@@ -28,7 +28,7 @@ function renderHome(){
         <h1>Entenda a indústria.<br><span>Enxergue o processo.</span></h1>
         <p>Uma experiência visual para percorrer os processos documentados do iLabPharma, do contexto inicial às etapas finais.</p>
         <div class="home-actions">
-          <button class="primary-btn home-cta" onclick="renderJourney(0)">Começar a jornada <span>→</span></button>
+          <button class="primary-btn home-cta" onclick="document.body.classList.remove('home-mode');renderJourney(0)">Começar a jornada <span>→</span></button>
         </div>
       </div>
       <div class="hero-orbit hero-orbit-modules" aria-label="Ecossistema de processos">
