@@ -12,6 +12,7 @@
     if(!visual) return;
     visual.className='journey-process-visual';
     visual.setAttribute('aria-label','Visual conceitual de processos conectados');
-    visual.innerHTML='<img src="assets/journey-process-visual.svg" alt="Processos conectados por fluxos de informação" loading="eager">';
+    const src=new URL('assets/journey-process-visual.svg?v=1.0.1',document.baseURI).href;
+    visual.innerHTML='<img src="'+src+'" alt="Processos conectados por fluxos de informação" loading="eager">';
   };
 })();
