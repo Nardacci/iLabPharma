@@ -17,7 +17,6 @@
       <section class="stage1-screen">
         <header class="stage1-header">
           <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
-          <div class="stage1-heading"><div><span class="stage1-kicker"><i></i> CAPÍTULO 01</span><h1>Indústria</h1><p>Quem irá fabricar o medicamento?</p></div><div class="stage1-counter"><strong>01</strong><span>/ 08</span></div></div>
           <div class="stage1-actions"><button class="stage1-home-btn" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button><button class="stage1-login" onclick="renderPlaceholder('Acesso')"><span>♙</span> Entrar</button></div>
         </header>
         <div class="stage1-layout">
@@ -30,9 +29,9 @@
             <div class="stage1-side-result"><span>AO FINAL DESTA ETAPA</span><strong>A indústria estará<br>estruturada no<br>iLabPharma.</strong></div>
           </aside>
           <main class="stage1-main">
-            <div class="stage1-context"><span class="stage1-kicker"><i></i> ESTRUTURA ANTES DA OPERAÇÃO</span><h2>Antes de produzir, a indústria precisa estar <em>estruturada.</em></h2><p>A operação começa pela definição da organização, das pessoas que participam dos processos e dos níveis de acesso necessários para executar e controlar as atividades.</p></div>
-            <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button onclick="renderJourney(0,0)"><b>01</b><strong>Quem participa da operação?</strong><span>Profissionais e funções</span></button><button onclick="renderJourney(0,2)"><b>02</b><strong>Quem pode acessar o sistema?</strong><span>Contas, perfis e permissões</span></button><button onclick="renderJourney(0,4)"><b>03</b><strong>Como a empresa se organiza?</strong><span>Pessoa jurídica e estrutura</span></button></div></div>
+            <div class="stage1-context"><span class="stage1-kicker"><i></i> ESTRUTURA ANTES DA OPERAÇÃO</span><h2>Antes de produzir, a indústria precisa <em>existir.</em></h2><p>A operação começa pela definição da organização, das pessoas que participam dos processos e dos níveis de acesso necessários para executar e controlar as atividades.</p></div>
             <div class="stage1-detail"><div class="stage1-detail-top"><span class="stage1-detail-number">${String(journeySelected+1).padStart(2,'0')}</span><div><span class="stage1-section-label">ELEMENTO DA ESTRUTURA</span><h3>${selectedItem.name}</h3></div></div><p>${selectedItem.text}</p><div class="stage1-source"><span>FONTE</span><strong>${selectedItem.source}</strong></div></div>
+            <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button onclick="renderJourney(0,0)"><b>01</b><strong>Quem participa da operação?</strong><span>Profissionais e funções</span></button><button onclick="renderJourney(0,2)"><b>02</b><strong>Quem pode acessar o sistema?</strong><span>Contas, perfis e permissões</span></button><button onclick="renderJourney(0,4)"><b>03</b><strong>Como a empresa se organiza?</strong><span>Pessoa jurídica e estrutura</span></button></div></div>
             <div class="stage1-bottom"><button class="ghost-btn" onclick="renderJourneyIntro()">← Voltar</button><div><span>Você está aqui</span><strong>Indústria</strong></div><button class="primary-btn" onclick="renderJourney(1)">Continuar →</button></div>
           </main>
         </div>
