@@ -29,12 +29,6 @@ function renderHome(){
           <img src="assets/ilabpharma-logo.svg" alt="iLabPharma">
           <span>INTELIGÊNCIA APLICADA</span>
         </button>
-        <nav class="home-nav" aria-label="Navegação principal">
-          <button onclick="renderJourney(0)">JORNADA</button>
-          <button onclick="renderProcessList()">PROCESSOS</button>
-          <button onclick="renderProcessList()">MÓDULOS</button>
-          <button onclick="renderPlaceholder('Sobre o Projeto')">SOBRE O PROJETO</button>
-        </nav>
         <button class="home-login" onclick="renderPlaceholder('Acesso')"><span>♙</span> Entrar</button>
       </header>
 
