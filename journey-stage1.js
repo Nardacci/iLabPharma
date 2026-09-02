@@ -5,8 +5,7 @@
     if(index!==0){ originalRenderJourney(index,selected); return; }
     const s=journeyStages[0];
     journeyIndex=0;
-    const sourceItems=s.purposes||s.items;
-    const items=sourceItems.slice(0,5);
+    const items=(s.purposes||s.items).filter(item=>item.name!=='Gestão Documental');
     journeySelected=Math.max(0,Math.min(selected,items.length-1));
     closeGeneralFlow();
     document.body.classList.remove('home-mode','journey-intro-mode');
@@ -39,10 +38,10 @@
       </section>`;
   };
   const flowScript=document.createElement('script');
-  flowScript.src='journey-flow.js?v=3.0.1';
+  flowScript.src='journey-flow.js?v=3.0.0';
   document.head.appendChild(flowScript);
   const flowCss=document.createElement('link');
   flowCss.rel='stylesheet';
-  flowCss.href='journey-flow.css?v=3.0.1';
+  flowCss.href='journey-flow.css?v=3.0.0';
   document.head.appendChild(flowCss);
 })();
