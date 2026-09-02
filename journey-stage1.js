@@ -37,6 +37,12 @@
         </div>
       </section>`;
   };
+  if(!document.querySelector('script[data-flow-experience]')){
+    const flowScript=document.createElement('script');
+    flowScript.dataset.flowExperience='true';
+    flowScript.src='journey-flow-experience.js?v=1.0.0';
+    document.head.appendChild(flowScript);
+  }
   if(!document.querySelector('link[data-flow-v2]')){
     const flowCss=document.createElement('link');
     flowCss.rel='stylesheet';
