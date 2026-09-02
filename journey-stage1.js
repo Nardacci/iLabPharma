@@ -16,8 +16,9 @@
     app.innerHTML=`
       <section class="stage1-screen">
         <header class="stage1-header">
-          <div class="stage1-heading"><span class="stage1-kicker"><i></i> CAPÍTULO 01</span><h1>Indústria</h1><p>Quem irá fabricar o medicamento?</p></div>
-          <div class="stage1-counter"><strong>01</strong><span>/ 08</span></div>
+          <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
+          <div class="stage1-heading"><div><span class="stage1-kicker"><i></i> CAPÍTULO 01</span><h1>Indústria</h1><p>Quem irá fabricar o medicamento?</p></div><div class="stage1-counter"><strong>01</strong><span>/ 08</span></div></div>
+          <div class="stage1-actions"><button class="stage1-home-btn" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button><button class="stage1-login" onclick="renderPlaceholder('Acesso')"><span>♙</span> Entrar</button></div>
         </header>
         <div class="stage1-layout">
           <aside class="stage1-sidebar">
