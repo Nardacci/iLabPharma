@@ -1,5 +1,5 @@
 const journeyStages=[
-  {n:1,title:'Indústria',kicker:'CAPÍTULO 01',intro:'Antes de produzir, a indústria precisa estar estruturada.',context:'A operação começa pela definição da organização, das pessoas que participam dos processos e dos níveis de acesso necessários para executar e controlar as atividades.',flow:['Pessoas','Acessos e Permissões','Organização','Estrutura da Empresa','Documentação'],items:[
+  {n:1,title:'Indústria',kicker:'CAPÍTULO 01',intro:'Antes de produzir, a indústria precisa estar estruturada.',context:'A operação começa pela definição da organização, das pessoas que participam dos processos e dos níveis de acesso necessários para executar e controlar as atividades. No módulo Principal, essas informações são administradas como base estrutural para os demais processos.',contextNote:'É aqui que a estrutura administrativa ganha forma: usuários, perfis, organização e cadastros passam a compor uma base compartilhada pelos processos de Produção, Controle da Qualidade, Garantia da Qualidade, Estoque e outros módulos.',flow:['Pessoas','Acessos e Permissões','Organização','Estrutura da Empresa','Documentação'],items:[
     {name:'Profissionais',text:'Cadastro relacionado às pessoas que participam da operação.',source:'Módulo Principal · Administração · Cadastros'},
     {name:'Contas de Usuários',text:'Administração das contas utilizadas para acesso ao sistema.',source:'Módulo Principal · Administração'},
     {name:'Perfis e Permissões',text:'Definição dos perfis e das permissões associados aos usuários.',source:'Módulo Principal · Administração'},
@@ -31,7 +31,7 @@ function renderJourney(index=journeyIndex,selected=0){
       <div class="journey-counter"><strong>${String(s.n).padStart(2,'0')}</strong><span>/ 08</span></div>
     </div>
     <div class="journey-progress">${journeyStages.map((x,i)=>`<button class="journey-dot ${i===journeyIndex?'current':''} ${i<journeyIndex?'done':''}" onclick="renderJourney(${i})" title="${x.title}"><span></span><b>${String(x.n).padStart(2,'0')} · ${x.title}</b></button>`).join('')}</div>
-    <div class="journey-context"><span class="section-kicker">CONTEXTO</span><p>${s.context}</p></div>
+    <div class="journey-context"><span class="section-kicker">CONTEXTO</span><h3>Estrutura antes da operação</h3><p>${s.context}</p>${s.contextNote?`<p class="context-note">${s.contextNote}</p>`:''}</div>
     <div class="journey-flow"><div class="flow-label">O FLUXO MOSTRA</div><div class="flow-track">${s.flow.map((x,i)=>`<div class="flow-node"><span>${String(i+1).padStart(2,'0')}</span><strong>${x}</strong></div>${i<s.flow.length-1?'<i>→</i>':''}`).join('')}</div></div>
     <div class="journey-experience">
       <div class="journey-items-panel"><div class="panel-heading"><span class="section-kicker">ELEMENTOS DA ETAPA</span><strong>Explore para aprofundar</strong></div><div class="journey-items">${s.items.map((item,i)=>`<button class="journey-item ${i===journeySelected?'selected':''}" onclick="renderJourney(${journeyIndex},${i})"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong><em>→</em></button>`).join('')}</div></div>
