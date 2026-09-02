@@ -37,7 +37,7 @@ function renderStageFlow(stageIndex=journeyIndex){
           <div class="journey-flow-side-title"><span>01</span><div><strong>Indústria</strong><small>Visão do processo</small></div></div>
           <div class="journey-flow-side-label">NESTA ETAPA</div>
           <nav class="journey-flow-side-nav">
-            ${['Profissionais','Contas de Usuários','Perfis e Permissões','Pessoa Jurídica','Estrutura Organizacional','Gestão Documental'].map((x,i)=>`<button onclick="renderJourney(0,${i})"><span>${String(i+1).padStart(2,'0')}</span>${x}<em>›</em></button>`).join('')}
+            ${['Profissionais','Contas de Usuários','Perfis e Permissões','Pessoa Jurídica','Estrutura Organizacional'].map((x,i)=>`<button onclick="renderJourney(0,${i})"><span>${String(i+1).padStart(2,'0')}</span>${x}<em>›</em></button>`).join('')}
             <button class="is-flow"><span>◎</span>Fluxo<em>›</em></button>
           </nav>
           <div class="journey-flow-side-note"><span>FOCO</span><strong>Módulo Principal<br>como base da operação.</strong></div>
@@ -47,7 +47,6 @@ function renderStageFlow(stageIndex=journeyIndex){
             <div><span class="journey-flow-kicker"><i></i> FLUXO DO MÓDULO PRINCIPAL</span><h1>Como os dados estruturam a operação?</h1><p>Explore a base cadastral, os controles e a disponibilização dos dados que sustentam os processos dependentes.</p></div>
             <div class="journey-flow-legend"><span><i class="start"></i>Base</span><span><i class="end"></i>Dependência</span><span><b>→</b> Evolução</span></div>
           </div>
-
           <section class="principal-flow-canvas">
             <div class="principal-flow-instruction"><span>EXPLORE O FLUXO</span><strong>Clique em uma etapa para revelar seus elementos.</strong></div>
             <div class="principal-flow-stage-grid">
