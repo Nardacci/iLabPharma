@@ -2,16 +2,17 @@ function renderHome(){
   document.body.classList.add('home-mode');
   setCrumbs('iLabPharma','');
   const modules=[
-    {n:'01',title:'PRODUÇÃO',desc:'Planejamento, ordens de produção e execução industrial.',cls:'module-1',icon:'gear'},
-    {n:'02',title:'ESTOQUE',desc:'Recebimento, armazenamento, movimentações e inventário.',cls:'module-2',icon:'box'},
-    {n:'03',title:'CQ',desc:'Ensaios, resultados, especificações e laudos.',cls:'module-3',icon:'flask'},
-    {n:'04',title:'GQ',desc:'CAPA, desvios, mudanças e treinamentos.',cls:'module-4',icon:'shield'},
-    {n:'05',title:'DOCUMENTOS',desc:'Gestão eletrônica de documentos e registros.',cls:'module-5',icon:'document'},
-    {n:'06',title:'RASTREABILIDADE',desc:'Rastreabilidade completa de lotes, séries e genealogia.',cls:'module-6',icon:'trace'},
-    {n:'07',title:'COMERCIAL',desc:'Pedidos, cotações, faturamento e contratos.',cls:'module-7',icon:'cart'},
-    {n:'08',title:'PATRIMÔNIO',desc:'Gestão de ativos, manutenções e calibrações.',cls:'module-8',icon:'asset'}
+    {n:'01',title:'ESTRUTURA',desc:'Organização e governança',cls:'module-1',icon:'structure'},
+    {n:'02',title:'MATERIAIS',desc:'Matérias-primas e componentes',cls:'module-2',icon:'flask'},
+    {n:'03',title:'CQ',desc:'Ensaios, resultados, especificações e laudos',cls:'module-3',icon:'gear'},
+    {n:'04',title:'GQ',desc:'CAPA, desvios, mudanças e treinamentos',cls:'module-4',icon:'shield'},
+    {n:'05',title:'DOCUMENTOS',desc:'Gestão eletrônica de documentos e registros',cls:'module-5',icon:'document'},
+    {n:'06',title:'RASTREABILIDADE',desc:'Rastreabilidade completa de lotes, séries e genealogia',cls:'module-6',icon:'trace'},
+    {n:'07',title:'COMERCIAL',desc:'Pedidos, cotações, faturamento e contratos',cls:'module-7',icon:'cart'},
+    {n:'08',title:'PATRIMÔNIO',desc:'Gestão de ativos, manutenções e calibrações',cls:'module-8',icon:'asset'}
   ];
   const icons={
+    structure:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 28V8l11-5 11 5v20M11 28V18h10v10M9 12h2M16 10h2M21 12h2M9 15h2M21 15h2"/></svg>',
     gear:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13 4h6l1 4 3 2 4-1 3 5-3 3v4l3 3-3 5-4-1-3 2-1 4h-6l-1-4-3-2-4 1-3-5 3-3v-4l-3-3 3-5 4 1 3-2 1-4z"/><circle cx="16" cy="19" r="5"/></svg>',
     box:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 4 11 6-11 6L5 10 16 4zM5 10v12l11 6 11-6V10M16 16v12"/></svg>',
     flask:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M12 4h8M14 4v8l-8 14c-.7 1.2.2 2 1.5 2h17c1.3 0 2.2-.8 1.5-2l-8-14V4M9 22h14"/></svg>',
@@ -31,7 +32,7 @@ function renderHome(){
           <button class="primary-btn home-cta" onclick="document.body.classList.remove('home-mode');renderJourney(0)">Começar a jornada <span>→</span></button>
         </div>
       </div>
-      <div class="hero-orbit hero-orbit-modules" aria-label="Módulos do sistema">
+      <div class="hero-orbit hero-orbit-modules" aria-label="Visão dos processos do iLabPharma">
         <div class="orbit-connection connection-v"></div><div class="orbit-connection connection-h"></div>
         <div class="orbit-ring ring-a"></div><div class="orbit-ring ring-b"></div><div class="orbit-ring ring-c"></div>
         <div class="orbit-core"><span>i</span><strong>LAB</strong><small>PHARMA</small></div>
