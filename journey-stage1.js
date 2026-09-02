@@ -37,4 +37,11 @@
         </div>
       </section>`;
   };
+  if(!document.querySelector('link[data-flow-v2]')){
+    const flowCss=document.createElement('link');
+    flowCss.rel='stylesheet';
+    flowCss.dataset.flowV2='true';
+    flowCss.href='journey-flow-v2.css?v=1.0.0';
+    document.head.appendChild(flowCss);
+  }
 })();
