@@ -5,13 +5,14 @@
     if(index!==0){ originalRenderJourney(index,selected); return; }
     const s=journeyStages[0];
     journeyIndex=0;
-    journeySelected=Math.max(0,Math.min(selected,(s.purposes||s.items).length-1));
+    const sourceItems=s.purposes||s.items;
+    const items=sourceItems.slice(0,5);
+    journeySelected=Math.max(0,Math.min(selected,items.length-1));
     closeGeneralFlow();
     document.body.classList.remove('home-mode','journey-intro-mode');
     document.body.classList.add('journey-mode','journey-stage1-mode');
     setCrumbs('Jornada','Indústria');
     document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-    const items=s.purposes||s.items;
     const selectedItem=items[journeySelected];
     app.innerHTML=`
       <section class="stage1-screen">
@@ -38,10 +39,10 @@
       </section>`;
   };
   const flowScript=document.createElement('script');
-  flowScript.src='journey-flow.js?v=3.0.0';
+  flowScript.src='journey-flow.js?v=3.0.1';
   document.head.appendChild(flowScript);
   const flowCss=document.createElement('link');
   flowCss.rel='stylesheet';
-  flowCss.href='journey-flow.css?v=3.0.0';
+  flowCss.href='journey-flow.css?v=3.0.1';
   document.head.appendChild(flowCss);
 })();
