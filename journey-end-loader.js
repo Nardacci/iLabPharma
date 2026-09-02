@@ -1,6 +1,4 @@
 (function(){
-  const baseRenderJourney=window.renderJourney;
-  if(typeof baseRenderJourney!=='function')return;
   function renderEnd(){
     if(typeof closeGeneralFlow==='function')closeGeneralFlow();
     document.body.className=document.body.className.replace(/journey-stage[1-8]-mode/g,'');
@@ -8,8 +6,29 @@
     document.body.classList.add('journey-mode','journey-end-mode');
     if(typeof setCrumbs==='function')setCrumbs('Jornada','Encerramento');
     document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-    app.innerHTML=`<section class="journey-end-screen"><header class="journey-end-header"><button class="journey-end-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button><div class="journey-end-actions"><button class="journey-end-home" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button><button class="journey-end-login" onclick="renderPlaceholder('Acesso')"><span>♙</span> Entrar</button></div></header><main class="journey-end-main"><div class="journey-end-copy"><span class="journey-end-kicker"><i></i> JORNADA CONCLUÍDA</span><h1>Do processo ao <em>todo.</em></h1><p>Ao percorrer esta jornada, você acompanhou como diferentes etapas se conectam para estruturar, produzir, controlar e disponibilizar um medicamento.</p><p>Da estruturação da indústria ao produto acabado, cada etapa representa uma parte da operação e contribui para uma visão integrada do processo.</p><p class="journey-end-highlight">O iLabPharma conecta essa visão para tornar os processos mais claros, relacionados e compreensíveis.</p><div class="journey-end-actions-bottom"><button class="journey-end-back" onclick="renderJourney(7)">← Voltar</button><button class="journey-end-home-primary" onclick="renderHome()">Ir para a página principal <span>→</span></button></div></div><div class="journey-end-visual" aria-hidden="true"><div class="end-orbit-glow"></div><div class="end-ring end-ring-1"></div><div class="end-ring end-ring-2"></div><div class="end-ring end-ring-3"></div><div class="end-cross end-cross-v"></div><div class="end-cross end-cross-h"></div><div class="end-core"><img src="assets/ilabpharma-logo.svg" alt=""></div></div></main></section>`;
+    app.innerHTML=`
+      <section class="journey-end-screen">
+        <main class="journey-end-main">
+          <div class="journey-end-check" aria-hidden="true">✓</div>
+          <span class="journey-end-kicker"><i></i> JORNADA CONCLUÍDA</span>
+          <h1>Você percorreu a história<br><em>de ponta a ponta.</em></h1>
+          <p class="journey-end-intro">Da estrutura da indústria ao produto acabado, a jornada apresentou os oito estágios documentados do<br class="desktop-only"> processo de produção de medicamentos.</p>
+          <div class="journey-end-stages" aria-label="Etapas percorridas">
+            <button onclick="renderJourney(0)">01 · Indústria</button>
+            <button onclick="renderJourney(1)">02 · Fábrica</button>
+            <button onclick="renderJourney(2)">03 · Preparação</button>
+            <button onclick="renderJourney(3)">04 · Medicamento</button>
+            <button onclick="renderJourney(4)">05 · Produção</button>
+            <button onclick="renderJourney(5)">06 · Controle da Qualidade</button>
+            <button onclick="renderJourney(6)">07 · Garantia da Qualidade</button>
+            <button onclick="renderJourney(7)">08 · Produto Acabado</button>
+          </div>
+          <div class="journey-end-actions-bottom">
+            <button class="journey-end-restart" onclick="renderJourney(0)">↻ Reiniciar jornada</button>
+            <button class="journey-end-map" onclick="renderMap()">Explorar mapa de processos <span>→</span></button>
+          </div>
+        </main>
+      </section>`;
   }
   window.finishJourney=renderEnd;
-  window.renderJourney=function(index=0,selected=0){if(index!==8){baseRenderJourney(index,selected);return}renderEnd()};
 })();
