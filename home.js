@@ -3,14 +3,14 @@ function renderHome(){
   document.body.classList.add('home-mode');
   setCrumbs('iLabPharma','');
   const modules=[
-    {title:'PRODUÇÃO',desc:'Processo produtivo',cls:'module-1',icon:'gear'},
-    {title:'CQ',desc:'Controle da qualidade',cls:'module-2',icon:'flask'},
-    {title:'GQ',desc:'Garantia da qualidade',cls:'module-3',icon:'shield'},
-    {title:'DOCUMENTOS',desc:'Controle documental',cls:'module-4',icon:'document'},
-    {title:'RASTREABILIDADE',desc:'Relação entre processos',cls:'module-5',icon:'trace'},
-    {title:'COMERCIAL',desc:'Processos comerciais',cls:'module-6',icon:'cart'},
-    {title:'ESTOQUE',desc:'Materiais e movimentações',cls:'module-7',icon:'box'},
-    {title:'PATRIMÔNIO',desc:'Gestão de ativos',cls:'module-8',icon:'asset'}
+    {title:'PRODUÇÃO',cls:'module-1',icon:'gear'},
+    {title:'CQ',cls:'module-2',icon:'flask'},
+    {title:'GQ',cls:'module-3',icon:'shield'},
+    {title:'DOCUMENTOS',cls:'module-4',icon:'document'},
+    {title:'RASTREABILIDADE',cls:'module-5',icon:'trace'},
+    {title:'COMERCIAL',cls:'module-6',icon:'cart'},
+    {title:'ESTOQUE',cls:'module-7',icon:'box'},
+    {title:'PATRIMÔNIO',cls:'module-8',icon:'asset'}
   ];
   const icons={
     gear:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13 4h6l1 4 3 2 4-1 3 5-3 3v4l3 3-3 5-4-1-3 2-1 4h-6l-1-4-3-2-4 1-3-5 3-3v-4l-3-3 3-5 4 1 3-2 1-4z"/><circle cx="16" cy="19" r="5"/></svg>',
@@ -56,11 +56,9 @@ function renderHome(){
           <div class="orbit-ring ring-outer"></div><div class="orbit-ring ring-middle"></div><div class="orbit-ring ring-inner"></div>
           <div class="orbit-cross cross-v"></div><div class="orbit-cross cross-h"></div>
           <div class="orbit-core"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></div>
-          ${modules.map(m=>`<div class="orbit-module ${m.cls}"><div class="module-icon">${icons[m.icon]}</div><div class="module-copy"><b>${m.title}</b><span>${m.desc}</span></div></div>`).join('')}
+          ${modules.map(m=>`<div class="orbit-module ${m.cls}"><div class="module-icon">${icons[m.icon]}</div><b class="module-label">${m.title}</b></div>`).join('')}
         </div>
       </div>
-
-      <div class="home-scroll"><span class="mouse"></span><span>Role para explorar</span><b>⌄</b></div>
     </section>`;
 }
 renderHome();
