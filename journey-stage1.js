@@ -24,7 +24,7 @@
             <div class="stage1-side-title"><span>01</span><div><strong>Indústria</strong><small>Quem irá fabricar o medicamento?</small></div></div>
             <nav class="stage1-items" aria-label="Elementos da Indústria">
               ${items.map((item,i)=>`<button class="stage1-item ${i===journeySelected?'selected':''}" onclick="renderJourney(0,${i})"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong><em>›</em></button>`).join('')}
-              <button class="stage1-item stage1-flow-item" onclick="openGeneralFlow()"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
+              <button class="stage1-item stage1-flow-item" onclick="renderStageFlow(0)"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
             </nav>
             <div class="stage1-side-result"><span>AO FINAL DESTA ETAPA</span><strong>A indústria estará<br>estruturada no<br>iLabPharma.</strong></div>
           </aside>
@@ -37,4 +37,11 @@
         </div>
       </section>`;
   };
+  const flowScript=document.createElement('script');
+  flowScript.src='journey-flow.js?v=1.0.0';
+  document.head.appendChild(flowScript);
+  const flowCss=document.createElement('link');
+  flowCss.rel='stylesheet';
+  flowCss.href='journey-flow.css?v=1.0.0';
+  document.head.appendChild(flowCss);
 })();
