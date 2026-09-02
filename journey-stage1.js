@@ -37,11 +37,4 @@
         </div>
       </section>`;
   };
-  const flowScript=document.createElement('script');
-  flowScript.src='journey-flow.js?v=3.0.0';
-  document.head.appendChild(flowScript);
-  const flowCss=document.createElement('link');
-  flowCss.rel='stylesheet';
-  flowCss.href='journey-flow.css?v=3.0.0';
-  document.head.appendChild(flowCss);
 })();
