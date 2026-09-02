@@ -35,7 +35,7 @@ function renderHome(){
         <div class="orbit-connection connection-v"></div><div class="orbit-connection connection-h"></div>
         <div class="orbit-ring ring-a"></div><div class="orbit-ring ring-b"></div><div class="orbit-ring ring-c"></div>
         <div class="orbit-core"><span>i</span><strong>LAB</strong><small>PHARMA</small></div>
-        ${modules.map(m=>`<div class="orbit-module ${m.cls}"><div class="module-icon">${icons[m.icon]}</div><div class="module-copy"><b>${m.n} ${m.title}</b><span>${m.desc}</span></div></div>`).join('')}
+        ${modules.map(m=>`<div class="orbit-module ${m.cls}"><div class="module-icon">${icons[m.icon]}</div><div class="module-copy"><b>${m.title}</b><span>${m.desc}</span></div></div>`).join('')}
       </div>
     </section>`;
 }
