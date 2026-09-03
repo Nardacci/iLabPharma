@@ -45,6 +45,8 @@
             <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button onclick="renderJourney(${index},0)"><b>01</b><strong>${s.question}</strong><span>${items.slice(0,2).map(x=>x[0]).join(' · ')}</span></button><button onclick="renderJourney(${index},${Math.min(1,items.length-1)})"><b>02</b><strong>Quais elementos fazem parte?</strong><span>${items.slice(2,4).map(x=>x[0]).join(' · ')||items[0][0]}</span></button><button onclick="renderJourney(${index},${Math.min(2,items.length-1)})"><b>03</b><strong>O que acontece nesta etapa?</strong><span>${items[Math.min(2,items.length-1)][0]}</span></button></div></div>
             ${index===3?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20Medicamento.png?v=1.0.0" alt="Sistema - Medicamento"></div>':''}
             ${index===4?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20Produ%C3%A7%C3%A3o.png?v=1.0.0" alt="Sistema - Produção"></div>':''}
+            ${index===5?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20CQ.png?v=1.0.0" alt="Sistema - CQ"></div>':''}
+            ${index===6?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20GQ.png?v=1.0.0" alt="Sistema - GQ"></div>':''}
             <div class="stage1-bottom"><button class="ghost-btn" onclick="renderJourney(${index-1})">← Voltar</button><div><span>Você está aqui</span><strong>${s.name}</strong></div><button class="primary-btn" onclick="${index===7?'finishJourney()':`renderJourney(${index+1})`}">${index===7?'Concluir jornada →':'Continuar →'}</button></div>
           </main>
         </div>
