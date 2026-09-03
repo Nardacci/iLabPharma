@@ -6,13 +6,12 @@
     const s=journeyStages[0];
     journeyIndex=0;
     const items=(s.purposes||s.items).filter(item=>item.name!=='Gestão Documental');
-    journeySelected=Math.max(0,Math.min(selected,items.length-1));
+    journeySelected=0;
     closeGeneralFlow();
     document.body.classList.remove('home-mode','journey-intro-mode');
     document.body.classList.add('journey-mode','journey-stage1-mode');
     setCrumbs('Jornada','Indústria');
     document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-    const selectedItem=items[journeySelected];
     app.innerHTML=`
       <section class="stage1-screen">
         <header class="stage1-header">
@@ -26,18 +25,18 @@
           <aside class="stage1-sidebar">
             <div class="stage1-side-title"><span>01</span><div><strong>Indústria</strong><small>Quem irá fabricar o medicamento?</small></div></div>
             <nav class="stage1-items" aria-label="Elementos da Indústria">
-              ${items.map((item,i)=>`<button class="stage1-item ${i===journeySelected?'selected':''}" onclick="renderJourney(0,${i})"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong><em>›</em></button>`).join('')}
-              <button class="stage1-item stage1-flow-item" onclick="renderIndustryFlowList()"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
+              ${items.map((item,i)=>`<button class="stage1-item ${i===0?'selected':''}" type="button" aria-label="${item.name}"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong></button>`).join('')}
+              <button class="stage1-item stage1-flow-item" type="button" onclick="renderIndustryFlowList"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
             </nav>
             <div class="stage1-side-result"><span>AO FINAL DESTA ETAPA</span><strong>A indústria estará<br>estruturada no<br>iLabPharma.</strong></div>
           </aside>
           <main class="stage1-main">
-            <div class="stage1-detail"><div class="stage1-detail-top"><span class="stage1-detail-number">${String(journeySelected+1).padStart(2,'0')}</span><div><span class="stage1-section-label">ELEMENTO DA ESTRUTURA</span><h3>${selectedItem.name}</h3></div></div><p>${selectedItem.text}</p><div class="stage1-source"><span>FONTE</span><strong>${selectedItem.source}</strong></div></div>
-            <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button onclick="renderJourney(0,0)"><b>01</b><strong>Quem participa da operação?</strong><span>Profissionais e funções</span></button><button onclick="renderJourney(0,2)"><b>02</b><strong>Quem pode acessar o sistema?</strong><span>Contas, perfis e permissões</span></button><button onclick="renderJourney(0,4)"><b>03</b><strong>Como a empresa se organiza?</strong><span>Pessoa jurídica e estrutura</span></button></div></div>
+            <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button type="button"><b>01</b><strong>Quem participa da operação?</strong><span>Profissionais e funções</span></button><button type="button"><b>02</b><strong>Quem pode acessar o sistema?</strong><span>Contas, perfis e permissões</span></button><button type="button"><b>03</b><strong>Como a empresa se organiza?</strong><span>Pessoa jurídica e estrutura</span></button></div></div>
             <div class="stage1-bottom"><button class="ghost-btn" onclick="renderJourneyIntro()">← Voltar</button><div><span>Você está aqui</span><strong>Indústria</strong></div><button class="primary-btn" onclick="renderJourney(1)">Continuar →</button></div>
           </main>
         </div>
       </section>`;
+    app.querySelector('.stage1-flow-item').onclick=()=>renderIndustryFlowList();
   };
   if(!document.querySelector('script[data-flow-experience]')){
     const flowScript=document.createElement('script');
