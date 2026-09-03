@@ -8,6 +8,11 @@
   css.href='journey-flow-v4.css?v=1.0.0';
   css.dataset.principalFlowV4='true';
   document.head.appendChild(css);
+  const cssFix=document.createElement('link');
+  cssFix.rel='stylesheet';
+  cssFix.href='journey-flow-v5.css?v=1.0.0';
+  cssFix.dataset.principalFlowV5='true';
+  document.head.appendChild(cssFix);
   const script=document.createElement('script');
   script.dataset.principalFlowCurrent='true';
   script.src=current;
