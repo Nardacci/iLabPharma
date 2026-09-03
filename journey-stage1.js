@@ -16,7 +16,10 @@
     app.innerHTML=`
       <section class="stage1-screen">
         <header class="stage1-header">
-          <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
+          <div class="stage1-header-context">
+            <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
+            <div class="stage1-page-title"><strong>${selectedItem.name}</strong><span>${selectedItem.text}</span></div>
+          </div>
           <div class="stage1-actions"><button class="stage1-home-btn" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button></div>
         </header>
         <div class="stage1-layout">
