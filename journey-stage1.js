@@ -18,7 +18,7 @@
         <header class="stage1-header">
           <div class="stage1-header-context">
             <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
-            <div class="stage1-page-title"><strong>${selectedItem.name}</strong><span>${selectedItem.text}</span></div>
+            <div class="stage1-page-title"><strong>Antes de produzir, a indústria precisa <em>existir.</em></strong><span>A operação começa pela definição da organização, das pessoas que participam dos processos e dos níveis de acesso necessários para executar e controlar as atividades.</span></div>
           </div>
           <div class="stage1-actions"><button class="stage1-home-btn" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button></div>
         </header>
