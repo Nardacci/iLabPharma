@@ -2,16 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
   <title>iLabPharma · Arquitetura Funcional</title>
   <style>
     *{box-sizing:border-box}
-    html,body{margin:0;width:100%;height:100%;overflow:auto;background:#fff}
-    body{display:flex;align-items:center;justify-content:center}
-    img{display:block;width:100vw;height:100vh;object-fit:contain}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff}
+    body{display:flex;align-items:center;justify-content:center;touch-action:none}
+    #viewport{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:grab;touch-action:none}
+    #viewport.dragging{cursor:grabbing}
+    img{display:block;width:100vw;height:100vh;object-fit:contain;transform:translate3d(0,0,0) scale(1);transform-origin:center center;user-select:none;-webkit-user-drag:none;will-change:transform}
   </style>
 </head>
 <body>
-  <img src="imagens/Fluxo%20-%20Arquitetura%20Funcional.png?v=1.0.0" alt="Fluxo de Arquitetura Funcional do iLabPharma">
+  <div id="viewport"><img id="flowImage" src="imagens/Fluxo%20-%20Arquitetura%20Funcional.png?v=1.0.0" alt="Fluxo de Arquitetura Funcional do iLabPharma" draggable="false"></div>
+  <script>
+    (()=>{const v=document.getElementById('viewport'),i=document.getElementById('flowImage');let s=1,x=0,y=0,d=false,sx=0,sy=0,px=0,py=0;const MIN=1,MAX=5,STEP=.25;const pts=new Map();let ps=0,ss=1;function c(a){return Math.max(MIN,Math.min(MAX,a))}function r(){i.style.transform=`translate3d(${x}px,${y}px,0) scale(${s})`}function reset(){s=1;x=0;y=0;r()}function z(n,cx=innerWidth/2,cy=innerHeight/2){n=c(n);if(n===s)return;const q=n/s;x=cx-(cx-x)*q;y=cy-(cy-y)*q;s=n;if(s===1){x=0;y=0}r()}v.addEventListener('wheel',e=>{e.preventDefault();z(s+(e.deltaY<0?STEP:-STEP),e.clientX,e.clientY)},{passive:false});v.addEventListener('dblclick',e=>{e.preventDefault();s===1?z(2.5,e.clientX,e.clientY):reset()});v.addEventListener('pointerdown',e=>{pts.set(e.pointerId,e);v.setPointerCapture(e.pointerId);if(pts.size===1&&s>1){d=true;sx=e.clientX;sy=e.clientY;px=x;py=y;v.classList.add('dragging')}if(pts.size===2){d=false;const a=[...pts.values()];ps=Math.hypot(a[0].clientX-a[1].clientX,a[0].clientY-a[1].clientY);ss=s}});v.addEventListener('pointermove',e=>{pts.set(e.pointerId,e);if(pts.size===1&&d){x=px+e.clientX-sx;y=py+e.clientY-sy;r()}if(pts.size===2){const a=[...pts.values()],dd=Math.hypot(a[0].clientX-a[1].clientX,a[0].clientY-a[1].clientY);if(ps)z(ss*(dd/ps),(a[0].clientX+a[1].clientX)/2,(a[0].clientY+a[1].clientY)/2)}});function end(e){pts.delete(e.pointerId);if(pts.size<2)ps=0;if(!pts.size){d=false;v.classList.remove('dragging')}}v.addEventListener('pointerup',end);v.addEventListener('pointercancel',end);window.addEventListener('keydown',e=>{if(e.key==='+'||e.key==='=')z(s+STEP);else if(e.key==='-'||e.key==='_')z(s-STEP);else if(e.key==='0'||e.key==='Escape')reset()});r()})();
+  </script>
 </body>
 </html>
