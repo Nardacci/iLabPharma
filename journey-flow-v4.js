@@ -13,6 +13,7 @@
     <section class="principal-flow-v4-screen">
       <header class="principal-flow-v4-header">
         <button class="principal-flow-v4-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
+        <div class="principal-flow-v4-header-title"><strong>Como os módulos utilizam os cadastros?</strong><span>Uma visão resumida do fluxo do Módulo Principal.</span></div>
         <div class="principal-flow-v4-actions"><button onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button></div>
       </header>
       <div class="principal-flow-v4-layout">
@@ -26,7 +27,7 @@
           <div class="flow-v4-side-result"><span>AO FINAL DESTA ETAPA</span><strong>A indústria estará<br>estruturada no<br>iLabPharma.</strong></div>
         </aside>
         <main class="principal-flow-v4-main">
-          <div class="principal-flow-v4-title"><span><i></i> FLUXO</span><h1>Como os módulos utilizam os cadastros?</h1><p>Uma visão resumida do fluxo do Módulo Principal.</p></div>
+          <div class="principal-flow-v4-title"><span><i></i> FLUXO</span></div>
           <div class="principal-flow-v4-content">
             <section class="flow-v4-sequence" aria-label="Fluxo do Módulo Principal">
               <article class="flow-v4-step flow-v4-step-primary"><div class="flow-v4-step-label">01</div><div class="flow-v4-step-copy"><strong>Cadastro e Parametrização</strong><span>Módulo Principal</span><b>Central de Governança</b></div></article>
@@ -35,16 +36,9 @@
               <div class="flow-v4-arrow">↓</div>
               <article class="flow-v4-step flow-v4-result"><div class="flow-v4-step-label">03</div><div class="flow-v4-step-copy"><strong>Disponibilização de Dados Mestres</strong><span>Dados disponíveis para os módulos</span></div></article>
             </section>
-            <section class="flow-v4-modules" aria-label="Como os módulos utilizam os cadastros">
-              <header>Como os módulos utilizam os cadastros?</header>
-              <div class="flow-v4-module-list">
-                <article><strong>Produção</strong><span>Ambientes, equipamentos, instrumentos, OPE, usuários, centros de custo.</span></article>
-                <article><strong>Estoque</strong><span>Locais físicos, fornecedores, pessoas jurídicas, itens, centros de custo.</span></article>
-                <article><strong>Controle da Qualidade (CQ)</strong><span>Ambientes, instrumentos, profissionais, setores, usuários.</span></article>
-                <article><strong>Garantia da Qualidade (GQ)</strong><span>Profissionais, estrutura organizacional, documentos, treinamentos.</span></article>
-                <article><strong>Controle de Documentos</strong><span>Estrutura organizacional, perfis, aprovadores, vigência.</span></article>
-                <article><strong>Rastreabilidade</strong><span>Lotes, produtos, insumos, movimentações e eventos.</span></article>
-              </div>
+            <section class="flow-v4-impact-grid" aria-label="Benefícios e riscos">
+              <article class="flow-v4-impact flow-v4-benefits"><header><span>✓</span><strong>Benefícios</strong></header><ul><li>Processos integrados e consistentes</li><li>Redução de retrabalho</li><li>Conformidade com ANVISA / BPF</li><li>Melhor rastreabilidade</li><li>Segurança da informação</li><li>Governança de acessos</li></ul></article>
+              <article class="flow-v4-impact flow-v4-risks"><header><span>!</span><strong>Riscos sem os cadastros</strong></header><ul><li>Impossibilidade de executar processos dependentes</li><li>Dados inconsistentes</li><li>Falhas na rastreabilidade</li><li>Não conformidades regulatórias</li><li>Atrasos na produção e liberação</li></ul><blockquote>Sem os cadastros e parâmetros necessários, os processos dependentes não podem ser executados corretamente.</blockquote></article>
             </section>
           </div>
           <div class="principal-flow-v4-bottom"><button class="flow-v4-ghost" onclick="renderJourney(0)">← Voltar para Indústria</button><div><span>VOCÊ ESTÁ AQUI</span><strong>01 · Indústria · Fluxo</strong></div><button class="flow-v4-primary" onclick="renderJourney(1)">Continuar →</button></div>
