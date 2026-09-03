@@ -27,7 +27,7 @@
             <div class="stage1-side-title"><span>01</span><div><strong>Indústria</strong><small>Quem irá fabricar o medicamento?</small></div></div>
             <nav class="stage1-items" aria-label="Elementos da Indústria">
               ${items.map((item,i)=>`<button class="stage1-item ${i===journeySelected?'selected':''}" onclick="renderJourney(0,${i})"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong><em>›</em></button>`).join('')}
-              <button class="stage1-item stage1-flow-item" onclick="renderStageFlow(0)"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
+              <button class="stage1-item stage1-flow-item" onclick="renderIndustryFlowList()"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
             </nav>
             <div class="stage1-side-result"><span>AO FINAL DESTA ETAPA</span><strong>A indústria estará<br>estruturada no<br>iLabPharma.</strong></div>
           </aside>
@@ -42,7 +42,7 @@
   if(!document.querySelector('script[data-flow-experience]')){
     const flowScript=document.createElement('script');
     flowScript.dataset.flowExperience='true';
-    flowScript.src='journey-flow-experience.js?v=1.0.1';
+    flowScript.src='journey-flow-experience.js?v=1.0.2';
     document.head.appendChild(flowScript);
   }
   if(!document.querySelector('link[data-flow-v2]')){
