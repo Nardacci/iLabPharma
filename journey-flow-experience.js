@@ -1,9 +1,10 @@
-/*
- * Compatibility loader.
- * The canonical Módulo Principal flow is rendered by journey-flow.js.
- * This file intentionally does not redefine renderStageFlow, preventing
- * the legacy renderer from replacing the current journey layout.
- */
+/* Compatibility loader for the canonical Módulo Principal flow. */
 (function(){
-  if(typeof window.renderStageFlow!=='function') return;
+  const current='journey-flow.js?v=3.0.3';
+  const existing=document.querySelector('script[data-principal-flow-current]');
+  if(existing) return;
+  const script=document.createElement('script');
+  script.dataset.principalFlowCurrent='true';
+  script.src=current;
+  document.head.appendChild(script);
 })();
