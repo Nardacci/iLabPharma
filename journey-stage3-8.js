@@ -47,6 +47,7 @@
             ${index===4?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20Producao.png?v=1.0.0" alt="Sistema - Producao"></div>':''}
             ${index===5?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20CQ.png?v=1.0.0" alt="Sistema - CQ"></div>':''}
             ${index===6?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20GQ.png?v=1.0.0" alt="Sistema - GQ"></div>':''}
+            ${index===7?'<div class="stage1-system-image"><img src="imagens/Sistema%20-%20Acabado.png?v=1.0.0" alt="Sistema - Acabado"></div>':''}
             <div class="stage1-bottom"><button class="ghost-btn" onclick="renderJourney(${index-1})">← Voltar</button><div><span>Você está aqui</span><strong>${s.name}</strong></div><button class="primary-btn" onclick="${index===7?'finishJourney()':`renderJourney(${index+1})`}">${index===7?'Concluir jornada →':'Continuar →'}</button></div>
           </main>
         </div>
