@@ -24,7 +24,10 @@
     app.innerHTML=`
       <section class="stage1-screen">
         <header class="stage1-header">
-          <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
+          <div class="stage1-header-context">
+            <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
+            <div class="stage1-page-title"><strong>${s.question.replace('?', ' <em>?</em>')}</strong><span>${s.intro}</span></div>
+          </div>
           <div class="stage1-actions"><button class="stage1-home-btn" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button></div>
         </header>
         <div class="stage1-layout">
@@ -37,7 +40,7 @@
             <div class="stage1-side-result"><span>AO FINAL DESTA ETAPA</span><strong>${s.result}</strong></div>
           </aside>
           <main class="stage1-main">
-            <div class="stage1-context"><span class="stage1-kicker"><i></i> ${s.kicker}</span><h2>${s.question}</h2><p>${s.intro}</p></div>
+            <div class="stage1-context"><span class="stage1-kicker"><i></i> ${s.kicker}</span></div>
             <div class="stage1-detail"><div class="stage1-detail-top"><span class="stage1-detail-number">${String(sel+1).padStart(2,'0')}</span><div><span class="stage1-section-label">ELEMENTO DA ETAPA</span><h3>${item[0]}</h3></div></div><p>${item[1]}</p><div class="stage1-source"><span>FONTE</span><strong>${s.source}</strong></div></div>
             <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button onclick="renderJourney(${index},0)"><b>01</b><strong>${s.question}</strong><span>${items.slice(0,2).map(x=>x[0]).join(' · ')}</span></button><button onclick="renderJourney(${index},${Math.min(1,items.length-1)})"><b>02</b><strong>Quais elementos fazem parte?</strong><span>${items.slice(2,4).map(x=>x[0]).join(' · ')||items[0][0]}</span></button><button onclick="renderJourney(${index},${Math.min(2,items.length-1)})"><b>03</b><strong>O que acontece nesta etapa?</strong><span>${items[Math.min(2,items.length-1)][0]}</span></button></div></div>
             <div class="stage1-bottom"><button class="ghost-btn" onclick="renderJourney(${index-1})">← Voltar</button><div><span>Você está aqui</span><strong>${s.name}</strong></div><button class="primary-btn" onclick="${index===7?'finishJourney()':`renderJourney(${index+1})`}">${index===7?'Concluir jornada →':'Continuar →'}</button></div>
