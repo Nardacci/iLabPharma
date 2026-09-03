@@ -13,6 +13,7 @@
     <section class="principal-flow-v4-screen">
       <header class="principal-flow-v4-header">
         <button class="principal-flow-v4-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
+        <div class="principal-flow-v4-header-divider"></div>
         <div class="principal-flow-v4-header-title"><strong>Como os módulos utilizam os cadastros?</strong><span>Uma visão resumida do fluxo do Módulo Principal.</span></div>
         <div class="principal-flow-v4-actions"><button onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button></div>
       </header>
