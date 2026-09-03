@@ -8,92 +8,53 @@ function renderStageFlow(stageIndex=journeyIndex){
   setCrumbs('Jornada','Indústria · Fluxo');
   document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
 
+  const items=(journeyStages[0].purposes||journeyStages[0].items).filter(item=>item.name!=='Gestão Documental');
+
   app.innerHTML=`
   <section class="principal-flow-only-screen">
     <header class="principal-flow-only-header">
       <button class="principal-flow-only-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
-      <div class="principal-flow-only-actions">
-        <button onclick="renderHome()" aria-label="Voltar para Home">⌂</button>
-        <button onclick="renderPlaceholder('Acesso')">♙ Entrar</button>
-      </div>
+      <div class="principal-flow-only-actions"><button onclick="renderHome()" aria-label="Voltar para Home">⌂</button><button onclick="renderPlaceholder('Acesso')">♙ Entrar</button></div>
     </header>
+    <div class="principal-flow-only-layout">
+      <aside class="principal-flow-only-sidebar">
+        <div class="flow-side-title"><span>01</span><div><strong>Indústria</strong><small>Quem irá fabricar o medicamento?</small></div></div>
+        <div class="flow-side-label">NESTA ETAPA</div>
+        <nav class="flow-side-nav">
+          ${items.map((item,i)=>`<button onclick="renderJourney(0,${i})"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong><em>›</em></button>`).join('')}
+          <button class="flow-side-nav-active"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
+        </nav>
+        <div class="flow-side-result"><span>AO FINAL DESTA ETAPA</span><strong>A indústria estará<br>estruturada no<br>iLabPharma.</strong></div>
+      </aside>
 
-    <main class="principal-flow-only-main">
-      <div class="principal-flow-only-title">
-        <span><i></i> FLUXO DO MÓDULO PRINCIPAL</span>
-        <h1>Como os módulos utilizam os cadastros?</h1>
-      </div>
-
-      <div class="principal-flow-source-layout">
-        <section class="principal-flow-source-left" aria-label="Fluxo do Módulo Principal">
-          <div class="source-step source-step-blue">
-            <div class="source-step-top">1. Cadastro e Parametrização</div>
-            <div class="source-database" aria-hidden="true"><span></span><span></span><span></span></div>
-            <div class="source-core-title">Módulo Principal</div>
-            <div class="source-core-subtitle">Central de Governança</div>
-          </div>
-
-          <div class="source-arrow-down">▼</div>
-
-          <div class="source-step source-step-light">
-            <div class="source-step-top">2. Validação e Controle</div>
-            <div class="source-controls">
-              <div><b>⚙</b><span>Regras de negócio</span></div>
-              <div><b>◆</b><span>Permissões e perfis</span></div>
-              <div><b>▤</b><span>Audit Trail</span></div>
-            </div>
-          </div>
-
-          <div class="source-arrow-down">▼</div>
-
-          <div class="source-step source-step-light source-result">
-            <div class="source-step-top">3. Disponibilização de Dados Mestres</div>
-            <div class="source-result-content">
-              <div class="source-database small" aria-hidden="true"><span></span><span></span><span></span></div>
-              <strong>Dados disponíveis<br>para os módulos</strong>
-            </div>
-          </div>
-        </section>
-
-        <section class="principal-flow-source-right" aria-label="Como os módulos utilizam os cadastros">
-          <div class="source-right-title">Como os módulos utilizam os cadastros?</div>
-          <div class="source-module-list">
+      <main class="principal-flow-only-main">
+        <div class="principal-flow-only-title"><span><i></i> FLUXO DO MÓDULO PRINCIPAL</span><h1>Como os módulos utilizam os cadastros?</h1><p>Uma visão resumida do fluxo do Módulo Principal.</p></div>
+        <div class="principal-flow-source-layout">
+          <section class="principal-flow-source-left" aria-label="Fluxo do Módulo Principal">
+            <div class="source-step source-step-blue"><div class="source-step-top">1. Cadastro e Parametrização</div><div class="source-database" aria-hidden="true"><span></span><span></span><span></span></div><div class="source-core-title">Módulo Principal</div><div class="source-core-subtitle">Central de Governança</div></div>
+            <div class="source-arrow-down">▼</div>
+            <div class="source-step source-step-light"><div class="source-step-top">2. Validação e Controle</div><div class="source-controls"><div><b>⚙</b><span>Regras de negócio</span></div><div><b>◆</b><span>Permissões e perfis</span></div><div><b>▤</b><span>Audit Trail</span></div></div></div>
+            <div class="source-arrow-down">▼</div>
+            <div class="source-step source-step-light source-result"><div class="source-step-top">3. Disponibilização de Dados Mestres</div><div class="source-result-content"><div class="source-database small" aria-hidden="true"><span></span><span></span><span></span></div><strong>Dados disponíveis<br>para os módulos</strong></div></div>
+          </section>
+          <section class="principal-flow-source-right" aria-label="Como os módulos utilizam os cadastros"><div class="source-right-title">Como os módulos utilizam os cadastros?</div><div class="source-module-list">
             <article><b class="module-icon purple">⚙</b><div><strong>Produção</strong><p>Ambientes, equipamentos, instrumentos, OPE, usuários, centros de custo.</p></div></article>
             <article><b class="module-icon orange">▣</b><div><strong>Estoque</strong><p>Locais físicos, fornecedores, pessoas jurídicas, itens, centros de custo.</p></div></article>
             <article><b class="module-icon green">♜</b><div><strong>Controle da Qualidade (CQ)</strong><p>Ambientes, instrumentos, profissionais, setores, usuários.</p></div></article>
             <article><b class="module-icon blue">▤</b><div><strong>Garantia da Qualidade (GQ)</strong><p>Profissionais, estrutura organizacional, documentos, treinamentos.</p></div></article>
             <article><b class="module-icon red">▤</b><div><strong>Controle de Documentos</strong><p>Estrutura organizacional, perfis, aprovadores, vigência.</p></div></article>
             <article><b class="module-icon purple">⌘</b><div><strong>Rastreabilidade</strong><p>Lotes, produtos, insumos, movimentações e eventos.</p></div></article>
-          </div>
-        </section>
-      </div>
-    </main>
+          </div></section>
+        </div>
+        <div class="principal-flow-only-bottom"><button class="flow-ghost" onclick="renderJourney(0)">← Voltar para Indústria</button><div><span>VOCÊ ESTÁ AQUI</span><strong>01 · Indústria · Fluxo</strong></div><button class="flow-primary" onclick="renderJourney(1)">Continuar →</button></div>
+      </main>
+    </div>
   </section>
-
   <style>
-    body.principal-flow-only-mode{overflow:hidden}
-    body.principal-flow-only-mode .sidebar,body.principal-flow-only-mode .topbar{display:none}
-    body.principal-flow-only-mode .app-shell{display:block;min-height:100vh;width:100%}
-    body.principal-flow-only-mode .main-content{margin:0;width:100%;min-height:100vh}
-    body.principal-flow-only-mode .content{padding:0;max-width:none;width:100%;min-height:100vh}
-    .principal-flow-only-screen{min-height:100vh;width:100%;background:#071426;color:#fff;overflow:hidden;position:relative;font-family:inherit}
-    .principal-flow-only-header{height:72px;padding:14px 42px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:3}
-    .principal-flow-only-brand{background:none;border:0;padding:0;cursor:pointer}.principal-flow-only-brand img{width:156px;height:auto;display:block}
-    .principal-flow-only-actions{display:flex;gap:10px}.principal-flow-only-actions button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:#fff;border-radius:8px;padding:9px 14px;font-weight:700;cursor:pointer}
-    .principal-flow-only-main{width:min(1160px,94vw);margin:0 auto;padding:16px 0 42px}
-    .principal-flow-only-title{margin-bottom:22px}.principal-flow-only-title span{font-size:11px;letter-spacing:1.8px;font-weight:800;color:#4db5ff}.principal-flow-only-title span i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff8a24;margin-right:7px}.principal-flow-only-title h1{font-size:28px;margin:7px 0 0;font-weight:800}
-    .principal-flow-source-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(380px,.85fr);gap:22px;align-items:stretch}
-    .principal-flow-source-left{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:650px;padding:8px 0}
-    .source-step{width:min(620px,100%);border-radius:12px;box-sizing:border-box;text-align:center;position:relative;box-shadow:0 12px 35px rgba(0,0,0,.25)}
-    .source-step-blue{height:238px;background:radial-gradient(circle at 50% 42%,#1265aa 0,#063a70 42%,#06294e 100%);border:1px solid rgba(69,176,255,.45);padding:0 30px}
-    .source-step-light{background:linear-gradient(180deg,#f7fafc,#dce6ee);color:#12243b;border:1px solid rgba(255,255,255,.8);padding:0 24px}
-    .source-step-top{font-size:15px;font-weight:800;padding:11px 14px;border-radius:0 0 8px 8px;letter-spacing:.1px}.source-step-blue .source-step-top{background:#0875cf;color:#fff}.source-step-light .source-step-top{color:#16314d;background:rgba(255,255,255,.2)}
-    .source-database{width:72px;height:68px;margin:17px auto 8px;position:relative}.source-database span{display:block;width:72px;height:23px;border:2px solid #72e6ff;border-radius:50%;position:absolute;left:0;background:linear-gradient(180deg,#35c9f5,#0b68ad);box-shadow:0 0 16px rgba(64,214,255,.45)}.source-database span:nth-child(1){top:0}.source-database span:nth-child(2){top:21px}.source-database span:nth-child(3){top:42px}.source-core-title{font-size:23px;font-weight:900;margin-top:3px}.source-core-subtitle{display:inline-block;margin-top:4px;background:#0b82df;border-radius:16px;padding:5px 25px;font-size:12px;font-weight:800}
-    .source-arrow-down{height:28px;line-height:28px;color:#1b8de8;font-size:24px;text-shadow:0 0 10px rgba(27,141,232,.7)}
-    .source-step-light.source-result{height:116px}.source-controls{display:grid;grid-template-columns:repeat(3,1fr);height:64px;margin:3px 0 0}.source-controls div{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;border-left:1px solid #b6c6d4;font-size:10px;font-weight:800}.source-controls div:first-child{border-left:0}.source-controls b{font-size:23px;color:#17395c}.source-result-content{display:flex;align-items:center;justify-content:center;gap:20px;height:58px}.source-database.small{transform:scale(.58);transform-origin:center;margin:0;width:72px;height:45px}.source-result-content strong{font-size:14px;text-align:left;color:#17395c}
-    .principal-flow-source-right{background:linear-gradient(180deg,#f8fbfd,#e6edf3);border-radius:11px;color:#102946;overflow:hidden;border:1px solid rgba(255,255,255,.9);box-shadow:0 15px 38px rgba(0,0,0,.3)}
-    .source-right-title{height:52px;background:#0a2746;color:#fff;display:flex;align-items:center;padding:0 18px;font-size:15px;font-weight:900}.source-module-list article{display:grid;grid-template-columns:40px 1fr;gap:10px;padding:9px 14px;border-bottom:1px solid #cad7e2;min-height:74px;box-sizing:border-box}.source-module-list article:last-child{border-bottom:0}.module-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:900;margin-top:1px}.module-icon.purple{background:#6b42b7}.module-icon.orange{background:#f39a14}.module-icon.green{background:#21a875}.module-icon.blue{background:#2274bd}.module-icon.red{background:#d63d45}.source-module-list strong{font-size:13px;display:block;line-height:1.15;margin-bottom:4px}.source-module-list p{font-size:10.5px;line-height:1.3;margin:0;color:#31485e}
-    @media(max-width:900px){body.principal-flow-only-mode{overflow:auto}.principal-flow-source-layout{grid-template-columns:1fr}.principal-flow-source-left{min-height:auto}.principal-flow-source-right{margin-bottom:30px}.principal-flow-only-header{padding:12px 20px}.principal-flow-only-main{padding-bottom:30px}.principal-flow-only-title h1{font-size:23px}}
-    @media(max-width:600px){.principal-flow-only-header{height:62px;padding:10px 14px}.principal-flow-only-brand img{width:125px}.principal-flow-only-actions button{padding:7px 9px;font-size:11px}.principal-flow-source-left{padding:0 6px}.source-step-blue{height:220px}.source-step-top{font-size:12px}.source-core-title{font-size:19px}.principal-flow-only-title{padding:0 8px}.principal-flow-only-title h1{font-size:20px}.source-module-list article{min-height:auto;padding:8px 10px}.source-module-list p{font-size:10px}}
+    body.principal-flow-only-mode{overflow:auto;background:#02080e}body.principal-flow-only-mode .sidebar,body.principal-flow-only-mode .topbar{display:none}body.principal-flow-only-mode .app-shell{display:block;min-height:100vh}body.principal-flow-only-mode .main-content{margin:0;width:100%;min-height:100vh}body.principal-flow-only-mode .content{padding:0;max-width:none;width:100%;min-height:100vh}
+    .principal-flow-only-screen{min-height:100vh;width:100%;background:radial-gradient(circle at 75% 45%,rgba(11,50,72,.28),transparent 34%),linear-gradient(135deg,#02080e,#061725 62%,#071d2c);color:#fff;box-sizing:border-box;font-family:inherit}.principal-flow-only-header{height:82px;margin:0 42px;border-bottom:1px solid rgba(91,143,177,.13);display:flex;align-items:center;justify-content:space-between}.principal-flow-only-brand{background:transparent;border:0;padding:0;cursor:pointer}.principal-flow-only-brand img{width:190px;height:auto;max-height:44px;display:block}.principal-flow-only-actions{display:flex;gap:10px;align-items:center}.principal-flow-only-actions button{height:40px;border:1px solid rgba(150,170,181,.35);border-radius:22px;background:rgba(4,17,27,.55);color:#fff;padding:0 17px;font:700 11px Inter;cursor:pointer}.principal-flow-only-actions button:first-child{width:40px;padding:0;border-radius:50%;font-size:17px}.principal-flow-only-actions button:first-child:hover{border-color:#ff8500;color:#ff8500}.principal-flow-only-actions button:last-child{border-color:#ff8500}.principal-flow-only-layout{display:grid;grid-template-columns:255px minmax(0,1fr);gap:42px;max-width:1460px;margin:28px auto 0;padding:0 42px 34px;box-sizing:border-box}.principal-flow-only-sidebar{min-height:calc(100vh - 145px);border:1px solid rgba(91,143,177,.28);border-radius:16px;background:linear-gradient(180deg,rgba(5,19,30,.94),rgba(3,13,21,.94));padding:18px 14px 15px;display:flex;flex-direction:column;box-sizing:border-box;box-shadow:0 18px 50px rgba(0,0,0,.16)}.flow-side-title{display:flex;align-items:center;gap:10px;padding:1px 6px 18px;border-bottom:1px solid rgba(104,139,157,.14);margin-bottom:14px}.flow-side-title>span{width:28px;height:28px;border:1px solid rgba(255,133,0,.7);border-radius:50%;display:grid;place-items:center;background:rgba(255,133,0,.08);color:#ff8500;font:800 10px Inter}.flow-side-title strong{display:block;font:800 16px Manrope}.flow-side-title small{display:block;margin-top:4px;font:500 8px Inter;color:#8ea1ac}.flow-side-label{color:#718896;font:800 8px Inter;letter-spacing:1.7px;margin:0 6px 10px}.flow-side-nav{display:flex;flex-direction:column;gap:7px}.flow-side-nav button{width:100%;min-height:38px;border:1px solid rgba(105,141,159,.2);border-radius:10px;background:rgba(8,28,42,.7);color:#dce5ea;display:flex;align-items:center;padding:0 10px;cursor:pointer;text-align:left;box-sizing:border-box}.flow-side-nav button:hover,.flow-side-nav .flow-side-nav-active{background:rgba(255,133,0,.08);border-color:rgba(255,133,0,.55)}.flow-side-nav button span{width:24px;color:#718b99;font:800 8px Inter}.flow-side-nav button strong{flex:1;font:600 10px Inter}.flow-side-nav button em{font-style:normal;color:#ff8500;font-size:15px}.flow-side-nav-active span{font-size:13px!important;color:#ff8500!important}.flow-side-result{margin-top:auto;border:1px solid rgba(255,133,0,.28);border-radius:12px;padding:13px 10px;text-align:center;background:rgba(255,133,0,.045)}.flow-side-result span{display:block;font:800 7px Inter;letter-spacing:1.3px;color:#8499a5;margin-bottom:6px}.flow-side-result strong{font:700 10px/1.45 Inter;color:#dce6eb}
+    .principal-flow-only-main{min-width:0;padding:7px 4% 0 0}.principal-flow-only-title{margin-bottom:20px}.principal-flow-only-title span{font:800 9px Inter;letter-spacing:1.8px;color:#4db5ff}.principal-flow-only-title span i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff8a24;margin-right:7px}.principal-flow-only-title h1{font:800 clamp(25px,2.4vw,34px)/1.1 Manrope;letter-spacing:-1px;margin:8px 0 7px}.principal-flow-only-title p{margin:0;color:#9db0bb;font:400 12px/1.5 Inter}.principal-flow-source-layout{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(350px,.82fr);gap:20px;align-items:stretch}.principal-flow-source-left{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:610px}.source-step{width:min(570px,100%);border-radius:12px;box-sizing:border-box;text-align:center;position:relative;box-shadow:0 12px 35px rgba(0,0,0,.25)}.source-step-blue{height:220px;background:radial-gradient(circle at 50% 42%,#1265aa 0,#063a70 42%,#06294e 100%);border:1px solid rgba(69,176,255,.45);padding:0 25px}.source-step-light{background:linear-gradient(180deg,#f7fafc,#dce6ee);color:#12243b;border:1px solid rgba(255,255,255,.8);padding:0 20px}.source-step-top{font-size:14px;font-weight:800;padding:10px 14px;border-radius:0 0 8px 8px}.source-step-blue .source-step-top{background:#0875cf;color:#fff}.source-step-light .source-step-top{color:#16314d}.source-database{width:66px;height:62px;margin:15px auto 7px;position:relative}.source-database span{display:block;width:66px;height:21px;border:2px solid #72e6ff;border-radius:50%;position:absolute;left:0;background:linear-gradient(180deg,#35c9f5,#0b68ad);box-shadow:0 0 16px rgba(64,214,255,.45)}.source-database span:nth-child(1){top:0}.source-database span:nth-child(2){top:19px}.source-database span:nth-child(3){top:38px}.source-core-title{font-size:22px;font-weight:900}.source-core-subtitle{display:inline-block;margin-top:4px;background:#0b82df;border-radius:16px;padding:5px 24px;font-size:11px;font-weight:800}.source-arrow-down{height:25px;line-height:25px;color:#1b8de8;font-size:21px;text-shadow:0 0 10px rgba(27,141,232,.7)}.source-step-light.source-result{height:105px}.source-controls{display:grid;grid-template-columns:repeat(3,1fr);height:57px;margin:2px 0 0}.source-controls div{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;border-left:1px solid #b6c6d4;font-size:9px;font-weight:800}.source-controls div:first-child{border-left:0}.source-controls b{font-size:21px;color:#17395c}.source-result-content{display:flex;align-items:center;justify-content:center;gap:17px;height:52px}.source-database.small{transform:scale(.54);transform-origin:center;margin:0;width:66px;height:42px}.source-result-content strong{font-size:13px;text-align:left;color:#17395c}.principal-flow-source-right{background:linear-gradient(180deg,#f8fbfd,#e6edf3);border-radius:11px;color:#102946;overflow:hidden;border:1px solid rgba(255,255,255,.9);box-shadow:0 15px 38px rgba(0,0,0,.3)}.source-right-title{height:50px;background:#0a2746;color:#fff;display:flex;align-items:center;padding:0 17px;font-size:14px;font-weight:900}.source-module-list article{display:grid;grid-template-columns:38px 1fr;gap:9px;padding:8px 13px;border-bottom:1px solid #cad7e2;min-height:69px;box-sizing:border-box}.source-module-list article:last-child{border-bottom:0}.module-icon{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;font-weight:900;margin-top:1px}.module-icon.purple{background:#6b42b7}.module-icon.orange{background:#f39a14}.module-icon.green{background:#21a875}.module-icon.blue{background:#2274bd}.module-icon.red{background:#d63d45}.source-module-list strong{font-size:12px;display:block;line-height:1.15;margin-bottom:3px}.source-module-list p{font-size:10px;line-height:1.28;margin:0;color:#31485e}.principal-flow-only-bottom{margin-top:22px;padding-top:17px;border-top:1px solid rgba(104,139,157,.12);display:grid;grid-template-columns:1fr auto 1fr;align-items:center}.principal-flow-only-bottom>div{text-align:center}.principal-flow-only-bottom>div span{display:block;font:700 7px Inter;letter-spacing:1px;color:#687f8c;text-transform:uppercase}.principal-flow-only-bottom>div strong{font:800 10px Inter;color:#fff}.flow-ghost,.flow-primary{height:36px;padding:0 15px;border-radius:20px;cursor:pointer;font:700 10px Inter}.flow-ghost{justify-self:start;border:1px solid rgba(150,170,181,.3);background:transparent;color:#aebdc6}.flow-primary{justify-self:end;border:1px solid #ff8500;background:#ff8500;color:#fff}
+    @media(max-width:1050px){.principal-flow-only-layout{grid-template-columns:220px minmax(0,1fr);gap:24px;padding:0 24px 30px}.principal-flow-source-layout{grid-template-columns:1fr}.principal-flow-source-right{margin-top:18px}.principal-flow-source-left{min-height:auto}.principal-flow-only-header{margin:0 24px}}
+    @media(max-width:700px){.principal-flow-only-header{height:72px;margin:0 14px}.principal-flow-only-brand img{width:145px}.principal-flow-only-layout{grid-template-columns:1fr;gap:18px;padding:0 14px 24px}.principal-flow-only-sidebar{min-height:auto}.flow-side-result{margin-top:14px}.principal-flow-only-main{padding:0}.principal-flow-only-title h1{font-size:24px}.principal-flow-source-layout{grid-template-columns:1fr}.principal-flow-only-bottom{grid-template-columns:auto 1fr auto;gap:8px}.principal-flow-only-bottom>div{display:none}.source-step-blue{height:210px}.source-step-top{font-size:12px}.source-core-title{font-size:19px}}
   </style>`;
 }
