@@ -17,7 +17,7 @@
       <section class="stage1-screen">
         <header class="stage1-header">
           <button class="stage1-brand" onclick="renderHome()" aria-label="Voltar para Home"><img src="assets/ilabpharma-logo.svg" alt="iLabPharma"></button>
-          <div class="stage1-actions"><button class="stage1-home-btn" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button><button class="stage1-login" onclick="renderPlaceholder('Acesso')"><span>♙</span> Entrar</button></div>
+          <div class="stage1-actions"><button class="stage1-home-btn" onclick="renderHome()" aria-label="Voltar para Home" title="Voltar para Home">⌂</button></div>
         </header>
         <div class="stage1-layout">
           <aside class="stage1-sidebar">
