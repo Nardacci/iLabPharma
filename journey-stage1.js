@@ -6,7 +6,7 @@
     const s=journeyStages[0];
     journeyIndex=0;
     const items=(s.purposes||s.items).filter(item=>item.name!=='Gestão Documental');
-    journeySelected=0;
+    journeySelected=Math.max(0,Math.min(selected,items.length-1));
     closeGeneralFlow();
     document.body.classList.remove('home-mode','journey-intro-mode');
     document.body.classList.add('journey-mode','journey-stage1-mode');
@@ -25,18 +25,18 @@
           <aside class="stage1-sidebar">
             <div class="stage1-side-title"><span>01</span><div><strong>Indústria</strong><small>Quem irá fabricar o medicamento?</small></div></div>
             <nav class="stage1-items" aria-label="Elementos da Indústria">
-              ${items.map((item,i)=>`<button class="stage1-item ${i===0?'selected':''}" type="button" aria-label="${item.name}"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong></button>`).join('')}
-              <button class="stage1-item stage1-flow-item" type="button" onclick="renderIndustryFlowList"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
+              ${items.map((item,i)=>`<button class="stage1-item ${i===journeySelected?'selected':''}" type="button" onclick="renderJourney(0,${i})" aria-label="${item.name}"><span>${String(i+1).padStart(2,'0')}</span><strong>${item.name}</strong></button>`).join('')}
+              <button class="stage1-item stage1-flow-item" type="button" onclick="renderIndustryFlowList()"><span>◎</span><strong>Fluxo</strong><em>›</em></button>
             </nav>
             <div class="stage1-side-result"><span>AO FINAL DESTA ETAPA</span><strong>A indústria estará<br>estruturada no<br>iLabPharma.</strong></div>
           </aside>
           <main class="stage1-main">
             <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button type="button"><b>01</b><strong>Quem participa da operação?</strong><span>Profissionais e funções</span></button><button type="button"><b>02</b><strong>Quem pode acessar o sistema?</strong><span>Contas, perfis e permissões</span></button><button type="button"><b>03</b><strong>Como a empresa se organiza?</strong><span>Pessoa jurídica e estrutura</span></button></div></div>
+            <section class="stage1-detail-card" aria-live="polite"><span class="stage1-detail-label">CONDIÇÃO DA ETAPA</span><h2>${items[journeySelected]?.name||''}</h2><div class="stage1-detail-content"></div></section>
             <div class="stage1-bottom"><button class="ghost-btn" onclick="renderJourneyIntro()">← Voltar</button><div><span>Você está aqui</span><strong>Indústria</strong></div><button class="primary-btn" onclick="renderJourney(1)">Continuar →</button></div>
           </main>
         </div>
       </section>`;
-    app.querySelector('.stage1-flow-item').onclick=()=>renderIndustryFlowList();
   };
   if(!document.querySelector('script[data-flow-experience]')){
     const flowScript=document.createElement('script');
