@@ -26,8 +26,8 @@
     setCrumbs('Jornada','Indústria');
     document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
 
-    const activeName=normalizedSelected>=0?items[normalizedSelected]?.name:'Indústria';
-    const content=stage1Content[activeName]||{title:activeName,html:''};
+    const activeName=normalizedSelected>=0?items[normalizedSelected]?.name:'initial';
+    const content=stage1Content[activeName]||{title:'Indústria',html:''};
 
     app.innerHTML=`
       <section class="stage1-screen">
