@@ -36,7 +36,7 @@
       .stage2-flow-card:hover{border-color:rgba(255,133,0,.42)}
       .stage2-flow-card-num{width:36px;height:36px;border:1px solid rgba(255,133,0,.7);border-radius:50%;display:grid;place-items:center;color:#ff8500;font:800 9px Inter;background:rgba(255,133,0,.06)}
       .stage2-flow-card-copy{min-width:0}.stage2-flow-card-copy .eyebrow{font:800 7px Inter;letter-spacing:1.5px;color:#718896;margin-bottom:5px}.stage2-flow-card-copy h2{font:800 17px Manrope;margin:0 0 4px;color:#fff}.stage2-flow-card-copy p{margin:0;color:#9db0bb;font:500 9px/1.35 Inter}
-      .stage2-flow-open{min-width:126px;height:38px;border:1px solid #ff8500;border-radius:22px;background:#ff8500;color:#08131b;font:800 9px Inter;cursor:pointer;padding:0 16px}.stage2-flow-open:hover{filter:brightness(1.08)}
+      .stage2-flow-open{min-width:126px;height:38px;border:1px solid #ff8500;border-radius:22px;background:#ff8500;color:#08131b;font:800 9px Inter;cursor:pointer;padding:0 16px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.stage2-flow-open:hover{filter:brightness(1.08)}
       .stage2-flow-bottom{height:40px;flex:0 0 40px;margin-top:7px;padding-top:6px;border-top:1px solid rgba(104,139,157,.12);display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
       .stage2-flow-bottom>div{text-align:center}.stage2-flow-bottom>div span{display:block;font:700 6px Inter;letter-spacing:1px;color:#687f8c;text-transform:uppercase}.stage2-flow-bottom>div strong{font:800 9px Inter;color:#fff}
       .stage2-flow-ghost,.stage2-flow-primary{height:30px;padding:0 13px;border-radius:17px;cursor:pointer;font:700 9px Inter}.stage2-flow-ghost{justify-self:start;border:1px solid rgba(150,170,181,.3);background:transparent;color:#aebdc6}.stage2-flow-primary{justify-self:end;border:1px solid #ff8500;background:#ff8500;color:#fff}
@@ -44,10 +44,6 @@
       @media(max-width:700px){body.journey-stage2-flow-list-mode{overflow:auto}.stage2-flow-screen{padding:0 14px}.stage2-flow-layout{height:auto;min-height:100vh;grid-template-columns:1fr;gap:0}.stage2-flow-sidebar{height:auto;min-height:0;margin:12px 0}.stage2-flow-main{height:auto;min-height:0;overflow:visible}.stage2-flow-header{height:62px;flex-basis:62px}.stage2-flow-brand img{width:155px}.stage2-flow-header-title strong{font-size:12px}.stage2-flow-header-title span{font-size:7px}.stage2-flow-title{margin-top:20px}.stage2-flow-cards{overflow:visible}.stage2-flow-card{grid-template-columns:40px 1fr;gap:10px;padding:14px}.stage2-flow-open{grid-column:2;width:100%;margin-top:4px}.stage2-flow-bottom{margin-bottom:15px}}
     `;
     document.head.appendChild(style);
-  }
-
-  function openFlow(path){
-    window.open(path,'_blank','noopener');
   }
 
   window.renderStage2FlowList=function(){
@@ -91,17 +87,17 @@
             <article class="stage2-flow-card">
               <div class="stage2-flow-card-num">01</div>
               <div class="stage2-flow-card-copy"><div class="eyebrow">FLUXO 01</div><h2>Recebimento de Material</h2><p>Fluxo relacionado ao recebimento dos materiais na operação da fábrica.</p></div>
-              <button class="stage2-flow-open" type="button" onclick="openFlow('fluxo-recebimento-material.html')">Abrir fluxo →</button>
+              <a class="stage2-flow-open" href="fluxo-recebimento-material.html" target="_blank" rel="noopener noreferrer">Abrir fluxo →</a>
             </article>
             <article class="stage2-flow-card">
               <div class="stage2-flow-card-num">02</div>
               <div class="stage2-flow-card-copy"><div class="eyebrow">FLUXO 02</div><h2>Estoque de Quarentena</h2><p>Fluxo relacionado à gestão dos materiais em quarentena.</p></div>
-              <button class="stage2-flow-open" type="button" onclick="openFlow('fluxo-estoque-quarentena.html')">Abrir fluxo →</button>
+              <a class="stage2-flow-open" href="fluxo-estoque-quarentena.html" target="_blank" rel="noopener noreferrer">Abrir fluxo →</a>
             </article>
             <article class="stage2-flow-card">
               <div class="stage2-flow-card-num">03</div>
               <div class="stage2-flow-card-copy"><div class="eyebrow">FLUXO 03</div><h2>Estoque Quarentena Produção</h2><p>Fluxo relacionado à quarentena de materiais no contexto da produção.</p></div>
-              <button class="stage2-flow-open" type="button" onclick="openFlow('fluxo-estoque-quarentena-producao.html')">Abrir fluxo →</button>
+              <a class="stage2-flow-open" href="fluxo-estoque-quarentena-producao.html" target="_blank" rel="noopener noreferrer">Abrir fluxo →</a>
             </article>
           </section>
 
