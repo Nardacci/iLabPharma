@@ -32,7 +32,7 @@
           </aside>
           <main class="stage1-main">
             <div class="stage1-questions"><span class="stage1-section-label">AS PERGUNTAS QUE ESTRUTURAM ESTA ETAPA</span><div class="stage1-question-grid"><button type="button"><b>01</b><strong>Quem participa da operação?</strong><span>Profissionais e funções</span></button><button type="button"><b>02</b><strong>Quem pode acessar o sistema?</strong><span>Contas, perfis e permissões</span></button><button type="button"><b>03</b><strong>Como a empresa se organiza?</strong><span>Pessoa jurídica e estrutura</span></button></div></div>
-            <section class="stage1-detail-card" aria-live="polite"><span class="stage1-detail-label">CONDIÇÃO DA ETAPA</span><h2>${items[journeySelected]?.name||''}</h2><div class="stage1-detail-content"></div></section>
+            <section class="stage1-detail-card" aria-live="polite"><h2>${items[journeySelected]?.name||''}</h2><div class="stage1-detail-content"></div></section>
             <div class="stage1-bottom"><button class="ghost-btn" onclick="renderJourneyIntro()">← Voltar</button><div><span>Você está aqui</span><strong>Indústria</strong></div><button class="primary-btn" onclick="renderJourney(1)">Continuar →</button></div>
           </main>
         </div>
