@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estabilidade · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html">Regras de amostragem e de análise</a></li><li><a href="estabilidade.html" aria-current=page>Estabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Estabilidade</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-qualidade/LabMedSys - Modulo Controle da Qualidade - Fluxo Estabilidade.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo de <strong>estabilidade</strong> no Controle da Qualidade: a <strong>regra</strong> com os tempos do estudo, a <strong>abertura do acompanhamento</strong> quando o produto acabado entra no Estoque, a <strong>execução de cada tempo</strong> (uma solicitação de análise por ponto), a <strong>interrupção</strong> e o <strong>final do estudo</strong>, com o relatório.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Regra de Estabilidade.</li>
+<li>Abertura automática do acompanhamento, pelo Estoque.</li>
+<li>Acompanhamento da Estabilidade: geração das solicitações de cada tempo e interrupção.</li>
+<li>Final de Estabilidade e relatório final.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> a amostragem, a análise e o laudo de cada tempo, que seguem o fluxo <code>solicitacao-analise-laudo.md</code>; a guarda das amostras de estabilidade no Estoque (<code>3.estoque/fluxos/almoxarifado-cq.md</code>).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>4.controle_qualidade/app/</code>. Para encurtar: <code>Estab/</code> = <code>HSolutions.CQ.UI/Areas/Estabilidade/Controllers/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-qualidade/estabilidade-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/estabilidade-fluxograma.png" alt="Workflow do processo de estabilidade" loading="lazy"></a><figcaption>Workflow do processo de estabilidade · clique para ampliar</figcaption></figure>
+
+<p>Para cada <strong>produto acabado</strong>, o CQ cadastra uma <strong>Regra de Estabilidade</strong> (no máximo uma físico-química e uma microbiológica) com os <strong>tempos</strong> do estudo (T0, T1, T2…) e, para cada tempo, os <strong>dias</strong> depois do início, por tipo de estudo: acelerado, longa duração, acompanhamento e prateleira.</p>
+<p>Quando o Estoque registra a entrada de um lote de produto acabado marcado para estabilidade, ele pede ao CQ que <strong>abra o acompanhamento</strong>: um estudo por tipo de estudo pedido, com os tempos da regra.</p>
+<p>Cada tempo vira uma <strong>solicitação de análise</strong> quando alguém clica em <strong>"Gerar Solicitação"</strong>; o sistema não gera nada sozinho pela data. A solicitação segue o fluxo normal de amostragem, análise e laudo.</p>
+<p>Com todos os tempos com laudo liberado, o CQ <strong>finaliza o estudo</strong> com a temperatura, a conclusão e o resultado (aprovado ou reprovado) e imprime o <strong>relatório final</strong>. O estudo também pode ser <strong>interrompido</strong>, com justificativa.</p>
+<p><strong>Situações do acompanhamento:</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Situação</th>
+<th>Quando entra</th>
+<th>Próximo passo</th>
+<th>Tela</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Em aberto</td>
+<td>O Estoque abre o estudo na entrada do produto acabado</td>
+<td>Gerar as solicitações, tempo a tempo</td>
+<td>Acompanhamento da Estabilidade</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Finalizado</td>
+<td>Todos os tempos com laudo liberado; temperatura, conclusão e resultado informados</td>
+<td>Imprimir o relatório final</td>
+<td>Final de Estabilidade</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Interrompido</td>
+<td>"Interromper Estudo", com justificativa</td>
+<td>— (fim; não há reabertura)</td>
+<td>Acompanhamento da Estabilidade</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="regra-de-estabilidade">Regra de Estabilidade</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórios: o <strong>item</strong> (produto) e o tipo ("Selecione um item."). Se o item ainda não existe no CQ, é criado na hora com código e descrição (<code>Estab/RegraEstabilidadeController.cs:270-309</code>).</li>
+<li>RN002 – Cada item tem <strong>no máximo duas regras</strong>: a primeira vira físico-química e a segunda microbiológica, <strong>sem o usuário escolher</strong>. A terceira é recusada ("Item já cadastrado") (<code>RegraEstabilidadeController.cs:282-295</code>).</li>
+<li>RN003 – A regra é formada por <strong>tempos</strong> (T0, T1, T2…). Cada tempo guarda os <strong>dias</strong> depois do início, por tipo de estudo (acelerado, longa duração, acompanhamento, prateleira). Um tipo só vale se tiver dias maiores que zero. Só o último tempo pode ser excluído (<code>HSolutions.CQ.Domain/Estabilidade/RegraEstabilidadeDetalhe.cs:15-43</code>; <code>RegraEstabilidadeController.cs:505-549</code>).</li>
+<li>RN004 – Os dias <strong>não são validados</strong>: não se confere a ordem crescente nem valores negativos; um texto que não seja número dá um erro genérico (<code>RegraEstabilidadeController.cs:399-402</code>, <code>:449-458</code>).</li>
+<li>RN005 – Na alteração, <strong>todos os tempos são apagados e gravados de novo</strong>, sem justificativa e sem histórico campo a campo; fica só quem alterou e quando (<code>RegraEstabilidadeController.cs:404-458</code>).</li>
+<li>RN006 – Não há exclusão da regra; ela é <strong>desativada</strong> (<code>RegraEstabilidadeController.cs:379</code>, <code>:410</code>).</li>
+<li>RN007 – A regra <strong>não tem os campos de um protocolo</strong>: condição de armazenamento, métodos, critérios de aceitação, número de lotes (<code>HSolutions.CQ.Domain/Estabilidade/RegraEstabilidade.cs:12-17</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Regra Estabilidade</td>
+<td>Tempos e dias do estudo, por produto e tipo de análise</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="abertura-do-acompanhamento">Abertura do acompanhamento</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – O acompanhamento é <strong>aberto só pelo Estoque</strong>, na entrada do produto acabado marcada para estabilidade. O Estoque envia o produto, o lote do fabricante, a entrada, os tipos de análise e de estudo e o usuário. <strong>Não há abertura manual</strong> na tela (<code>HSolutions.CQ.UI/Api/AcompanhamentoEstabilidadeController.cs:80-187</code>).</li>
+<li>RN002 – Para cada tipo de análise, o sistema procura a regra do produto e abre <strong>um estudo por tipo de estudo pedido</strong> que tenha dias na regra. <strong>Sem regra, nada é aberto e nenhum aviso volta ao Estoque</strong> (<code>AcompanhamentoEstabilidadeController.cs:102-155</code>).</li>
+<li>RN003 – O estudo nasce <strong>Em aberto</strong>, com a data do servidor e um código com ano, sequência e tipo de análise (<code>AcompanhamentoEstabilidadeController.cs:203-214</code>).</li>
+<li>RN004 – Cada tempo da regra vira uma linha do estudo com os dias previstos. <strong>Não há data prevista calculada nem aviso</strong> de tempo próximo ou atrasado (<code>AcompanhamentoEstabilidadeController.cs:216-229</code>).</li>
+<li>RN005 – O estudo <strong>não guarda</strong> a quantidade reservada para estabilidade, a condição de armazenamento nem a data de início (<code>HSolutions.CQ.Domain/Estabilidade/AcompanhamentoEstabilidade.cs:33-48</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Entrada de produto acabado / almoxarifado do CQ</td>
+<td>Pedem a abertura do estudo</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Acompanhamento da Estabilidade</td>
+<td>Consultar o estudo aberto</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="execucao-dos-tempos">Execução dos tempos</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – A solicitação de cada tempo é gerada <strong>à mão</strong>, pelo botão "Gerar Solicitação", que aparece só no primeiro tempo ainda sem solicitação e com o estudo Em aberto. <strong>Nada é gerado pela data</strong> (<code>Estab/AcompanhamentoController.cs:184-246</code>).</li>
+<li>RN002 – Para gerar, o sistema exige o lote no Estoque ("Lote não encontrado!"), o almoxarifado de estabilidade ("Almoxarifado de estabilidade não encontrado!"), o motivo ligado a ele ("Motivo não cadastrado!") e a solicitação do T0 ("Solicitação T0 não encontrada!"). Lote, validade, quantidade e volumes são copiados do T0 (<code>AcompanhamentoController.cs:400-430</code>).</li>
+<li>RN003 – O usuário escolhe os <strong>ensaios</strong> da solicitação (<code>AcompanhamentoController.cs:194-222</code>).</li>
+<li>RN004 – A solicitação nasce em <strong>Coleta pendente de programação</strong>, marcada como estabilidade, com o número do tempo e o motivo do almoxarifado de estabilidade, e segue o fluxo normal. Fica no histórico (<code>AcompanhamentoController.cs:432-467</code>).</li>
+<li>RN005 – A situação de cada tempo vem da solicitação: "Aguardando" sem solicitação; "Laudo liberado" quando a análise termina, com o botão "Imprimir Laudo" (<code>AcompanhamentoController.cs:296-325</code>).</li>
+<li>RN006 – Tempo atrasado <strong>não tem tratamento</strong>: nem aviso, nem bloqueio, nem justificativa (<em>inferência: o código não compara datas</em>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Acompanhamento da Estabilidade</td>
+<td>Gerar a solicitação de cada tempo e ver a situação</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="interrupcao">Interrupção</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – "Interromper Estudo" pede confirmação e <strong>justificativa</strong>. Se algum tempo tiver solicitação sem laudo liberado, a tela avisa "Existem solicitações pendentes!" e não segue; <strong>essa conferência é só da tela</strong> (<code>HSolutions.CQ.UI/Areas/Estabilidade/Script/AcompanhamentoEdit.js:58-87</code>).</li>
+<li>RN002 – O estudo passa a <strong>Interrompido</strong>, com usuário, data e histórico com a justificativa (<code>AcompanhamentoController.cs:133-148</code>).</li>
+<li>RN003 – A conferência da função "Estabilidade" existe no código, mas <strong>está desligada</strong> (o resultado é sempre "sim"): qualquer usuário com a tela no menu interrompe (<code>AcompanhamentoController.cs:168-178</code>; <code>Estab/FinalEstabilidadeController.cs:265</code>).</li>
+<li>RN004 – Interrompido, o estudo não pode ser editado nem receber novas solicitações; as já geradas continuam como estão (<code>AcompanhamentoController.cs:385</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Acompanhamento da Estabilidade; Final de Estabilidade</td>
+<td>Interromper o estudo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="final-de-estabilidade">Final de Estabilidade</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN001 – Para finalizar, <strong>todos os tempos</strong> precisam ter solicitação com <strong>laudo liberado</strong> ("Tempo X sem solicitação!", "Solicitação N está pendente!", "Existem pendências no estudo!") (<code>Estab/FinalEstabilidadeController.cs:176-207</code>).</li>
+<li>RN002 – Obrigatórios: <strong>temperatura</strong> (texto livre), <strong>conclusão</strong> e <strong>resultado</strong> (aprovado ou reprovado) ("Temperatura não foi informada!"). A observação é opcional (<code>FinalEstabilidadeController.cs:209-216</code>).</li>
+<li>RN003 – O sistema <strong>não confere os resultados dos tempos</strong>: o estudo pode ser finalizado como <strong>aprovado mesmo com algum laudo reprovado</strong> (<code>FinalEstabilidadeController.cs:199-224</code>).</li>
+<li>RN004 – O estudo passa a <strong>Finalizado</strong> com o resultado, o usuário e a data, e vai para o histórico com a justificativa digitada ou, sem ela, com o texto fixo "Alteração". <strong>Sem senha</strong> (<code>FinalEstabilidadeController.cs:219-231</code>).</li>
+<li>RN005 – Finalizado ou interrompido, os dados finais ficam bloqueados (<code>FinalEstabilidadeController.cs:343</code>).</li>
+<li>RN006 – O <strong>relatório final</strong> traz o código do estudo, o produto, o lote, a validade, os tipos de estudo e de análise, a temperatura, os resultados de cada ensaio por tempo (com especificação e unidade), a data programada (a do T0 mais os dias) e a realizada, a conclusão e o resultado. <strong>Não traz</strong> o protocolo, os métodos nem quem aprovou, e o campo "Data de Fabricação" mostra, na verdade, a <strong>data de entrada</strong> do T0 (<code>HSolutions.CQ.UI/Controllers/Services/ObterRelatorioFinalEstabilidadeService.cs:80-89</code>, <code>:138-144</code>, <code>:240-263</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Final de Estabilidade</td>
+<td>Concluir o estudo e imprimir o relatório final</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. A regra não é um protocolo.</strong> Faltam condição de armazenamento (só uma temperatura em texto no fim), métodos, critérios de aceitação e número de lotes (RDC 658/2022, arts. 275 e 277).</p>
+<p><strong>2. Não há controle de lotes por ano.</strong> Nada confere se ao menos um lote por ano entrou no programa (art. 280). E, se o produto não tiver regra, o pedido do Estoque é ignorado sem aviso.</p>
+<p><strong>3. Os tempos não têm data nem alerta.</strong> Cada tempo depende de alguém clicar no botão; não há data prevista na tela nem aviso de atraso.</p>
+<p><strong>4. Resultado fora de especificação não muda nada.</strong> Não abre investigação nem comunicação (arts. 287 e 288), e o estudo pode ser finalizado como <strong>aprovado com laudo reprovado</strong>.</p>
+<p><strong>5. Histórico frágil.</strong> A regra é alterada apagando e regravando os tempos, sem justificativa; a finalização usa o texto fixo "Alteração" quando não há justificativa; não há assinatura (art. 125).</p>
+<p><strong>6. Quem interrompe ou finaliza não é conferido.</strong> A conferência da função de estabilidade está desligada no código, e a trava de pendências antes de interromper é só da tela.</p>
+<p><strong>7. O relatório final está incompleto e com um rótulo errado.</strong> Não identifica protocolo, condição de armazenamento nem o responsável; a "Data de Fabricação" é a data de entrada (art. 290).</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> um produto acabado <code>TESTE PRODUTO ACABADO</code> com entrada no Estoque marcada para estabilidade (depende do Estoque; ver <code>3.estoque/fluxos/devolucao-entrada-producao.md</code>); o almoxarifado e o motivo de estabilidade <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-040</td>
+<td>Regra de estabilidade com tempos de 30, 10 e -5 dias</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (RN004 da regra)</td>
+</tr>
+<tr>
+<td>CT-CQ-041</td>
+<td>Terceira regra para o mesmo produto</td>
+<td>Recusa: "Item já cadastrado"</td>
+</tr>
+<tr>
+<td>CT-CQ-042</td>
+<td>Alterar a regra e consultar o histórico</td>
+<td><strong>Registrar a falta de justificativa e de histórico</strong> (ponto 5)</td>
+</tr>
+<tr>
+<td>CT-CQ-043</td>
+<td>Entrada de produto acabado para estabilidade <strong>sem regra</strong> cadastrada</td>
+<td><strong>Registrar que nenhum estudo é aberto e nada avisa</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-CQ-044</td>
+<td>Entrada com regra; consultar o Acompanhamento</td>
+<td>Estudo Em aberto, com os tempos e dias da regra</td>
+</tr>
+<tr>
+<td>CT-CQ-045</td>
+<td>Gerar a solicitação do T1 sem o almoxarifado de estabilidade cadastrado</td>
+<td>Recusa: "Almoxarifado de estabilidade não encontrado!"</td>
+</tr>
+<tr>
+<td>CT-CQ-046</td>
+<td>Gerar a solicitação do T1</td>
+<td>Solicitação em Coleta pendente de programação, marcada como estabilidade</td>
+</tr>
+<tr>
+<td>CT-CQ-047</td>
+<td>Deixar passar a data de um tempo</td>
+<td><strong>Registrar que não há aviso</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-CQ-048</td>
+<td>Interromper com solicitação pendente</td>
+<td>A tela recusa: "Existem solicitações pendentes!"</td>
+</tr>
+<tr>
+<td>CT-CQ-049</td>
+<td>Interromper com um usuário sem a função de estabilidade</td>
+<td>Pela norma, recusa. <strong>Registrar se interromper</strong> (ponto 6)</td>
+</tr>
+<tr>
+<td>CT-CQ-050</td>
+<td>Finalizar com um tempo ainda sem laudo</td>
+<td>Recusa: "Existem pendências no estudo!"</td>
+</tr>
+<tr>
+<td>CT-CQ-051</td>
+<td><strong>Finalizar como aprovado com um tempo de laudo reprovado</strong></td>
+<td>Pela norma, recusa ou exige investigação. <strong>Registrar se aceitar</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-CQ-052</td>
+<td>Imprimir o relatório final</td>
+<td><strong>Conferir a "Data de Fabricação" e a ausência de protocolo e responsável</strong> (ponto 7)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-CQ-051, 043, 049 e 042 primeiro. Eles tocam a decisão sobre o produto no mercado, a cobertura do programa e a trilha de auditoria.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#regra-de-estabilidade">Regra de Estabilidade</a></li><li class="sub"><a href="#abertura-do-acompanhamento">Abertura do acompanhamento</a></li><li class="sub"><a href="#execucao-dos-tempos">Execução dos tempos</a></li><li class="sub"><a href="#interrupcao">Interrupção</a></li><li class="sub"><a href="#final-de-estabilidade">Final de Estabilidade</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
