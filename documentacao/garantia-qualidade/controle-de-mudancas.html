@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de mudanças · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="controle-de-mudancas.html" aria-current=page>Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Controle de mudanças</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/garantia-qualidade/LabMedSys - Modulo Garantia da Qualidade - Fluxo Controle de Mudancas.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo de <strong>controle de mudanças</strong> no LabMedSys. Vai da solicitação de mudança à revisão pela Garantia da Qualidade (pré-avaliação), à escolha das áreas que avaliam, ao parecer de cada área, à liberação da avaliação, ao plano de ação, à execução, à finalização e, quando a mudança envolve produto, à aprovação final no Controle Mudança Produto.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Solicitação, edição e cancelamento da mudança.</li>
+<li>Revisão (pré-avaliação) e definição das áreas que avaliam.</li>
+<li>Avaliação pelas áreas e liberação da avaliação.</li>
+<li>Plano de ação, execução e finalização.</li>
+<li>Aprovação do produto (Controle Mudança Produto).</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o fluxo de desvios (<code>desvios-capa.md</code>), que pode indicar a necessidade de uma mudança mas não abre a solicitação; validação e qualificação, que são só protótipo na GQ; e a atualização de documentos no Controle de Documentos.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código são relativos a <code>5.garantia_qualidade/app/</code>. Para encurtar: <code>RM/</code>, <code>Avaliacao/</code> e <code>PlanoAcao/</code> querem dizer <code>HSolutions.GQ.UI/Areas/&lt;pasta&gt;/Controllers/</code>; <code>Service/</code> quer dizer <code>HSolutions.GQ.Domain/Service/</code>; <code>Helpers/</code> quer dizer <code>HSolutions.GQ.UI/Helpers/</code>.</p>
+<p><strong>Quem faz o quê:</strong> a GQ usa três níveis de grupo de perfil (ver o fluxo de desvios). Neste fluxo, o <strong>nível 1</strong> só solicita; o <strong>nível 2</strong> solicita, revisa e avalia pela sua área; só o <strong>nível 3</strong> libera a avaliação, finaliza o plano e aprova o produto. <em>A validar:</em> quem da empresa está em cada nível.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/garantia-qualidade/controle-mudancas-fluxograma.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/controle-mudancas-fluxograma.png" alt="Workflow do processo de controle de mudanças" loading="lazy"></a><figcaption>Workflow do processo de controle de mudanças</figcaption></figure>
+
+<p>Qualquer área registra uma <strong>Solicitação de Mudanças</strong>: o que muda, por quê, se é definitiva ou temporária, que itens são alterados (processo, formulação, regulatórios, produto, projetos), o impacto e a urgência. A <strong>Garantia da Qualidade revisa</strong> a solicitação (pré-avaliação): se aceitar, escolhe as <strong>áreas que precisam avaliar</strong>. Cada área registra seu <strong>parecer</strong> (aceito ou não aceito). A GQ então <strong>libera a avaliação</strong>, aprovando ou reprovando a mudança.</p>
+<p>Aprovada, a mudança ganha um <strong>plano de ação</strong> com responsáveis e prazos. Os responsáveis informam a <strong>execução</strong> e a GQ <strong>finaliza</strong> o plano. Se a mudança envolve <strong>produto</strong>, ela ainda passa pelo <strong>Controle Mudança Produto</strong>, onde se registra o lote; senão, termina como <strong>Aceito</strong>.</p>
+<p><strong>Situações da mudança, na ordem (como aparecem na tela):</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Situação</th>
+<th>Quem tira a mudança dela</th>
+<th>Tela</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pendente Revisão</td>
+<td>GQ (nível 2 ou 3)</td>
+<td>Pré-Avaliação de Mudanças</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Pendente Definição Áreas Avaliação</td>
+<td>GQ</td>
+<td>Pré-Avaliação de Mudanças (áreas)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Pendente Liberação Avaliação</td>
+<td>Áreas (parecer) e GQ nível 3 (liberação)</td>
+<td>Avaliação de Mudanças e Liberação Avaliação de Mudanças</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Pendente Plano de Ação</td>
+<td>GQ</td>
+<td>Plano de Ação</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Pendente Finalização Plano Ação</td>
+<td>Responsáveis (execução) e GQ nível 3 (finalização)</td>
+<td>Execução Plano de Ação e Finalização Plano de Ação</td>
+</tr>
+<tr>
+<td>6a</td>
+<td>Pendente Aprovação produto</td>
+<td>GQ nível 3</td>
+<td>Controle Mudança Produto</td>
+</tr>
+<tr>
+<td>6b / 7</td>
+<td>Aceito</td>
+<td>— (fim)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Não Aceito</td>
+<td>— (fim): na revisão, na liberação ou na finalização</td>
+<td>—</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Cancelado</td>
+<td>— (fim), só a partir da situação 1</td>
+<td>Solicitação de Mudanças</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="solicitacao-de-mudanca">Solicitação de mudança</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórios: <strong>descrição</strong>, <strong>tipo de mudança</strong> (definitiva ou temporária), <strong>mudança proposta</strong>, <strong>área solicitante</strong>, pelo menos um <strong>item a ser alterado</strong> e o <strong>motivo</strong> (<code>Service/SolicitacaoMudancaValidator.cs:25</code> a <code>:86</code>).</li>
+<li>RN002 – Itens a ser alterados: processo, formulação, regulatórios, produto e projetos (<code>Hsolutions.GQ.DB/dml.sql:1-17</code>). Se for <strong>produto</strong>, a descrição do produto é obrigatória; se for <strong>outros</strong>, o texto é obrigatório (<code>SolicitacaoMudancaValidator.cs:72</code> e <code>:78</code>).</li>
+<li>RN003 – Mudança <strong>temporária</strong> exige <strong>data de validade</strong>, que precisa ser futura. A mudança definitiva não aceita data (<code>SolicitacaoMudancaValidator.cs:36</code> e <code>:44</code>).</li>
+<li>RN004 – Registra o <strong>impacto</strong> (cinco níveis, de "vital importância" a "pouca expressão") e a <strong>urgência</strong> (imediata até um mês, curto, médio ou longo prazo) (<code>HSolutions.GQ.Domain/Entities/SolicitacaoMudanca.cs:28-29</code>).</li>
+<li>RN005 – As <strong>áreas de impacto</strong> podem ser informadas, mas <strong>não são obrigatórias</strong>: a regra está desligada no código (<code>SolicitacaoMudancaValidator.cs:92</code>, comentada).</li>
+<li>RN006 – Ao salvar, a mudança vai para <strong>Pendente Revisão</strong> (<code>RM/SolicitacaoMudancaController.cs:606</code>), com histórico (<code>:275</code>).</li>
+<li>RN007 – Edição só em Pendente Revisão: por nível 2 ou 3, pelo responsável, ou por alguém da mesma área do responsável (<code>Helpers/GerenciadorAcessoTelaSolicitacao.cs</code>). A edição grava histórico (<code>SolicitacaoMudancaController.cs:325</code>).</li>
+<li>RN008 – <strong>Cancelamento</strong> pela tela, com justificativa e histórico (<code>SolicitacaoMudancaController.cs:383-405</code>). Há um <strong>segundo caminho</strong> no código, "Excluir solicitação", que cancela <strong>sem justificativa, sem histórico e sem conferir a situação</strong> (<code>SolicitacaoMudancaController.cs:750-759</code>). O botão não aparece na lista; a função existe no script da tela (<code>HSolutions.GQ.UI/Areas/RM/Script/SolicitacaoMudancaIndex.js:115</code>). <em>A confirmar no teste</em> se algum botão a usa.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Solicitação de Mudanças</td>
+<td>Registrar, editar, visualizar e cancelar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="revisao-pre-avaliacao-e-definicao-das-areas">Revisão (pré-avaliação) e definição das áreas</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – A GQ <strong>aceita</strong> ou <strong>não aceita</strong> a solicitação. Não aceitar exige <strong>justificativa</strong> (<code>Service/PreAvaliacaoValidator.cs:32</code>) e encerra a mudança como <strong>Não Aceito</strong>. Aceitar leva a <strong>Pendente Definição Áreas Avaliação</strong> (<code>RM/PreAvaliacaoMudancaController.cs:323-327</code>).</li>
+<li>RN002 – Na revisão, a GQ pode ajustar a solicitação (itens, áreas de impacto, validade). As alterações gravam histórico (<code>PreAvaliacaoMudancaController.cs:415</code>).</li>
+<li>RN003 – Em seguida, a GQ escolhe <strong>pelo menos uma área</strong> que vai avaliar (<code>Service/AreasResponsaveisAvaliacaoValidator.cs:32</code>). A mudança vai <strong>direto</strong> para <strong>Pendente Liberação Avaliação</strong> (<code>PreAvaliacaoMudancaController.cs:556</code>).</li>
+<li>RN004 – A data da revisão é a que vem da tela (<code>PreAvaliacaoMudancaController.cs:312</code>), preenchida com a data do dia quando a tela abre (<code>:162</code>).</li>
+<li>RN005 – Nível 1 não revisa. A revisão fica bloqueada depois que alguma área avaliou (<code>Helpers/GerenciadorAcessoTelaPreAvaliacao.cs</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Pré-Avaliação de Mudanças</td>
+<td>Aceitar ou não e definir as áreas que avaliam</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="avaliacao-pelas-areas-e-liberacao">Avaliação pelas áreas e liberação</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – Cada área escolhida registra seu parecer: <strong>aceito</strong> ou <strong>não aceito</strong>. Não aceitar exige <strong>justificativa</strong> (<code>Avaliacao/AvaliacaoMudancaController.cs:214-216</code>; <code>Service/AvaliacaoSolicitacaoValidator.cs:25</code>).</li>
+<li>RN002 – A data do parecer é a da tela, se informada (<code>AvaliacaoMudancaController.cs:229</code>).</li>
+<li>RN003 – Nível 1 não avalia. A avaliação fica bloqueada depois da liberação (<code>Helpers/GerenciadorAcessoTelaAvaliacaoMudancaIndex.cs</code>).</li>
+<li>RN004 – <strong>Liberação:</strong> só nível 3 (<code>Helpers/GerenciadorAcessoTelaLiberacaoSolicitacaoIndex.cs</code>). Aprovar leva a <strong>Pendente Plano de Ação</strong>; reprovar leva a <strong>Não Aceito</strong>, com justificativa obrigatória (<code>Avaliacao/LiberacaoAvaliacaoMudancaController.cs:177</code>; <code>Service/LiberacaoAvaliacaoValidator.cs:25</code>).</li>
+<li>RN005 – <strong>A liberação não depende dos pareceres.</strong> O sistema permite liberar enquanto a mudança está em Pendente Liberação Avaliação, situação em que ela entra logo que as áreas são escolhidas. Nenhuma regra exige que todas as áreas tenham avaliado, e um "não aceito" de uma área não impede a aprovação. Ponto de atenção 1.</li>
+<li>RN006 – A data da liberação é a da tela, se informada (<code>LiberacaoAvaliacaoMudancaController.cs:167</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Avaliação de Mudanças</td>
+<td>Parecer de cada área</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Liberação Avaliação de Mudanças</td>
+<td>Aprovar ou reprovar a mudança</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="plano-de-acao-execucao-e-finalizacao">Plano de ação, execução e finalização</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – O plano exige <strong>pelo menos uma ação</strong>, cada uma com <strong>descrição</strong>, <strong>prioridade de 1 a 10</strong>, <strong>área</strong>, <strong>responsável</strong> e <strong>data prevista</strong>, que não pode ser anterior à data da solicitação (<code>Service/PlanoAcaoValidator.cs:33</code> a <code>:86</code>).</li>
+<li>RN002 – Ao salvar o plano, a mudança vai <strong>direto</strong> para <strong>Pendente Finalização Plano Ação</strong> (<code>PlanoAcao/PlanoAcaoController.cs:231</code>). Não há aprovação do plano antes da execução.</li>
+<li>RN003 – <strong>Só abrir</strong> a tela de visualização do plano cria um plano vazio e o liga à solicitação, sem histórico da ligação (<code>PlanoAcaoController.cs:161-193</code>). <em>Efeito colateral:</em> uma consulta altera dados.</li>
+<li>RN004 – <strong>Execução:</strong> cada responsável informa a conclusão da sua ação. A data de conclusão é obrigatória, não pode ser anterior à solicitação nem futura (<code>Service/AvaliacaoPlanoAcaoValidator.cs:27</code> a <code>:40</code>). A ação fica <strong>Finalizado</strong> (<code>PlanoAcao/AvaliacaoPlanoAcaoController.cs:397</code>).</li>
+<li>RN005 – <strong>Finalização:</strong> só nível 3 (<code>Helpers/GerenciadorAcessoTelaLiberacaoPlanoAcao.cs</code>). A <strong>conclusão</strong> é obrigatória (<code>Service/LiberacaoPlanoAcaoValidator.cs:24</code>). <strong>Não exige que todas as ações estejam concluídas.</strong> Ponto de atenção 2.</li>
+<li>RN006 – Plano <strong>aprovado</strong>: se algum item alterado é <strong>produto</strong>, a mudança vai para <strong>Pendente Aprovação produto</strong>; senão, termina como <strong>Aceito</strong> (<code>PlanoAcao/LiberacaoPlanoAcaoController.cs:273-278</code>). Plano <strong>reprovado</strong>: a mudança termina como <strong>Não Aceito</strong> (<code>:304-305</code>), mesmo que parte das ações já tenha sido executada.</li>
+<li>RN007 – Não há etapa de <strong>verificação da eficácia</strong> depois da implementação (RDC 658/2022, art. 8º, XIII).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Plano de Ação</td>
+<td>Ações, prioridades, responsáveis e prazos</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Execução Plano de Ação</td>
+<td>Cada responsável conclui sua ação</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Liberação Plano de Ação (na tela: "Finalização Plano de Ação")</td>
+<td>Concluir e aprovar ou reprovar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="aprovacao-do-produto">Aprovação do produto</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN001 – Só para mudanças com item <strong>produto</strong>, em Pendente Aprovação produto, e só nível 3 (<code>Helpers/GerenciadorAcessoTelaControleMudancaProdutoIndex.cs</code>).</li>
+<li>RN002 – Registra o <strong>número do lote</strong>, digitado livremente, sem consulta à Produção ou ao Estoque, mais observação e justificativa (<code>RM/ControleMudancaProdutoController.cs:160</code> em diante).</li>
+<li>RN003 – A <strong>justificativa não é obrigatória</strong>: a regra está desligada (<code>Service/ControleProdutoMudancaValidator.cs:24</code>, comentada).</li>
+<li>RN004 – A mudança termina como <strong>Aceito</strong> (<code>ControleMudancaProdutoController.cs:218</code>), numa gravação <strong>sem histórico</strong> (<code>:227</code>). Ponto de atenção 3.</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Controle Mudança Produto</td>
+<td>Lote ligado à mudança e aprovação final</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="mudanca-temporaria">Mudança temporária</h3>
+<h4 id="regras-de-negocio_5">Regras de negócio</h4>
+<ul>
+<li>RN001 – A data de validade da mudança temporária só serve de <strong>filtro</strong> na lista da finalização do plano (<code>PlanoAcao/LiberacaoPlanoAcaoController.cs:81</code>). Quando a validade vence, o sistema <strong>não avisa ninguém</strong>, não volta a situação nem pede o encerramento da mudança. Nenhuma tela de mudanças envia notificação ou e-mail.</li>
+</ul>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. A GQ pode aprovar a mudança sem o parecer das áreas.</strong> A liberação fica disponível assim que as áreas são escolhidas e não confere se elas avaliaram nem se alguma não aceitou. A avaliação pelas áreas impactadas, base do art. 8º, XII da RDC 658/2022 (avaliação prospectiva antes da aprovação), pode ser pulada. <em>A confirmar no teste (CT-GQ-034).</em></p>
+<p><strong>2. Finalizar sem concluir e sem avaliar a eficácia.</strong> O plano pode ser finalizado com ações pendentes, e não existe verificação, depois da implementação, de que o objetivo foi alcançado sem impacto negativo (art. 8º, XIII). O plano também começa a ser executado sem ter sido aprovado.</p>
+<p><strong>3. A aprovação final do produto não fica na trilha de auditoria.</strong> O Controle Mudança Produto grava sem histórico, com justificativa opcional e lote digitado à mão. É justamente a etapa que liga a mudança a um lote fabricado.</p>
+<p><strong>4. Há dois cancelamentos, um sem rastro.</strong> O cancelamento pela tela pede justificativa e grava histórico. O "Excluir solicitação" muda a situação para Cancelado sem justificativa nem histórico.</p>
+<p><strong>5. Mudanças temporárias não vencem.</strong> Não há aviso nem encerramento quando a validade passa.</p>
+<p><strong>6. A mudança não conversa com o resto.</strong> O desvio que marca "necessário abrir controle de mudança" não abre a solicitação. A mudança não exige validação (protótipo na GQ), não aponta os documentos a revisar no Controle de Documentos e não informa o item "regulatórios" à tela de Assuntos Regulatórios. Datas de revisão, parecer e liberação vêm da tela.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> os usuários <code>TESTE NIVEL 1</code>, <code>TESTE NIVEL 2</code> e <code>TESTE NIVEL 3</code> do fluxo de desvios, em duas áreas diferentes. Um produto <code>TESTE</code> da Produção, se houver, e o lote <code>TESTE</code> do Estoque. Todas as solicitações com descrição começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-030</td>
+<td>Solicitação sem descrição, sem tipo, sem item e sem motivo</td>
+<td>Recusa, com as mensagens de cada campo</td>
+</tr>
+<tr>
+<td>CT-GQ-031</td>
+<td>Mudança temporária sem validade, depois com validade passada, depois futura; sem áreas de impacto</td>
+<td>Recusa nas duas primeiras; a terceira salva em Pendente Revisão. <strong>Registrar que as áreas de impacto não são exigidas</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-032</td>
+<td>Revisão não aceitando, sem justificativa e depois com justificativa</td>
+<td>Recusa; depois Não Aceito</td>
+</tr>
+<tr>
+<td>CT-GQ-033</td>
+<td>Em outra solicitação (item produto), revisar aceitando e escolher duas áreas</td>
+<td>Pendente Liberação Avaliação</td>
+</tr>
+<tr>
+<td>CT-GQ-034</td>
+<td><strong>Com o TESTE NIVEL 3, liberar (aprovar) a avaliação antes de qualquer área avaliar</strong></td>
+<td>Pela norma, deveria exigir os pareceres. <strong>Registrar se aprovar</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-GQ-035</td>
+<td>Em outra solicitação, uma área "não aceita" (com justificativa) e a GQ libera aprovando</td>
+<td><strong>Registrar se aprovar apesar do "não aceito"</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-036</td>
+<td>Com o <code>TESTE NIVEL 2</code>, abrir a Liberação Avaliação de Mudanças</td>
+<td>Sem botão de liberar</td>
+</tr>
+<tr>
+<td>CT-GQ-037</td>
+<td>Plano de ação com prioridade 11 e data prevista anterior à solicitação</td>
+<td>Recusa nas duas</td>
+</tr>
+<tr>
+<td>CT-GQ-038</td>
+<td>Plano com duas ações; a mudança fica Pendente Finalização Plano Ação</td>
+<td>Sem etapa de aprovação do plano</td>
+</tr>
+<tr>
+<td>CT-GQ-039</td>
+<td>Abrir a visualização do plano de uma mudança sem plano e consultar o histórico</td>
+<td><strong>Registrar se a consulta criou o plano</strong> (RN003 do plano)</td>
+</tr>
+<tr>
+<td>CT-GQ-040</td>
+<td>Executar uma ação com data futura e com data anterior à solicitação</td>
+<td>Recusa nas duas</td>
+</tr>
+<tr>
+<td>CT-GQ-041</td>
+<td><strong>Finalizar o plano com uma ação ainda não concluída</strong></td>
+<td><strong>Registrar se aceitar</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-GQ-042</td>
+<td>Mudança com produto: finalização aprovada</td>
+<td>Pendente Aprovação produto</td>
+</tr>
+<tr>
+<td>CT-GQ-043</td>
+<td>Controle Mudança Produto sem justificativa, lote <code>TESTE</code>; consultar o histórico</td>
+<td><strong>Registrar se salvar sem justificativa e se não houver histórico</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-GQ-044</td>
+<td>Mudança sem produto: finalização aprovada</td>
+<td>Aceito</td>
+</tr>
+<tr>
+<td>CT-GQ-045</td>
+<td>Finalização reprovada com ações já executadas</td>
+<td>Não Aceito</td>
+</tr>
+<tr>
+<td>CT-GQ-046</td>
+<td>Cancelar uma solicitação em Pendente Revisão, com justificativa; consultar o histórico</td>
+<td>Cancelado, com histórico</td>
+</tr>
+<tr>
+<td>CT-GQ-047</td>
+<td>Procurar na tela Solicitação de Mudanças um botão "Excluir"</td>
+<td><strong>Registrar se existir</strong> e se cancela sem histórico (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-GQ-048</td>
+<td>Mudança temporária com validade de amanhã; no dia seguinte, consultar a mudança</td>
+<td><strong>Registrar que nada acontece</strong> no vencimento (ponto 5)</td>
+</tr>
+<tr>
+<td>CT-GQ-049</td>
+<td>Desvio avaliado com "necessário abrir controle de mudança" (CT-GQ-016)</td>
+<td>Nenhuma solicitação aberta (ponto 6)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-GQ-034, 035, 041, 043 e 047 primeiro. Eles tocam aprovação, eficácia e trilha de auditoria.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#solicitacao-de-mudanca">Solicitação de mudança</a></li><li class="sub"><a href="#revisao-pre-avaliacao-e-definicao-das-areas">Revisão (pré-avaliação) e definição das áreas</a></li><li class="sub"><a href="#avaliacao-pelas-areas-e-liberacao">Avaliação pelas áreas e liberação</a></li><li class="sub"><a href="#plano-de-acao-execucao-e-finalizacao">Plano de ação, execução e finalização</a></li><li class="sub"><a href="#aprovacao-do-produto">Aprovação do produto</a></li><li class="sub"><a href="#mudanca-temporaria">Mudança temporária</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
