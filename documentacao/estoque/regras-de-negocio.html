@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Regras de Negocio.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="introducao">Introdução</h2>
+<p>Este documento consolida as <strong>regras de negócio do módulo Estoque</strong> do LabMedSys, na versão entregue pelo fornecedor. Ele serve para a equipe de negócio validar o comportamento do sistema e para os desenvolvedores corrigirem a nova versão.</p>
+<p>As regras vêm de três fontes:</p>
+<ul>
+<li><strong>Fluxos de Recebimento de materiais e de Estoque quarentena</strong> feitos pela equipe (<code>Documentação/</code>), conferidos contra o código;</li>
+<li><strong>Código-fonte</strong> do sistema atual, com a indicação do arquivo de origem (caminho relativo à pasta <code>3.estoque/app/</code>);</li>
+<li><strong>Testes nas telas</strong> no ambiente de teste, em 07/10/2026 e 08/10/2026 (resultado no Relatório de Testes do Estoque).</li>
+</ul>
+<p>Cada regra descreve <strong>o que o sistema faz hoje</strong> e traz a sua situação:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confirmada</td>
+<td>O teste mostrou o comportamento descrito, e ele está correto.</td>
+</tr>
+<tr>
+<td>Confirmada com falha</td>
+<td>O teste mostrou o comportamento descrito, mas ele fere a norma ou a boa prática. O desvio (DV-EST-nnn) diz o que corrigir.</td>
+</tr>
+<tr>
+<td>Bloqueada</td>
+<td>O teste não pôde ser feito (o motivo está indicado).</td>
+</tr>
+<tr>
+<td>Não testada</td>
+<td>Vem do código; ainda não foi verificada nas telas.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Situação das regras depois dos testes de 07 e 08/10/2026:</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Regras</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Não testada</td>
+<td>138</td>
+</tr>
+<tr>
+<td>Confirmada com falha</td>
+<td>16</td>
+</tr>
+<tr>
+<td>Confirmada</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Bloqueada</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Confirmada em parte</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Não conclusiva</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>171</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Como usar este documento na nova versão</p>
+<ul>
+<li>Regra <strong>Confirmada</strong>: manter o comportamento.</li>
+<li>Regra <strong>Confirmada com falha</strong>: corrigir conforme o desvio citado e a coluna "Como deveria funcionar" do Relatório de Testes.</li>
+<li>Regra <strong>Bloqueada</strong> ou <strong>Não testada</strong>: confirmar com a área antes de implementar. Os pontos de atenção, no fim do documento, indicam as regras que já se sabe que precisam mudar.</li>
+</ul>
+<p><strong>Ainda não testado:</strong> os testes pararam no endereçamento do lote recebido (DV-EST-016), à espera do DBA. Por isso a quarentena, a análise do Controle da Qualidade e todos os fluxos posteriores estão como <strong>Não testada</strong> ou <strong>Bloqueada</strong>.</p>
+</div>
+<h2 id="regras-gerais-do-modulo">Regras gerais do módulo</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Fonte</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-001</td>
+<td>O acesso ao Estoque segue o <strong>perfil do Principal</strong>: o usuário só entra com as funções do Estoque marcadas no perfil. A mensagem de acesso negado ("Seu perfil não possuí permissão!") não diz qual função falta.</td>
+<td>Teste de 07/10/2026</td>
+<td>Confirmada com falha (DV-EST-005)</td>
+</tr>
+<tr>
+<td>RN-EST-002</td>
+<td>O menu esconde as telas sem permissão, mas <strong>a própria tela não confere a permissão</strong> ao ser aberta.</td>
+<td>Teste de 08/10/2026 (CT-EST-045)</td>
+<td>Confirmada com falha (DV-EST-008)</td>
+</tr>
+<tr>
+<td>RN-EST-003</td>
+<td>Cada <strong>grupo de usuário</strong> só enxerga os almoxarifados ligados a ele na tela Grupo de Usuário - Almoxarifado.</td>
+<td><code>administracao/grupo_usuario_local*</code>; CT-EST-014</td>
+<td>Confirmada (falta comparar com um usuário de outro grupo)</td>
+</tr>
+<tr>
+<td>RN-EST-004</td>
+<td>O <strong>código do lote</strong> é gravado em maiúsculas e o campo remove os hífens (<code>TESTE-LOTE-001</code> vira <code>TESTELOTE001</code>).</td>
+<td><code>estoque/recebimentoNfItemLote_ed.aspx.cs:482</code>; CT-EST-187</td>
+<td>Confirmada com falha (DV-EST-001)</td>
+</tr>
+<tr>
+<td>RN-EST-005</td>
+<td>Os campos de <strong>quantidade</strong> têm máscara de três casas decimais: digitar <code>100</code> grava <code>0,100</code>.</td>
+<td>CT-EST-187</td>
+<td>Confirmada com falha (DV-EST-002)</td>
+</tr>
+<tr>
+<td>RN-EST-006</td>
+<td><strong>Saldos</strong> de lote, de endereço, custo médio e saldo diário são atualizados por <strong>gatilhos do banco</strong>, e não pela tela. A autoria fica só na movimentação.</td>
+<td><code>TBL_MOVIMENTACAO_ITEM</code> (gatilho <code>trAllMovimentacaoItem</code>), <code>TBL_LOTE_ENDERECO</code> (gatilho <code>trAllLLoteEndereco</code>)</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-007</td>
+<td>O Estoque tem <strong>cópias das telas do Principal</strong> (Profissional, Conta usuário, Perfil, Grupo de usuários, Funções profissionais, Local, Pessoa jurídica) que gravam nas tabelas do Principal pelos sinônimos. A cópia de Perfil <strong>não grava histórico</strong>.</td>
+<td><code>LaboSys_BLL/bllPerfil.cs</code> nos dois módulos; <code>homologacao/transversal/01-telas-repetidas.md</code></td>
+<td>Não testada (DV-EST-007 inconclusivo)</td>
+</tr>
+<tr>
+<td>RN-EST-008</td>
+<td>Alteração e exclusão de cadastro exigem <strong>justificativa</strong> e ficam no histórico (tabela <code>TBL_LOG</code>).</td>
+<td>Telas de cadastro (<code>*_lst.aspx.cs</code>, <code>*_ed.aspx.cs</code>)</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="cadastros-de-apoio">Cadastros de apoio</h2>
+<p>Detalhe e casos de teste: <code>3.estoque/01-cadastros-de-apoio.md</code>. Cada regra lista os campos obrigatórios e as recusas que o código faz.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Grupo</th>
+<th>Cadastro e regras</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-009</td>
+<td>Estrutura física do estoque</td>
+<td>Almoxarifado (<code>almoxarifado</code>): obrigatórios e regras: Descrição, sigla. Depende de: —. É usado por: Item, local, inventário, solicitação, remessa, grupo de usuário.</td>
+<td>Confirmada (CT-EST-001)</td>
+</tr>
+<tr>
+<td>RN-EST-010</td>
+<td>Estrutura física do estoque</td>
+<td>Local de armazenagem (<code>estoque_local</code>): obrigatórios e regras: Código (não pode ser zero), descrição, almoxarifado, situação e as marcações <strong>Local controlado, Refrigerado, Quarentena, Controle de umidade e Refugo</strong>. Depende de: Almoxarifado. É usado por: Endereço, item, inventário.</td>
+<td>Confirmada (CT-EST-001)</td>
+</tr>
+<tr>
+<td>RN-EST-011</td>
+<td>Estrutura física do estoque</td>
+<td>Rua, Coluna, Andar (<code>estoque_rua</code>, <code>estoque_coluna</code>, <code>estoque_andar</code>): obrigatórios e regras: Código (não pode ser zero ou nulo), descrição, situação. Depende de: —. É usado por: Endereço do estoque.</td>
+<td>Confirmada (CT-EST-001)</td>
+</tr>
+<tr>
+<td>RN-EST-012</td>
+<td>Estrutura física do estoque</td>
+<td>Grupo de usuário × almoxarifado (<code>grupo_usuario_local</code>): obrigatórios e regras: Almoxarifado. Depende de: Grupo de usuário (<strong>cadastro do Principal</strong>) e almoxarifado. É usado por: Define quais almoxarifados cada grupo enxerga.</td>
+<td>Confirmada (CT-EST-014)</td>
+</tr>
+<tr>
+<td>RN-EST-013</td>
+<td>Estrutura física do estoque</td>
+<td>Tipo de armazenagem (<code>tipo_armazenagem</code>): obrigatórios e regras: Código (não pode ser zero), descrição, situação. Depende de: —. É usado por: Item, endereço.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-014</td>
+<td>Estrutura física do estoque</td>
+<td>Condição de armazenagem (<code>condicao_armazenagem</code>): obrigatórios e regras: Descrição, situação. Depende de: —. É usado por: Item.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-015</td>
+<td>Estrutura física do estoque</td>
+<td>Nível de segurança (<code>nivel_seguranca</code>): obrigatórios e regras: Descrição. Depende de: —. É usado por: Item.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-016</td>
+<td>Item e suas classificações</td>
+<td><strong>Item</strong> (<code>item</code>): obrigatórios e regras: Código, descrição, situação, tipo, grupo e subgrupo, unidade, custo inicial, ativo imobilizado, estoque mínimo e máximo, peso e outros. Recusas no código: <strong>item sem almoxarifado</strong>; <strong>cliente obrigatório quando o item não é próprio</strong>; grau de pureza inválido; valores e medidas inválidos. Depende de: 17 cadastros: almoxarifado, local, rua, grupo e subgrupo, unidade, classe, classificação, classificação de reanálise, condição e tipo de armazenagem, nível de segurança, NCM, SJB, <strong>substância controlada</strong>, contas. É usado por: Lotes, movimentação, solicitação, separação, inventário, análise do CQ, entrada de produção, kits.</td>
+<td>Confirmada com falha (DV-EST-006; o item salva sem almoxarifado padrão, exigido depois no recebimento: DV-EST-010)</td>
+</tr>
+<tr>
+<td>RN-EST-017</td>
+<td>Item e suas classificações</td>
+<td>Grupo e Subgrupo de item (<code>item_grupo</code>, <code>item_subgrupo</code>): obrigatórios e regras: Descrição, situação; o subgrupo exige o grupo. Depende de: Subgrupo depende do grupo. É usado por: Item, local, inventário.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-018</td>
+<td>Item e suas classificações</td>
+<td>Classe de item, Classificação de item (<code>classe_item</code>, <code>classificacao_item</code>): obrigatórios e regras: Descrição (e situação na classificação). Depende de: —. É usado por: Item.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-019</td>
+<td>Item e suas classificações</td>
+<td>Classificação de reanálise (<code>classificacao_reanalise</code>): obrigatórios e regras: Código, descrição, <strong>primeira reanálise</strong>, situação. Depende de: —. É usado por: Item (prazo de reanálise do lote).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-020</td>
+<td>Item e suas classificações</td>
+<td>Conservação, Concentração (<code>conservacao_item</code>, <code>concentracao</code>): obrigatórios e regras: Código (não pode ser zero), descrição, situação. Depende de: —. É usado por: Item (a confirmar).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-021</td>
+<td>Item e suas classificações</td>
+<td>Unidade de medida (<code>unidade_medida</code>): obrigatórios e regras: Abreviatura, descrição. <strong>Ao incluir, o banco cria sozinho uma apresentação</strong> para a unidade (gatilho <code>trUnidadeMedidaAll</code>). Depende de: —. É usado por: Apresentação, item, nota fiscal.</td>
+<td>Confirmada (CT-EST-010): cria a apresentação sozinha</td>
+</tr>
+<tr>
+<td>RN-EST-022</td>
+<td>Item e suas classificações</td>
+<td>Apresentação do item (<code>apresentacao_item</code>): obrigatórios e regras: Apresentação, unidade de produção, unidade, <strong>fator de conversão</strong> (recusa se inválido), situação. Depende de: Unidade. É usado por: Apresentação do fornecedor, nota fiscal.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-023</td>
+<td>Item e suas classificações</td>
+<td>Apresentação do fornecedor (<code>apresentacao_fornecedor</code>): obrigatórios e regras: Item, fornecedor, apresentação, código do item no fornecedor, situação. Depende de: Item, apresentação, fornecedor (<strong>pessoa jurídica do Principal</strong>). É usado por: Recebimento (a confirmar).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-024</td>
+<td>Item e suas classificações</td>
+<td>Fabricante (<code>fabricante</code>): obrigatórios e regras: Código (não pode ser zero), descrição, situação. Depende de: —. É usado por: Item (a confirmar).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-025</td>
+<td>Item e suas classificações</td>
+<td><strong>Substância controlada</strong> (<code>substancia_controlada</code>): obrigatórios e regras: Código (não pode ser zero), descrição. Depende de: —. É usado por: Item.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-026</td>
+<td>Item e suas classificações</td>
+<td>NCM (<code>ncm</code>), SJB (<code>sjb</code>): obrigatórios e regras: Código, descrição. Depende de: —. É usado por: Item.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-027</td>
+<td>Movimentação e fiscal</td>
+<td>Tipo de movimentação (<code>tipo_movimentacao</code>): obrigatórios e regras: Descrição, <strong>entrada ou saída, atualiza custo médio, entrada por nota fiscal</strong>, situação. Depende de: —. É usado por: Movimentação, nota fiscal, saída.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-028</td>
+<td>Movimentação e fiscal</td>
+<td>Motivo de movimentação (<code>motivo_movimentacao</code>): obrigatórios e regras: Descrição, entrada, saída, situação. Depende de: —. É usado por: Movimentação, saída.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-029</td>
+<td>Movimentação e fiscal</td>
+<td>Tipo de referência (<code>tipo_referencia</code>): obrigatórios e regras: Descrição. Depende de: —. É usado por: Nota fiscal.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-030</td>
+<td>Movimentação e fiscal</td>
+<td>CFOP (<code>cfop</code>): obrigatórios e regras: Código, descrição, parâmetros de venda, DIPJ, PIS/COFINS e IPI, situação. Depende de: —. É usado por: Item da nota fiscal.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-031</td>
+<td>Financeiro</td>
+<td>Banco (<code>banco</code>): obrigatórios e regras: Código (não pode ser 000), nome, situação. <strong>Grava na tabela de bancos do Principal</strong> (sinônimo). Depende de: —. É usado por: Principal e outros módulos.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-032</td>
+<td>Financeiro</td>
+<td>Conta corrente, Conta financeira (<code>conta_corrente</code>, <code>conta_financeira</code>): obrigatórios e regras: Número ou descrição, nome, situação. Depende de: —. É usado por: Item.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-033</td>
+<td>Financeiro</td>
+<td>Centro de custo (<code>centro_custo</code>): obrigatórios e regras: Descrição, situação e itens com quantidade e periodicidade. <strong>O Estoque tem tabela própria de centro de custo, diferente da do Principal</strong>. Depende de: Item, periodicidade. É usado por: Consumo por centro de custo.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="recebimento-de-materiais">Recebimento de materiais</h2>
+<p>Detalhe, comparação com o fluxo da equipe e casos de teste: <code>fluxos/recebimento-quarentena-conferencia.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-034</td>
+<td>Inspeção veicular</td>
+<td>O Checklist de Inspeção Veicular exige placa, condutor, tipo e número do documento, tipo de movimento e justificativa; os pesos de entrada e de saída são validados (<code>estoque/portaria_ed2.aspx</code>).</td>
+<td>Confirmada (CT-EST-180)</td>
+</tr>
+<tr>
+<td>RN-EST-035</td>
+<td>Inspeção veicular</td>
+<td>O checklist aceita o parecer <strong>Aprovado</strong> sem nenhuma das 15 perguntas respondida.</td>
+<td>Confirmada com falha (DV-EST-004, CT-EST-181)</td>
+</tr>
+<tr>
+<td>RN-EST-036</td>
+<td>Inspeção veicular</td>
+<td>A lista de checklists oferecida no recebimento só filtra os já usados e os veículos que já saíram; <strong>não filtra o parecer</strong>: o checklist reprovado aparece (<code>LaboSys_DAL/dalPortaria.cs:355-356</code>, <code>estoque/recebimento_ed2.aspx.cs:153</code>).</td>
+<td>Confirmada com falha (DV-EST-011, CT-EST-182)</td>
+</tr>
+<tr>
+<td>RN-EST-037</td>
+<td>Inspeção veicular</td>
+<td>O recebimento pode ser salvo <strong>sem checklist</strong>, sem placa e sem motorista (<code>recebimento_ed2.aspx.cs:153-158</code>).</td>
+<td>Confirmada com falha (DV-EST-012, CT-EST-183)</td>
+</tr>
+<tr>
+<td>RN-EST-038</td>
+<td>Nota fiscal</td>
+<td>A nota exige número, série, fornecedor, tipo de documento, de frete, de pagamento e de movimentação e todos os valores; o item exige CFOP, NCM, CSTs, valores e impostos (<code>estoque/recebimentoNF_ed.aspx</code>, <code>recebimentoNfItem_ed.aspx</code>). Sem a série, não grava e não avisa.</td>
+<td>Confirmada com falha (DV-EST-013, CT-EST-184)</td>
+</tr>
+<tr>
+<td>RN-EST-039</td>
+<td>Nota fiscal</td>
+<td>O mesmo número de item não pode repetir na nota: "Nº do Item já existe na Nota Fiscal!" (<code>estoque/recebimento_ed.aspx</code>).</td>
+<td>Não testada (não isolada no CT-EST-184)</td>
+</tr>
+<tr>
+<td>RN-EST-040</td>
+<td>Itens e lotes</td>
+<td>O lote é <strong>informado pelo operador</strong>, item a item: código, quantidade, volumes, apresentação, fabricante e validade. O gatilho que criava um lote padrão está desligado (<code>estoque/recebimentoNfItemLote_ed.aspx.cs:482-490</code>; <code>TBL_RECEBIMENTO.sql:81</code>).</td>
+<td>Confirmada (CT-EST-187)</td>
+</tr>
+<tr>
+<td>RN-EST-041</td>
+<td>Itens e lotes</td>
+<td>Para item com controle de validade, a <strong>validade é obrigatória</strong>. Para os demais, a validade em branco é gravada como 31/12/2099 (<code>recebimentoNfItemLote_ed.aspx.cs:479-486</code>).</td>
+<td>Confirmada (CT-EST-185); o 31/12/2099 não foi testado</td>
+</tr>
+<tr>
+<td>RN-EST-042</td>
+<td>Itens e lotes</td>
+<td>O sistema só confere se a validade é uma data válida: <strong>lote vencido é aceito, sem aviso</strong> (<code>recebimentoNfItemLote_ed.aspx.cs:479-486</code>).</td>
+<td>Confirmada com falha (DV-EST-014, CT-EST-186)</td>
+</tr>
+<tr>
+<td>RN-EST-043</td>
+<td>Confirmação</td>
+<td>"Confirmar recebimento" exige que o item tenha <strong>almoxarifado padrão</strong>; sem ele, o código do volume fica vazio e a tela mostra só "Erro ao Finalizar Recebimento!". O cadastro do item, porém, aceita salvar sem esse campo.</td>
+<td>Confirmada com falha (DV-EST-010)</td>
+</tr>
+<tr>
+<td>RN-EST-044</td>
+<td>Autorização</td>
+<td>Depois do cadastro, o botão "Autorizar recebimento" pede login e senha de <strong>outro</strong> usuário; recusa quem cadastrou ("Usuário não pode autorizar!") e grava quem autorizou e quando (<code>estoque/recebimento_ed2.aspx.cs:1050-1081</code>).</td>
+<td>Confirmada (CT-EST-188, 189)</td>
+</tr>
+<tr>
+<td>RN-EST-045</td>
+<td>Autorização</td>
+<td>A autorização aceita <strong>qualquer usuário com login válido</strong>: não confere perfil, grupo nem permissão (<code>recebimento_ed2.aspx.cs:1050-1081</code>).</td>
+<td>Confirmada com falha (DV-EST-009, CT-EST-190)</td>
+</tr>
+<tr>
+<td>RN-EST-046</td>
+<td>Fornecedor</td>
+<td>O recebimento exige um fornecedor, mas <strong>não consulta</strong> a qualificação do fornecedor (<code>LaboSys_BLL/bllQualificacaoFornecedor.cs</code> não é usada no recebimento).</td>
+<td>Confirmada em parte (CT-EST-196: nenhum alerta; falta testar com fornecedor marcado como não qualificado)</td>
+</tr>
+<tr>
+<td>RN-EST-047</td>
+<td>Conferência</td>
+<td>A conferência pede <strong>login, senha e justificativa</strong> e grava o usuário que autorizou, mas aceita <strong>qualquer usuário válido</strong> (<code>estoque/conferencia_ed.aspx.cs:270-301</code>).</td>
+<td>Confirmada com falha, pelo código (CT-EST-192)</td>
+</tr>
+<tr>
+<td>RN-EST-048</td>
+<td>Conferência</td>
+<td>A <strong>divergência de quantidade</strong> é aceita só com a pergunta "Deseja continuar?", sem justificativa e sem aviso à Qualidade.</td>
+<td>Confirmada com falha (CT-EST-191)</td>
+</tr>
+<tr>
+<td>RN-EST-049</td>
+<td>Conferência</td>
+<td>Ao finalizar, a nota é marcada como <strong>conferida antes</strong> do ajuste dos volumes, e as duas gravações não ficam juntas: se o ajuste dá erro ("Erro ao redistribuir quantidade dos volumes"), a nota fica conferida assim mesmo. O gatilho que fazia essa marcação no banco está desligado (<code>TBL_NF_ITEM_LOTE.sql:73</code>).</td>
+<td>Confirmada com falha (DV-EST-015, CT-EST-193)</td>
+</tr>
+<tr>
+<td>RN-EST-050</td>
+<td>Conferência</td>
+<td><strong>Não existe</strong> reprovação na conferência nem envio de não conformidade à Garantia da Qualidade.</td>
+<td>Não testada (ausência no código)</td>
+</tr>
+<tr>
+<td>RN-EST-051</td>
+<td>Endereçamento</td>
+<td>O endereçamento exige almoxarifado, local, rua, coluna, andar, item, lote e quantidade; é <strong>nele</strong> que nascem as solicitações de análise enviadas ao Controle da Qualidade (<code>estoque/enderecamento_ed.aspx.cs:129</code>; <code>LaboSys_BLL/bllNotaFiscal.cs:283-327</code>).</td>
+<td>Confirmada com falha (DV-EST-016, CT-EST-194 e 197: a tela mostra sucesso, mas nada é gravado)</td>
+</tr>
+<tr>
+<td>RN-EST-052</td>
+<td>Endereçamento</td>
+<td>Para lote em quarentena, a lista oferece só locais de quarentena, compatíveis com as marcações do item (umidade, refrigeração). A regra está <strong>só na tela</strong> (<code>estoque/movimentacao_ed.aspx.cs:858</code>).</td>
+<td>Não conclusiva (CT-EST-195: falta um local comum para comparar)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="estoque-quarentena">Estoque quarentena</h2>
+<p>Detalhe: <code>fluxos/recebimento-quarentena-conferencia.md</code>. Todos os casos (CT-EST-200 a 209) estão <strong>bloqueados</strong>, porque nenhuma solicitação de análise nasceu no teste do endereçamento (DV-EST-016).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-053</td>
+<td>Solicitação de análise</td>
+<td>A solicitação de análise é gerada <strong>automaticamente no endereçamento</strong> do lote recebido e enviada ao Controle da Qualidade pela integração (<code>enderecamento_ed.aspx.cs:129</code>; <code>bllNotaFiscal.cs:313-327</code>).</td>
+<td>Bloqueada</td>
+</tr>
+<tr>
+<td>RN-EST-054</td>
+<td>Pesagem da amostra</td>
+<td>A pesagem registra a tag da balança, o lacre, o peso bruto, a tara e os volumes (<code>estoque/pesagem_ed.aspx</code>).</td>
+<td>Bloqueada</td>
+</tr>
+<tr>
+<td>RN-EST-055</td>
+<td>Laudo</td>
+<td>A validade do laudo vem da solicitação e pode ser alterada, mas precisa ser hoje ou depois ("A Data de Validade tem que ser maior ou igual a atual."; <code>4.controle_qualidade/app/HSolutions.CQ.UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:449-457</code>).</td>
+<td>Bloqueada</td>
+</tr>
+<tr>
+<td>RN-EST-056</td>
+<td>Laudo</td>
+<td>A aprovação do laudo <strong>não confere a função de revisor</strong>: a função "48 CQ - Chefe de Subdivisão" está fixa no código e serve só para marcar as linhas da lista (<code>EmissaoLaudoFinalController.cs:425-464</code>, <code>:942-972</code>).</td>
+<td>Bloqueada</td>
+</tr>
+<tr>
+<td>RN-EST-057</td>
+<td>Saída da quarentena</td>
+<td>O material <strong>aprovado</strong> só vai para locais comuns; o <strong>reprovado</strong>, só para o refugo. A regra está <strong>só na lista da tela</strong> (<code>estoque/movimentacao_cq_ed.aspx.cs:101</code>, <code>:839-873</code>).</td>
+<td>Bloqueada</td>
+</tr>
+<tr>
+<td>RN-EST-058</td>
+<td>Liberação</td>
+<td><strong>Não existe</strong> liberação do lote separada, pela pessoa designada (RDC 658/2022, art. 8º, XV): a liberação é a própria aprovação do laudo.</td>
+<td>Não testada (ausência no código)</td>
+</tr>
+<tr>
+<td>RN-EST-059</td>
+<td>Saída da quarentena</td>
+<td>A trava do servidor que impedia levar um lote da quarentena para um endereço comum foi <strong>desligada</strong> (substituída por <code>if (true)</code>, <code>estoque/movimentacao_ed.aspx.cs:579</code> e <code>:601</code>).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="movimentacao-interna">Movimentação interna</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/movimentacao-interna.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-060</td>
+<td>Cadastro do endereço do estoque</td>
+<td>O endereço exige local de armazenagem, rua, coluna, andar e tipo de local (<code>LaboSys_UI/estoque/endereco_ed.aspx</code>, validadores).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-061</td>
+<td>Cadastro do endereço do estoque</td>
+<td>O endereço exige altura, largura, profundidade e peso máximo; esses valores limitam o que pode ser guardado nele (ver RN004 da movimentação).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-062</td>
+<td>Cadastro do endereço do estoque</td>
+<td>Não pode haver dois endereços iguais: a inclusão repetida é recusada com "Não foi possível incluir o endereço. Verifique se o mesmo já existe" (<code>endereco_ed.aspx.cs:333</code>). <em>A mensagem genérica não diz o motivo.</em></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-063</td>
+<td>Cadastro do endereço do estoque</td>
+<td>Um endereço com saldo de item não pode ser excluído: "O Registro não pode ser excluido pois possui item em estoque associado" (<code>endereco_lst.aspx.cs:380</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-064</td>
+<td>Cadastro do endereço do estoque</td>
+<td>Alteração e exclusão exigem justificativa e ficam no histórico.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-065</td>
+<td>Endereçamento do lote</td>
+<td>Exige item, lote e validade, quantidade, almoxarifado, local, rua, coluna e andar (<code>estoque/enderecamento_ed.aspx</code>, validadores "Item não foi selecionado!", "O Lote/Validade não foi selecionado!", "Quantidade inválida!", "Endereço inválido!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-066</td>
+<td>Endereçamento do lote</td>
+<td>O saldo do lote no endereço é gravado pelo banco (gatilho <code>trAllLLoteEndereco</code> em <code>TBL_LOTE_ENDERECO</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-067</td>
+<td>Endereçamento do lote</td>
+<td><em>A validar com a área:</em> o endereçamento é feito aqui ou já no recebimento (o fluxo de Recebimento da equipe inclui a etapa "Armazenamento")? Registrar no teste qual caminho o sistema usa.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-068</td>
+<td>Movimentação entre endereços</td>
+<td>Exige tipo de movimentação, item, lote, endereço de origem, quantidade, endereço de destino e justificativa (<code>estoque/movimentacao_ed.aspx</code>, validadores).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-069</td>
+<td>Movimentação entre endereços</td>
+<td>A origem precisa ter saldo: "O endereço de origem não tem saldo disponível!"; a quantidade precisa ser válida e respeitar o fracionamento do item.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-070</td>
+<td>Movimentação entre endereços</td>
+<td>O endereço de destino precisa estar <strong>vazio ou conter o mesmo item</strong>; um endereço não guarda itens diferentes (<code>movimentacao_ed.aspx.cs:577</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-071</td>
+<td>Movimentação entre endereços</td>
+<td>O item precisa caber no destino: altura, largura, profundidade e peso (peso do item × quantidade). Se não couber: "A altura do item excede a capacidade do endereço!", e assim por diante (<code>movimentacao_ed.aspx.cs:581-593</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-072</td>
+<td>Movimentação entre endereços</td>
+<td>O mesmo endereço não pode estar em duas movimentações ao mesmo tempo: "Endereço já informado em outra movimentação!" (<code>movimentacao_ed.aspx.cs:681</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-073</td>
+<td>Movimentação entre endereços</td>
+<td>A lista de destinos mostra só locais com a <strong>mesma marcação de quarentena e de refugo</strong> da origem e compatíveis com as exigências do item (umidade e refrigeração), dentro dos almoxarifados do grupo do usuário (<code>movimentacao_ed.aspx.cs:858</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-074</td>
+<td>Movimentação entre endereços</td>
+<td>Ao confirmar, o banco atualiza sozinho o saldo do endereço de origem e do destino, o saldo do lote, o custo e o saldo diário (gatilho <code>trAllMovimentacaoItem</code> em <code>TBL_MOVIMENTACAO_ITEM</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-075</td>
+<td>Consultas e rastreabilidade</td>
+<td>As consultas de disponibilidade (geral, por lote e por local) mostram o saldo por item, lote e local, com relatório e Excel; não alteram dados.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-076</td>
+<td>Consultas e rastreabilidade</td>
+<td>O histórico do lote reúne movimentações, solicitações, análises do Controle da Qualidade, amostras e notas fiscais ligadas ao lote (tela Histórico do Lote).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-077</td>
+<td>Consultas e rastreabilidade</td>
+<td>O histórico do item reúne as mesmas informações por item, incluindo pesagens e remessas (tela Histórico do Item).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-078</td>
+<td>Consultas e rastreabilidade</td>
+<td><em>A validar:</em> as consultas respeitam o grupo do usuário (só os almoxarifados dele)?</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="reprovado-reanalise-e-revalidacao">Reprovado, reanálise e revalidação</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/reprovado-reanalise-revalidacao.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-079</td>
+<td>Destino do lote depois da análise</td>
+<td>A tela mostra se o lote foi aprovado ou reprovado pela análise do Controle da Qualidade (<code>LaboSys_UI/estoque/movimentacao_cq_ed.aspx.cs:101</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-080</td>
+<td>Destino do lote depois da análise</td>
+<td>Lote <strong>reprovado</strong>: a lista de destinos mostra <strong>só locais de refugo</strong>. Lote aprovado: só locais comuns, sem quarentena e sem refugo (<code>movimentacao_cq_ed.aspx.cs:873</code>, filtro de refugo e quarentena).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-081</td>
+<td>Destino do lote depois da análise</td>
+<td>Lote vindo da produção mostra o aviso "LOTE AGUARDANDO LIBERAÇÃO DA PRODUÇÃO" ou "LOTE DE PRODUÇÃO REPROVADO" (<code>movimentacao_cq_ed.aspx.cs:59-62</code>, <code>movimentacao_cq_ed2.aspx.cs:79-84</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-082</td>
+<td>Destino do lote depois da análise</td>
+<td>A quantidade movimentada não pode passar do pendente: "Quantidade informada é superior a pendente!". O endereço precisa aceitar o lote: "Endereço não pode receber o lote!" (<code>movimentacao_cq_ed2.aspx.cs:352-362</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-083</td>
+<td>Destino do lote depois da análise</td>
+<td>Justificativa obrigatória.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-084</td>
+<td>Destino do lote depois da análise</td>
+<td>No saldo, o lote em local de refugo conta como <strong>reprovado</strong> e o lote <strong>bloqueado</strong> conta à parte; nenhum dos dois entra no <strong>saldo disponível</strong> (visão <code>VW_SALDO_ITEM_LOTE_ENDERECO</code> do banco).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-085</td>
+<td>Reanálise do lote</td>
+<td>A Agenda de Reanálise lista os lotes pela data de reanálise. A data vem da <strong>classificação de reanálise</strong> do item, que é cadastro de apoio, a partir da primeira reanálise. <em>A confirmar no teste:</em> como a data é calculada.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-086</td>
+<td>Reanálise do lote</td>
+<td>Não agenda lote <strong>bloqueado</strong> ("O Lote está bloqueado. Operação não permitida!") nem lote com <strong>análise em aberto</strong> ("O Lote possui análise não finalizada!") (<code>agenda_reanalise_lst.aspx.cs:170-173</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-087</td>
+<td>Reanálise do lote</td>
+<td>Ao agendar, o sistema abre uma análise do tipo <strong>reanálise</strong> para o Controle da Qualidade, marca o lote como <strong>em reanálise</strong>, o que o tira do saldo disponível, e imprime a etiqueta se o item tem controle de qualidade (<code>agenda_reanalise_lst.aspx.cs:175-190</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-088</td>
+<td>Reanálise do lote</td>
+<td>A <strong>reanálise avulsa</strong> faz o mesmo fora da agenda (<code>reanalise_avulsa_lst.aspx.cs:142</code>, <code>agenda_reanalise_op.aspx.cs:277</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-089</td>
+<td>Reanálise do lote</td>
+<td>Justificativa obrigatória.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-090</td>
+<td>Revalidação da validade</td>
+<td>A Revalidação de Lote <strong>não muda a validade direto</strong>: abre uma análise do tipo <strong>revalidação</strong> no Controle da Qualidade (<code>revalidacao_item_lst.aspx.cs:126-161</code>). A nova validade vem da análise.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-091</td>
+<td>Revalidação da validade</td>
+<td>Justificativa obrigatória.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-092</td>
+<td>Revalidação da validade</td>
+<td>Lote com <strong>validade vencida</strong> sai sozinho do saldo disponível (visão de saldo: validade menor que a data de hoje).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-093</td>
+<td>Consultas e relatórios</td>
+<td>A disponibilidade separa o saldo do lote em: quarentena, vencido ou em reanálise, bloqueado, reprovado, inventário, retenção, referência, estabilidade e <strong>disponível</strong> (visão <code>VW_SALDO_ITEM_LOTE_ENDERECO</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-094</td>
+<td>Consultas e relatórios</td>
+<td>As listas de lotes para uso excluem lote bloqueado e lote em reanálise (<code>LaboSys_DAL/dalItemLote.cs</code>, filtros <code>BLOQUEADO</code> e <code>REANALISE</code>).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="solicitacao-e-atendimento-a-producao">Solicitação e atendimento à produção</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/solicitacao-atendimento-producao.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-095</td>
+<td>Solicitação de material</td>
+<td>Tipos de solicitação: <strong>produção, consumo, cliente e Controle da Qualidade</strong> (<code>LaboSys_Util/Constantes.cs:43-46</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-096</td>
+<td>Solicitação de material</td>
+<td>Situações da solicitação: aberta, em atendimento, separada, atendida, fechada, finalizada e cancelada (<code>Constantes.cs:30-36</code>). <em>A validar:</em> a ordem exata entre separada, atendida, fechada e finalizada.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-097</td>
+<td>Solicitação de material</td>
+<td>Exige código, tipo, prioridade, situação, centro de custo ou cliente, item e quantidade, e justificativa na alteração (<code>estoque/solicitacao_ed.aspx</code>, validadores). Na de consumo, também data e almoxarifado.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-098</td>
+<td>Solicitação de material</td>
+<td>Quando o módulo Produção está ativo, a conclusão da separação de uma solicitação do tipo <strong>produção</strong> atualiza o módulo Produção (<code>movimentacao_cq_reprovado_ed.aspx.cs:178-181</code>, <code>separacao_ed.aspx.cs:202</code>). <em>A confirmar no teste:</em> se a solicitação de produção é criada no módulo Produção, a partir da ordem de produção.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-099</td>
+<td>Solicitação de material</td>
+<td>O banco tinha um gatilho para recalcular a situação da solicitação a cada mudança nos itens, mas ele está <strong>desligado</strong> (<code>TBL_SOLICITACAO_ITEM.sql:76</code>, <code>DISABLE TRIGGER trAll_StatusSolicitacao</code>). A situação é mudada pelas próprias telas, por exemplo para "separada" (<code>movimentacao_cq_reprovado_ed.aspx.cs:186</code>). <em>A confirmar no teste:</em> se a situação acompanha corretamente cada etapa.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-100</td>
+<td>Aprovação da solicitação</td>
+<td>Cada perfil tem os <strong>tipos de solicitação</strong> que pode tratar (<code>LaboSys_DAL/dalUsuario.cs:1724</code>, tabela de perfil × tipo de solicitação). <em>A confirmar no teste:</em> se isso limita quem aprova, quem solicita ou os dois, e onde se configura.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-101</td>
+<td>Aprovação da solicitação</td>
+<td>Aprovação, reprovação e cancelamento exigem justificativa.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-102</td>
+<td>Separação e pesagem</td>
+<td>A lista de lotes do atendimento mostra <strong>só saldo disponível</strong> (fora de quarentena e refugo), <strong>dentro da validade</strong>, de lote não bloqueado e não em reanálise (<code>LaboSys_DAL/dalItemLote.cs:1006-1060</code>, <code>retornarLoteSaldo</code>, usada em <code>atendimento_op.aspx.cs:968</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-103</td>
+<td>Separação e pesagem</td>
+<td>A lista <strong>não é ordenada pela validade</strong>: o sistema nem sugere nem obriga a usar primeiro o lote que vence antes (<code>dalItemLote.cs:1006-1060</code>, sem ordenação). A ordenação por validade existe só na lista de lotes <strong>para venda</strong> (<code>dalItemLote.cs:547-548</code>). A RDC 658/2022 pede o uso do material de forma a garantir a validade e a rotação do estoque.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-104</td>
+<td>Separação e pesagem</td>
+<td>O cancelamento da separação exige justificativa ("Justificativa é obrigatória para o cancelamento!"), e não se altera separação cujo processo já foi finalizado ("Processo vinculado a solicitação já foi finalizado!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-105</td>
+<td>Separação e pesagem</td>
+<td>A pesagem exige item, quantidade maior que zero, tag da balança, número do lacre, peso e tara, e valida peso bruto, líquido e tara (<code>estoque/pesagem_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-106</td>
+<td>Separação e pesagem</td>
+<td><strong>A pesagem para produção não pode ser finalizada com divergência</strong> de peso. Na divisão em volumes, a soma dos volumes A e B precisa bater com o total.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-107</td>
+<td>Atendimento e encerramento</td>
+<td>O atendimento exige item e lote, e a quantidade atendida <strong>não pode passar da solicitada</strong> ("Quantidade atendida não pode ser superior a solicitada!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-108</td>
+<td>Atendimento e encerramento</td>
+<td>O atendimento avulso exige armazenagem e <strong>cliente ou centro de custo</strong>.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-109</td>
+<td>Atendimento e encerramento</td>
+<td>A saída baixa o saldo do lote e do endereço pelo banco (gatilho <code>trAllMovimentacaoItem</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-110</td>
+<td>Atendimento e encerramento</td>
+<td>Justificativa obrigatória.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-111</td>
+<td>Outras saídas e consultas</td>
+<td>A <strong>Saída de Material (Outras)</strong> exige data, tipo e motivo da movimentação, item, lote de entrada, almoxarifado, local, rua, coluna, andar, quantidade, valor e justificativa (<code>estoque/saida_item_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-112</td>
+<td>Outras saídas e consultas</td>
+<td>O histórico do lote mostra as solicitações e saídas ligadas a ele (ver o fluxo de movimentação interna).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="devolucao-e-entrada-de-produto-acabado">Devolução e entrada de produto acabado</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/devolucao-entrada-producao.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-113</td>
+<td>Devolução da produção</td>
+<td>Exige quantidade, almoxarifado, local, rua, coluna e andar, e justificativa (<code>estoque/devolucao_producao_ed.aspx</code>, validadores).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-114</td>
+<td>Devolução da produção</td>
+<td>A lista de destinos respeita as exigências do item: quarentena, umidade e refrigeração (<code>devolucao_producao_ed.aspx.cs:341</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-115</td>
+<td>Devolução da produção</td>
+<td><strong>O código não abre análise do Controle da Qualidade</strong> na devolução da produção: o material volta direto ao saldo. <em>A validar com a área e a Garantia da Qualidade:</em> se a sobra devolvida precisa de avaliação antes de ser usada de novo, por exemplo quando a embalagem foi aberta.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-116</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>Exige tipo de movimentação, item, lote, validade, fabricante, custo unitário, quantidade, quantidade do volume, endereço e justificativa (<code>estoque/devolucao_ed.aspx</code>, <code>entrada_material_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-117</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>Na <strong>devolução</strong>, o lote informado precisa <strong>já existir</strong> no estoque com o mesmo item, validade e fabricante (<code>devolucao_ed.aspx.cs:724-735</code>, <code>LoteValido</code>). Isso garante a rastreabilidade do lote devolvido.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-118</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>O total endereçado não pode passar da quantidade do item ("Quantidade total endereçada não pode ser maior que a quantidade do item."). Na entrada avulsa, o mesmo item, lote e fabricante não pode repetir na lista.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-119</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>Ao salvar, o sistema <strong>abre análise no Controle da Qualidade</strong> para os lotes (<code>devolucao_ed.aspx.cs:193</code>, <code>entrada_material_ed.aspx.cs:322</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-120</td>
+<td>Entrada do produto acabado</td>
+<td>Exige item, lote, validade, fabricante, quantidade, quantidade do volume e endereço (<code>estoque/entrada_producao_ed.aspx</code>, validadores).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-121</td>
+<td>Entrada do produto acabado</td>
+<td>Se o item exige controle de quarentena, a lista de destinos mostra só locais de quarentena (<code>entrada_producao_ed.aspx.cs:268-291</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-122</td>
+<td>Entrada do produto acabado</td>
+<td>Ao salvar, o sistema abre análise do tipo <strong>produto acabado</strong> no Controle da Qualidade e imprime a etiqueta se o item tem controle de qualidade (<code>entrada_producao_ed.aspx.cs:163-166</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-123</td>
+<td>Entrada do produto acabado</td>
+<td>A <strong>Entrada de Produção</strong> (serviços) exige custo do item, custos adicionais (FR170 e FR180), volumes e endereço. <em>A validar com a área:</em> quando é usada (produção terceirizada?) e o que são os custos FR170 e FR180.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="remessa-e-expedicao">Remessa e expedição</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/remessa-expedicao.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-124</td>
+<td>Remessa de material</td>
+<td>Exige almoxarifado, origem, motivo da remessa, local de entrega, item, lote, quantidade, valor unitário e justificativa (<code>estoque/remessa_ed.aspx</code>, validadores).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-125</td>
+<td>Remessa de material</td>
+<td>A lista de lotes mostra lotes com saldo, <strong>fora de quarentena</strong>, não bloqueados e não em reanálise, dos almoxarifados do grupo do usuário (<code>remessa_ed.aspx.cs:134</code>, <code>LaboSys_DAL/dalItemLote.cs</code>, filtros).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-126</td>
+<td>Remessa de material</td>
+<td>O mesmo lote não pode entrar duas vezes na remessa ("O Lote informado já existe na Remessa!"). A quantidade é conferida contra o saldo do lote (<code>remessa_ed.aspx.cs:604</code>, <code>:905</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-127</td>
+<td>Remessa de material</td>
+<td>A remessa de kit não pode ser excluída ("Remessa de KIT não pode ser excluída!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-128</td>
+<td>Remessa por guia (GMM)</td>
+<td>Exige almoxarifado, item, quantidade, valor unitário, consignatário, centro de custo, local de entrega e justificativa (<code>estoque/remessa_gmm_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-129</td>
+<td>Remessa por guia (GMM)</td>
+<td>A data do embarque não pode ser anterior à data da guia ("Data do embarque não pode ser inferior a Data da Guia!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-130</td>
+<td>Remessa por guia (GMM)</td>
+<td>A guia de kit não pode ser reaberta ("Guia de KIT não pode ser reaberta!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-131</td>
+<td>Confirmação e saída</td>
+<td>A confirmação grava a <strong>data de liberação</strong> da remessa (<code>remessa_ed.aspx.cs:678-679</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-132</td>
+<td>Confirmação e saída</td>
+<td>Com o módulo Rastreabilidade ativo, a confirmação avisa: "O envio poderá ser feito pelo módulo RASTREABILIDADE" (<code>remessa_ed.aspx.cs:682</code>, <code>:310</code>). O Estoque não envia nada à ANVISA; <em>a confirmar no módulo Rastreabilidade</em> que a remessa aparece lá.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-133</td>
+<td>Confirmação e saída</td>
+<td>A <strong>Saída por Nota Fiscal</strong> exige a empresa cliente, a chave da nota fiscal e a justificativa (<code>estoque/saidamaterial_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="inventario">Inventário</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/inventario.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-134</td>
+<td>Abertura do inventário</td>
+<td>Exige data, tipo, motivo, almoxarifado, local, grupo e subgrupo (<code>inventario/inventario_ed.aspx</code>, validadores).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-135</td>
+<td>Abertura do inventário</td>
+<td>A data não pode ser anterior a hoje ("A data do inventário não pode ser anterior a data atual!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-136</td>
+<td>Abertura do inventário</td>
+<td>Não gera inventário com <strong>itens pendentes de recebimento</strong> nem com <strong>solicitações pendentes</strong> (mensagens do código).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-137</td>
+<td>Abertura do inventário</td>
+<td>Os endereços do inventário ficam <strong>travados</strong>, e o saldo deles sai do disponível (<code>LaboSys_DAL/dalInventarioItem.cs:553</code>; visão de saldo, coluna de inventário).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-138</td>
+<td>Contagem e justificativa</td>
+<td>A contagem exige o código da contagem, o endereço, o item e a quantidade (<code>inventario/inventario_contagem.aspx</code>, <code>inventario_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-139</td>
+<td>Contagem e justificativa</td>
+<td>Até <strong>três contagens</strong>. A terceira contagem divergente exige justificativa: "Informe a justificativa para a contagem divergente!" (<code>inventario_ed.aspx</code>); a apuração recusa "Terceira contagem ainda não foi Justificada!" (<code>inventario_apuracao_op.aspx.cs:148</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-140</td>
+<td>Contagem e justificativa</td>
+<td><em>A validar com a área e a Garantia da Qualidade:</em> se as contagens devem ser feitas por pessoas diferentes. O código não mostra essa trava.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-141</td>
+<td>Apuração</td>
+<td>Só apura com a contagem finalizada ("A contagem não foi finalizada!") e a terceira contagem justificada (<code>inventario_apuracao_op.aspx.cs:145-148</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-142</td>
+<td>Apuração</td>
+<td>A apuração processa os itens, ajusta os saldos e informa quantos itens processou (<code>inventario_apuracao_op.aspx.cs:155</code>). Gera o relatório de apuração (<code>:107</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-143</td>
+<td>Apuração</td>
+<td>O inventário pode ser <strong>cancelado</strong> e uma contagem pode ser <strong>reaberta</strong> (<code>inventario_apuracao_op.aspx.cs:184-211</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-144</td>
+<td>Apuração</td>
+<td><em>A validar:</em> quem pode apurar, cancelar e reabrir. O código desta tela não mostra conferência de perfil além da permissão de acesso à tela. <em>A confirmar no teste:</em> se o ajuste de saldo fica no histórico do lote com usuário e justificativa.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="kits">Kits</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/kits.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-145</td>
+<td>Cadastro e parâmetros</td>
+<td>O kit exige descrição, tipo de kit, almoxarifado, itens componentes e quantidades, e justificativa na alteração (<code>kit/cadastro_kit_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-146</td>
+<td>Cadastro e parâmetros</td>
+<td>Os Parâmetros de Configuração (Kit) definem regras gerais; <em>a detalhar no teste</em> quais são.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-147</td>
+<td>Planejamento</td>
+<td>Exige cliente, filial, kit, quantidade e <strong>validade mínima</strong> (<code>kit/planejamento_kit_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-148</td>
+<td>Planejamento</td>
+<td>O mesmo kit não pode repetir no planejamento atual ("O KIT informado já existe no planejamento atual!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-149</td>
+<td>Planejamento</td>
+<td>A análise do planejamento exige o período.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-150</td>
+<td>Solicitação e envio</td>
+<td>Exige tipo de solicitação, cliente, centro de custo, local de entrega, kit, componentes, quantidade de kits e almoxarifado (<code>kit/solicitacao_kit_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-151</td>
+<td>Solicitação e envio</td>
+<td>A solicitação de kit gera itens de solicitação comuns, e a separação segue o fluxo de solicitação. O gatilho do banco que recalculava a situação da solicitação está <strong>desligado</strong> (<code>TBL_SOLICITACAO_ITEM.sql:76</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-152</td>
+<td>Solicitação e envio</td>
+<td>Solicitação ligada a uma guia de movimentação não pode ser alterada livremente ("Solicitação vinculada a uma Guia de Movimentação"). A guia de kit não pode ser reaberta e a remessa de kit não pode ser excluída (fluxo de remessa).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-153</td>
+<td>Solicitação e envio</td>
+<td><em>A confirmar no teste:</em> se a <strong>validade mínima</strong> do planejamento impede separar componentes com validade menor.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-154</td>
+<td>Controle e reposição</td>
+<td>O Controle de Kits mostra os kits enviados e os lotes de cada componente, por remessa (<code>kit/controle_kit_lote_op.aspx.cs:62</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-155</td>
+<td>Controle e reposição</td>
+<td>Permite <strong>repor um lote</strong> ou <strong>repor os lotes vencidos</strong> (<code>controle_kit_lote_op.aspx.cs:114-149</code>). <em>A confirmar no teste:</em> o que a reposição gera (nova solicitação ou remessa) e o que acontece com o lote vencido que está no cliente.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-156</td>
+<td>Controle e reposição</td>
+<td>Na tela de lotes do componente, o código não mostra justificativa nem histórico.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="compras-e-avaliacao-do-fornecedor">Compras e avaliação do fornecedor</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/compras-fornecedor.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-157</td>
+<td>Análise da necessidade</td>
+<td>A Curva ABC exige o período (mês e ano iniciais e finais) e o parâmetro A, e justificativa (<code>gestao/curva_abc_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-158</td>
+<td>Análise da necessidade</td>
+<td>A Análise do Estoque exige grupo do item, período de análise e período de necessidade, <strong>cada um de até 12 meses</strong> ("Período de análise não pode ser superior a 12 meses!") (<code>gestao/analise_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-159</td>
+<td>Pedido de compra</td>
+<td>O pedido exige item, quantidade e custo unitário, e o mesmo item não pode repetir ("O Item informado já existe no pedido!") (<code>gestao/pedido_compra_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-160</td>
+<td>Pedido de compra</td>
+<td>O pedido pode ser gerado a partir da análise (<code>gestao/gerar_pedido_op.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-161</td>
+<td>Pedido de compra</td>
+<td>A baixa (<strong>Recebimento do Item</strong>) exige o lote e a quantidade, com justificativa (<code>gestao/pedido_compra_baixa_op.aspx</code>). <em>A confirmar no teste:</em> se a baixa é automática pelo recebimento da nota ou manual.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-162</td>
+<td>Avaliação do fornecedor</td>
+<td>A <strong>Avaliação do Fornecedor</strong> é feita <strong>por entrega</strong>: cada registro é ligado a uma nota fiscal e a um lote recebido, com pontuação total, campo "qualificado", observação e usuário e data de finalização (tabela <code>TBL_QUALIFICACAO_FORNECEDOR</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-163</td>
+<td>Avaliação do fornecedor</td>
+<td>Justificativa obrigatória na alteração.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-164</td>
+<td>Avaliação do fornecedor</td>
+<td>A avaliação <strong>só é usada na própria tela</strong>. O recebimento não a consulta (<code>LaboSys_BLL/bllQualificacaoFornecedor.cs</code>, sem outro uso no código).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="almoxarifado-do-controle-da-qualidade">Almoxarifado do Controle da Qualidade</h2>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/almoxarifado-cq.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-165</td>
+<td>Estrutura</td>
+<td>O almoxarifado pode ser marcado como <strong>referência, retenção ou estabilidade</strong> (<code>TBL_ALMOXARIFADO</code>, campos <code>REFERENCIA</code>, <code>RETENCAO</code>, <code>ESTABILIDADE</code>). O saldo nele aparece separado na disponibilidade e não conta como disponível para uso (visão <code>VW_SALDO_ITEM_LOTE_ENDERECO</code>, almoxarifado especial).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-166</td>
+<td>Entrada da amostra</td>
+<td>A entrada exige quantidade, almoxarifado, local, rua, coluna e andar, e o endereço precisa aceitar o lote ("Endereço não pode receber o lote!") (<code>cq/movimentacao_almox_cq_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-167</td>
+<td>Entrada da amostra</td>
+<td>O tipo da reserva vem do tipo de movimentação: entrada de referência, de retenção ou de estabilidade (<code>cq/movimentacoes_ed.aspx.cs:507-512</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-168</td>
+<td>Entrada da amostra</td>
+<td>Amostra de <strong>estabilidade</strong> exige o tipo de estabilidade ("É necessário informar um tipo de estabilidade!") e <strong>abre o acompanhamento de estabilidade</strong> no Controle da Qualidade (<code>movimentacao_almox_cq_ed.aspx.cs:176-237</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-169</td>
+<td>Movimentação e saída</td>
+<td>A quantidade movimentada não pode passar da disponível ("Quantidade movimentada não pode ser superior a quantidade disponível!"), e os endereços de origem e destino precisam ser válidos (<code>cq/movimentacoes_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-170</td>
+<td>Movimentação e saída</td>
+<td>A saída baixa o saldo da amostra, com justificativa (<code>cq/movimentacao_saida_lst.aspx</code>). <em>A validar com a área:</em> se a saída distingue consumo em análise de descarte.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-EST-171</td>
+<td>Consulta</td>
+<td>A consulta mostra as amostras guardadas por item e lote (<code>cq/consulta_disponibilidade_lst.aspx</code>, <code>cq/consulta_disponibilidade_ed.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="pontos-de-atencao-dos-fluxos">Pontos de atenção dos fluxos</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Ponto de atenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Movimentação interna</td>
+<td>A trava de quarentena foi desligada</td>
+</tr>
+<tr>
+<td>Movimentação interna</td>
+<td>Validações desligadas</td>
+</tr>
+<tr>
+<td>Movimentação interna</td>
+<td>Saldos atualizados só pelo banco</td>
+</tr>
+<tr>
+<td>Reprovado, reanálise e revalidação</td>
+<td>O destino do reprovado é garantido só pela lista da tela</td>
+</tr>
+<tr>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Lote com a data de reanálise vencida continua disponível para uso</td>
+</tr>
+<tr>
+<td>Solicitação e atendimento à produção</td>
+<td>Lote com data de reanálise vencida pode aparecer para separação</td>
+</tr>
+<tr>
+<td>Devolução e entrada de produto acabado</td>
+<td>A conferência do lote do produto acabado está desligada</td>
+</tr>
+<tr>
+<td>Devolução e entrada de produto acabado</td>
+<td>Destino em quarentena garantido só pela lista da tela</td>
+</tr>
+<tr>
+<td>Remessa e expedição</td>
+<td>O código da lista de lotes não mostra filtro de validade</td>
+</tr>
+<tr>
+<td>Compras e avaliação do fornecedor</td>
+<td>Não existe fornecedor aprovado no Estoque</td>
+</tr>
+<tr>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>O código não mostra controle do prazo de guarda das amostras</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="correspondencia-com-os-fluxos">Correspondência com os fluxos</h2>
+<p>Cada regra tem o número local (RN001…) que aparece no documento do fluxo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Fluxo</th>
+<th>Etapa</th>
+<th>No fluxo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-EST-060</td>
+<td>Movimentação interna</td>
+<td>Cadastro do endereço do estoque</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-061</td>
+<td>Movimentação interna</td>
+<td>Cadastro do endereço do estoque</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-062</td>
+<td>Movimentação interna</td>
+<td>Cadastro do endereço do estoque</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-063</td>
+<td>Movimentação interna</td>
+<td>Cadastro do endereço do estoque</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-064</td>
+<td>Movimentação interna</td>
+<td>Cadastro do endereço do estoque</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-EST-065</td>
+<td>Movimentação interna</td>
+<td>Endereçamento do lote</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-066</td>
+<td>Movimentação interna</td>
+<td>Endereçamento do lote</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-067</td>
+<td>Movimentação interna</td>
+<td>Endereçamento do lote</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-068</td>
+<td>Movimentação interna</td>
+<td>Movimentação entre endereços</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-069</td>
+<td>Movimentação interna</td>
+<td>Movimentação entre endereços</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-070</td>
+<td>Movimentação interna</td>
+<td>Movimentação entre endereços</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-071</td>
+<td>Movimentação interna</td>
+<td>Movimentação entre endereços</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-072</td>
+<td>Movimentação interna</td>
+<td>Movimentação entre endereços</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-EST-073</td>
+<td>Movimentação interna</td>
+<td>Movimentação entre endereços</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-EST-074</td>
+<td>Movimentação interna</td>
+<td>Movimentação entre endereços</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-EST-075</td>
+<td>Movimentação interna</td>
+<td>Consultas e rastreabilidade</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-076</td>
+<td>Movimentação interna</td>
+<td>Consultas e rastreabilidade</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-077</td>
+<td>Movimentação interna</td>
+<td>Consultas e rastreabilidade</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-078</td>
+<td>Movimentação interna</td>
+<td>Consultas e rastreabilidade</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-079</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Destino do lote depois da análise</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-080</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Destino do lote depois da análise</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-081</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Destino do lote depois da análise</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-082</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Destino do lote depois da análise</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-083</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Destino do lote depois da análise</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-EST-084</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Destino do lote depois da análise</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-EST-085</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Reanálise do lote</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-086</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Reanálise do lote</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-087</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Reanálise do lote</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-088</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Reanálise do lote</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-089</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Reanálise do lote</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-EST-090</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Revalidação da validade</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-091</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Revalidação da validade</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-092</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Revalidação da validade</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-093</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Consultas e relatórios</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-094</td>
+<td>Reprovado, reanálise e revalidação</td>
+<td>Consultas e relatórios</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-095</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Solicitação de material</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-096</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Solicitação de material</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-097</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Solicitação de material</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-098</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Solicitação de material</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-099</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Solicitação de material</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-EST-100</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Aprovação da solicitação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-101</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Aprovação da solicitação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-102</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Separação e pesagem</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-103</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Separação e pesagem</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-104</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Separação e pesagem</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-105</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Separação e pesagem</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-106</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Separação e pesagem</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-EST-107</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Atendimento e encerramento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-108</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Atendimento e encerramento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-109</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Atendimento e encerramento</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-110</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Atendimento e encerramento</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-111</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Outras saídas e consultas</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-112</td>
+<td>Solicitação e atendimento à produção</td>
+<td>Outras saídas e consultas</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-113</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Devolução da produção</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-114</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Devolução da produção</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-115</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Devolução da produção</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-116</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-117</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-118</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-119</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Devolução de material e entradas avulsas</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-120</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Entrada do produto acabado</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-121</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Entrada do produto acabado</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-122</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Entrada do produto acabado</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-123</td>
+<td>Devolução e entrada de produto acabado</td>
+<td>Entrada do produto acabado</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-124</td>
+<td>Remessa e expedição</td>
+<td>Remessa de material</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-125</td>
+<td>Remessa e expedição</td>
+<td>Remessa de material</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-126</td>
+<td>Remessa e expedição</td>
+<td>Remessa de material</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-127</td>
+<td>Remessa e expedição</td>
+<td>Remessa de material</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-128</td>
+<td>Remessa e expedição</td>
+<td>Remessa por guia (GMM)</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-129</td>
+<td>Remessa e expedição</td>
+<td>Remessa por guia (GMM)</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-130</td>
+<td>Remessa e expedição</td>
+<td>Remessa por guia (GMM)</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-131</td>
+<td>Remessa e expedição</td>
+<td>Confirmação e saída</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-132</td>
+<td>Remessa e expedição</td>
+<td>Confirmação e saída</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-133</td>
+<td>Remessa e expedição</td>
+<td>Confirmação e saída</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-134</td>
+<td>Inventário</td>
+<td>Abertura do inventário</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-135</td>
+<td>Inventário</td>
+<td>Abertura do inventário</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-136</td>
+<td>Inventário</td>
+<td>Abertura do inventário</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-137</td>
+<td>Inventário</td>
+<td>Abertura do inventário</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-138</td>
+<td>Inventário</td>
+<td>Contagem e justificativa</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-139</td>
+<td>Inventário</td>
+<td>Contagem e justificativa</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-140</td>
+<td>Inventário</td>
+<td>Contagem e justificativa</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-141</td>
+<td>Inventário</td>
+<td>Apuração</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-142</td>
+<td>Inventário</td>
+<td>Apuração</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-143</td>
+<td>Inventário</td>
+<td>Apuração</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-144</td>
+<td>Inventário</td>
+<td>Apuração</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-145</td>
+<td>Kits</td>
+<td>Cadastro e parâmetros</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-146</td>
+<td>Kits</td>
+<td>Cadastro e parâmetros</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-147</td>
+<td>Kits</td>
+<td>Planejamento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-148</td>
+<td>Kits</td>
+<td>Planejamento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-149</td>
+<td>Kits</td>
+<td>Planejamento</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-150</td>
+<td>Kits</td>
+<td>Solicitação e envio</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-151</td>
+<td>Kits</td>
+<td>Solicitação e envio</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-152</td>
+<td>Kits</td>
+<td>Solicitação e envio</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-153</td>
+<td>Kits</td>
+<td>Solicitação e envio</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-EST-154</td>
+<td>Kits</td>
+<td>Controle e reposição</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-155</td>
+<td>Kits</td>
+<td>Controle e reposição</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-156</td>
+<td>Kits</td>
+<td>Controle e reposição</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-157</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Análise da necessidade</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-158</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Análise da necessidade</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-159</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Pedido de compra</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-160</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Pedido de compra</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-161</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Pedido de compra</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-162</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Avaliação do fornecedor</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-163</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Avaliação do fornecedor</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-164</td>
+<td>Compras e avaliação do fornecedor</td>
+<td>Avaliação do fornecedor</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-165</td>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>Estrutura</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-166</td>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>Entrada da amostra</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-167</td>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>Entrada da amostra</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-168</td>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>Entrada da amostra</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-EST-169</td>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>Movimentação e saída</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-EST-170</td>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>Movimentação e saída</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-EST-171</td>
+<td>Almoxarifado do Controle da Qualidade</td>
+<td>Consulta</td>
+<td>RN001</td>
+</tr>
+</tbody>
+</table></div>
+<!-- total: 112 regras -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#regras-gerais-do-modulo">Regras gerais do módulo</a></li><li><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li><a href="#recebimento-de-materiais">Recebimento de materiais</a></li><li><a href="#estoque-quarentena">Estoque quarentena</a></li><li><a href="#movimentacao-interna">Movimentação interna</a></li><li><a href="#reprovado-reanalise-e-revalidacao">Reprovado, reanálise e revalidação</a></li><li><a href="#solicitacao-e-atendimento-a-producao">Solicitação e atendimento à produção</a></li><li><a href="#devolucao-e-entrada-de-produto-acabado">Devolução e entrada de produto acabado</a></li><li><a href="#remessa-e-expedicao">Remessa e expedição</a></li><li><a href="#inventario">Inventário</a></li><li><a href="#kits">Kits</a></li><li><a href="#compras-e-avaliacao-do-fornecedor">Compras e avaliação do fornecedor</a></li><li><a href="#almoxarifado-do-controle-da-qualidade">Almoxarifado do Controle da Qualidade</a></li><li><a href="#pontos-de-atencao-dos-fluxos">Pontos de atenção dos fluxos</a></li><li><a href="#correspondencia-com-os-fluxos">Correspondência com os fluxos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

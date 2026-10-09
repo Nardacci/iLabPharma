@@ -84,6 +84,7 @@ MODULOS = [
         "docs": [
             ("3.estoque/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
+            ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
             ("3.estoque/fluxos/recebimento-quarentena-conferencia.md", "Recebimento e quarentena (conferência)", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Conferencia dos Fluxos de Recebimento e Quarentena.docx"),
             ("3.estoque/fluxos/movimentacao-interna.md", "Movimentação interna", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Movimentacao Interna.docx"),
             ("3.estoque/fluxos/reprovado-reanalise-revalidacao.md", "Reprovado, reanálise e revalidação", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Reprovado, Reanalise e Revalidacao.docx"),
