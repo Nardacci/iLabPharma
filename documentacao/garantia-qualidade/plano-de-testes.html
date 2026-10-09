@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="autoinspecao-e-auditoria.html">Autoinspeção e auditoria</a></li><li><a href="treinamento-tecnico.html">Treinamento técnico</a></li><li><a href="assuntos-regulatorios.html">Assuntos regulatórios</a></li><li><a href="controle-de-mudancas.html">Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Versão a testar:</strong> legado entregue pelo fornecedor · <strong>Executor previsto:</strong> Claude Code no computador da pessoa, pela VPN, com a habilidade <code>executar-testes</code> (passo a passo em <code>homologacao/COMO-EXECUTAR-TESTES.md</code>).</p>
+<p>Os casos das seções 6.1 a 6.5 e o resumo (seção 7) foram <strong>montados por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/montar_plano_testes_gq.py</code>). Se um fluxo mudar, gere essas seções de novo.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<p>Confirmar nas telas o que a leitura do código encontrou na Garantia da Qualidade: as regras de negócio (<code>01-regras-de-negocio.md</code>), os pontos de atenção dos cinco fluxos e a situação das 67 telas (<code>11-inventario-de-telas.md</code>). Os testes vão <strong>por risco</strong>: primeiro o que toca a norma (lote, trilha de auditoria, aprovação, independência, eficácia, registro do produto).</p>
+<h3 id="2-escopo">2. Escopo</h3>
+<ul>
+<li>Os cinco fluxos: desvios e CAPA, controle de mudanças, autoinspeção e auditoria, treinamento e assuntos regulatórios.</li>
+<li><strong>Fora:</strong> os 22 protótipos, que só serão abertos para registrar que não gravam; os módulos Produção, CQ e Controle de Documentos, que só entram onde um caso pede para conferir o efeito lá (por exemplo, CT-GQ-014, 080, 081 e 099).</li>
+</ul>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<h4 id="3-1-antes-de-qualquer-caso-a-gq-abre">3.1 Antes de qualquer caso: a GQ abre?</h4>
+<p>No Estoque, os testes travaram porque o usuário de teste não tinha acesso ao módulo (<code>3.estoque/execucao/2026-10-07/resultado.md</code>, seção do perfil <code>TESTEESTOQUE</code>). Na GQ, o acesso também vem do Principal: o <strong>menu</strong> vem da <code>SIS_FUNCAO</code> e as <strong>permissões</strong> do perfil (RN-GQ-001). Por isso, o primeiro passo é:</p>
+<ol>
+<li>No Principal, criar o perfil <strong><code>TESTEGQ</code></strong> com <strong>todas as telas da aba Garantia da Qualidade</strong> e todas as ações.</li>
+<li>Dar o <code>TESTEGQ</code> como perfil adicional aos usuários da tabela 3.3.</li>
+<li>Entrar na GQ com <code>t.admin</code> e conferir se o menu aparece. <strong>Se não aparecer, parar e registrar</strong>: é o mesmo bloqueio do Estoque, e o caminho é pedir à TI/DBA.</li>
+</ol>
+<h4 id="3-2-areas-de-teste-no-principal">3.2 Áreas de teste (no Principal)</h4>
+<p>As "áreas" da GQ são os <strong>locais da Estrutura funcional</strong> do Principal, e <strong>só aparecem os locais que têm responsável</strong> (<code>1.principal/app/HSolutions.Principal.Microservice/Controllers/AreaController.cs:50</code>, <code>retornarLocaisComResponsaveis</code>). Criar no Principal:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Local</th>
+<th>Responsável</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TESTE AREA A</code></td>
+<td><code>t.cadastro</code></td>
+</tr>
+<tr>
+<td><code>TESTE AREA B</code></td>
+<td><code>t.semadmin</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-3-usuarios-e-niveis-da-gq">3.3 Usuários e níveis da GQ</h4>
+<p>A GQ já traz os grupos de perfil <strong>Nível 01, Nível 02 e Nível 03</strong> (criados pelo script de instalação, <code>Hsolutions.GQ.DB/dml.sql:53-63</code>). <strong>Não é preciso criar grupos <code>TESTE</code>.</strong> Na tela <strong>Grupo Perfil</strong> da GQ, ligar os usuários do Principal assim:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário (já existe)</th>
+<th>Grupo na GQ</th>
+<th>Área</th>
+<th>Nos fluxos é chamado de</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t.admin</code></td>
+<td>Nível 03</td>
+<td>—</td>
+<td><code>TESTE NIVEL 3</code> (GQ, aprova e libera)</td>
+</tr>
+<tr>
+<td><code>t.cadastro</code></td>
+<td>Nível 02</td>
+<td><code>TESTE AREA A</code></td>
+<td><code>TESTE NIVEL 2</code> (área A)</td>
+</tr>
+<tr>
+<td><code>t.semadmin</code></td>
+<td>Nível 02</td>
+<td><code>TESTE AREA B</code></td>
+<td>segunda área (área B)</td>
+</tr>
+<tr>
+<td><code>t.consulta</code></td>
+<td>Nível 01</td>
+<td><code>TESTE AREA A</code></td>
+<td><code>TESTE NIVEL 1</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Se um desses usuários estiver bloqueado ou com a senha vencida (sobras das rodadas do Principal), usar o administrador para gerar senha nova. <strong>Não guardar senhas neste repositório.</strong></p>
+<h4 id="3-4-dados-ja-existentes-no-ambiente-reaproveitar">3.4 Dados já existentes no ambiente (reaproveitar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Onde</th>
+<th>Uso aqui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lote <code>TESTELOTE001</code> do item <code>TESTE MATERIA PRIMA</code></td>
+<td>Estoque (rodada de 07/10)</td>
+<td>Lote do desvio (CT-GQ-002 e 014). <em>A confirmar:</em> a GQ busca lotes pela API da <strong>Produção</strong>; se o lote do Estoque não aparecer, registrar e usar o item como "material"</td>
+</tr>
+<tr>
+<td><code>TESTE PJ FARMACÊUTICA LTDA</code></td>
+<td>Principal (pessoa jurídica)</td>
+<td>Fornecedor da programação regulatória; empresa de inspetor externo</td>
+</tr>
+<tr>
+<td>Equipamentos <code>TESTE …</code></td>
+<td>Principal</td>
+<td>Item do tipo equipamento no desvio</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-5-dados-que-faltam-pedir-ou-criar">3.5 Dados que faltam (pedir ou criar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Necessário para</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Um <strong>produto <code>TESTE</code></strong> na Produção</td>
+<td>Mudança com produto (CT-GQ-033, 042, 043), solicitação de registro (CT-GQ-096 a 099)</td>
+<td>Não existe. Sem ele, esses casos ficam <strong>bloqueados</strong></td>
+</tr>
+<tr>
+<td>Um <strong>POP <code>TESTE</code></strong> no Controle de Documentos</td>
+<td>Treinamento ligado a documento (CT-GQ-071, 081)</td>
+<td>Não existe. O treinamento pode ser testado sem POP, mas o CT-GQ-081 fica bloqueado</td>
+</tr>
+<tr>
+<td>Uma <strong>função <code>TESTE</code></strong> com dois funcionários</td>
+<td>Matriz e acompanhamento do treinamento (CT-GQ-071 a 080)</td>
+<td>Criar no Principal (Funções profissionais), ligando <code>t.cadastro</code> e <code>t.consulta</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<p>Como nos outros módulos: captura de cada passo relevante nos casos de prioridade <strong>alta</strong> e do resultado nos de prioridade <strong>média</strong>, em <code>homologacao/5.garantia_qualidade/execucao/&lt;AAAA-MM-DD&gt;/evidencias/CT-GQ-xxx-passo-N.png</code>. Resultado em <code>execucao/&lt;AAAA-MM-DD&gt;/resultado.md</code>, com os desvios numerados <strong>DV-GQ-001</strong> em diante. Todo registro criado começa com <code>TESTE</code> e fica no ambiente.</p>
+<p><strong>Atenção à trilha de auditoria:</strong> vários casos pedem para "consultar o histórico". Na GQ, o histórico de cada registro abre pelo ícone de histórico (log) da lista. Se o histórico vier vazio para tudo, pode ser a tabela <code>TBL_LOG_ALTERACAO_GQ</code>, que não está no projeto de banco (RN-GQ-005): registrar e perguntar ao DBA antes de concluir que cada gravação "não deixa histórico".</p>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<ul>
+<li>O teste <strong>confirma o comportamento atual</strong>. Nos casos marcados "Registrar se…", o resultado esperado pela norma é diferente do que o código indica; o caso <strong>falha</strong> se o sistema fizer o que o código mostra.</li>
+<li>Para a nova versão, todos os casos de prioridade <strong>alta</strong> devem passar (as falhas viram requisitos corrigidos).</li>
+<li><strong>Ordem sugerida:</strong> rodada 1 com os 25 casos de prioridade alta, na ordem dos fluxos; rodada 2 com os de prioridade média; rodada 3 com os de prioridade baixa (preenchimento e caminhos normais), conforme houver crédito.</li>
+</ul>
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p>Prioridade: <strong>Alta</strong> = citado na prioridade por risco do fluxo; <strong>Média</strong> = pede para registrar uma falha prevista pelo código; <strong>Baixa</strong> = regras de preenchimento e caminhos normais. "Rastreia" aponta o ponto de atenção do fluxo, quando o caso o cita. A ligação com as regras está no <code>01-regras-de-negocio.md</code> (seção 8) e nos fluxos.</p>
+<h4 id="6-1-desvios-e-capa">6.1 Desvios e CAPA</h4>
+<p>Fluxo: <code>fluxos/desvios-capa.md</code>. Dados do fluxo: usuários de teste em três grupos de perfil, <code>TESTE NIVEL 1</code>, <code>TESTE NIVEL 2</code> e <code>TESTE NIVEL 3</code>, em duas áreas diferentes. Criar os grupos na tela Grupo Perfil se ainda não existirem. Também um lote <code>TESTE</code> já existente no Estoque (ver a lista em <code>3.estoque/execucao/</code>) e um equipamento <code>TESTE</code> do Principal. Todos os desvios com descrição começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-001</td>
+<td>Relatório de Desvios sem descrição e sem local</td>
+<td>Recusa: descrição e local obrigatórios</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-002</td>
+<td>Registrar desvio <code>TESTE</code> com item produto e o lote <code>TESTE</code></td>
+<td>Número sequencial do ano; situação Pendente Registro Ação Corretiva</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-003</td>
+<td>Tentar alterar a data do relatório antes de salvar (campo da tela)</td>
+<td>Pela norma, a data deve ser a do servidor. <strong>Registrar se a data alterada for gravada</strong></td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-004</td>
+<td>Editar o desvio sem justificativa e depois com justificativa; consultar o histórico</td>
+<td>Recusa sem justificativa; com ela, o histórico mostra valor antigo e novo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-005</td>
+<td>Com o <code>TESTE NIVEL 1</code> de outra área, tentar editar o desvio de outro usuário</td>
+<td>Sem botão de editar</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-006</td>
+<td>Cancelar um desvio pela tela Relatório de Desvios, com justificativa; consultar o histórico</td>
+<td>Cancelado. <strong>Registrar se o cancelamento não aparecer no histórico</strong> (ponto 4)</td>
+<td>Ponto 4: Trilha de auditoria incompleta</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-007</td>
+<td>Cancelar outro desvio pela tela Registro Ação Corretiva Imediata; consultar o histórico</td>
+<td>Cancelado e presente no histórico (comparar com o CT-GQ-006)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-008</td>
+<td>Registrar a ação imediata sem descrição e depois com descrição</td>
+<td>Recusa; depois Pendente Pré Avaliação</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-009</td>
+<td>Pré-avaliação com método "Outros" sem texto</td>
+<td>Recusa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-010</td>
+<td>Pré-avaliação com duas áreas envolvidas</td>
+<td>Pendente Responsável Área</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-011</td>
+<td>Antes de as áreas avaliarem, abrir a Avaliação Relatório Desvios</td>
+<td>O desvio aparece na lista, mas sem botão de avaliar</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-012</td>
+<td>Avaliação Área sem observação; depois só a primeira área avalia</td>
+<td>Recusa; depois o desvio continua em Pendente Responsável Área</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-013</td>
+<td>A segunda área avalia</td>
+<td>Pendente Avaliação Relatório de Desvios</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-014</td>
+<td><strong>Com o desvio aberto, liberar ou usar o lote TESTE no CQ, no Estoque ou na Produção</strong></td>
+<td>Pela norma, deveria haver bloqueio ou aviso. <strong>Registrar com evidência se o lote seguir normalmente</strong> (ponto 6)</td>
+<td>Ponto 6: O desvio não chega ao lote</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-015</td>
+<td>Avaliar sem CAPA, sem preencher a observação de abertura de CAPA</td>
+<td>Recusa; preenchida, o desvio fica Finalizado sem Relatório CAPA</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-016</td>
+<td>Em outro desvio, avaliar marcando CAPA e controle de mudança</td>
+<td>Pendente Relatório de CAPA. <strong>Conferir que nenhuma solicitação de mudança foi aberta</strong></td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-017</td>
+<td>Relatório de CAPA com o diagrama incompleto; depois completo, com criticidade "Crítico"</td>
+<td>Recusa; depois Pendente Plano Ação Corretiva; impressão do CAPA</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-018</td>
+<td>Com o <code>TESTE NIVEL 2</code>, abrir o Plano de Ação Corretiva</td>
+<td>Volta para a lista (só nível 3)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-019</td>
+<td>Plano corretivo com duas ações (responsáveis de áreas diferentes)</td>
+<td>Desvio vai direto para Pendente Monitoramento, sem aprovação do plano</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-020</td>
+<td>Executar só uma das duas ações, com data de conclusão futura e depois com a de hoje</td>
+<td>Recusa a data futura; aceita a de hoje</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-021</td>
+<td><strong>Monitoramento com uma ação ainda não concluída</strong>, aprovando o plano</td>
+<td>Pela norma, deveria exigir todas concluídas. <strong>Registrar se aprovar</strong></td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-022</td>
+<td><strong>Em outro desvio, reprovar o plano corretivo</strong> e procurar o desvio nas telas de plano</td>
+<td><strong>Registrar se o desvio ficar sem tela para seguir</strong> (ponto 2)</td>
+<td>Ponto 2: Plano corretivo reprovado não tem saída</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-023</td>
+<td>Plano preventivo, execução e monitoramento <strong>reprovando</strong></td>
+<td><strong>Registrar se o desvio for para Concluído</strong> (ponto 1)</td>
+<td>Ponto 1: Plano preventivo reprovado encerra o desvio como "Concluído"</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-024</td>
+<td>Mesmo usuário nível 3 escreve e aprova o plano preventivo de outro desvio</td>
+<td>Pela norma, separação de funções. <strong>Registrar se o sistema aceitar</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-025</td>
+<td>Acompanhamento RD e Controle de Emissão de RNC do período dos testes</td>
+<td>Relatórios com os desvios <code>TESTE</code> e suas situações</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-2-controle-de-mudancas">6.2 Controle de mudanças</h4>
+<p>Fluxo: <code>fluxos/controle-mudancas.md</code>. Dados do fluxo: os usuários <code>TESTE NIVEL 1</code>, <code>TESTE NIVEL 2</code> e <code>TESTE NIVEL 3</code> do fluxo de desvios, em duas áreas diferentes. Um produto <code>TESTE</code> da Produção, se houver, e o lote <code>TESTE</code> do Estoque. Todas as solicitações com descrição começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-030</td>
+<td>Solicitação sem descrição, sem tipo, sem item e sem motivo</td>
+<td>Recusa, com as mensagens de cada campo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-031</td>
+<td>Mudança temporária sem validade, depois com validade passada, depois futura; sem áreas de impacto</td>
+<td>Recusa nas duas primeiras; a terceira salva em Pendente Revisão. <strong>Registrar que as áreas de impacto não são exigidas</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-032</td>
+<td>Revisão não aceitando, sem justificativa e depois com justificativa</td>
+<td>Recusa; depois Não Aceito</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-033</td>
+<td>Em outra solicitação (item produto), revisar aceitando e escolher duas áreas</td>
+<td>Pendente Liberação Avaliação</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-034</td>
+<td><strong>Com o TESTE NIVEL 3, liberar (aprovar) a avaliação antes de qualquer área avaliar</strong></td>
+<td>Pela norma, deveria exigir os pareceres. <strong>Registrar se aprovar</strong> (ponto 1)</td>
+<td>Ponto 1: A GQ pode aprovar a mudança sem o parecer das áreas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-035</td>
+<td>Em outra solicitação, uma área "não aceita" (com justificativa) e a GQ libera aprovando</td>
+<td><strong>Registrar se aprovar apesar do "não aceito"</strong></td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-036</td>
+<td>Com o <code>TESTE NIVEL 2</code>, abrir a Liberação Avaliação de Mudanças</td>
+<td>Sem botão de liberar</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-037</td>
+<td>Plano de ação com prioridade 11 e data prevista anterior à solicitação</td>
+<td>Recusa nas duas</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-038</td>
+<td>Plano com duas ações; a mudança fica Pendente Finalização Plano Ação</td>
+<td>Sem etapa de aprovação do plano</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-039</td>
+<td>Abrir a visualização do plano de uma mudança sem plano e consultar o histórico</td>
+<td><strong>Registrar se a consulta criou o plano</strong> (RN003 do plano)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-040</td>
+<td>Executar uma ação com data futura e com data anterior à solicitação</td>
+<td>Recusa nas duas</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-041</td>
+<td><strong>Finalizar o plano com uma ação ainda não concluída</strong></td>
+<td><strong>Registrar se aceitar</strong> (ponto 2)</td>
+<td>Ponto 2: Finalizar sem concluir e sem avaliar a eficácia</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-042</td>
+<td>Mudança com produto: finalização aprovada</td>
+<td>Pendente Aprovação produto</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-043</td>
+<td>Controle Mudança Produto sem justificativa, lote <code>TESTE</code>; consultar o histórico</td>
+<td><strong>Registrar se salvar sem justificativa e se não houver histórico</strong> (ponto 3)</td>
+<td>Ponto 3: A aprovação final do produto não fica na trilha de auditoria</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-044</td>
+<td>Mudança sem produto: finalização aprovada</td>
+<td>Aceito</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-045</td>
+<td>Finalização reprovada com ações já executadas</td>
+<td>Não Aceito</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-046</td>
+<td>Cancelar uma solicitação em Pendente Revisão, com justificativa; consultar o histórico</td>
+<td>Cancelado, com histórico</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-047</td>
+<td>Procurar na tela Solicitação de Mudanças um botão "Excluir"</td>
+<td><strong>Registrar se existir</strong> e se cancela sem histórico (ponto 4)</td>
+<td>Ponto 4: Há dois cancelamentos, um sem rastro</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-048</td>
+<td>Mudança temporária com validade de amanhã; no dia seguinte, consultar a mudança</td>
+<td><strong>Registrar que nada acontece</strong> no vencimento (ponto 5)</td>
+<td>Ponto 5: Mudanças temporárias não vencem</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-049</td>
+<td>Desvio avaliado com "necessário abrir controle de mudança" (CT-GQ-016)</td>
+<td>Nenhuma solicitação aberta (ponto 6)</td>
+<td>Ponto 6: A mudança não conversa com o resto</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-3-autoinspecao-e-auditoria">6.3 Autoinspeção e auditoria</h4>
+<p>Fluxo: <code>fluxos/autoinspecao-auditoria.md</code>. Dados do fluxo: os usuários <code>TESTE NIVEL 2</code> e <code>TESTE NIVEL 3</code>; um usuário <code>TESTE INSPETOR</code> cadastrado como auditor; duas áreas de teste. Todos os roteiros e autoinspeções com nome começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-050</td>
+<td>Cadastrar dois roteiros com o mesmo título</td>
+<td>Recusa no segundo: "Título do Roteiro já existe"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-051</td>
+<td>Roteiro <code>TESTE</code> com perguntas de cada forma de resposta, uma obrigatória e uma que gera RNC</td>
+<td>Roteiro salvo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-052</td>
+<td>Abrir a lista de tipos no Cadastro Autoinspeção e Auditoria</td>
+<td>Mostra rotina, completa, específica e auditoria interna. <strong>Registrar que não há tipo de fornecedor</strong> (ponto 4)</td>
+<td>Ponto 4: Não existe auditoria de fornecedor</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-053</td>
+<td>Programação com período começando ontem, depois com início após o fim</td>
+<td>Recusa nas duas</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-054</td>
+<td>Programação sem coordenador e sem departamento auditado</td>
+<td>Recusa por falta de departamento; <strong>registrar que o coordenador não é exigido</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-055</td>
+<td><strong>Programação em que o inspetor é da área auditada</strong></td>
+<td>Pela norma, deveria impedir ou alertar. <strong>Registrar se aceitar</strong> (ponto 3)</td>
+<td>Ponto 3: Independência não garantida</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-056</td>
+<td>Iniciar a programação</td>
+<td>Em Curso; roteiros abertos por departamento</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-057</td>
+<td><strong>Com o responsável da área auditada, registrar e alterar respostas</strong></td>
+<td><strong>Registrar se a área auditada conseguir</strong> (ponto 3)</td>
+<td>Ponto 3: Independência não garantida</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-058</td>
+<td>Resposta não conforme com o número de RNC "TESTE 999", que não existe</td>
+<td><strong>Registrar que aceita qualquer texto</strong> (ponto 2)</td>
+<td>Ponto 2: A auditoria não alimenta o tratamento de desvios</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-059</td>
+<td>Avançar para avaliação com um roteiro ainda em curso (se o botão aparecer)</td>
+<td>Pela regra, só com roteiros concluídos</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-060</td>
+<td>Avaliação sem evidências e sem conclusões; período real com fim amanhã</td>
+<td>Recusa nas duas</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-061</td>
+<td>Registrar um desvio da auditoria, alterar a descrição e consultar o histórico</td>
+<td><strong>Registrar se a alteração não aparecer no histórico</strong> (ponto 5)</td>
+<td>Ponto 5: Travas só na tela e registros sem histórico</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-062</td>
+<td>Reabrir a avaliação</td>
+<td>Volta para Em Curso. <strong>Registrar que não pede justificativa</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-063</td>
+<td>Finalizar com resultado "Não conforme"; procurar um Relatório de Desvios aberto</td>
+<td>Finalizado. <strong>Registrar que nenhum desvio foi aberto</strong> (ponto 2)</td>
+<td>Ponto 2: A auditoria não alimenta o tratamento de desvios</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-064</td>
+<td>Imprimir o relatório da autoinspeção finalizada</td>
+<td>Relatório com evidências, conclusões e desvios</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-065</td>
+<td>Excluir um roteiro usado em programação finalizada; consultar o histórico e a programação</td>
+<td><strong>Registrar o efeito na programação e a falta de histórico</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-4-treinamento">6.4 Treinamento</h4>
+<p>Fluxo: <code>fluxos/treinamento.md</code>. Dados do fluxo: os usuários <code>TESTE NIVEL 2</code> e <code>TESTE NIVEL 3</code>; dois funcionários de teste numa função <code>TESTE</code>; um POP <code>TESTE</code> no Controle de Documentos, se houver. Todos os treinamentos com nome começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-070</td>
+<td>Cadastro de Treinamento externo sem instituição e sem CNPJ</td>
+<td>Recusa nos dois</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-071</td>
+<td>Treinamento <code>TESTE</code> obrigatório, validade de 1 dia, ligado à função <code>TESTE</code></td>
+<td>Salvo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-072</td>
+<td>Solicitação sem funcionário; depois com os dois funcionários</td>
+<td>Recusa; depois Pendente</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-073</td>
+<td>Programação com máximo de 1 treinando</td>
+<td>Recusa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-074</td>
+<td>Programação válida, alocação dos dois na matriz e início</td>
+<td>Alocado, depois Em Curso; histórico da alocação</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-075</td>
+<td>Conclusão sem nota de um treinando</td>
+<td>Recusa: "Nota não informada!"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-076</td>
+<td><strong>Conclusão com um treinando ausente, nota 0, marcado "Suficiente"</strong></td>
+<td>Pela norma, deveria recusar. <strong>Registrar se aceitar e se ele receber validade</strong> (ponto 1)</td>
+<td>Ponto 1: "Suficiente" sem critério</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-077</td>
+<td>Conclusão sem tipo de avaliação</td>
+<td><strong>Registrar que aceita</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-078</td>
+<td>Consultar o histórico da programação concluída</td>
+<td><strong>Registrar se a mudança para Finalizado não aparecer</strong> (ponto 5)</td>
+<td>Ponto 5: Registros sem histórico</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-079</td>
+<td>Acompanhamento no dia seguinte (validade de 1 dia)</td>
+<td>Os dois aparecem como Vencido; <strong>registrar que não há aviso</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-080</td>
+<td>Com um funcionário vencido, executar uma tarefa na Produção ou no Estoque</td>
+<td><strong>Registrar que nada impede</strong> (ponto 2)</td>
+<td>Ponto 2: O treinamento não habilita nem bloqueia ninguém</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-081</td>
+<td>Turma em que todos ficam insuficientes; consultar no Controle de Documentos o treinamento do POP</td>
+<td><strong>Registrar se aparece como concluído</strong> (ponto 3)</td>
+<td>Ponto 3: O Controle de Documentos recebe a turma, não a pessoa</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-082</td>
+<td>Excluir um treinamento com programação</td>
+<td>Recusa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-083</td>
+<td>Excluir um tipo de treinamento sem uso e consultar o histórico</td>
+<td><strong>Registrar a falta de histórico</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-5-assuntos-regulatorios">6.5 Assuntos regulatórios</h4>
+<p>Fluxo: <code>fluxos/assuntos-regulatorios.md</code>. Dados do fluxo: um processo regulatório <code>TESTE</code>; o fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>; um produto <code>TESTE</code> da Produção, se houver. Todas as descrições começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-090</td>
+<td>Processo Regulatório sem descrição; depois com descrição</td>
+<td>Recusa; depois salvo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-091</td>
+<td><strong>Programação com prazo máximo anterior à data programada e validade anterior ao prazo</strong></td>
+<td>Pela regra documentada, deveria recusar. <strong>Registrar se aceitar</strong> (ponto 2)</td>
+<td>Ponto 2: As regras descritas pela equipe não estão no código</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-092</td>
+<td>Programação com um nome de produto que não existe ("TESTE INEXISTENTE")</td>
+<td><strong>Registrar que aceita qualquer texto</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-093</td>
+<td>Programação com validade de amanhã; no dia seguinte, abrir a lista</td>
+<td><strong>Registrar que não há aviso</strong> (ponto 3)</td>
+<td>Ponto 3: Sem aviso de prazo e sem efeito nos outros módulos</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-094</td>
+<td>Monitoramento sem anexo; depois com anexo, finalizando</td>
+<td>Recusa; depois a programação fica finalizada, com histórico</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-095</td>
+<td>Check-list com dois documentos, um "Com Pendências"</td>
+<td>Salvo; <strong>consultar o histórico</strong> da edição</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-096</td>
+<td>Solicitação de Registro de registro novo para o produto <code>TESTE</code>, usando o check-list</td>
+<td>Criado</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-097</td>
+<td><strong>Enviar à ANVISA com o documento ainda "Com Pendências"</strong></td>
+<td>Pela norma, deveria impedir. <strong>Registrar se enviar</strong>; consultar o histórico (ponto 4)</td>
+<td>Ponto 4: Envio à ANVISA sem conferência e sem histórico</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-098</td>
+<td>No Controle de Produtos, registrar "Indeferida pela ANVISA" para o produto <code>TESTE</code></td>
+<td>Salvo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-099</td>
+<td><strong>Com o registro indeferido, abrir uma ordem de produção ou um pedido do produto TESTE</strong></td>
+<td><strong>Registrar que nada impede</strong> (ponto 3)</td>
+<td>Ponto 3: Sem aviso de prazo e sem efeito nos outros módulos</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-GQ-100</td>
+<td>Fechar a solicitação e consultar o histórico</td>
+<td>Fechada. <strong>Registrar a falta de histórico</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-101</td>
+<td>Abrir a tela Exigências da ANVISA</td>
+<td><strong>Registrar o erro</strong> (achado 4 do reconhecimento)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Casos</th>
+<th>Alta</th>
+<th>Média</th>
+<th>Baixa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desvios e CAPA</td>
+<td>26</td>
+<td>7</td>
+<td>1</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Controle de mudanças</td>
+<td>20</td>
+<td>5</td>
+<td>3</td>
+<td>12</td>
+</tr>
+<tr>
+<td>Autoinspeção e auditoria</td>
+<td>16</td>
+<td>5</td>
+<td>4</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Treinamento</td>
+<td>14</td>
+<td>4</td>
+<td>3</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Assuntos regulatórios</td>
+<td>12</td>
+<td>4</td>
+<td>3</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>88</strong></td>
+<td><strong>25</strong></td>
+<td><strong>14</strong></td>
+<td><strong>49</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</h3>
+<ol>
+<li>Confirmar que pode criar no Principal o perfil <code>TESTEGQ</code>, os locais <code>TESTE AREA A</code> e <code>B</code> e a função <code>TESTE</code>, e ligar os quatro usuários de teste.</li>
+<li>Pedir à Produção, se possível, um produto <code>TESTE</code> (ou autorizar criá-lo), e ao Controle de Documentos um POP <code>TESTE</code>.</li>
+<li>Perguntar ao DBA se as tabelas <code>TBL_LOG_ALTERACAO_GQ</code> e <code>_ITEM</code> existem (seção 4).</li>
+<li>No seu computador, pela VPN, pedir ao Claude Code: "executar os testes da garantia da qualidade, rodada 1 (prioridade alta)".</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
