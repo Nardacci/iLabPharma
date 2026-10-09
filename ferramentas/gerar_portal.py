@@ -152,6 +152,34 @@ RE_LINHA_SEG = re.compile(
     re.I)
 
 
+
+DIAGNOSTICO = "transversal/03-diagnostico-conformidade.md"
+
+
+def bloco_diretoria(origem):
+    """Destaque da página inicial: diagnóstico de conformidade, com a contagem tirada do próprio documento."""
+    arq = Path(origem) / "homologacao" / DIAGNOSTICO
+    if not arq.exists():
+        return ""
+    texto = arq.read_text(encoding="utf-8")
+    m = re.search(r"\*\*Contagem:\*\* Atende (\d+) · Parcial (\d+).*?Não atende (\d+).*?A verificar (\d+)", texto)
+    nums = m.groups() if m else ("?", "?", "?", "?")
+    rotulos = (("Atendem", "ok"), ("Atendem em parte", "parcial"), ("Não atendem", "nao"), ("A verificar", "verificar"))
+    caixas = "".join(f'<div class="diag-num diag-{c}"><strong>{n}</strong><span>{r}</span></div>' for n, (r, c) in zip(nums, rotulos))
+    return f"""<section class="secao diretoria" id="diretoria">
+    <div class="diretoria-texto">
+      <p class="sobretitulo">Para a diretoria</p>
+      <h2>Diagnóstico de conformidade com a ANVISA</h2>
+      <p>Principal, Estoque e Garantia da Qualidade, como foram entregues pelo fornecedor, comparados com a RDC 658/2022 e o Guia 33/2020: o que atende, o que não atende, as causas e o que corrigir primeiro.</p>
+      <div class="hero-acoes">
+        <a class="botao" href="documentacao/visao-geral/diagnostico-de-conformidade-com-a-anvisa.html">Ler o diagnóstico →</a>
+        <a class="botao botao-secundario" href="documentacao/arquivos/visao-geral/LabMedSys - Diagnostico de Conformidade ANVISA.docx">Baixar em Word</a>
+      </div>
+    </div>
+    <div class="diag-numeros" aria-label="Temas da norma avaliados">{caixas}</div>
+  </section>"""
+
+
 def limpar(md, nome, retirado):
     """Retira o conteúdo de segurança. Devolve o texto limpo; anota o que saiu em `retirado`."""
     linhas = md.splitlines()
@@ -306,6 +334,7 @@ def cabecalho(titulo, raiz, ativo=""):
   <a class="marca" href="{raiz}index.html" aria-label="iLabMedSys, página inicial"><img src="{raiz}assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
   <nav class="topo-nav" aria-label="Principal">
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
+    <a href="{raiz}index.html#diretoria">Diretoria</a>
     <a href="{raiz}index.html#publicos">Por público</a>
     <a href="{raiz}apresentacao.html">Apresentação</a>
   </nav>
@@ -404,7 +433,7 @@ def gerar(origem, destino, relatorio):
             (pasta / f"{p['slug']}.html").write_text(pagina_documento(mod, p), encoding="utf-8")
         (pasta / "index.html").write_text(pagina_modulo(mod), encoding="utf-8")
 
-    (destino / "index.html").write_text(pagina_inicial(), encoding="utf-8")
+    (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
     (destino / "portal/busca.json").write_text(json.dumps(busca, ensure_ascii=False), encoding="utf-8")
 
     if relatorio:
@@ -519,7 +548,7 @@ def pagina_modulo(mod):
 """ + rodape(raiz))
 
 
-def pagina_inicial():
+def pagina_inicial(origem):
     raiz = ""
     cards = []
     for mod in MODULOS:
@@ -551,6 +580,7 @@ def pagina_inicial():
     modulos_com_doc = sum(1 for m in MODULOS if m["paginas"] and m["id"] != "visao-geral")
     total_modulos = len([m for m in MODULOS if m["id"] != "visao-geral"])
 
+    diretoria = bloco_diretoria(origem)
     return (cabecalho("iLabMedSys · Documentação do sistema", raiz) + f"""
 <main id="conteudo">
   <section class="hero">
@@ -559,7 +589,8 @@ def pagina_inicial():
       <h1>Tudo o que sabemos sobre o sistema, em um só lugar.</h1>
       <p class="hero-desc">A homologação do sistema de gestão da fábrica, módulo por módulo: o que existe e funciona, como cada processo anda nas telas, o que a ANVISA exige e onde o sistema falha.</p>
       <div class="hero-acoes">
-        <a class="botao botao-grande" href="#modulos">Explorar os módulos</a>
+        <a class="botao botao-grande" href="#diretoria">Diagnóstico para a diretoria</a>
+        <a class="botao botao-grande botao-secundario" href="#modulos">Explorar os módulos</a>
         <a class="botao botao-grande botao-secundario" href="apresentacao.html">Ver a apresentação ↗</a>
       </div>
     </div>
@@ -569,6 +600,8 @@ def pagina_inicial():
       <div class="numero"><strong>{total_fluxos}</strong><span>fluxos documentados</span></div>
     </div>
   </section>
+
+  {diretoria}
 
   <section class="secao" id="como-ler">
     <h2>Como a homologação avança</h2>
