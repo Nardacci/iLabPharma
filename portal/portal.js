@@ -117,4 +117,35 @@
     }, { rootMargin: '-80px 0px -70% 0px' });
     Object.keys(mapa).forEach(function (id) { var el = document.getElementById(id); if (el) obs.observe(el); });
   }
+  // Links de tabela para um título da mesma página (ex.: referência da norma no diagnóstico):
+  // abrem o conteúdo daquela seção numa janela, sem sair da tabela.
+  var refs = document.querySelectorAll('article.texto td a[href^="#"]');
+  if (refs.length && typeof HTMLDialogElement === 'function') {
+    var janela = document.createElement('dialog');
+    janela.className = 'janela-ref';
+    janela.innerHTML = '<div class="janela-topo"><strong></strong><button type="button" class="janela-fechar" aria-label="Fechar">×</button></div><div class="janela-corpo"></div><a class="janela-link" href="#">Ver no fim da página</a>';
+    document.body.appendChild(janela);
+    janela.querySelector('.janela-fechar').addEventListener('click', function () { janela.close(); });
+    janela.addEventListener('click', function (e) { if (e.target === janela) janela.close(); });
+    janela.querySelector('.janela-link').addEventListener('click', function () { janela.close(); });
+    refs.forEach(function (a) {
+      var alvo = document.getElementById(a.getAttribute('href').slice(1));
+      if (!alvo || !/^H[2-4]$/.test(alvo.tagName)) return;
+      a.classList.add('ref-norma');
+      a.title = 'Ver o que a norma diz';
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var corpo = janela.querySelector('.janela-corpo');
+        corpo.innerHTML = '';
+        var nivel = Number(alvo.tagName[1]);
+        for (var el = alvo.nextElementSibling; el; el = el.nextElementSibling) {
+          if (/^H[1-6]$/.test(el.tagName) && Number(el.tagName[1]) <= nivel) break;
+          corpo.appendChild(el.cloneNode(true));
+        }
+        janela.querySelector('strong').textContent = alvo.textContent;
+        janela.querySelector('.janela-link').setAttribute('href', '#' + alvo.id);
+        janela.showModal();
+      });
+    });
+  }
 })();
