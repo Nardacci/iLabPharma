@@ -129,6 +129,8 @@ MODULOS = [
          ("4.controle_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("4.controle_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
+         ("4.controle_qualidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
+         ("4.controle_qualidade/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("4.controle_qualidade/fluxos/solicitacao-analise-laudo.md", "Solicitação, análise e laudo", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Solicitacao, Analise e Laudo.docx"),
          ("4.controle_qualidade/fluxos/regras-amostragem-analise.md", "Regras de amostragem e de análise", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Regras de Amostragem e de Analise.docx"),
          ("4.controle_qualidade/fluxos/estabilidade.md", "Estabilidade", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Estabilidade.docx"),

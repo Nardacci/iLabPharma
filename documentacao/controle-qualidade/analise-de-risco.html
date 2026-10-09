@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise de risco · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html">Regras de amostragem e de análise</a></li><li><a href="estabilidade.html">Estabilidade</a></li><li><a href="agua-e-ambiente.html">Água e ambiente</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html" aria-current=page>Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Qualidade e ANVISA</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Análise de risco</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> Garantia da Qualidade e equipe de homologação.
+<strong>Método:</strong> Guia nº 33/2020 da ANVISA, item 6 (gerenciamento do risco à qualidade, com base no ICH Q9 e no GAMP 5), com as mesmas escalas do Principal e da Garantia da Qualidade.
+<strong>Data:</strong> 09/10/2026 · <strong>Situação:</strong> rascunho para revisão pela Garantia da Qualidade. As notas são uma proposta inicial, a partir do código, das regras (<code>01-regras-de-negocio.md</code>), da conformidade (<code>04-conformidade-regulatoria.md</code>) e dos fluxos.</p>
+<h3 id="para-que-serve">Para que serve</h3>
+<p>Define <strong>o que testar primeiro e com que profundidade</strong> e a ordem das correções na nova versão.</p>
+<hr />
+<h3 id="etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Resposta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O sistema é regulado pelas Boas Práticas de Fabricação?</td>
+<td><strong>Sim.</strong> O CQ registra amostragem, análises e o laudo que decide se o material e o produto podem ser usados ou vendidos (RDC 658/2022, Capítulo VII).</td>
+</tr>
+<tr>
+<td>Categoria GAMP 5</td>
+<td><strong>5</strong>: aplicação customizada.</td>
+</tr>
+<tr>
+<td>Impacto do módulo</td>
+<td><strong>Alto, direto, sobre o paciente:</strong> um laudo errado libera material ou produto fora de especificação.</td>
+</tr>
+<tr>
+<td>Particularidade</td>
+<td>O resultado do laudo <strong>não chega sozinho</strong> ao Estoque, e a Produção não o consulta para água e ambiente. A decisão do CQ depende de ações manuais em outros módulos.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conclusão:</strong> é necessária a avaliação funcional detalhada (etapas 2 e 3).</p>
+<h3 id="escalas-usadas">Escalas usadas</h3>
+<p>Iguais às do Principal (<code>1.principal/07-analise-de-risco.md</code>): Severidade (S) e Probabilidade (P) Alta, Média ou Baixa; Detecção (D) Baixa quando ninguém nota, Alta quando se percebe na hora.</p>
+<p><strong>Classe</strong> = S × P (Alta×Alta, Alta×Média ou Média×Alta = 1; Alta×Baixa, Média×Média ou Baixa×Alta = 2; demais = 3).
+<strong>Prioridade</strong> = Classe × D (classe 1: Alta, salvo D Alta → Média; classe 2: Baixa, Média ou Alta conforme D seja Alta, Média ou Baixa; classe 3: Média só com D Baixa).</p>
+<hr />
+<h3 id="etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</h3>
+<h4 id="decisao-do-laudo-e-liberacao">Decisão do laudo e liberação</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-CQ-01</td>
+<td>Aprovação do laudo</td>
+<td>Laudo aprovado por quem não é a pessoa designada</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Só a separação de quem digitou</td>
+<td>Conferir a função ao gravar; assinatura eletrônica</td>
+<td><code>04</code>, tema 2; RN-CQ-005</td>
+</tr>
+<tr>
+<td>R-CQ-02</td>
+<td>Aprovação com resultado fora</td>
+<td>Lote aprovado com ensaio fora da especificação</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>O botão some na tela; a gravação não confere</td>
+<td>Conferir os resultados ao gravar</td>
+<td>Fluxo 1, laudo RN002</td>
+</tr>
+<tr>
+<td>R-CQ-03</td>
+<td>Emissão do laudo</td>
+<td>Laudo "liberado" sem decisão de aprovar ou reprovar</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Emitir só depois da decisão e com todos os ensaios</td>
+<td>Fluxo 1, ponto 1</td>
+</tr>
+<tr>
+<td>R-CQ-04</td>
+<td>Retorno ao Estoque</td>
+<td>Lote aprovado parado ou lote reprovado ainda disponível no Estoque</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Atualização manual na tela do Estoque</td>
+<td>O CQ avisa o Estoque na decisão</td>
+<td>Mapa de integrações, seta 16</td>
+</tr>
+<tr>
+<td>R-CQ-05</td>
+<td>Reprovação antes do laudo</td>
+<td>Estoque trata como reprovado um lote ainda em análise</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td>Média</td>
+<td>Nenhum</td>
+<td>Só a decisão emitida vale</td>
+<td>Fluxo 1, ponto 4</td>
+</tr>
+<tr>
+<td>R-CQ-06</td>
+<td>Cancelamento da solicitação</td>
+<td>Análise com laudo liberado cancelada sem rastro</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Recusa só se cancelada ou concluída</td>
+<td>Sem cancelamento depois do laudo; histórico garantido</td>
+<td>Fluxo 1, RN008; ponto 6</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="resultados-e-especificacao">Resultados e especificação</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-CQ-07</td>
+<td>Resultado fora de especificação</td>
+<td>Fora da especificação sem investigação</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Exige só observação</td>
+<td>Investigação de laboratório ligada ao desvio da GQ</td>
+<td><code>04</code>, tema 7</td>
+</tr>
+<tr>
+<td>R-CQ-08</td>
+<td>Registro do teste</td>
+<td>Registro incompleto (sem equipamento, cálculo, verificador); resultado em texto</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Campos de texto</td>
+<td>Campos estruturados; verificação por segunda pessoa</td>
+<td><code>04</code>, temas 5 e 6</td>
+</tr>
+<tr>
+<td>R-CQ-09</td>
+<td>Especificação (regra de análise)</td>
+<td>Limite alterado sem aprovação; laudo sem saber a versão usada</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Alteração com justificativa; trava só na tela</td>
+<td>Versão e aprovação da especificação; versão gravada na análise</td>
+<td>Fluxo 2, pontos 2 e 3</td>
+</tr>
+<tr>
+<td>R-CQ-10</td>
+<td>Limites da regra</td>
+<td>Mínimo maior que máximo, ou zero, aceito</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Conferência só com valores positivos</td>
+<td>Validar sempre</td>
+<td>Fluxo 2, ponto 4</td>
+</tr>
+<tr>
+<td>R-CQ-11</td>
+<td>Métodos analíticos</td>
+<td>Método sem versão nem validação no sistema</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Texto livre</td>
+<td>Ligação com o documento do método (Controle de Documentos)</td>
+<td><code>04</code>, tema 9</td>
+</tr>
+<tr>
+<td>R-CQ-12</td>
+<td>Reagentes, padrões e meios</td>
+<td>Análise com reagente ou padrão vencido</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum (fora do sistema)</td>
+<td>Controle de reagentes e padrões, ou decisão formal de manter fora</td>
+<td><code>04</code>, tema 10</td>
+</tr>
+<tr>
+<td>R-CQ-13</td>
+<td>Tendência</td>
+<td>Desvio gradual não percebido</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Resultado numérico e relatório de tendência</td>
+<td><code>04</code>, tema 8</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="amostragem">Amostragem</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-CQ-14</td>
+<td>Procedimento de amostragem</td>
+<td>Amostra não representativa</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Quantidade fixa, tolerância em %</td>
+<td>Plano de amostragem e campos do art. 247</td>
+<td>Fluxo 2, ponto 1</td>
+</tr>
+<tr>
+<td>R-CQ-15</td>
+<td>Amostrador</td>
+<td>Amostragem por pessoa não autorizada</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td>Média</td>
+<td>Lista filtrada na tela</td>
+<td>Conferir a função ao gravar</td>
+<td>Fluxo 1, amostragem RN003</td>
+</tr>
+<tr>
+<td>R-CQ-16</td>
+<td>Saldo e tolerância</td>
+<td>Retirada maior que o saldo; tolerância errada</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td>Média</td>
+<td>Conferência parcial na tela</td>
+<td>Conferir no servidor, inclusive a estabilidade</td>
+<td>Fluxo 1, ponto 8</td>
+</tr>
+<tr>
+<td>R-CQ-17</td>
+<td>Amostras de retenção</td>
+<td>Amostra descartada antes do prazo</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum prazo</td>
+<td>Prazo de guarda e trava de descarte</td>
+<td><code>04</code>, tema 11</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="estabilidade">Estabilidade</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-CQ-18</td>
+<td>Final do estudo</td>
+<td>Estudo aprovado com laudo reprovado</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Conferir os laudos; investigação obrigatória</td>
+<td>Fluxo 3, ponto 4</td>
+</tr>
+<tr>
+<td>R-CQ-19</td>
+<td>Abertura do estudo</td>
+<td>Lote sem estudo por falta de regra, sem aviso</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Erro e aviso ao Estoque</td>
+<td>Fluxo 3, ponto 2</td>
+</tr>
+<tr>
+<td>R-CQ-20</td>
+<td>Execução dos tempos</td>
+<td>Tempo perdido</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Botão manual, sem data</td>
+<td>Datas previstas e avisos</td>
+<td>Fluxo 3, ponto 3</td>
+</tr>
+<tr>
+<td>R-CQ-21</td>
+<td>Protocolo</td>
+<td>Estudo sem condição de armazenamento nem critério</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Só tempos e dias</td>
+<td>Protocolo completo (art. 277)</td>
+<td>Fluxo 3, ponto 1</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="agua-e-ambiente">Água e ambiente</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-CQ-22</td>
+<td>Uso do ponto de água</td>
+<td>Água reprovada no CQ usada na produção</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Decisão manual na Produção, por registros próprios</td>
+<td>A Produção consulta o laudo do CQ</td>
+<td>Fluxo 4, ponto 3</td>
+</tr>
+<tr>
+<td>R-CQ-23</td>
+<td>Programa de monitoramento</td>
+<td>Ponto ou sala sem coleta na frequência devida</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Agenda manual</td>
+<td>Plano com frequência e geração automática</td>
+<td>Fluxo 4, ponto 1</td>
+</tr>
+<tr>
+<td>R-CQ-24</td>
+<td>Limites de alerta e ação</td>
+<td>Tendência de contaminação não percebida</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Conforme ou não conforme</td>
+<td>Limites de alerta e ação; tendência</td>
+<td>Fluxo 4, ponto 2</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="integridade-dos-registros">Integridade dos registros</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-CQ-25</td>
+<td>Trilha de auditoria</td>
+<td>Decisões e alterações sem registro</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Histórico só em parte</td>
+<td>Histórico em toda gravação, com motivo</td>
+<td>RN-CQ-002, 003</td>
+</tr>
+<tr>
+<td>R-CQ-26</td>
+<td>Datas</td>
+<td>Data informada diferente do momento real</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Data do formulário</td>
+<td>Data do servidor</td>
+<td>RN-CQ-004</td>
+</tr>
+<tr>
+<td>R-CQ-27</td>
+<td>Banco × código</td>
+<td>Instalação sem as tabelas e colunas que o código usa</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Projeto de banco conferido com o código</td>
+<td><code>06-modelo-de-dados.md</code>, seção 7</td>
+</tr>
+<tr>
+<td>R-CQ-28</td>
+<td>Etiqueta</td>
+<td>Etiqueta de situação impressa antes do laudo</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td>Média</td>
+<td>Nenhum</td>
+<td>Etiqueta só com laudo emitido</td>
+<td>Fluxo 1, ponto 9</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resumo">Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Riscos</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alta</strong></td>
+<td>R-CQ-01 a 04, 06 a 14, 17 a 27, 29 a 31</td>
+<td>27</td>
+</tr>
+<tr>
+<td><strong>Média</strong></td>
+<td>R-CQ-05, 15, 16, 28, 32, 33</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>Baixa</strong></td>
+<td>—</td>
+<td>0</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- O CQ concentra <strong>o maior risco direto ao paciente</strong> entre os módulos analisados: a decisão de aprovar não é protegida (quem decide, com que resultado, com que especificação) e não chega sozinha a quem usa o material.
+- Os outros riscos altos estão na <strong>qualidade do registro</strong> (resultado em texto, sem verificação, sem tendência, especificação sem versão) e nos <strong>programas contínuos</strong> (estabilidade e monitoramento de água e ambiente), que dependem de ações manuais e não avisam.</p>
+<hr />
+<h3 id="etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</h3>
+<p>Cada controle exigido vira um <strong>requisito corrigido</strong> da nova versão (documento 05, depois dos testes) e um ou mais <strong>casos de teste</strong> (documento 08): fluxo 1 (CT-CQ-001 a 018), fluxo 2 (020 a 035), fluxo 3 (040 a 052), fluxo 4 (060 a 068) e acesso (070 a 074).</p>
+<h3 id="etapa-5-revisao">Etapa 5: revisão</h3>
+<p>Revisar depois dos testes de tela, quando o DBA responder sobre o banco (R-CQ-27) e quando a Produção for analisada (R-CQ-22).</p>
+<h3 id="pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</h3>
+<ol>
+<li>Quem é a Pessoa Delegada para liberar o lote, e a aprovação do laudo no CQ é essa liberação?</li>
+<li>Os controles hoje fora do sistema (métodos, reagentes, investigação de resultado fora de especificação, plano de monitoramento, protocolo de estabilidade) têm procedimento? Isso reduz a probabilidade de R-CQ-07, 11, 12, 21 e 23 no uso atual, mas não muda o requisito da nova versão.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#para-que-serve">Para que serve</a></li><li><a href="#etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</a></li><li><a href="#escalas-usadas">Escalas usadas</a></li><li><a href="#etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</a></li><li><a href="#etapa-5-revisao">Etapa 5: revisão</a></li><li><a href="#pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
