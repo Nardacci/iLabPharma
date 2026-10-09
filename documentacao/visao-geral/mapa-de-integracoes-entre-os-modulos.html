@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de integrações entre os módulos · Visão entre módulos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2563eb"><span class="icone">◎</span>Visão entre módulos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="mapa-de-integracoes-entre-os-modulos.html" aria-current=page>Mapa de integrações entre os módulos</a></li><li><a href="diagnostico-de-conformidade-com-a-anvisa.html">Diagnóstico de conformidade com a ANVISA</a></li><li><a href="mapa-do-processo-fabril.html">Mapa do processo fabril</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="telas-repetidas-entre-modulos.html">Telas repetidas entre módulos</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Visão entre módulos</a> › <span>Comece por aqui</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Mapa de integrações entre os módulos</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/visao-geral/LabMedSys - Mapa de Integracoes entre Modulos.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Uso interno.</strong> Mapa das integrações entre os nove módulos do LabMedSys, na versão entregue pelo fornecedor: o que cada módulo envia para outro ou busca em outro, e por qual meio. Levantado no código em 09/10/2026, por scripts e pela leitura dirigida das classes de integração. <strong>Nada aqui foi testado nas telas</strong>, exceto o pedido de análise do Estoque ao Controle da Qualidade (CQ), que falhou no teste do endereçamento (DV-EST-016).</p>
+<h2 id="o-mapa">O mapa</h2>
+<figure><a href="../img/visao-geral/04-mapa-de-integracoes.png" target="_blank" rel="noopener"><img src="../img/visao-geral/04-mapa-de-integracoes.png" alt="Mapa das integrações entre os módulos do LabMedSys" loading="lazy"></a><figcaption>Mapa das integrações entre os módulos do LabMedSys · clique para ampliar</figcaption></figure>
+
+<p><strong>Como ler:</strong> cada caixa é um módulo; cada seta azul é uma integração que existe no código, no sentido de quem pede para quem atende; cada seta vermelha tracejada é uma integração que as Boas Práticas exigem e o sistema não tem. O número de cada seta remete à tabela abaixo. O <strong>Principal</strong> aparece como uma faixa embaixo porque todos os módulos o consultam.</p>
+<h2 id="o-ciclo-do-lote-em-palavras">O ciclo do lote, em palavras</h2>
+<ol>
+<li><strong>Compra e recebimento.</strong> O Comercial consulta e reserva saldo no Estoque (seta 6). O material chega pelo Estoque.</li>
+<li><strong>Quarentena e análise.</strong> Ao endereçar o lote recebido, o Estoque <strong>abre a solicitação de análise no CQ</strong> (seta 1). O CQ pede ao Estoque a separação da amostra e só segue com a análise depois que ela é separada (seta 2).</li>
+<li><strong>Liberação.</strong> Quando o CQ emite o laudo, ele <strong>não avisa o Estoque</strong>. O lote só sai da quarentena quando alguém abre a análise na tela do Estoque, que então busca o resultado no CQ (seta 1). A seta 16 marca o aviso que falta.</li>
+<li><strong>Produção.</strong> A Produção consulta o saldo, reserva os insumos e, na pesagem, lê o que o Estoque separou (seta 3). O Estoque pergunta à Produção se a ordem já foi liberada antes de movimentar o produto acabado (seta 4). Nas etapas de processo, a Produção abre análises de granel e semielaborado no CQ (seta 5). O modelo do registro de lote vem do OPE (seta 10).</li>
+<li><strong>Produto acabado.</strong> No fim da produção, a Produção envia o produto acabado ao Estoque (seta 3), e o Estoque abre a análise e o estudo de estabilidade no CQ (seta 1).</li>
+<li><strong>Venda e rastreabilidade.</strong> O Comercial fatura e gera a remessa no Estoque (seta 6). O Estoque envia os eventos de entrega e recebimento à Rastreabilidade (seta 7), que gera os códigos únicos (IUM) a partir dos produtos da Produção (seta 8) e os transmite à ANVISA (seta 9).</li>
+<li><strong>Qualidade.</strong> A Garantia da Qualidade (GQ) só <strong>consulta</strong>: produtos e lotes na Produção (seta 11) e documentos no Controle de Documentos (seta 12). O Controle de Documentos consulta na GQ quem foi treinado em cada documento (seta 13). <strong>Nenhuma decisão da GQ chega ao Estoque ou à Produção</strong> (setas 14 e 15).</li>
+</ol>
+<h2 id="as-integracoes-uma-a-uma">As integrações, uma a uma</h2>
+<p>Caminhos relativos à raiz do repositório.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>De → Para</th>
+<th>O que trafega</th>
+<th>Meio</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Estoque → CQ</td>
+<td>Abre a <strong>solicitação de análise</strong> de cada lote em quarentena, ao endereçar o lote recebido (só se o CQ estiver habilitado na configuração de módulos); <strong>busca o resultado do laudo</strong> (aprovado, reprovado, validade) quando o usuário atualiza a análise na tela; abre o <strong>acompanhamento de estabilidade</strong> do produto acabado; lê os tipos de item de análise</td>
+<td>API</td>
+<td><code>3.estoque/app/LaboSys_BLL/bllNotaFiscal.cs:293-300</code>; <code>3.estoque/app/LaboSys_BLL/bllAnaliseControle.cs:543</code>, <code>:640</code>, <code>:878</code>; <code>3.estoque/app/LaboSys_UI/estoque/analise_controle_ed.aspx.cs:295</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>CQ → Estoque</td>
+<td>Pede a <strong>separação da amostra</strong> (rotina e regulatória: retenção, referência, estabilidade); confere se a amostra já foi separada, e sem isso a análise não segue; pede <strong>reanálise</strong> do lote; lê almoxarifados e lotes</td>
+<td>API</td>
+<td><code>4.controle_qualidade/app/HSolutions.CQ.Services/Estoque/SolicitacaoEstoque.cs:19</code>, <code>:50</code>, <code>:84</code>, <code>:154</code>; <code>4.controle_qualidade/app/HSolutions.CQ.UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:215-222</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Produção → Estoque</td>
+<td>Consulta o <strong>saldo</strong> dos insumos no início da produção; cria, confirma e cancela a <strong>reserva de insumos</strong>; na <strong>pesagem</strong>, lê os lotes separados; envia o <strong>produto acabado</strong> para entrar no Estoque</td>
+<td>API, serviço SOAP e <strong>gravação direta no banco do Estoque</strong> (uma cópia das regras do Estoque dentro da Produção)</td>
+<td><code>2.producao/app/LaboSys.Producao.Services/Estoque/EstoqueService.cs:24</code>, <code>:41</code>; <code>2.producao/app/Integracao_Producao_Estoque/bllItemIntegracao.cs:210</code>, <code>:351</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Estoque → Produção</td>
+<td>Antes de movimentar o produto acabado em quarentena, pergunta se a <strong>ordem de produção foi liberada</strong>; lê as autorizações de saída de insumo e grava a confirmação da separação</td>
+<td>Microsserviço e <strong>acesso direto ao banco da Produção</strong></td>
+<td><code>3.estoque/app/LaboSys_BLL/bllAnaliseControle.cs:1026</code>; <code>3.estoque/app/LaboSys_DAL/dalAutorizacaoEstoqueProducao.cs:11</code>, <code>:85</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Produção → CQ</td>
+<td>Abre <strong>análises em processo</strong> (granel e semielaborado) por etapa da ordem e consulta a situação delas</td>
+<td>API</td>
+<td><code>2.producao/app/LaboSys.Producao.Services/CQ/CqService.cs:37-47</code>; <code>2.producao/app/LaboSys_UI/producao/XML/Class_Producao/SubEtapaProducao.cs:796</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Comercial → Estoque</td>
+<td>Consulta itens, <strong>lotes disponíveis para venda</strong> (com validade mínima) e disponibilidade; cria, confirma e cancela a <strong>reserva</strong> do pedido; confere a separação e a liberação da fatura; ao faturar, gera a <strong>remessa</strong> (GMM)</td>
+<td>API</td>
+<td><code>7.comercial/comercial/HSolutions.Comercial.Services/Estoque/EstoqueServiceApi.cs:320</code>, <code>:516</code>, <code>:864</code>; <code>3.estoque/app/LaboSys_UI/Api/EstoqueController.cs:571-601</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Estoque → Rastreabilidade</td>
+<td>Envia os <strong>eventos de entrega e de recebimento</strong> (por IUM ou por agregação) para declarar à ANVISA; confere se os IUM existem</td>
+<td>Microsserviço</td>
+<td><code>3.estoque/app/LaboSys_BLL/bllEventoAnvisa.cs:156</code>, <code>:227</code>, <code>:291</code>, <code>:354</code>, <code>:411</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Rastreabilidade → Produção</td>
+<td>Busca <strong>produtos</strong> (registro e descrição) para gerar os IUM</td>
+<td>API</td>
+<td><code>8.rastreabilidade/app/HSolutions.Rastreabilidade.Services/Producao/ProdutoService.cs:26</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Rastreabilidade → ANVISA</td>
+<td>Transmite os eventos (produção, entrega, recebimento, finalização) ao sistema da ANVISA (SNCM), por uma fila de mensagens e um serviço que envia</td>
+<td>Microsserviço e fila de mensagens</td>
+<td><code>8.rastreabilidade/app/HSolutions.Rastreabilidade.Domain.Services/AnvisaHelper.cs:64-71</code>; <code>8.rastreabilidade/app/HSolutions.Rastreabilidade.AnvisaWindowsService/BootstrapWindowsService.cs:27</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>OPE → Produção</td>
+<td>O OPE grava, por produto, o <strong>modelo do registro eletrônico de lote</strong> (XML); a Produção o lê para montar a ordem</td>
+<td><strong>Banco compartilhado</strong> (mesma tabela)</td>
+<td><code>9.ope/app/HSolutions.GeradorXML.ORM/Repository/GeradorXMLRepository.cs:21-32</code>; <code>2.producao/app/LaboSys_DAL/dalProduto.cs:603</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td>GQ → Produção</td>
+<td>Consulta <strong>produtos e lotes</strong> (para o desvio, a mudança e o registro na ANVISA) e itens de estoque, que a Produção repassa ao Estoque</td>
+<td>API</td>
+<td><code>5.garantia_qualidade/app/HSolutions.GQ.Services/Producao/ProdutoService.cs:20</code>; <code>5.garantia_qualidade/app/HSolutions.GQ.Services/Estoque/EstoqueService.cs:20-21</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td>GQ → Controle de Documentos</td>
+<td>Consulta o <strong>documento</strong> (POP) pelo código</td>
+<td>API</td>
+<td><code>5.garantia_qualidade/app/HSolutions.GQ.Services/Gdoc/DocumentoService.cs:23</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td>Controle de Documentos → GQ</td>
+<td>Consulta os <strong>treinamentos</strong>: quem foi treinado em cada documento, programação e treinamentos finalizados</td>
+<td>API</td>
+<td><code>6.controle_documento/app/HSolutions.ControleDoc.Infra.Service/Api/GarantiaQualidadeApi.cs:49</code>, <code>:116</code>, <code>:185</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td>GQ → Estoque</td>
+<td><strong>Falta:</strong> um desvio aberto sobre material ou produto deveria <strong>reter o lote</strong>; a qualificação do fornecedor deveria ser conferida no recebimento</td>
+<td>—</td>
+<td>RDC 658/2022, art. 8º, VI e IX; <code>transversal/03-diagnostico-conformidade.md</code>, temas 8 e 15</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GQ → Produção</td>
+<td><strong>Falta:</strong> a Produção deveria conferir, antes de produzir, se o <strong>registro do produto</strong> na ANVISA está válido e se o operador tem <strong>treinamento válido</strong>; a mudança aprovada deveria chegar à Produção</td>
+<td>—</td>
+<td>RDC 658/2022, arts. 39 a 46 e art. 8º, XII; diagnóstico, temas 16, 18 e 19</td>
+</tr>
+<tr>
+<td>16</td>
+<td>CQ → Estoque</td>
+<td><strong>Falta:</strong> ao aprovar ou reprovar o laudo, o CQ deveria <strong>avisar o Estoque</strong>, que liberaria ou bloquearia o lote na hora. Hoje depende de alguém atualizar a análise na tela do Estoque</td>
+<td>—</td>
+<td><code>4.controle_qualidade/app/HSolutions.CQ.UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:463</code> (só grava no CQ); art. 8º, XV</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-principal-faixa-de-baixo">O Principal (faixa de baixo)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>O que busca no Principal</th>
+<th>Meio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque, Produção</td>
+<td>Login e módulos habilitados; usuários, perfis, locais, pessoas jurídicas, que também <strong>gravam</strong> direto nas tabelas do Principal</td>
+<td>Serviço de login (SOAP) e sinônimos de banco (Estoque 37, Produção 53)</td>
+</tr>
+<tr>
+<td>CQ, GQ, Controle de Documentos, Comercial, Rastreabilidade</td>
+<td>Usuários, funções, permissões, menu, áreas, equipamentos, ambientes, pessoas jurídicas, endereço por CEP</td>
+<td>API</td>
+</tr>
+<tr>
+<td>OPE</td>
+<td>Ambientes usados no modelo do registro de lote</td>
+<td>Microsserviço</td>
+</tr>
+<tr>
+<td>Controle de Documentos → Principal</td>
+<td><strong>Envia avisos</strong> de eventos do documento (aprovação, vencimento) à central de notificações</td>
+<td>API (<code>6.controle_documento/app/HSolutions.ControleDoc.Infra.Service/Api/NotificacaoEventoApi.cs:82</code>)</td>
+</tr>
+<tr>
+<td>Principal → Controle de Documentos</td>
+<td>A rotina noturna do Principal consulta a situação dos documentos para gerar os avisos</td>
+<td>API (<code>1.principal/app/LabMedSys.Principal.Service.Core/APIService/GdocService.cs:19</code>); <em>a rota no Controle de Documentos está comentada: a confirmar</em></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="o-que-o-mapa-revela">O que o mapa revela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Achado</th>
+<th>Por que importa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>O Estoque é o centro do sistema:</strong> conversa com seis módulos</td>
+<td>Uma falha nele, como a do endereçamento (DV-EST-016), para a quarentena, a análise no CQ e tudo o que vem depois</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>A liberação do lote não é automática.</strong> O CQ aprova o laudo e não avisa o Estoque; o lote só sai da quarentena quando alguém atualiza a análise na tela do Estoque (seta 16)</td>
+<td>Lote aprovado pode ficar parado; o registro de quando o lote foi liberado depende de uma ação manual</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>A GQ é uma ilha:</strong> só consulta; nenhuma decisão sai dela (setas 14 e 15)</td>
+<td>Desvio aberto, registro vencido e treinamento vencido não bloqueiam nada (diagnóstico, causa 3)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Há atalhos que passam por fora das APIs:</strong> a Produção grava direto no banco do Estoque com uma cópia das regras dele, e o Estoque grava direto no banco da Produção</td>
+<td>Duas versões da mesma regra; uma correção numa não chega à outra; gravações sem a trilha do módulo dono do dado</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Seis meios diferentes de integração:</strong> API, microsserviço, serviço SOAP, sinônimos de banco, banco compartilhado e fila de mensagens</td>
+<td>Mais pontos de falha e de manutenção; a nova versão deveria padronizar</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Integrações abandonadas no código:</strong> Estoque → Comercial (endereço do cliente, rota que não existe), CQ → GQ (endereço configurado e nunca usado), Rastreabilidade → Estoque (método nunca chamado)</td>
+<td>Código morto, que confunde a manutenção</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="como-deveria-ser">Como deveria ser</h2>
+<ul>
+<li><strong>O dono do dado avisa:</strong> o CQ avisa o Estoque ao aprovar ou reprovar; a GQ avisa o Estoque ao abrir um desvio sobre um lote; o Estoque não deveria depender de alguém consultar.</li>
+<li><strong>Decisões da qualidade viram travas:</strong> lote com desvio, produto sem registro válido e operador sem treinamento válido bloqueiam a etapa seguinte.</li>
+<li><strong>Um só caminho por dado:</strong> cada módulo grava só no próprio banco; os outros usam a API dele.</li>
+<li><strong>Um só meio de integração</strong> (API) e uma biblioteca comum para chamá-la.</li>
+</ul>
+<h2 id="pontos-para-validar">Pontos para validar</h2>
+<ol>
+<li>Qual versão da integração Produção → Estoque está em uso no ambiente: a API ou a cópia que grava direto no banco?</li>
+<li>No ambiente de teste, os módulos usam bancos separados ou um banco só? (Os arquivos de configuração do Estoque e do OPE apontam todos para o mesmo nome de banco.)</li>
+<li>A rotina noturna do Principal consegue ler a situação dos documentos? A rota no Controle de Documentos está comentada.</li>
+<li>O CQ está habilitado na configuração de módulos? Sem isso, o Estoque <strong>não abre</strong> a análise do lote recebido (seta 1). Pode explicar parte do DV-EST-016.</li>
+</ol>
+<p><strong>Atualização:</strong> o desenho é gerado por <code>homologacao/ferramentas/gerar_mapa_integracoes.py</code> a partir de <code>transversal/04-mapa-de-integracoes.json</code>. Ao analisar cada módulo, acrescentar ou corrigir as ligações no arquivo de dados e gerar de novo.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-mapa">O mapa</a></li><li><a href="#o-ciclo-do-lote-em-palavras">O ciclo do lote, em palavras</a></li><li><a href="#as-integracoes-uma-a-uma">As integrações, uma a uma</a></li><li class="sub"><a href="#o-principal-faixa-de-baixo">O Principal (faixa de baixo)</a></li><li><a href="#o-que-o-mapa-revela">O que o mapa revela</a></li><li><a href="#como-deveria-ser">Como deveria ser</a></li><li><a href="#pontos-para-validar">Pontos para validar</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
