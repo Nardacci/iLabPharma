@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devolução e entradas da produção · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html" aria-current=page>Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Devolução e entradas da produção</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Fluxo Devolucao e Entradas.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve as <strong>entradas no estoque que não vêm de compra</strong>: a devolução de sobra da produção, a devolução de material, as entradas avulsas ("outras") e a <strong>entrada do produto acabado</strong> fabricado.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Devolução da produção (sobra de material atendido).</li>
+<li>Devolução de material e entrada de material (outras).</li>
+<li>Entrada do produto acabado (Entrada de Materiais - Produção) e entrada de produção de serviços.</li>
+<li>Encaminhamento para a análise do Controle da Qualidade.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o recebimento por nota fiscal de compra (fluxo da equipe), a liberação pelo Controle da Qualidade (fluxo de reprovado, reanálise e revalidação) e a fabricação em si (módulo Produção).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. A tela de lista "Devolução de Material" muda de título conforme a opção do menu: Devolução de Material, Entrada de Material - Outras ou Entrada de Material - Produção (<code>estoque/devolucao_lst.aspx.cs:34-38</code>).</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/estoque/devolucao-entrada-producao-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/devolucao-entrada-producao-fluxograma.png" alt="Workflow do processo de devolução e entradas" loading="lazy"></a><figcaption>Workflow do processo de devolução e entradas</figcaption></figure>
+
+<p>A <strong>sobra de material</strong> que volta da fabricação é registrada na <strong>Devolução da Produção</strong>, com a quantidade e o endereço de destino. O material que <strong>volta de outra origem</strong> é registrado na <strong>Devolução de Material</strong>, que só aceita um lote que já existe no estoque. Entradas que não são compra nem devolução vão pela <strong>Entrada de Material - Outras</strong>. Nesses dois últimos casos, o sistema abre uma <strong>análise no Controle da Qualidade</strong>, e o lote volta à quarentena até ser liberado.</p>
+<p>O <strong>produto acabado</strong> entra pela <strong>Entrada de Materiais - Produção</strong>: item, lote, validade, quantidade e endereço. Se o item exige quarentena, só são oferecidos locais de quarentena. O sistema abre a análise do tipo <strong>produto acabado</strong> e imprime a etiqueta. A liberação segue o fluxo de Quarentena.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="devolucao-da-producao">Devolução da produção</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige quantidade, almoxarifado, local, rua, coluna e andar, e justificativa (<code>estoque/devolucao_producao_ed.aspx</code>, validadores).</li>
+<li>RN002 – A lista de destinos respeita as exigências do item: quarentena, umidade e refrigeração (<code>devolucao_producao_ed.aspx.cs:341</code>).</li>
+<li>RN003 – <strong>O código não abre análise do Controle da Qualidade</strong> na devolução da produção: o material volta direto ao saldo. <em>A validar com a área e a Garantia da Qualidade:</em> se a sobra devolvida precisa de avaliação antes de ser usada de novo, por exemplo quando a embalagem foi aberta.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Devolução da Produção</td>
+<td>Devolver sobra de material atendido</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="devolucao-de-material-e-entradas-avulsas">Devolução de material e entradas avulsas</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige tipo de movimentação, item, lote, validade, fabricante, custo unitário, quantidade, quantidade do volume, endereço e justificativa (<code>estoque/devolucao_ed.aspx</code>, <code>entrada_material_ed.aspx</code>).</li>
+<li>RN002 – Na <strong>devolução</strong>, o lote informado precisa <strong>já existir</strong> no estoque com o mesmo item, validade e fabricante (<code>devolucao_ed.aspx.cs:724-735</code>, <code>LoteValido</code>). Isso garante a rastreabilidade do lote devolvido.</li>
+<li>RN003 – O total endereçado não pode passar da quantidade do item ("Quantidade total endereçada não pode ser maior que a quantidade do item."). Na entrada avulsa, o mesmo item, lote e fabricante não pode repetir na lista.</li>
+<li>RN004 – Ao salvar, o sistema <strong>abre análise no Controle da Qualidade</strong> para os lotes (<code>devolucao_ed.aspx.cs:193</code>, <code>entrada_material_ed.aspx.cs:322</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Devolução de Material</td>
+<td>Material que volta ao estoque</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Entrada de Material - Outras</td>
+<td>Entrada que não é compra nem devolução</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="entrada-do-produto-acabado">Entrada do produto acabado</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige item, lote, validade, fabricante, quantidade, quantidade do volume e endereço (<code>estoque/entrada_producao_ed.aspx</code>, validadores).</li>
+<li>RN002 – Se o item exige controle de quarentena, a lista de destinos mostra só locais de quarentena (<code>entrada_producao_ed.aspx.cs:268-291</code>).</li>
+<li>RN003 – Ao salvar, o sistema abre análise do tipo <strong>produto acabado</strong> no Controle da Qualidade e imprime a etiqueta se o item tem controle de qualidade (<code>entrada_producao_ed.aspx.cs:163-166</code>).</li>
+<li>RN004 – A <strong>Entrada de Produção</strong> (serviços) exige custo do item, custos adicionais (FR170 e FR180), volumes e endereço. <em>A validar com a área:</em> quando é usada (produção terceirizada?) e o que são os custos FR170 e FR180.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Entrada de Materiais - Produção</td>
+<td>Entrada do lote fabricado</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Entrada de Produção</td>
+<td>Entrada de produção com custos (serviços)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<ul>
+<li><strong>A conferência do lote do produto acabado está desligada.</strong> A chamada que validava lote, validade e fabricante foi comentada (<code>entrada_producao_ed.aspx.cs:579</code>). O lote é digitado livremente. O código não mostra ligação com o lote gerado na ordem de produção. É preciso confirmar no teste se é possível dar entrada de um lote de produto acabado que <strong>não existe na Produção</strong>. Isso quebraria a rastreabilidade do medicamento exigida pela RDC 658/2022.</li>
+<li><strong>Destino em quarentena garantido só pela lista da tela,</strong> como nos outros fluxos.</li>
+</ul>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> <code>TESTE MATERIA PRIMA</code> com o lote <code>TESTELOTE001</code> disponível e já atendido numa solicitação (fluxo de solicitação, CT-EST-079); um item de produto acabado <code>TESTE PRODUTO ACABADO</code> com controle de quarentena (cadastros de apoio); locais <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-090</td>
+<td>Devolução da Produção: devolver parte do <code>TESTELOTE001</code> atendido, com justificativa</td>
+<td>Saldo volta ao endereço escolhido; aparece no histórico do lote</td>
+</tr>
+<tr>
+<td>CT-EST-091</td>
+<td>Ver se a devolução da produção abriu análise no CQ ou deixou o saldo disponível direto</td>
+<td>Registrar o comportamento (RN003) para a Garantia da Qualidade decidir</td>
+</tr>
+<tr>
+<td>CT-EST-092</td>
+<td>Devolução de Material com um lote que <strong>não existe</strong></td>
+<td>Recusa (RN002)</td>
+</tr>
+<tr>
+<td>CT-EST-093</td>
+<td>Devolução de Material com o <code>TESTELOTE001</code> (existente)</td>
+<td>Aceita; abre análise no CQ; lote em quarentena</td>
+</tr>
+<tr>
+<td>CT-EST-094</td>
+<td>Endereçar quantidade maior que a devolvida</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-095</td>
+<td>Entrada de Material - Outras com item, lote e fabricante repetidos na lista</td>
+<td>Recusa: "O Item/Lote/Fabricante já existe na lista!"</td>
+</tr>
+<tr>
+<td>CT-EST-096</td>
+<td>Entrada de Materiais - Produção do <code>TESTE PRODUTO ACABADO</code>, lote <code>TESTEPA001</code>: ver os destinos</td>
+<td>Só locais de quarentena</td>
+</tr>
+<tr>
+<td>CT-EST-097</td>
+<td>Concluir a entrada do <code>TESTEPA001</code></td>
+<td>Análise de produto acabado aberta no CQ; etiqueta impressa</td>
+</tr>
+<tr>
+<td>CT-EST-098</td>
+<td><strong>Entrada de produto acabado com lote inventado</strong> (<code>TESTEPA999</code>, sem ordem de produção)</td>
+<td>Pela rastreabilidade, deveria recusar. <strong>Registrar com evidência se aceitar</strong></td>
+</tr>
+<tr>
+<td>CT-EST-099</td>
+<td>Entrada com validade inválida ou anterior a hoje</td>
+<td>Recusa: "Data de validade inválida!"</td>
+</tr>
+<tr>
+<td>CT-EST-100</td>
+<td>Entrada de Produção (serviços) com custos <code>TESTE</code></td>
+<td>Registrar o comportamento e os campos pedidos</td>
+</tr>
+<tr>
+<td>CT-EST-101</td>
+<td>Liberar o <code>TESTEPA001</code> pelo CQ e conferir o histórico do lote</td>
+<td>Entrada, análise e liberação aparecem com usuário e data</td>
+</tr>
+<tr>
+<td>CT-EST-102</td>
+<td>Permissão: abrir Entrada de Materiais - Produção pelo endereço com usuário sem acesso</td>
+<td>Acesso negado (ver DV-EST-008)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#devolucao-da-producao">Devolução da produção</a></li><li class="sub"><a href="#devolucao-de-material-e-entradas-avulsas">Devolução de material e entradas avulsas</a></li><li class="sub"><a href="#entrada-do-produto-acabado">Entrada do produto acabado</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

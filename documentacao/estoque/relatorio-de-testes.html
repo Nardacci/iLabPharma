@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório de testes · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html" aria-current=page>Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Comece por aqui</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Relatório de testes</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Relatorio de Testes.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Uso interno.</strong> Resultado dos testes feitos nas telas do módulo Estoque até 08/10/2026. O registro detalhado de cada rodada, com as capturas de tela, está em <code>homologacao/3.estoque/execucao/</code> (rodadas de 07/10 e 08/10/2026).</p>
+<h2 id="resumo">Resumo</h2>
+<p>Os testes do Estoque começaram pelo <strong>Recebimento de Material</strong>, a porta de entrada de tudo o que é guardado e usado na fábrica. Antes dele, foram montados os cadastros de apoio que o teste precisa: almoxarifado, locais, unidade, item e a ligação do almoxarifado ao grupo do usuário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Casos</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Passaram</td>
+<td>CT-EST-001, 010, 180, 185, 188, 189</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Passaram com ressalvas</td>
+<td>CT-EST-014, 184, 187</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Falharam</td>
+<td>CT-EST-045, 181, 182, 183, 186, 190, 191, 193, 194, 197</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Não conclusivo ou parcial</td>
+<td>CT-EST-195, 196</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Comprovado pelo código</td>
+<td>CT-EST-192</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Bloqueados</td>
+<td>CT-EST-030 a 044 (falta um local comum), 200 a 209 (falta a análise do CQ)</td>
+<td>25</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conclusão até aqui:</strong> o Recebimento <strong>registra os dados principais da entrada</strong> (nota fiscal, item, lote, validade, quem cadastrou e quem autorizou) e impede que a mesma pessoa cadastre e autorize. Mas <strong>não está em conformidade com a ANVISA</strong> em quatro pontos:</p>
+<ul>
+<li><strong>Lote vencido entra no estoque sem aviso.</strong></li>
+<li><strong>Qualquer usuário do sistema autoriza a entrada de material</strong>, mesmo sem acesso ao Estoque.</li>
+<li><strong>A inspeção do veículo é opcional e pode ser "aprovada" sem nenhuma resposta.</strong></li>
+<li><strong>Veículo reprovado pode ser usado no recebimento.</strong></li>
+</ul>
+<p>O material também <strong>não chega ao estoque nem ao Controle da Qualidade</strong>. Com um item cadastrado corretamente, o recebimento 00016 foi confirmado, mas:</p>
+<ul>
+<li>a <strong>conferência</strong> termina com erro e, mesmo assim, a nota fica marcada como conferida (DV-EST-015);</li>
+<li>o <strong>endereçamento</strong> mostra "sucesso", mas nada foi gravado: o lote fica sem saldo, sem histórico e sem solicitação de análise no CQ (DV-EST-016). O código mostra que a tela <strong>nunca confere</strong> se a gravação deu certo.</li>
+</ul>
+<p>Por isso os testes da quarentena e do CQ (CT-EST-200 a 209) seguem parados. A causa no banco depende do DBA.</p>
+<h2 id="o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</h2>
+<h3 id="cadastros-de-apoio">Cadastros de apoio</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>O que foi feito</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almoxarifado, Rua, Coluna, Andar, Local de Armazenagem</td>
+<td>Inclusão do <code>TESTE ALMOX</code> e de 4 locais (901 a 904)</td>
+<td><strong>Funciona</strong> (CT-EST-001)</td>
+</tr>
+<tr>
+<td>Unidade</td>
+<td>Inclusão da unidade <code>TST</code></td>
+<td><strong>Funciona.</strong> A unidade cria sozinha a apresentação correspondente (CT-EST-010)</td>
+</tr>
+<tr>
+<td>Item</td>
+<td>Inclusão do <code>TESTE MATERIA PRIMA</code> e do <code>TESTE MATERIA PRIMA 2</code></td>
+<td><strong>Funciona com falhas.</strong> Alguns botões recarregam a tela e apagam os números digitados (DV-EST-006). O item foi salvo <strong>sem almoxarifado padrão</strong>, e esse campo depois fica travado (ver DV-EST-010)</td>
+</tr>
+<tr>
+<td>Grupo de Usuário - Almoxarifado</td>
+<td>Ligar o <code>TESTE ALMOX</code> ao grupo do usuário</td>
+<td><strong>Funciona.</strong> O almoxarifado só aparece para quem é de um grupo ligado a ele (CT-EST-014). Falta comparar com um usuário de outro grupo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="recebimento-de-material">Recebimento de Material</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que foi testado</th>
+<th>Resultado</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-180</td>
+<td>Checklist do veículo sem placa, sem motorista ou sem documento</td>
+<td><strong>Passou</strong></td>
+<td>O sistema exige os dados do veículo no checklist</td>
+</tr>
+<tr>
+<td>CT-EST-181</td>
+<td>Checklist com parecer "Aprovado" e <strong>nenhuma</strong> das 15 perguntas respondida</td>
+<td><strong>Falhou</strong></td>
+<td>A inspeção pode ser "aprovada" sem ter sido feita (DV-EST-004)</td>
+</tr>
+<tr>
+<td>CT-EST-182</td>
+<td>Checklist com parecer "Reprovado"</td>
+<td><strong>Falhou</strong></td>
+<td>O veículo reprovado aparece para ser usado no recebimento (DV-EST-011)</td>
+</tr>
+<tr>
+<td>CT-EST-183</td>
+<td>Recebimento sem checklist, sem placa e sem motorista</td>
+<td><strong>Falhou</strong></td>
+<td>O recebimento é salvo sem nenhuma inspeção do veículo (DV-EST-012)</td>
+</tr>
+<tr>
+<td>CT-EST-184</td>
+<td>Nota fiscal sem cada campo obrigatório</td>
+<td><strong>Passou com ressalvas</strong></td>
+<td>Recusa quase tudo, mas sem a série não grava e não avisa (DV-EST-013). O item repetido não foi isolado no teste</td>
+</tr>
+<tr>
+<td>CT-EST-185</td>
+<td>Lote sem validade</td>
+<td><strong>Passou</strong></td>
+<td>Para item com controle de validade, a validade é obrigatória</td>
+</tr>
+<tr>
+<td>CT-EST-186</td>
+<td>Lote com validade <strong>vencida</strong> (ontem)</td>
+<td><strong>Falhou</strong></td>
+<td>O lote vencido foi aceito, sem aviso (DV-EST-014)</td>
+</tr>
+<tr>
+<td>CT-EST-187</td>
+<td>Lote <code>TESTE-LOTE-002</code> com 100 unidades</td>
+<td><strong>Passou com ressalvas</strong></td>
+<td>Gravou como <code>TESTELOTE002</code>, sem os hífens (DV-EST-001). A quantidade só sai certa digitando <code>100,000</code> (DV-EST-002)</td>
+</tr>
+<tr>
+<td>CT-EST-188</td>
+<td>Autorizar com outro usuário, pelo quadro de autorização</td>
+<td><strong>Passou</strong></td>
+<td>Fica registrado quem autorizou e quando</td>
+</tr>
+<tr>
+<td>CT-EST-189</td>
+<td>Autorizar com o mesmo usuário que cadastrou</td>
+<td><strong>Passou</strong></td>
+<td>Recusado: "Usuário não pode autorizar!". Ponto positivo: separa quem cadastra de quem autoriza</td>
+</tr>
+<tr>
+<td>CT-EST-190</td>
+<td>Autorizar com um usuário <strong>sem nenhum acesso ao Estoque</strong></td>
+<td><strong>Falhou</strong></td>
+<td>Aceito. Qualquer pessoa com login no sistema autoriza a entrada (DV-EST-009)</td>
+</tr>
+<tr>
+<td>—</td>
+<td>"Confirmar recebimento" do 00013 e do 00014 (item sem almoxarifado padrão) e do 00016 (item com o campo preenchido)</td>
+<td><strong>Funciona com falhas</strong></td>
+<td>Falha com erro genérico quando o item não tem almoxarifado padrão; com o campo preenchido, passou em 4,5 s (DV-EST-010)</td>
+</tr>
+<tr>
+<td>CT-EST-191</td>
+<td>Conferir 90 de 100</td>
+<td><strong>Falhou</strong></td>
+<td>Aceita a divergência só com "Deseja continuar?", sem justificativa e sem avisar a Qualidade</td>
+</tr>
+<tr>
+<td>CT-EST-192</td>
+<td>Conferência por usuário sem permissão</td>
+<td><strong>Comprovado pelo código</strong></td>
+<td>A tela grava o usuário logado, sem pedir senha nem conferir permissão</td>
+</tr>
+<tr>
+<td>CT-EST-193</td>
+<td>Finalizar a conferência</td>
+<td><strong>Falhou</strong></td>
+<td>"Erro ao redistribuir quantidade dos volumes", mesmo com 100 de 100. A nota fica marcada como conferida apesar do erro (DV-EST-015)</td>
+</tr>
+<tr>
+<td>CT-EST-194</td>
+<td>Endereçar o lote no local de quarentena</td>
+<td><strong>Falhou</strong></td>
+<td>Mostra "Endereçamento Finalizado com sucesso!", mas a nota continua não endereçada, sem saldo e sem análise no CQ (DV-EST-016)</td>
+</tr>
+<tr>
+<td>CT-EST-195</td>
+<td>Locais oferecidos para lote em quarentena</td>
+<td><strong>Não conclusivo</strong></td>
+<td>Só aparece o local de quarentena, mas o <code>TESTE ALMOX</code> não tem local comum para comparar</td>
+</tr>
+<tr>
+<td>CT-EST-196</td>
+<td>Fornecedor não qualificado</td>
+<td><strong>Parcial</strong></td>
+<td>Nenhum alerta em nenhuma etapa, e o código não consulta a qualificação. Falta testar com um fornecedor marcado como não qualificado</td>
+</tr>
+<tr>
+<td>CT-EST-197</td>
+<td>Histórico e disponibilidade do lote</td>
+<td><strong>Falhou</strong></td>
+<td>Histórico vazio e saldo zero (DV-EST-016)</td>
+</tr>
+<tr>
+<td>CT-EST-200 a 209</td>
+<td>Quarentena, análise do CQ, laudo e liberação</td>
+<td><strong>Bloqueados</strong></td>
+<td>Nenhuma solicitação de análise nasceu (DV-EST-016)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="permissoes-e-acesso">Permissões e acesso</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que foi testado</th>
+<th>Resultado</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acesso pelo menu</td>
+<td>Usuário de teste com permissões do Estoque marcadas no perfil</td>
+<td><strong>Funciona com falhas</strong></td>
+<td>Só entra com a função certa marcada, e a mensagem "Seu perfil não possuí permissão!" não diz qual falta (DV-EST-005)</td>
+</tr>
+<tr>
+<td>CT-EST-030 a 044</td>
+<td>Movimentação interna</td>
+<td><strong>Bloqueados</strong></td>
+<td>Dependem de um lote no estoque, que depende do Recebimento</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="desvios-encontrados">Desvios encontrados</h2>
+<p>Gravidade: <strong>Alta</strong> impede o uso seguro ou fere a norma diretamente; <strong>Média</strong> prejudica o controle ou a prova do que foi feito; <strong>Baixa</strong> atrapalha o usuário, sem efeito na qualidade.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Nº</th>
+<th>Gravidade</th>
+<th>Tela</th>
+<th>O que acontece</th>
+<th>Por que importa (ANVISA)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-EST-016</td>
+<td><strong>Alta</strong></td>
+<td>Endereçamento</td>
+<td>Mostra "Endereçamento Finalizado com sucesso!", mas nada foi gravado: o lote fica sem saldo e sem histórico, nenhuma análise vai para o CQ e a nota continua "Endereçado = NÃO". Pelo código, a rotina do banco desfaz tudo quando falha, e <strong>a tela nunca confere o resultado</strong></td>
+<td>O sistema diz que o material entrou em quarentena e foi para o CQ quando nada aconteceu. Quarentena logo após o recebimento (RDC 658/2022, art. 157); registro de cada ação quando é feita (art. 124)</td>
+</tr>
+<tr>
+<td>DV-EST-015</td>
+<td><strong>Alta</strong></td>
+<td>Conferência de Recebimento</td>
+<td>Finalizar a conferência dá "Erro ao redistribuir quantidade dos volumes", mesmo sem divergência. A nota fica marcada como conferida apesar do erro, porque a marcação é gravada antes do ajuste e as duas gravações não ficam juntas. A divergência de quantidade é aceita sem justificativa</td>
+<td>A verificação de cada entrega deve ser documentada (art. 183); o registro de conferido fica falso</td>
+</tr>
+<tr>
+<td>DV-EST-010</td>
+<td>Média</td>
+<td>Recebimento de Material</td>
+<td>"Confirmar recebimento" falha com "Erro ao Finalizar Recebimento!" quando o item não tem almoxarifado padrão. <strong>Causa confirmada:</strong> o 00016, com o campo preenchido, passou, e o código mostra que sem a sigla o código do volume fica vazio. <em>Era Alta; baixada para Média porque há contorno</em></td>
+<td>O sistema <strong>aceita salvar o item sem o dado que depois exige</strong>, e a mensagem não diz o que falta</td>
+</tr>
+<tr>
+<td>DV-EST-009</td>
+<td><strong>Alta</strong></td>
+<td>Recebimento de Material: autorização</td>
+<td>O quadro de autorização aceita <strong>qualquer usuário com login válido</strong>, mesmo sem acesso ao Estoque. Só recusa quem cadastrou</td>
+<td>A entrada de material precisa ser autorizada por pessoa designada. O Guia 33/2020 pede controle de acesso por função</td>
+</tr>
+<tr>
+<td>DV-EST-014</td>
+<td><strong>Alta</strong></td>
+<td>Recebimento de Material: lote</td>
+<td>Lote com validade vencida é aceito, sem aviso. <em>Revisão: o agente propôs Média; elevada para Alta</em></td>
+<td>Só material dentro da validade pode ser usado (RDC 658/2022, art. 189). Aceitar o vencido sem aviso deixa a barreira só nas etapas seguintes</td>
+</tr>
+<tr>
+<td>DV-EST-004</td>
+<td>Média</td>
+<td>Checklist de inspeção veicular</td>
+<td>Salva com parecer "Aprovado" sem nenhuma das 15 respostas</td>
+<td>As verificações de cada entrega devem ser documentadas (RDC 658/2022, art. 183, parágrafo único)</td>
+</tr>
+<tr>
+<td>DV-EST-011</td>
+<td>Média</td>
+<td>Recebimento de Material</td>
+<td>O checklist "Reprovado" aparece na lista para uso no recebimento</td>
+<td>Problemas que afetam a qualidade devem ser investigados e relatados (art. 156). O sistema não barra</td>
+</tr>
+<tr>
+<td>DV-EST-012</td>
+<td>Média</td>
+<td>Recebimento de Material</td>
+<td>O recebimento é salvo sem checklist, sem placa e sem motorista</td>
+<td>Mesma exigência do art. 183: a inspeção da entrega deixa de ser obrigatória</td>
+</tr>
+<tr>
+<td>DV-EST-001</td>
+<td>Média</td>
+<td>Recebimento de Material: lote</td>
+<td>O número do lote perde os hífens (<code>TESTE-LOTE-001</code> vira <code>TESTELOTE001</code>)</td>
+<td>O registro deve trazer o lote do fabricante como ele é (art. 141, V). Mesma falha do Principal (DV-PRI-001)</td>
+</tr>
+<tr>
+<td>DV-EST-002</td>
+<td>Média</td>
+<td>Recebimento de Material: lote</td>
+<td>Digitar <code>100</code> na quantidade grava <code>0,100</code>. O erro só aparece no fim</td>
+<td>Risco de quantidade errada no registro de entrada (art. 141, VI)</td>
+</tr>
+<tr>
+<td>DV-EST-005</td>
+<td>Média</td>
+<td>Acesso ao Estoque</td>
+<td>A mensagem de acesso negado não diz qual permissão falta</td>
+<td>Dificulta administrar os perfis. <em>Revisado em 07/10: o perfil do Principal vale no Estoque</em></td>
+</tr>
+<tr>
+<td>DV-EST-007</td>
+<td>Média</td>
+<td>Telas Usuário e Perfil do Estoque</td>
+<td>Abertas pelo endereço, deram erro 500 ou sessão expirada. <strong>Inconclusivo</strong>: refazer</td>
+<td>A confirmar</td>
+</tr>
+<tr>
+<td>DV-EST-003</td>
+<td>Baixa</td>
+<td>Recebimento de Material</td>
+<td>Sem a data do recebimento, o botão SIM não faz nada e não mostra mensagem</td>
+<td>Usabilidade</td>
+</tr>
+<tr>
+<td>DV-EST-006</td>
+<td>Baixa</td>
+<td>Item</td>
+<td>Alguns botões recarregam a tela e apagam os números digitados; erro de script em várias telas</td>
+<td>Usabilidade</td>
+</tr>
+<tr>
+<td>DV-EST-013</td>
+<td>Baixa</td>
+<td>Recebimento de Material: nota fiscal</td>
+<td>Sem a série, não grava e não avisa. Algumas mensagens apontam o campo errado</td>
+<td>Usabilidade</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Ponto positivo confirmado:</strong> a mesma pessoa não consegue cadastrar e autorizar o mesmo recebimento (CT-EST-189). É a separação de funções que a norma espera.</p>
+<h2 id="como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Como funciona hoje</th>
+<th>Como deveria funcionar (Boas Práticas de Fabricação)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inspeção do veículo</td>
+<td>Opcional; pode ser "aprovada" sem respostas; o veículo reprovado pode ser usado</td>
+<td>Obrigatória em toda entrega; todas as perguntas respondidas; o veículo reprovado bloqueia o recebimento ou exige uma decisão registrada da Qualidade</td>
+</tr>
+<tr>
+<td>Nota fiscal e lote</td>
+<td>Grava os dados; altera o número do lote; aceita lote vencido</td>
+<td>Guarda o lote exatamente como veio; recusa o vencido, ou exige justificativa e avisa a Qualidade</td>
+</tr>
+<tr>
+<td>Fornecedor</td>
+<td>Não verifica se o fornecedor é qualificado</td>
+<td>Avisa ou bloqueia a entrada de fornecedor não qualificado (RDC 658/2022, art. 8º, VI)</td>
+</tr>
+<tr>
+<td>Autorização</td>
+<td>Qualquer login válido autoriza, menos quem cadastrou</td>
+<td>Só a pessoa com a função de autorizar recebimento, e com registro de quem foi</td>
+</tr>
+<tr>
+<td>Confirmação</td>
+<td>Falha com mensagem genérica quando falta o almoxarifado padrão no item (DV-EST-010)</td>
+<td>O cadastro do item exige o que o recebimento usa; se faltar algo, a mensagem diz o quê</td>
+</tr>
+<tr>
+<td>Conferência</td>
+<td>Aceita divergência sem justificativa; marca "conferido" mesmo com erro (DV-EST-015)</td>
+<td>Divergência exige justificativa e vai para a Qualidade; ou grava tudo ou não grava nada</td>
+</tr>
+<tr>
+<td>Endereçamento</td>
+<td>Mostra sucesso sem ter gravado nada (DV-EST-016)</td>
+<td>Só mostra sucesso quando o lote está no estoque, em quarentena, e a análise foi aberta no CQ</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</h2>
+<p>Ficam no sistema para os próximos testes (decisão de 06/10/2026). Nada foi apagado.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Registro</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almoxarifado</td>
+<td><code>TESTE ALMOX</code> (00017)</td>
+<td>"Lote identificado" = Sim, sigla <code>TA</code> (alterado em 08/10)</td>
+</tr>
+<tr>
+<td>Locais</td>
+<td>901 a 904 do <code>TESTE ALMOX</code></td>
+<td>Criados</td>
+</tr>
+<tr>
+<td>Ligação grupo × almoxarifado</td>
+<td><code>TODOS</code> e <code>ADMINISTRAÇÃO</code> ↔ <code>TESTE ALMOX</code></td>
+<td>Criadas</td>
+</tr>
+<tr>
+<td>Unidade</td>
+<td><code>TST</code></td>
+<td>Criada, com a apresentação "TESTE UNIDADE"</td>
+</tr>
+<tr>
+<td>Itens</td>
+<td><code>TESTE MATERIA PRIMA</code> (sem almoxarifado padrão) e <code>TESTE MATERIA PRIMA 2</code> (TST0002, almoxarifado padrão <code>TESTE ALMOX</code>)</td>
+<td>Criados</td>
+</tr>
+<tr>
+<td>Checklists</td>
+<td>00004 (aprovado sem respostas) e 00005 (reprovado)</td>
+<td>Criados</td>
+</tr>
+<tr>
+<td>Recebimentos</td>
+<td>00013 e 00014</td>
+<td>Autorizados; "Confirmar recebimento" com erro</td>
+</tr>
+<tr>
+<td>Recebimento</td>
+<td>00015</td>
+<td>Aberto, com a nota 9003 (lote vencido <code>TESTELOTE004</code>) e a nota 9005 vazia, incluída por engano. <strong>Não usar como recebimento limpo</strong></td>
+</tr>
+<tr>
+<td>Recebimento</td>
+<td>00016</td>
+<td>Item 2, lote <code>TESTELOTE002</code> (item de entrada <code>TA0001/26</code>): autorizado, confirmado, conferido com erro e "endereçado" sem efeito</td>
+</tr>
+<tr>
+<td>Endereço de estoque</td>
+<td><code>L902-R901-C901-A901</code> (local 902, quarentena)</td>
+<td>Criado</td>
+</tr>
+<tr>
+<td>Usuários</td>
+<td><code>t.admin</code> (TESTE ADMIN) e <code>T.CONSULTA</code> (TESTE CONSULTA)</td>
+<td>Senhas redefinidas em 08/10; a do <code>t.admin</code> foi gravada de novo pelo responsável</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="proximos-passos">Próximos passos</h2>
+<ul>
+<li><strong>Perguntas ao DBA</strong> (quatro, em ordem de prioridade, na seção 6 da rodada de 08/10/2026). A principal: executar a rotina do endereçamento para a nota 9006 e informar o erro. Sem essa resposta, a quarentena e o CQ não podem ser testados.</li>
+<li><strong>Cadastrar um local comum</strong> no <code>TESTE ALMOX</code>. Destrava o CT-EST-195 e a movimentação interna (CT-EST-030 e seguintes).</li>
+<li><strong>Testes por risco:</strong> daqui em diante, primeiro os casos que tocam a norma (lote, validade, quarentena, aprovação do CQ, autorização e acesso). Os demais, à medida que houver crédito.</li>
+</ul>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-de-material">Recebimento de Material</a></li><li class="sub"><a href="#permissoes-e-acesso">Permissões e acesso</a></li><li><a href="#desvios-encontrados">Desvios encontrados</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compras e avaliação do fornecedor · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html" aria-current=page>Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Compras e avaliação do fornecedor</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Fluxo Compras e Avaliacao do Fornecedor.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo de <strong>compras e avaliação do fornecedor</strong> no LabMedSys. Vai da análise da necessidade (curva ABC e análise do estoque) ao pedido de compra, à baixa do pedido no recebimento e à avaliação do fornecedor em cada entrega.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Curva ABC e análise do estoque.</li>
+<li>Geração, cadastro e baixa do pedido de compra.</li>
+<li>Avaliação do fornecedor por entrega.</li>
+<li>Relação com o recebimento e com a exigência de fornecedor aprovado.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o recebimento em si (fluxo da equipe), a cotação no módulo Comercial e a avaliação de fornecedor dos módulos Controle da Qualidade e Garantia da Qualidade, que também existem (ver o mapa do processo fabril).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. A referência ao código fica só nas regras.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/estoque/compras-fornecedor-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/compras-fornecedor-fluxograma.png" alt="Workflow do processo de compras e avaliação do fornecedor" loading="lazy"></a><figcaption>Workflow do processo de compras e avaliação do fornecedor</figcaption></figure>
+
+<p>A <strong>Análise da Curva ABC</strong> classifica os itens pela importância de consumo num período. A <strong>Análise do Estoque</strong> calcula a necessidade de compra por grupo de item. A partir dela, o sistema <strong>gera o pedido de compra</strong>, que pode ser ajustado na tela <strong>Pedido de Compra</strong>.</p>
+<p>Quando o material chega, ele passa pelo fluxo de <strong>Recebimento</strong>, e o pedido é baixado na tela <strong>Recebimento do Item</strong>, informando o lote e a quantidade. Em cada entrega, a <strong>Avaliação do Fornecedor</strong> registra uma pontuação e se o fornecedor foi qualificado naquela entrega.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="analise-da-necessidade">Análise da necessidade</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – A Curva ABC exige o período (mês e ano iniciais e finais) e o parâmetro A, e justificativa (<code>gestao/curva_abc_ed.aspx</code>).</li>
+<li>RN002 – A Análise do Estoque exige grupo do item, período de análise e período de necessidade, <strong>cada um de até 12 meses</strong> ("Período de análise não pode ser superior a 12 meses!") (<code>gestao/analise_ed.aspx</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Análise da Curva ABC</td>
+<td>Classificação ABC</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Análise do Estoque</td>
+<td>Necessidade de compra</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="pedido-de-compra">Pedido de compra</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – O pedido exige item, quantidade e custo unitário, e o mesmo item não pode repetir ("O Item informado já existe no pedido!") (<code>gestao/pedido_compra_ed.aspx</code>).</li>
+<li>RN002 – O pedido pode ser gerado a partir da análise (<code>gestao/gerar_pedido_op.aspx</code>).</li>
+<li>RN003 – A baixa (<strong>Recebimento do Item</strong>) exige o lote e a quantidade, com justificativa (<code>gestao/pedido_compra_baixa_op.aspx</code>). <em>A confirmar no teste:</em> se a baixa é automática pelo recebimento da nota ou manual.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Pedido de Compra</td>
+<td>Cadastro e acompanhamento</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Recebimento do Item</td>
+<td>Baixa do pedido</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="avaliacao-do-fornecedor">Avaliação do fornecedor</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – A <strong>Avaliação do Fornecedor</strong> é feita <strong>por entrega</strong>: cada registro é ligado a uma nota fiscal e a um lote recebido, com pontuação total, campo "qualificado", observação e usuário e data de finalização (tabela <code>TBL_QUALIFICACAO_FORNECEDOR</code>).</li>
+<li>RN002 – Justificativa obrigatória na alteração.</li>
+<li>RN003 – A avaliação <strong>só é usada na própria tela</strong>. O recebimento não a consulta (<code>LaboSys_BLL/bllQualificacaoFornecedor.cs</code>, sem outro uso no código).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Avaliação do Fornecedor</td>
+<td>Nota de cada entrega</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Ponto de atenção</p>
+<p><strong>Não existe fornecedor aprovado no Estoque.</strong> A RDC 658/2022 (art. 8º, VI) exige verificar se cada recebimento vem de <strong>fornecedor aprovado</strong>. No sistema, a avaliação é posterior à entrega e não bloqueia nada. Qualquer pessoa jurídica cadastrada pode ser fornecedora num recebimento. O assunto também aparece no Controle da Qualidade e na Garantia da Qualidade (só protótipo), o que espalha o mesmo controle por três módulos (ver o mapa do processo fabril).</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> os itens <code>TESTE</code>, com consumo registrado pelos fluxos anteriores; o fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>; um segundo fornecedor <code>TESTE FORNECEDOR REPROVADO</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-160</td>
+<td>Curva ABC com período inválido e depois válido</td>
+<td>Recusa; válido, mostra a classificação</td>
+</tr>
+<tr>
+<td>CT-EST-161</td>
+<td>Análise do Estoque com período de 13 meses</td>
+<td>Recusa: "Período de análise não pode ser superior a 12 meses!"</td>
+</tr>
+<tr>
+<td>CT-EST-162</td>
+<td>Gerar pedido a partir da análise</td>
+<td>Pedido criado com os itens da necessidade</td>
+</tr>
+<tr>
+<td>CT-EST-163</td>
+<td>Pedido de Compra com item repetido</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-164</td>
+<td>Receber o pedido pelo fluxo de Recebimento e baixar no Recebimento do Item</td>
+<td>Pedido baixado; ver se a baixa foi automática ou manual</td>
+</tr>
+<tr>
+<td>CT-EST-165</td>
+<td>Avaliação do Fornecedor da entrega do <code>TESTE FORNECEDOR REPROVADO</code> com pontuação baixa, marcando como <strong>não qualificado</strong></td>
+<td>Avaliação salva</td>
+</tr>
+<tr>
+<td>CT-EST-166</td>
+<td><strong>Novo recebimento do mesmo <code>TESTE FORNECEDOR REPROVADO</code></strong></td>
+<td>Pela norma, deveria bloquear ou alertar. <strong>Registrar com evidência se o sistema aceitar sem aviso</strong></td>
+</tr>
+<tr>
+<td>CT-EST-167</td>
+<td>Histórico da avaliação (alteração com justificativa)</td>
+<td>Mostra valor antigo e novo, usuário e justificativa</td>
+</tr>
+<tr>
+<td>CT-EST-168</td>
+<td>Permissão: abrir Pedido de Compra pelo endereço com usuário sem acesso</td>
+<td>Acesso negado (ver DV-EST-008)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#analise-da-necessidade">Análise da necessidade</a></li><li class="sub"><a href="#pedido-de-compra">Pedido de compra</a></li><li class="sub"><a href="#avaliacao-do-fornecedor">Avaliação do fornecedor</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

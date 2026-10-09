@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitação e atendimento à produção · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html" aria-current=page>Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Solicitação e atendimento à produção</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Fluxo Solicitacao, Separacao e Atendimento.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo de <strong>solicitação, separação e atendimento de material</strong> no LabMedSys: o pedido de material ao Estoque (pela produção, para consumo, para cliente ou para o Controle da Qualidade), a aprovação, a separação dos lotes, a pesagem e a entrega.</p>
+<p>É o fluxo que faltava no documento da equipe "Solicitação e liberação da Produção". Aquele arquivo, na pasta <code>Documentação/</code>, é uma cópia do fluxo de Recebimento.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Solicitação de material: produção, consumo, cliente e Controle da Qualidade.</li>
+<li>Aprovação da solicitação.</li>
+<li>Separação dos lotes e pesagem.</li>
+<li>Atendimento (saída do estoque) e encerramento.</li>
+<li>Saída de material avulsa ("outras") e consultas.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> a ordem de produção e o uso do material na fabricação (módulo Produção), a devolução de sobras (fluxo próprio) e a saída por nota fiscal e remessa (fluxo de remessa).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. A referência ao código fica só nas regras.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/estoque/solicitacao-atendimento-producao-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/solicitacao-atendimento-producao-fluxograma.png" alt="Workflow do processo de solicitação, separação e atendimento" loading="lazy"></a><figcaption>Workflow do processo de solicitação, separação e atendimento</figcaption></figure>
+
+<p>Quem precisa de material registra uma <strong>Solicitação de Material</strong>, informando o tipo, a prioridade, o centro de custo ou o cliente, os itens e as quantidades. Quando a solicitação é do tipo produção e o módulo Produção está ativo, o Estoque avisa a Produção ao concluir a separação.</p>
+<p>A <strong>Aprovação de Solicitação</strong> libera ou recusa o pedido, conforme os tipos de solicitação permitidos ao perfil do usuário. No atendimento, o Estoque escolhe os lotes e endereços. A lista mostra só lotes disponíveis e dentro da validade, <strong>sem ordenar pela validade</strong>. A <strong>Separação de Material</strong> registra a separação e o relatório, e, quando o item exige, a <strong>Pesagem</strong> registra balança, lacre, peso e tara.</p>
+<p>No <strong>Atendimento de Solicitação</strong>, a quantidade entregue é baixada do estoque. O banco atualiza os saldos sozinho, e a solicitação muda de situação até ser encerrada.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="solicitacao-de-material">Solicitação de material</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Tipos de solicitação: <strong>produção, consumo, cliente e Controle da Qualidade</strong> (<code>LaboSys_Util/Constantes.cs:43-46</code>).</li>
+<li>RN002 – Situações da solicitação: aberta, em atendimento, separada, atendida, fechada, finalizada e cancelada (<code>Constantes.cs:30-36</code>). <em>A validar:</em> a ordem exata entre separada, atendida, fechada e finalizada.</li>
+<li>RN003 – Exige código, tipo, prioridade, situação, centro de custo ou cliente, item e quantidade, e justificativa na alteração (<code>estoque/solicitacao_ed.aspx</code>, validadores). Na de consumo, também data e almoxarifado.</li>
+<li>RN004 – Quando o módulo Produção está ativo, a conclusão da separação de uma solicitação do tipo <strong>produção</strong> atualiza o módulo Produção (<code>movimentacao_cq_reprovado_ed.aspx.cs:178-181</code>, <code>separacao_ed.aspx.cs:202</code>). <em>A confirmar no teste:</em> se a solicitação de produção é criada no módulo Produção, a partir da ordem de produção.</li>
+<li>RN005 – O banco tinha um gatilho para recalcular a situação da solicitação a cada mudança nos itens, mas ele está <strong>desligado</strong> (<code>TBL_SOLICITACAO_ITEM.sql:76</code>, <code>DISABLE TRIGGER trAll_StatusSolicitacao</code>). A situação é mudada pelas próprias telas, por exemplo para "separada" (<code>movimentacao_cq_reprovado_ed.aspx.cs:186</code>). <em>A confirmar no teste:</em> se a situação acompanha corretamente cada etapa.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Solicitação de Material</td>
+<td>Lista das solicitações</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Solicitação de Material (Produção)</td>
+<td>Pedido para a produção</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Solicitação de Material (Consumo)</td>
+<td>Pedido para consumo interno</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>(ordem de produção)</td>
+<td>Origem da solicitação de produção; <em>a mapear no módulo Produção</em></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="aprovacao-da-solicitacao">Aprovação da solicitação</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Cada perfil tem os <strong>tipos de solicitação</strong> que pode tratar (<code>LaboSys_DAL/dalUsuario.cs:1724</code>, tabela de perfil × tipo de solicitação). <em>A confirmar no teste:</em> se isso limita quem aprova, quem solicita ou os dois, e onde se configura.</li>
+<li>RN002 – Aprovação, reprovação e cancelamento exigem justificativa.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Aprovação de Solicitação</td>
+<td>Aprovar ou recusar pedidos</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="separacao-e-pesagem">Separação e pesagem</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – A lista de lotes do atendimento mostra <strong>só saldo disponível</strong> (fora de quarentena e refugo), <strong>dentro da validade</strong>, de lote não bloqueado e não em reanálise (<code>LaboSys_DAL/dalItemLote.cs:1006-1060</code>, <code>retornarLoteSaldo</code>, usada em <code>atendimento_op.aspx.cs:968</code>).</li>
+<li>RN002 – A lista <strong>não é ordenada pela validade</strong>: o sistema nem sugere nem obriga a usar primeiro o lote que vence antes (<code>dalItemLote.cs:1006-1060</code>, sem ordenação). A ordenação por validade existe só na lista de lotes <strong>para venda</strong> (<code>dalItemLote.cs:547-548</code>). A RDC 658/2022 pede o uso do material de forma a garantir a validade e a rotação do estoque.</li>
+<li>RN003 – O cancelamento da separação exige justificativa ("Justificativa é obrigatória para o cancelamento!"), e não se altera separação cujo processo já foi finalizado ("Processo vinculado a solicitação já foi finalizado!").</li>
+<li>RN004 – A pesagem exige item, quantidade maior que zero, tag da balança, número do lacre, peso e tara, e valida peso bruto, líquido e tara (<code>estoque/pesagem_ed.aspx</code>).</li>
+<li>RN005 – <strong>A pesagem para produção não pode ser finalizada com divergência</strong> de peso. Na divisão em volumes, a soma dos volumes A e B precisa bater com o total.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Separação de Material</td>
+<td>Escolher lotes e endereços</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Pesagem (Central de Pesagem)</td>
+<td>Pesar o material separado</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Ponto de atenção</p>
+<p><strong>Lote com data de reanálise vencida pode aparecer para separação</strong> se ninguém o tiver agendado para reanálise. A regra que o tirava do saldo disponível foi desligada no banco (ver o fluxo de reprovado, reanálise e revalidação, CT-EST-058).</p>
+</div>
+<h3 id="atendimento-e-encerramento">Atendimento e encerramento</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – O atendimento exige item e lote, e a quantidade atendida <strong>não pode passar da solicitada</strong> ("Quantidade atendida não pode ser superior a solicitada!").</li>
+<li>RN002 – O atendimento avulso exige armazenagem e <strong>cliente ou centro de custo</strong>.</li>
+<li>RN003 – A saída baixa o saldo do lote e do endereço pelo banco (gatilho <code>trAllMovimentacaoItem</code>).</li>
+<li>RN004 – Justificativa obrigatória.</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Atendimento de Solicitação</td>
+<td>Entregar o material</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Atendimento</td>
+<td>Detalhe do atendimento</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="outras-saidas-e-consultas">Outras saídas e consultas</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN001 – A <strong>Saída de Material (Outras)</strong> exige data, tipo e motivo da movimentação, item, lote de entrada, almoxarifado, local, rua, coluna, andar, quantidade, valor e justificativa (<code>estoque/saida_item_ed.aspx</code>).</li>
+<li>RN002 – O histórico do lote mostra as solicitações e saídas ligadas a ele (ver o fluxo de movimentação interna).</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Saída de Material (Outras)</td>
+<td>Saída sem solicitação</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Histórico do Lote</td>
+<td>Para onde foi o lote</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Ponto para os desenvolvedores</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> o lote <code>TESTELOTE001</code> aprovado e disponível (fluxo de reprovado e reanálise, CT-EST-050), um segundo lote do mesmo item com validade mais curta (<code>TESTELOTE003</code>), o centro de custo <code>TESTE CC ESTOQUE</code> e um perfil de teste com tipos de solicitação liberados. A solicitação de produção depende do módulo Produção; se não houver ordem de produção de teste, usar a solicitação de consumo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-070</td>
+<td>Registrar uma solicitação de consumo do <code>TESTE MATERIA PRIMA</code> sem cada obrigatório; depois completa</td>
+<td>Recusas; completa, fica aberta</td>
+</tr>
+<tr>
+<td>CT-EST-071</td>
+<td>Aprovar a solicitação com um usuário cujo perfil tem o tipo liberado</td>
+<td>Aprovada; registra quem aprovou</td>
+</tr>
+<tr>
+<td>CT-EST-072</td>
+<td>Tentar aprovar com um usuário cujo perfil <strong>não</strong> tem o tipo liberado</td>
+<td>Recusa ou a solicitação não aparece para ele</td>
+</tr>
+<tr>
+<td>CT-EST-073</td>
+<td>Atendimento: ver a ordem dos lotes oferecidos</td>
+<td>Registrar a ordem. Pela boa prática, <code>TESTELOTE003</code> (vence antes) deveria aparecer primeiro; pelo código, não há ordenação</td>
+</tr>
+<tr>
+<td>CT-EST-074</td>
+<td>Atendimento: escolher o lote que vence <strong>depois</strong> (<code>TESTELOTE001</code>)</td>
+<td>Registrar se o sistema aceita, avisa ou recusa (RN002)</td>
+</tr>
+<tr>
+<td>CT-EST-075</td>
+<td>Separação: procurar um lote em quarentena, reprovado, bloqueado e em reanálise</td>
+<td>Nenhum aparece</td>
+</tr>
+<tr>
+<td>CT-EST-076</td>
+<td>Pesagem com divergência de peso numa solicitação de produção</td>
+<td>Não finaliza</td>
+</tr>
+<tr>
+<td>CT-EST-077</td>
+<td>Pesagem sem tag da balança, sem lacre ou com tara inválida</td>
+<td>Recusas</td>
+</tr>
+<tr>
+<td>CT-EST-078</td>
+<td>Atender quantidade maior que a solicitada</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-079</td>
+<td>Atender a quantidade correta com justificativa</td>
+<td>Saldo do lote e do endereço baixado; a solicitação muda de situação; o histórico do lote mostra a saída</td>
+</tr>
+<tr>
+<td>CT-EST-080</td>
+<td>Cancelar uma separação sem justificativa e depois com</td>
+<td>Primeiro recusado; depois cancelado; o saldo volta</td>
+</tr>
+<tr>
+<td>CT-EST-081</td>
+<td>Saída de Material (Outras) com tipo e motivo <code>TESTE</code></td>
+<td>Saída registrada com justificativa; saldo baixado</td>
+</tr>
+<tr>
+<td>CT-EST-082</td>
+<td>Solicitação de produção vinda do módulo Produção (se houver ordem de teste)</td>
+<td>Aparece no Estoque com o tipo produção e segue o mesmo fluxo</td>
+</tr>
+<tr>
+<td>CT-EST-083</td>
+<td>Permissão: abrir Atendimento de Solicitação pelo endereço com usuário sem acesso</td>
+<td>Acesso negado (ver DV-EST-008)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#solicitacao-de-material">Solicitação de material</a></li><li class="sub"><a href="#aprovacao-da-solicitacao">Aprovação da solicitação</a></li><li class="sub"><a href="#separacao-e-pesagem">Separação e pesagem</a></li><li class="sub"><a href="#atendimento-e-encerramento">Atendimento e encerramento</a></li><li class="sub"><a href="#outras-saidas-e-consultas">Outras saídas e consultas</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

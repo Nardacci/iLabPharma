@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desvios e CAPA · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html" aria-current=page>Desvios e CAPA</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Desvios e CAPA</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/garantia-qualidade/LabMedSys - Modulo Garantia da Qualidade - Fluxo Desvios e CAPA.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo de <strong>desvios e CAPA</strong> (ações corretivas e preventivas) no LabMedSys. Vai do registro do Relatório de Desvios à ação corretiva imediata, à pré-avaliação pela Garantia da Qualidade, à avaliação pelas áreas envolvidas, à decisão sobre abrir CAPA, ao Relatório de CAPA com a causa raiz, aos planos de ação corretiva e preventiva, à execução e ao monitoramento até o encerramento.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Registro, edição e cancelamento do Relatório de Desvios.</li>
+<li>Ação corretiva imediata (contenção).</li>
+<li>Pré-avaliação, avaliação das áreas e avaliação final do desvio.</li>
+<li>Relatório de CAPA, planos de ação corretiva e preventiva, execução e monitoramento.</li>
+<li>Relatórios de acompanhamento.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o controle de mudanças (fluxo próprio, a seguir), a ligação com o lote no Estoque, no Controle da Qualidade e na Produção (tratada no mapa do processo fabril) e os cadastros de usuários, áreas e grupos de perfil (Principal e Configuração da GQ).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. A referência ao código fica só nas regras, com o caminho relativo a <code>5.garantia_qualidade/app/</code>. Para encurtar, <code>Bloco2/</code> quer dizer <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/</code>, e <code>Service/</code> quer dizer <code>HSolutions.GQ.Domain/Service/</code>.</p>
+<p><strong>Quem faz o quê (níveis de acesso):</strong> a GQ usa três níveis de "grupo de perfil", cadastrados na tela <strong>Grupo Perfil</strong>. Pelo código: o <strong>nível 1</strong> só mexe no que criou; o <strong>nível 2</strong> também mexe no que é da sua área; o <strong>nível 3</strong> mexe em tudo e é o único que abre os planos de ação e o monitoramento. <em>A validar:</em> que pessoas da empresa estariam em cada nível (provavelmente nível 3 = Garantia da Qualidade).</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/garantia-qualidade/desvios-capa-fluxograma.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/desvios-capa-fluxograma.png" alt="Workflow do processo de desvios e CAPA" loading="lazy"></a><figcaption>Workflow do processo de desvios e CAPA</figcaption></figure>
+
+<p>Qualquer área registra um <strong>Relatório de Desvios</strong> e, em seguida, a <strong>ação corretiva imediata</strong> que conteve o problema. A <strong>Garantia da Qualidade</strong> faz a <strong>pré-avaliação</strong>: diz como o desvio foi detectado e quais áreas precisam opinar. Cada área envolvida registra sua <strong>avaliação de área</strong>. Depois, a GQ faz a <strong>avaliação do relatório</strong> e decide se é preciso abrir <strong>CAPA</strong>.</p>
+<p>Sem CAPA, o desvio termina como <strong>Finalizado sem Relatório CAPA</strong>, com justificativa. Com CAPA, a GQ preenche o <strong>Relatório de CAPA</strong> (diagrama de causa e efeito, impacto e criticidade) e o <strong>plano de ação corretiva</strong>. Os responsáveis executam as ações, e a GQ faz o <strong>monitoramento</strong>, aprovando ou reprovando o plano. Aprovado o corretivo, segue o <strong>plano de ação preventiva</strong>, com a mesma sequência. O monitoramento do preventivo leva o desvio a <strong>Concluído</strong>.</p>
+<p><strong>Situações do desvio, na ordem:</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Situação (como aparece na tela)</th>
+<th>Quem tira o desvio dela</th>
+<th>Tela</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pendente Registro Ação Corretiva</td>
+<td>Quem registrou ou a área</td>
+<td>Registro Ação Corretiva Imediata</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Pendente Pré Avaliação</td>
+<td>GQ</td>
+<td>Pré Avaliação Relatório Desvios</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Pendente Responsável Área</td>
+<td>Cada área envolvida</td>
+<td>Avaliação Área</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Pendente Avaliação Relatório de Desvios</td>
+<td>GQ</td>
+<td>Avaliação Relatório Desvios</td>
+</tr>
+<tr>
+<td>5a</td>
+<td>Finalizado sem Relatório CAPA</td>
+<td>— (fim)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5b</td>
+<td>Pendente Relatório de CAPA</td>
+<td>GQ</td>
+<td>Relatório de CAPA</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Pendente Plano Ação Corretiva</td>
+<td>GQ (nível 3)</td>
+<td>Plano de Ação Corretiva</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Pendente Monitoramento do Plano Ação Corretiva</td>
+<td>Responsáveis (execução) e GQ nível 3 (monitoramento)</td>
+<td>Execução e Monitoramento do Plano de Ação Corretiva</td>
+</tr>
+<tr>
+<td>8a</td>
+<td>Aprovado Plano Ação Corretiva</td>
+<td>GQ (nível 3)</td>
+<td>Plano de Ação Preventiva</td>
+</tr>
+<tr>
+<td>8b</td>
+<td>Reprovado Plano Ação Corretiva</td>
+<td><strong>Ninguém</strong> (ver ponto de atenção 2)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Pendente Monitoramento do Plano Ação Preventiva</td>
+<td>Responsáveis e GQ nível 3</td>
+<td>Execução e Monitoramento do Plano de Ação Preventiva</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Concluído</td>
+<td>— (fim)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Cancelado</td>
+<td>— (fim), só a partir da situação 1</td>
+<td>Relatório de Desvios ou Registro Ação Corretiva Imediata</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="registro-do-relatorio-de-desvios">Registro do Relatório de Desvios</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórios: <strong>descrição</strong> e <strong>local da ocorrência</strong> (<code>Service/RelatorioNaoConformidadeValidator.cs:26</code> e <code>:32</code>). O responsável e a data de criação também são exigidos, mas vêm preenchidos (<code>:72</code> e <code>:78</code>).</li>
+<li>RN002 – O desvio é ligado a um <strong>item</strong>, de um destes tipos: processo, formulação, regulatórios, produto, projetos, equipamento, metodologia analítica, MP ou ME, sistema computadorizado, mudança de fornecedor, instalações, utilidades, material ou outros (<code>HSolutions.GQ.Domain/Enumeradores/TipoItem.cs</code>). Produtos e lotes são buscados na <strong>Produção</strong>, materiais no "estoque" (na verdade também na API da Produção) e equipamentos no <strong>Principal</strong>.</li>
+<li>RN003 – Os <strong>lotes</strong> escolhidos são <strong>copiados</strong> para a GQ como número e descrição (<code>HSolutions.GQ.Domain/Entities/Bloco2/ControleDesvios/ItemRegistroDesvio.cs:17</code>). O desvio <strong>não muda nada no lote</strong> em outro módulo.</li>
+<li>RN004 – Anexo é opcional; se houver, o arquivo e a descrição do anexo são obrigatórios (<code>RelatorioNaoConformidadeValidator.cs:58</code> e <code>:64</code>).</li>
+<li>RN005 – Ao salvar, o desvio recebe número sequencial por ano e vai para <strong>Pendente Registro Ação Corretiva</strong> (<code>Bloco2/RegistroNaoConformidadeController.cs:282</code>). A inclusão grava histórico (<code>:313</code>).</li>
+<li>RN006 – A <strong>data do relatório</strong> gravada é a que vem da tela (<code>RegistroNaoConformidadeController.cs:208</code>, <code>DateTime.Parse(model.DataRD)</code>), e não a hora do servidor no momento de salvar. <em>A confirmar no teste</em> se o campo pode ser alterado.</li>
+<li>RN007 – <strong>Edição</strong> só enquanto o desvio está em Pendente Registro Ação Corretiva, por quem criou, por nível 3, ou por nível 2 da mesma área de quem criou (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaRelatorioNaoConformidadeIndex.cs</code>). A edição exige <strong>justificativa</strong> e grava histórico (<code>RelatorioNaoConformidadeValidator.cs:40</code>; <code>RegistroNaoConformidadeController.cs:470</code>).</li>
+<li>RN008 – <strong>Cancelamento</strong>: mesmas condições da edição, com <strong>justificativa obrigatória</strong> (<code>RelatorioNaoConformidadeValidator.cs:49</code>). O sistema guarda quem cancelou, quando e o motivo no próprio desvio, mas <strong>não grava na trilha de auditoria</strong> (<code>RegistroNaoConformidadeController.cs:548</code>, alteração sem histórico). Ver ponto de atenção 4.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Relatório de Desvios</td>
+<td>Registrar, editar, visualizar e cancelar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="acao-corretiva-imediata">Ação corretiva imediata</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatória a <strong>descrição da ação imediata</strong> (<code>Service/AcaoCorretivaImediataRDValidator.cs:26</code>).</li>
+<li>RN002 – Mesmas regras de acesso do registro: só em Pendente Registro Ação Corretiva; nível 1 não edita o que não criou; nível 2 só da sua área (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAcaoCorretivaImediataRDIndex.cs</code>).</li>
+<li>RN003 – Ao salvar, o desvio vai para <strong>Pendente Pré Avaliação</strong> (<code>Bloco2/AcaoCorretivaImediataRDController.cs:182</code>), com histórico (<code>:304</code>).</li>
+<li>RN004 – A data e hora da ação imediata vêm da tela (<code>AcaoCorretivaImediataRDController.cs:193</code>), como na RN006 do registro.</li>
+<li>RN005 – Esta tela também permite <strong>cancelar</strong> o desvio. Aqui o cancelamento <strong>grava histórico</strong> (<code>AcaoCorretivaImediataRDController.cs:379</code>), ao contrário do cancelamento pela tela Relatório de Desvios.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Registro Ação Corretiva Imediata</td>
+<td>Registrar a contenção ou cancelar o desvio</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="pre-avaliacao">Pré-avaliação</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatório o <strong>método de detecção</strong>: processo/produção, auditoria interna, inspeção sanitária, Controle da Qualidade, Garantia da Qualidade, SAC/Fármaco ou outros. Se for "outros", o campo de texto é obrigatório (<code>Service/PreAvaliacaoRNCValidator.cs:27</code> e <code>:35</code>).</li>
+<li>RN002 – Registra a observação do <strong>chefe da GQ</strong> (o código chama o campo de "ChefeDGQ"). O responsável é o usuário conectado.</li>
+<li>RN003 – <strong>Sem áreas envolvidas</strong>, o desvio vai direto para <strong>Pendente Avaliação Relatório de Desvios</strong> (<code>Bloco2/PreAvaliacaoRNCController.cs:226</code>). <strong>Com áreas</strong>, vai para <strong>Pendente Responsável Área</strong> (<code>:250</code>).</li>
+<li>RN004 – A data e hora da pré-avaliação vêm da tela (<code>PreAvaliacaoRNCController.cs:242</code>). Na tela o campo aparece travado e preenchido com a hora em que a tela foi aberta.</li>
+<li>RN005 – Nível 1 não faz pré-avaliação. Nível 2 só da sua área (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaPreAvaliacaoRNCIndex.cs</code>).</li>
+<li>RN006 – Não há classificação de risco nem de criticidade nesta etapa. A criticidade só aparece no Relatório de CAPA.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Pré Avaliação Relatório Desvios</td>
+<td>Método de detecção e áreas envolvidas</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="avaliacao-pelas-areas">Avaliação pelas áreas</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – Cada área envolvida registra <strong>uma</strong> avaliação, com <strong>observação obrigatória</strong> ("A Observação da Área é obrigatória.", <code>Bloco2/AvaliacaoAreaRDController.cs:353</code>). A avaliação já nasce <strong>concluída</strong> (<code>:264</code>) e não pode ser refeita.</li>
+<li>RN002 – Quando <strong>todas</strong> as áreas avaliaram, o desvio vai para <strong>Pendente Avaliação Relatório de Desvios</strong> (<code>AvaliacaoAreaRDController.cs:274-276</code>).</li>
+<li>RN003 – Na lista, o botão de avaliar só aparece para quem é da área (<code>AvaliacaoAreaRDController.cs:116</code>). <strong>Ao salvar, o sistema não confere de novo</strong> se o usuário pertence à área avaliada: a área do usuário é buscada e não é usada (<code>:249</code>). <em>A confirmar no teste</em> (ponto de atenção 5).</li>
+<li>RN004 – Nível 1 não avalia (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAvaliacaoAreaRDIndex.cs</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Avaliação Área</td>
+<td>Parecer de cada área envolvida</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="avaliacao-do-relatorio-de-desvios-e-decisao-sobre-capa">Avaliação do Relatório de Desvios e decisão sobre CAPA</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórias a <strong>avaliação</strong> e a <strong>observação do chefe do SDGQ</strong> (<code>Service/AvaliacaoRNCValidator.cs:41</code> e <code>:59</code>). Anexo opcional, com arquivo e descrição se houver.</li>
+<li>RN002 – A tela lista os desvios em Pendente Avaliação e em Pendente Responsável Área, mas só libera a edição em <strong>Pendente Avaliação Relatório de Desvios</strong>, ou seja, depois das áreas. O arquivo <code>GerenciadorAcessoTelaRelatorioCapaIndex.cs</code> contém a classe da Avaliação (os nomes dos arquivos estão trocados com o do Relatório de CAPA, sem efeito no funcionamento).</li>
+<li>RN003 – A trava "A finalização das avaliações das áreas são obrigatórias" (<code>AvaliacaoRNCValidator.cs:65</code>) só barra avaliação de área <strong>pendente</strong>. Como a avaliação de área já nasce concluída, a trava, na prática, não barra nada. Quem protege a ordem é só a lista (RN002).</li>
+<li>RN004 – Duas marcações: <strong>necessário abrir CAPA</strong> e <strong>necessário abrir controle de mudança</strong> (<code>Bloco2/AvaliacaoRNCController.cs:291</code> e <code>:293</code>).</li>
+<li>RN005 – <strong>Sem CAPA</strong>: o campo "Observação para abertura de CAPA" é obrigatório (<code>AvaliacaoRNCValidator.cs:52</code>) e o desvio termina como <strong>Finalizado sem Relatório CAPA</strong> (<code>AvaliacaoRNCController.cs:197</code>).</li>
+<li>RN006 – <strong>Com CAPA</strong>: o desvio vai para <strong>Pendente Relatório de CAPA</strong> (<code>AvaliacaoRNCController.cs:296</code>).</li>
+<li>RN007 – A marcação de <strong>controle de mudança não abre nenhuma solicitação de mudança</strong>. Fica só registrada no desvio.</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Avaliação Relatório Desvios</td>
+<td>Parecer final e decisão sobre CAPA</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="relatorio-de-capa">Relatório de CAPA</h3>
+<h4 id="regras-de-negocio_5">Regras de negócio</h4>
+<ul>
+<li>RN001 – O <strong>diagrama de causa e efeito</strong> tem 7 campos de texto, e <strong>todos são obrigatórios</strong> ("O diagrama deve ser totalmente preenchido.", <code>Service/RelatorioCapaValidator.cs:37</code>). Os campos ficam em <code>HSolutions.GQ.Domain/Entities/Bloco2/ControleDesvios/RelatorioCapa.cs:28</code> em diante.</li>
+<li>RN002 – Registra a <strong>avaliação de impacto</strong> e a <strong>criticidade</strong>: crítico, maior ou menor (<code>RelatorioCapa.cs:36</code> e <code>:38</code>).</li>
+<li>RN003 – Pelo menos uma <strong>divisão ou seção</strong> precisa participar da reunião (<code>RelatorioCapaValidator.cs:43</code>). A área escolhida precisa ter responsáveis cadastrados ("Essa área não possui responsáveis.", <code>Bloco2/RelatorioCapaController.cs:284</code>).</li>
+<li>RN004 – Ao salvar, o desvio vai para <strong>Pendente Plano Ação Corretiva</strong> (<code>RelatorioCapaController.cs:220</code>).</li>
+<li>RN005 – Não há campo para justificar <strong>erro humano</strong> como causa (art. 340 da RDC).</li>
+</ul>
+<h4 id="telas-do-sistema_5">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Relatório de CAPA</td>
+<td>Causa raiz, impacto e criticidade; impressão</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="plano-de-acao-corretiva-execucao-e-monitoramento">Plano de ação corretiva, execução e monitoramento</h3>
+<h4 id="regras-de-negocio_6">Regras de negócio</h4>
+<ul>
+<li>RN001 – Só <strong>nível 3</strong> abre o plano de ação corretiva (<code>Bloco2/PlanoAcaoCorretivaRNCController.cs:129</code>).</li>
+<li>RN002 – Cada ação exige <strong>descrição</strong>, <strong>responsável</strong> e <strong>prazo</strong> (<code>Service/PlanoAcaoCorretivaValidator.cs:41</code> a <code>:75</code>). O responsável é escolhido entre os responsáveis de uma área (<code>PlanoAcaoCorretivaRNCController.cs:441</code>).</li>
+<li>RN003 – Ao salvar o plano, o desvio vai <strong>direto</strong> para <strong>Pendente Monitoramento do Plano Ação Corretiva</strong> (<code>PlanoAcaoCorretivaRNCController.cs:224</code>). <strong>Não há aprovação do plano antes da execução.</strong> A única aprovação é a do monitoramento, no fim.</li>
+<li>RN004 – <strong>Execução:</strong> cada responsável informa a conclusão da sua ação, com <strong>data de conclusão obrigatória e não futura</strong> (<code>Service/AvaliacaoPlanoAcaoCorretivaValidator.cs:28</code> e <code>:35</code>). A ação fica concluída (<code>Bloco2/AvaliacaoPlanoAcaoCorretivaRNCController.cs:266</code>). Concluir as ações <strong>não muda a situação do desvio</strong>.</li>
+<li>RN005 – <strong>Monitoramento:</strong> só nível 3 abre (<code>Bloco2/LiberacaoPlanoAcaoCorretivaRNCController.cs:122</code>). Obrigatórios: observação de <strong>verificação final</strong> e um <strong>resultado por ação</strong> (número e observação) (<code>Service/LiberacaoPlanoAcaoCorretivaValidator.cs:27</code> a <code>:48</code>). A mensagem do último campo está errada: pede "Responsável na Ação Corretiva" quando falta a observação.</li>
+<li>RN006 – O monitoramento <strong>não exige que todas as ações estejam concluídas</strong>. O validador não olha a situação das ações. <em>A confirmar no teste.</em></li>
+<li>RN007 – <strong>Aprovado:</strong> o desvio vai para <strong>Aprovado Plano Ação Corretiva</strong> e segue para o plano preventivo. <strong>Reprovado:</strong> vai para <strong>Reprovado Plano Ação Corretiva</strong> (<code>LiberacaoPlanoAcaoCorretivaRNCController.cs:236-242</code>), situação de onde <strong>nenhuma tela o tira</strong> (ponto de atenção 2).</li>
+<li>RN008 – Não há verificação de <strong>eficácia</strong> depois de um prazo: o monitoramento avalia se as ações foram implementadas (ponto de atenção 3).</li>
+</ul>
+<h4 id="telas-do-sistema_6">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Plano de Ação Corretiva</td>
+<td>Definir ações, responsáveis e prazos</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Execução do Plano de Ação Corretiva</td>
+<td>Cada responsável conclui sua ação</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Monitoramento do Plano de Ação Corretiva</td>
+<td>Verificação final, aprovar ou reprovar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="plano-de-acao-preventiva-execucao-monitoramento-e-encerramento">Plano de ação preventiva, execução, monitoramento e encerramento</h3>
+<h4 id="regras-de-negocio_7">Regras de negócio</h4>
+<ul>
+<li>RN001 – O plano preventivo só pode ser feito depois de o corretivo ser <strong>aprovado</strong> (a tela lista apenas desvios em Aprovado Plano Ação Corretiva). Só nível 3 abre (<code>Bloco2/PlanoAcaoPreventivaRNCController.cs:100</code>).</li>
+<li>RN002 – Mesmas exigências do corretivo para cada ação: descrição, responsável e prazo (<code>Service/PlanoAcaoPreventivaValidator.cs</code>). Ao salvar, o desvio vai para <strong>Pendente Monitoramento do Plano Ação Preventiva</strong> (<code>PlanoAcaoPreventivaRNCController.cs:181</code>).</li>
+<li>RN003 – Execução igual à corretiva: data de conclusão obrigatória e não futura (<code>Service/AvaliacaoPlanoAcaoPreventivaValidator.cs:27</code> e <code>:34</code>).</li>
+<li>RN004 – Monitoramento: só nível 3. Obrigatórios: verificação final, observação do monitoramento da implementação e um resultado por ação (<code>Service/LiberacaoPlanoAcaoPreventivaValidator.cs:27</code> a <code>:55</code>).</li>
+<li>RN005 – <strong>Aprovado ou reprovado, o desvio vai para Concluído</strong> (<code>Bloco2/LiberacaoPlanoAcaoPreventivaRNCController.cs:241-247</code>). Ponto de atenção 1.</li>
+<li>RN006 – Pelo código, <strong>todo desvio com CAPA precisa de plano preventivo</strong> para ser encerrado: não há caminho de Aprovado Plano Ação Corretiva para Concluído sem ele. <em>A validar com a área</em> se isso corresponde à prática.</li>
+</ul>
+<h4 id="telas-do-sistema_7">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Plano de Ação Preventiva</td>
+<td>Definir ações preventivas</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Execução Plano de Ação Preventiva</td>
+<td>Cada responsável conclui sua ação</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Monitoramento do Plano de Ação Preventiva</td>
+<td>Verificação final e encerramento</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="acompanhamento">Acompanhamento</h3>
+<h4 id="regras-de-negocio_8">Regras de negócio</h4>
+<ul>
+<li>RN001 – <strong>Acompanhamento RD</strong> imprime os desvios de um período, por situação (<code>Bloco2/AcompanhamentoRNCController.cs</code>). <strong>Controle de Emissão de RNC</strong> imprime os relatórios emitidos. Nenhum dos dois agrupa por causa, área ou produto, o que seria preciso para a análise de tendência (art. 342 da RDC).</li>
+</ul>
+<h4 id="telas-do-sistema_8">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Acompanhamento RD</td>
+<td>Relatório por período e situação</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Controle de Emissão de RNC</td>
+<td>Relatório de emissão</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Plano preventivo reprovado encerra o desvio como "Concluído".</strong> O monitoramento do plano preventivo leva o desvio a Concluído tanto na aprovação quanto na reprovação (<code>LiberacaoPlanoAcaoPreventivaRNCController.cs:241-247</code>). Um desvio com plano reprovado fica igual, na lista, a um desvio resolvido. Contraria a exigência de que a CAPA seja implementada e sua eficácia avaliada (RDC 658/2022, art. 8º, § 4º, e art. 341).</p>
+<p><strong>2. Plano corretivo reprovado não tem saída.</strong> A reprovação no monitoramento leva o desvio a "Reprovado Plano Ação Corretiva". Nenhuma tela lista essa situação para refazer o plano: ela só aparece na própria tela de monitoramento. O desvio fica parado para sempre, sem chegar ao plano preventivo nem a Concluído.</p>
+<p><strong>3. A eficácia da CAPA não é verificada.</strong> O monitoramento confere se as ações foram implementadas, não se resolveram o problema. Também não exige que todas as ações estejam concluídas (RN006 do plano corretivo). Não há prazo para uma verificação de eficácia posterior.</p>
+<p><strong>4. Trilha de auditoria incompleta.</strong> O cancelamento pela tela Relatório de Desvios não grava histórico, enquanto o cancelamento pela tela de Ação Corretiva Imediata grava. As datas do registro, da ação imediata e da pré-avaliação vêm da tela, e não do relógio do servidor no momento de salvar (RDC 658/2022, art. 125; Guia 33, integridade dos dados).</p>
+<p><strong>6. O desvio não chega ao lote.</strong> Os lotes são copiados como texto e nada é bloqueado ou sinalizado no Estoque, no Controle da Qualidade ou na Produção. A marcação "necessário abrir controle de mudança" também não abre nada. A investigação não se estende a outros lotes (RDC 658/2022, arts. 8º, IX e XV, e 335).</p>
+<p><strong>7. Sem aprovação do plano antes da execução e sem separação de funções.</strong> O plano de ação vai direto para execução. A mesma pessoa de nível 3 pode escrever o plano e aprová-lo no monitoramento. Nenhuma aprovação pede senha (assinatura eletrônica).</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> usuários de teste em três grupos de perfil, <code>TESTE NIVEL 1</code>, <code>TESTE NIVEL 2</code> e <code>TESTE NIVEL 3</code>, em duas áreas diferentes. Criar os grupos na tela Grupo Perfil se ainda não existirem. Também um lote <code>TESTE</code> já existente no Estoque (ver a lista em <code>3.estoque/execucao/</code>) e um equipamento <code>TESTE</code> do Principal. Todos os desvios com descrição começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-001</td>
+<td>Relatório de Desvios sem descrição e sem local</td>
+<td>Recusa: descrição e local obrigatórios</td>
+</tr>
+<tr>
+<td>CT-GQ-002</td>
+<td>Registrar desvio <code>TESTE</code> com item produto e o lote <code>TESTE</code></td>
+<td>Número sequencial do ano; situação Pendente Registro Ação Corretiva</td>
+</tr>
+<tr>
+<td>CT-GQ-003</td>
+<td>Tentar alterar a data do relatório antes de salvar (campo da tela)</td>
+<td>Pela norma, a data deve ser a do servidor. <strong>Registrar se a data alterada for gravada</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-004</td>
+<td>Editar o desvio sem justificativa e depois com justificativa; consultar o histórico</td>
+<td>Recusa sem justificativa; com ela, o histórico mostra valor antigo e novo</td>
+</tr>
+<tr>
+<td>CT-GQ-005</td>
+<td>Com o <code>TESTE NIVEL 1</code> de outra área, tentar editar o desvio de outro usuário</td>
+<td>Sem botão de editar</td>
+</tr>
+<tr>
+<td>CT-GQ-006</td>
+<td>Cancelar um desvio pela tela Relatório de Desvios, com justificativa; consultar o histórico</td>
+<td>Cancelado. <strong>Registrar se o cancelamento não aparecer no histórico</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-GQ-007</td>
+<td>Cancelar outro desvio pela tela Registro Ação Corretiva Imediata; consultar o histórico</td>
+<td>Cancelado e presente no histórico (comparar com o CT-GQ-006)</td>
+</tr>
+<tr>
+<td>CT-GQ-008</td>
+<td>Registrar a ação imediata sem descrição e depois com descrição</td>
+<td>Recusa; depois Pendente Pré Avaliação</td>
+</tr>
+<tr>
+<td>CT-GQ-009</td>
+<td>Pré-avaliação com método "Outros" sem texto</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-GQ-010</td>
+<td>Pré-avaliação com duas áreas envolvidas</td>
+<td>Pendente Responsável Área</td>
+</tr>
+<tr>
+<td>CT-GQ-011</td>
+<td>Antes de as áreas avaliarem, abrir a Avaliação Relatório Desvios</td>
+<td>O desvio aparece na lista, mas sem botão de avaliar</td>
+</tr>
+<tr>
+<td>CT-GQ-012</td>
+<td>Avaliação Área sem observação; depois só a primeira área avalia</td>
+<td>Recusa; depois o desvio continua em Pendente Responsável Área</td>
+</tr>
+<tr>
+<td>CT-GQ-013</td>
+<td>A segunda área avalia</td>
+<td>Pendente Avaliação Relatório de Desvios</td>
+</tr>
+<tr>
+<td>CT-GQ-014</td>
+<td><strong>Com o desvio aberto, liberar ou usar o lote TESTE no CQ, no Estoque ou na Produção</strong></td>
+<td>Pela norma, deveria haver bloqueio ou aviso. <strong>Registrar com evidência se o lote seguir normalmente</strong> (ponto 6)</td>
+</tr>
+<tr>
+<td>CT-GQ-015</td>
+<td>Avaliar sem CAPA, sem preencher a observação de abertura de CAPA</td>
+<td>Recusa; preenchida, o desvio fica Finalizado sem Relatório CAPA</td>
+</tr>
+<tr>
+<td>CT-GQ-016</td>
+<td>Em outro desvio, avaliar marcando CAPA e controle de mudança</td>
+<td>Pendente Relatório de CAPA. <strong>Conferir que nenhuma solicitação de mudança foi aberta</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-017</td>
+<td>Relatório de CAPA com o diagrama incompleto; depois completo, com criticidade "Crítico"</td>
+<td>Recusa; depois Pendente Plano Ação Corretiva; impressão do CAPA</td>
+</tr>
+<tr>
+<td>CT-GQ-018</td>
+<td>Com o <code>TESTE NIVEL 2</code>, abrir o Plano de Ação Corretiva</td>
+<td>Volta para a lista (só nível 3)</td>
+</tr>
+<tr>
+<td>CT-GQ-019</td>
+<td>Plano corretivo com duas ações (responsáveis de áreas diferentes)</td>
+<td>Desvio vai direto para Pendente Monitoramento, sem aprovação do plano</td>
+</tr>
+<tr>
+<td>CT-GQ-020</td>
+<td>Executar só uma das duas ações, com data de conclusão futura e depois com a de hoje</td>
+<td>Recusa a data futura; aceita a de hoje</td>
+</tr>
+<tr>
+<td>CT-GQ-021</td>
+<td><strong>Monitoramento com uma ação ainda não concluída</strong>, aprovando o plano</td>
+<td>Pela norma, deveria exigir todas concluídas. <strong>Registrar se aprovar</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-022</td>
+<td><strong>Em outro desvio, reprovar o plano corretivo</strong> e procurar o desvio nas telas de plano</td>
+<td><strong>Registrar se o desvio ficar sem tela para seguir</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-GQ-023</td>
+<td>Plano preventivo, execução e monitoramento <strong>reprovando</strong></td>
+<td><strong>Registrar se o desvio for para Concluído</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-GQ-024</td>
+<td>Mesmo usuário nível 3 escreve e aprova o plano preventivo de outro desvio</td>
+<td>Pela norma, separação de funções. <strong>Registrar se o sistema aceitar</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-025</td>
+<td>Acompanhamento RD e Controle de Emissão de RNC do período dos testes</td>
+<td>Relatórios com os desvios <code>TESTE</code> e suas situações</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-GQ-014, 006, 022, 023, 021, 003 e 026 primeiro. Eles tocam lote, trilha de auditoria, CAPA e acesso.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#registro-do-relatorio-de-desvios">Registro do Relatório de Desvios</a></li><li class="sub"><a href="#acao-corretiva-imediata">Ação corretiva imediata</a></li><li class="sub"><a href="#pre-avaliacao">Pré-avaliação</a></li><li class="sub"><a href="#avaliacao-pelas-areas">Avaliação pelas áreas</a></li><li class="sub"><a href="#avaliacao-do-relatorio-de-desvios-e-decisao-sobre-capa">Avaliação do Relatório de Desvios e decisão sobre CAPA</a></li><li class="sub"><a href="#relatorio-de-capa">Relatório de CAPA</a></li><li class="sub"><a href="#plano-de-acao-corretiva-execucao-e-monitoramento">Plano de ação corretiva, execução e monitoramento</a></li><li class="sub"><a href="#plano-de-acao-preventiva-execucao-monitoramento-e-encerramento">Plano de ação preventiva, execução, monitoramento e encerramento</a></li><li class="sub"><a href="#acompanhamento">Acompanhamento</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

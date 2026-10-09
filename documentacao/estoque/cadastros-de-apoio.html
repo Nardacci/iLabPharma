@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastros de apoio · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html" aria-current=page>Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Cadastros de apoio</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 07/10/2026 · <strong>Versão analisada:</strong> legado (<code>3.estoque/app/LaboSys_UI/administracao/tabelas_apoio</code>) · <strong>Situação:</strong> Extraída do código, a confirmar no teste.</p>
+<p>Levantamento automático completo, cadastro a cadastro: levantamento/tabelas-apoio-automatico.md (gerado por <code>homologacao/ferramentas/levantar_cadastros.py</code>).</p>
+<h3 id="resumo">Resumo</h3>
+<ul>
+<li>A pasta tem <strong>34 telas</strong>: <strong>32 cadastros</strong> e 2 que não são cadastros. <strong>Aprovação de solicitação</strong> é uma etapa de processo e vai para o fluxo de solicitação; <strong>Configuração</strong> são parâmetros do módulo, e ali só se testa a permissão.</li>
+<li><strong>Padrão de todos os cadastros</strong> (pelo código): <strong>justificativa obrigatória</strong> na alteração e na exclusão, exclusão lógica (o registro fica no banco, marcado como excluído), consulta ao histórico de alterações e, na maioria, relatório e exportação para Excel. Neste ponto o Estoque está <strong>melhor que o Principal</strong>, onde vários cadastros não pedem justificativa.</li>
+<li>Os cadastros são a <strong>base de todos os fluxos</strong>: sem almoxarifado, local, endereço, unidade e item não há recebimento, quarentena nem movimentação.</li>
+</ul>
+<h3 id="cadastros-por-grupo">Cadastros por grupo</h3>
+<h4 id="estrutura-fisica-do-estoque">Estrutura física do estoque</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Cadastro (tela)</th>
+<th>Obrigatórios e regras do código</th>
+<th>Depende de</th>
+<th>É usado por</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almoxarifado (<code>almoxarifado</code>)</td>
+<td>Descrição, sigla</td>
+<td>—</td>
+<td>Item, local, inventário, solicitação, remessa, grupo de usuário</td>
+</tr>
+<tr>
+<td>Local de armazenagem (<code>estoque_local</code>)</td>
+<td>Código (não pode ser zero), descrição, almoxarifado, situação e as marcações <strong>Local controlado, Refrigerado, Quarentena, Controle de umidade e Refugo</strong></td>
+<td>Almoxarifado</td>
+<td>Endereço, item, inventário</td>
+</tr>
+<tr>
+<td>Rua, Coluna, Andar (<code>estoque_rua</code>, <code>estoque_coluna</code>, <code>estoque_andar</code>)</td>
+<td>Código (não pode ser zero ou nulo), descrição, situação</td>
+<td>—</td>
+<td>Endereço do estoque</td>
+</tr>
+<tr>
+<td>Grupo de usuário × almoxarifado (<code>grupo_usuario_local</code>)</td>
+<td>Almoxarifado</td>
+<td>Grupo de usuário (<strong>cadastro do Principal</strong>) e almoxarifado</td>
+<td>Define quais almoxarifados cada grupo enxerga</td>
+</tr>
+<tr>
+<td>Tipo de armazenagem (<code>tipo_armazenagem</code>)</td>
+<td>Código (não pode ser zero), descrição, situação</td>
+<td>—</td>
+<td>Item, endereço</td>
+</tr>
+<tr>
+<td>Condição de armazenagem (<code>condicao_armazenagem</code>)</td>
+<td>Descrição, situação</td>
+<td>—</td>
+<td>Item</td>
+</tr>
+<tr>
+<td>Nível de segurança (<code>nivel_seguranca</code>)</td>
+<td>Descrição</td>
+<td>—</td>
+<td>Item</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="item-e-suas-classificacoes">Item e suas classificações</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Cadastro (tela)</th>
+<th>Obrigatórios e regras do código</th>
+<th>Depende de</th>
+<th>É usado por</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item</strong> (<code>item</code>)</td>
+<td>Código, descrição, situação, tipo, grupo e subgrupo, unidade, custo inicial, ativo imobilizado, estoque mínimo e máximo, peso e outros. Recusas no código: <strong>item sem almoxarifado</strong>; <strong>cliente obrigatório quando o item não é próprio</strong>; grau de pureza inválido; valores e medidas inválidos</td>
+<td>17 cadastros: almoxarifado, local, rua, grupo e subgrupo, unidade, classe, classificação, classificação de reanálise, condição e tipo de armazenagem, nível de segurança, NCM, SJB, <strong>substância controlada</strong>, contas</td>
+<td>Lotes, movimentação, solicitação, separação, inventário, análise do CQ, entrada de produção, kits</td>
+</tr>
+<tr>
+<td>Grupo e Subgrupo de item (<code>item_grupo</code>, <code>item_subgrupo</code>)</td>
+<td>Descrição, situação; o subgrupo exige o grupo</td>
+<td>Subgrupo depende do grupo</td>
+<td>Item, local, inventário</td>
+</tr>
+<tr>
+<td>Classe de item, Classificação de item (<code>classe_item</code>, <code>classificacao_item</code>)</td>
+<td>Descrição (e situação na classificação)</td>
+<td>—</td>
+<td>Item</td>
+</tr>
+<tr>
+<td>Classificação de reanálise (<code>classificacao_reanalise</code>)</td>
+<td>Código, descrição, <strong>primeira reanálise</strong>, situação</td>
+<td>—</td>
+<td>Item (prazo de reanálise do lote)</td>
+</tr>
+<tr>
+<td>Conservação, Concentração (<code>conservacao_item</code>, <code>concentracao</code>)</td>
+<td>Código (não pode ser zero), descrição, situação</td>
+<td>—</td>
+<td>Item (a confirmar)</td>
+</tr>
+<tr>
+<td>Unidade de medida (<code>unidade_medida</code>)</td>
+<td>Abreviatura, descrição. <strong>Ao incluir, o banco cria sozinho uma apresentação</strong> para a unidade (gatilho <code>trUnidadeMedidaAll</code>)</td>
+<td>—</td>
+<td>Apresentação, item, nota fiscal</td>
+</tr>
+<tr>
+<td>Apresentação do item (<code>apresentacao_item</code>)</td>
+<td>Apresentação, unidade de produção, unidade, <strong>fator de conversão</strong> (recusa se inválido), situação</td>
+<td>Unidade</td>
+<td>Apresentação do fornecedor, nota fiscal</td>
+</tr>
+<tr>
+<td>Apresentação do fornecedor (<code>apresentacao_fornecedor</code>)</td>
+<td>Item, fornecedor, apresentação, código do item no fornecedor, situação</td>
+<td>Item, apresentação, fornecedor (<strong>pessoa jurídica do Principal</strong>)</td>
+<td>Recebimento (a confirmar)</td>
+</tr>
+<tr>
+<td>Fabricante (<code>fabricante</code>)</td>
+<td>Código (não pode ser zero), descrição, situação</td>
+<td>—</td>
+<td>Item (a confirmar)</td>
+</tr>
+<tr>
+<td><strong>Substância controlada</strong> (<code>substancia_controlada</code>)</td>
+<td>Código (não pode ser zero), descrição</td>
+<td>—</td>
+<td>Item</td>
+</tr>
+<tr>
+<td>NCM (<code>ncm</code>), SJB (<code>sjb</code>)</td>
+<td>Código, descrição</td>
+<td>—</td>
+<td>Item</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="movimentacao-e-fiscal">Movimentação e fiscal</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Cadastro (tela)</th>
+<th>Obrigatórios e regras do código</th>
+<th>Depende de</th>
+<th>É usado por</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tipo de movimentação (<code>tipo_movimentacao</code>)</td>
+<td>Descrição, <strong>entrada ou saída, atualiza custo médio, entrada por nota fiscal</strong>, situação</td>
+<td>—</td>
+<td>Movimentação, nota fiscal, saída</td>
+</tr>
+<tr>
+<td>Motivo de movimentação (<code>motivo_movimentacao</code>)</td>
+<td>Descrição, entrada, saída, situação</td>
+<td>—</td>
+<td>Movimentação, saída</td>
+</tr>
+<tr>
+<td>Tipo de referência (<code>tipo_referencia</code>)</td>
+<td>Descrição</td>
+<td>—</td>
+<td>Nota fiscal</td>
+</tr>
+<tr>
+<td>CFOP (<code>cfop</code>)</td>
+<td>Código, descrição, parâmetros de venda, DIPJ, PIS/COFINS e IPI, situação</td>
+<td>—</td>
+<td>Item da nota fiscal</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="financeiro">Financeiro</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Cadastro (tela)</th>
+<th>Obrigatórios e regras do código</th>
+<th>Depende de</th>
+<th>É usado por</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Banco (<code>banco</code>)</td>
+<td>Código (não pode ser 000), nome, situação. <strong>Grava na tabela de bancos do Principal</strong> (sinônimo)</td>
+<td>—</td>
+<td>Principal e outros módulos</td>
+</tr>
+<tr>
+<td>Conta corrente, Conta financeira (<code>conta_corrente</code>, <code>conta_financeira</code>)</td>
+<td>Número ou descrição, nome, situação</td>
+<td>—</td>
+<td>Item</td>
+</tr>
+<tr>
+<td>Centro de custo (<code>centro_custo</code>)</td>
+<td>Descrição, situação e itens com quantidade e periodicidade. <strong>O Estoque tem tabela própria de centro de custo, diferente da do Principal</strong></td>
+<td>Item, periodicidade</td>
+<td>Consumo por centro de custo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="achados-do-levantamento">Achados do levantamento</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Achado</th>
+<th>Por que importa</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Banco</strong> é mantido em dois módulos e o Estoque grava direto na tabela do Principal</td>
+<td>Mesma informação alterada por dois caminhos, com histórico em bancos diferentes (como usuários e perfis, ver <code>transversal/01-telas-repetidas.md</code>)</td>
+<td>Extraído; a confirmar</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Centro de custo</strong> existe no Principal e no Estoque, em <strong>tabelas diferentes com o mesmo nome</strong></td>
+<td>Um centro de custo criado num módulo não existe no outro</td>
+<td>Extraído; a confirmar</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Seis cadastros não têm o campo <strong>Situação</strong> (NCM, nível de segurança, SJB, substância controlada, tipo de referência, unidade de medida)</td>
+<td>Sem inativar, o registro antigo só pode ser excluído</td>
+<td>A confirmar na tela</td>
+</tr>
+<tr>
+<td>4</td>
+<td>O código não mostra <strong>verificação de duplicidade</strong> (mesmo código ou descrição) na maioria dos cadastros</td>
+<td>Duas unidades "KG", dois almoxarifados iguais</td>
+<td>A confirmar no teste</td>
+</tr>
+<tr>
+<td>5</td>
+<td>A <strong>unidade de medida</strong> cria uma apresentação sozinha, por gatilho do banco, sem passar pela tela</td>
+<td>Registro criado sem histórico de quem criou pela tela</td>
+<td>A confirmar</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Substância controlada</strong> é só código e descrição</td>
+<td>Medicamento controlado tem regras próprias da ANVISA (lista, escrituração); verificar no fluxo se o sistema trata algo além do cadastro</td>
+<td>Ponto para validar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="ordem-de-criacao-dos-dados-de-teste">Ordem de criação dos dados de teste</h3>
+<p>Os dados ficam no ambiente e serão usados nos fluxos e nos outros módulos. Todos começam com <code>TESTE</code>.</p>
+<ol>
+<li><strong>Principal:</strong> grupo de usuário <code>TESTE GRUPO ESTOQUE</code>, ligado aos usuários de teste <code>t.*</code>, e pessoa jurídica fornecedora (reaproveitar uma <code>TESTE</code> existente; se não houver, criar <code>TESTE FORNECEDOR</code>).</li>
+<li><strong>Estrutura física:</strong> almoxarifado <code>TESTE ALMOX</code>; rua, coluna e andar <code>TESTE</code>; locais <code>TESTE LOCAL NORMAL</code>, <code>TESTE LOCAL QUARENTENA</code> (marcado como quarentena), <code>TESTE LOCAL CONTROLADO</code> (controlado) e <code>TESTE LOCAL REFRIGERADO</code> (refrigerado); grupo de usuário × almoxarifado.</li>
+<li><strong>Apoio do item:</strong> grupo <code>TESTE GRUPO</code> e subgrupo <code>TESTE SUBGRUPO</code>; unidade <code>TST</code> (conferir a apresentação criada sozinha); classe, classificação, classificação de reanálise, condição e tipo de armazenagem, nível de segurança, conservação, concentração, fabricante, substância controlada, NCM e SJB, todos <code>TESTE</code>.</li>
+<li><strong>Movimentação e financeiro:</strong> tipo e motivo de movimentação, tipo de referência, CFOP, banco, conta corrente, conta financeira e centro de custo <code>TESTE</code>.</li>
+<li><strong>Itens</strong> (base dos fluxos): <code>TESTE MATERIA PRIMA</code> (com quarentena, lote e validade), <code>TESTE EMBALAGEM</code>, <code>TESTE PRODUTO ACABADO</code> e <code>TESTE CONTROLADO</code> (com substância controlada); a apresentação do item e a apresentação do fornecedor de cada um.</li>
+</ol>
+<h3 id="casos-de-teste">Casos de teste</h3>
+<h4 id="casos-gerais-aplicar-a-cada-cadastro">Casos gerais: aplicar a <strong>cada</strong> cadastro</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-001</td>
+<td>Incluir com todos os obrigatórios</td>
+<td>Salva e aparece na lista</td>
+</tr>
+<tr>
+<td>CT-EST-002</td>
+<td>Tentar salvar sem cada obrigatório, um de cada vez</td>
+<td>Mensagem do campo, nada é salvo</td>
+</tr>
+<tr>
+<td>CT-EST-003</td>
+<td>Incluir um segundo registro com o mesmo código e a mesma descrição</td>
+<td>Recusa por duplicidade (achado 4)</td>
+</tr>
+<tr>
+<td>CT-EST-004</td>
+<td>Alterar um campo com justificativa</td>
+<td>Salva; o histórico mostra valor antigo, valor novo, usuário, data e justificativa</td>
+</tr>
+<tr>
+<td>CT-EST-005</td>
+<td>Alterar sem justificativa</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-006</td>
+<td>Inativar (quando houver Situação)</td>
+<td>Some das listas de escolha das telas que o usam</td>
+</tr>
+<tr>
+<td>CT-EST-007</td>
+<td>Excluir sem vínculo, com justificativa</td>
+<td>Some da lista; o histórico do registro excluído continua consultável</td>
+</tr>
+<tr>
+<td>CT-EST-008</td>
+<td>Excluir um registro em uso por outro cadastro</td>
+<td>Recusa com mensagem clara do motivo</td>
+</tr>
+<tr>
+<td>CT-EST-009</td>
+<td>Relatório e Excel, quando houver</td>
+<td>Gera com os dados da lista</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="casos-especificos">Casos específicos</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Cadastro</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-010</td>
+<td>Unidade de medida</td>
+<td>Incluir <code>TST</code> e abrir a Apresentação do item</td>
+<td>Apresentação criada sozinha (achado 5); verificar o histórico dela</td>
+</tr>
+<tr>
+<td>CT-EST-011</td>
+<td>Grupo e Subgrupo</td>
+<td>Incluir subgrupo sem grupo; excluir grupo com subgrupo</td>
+<td>Primeiro recusado; segundo recusado com mensagem</td>
+</tr>
+<tr>
+<td>CT-EST-012</td>
+<td>Local de armazenagem</td>
+<td>Incluir sem almoxarifado; incluir sem cada marcação (quarentena, controlado, refrigerado, umidade, refugo)</td>
+<td>Recusas; com tudo preenchido, o local aparece no endereçamento</td>
+</tr>
+<tr>
+<td>CT-EST-013</td>
+<td>Rua, Coluna, Andar</td>
+<td>Código zero; excluir rua usada num endereço</td>
+<td>Recusas</td>
+</tr>
+<tr>
+<td>CT-EST-014</td>
+<td>Grupo × almoxarifado</td>
+<td>Ligar <code>TESTE GRUPO ESTOQUE</code> a <code>TESTE ALMOX</code> e entrar com um usuário do grupo e outro fora dele</td>
+<td>Só o usuário do grupo vê o almoxarifado nas telas de movimentação</td>
+</tr>
+<tr>
+<td>CT-EST-015</td>
+<td>Item</td>
+<td>Salvar sem almoxarifado; tipo não próprio sem cliente; estoque mínimo maior que o máximo; grau de pureza inválido</td>
+<td>Recusas com as mensagens do código; registrar se mínimo maior que máximo é aceito</td>
+</tr>
+<tr>
+<td>CT-EST-016</td>
+<td>Item controlado</td>
+<td>Criar <code>TESTE CONTROLADO</code> com substância controlada e local controlado</td>
+<td>Registrar o que o sistema pede a mais para controlado (achado 6)</td>
+</tr>
+<tr>
+<td>CT-EST-017</td>
+<td>Apresentação do fornecedor</td>
+<td>Incluir sem fornecedor, sem item e sem código do fornecedor; depois completo</td>
+<td>Recusas; completo aparece no recebimento da nota</td>
+</tr>
+<tr>
+<td>CT-EST-018</td>
+<td>Classificação de reanálise</td>
+<td>Incluir sem a primeira reanálise; ligar ao <code>TESTE MATERIA PRIMA</code></td>
+<td>Recusa; o prazo será conferido no fluxo de reanálise</td>
+</tr>
+<tr>
+<td>CT-EST-019</td>
+<td>Códigos com zeros</td>
+<td>Código 0, 000, 0000 em local, rua, coluna, andar, banco, NCM, fabricante, substância</td>
+<td>Recusa em todos</td>
+</tr>
+<tr>
+<td>CT-EST-020</td>
+<td>Tipo de movimentação</td>
+<td>Incluir um de entrada que atualiza custo médio e um de saída</td>
+<td>Aparecem nas telas de movimentação conforme o sentido</td>
+</tr>
+<tr>
+<td>CT-EST-021</td>
+<td>Banco</td>
+<td>Incluir <code>TESTE BANCO</code> no Estoque e procurar no Principal</td>
+<td>Registrar se aparece no Principal e em qual histórico (achado 1)</td>
+</tr>
+<tr>
+<td>CT-EST-022</td>
+<td>Centro de custo</td>
+<td>Incluir <code>TESTE CC ESTOQUE</code> no Estoque e procurar no Principal (e vice-versa)</td>
+<td>Registrar se são o mesmo cadastro (achado 2)</td>
+</tr>
+<tr>
+<td>CT-EST-023</td>
+<td>Permissões</td>
+<td>Entrar com usuário sem permissão nos cadastros do Estoque e abrir as telas pelo endereço</td>
+<td>Acesso negado (no Principal as telas abriam: DV-PRI-025)</td>
+</tr>
+<tr>
+<td>CT-EST-024</td>
+<td>Pesquisa</td>
+<td>Pesquisar com e sem acento</td>
+<td>Registrar se repete o DV-PRI-008</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#cadastros-por-grupo">Cadastros por grupo</a></li><li><a href="#achados-do-levantamento">Achados do levantamento</a></li><li><a href="#ordem-de-criacao-dos-dados-de-teste">Ordem de criação dos dados de teste</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

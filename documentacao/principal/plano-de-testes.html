@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html">Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html">Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html">Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html">Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> equipe de homologação (execução) e desenvolvedores da nova versão (os mesmos casos servem de testes de aceite).
+<strong>Situação:</strong> rascunho. Casos escritos a partir do código, ainda não executados.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<ol>
+<li><strong>Homologar o sistema atual:</strong> confirmar no ambiente de teste o comportamento extraído do código e registrar as diferenças.</li>
+<li><strong>Definir os testes de aceite da nova versão:</strong> cada caso diz o resultado esperado <strong>na nova versão</strong>. Quando o sistema atual tem uma falha conhecida, o caso indica "No atual: falha esperada", com o achado correspondente.</li>
+</ol>
+<h3 id="2-escopo">2. Escopo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dentro</th>
+<th>Fora (nesta versão do plano)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login, sessão e senha</td>
+<td>Desempenho com muitos usuários simultâneos</td>
+</tr>
+<tr>
+<td>Usuários, contas, perfis e permissões</td>
+<td>Notificações por e-mail (dependem de servidor de e-mail no ambiente de teste)</td>
+</tr>
+<tr>
+<td>Controle de acesso por tela</td>
+<td>Integrações por serviço com outros módulos (testadas com cada módulo)</td>
+</tr>
+<tr>
+<td>Trilha de auditoria e exclusão</td>
+<td>Backup e restauração (infraestrutura)</td>
+</tr>
+<tr>
+<td>Cadastros: ambiente, equipamento, pessoa jurídica (amostra)</td>
+<td>Demais cadastros: amostragem conforme o risco</td>
+</tr>
+<tr>
+<td>Segurança da aplicação</td>
+<td></td>
+</tr>
+<tr>
+<td>Carga de dados</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ambiente</td>
+<td>Ambiente de teste da empresa (nunca produção). Pode receber dados fictícios e exclusões.</td>
+</tr>
+<tr>
+<td>Navegador</td>
+<td>Chrome ou Edge atualizado.</td>
+</tr>
+<tr>
+<td>Versão testada</td>
+<td>Registrar no início de cada rodada: versão do sistema (tela inicial ou <code>SIS_CONFIGURACAO.VERSAO_SISTEMA</code>) e data.</td>
+</tr>
+<tr>
+<td>Dados</td>
+<td>Só fictícios. Nenhum CPF ou nome real.</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-1-perfis-de-teste-criar-antes-de-comecar">3.1 Perfis de teste (criar antes de começar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Permissões</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TESTE_ADMIN</code></td>
+<td>Todas as telas de Administração, todas as ações</td>
+</tr>
+<tr>
+<td><code>TESTE_CONSULTA</code></td>
+<td>Usuários e Perfis: só Consultar</td>
+</tr>
+<tr>
+<td><code>TESTE_CADASTRO</code></td>
+<td>Ambiente, Equipamento, Pessoa jurídica: Consultar, Incluir, Alterar (sem Excluir, sem Imprimir)</td>
+</tr>
+<tr>
+<td><code>TESTE_SEM_ADMIN</code></td>
+<td>Só a tela inicial e um cadastro qualquer (sem nenhuma tela de Administração)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-2-usuarios-de-teste">3.2 Usuários de teste</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário</th>
+<th>Perfil</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t.admin</code></td>
+<td>TESTE_ADMIN</td>
+<td>Ativo</td>
+</tr>
+<tr>
+<td><code>t.consulta</code></td>
+<td>TESTE_CONSULTA</td>
+<td>Ativo</td>
+</tr>
+<tr>
+<td><code>t.cadastro</code></td>
+<td>TESTE_CADASTRO</td>
+<td>Ativo</td>
+</tr>
+<tr>
+<td><code>t.semadmin</code></td>
+<td>TESTE_SEM_ADMIN</td>
+<td>Ativo</td>
+</tr>
+<tr>
+<td><code>t.inativo</code></td>
+<td>TESTE_CADASTRO</td>
+<td>Usuário inativo</td>
+</tr>
+<tr>
+<td><code>t.containativa</code></td>
+<td>TESTE_CADASTRO</td>
+<td>Conta inativa</td>
+</tr>
+<tr>
+<td><code>t.vencido</code></td>
+<td>TESTE_CADASTRO</td>
+<td>Validade de acesso já encerrada (data fim = ontem)</td>
+</tr>
+<tr>
+<td><code>t.futuro</code></td>
+<td>TESTE_CADASTRO</td>
+<td>Validade começa amanhã</td>
+</tr>
+<tr>
+<td><code>t.senhavencida</code></td>
+<td>TESTE_CADASTRO</td>
+<td>Senha vencida (validade da senha = ontem)</td>
+</tr>
+<tr>
+<td><code>t.bloqueio</code></td>
+<td>TESTE_CADASTRO</td>
+<td>Ativo; usado nos testes de bloqueio</td>
+</tr>
+</tbody>
+</table></div>
+<p>Guarde a senha de cada usuário de teste num local seguro da equipe, nunca neste repositório.</p>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<ul>
+<li><strong>Prioridade alta:</strong> captura de tela de cada passo relevante e do resultado.</li>
+<li><strong>Prioridade média:</strong> captura do resultado.</li>
+<li><strong>Prioridade baixa:</strong> registro de "passou/falhou".</li>
+<li>Registrar em cada execução: data, executor, versão, resultado (<strong>Passou</strong>, <strong>Falhou</strong>, <strong>Bloqueado</strong>, <strong>Não executado</strong>) e observação.</li>
+<li>Toda falha gera um <strong>desvio</strong> com: caso, passos para reproduzir, resultado obtido, evidência e gravidade.</li>
+</ul>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Rodada</th>
+<th>Critério</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Homologação do sistema atual</td>
+<td>Todos os casos executados; falhas registradas como desvio. As falhas já conhecidas (achados SEG) confirmam ou não o achado.</td>
+</tr>
+<tr>
+<td>Aceite da nova versão</td>
+<td><strong>100% dos casos de prioridade alta</strong> aprovados; prioridade média com no máximo desvios de gravidade baixa, com plano de correção aprovado pela Garantia da Qualidade.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p>Legenda: <strong>Prior.</strong> = prioridade, conforme a análise de risco. <strong>Rastreia</strong> = regras, requisitos, achados e riscos que o caso verifica.</p>
+<h4 id="6-1-login">6.1 Login</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado (nova versão)</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-001</td>
+<td>Login válido</td>
+<td>1) Entrar com <code>t.cadastro</code> e senha correta.</td>
+<td>Entra na tela inicial. Registro de acesso "permitido" com data, hora e origem.</td>
+<td>RN-PRI-008, 010; RF-PRI-001</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-002</td>
+<td>Campos vazios</td>
+<td>1) Clicar em Entrar sem login. 2) Repetir só com login.</td>
+<td>"Login e/ou senha não foram informados." Não entra.</td>
+<td>RN-PRI-001</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRI-004</td>
+<td>Usuário inativo</td>
+<td>1) Entrar com <code>t.inativo</code> e senha correta.</td>
+<td>Não entra. Mensagem de usuário inativo. Tentativa registrada.</td>
+<td>RN-PRI-004</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-005</td>
+<td>Conta inativa</td>
+<td>1) Entrar com <code>t.containativa</code> e senha correta.</td>
+<td>Não entra. Tentativa <strong>registrada</strong>. <strong>No atual:</strong> confirmar se registra (RN-PRI-003 indica que não).</td>
+<td>RN-PRI-003; RF-PRI-002</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-006</td>
+<td>Validade de acesso encerrada</td>
+<td>1) Entrar com <code>t.vencido</code>.</td>
+<td>Não entra. Mensagem de validade.</td>
+<td>RN-PRI-005</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-007</td>
+<td>Validade ainda não iniciada</td>
+<td>1) Entrar com <code>t.futuro</code>.</td>
+<td>Não entra.</td>
+<td>RN-PRI-005</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRI-009</td>
+<td>Contador zera após acerto</td>
+<td>1) Errar 2 vezes. 2) Acertar. 3) Sair e errar 3 vezes.</td>
+<td>No passo 3 não bloqueia (o contador foi zerado no acerto).</td>
+<td>RN-PRI-008</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRI-010</td>
+<td>Desbloqueio pelo administrador</td>
+<td>1) Com <code>t.admin</code>, gerar nova senha para <code>t.bloqueio</code>. 2) Entrar com a nova senha.</td>
+<td>Entra e é levado à troca de senha. O desbloqueio aparece no histórico da conta.</td>
+<td>RN-PRI-009; RF-PRI-005</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-011</td>
+<td>Usuário sem nenhuma permissão</td>
+<td>1) Criar um usuário com um perfil vazio (sem funções). 2) Entrar com ele.</td>
+<td>"Acesso negado: seu perfil não possui permissão."</td>
+<td>RN-PRI-011</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-2-sessao">6.2 Sessão</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado (nova versão)</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-020</td>
+<td>Acesso sem login</td>
+<td>1) Sem estar logado, abrir direto o endereço de <code>administracao/usuario_lst.aspx</code>.</td>
+<td>Vai para o login ou para "sessão expirada". Nenhum dado aparece.</td>
+<td>RN-PRI-012</td>
+<td><strong>Alta</strong></td>
+</tr>
+<tr>
+<td>CT-PRI-021</td>
+<td>Expiração por inatividade</td>
+<td>1) Entrar e ficar parado pelo tempo de sessão (anotar o tempo encontrado). 2) Clicar em qualquer opção.</td>
+<td>Pede login de novo.</td>
+<td>RF-PRI-006</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-022</td>
+<td>Sair</td>
+<td>1) Entrar, abrir um segundo módulo e clicar em Sair. 2) Usar o botão Voltar do navegador. 3) Tentar usar o outro módulo.</td>
+<td>Sessão encerrada nos dois módulos; Voltar não mostra dados.</td>
+<td>RF-PRI-006</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-3-senha">6.3 Senha</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado (nova versão)</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-030</td>
+<td>Troca válida</td>
+<td>1) Trocar a senha informando a atual e uma nova válida (ex.: <code>Teste@2026a</code>). 2) Sair e entrar com a nova.</td>
+<td>Troca aceita; a nova senha funciona; a antiga não.</td>
+<td>RN-PRI-021</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-031</td>
+<td>Senha atual errada</td>
+<td>1) Trocar informando a senha atual errada.</td>
+<td>"Senha atual incorreta!" Não troca.</td>
+<td>RN-PRI-021</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRI-032</td>
+<td>Regras de composição</td>
+<td>Tentar, uma de cada vez: <code>abc12!</code> (curta), <code>abcdefgh</code> (só letras), <code>abcd1234</code> (sem símbolo), <code>abcd!@#$</code> (sem número).</td>
+<td>Todas recusadas com a mensagem de estrutura.</td>
+<td>RN-PRI-020; RF-PRI-010</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-035</td>
+<td>Histórico de senhas</td>
+<td>1) Trocar a senha 3 vezes (A → B → C). 2) Tentar voltar para A, depois para B.</td>
+<td>Ambas recusadas ("não pode ser igual às últimas senhas").</td>
+<td>RN-PRI-024</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRI-036</td>
+<td>Senha vencida</td>
+<td>1) Entrar com <code>t.senhavencida</code>.</td>
+<td>Vai direto para a troca de senha. Desistir da troca encerra a sessão.</td>
+<td>RN-PRI-026</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-039</td>
+<td>Validade da senha provisória</td>
+<td>1) Gerar senha provisória. 2) Não usar e pedir ao DBA para conferir a data de validade gravada.</td>
+<td>Validade igual ao prazo definido (atual: 5 dias).</td>
+<td>RN-PRI-028</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-4-usuarios-e-contas-inclusao-edicao-exclusao">6.4 Usuários e contas (inclusão, edição, exclusão)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado (nova versão)</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-040</td>
+<td>Incluir usuário</td>
+<td>1) Com <code>t.admin</code>, incluir um usuário com os campos obrigatórios. 2) Criar a conta com login e um perfil.</td>
+<td>Usuário e conta criados. Histórico registra a inclusão, com quem e quando.</td>
+<td>RF-PRI-020; RN-PRI-054, 056</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-041</td>
+<td>Campos obrigatórios</td>
+<td>1) Tentar salvar o usuário sem cada campo obrigatório, um por vez.</td>
+<td>Cada tentativa recusada com mensagem clara. Anotar a lista de obrigatórios encontrada.</td>
+<td>RF-PRI-020</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRI-042</td>
+<td>Login duplicado</td>
+<td>1) Criar conta com o login <code>t.cadastro</code> para outro usuário.</td>
+<td>Recusado: "O login informado já foi cadastrado: [nome]!"</td>
+<td>RN-PRI-030</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-043</td>
+<td>Conta sem perfil</td>
+<td>1) Tentar salvar uma conta sem perfil.</td>
+<td>"O perfil do usuário é obrigatório!"</td>
+<td>RN-PRI-031</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-044</td>
+<td>Editar usuário</td>
+<td>1) Alterar cargo, e-mail e telefone de um usuário de teste com justificativa. 2) Abrir o histórico.</td>
+<td>Alteração salva. Histórico com um item por campo: valor antigo, valor novo, usuário, data e justificativa.</td>
+<td>RN-PRI-055</td>
+<td><strong>Alta</strong></td>
+</tr>
+<tr>
+<td>CT-PRI-045</td>
+<td>Inativar usuário</td>
+<td>1) Inativar um usuário com justificativa. 2) Tentar entrar com ele.</td>
+<td>Inativado; justificativa gravada; não consegue entrar.</td>
+<td>RN-PRI-035; RF-PRI-024</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-046</td>
+<td>Incluir e excluir perfil da conta</td>
+<td>1) Adicionar um segundo perfil a uma conta. 2) Remover. 3) Abrir o histórico.</td>
+<td>Histórico com "novo perfil" e "perfil excluído".</td>
+<td>RN-PRI-056</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-047</td>
+<td>Excluir usuário sem histórico</td>
+<td>1) Criar um usuário e não usá-lo. 2) Excluir com justificativa.</td>
+<td>Vai para a lixeira (some das listas); não é apagado do banco (confirmar com o DBA).</td>
+<td>RN-PRI-050, 053</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-048</td>
+<td>Excluir usuário com histórico</td>
+<td>1) Tentar excluir <code>t.cadastro</code> (que já incluiu registros).</td>
+<td>Recusado, informando <strong>quais</strong> dependências impedem. <strong>No atual:</strong> mensagem genérica "(REFERENCE)".</td>
+<td>RN-PRI-051, 052; RF-PRI-041</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-049</td>
+<td>Exclusão sem justificativa</td>
+<td>1) Tentar excluir sem justificativa.</td>
+<td>Recusado.</td>
+<td>RN-PRI-053; RF-PRI-042</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-5-perfis-e-permissoes">6.5 Perfis e permissões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado (nova versão)</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-050</td>
+<td>Somente consulta</td>
+<td>1) Entrar com <code>t.consulta</code>. 2) Abrir a lista de usuários e um usuário.</td>
+<td>Lista e detalhe visíveis; tela de edição travada; sem botões Incluir, Salvar, Excluir.</td>
+<td>RN-PRI-043</td>
+<td><strong>Alta</strong></td>
+</tr>
+<tr>
+<td>CT-PRI-051</td>
+<td>Imprimir e Excel sem permissão</td>
+<td>1) Entrar com <code>t.cadastro</code> e abrir a lista de ambientes.</td>
+<td>Botões Imprimir e Exportar não aparecem.</td>
+<td>RN-PRI-044</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRI-052</td>
+<td>Soma de perfis</td>
+<td>1) Dar a <code>t.consulta</code> um segundo perfil com Alterar em Usuários. 2) Entrar de novo.</td>
+<td>Passa a poder alterar usuários.</td>
+<td>RN-PRI-040; RF-PRI-030</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-053</td>
+<td>Mudança de permissão no histórico</td>
+<td>1) Com <code>t.admin</code>, retirar uma função de um perfil. 2) Abrir o histórico do perfil.</td>
+<td>Alteração registrada com quem, quando e o que mudou.</td>
+<td>RN-PRI-055; RF-PRI-036</td>
+<td><strong>Alta</strong></td>
+</tr>
+<tr>
+<td>CT-PRI-054</td>
+<td>Relatório de revisão de acessos</td>
+<td>1) Gerar o relatório de perfis/usuários.</td>
+<td>Lista usuários × perfis × funções, com data da última alteração. <strong>No atual:</strong> registrar o que o relatório <code>perfil_rel</code> mostra.</td>
+<td>RF-PRI-036</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-7-trilha-de-auditoria">6.7 Trilha de auditoria</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado (nova versão)</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-080</td>
+<td>Histórico de inclusão, alteração e exclusão</td>
+<td>1) Incluir um ambiente. 2) Alterar dois campos com justificativa. 3) Excluir com justificativa. 4) Abrir o histórico.</td>
+<td>Três eventos, com usuário, data e hora, justificativa e, na alteração, valor antigo e novo de cada campo.</td>
+<td>RN-PRI-054, 055; RDC 658 art. 125</td>
+<td><strong>Alta</strong></td>
+</tr>
+<tr>
+<td>CT-PRI-082</td>
+<td>Consultar histórico sem permissão</td>
+<td>1) Com usuário sem "Consultar log", abrir um registro.</td>
+<td>Opção de histórico não aparece.</td>
+<td>RN-PRI-042</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-085</td>
+<td>Data e hora</td>
+<td>1) Alterar um registro e anotar a hora do relógio. 2) Comparar com o histórico.</td>
+<td>Hora do histórico igual à do servidor, no fuso correto.</td>
+<td>RNF-PRI-012</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-8-cadastros-amostra-por-risco">6.8 Cadastros (amostra por risco)</h4>
+<p>Para <strong>Ambiente</strong> (prioridade média), <strong>Equipamento</strong> e <strong>Pessoa jurídica</strong> (prioridade baixa), executar:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-090</td>
+<td>Incluir</td>
+<td>Incluir com todos os campos e com só os obrigatórios.</td>
+<td>Grava; aparece na lista; histórico de inclusão.</td>
+<td>RF-PRI-050, 052, 053</td>
+</tr>
+<tr>
+<td>CT-PRI-091</td>
+<td>Obrigatórios e formatos</td>
+<td>Salvar sem cada obrigatório; datas inválidas; CNPJ inválido (pessoa jurídica).</td>
+<td>Recusado com mensagem clara. Anotar as regras encontradas.</td>
+<td>RF-PRI-050 a 053</td>
+</tr>
+<tr>
+<td>CT-PRI-092</td>
+<td>Alterar</td>
+<td>Alterar campos com justificativa.</td>
+<td>Grava; histórico campo a campo.</td>
+<td>RN-PRI-055</td>
+</tr>
+<tr>
+<td>CT-PRI-093</td>
+<td>Inativar</td>
+<td>Inativar e conferir se some das listas de seleção dos outros cadastros.</td>
+<td>Não aparece para novas escolhas; registros antigos continuam mostrando o valor.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-094</td>
+<td>Excluir sem dependentes</td>
+<td>Excluir um registro recém-criado.</td>
+<td>Vai para a lixeira.</td>
+<td>RN-PRI-050</td>
+</tr>
+<tr>
+<td>CT-PRI-095</td>
+<td>Excluir com dependentes</td>
+<td>Ambiente com equipamento ligado; pessoa jurídica usada como fabricante.</td>
+<td>Recusado, informando a dependência.</td>
+<td>RN-PRI-051</td>
+</tr>
+<tr>
+<td>CT-PRI-096</td>
+<td>Pesquisa</td>
+<td>Pesquisar por parte do nome, com e sem acento, maiúsculas e minúsculas.</td>
+<td>Encontra; acentos e caixa não atrapalham.</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-097</td>
+<td>Relatório e Excel</td>
+<td>Gerar o relatório e exportar com filtro.</td>
+<td>Mesmo conteúdo da lista filtrada.</td>
+<td>RF-PRI-057</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-10-carga-de-dados">6.10 Carga de dados</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Cenário</th>
+<th>Passos</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-110</td>
+<td>Carga base</td>
+<td>Incluir pelas telas (manualmente ou por automação no navegador): 50 usuários, 10 perfis, 200 pessoas jurídicas, 30 ambientes, 100 equipamentos, ligações equipamento × ambiente.</td>
+<td>Todos gravados; contagens nas listas batem com o carregado.</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-111</td>
+<td>Listas com volume</td>
+<td>Com a carga feita, abrir cada lista, paginar, ordenar e pesquisar.</td>
+<td>Tempo de resposta aceitável (anotar: meta inicial de até 3 segundos); paginação e ordenação corretas.</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-112</td>
+<td>Dados no limite</td>
+<td>Incluir registros com textos no tamanho máximo de cada campo, acentos, cedilha, apóstrofo, e-mails e telefones em formatos diversos.</td>
+<td>Grava sem cortar nem trocar caracteres; mostra corretamente na lista, no detalhe, no relatório e no Excel.</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRI-113</td>
+<td>Relatórios com volume</td>
+<td>Gerar os relatórios de usuários e de pessoas jurídicas com toda a carga.</td>
+<td>Gera completo, sem erro de tempo esgotado.</td>
+<td>RF-PRI-057</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<p>A automação da carga no navegador pode ser preparada pelo agente quando o acesso ao ambiente de teste estiver configurado.</p>
+<hr />
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Casos</th>
+<th>Prioridade alta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login</td>
+<td>12</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Sessão</td>
+<td>4</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Senha</td>
+<td>10</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Usuários e contas</td>
+<td>10</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Perfis e permissões</td>
+<td>5</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Acesso por tela</td>
+<td>12</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Trilha de auditoria</td>
+<td>6</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Cadastros (por cadastro testado)</td>
+<td>8</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Segurança da aplicação</td>
+<td>5</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Carga de dados</td>
+<td>4</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</h3>
+<ol>
+<li><strong>Acesso ao ambiente de teste:</strong> endereço e um usuário administrador para criar os perfis e usuários de teste da seção 3.</li>
+<li><strong>Apoio do DBA</strong> em três casos: CT-PRI-012 (registros de acesso), CT-PRI-083 e CT-PRI-084 (proteção do histórico). Só leitura, exceto a alteração controlada do CT-PRI-084.</li>
+<li><strong>Formato do registro de execução:</strong> planilha, ou o próprio repositório (um arquivo por rodada). Se preferir planilha, gero a partir deste plano.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

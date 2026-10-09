@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reconhecimento do módulo · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html" aria-current=page>Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Comece por aqui</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Reconhecimento do módulo</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>5.garantia_qualidade/app</code>) · <strong>Profundidade:</strong> superficial, por contagem e comparação automática de arquivos. Nada aqui foi testado nas telas.</p>
+<p><strong>Como foi feito:</strong> três scripts em <code>homologacao/ferramentas/</code> (podem ser rodados de novo a qualquer momento). A saída completa de cada um está em <code>homologacao/5.garantia_qualidade/levantamento/</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Script</th>
+<th>O que levanta</th>
+<th>Saída</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>levantar_telas_mvc.py</code></td>
+<td>Cada pasta de telas: título que o usuário vê, nome no roteiro de menu do fornecedor, controlador, ações, se lê ou grava dados, arquivos <code>.js</code></td>
+<td><code>telas-automatico.md</code></td>
+</tr>
+<tr>
+<td><code>levantar_tabelas_gq.py</code></td>
+<td>Tabelas do projeto de banco × tabelas que o código usa × tabelas de mesmo nome nos outros módulos</td>
+<td><code>tabelas-automatico.md</code></td>
+</tr>
+<tr>
+<td><code>levantar_integracoes_gq.py</code></td>
+<td>Chamadas da GQ à API dos outros módulos e chamadas dos outros módulos à GQ</td>
+<td><code>integracoes-automatico.md</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="diferenca-em-relacao-ao-principal-e-ao-estoque">Diferença em relação ao Principal e ao Estoque</h3>
+<p>A GQ foi feita em outra tecnologia: <strong>ASP.NET MVC</strong> (telas <code>.cshtml</code>), e não WebForms (<code>.aspx</code>). Duas consequências para o nosso trabalho:</p>
+<ul>
+<li><strong>O menu não está no código.</strong> Ele fica na tabela <code>SIS_FUNCAO</code> do banco do Principal. O código só traz um roteiro antigo de montagem do menu, <strong>todo comentado</strong>, em <code>Hsolutions.GQ.DB/dml.sql</code>. Neste documento as telas aparecem com o nome desse roteiro e, quando a tela não está nele, com o título que ela mostra no alto (<code>ViewBag.Pagina</code>, exibido em <code>titulo-principal</code>). <strong>O nome real do menu precisa ser confirmado</strong> (ver "Pontos para validar").</li>
+<li>O título da tela muda conforme o modo (pesquisa, inclusão, edição, visualização). Por exemplo, o Relatório de Desvios mostra cinco títulos diferentes.</li>
+</ul>
+<h3 id="tamanho">Tamanho</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Garantia da Qualidade</th>
+<th>Estoque</th>
+<th>Principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Páginas (<code>.cshtml</code> / <code>.aspx</code>)</td>
+<td>304</td>
+<td>301</td>
+<td>78</td>
+</tr>
+<tr>
+<td>Telas de negócio (agrupando pesquisa, inclusão, edição e visualização)</td>
+<td>67</td>
+<td>cerca de 151</td>
+<td>32</td>
+</tr>
+<tr>
+<td>... que funcionam pelo código</td>
+<td><strong>44</strong></td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>... protótipos (tela sem lógica)</td>
+<td><strong>23</strong></td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Tabelas no projeto de banco</td>
+<td>93 (91 + 75 arquivos em duas pastas, ver "Achados")</td>
+<td>165</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Relatórios impressos (<code>.rdlc</code>)</td>
+<td>33 (3 são cópias "Backup")</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Casos de teste deixados pelo fornecedor</td>
+<td>42 páginas HTML em <code>TesteUI/</code> e 26 arquivos de teste automatizado</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Fora as 67 telas de negócio, há 6 pastas técnicas: entrada (login), página inicial, páginas de erro, duas pastas de relatórios e uma tela genérica de teste (<code>Tela</code>).</p>
+<h3 id="telas-que-funcionam-44-pelo-nome-que-o-usuario-ve">Telas que funcionam (44), pelo nome que o usuário vê</h3>
+<p>"Menu" é o nome no roteiro do fornecedor. Quando a tela não está no roteiro, aparece o título dela, marcado com <em>(fora do roteiro)</em>.</p>
+<h4 id="controle-de-desvios-14">Controle de Desvios (14)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Pasta no código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relatório de Desvios</td>
+<td><code>Bloco2/RegistroNaoConformidade</code></td>
+</tr>
+<tr>
+<td>Registro Ação Corretiva Imediata</td>
+<td><code>Bloco2/AcaoCorretivaImediataRD</code></td>
+</tr>
+<tr>
+<td>Pré Avaliação Relatório Desvios</td>
+<td><code>Bloco2/PreAvaliacaoRNC</code></td>
+</tr>
+<tr>
+<td>Avaliação Área</td>
+<td><code>Bloco2/AvaliacaoAreaRD</code></td>
+</tr>
+<tr>
+<td>Avaliação Relatório Desvios</td>
+<td><code>Bloco2/AvaliacaoRNC</code></td>
+</tr>
+<tr>
+<td>Plano de Ação Corretiva</td>
+<td><code>Bloco2/PlanoAcaoCorretivaRNC</code></td>
+</tr>
+<tr>
+<td>Execução do Plano de Ação Corretiva</td>
+<td><code>Bloco2/AvaliacaoPlanoAcaoCorretivaRNC</code></td>
+</tr>
+<tr>
+<td>Monitoramento do Plano de Ação Corretiva</td>
+<td><code>Bloco2/LiberacaoPlanoAcaoCorretivaRNC</code></td>
+</tr>
+<tr>
+<td>Plano de Ação Preventiva</td>
+<td><code>Bloco2/PlanoAcaoPreventivaRNC</code></td>
+</tr>
+<tr>
+<td>Avaliação Plano de Ação Preventiva (na tela: "Execução Plano de Ação Preventiva")</td>
+<td><code>Bloco2/AvaliacaoPlanoAcaoPreventivaRNC</code></td>
+</tr>
+<tr>
+<td>Monitoramento do Plano de Ação Preventiva</td>
+<td><code>Bloco2/LiberacaoPlanoAcaoPreventivaRNC</code></td>
+</tr>
+<tr>
+<td>Relatório de CAPA</td>
+<td><code>Bloco2/RelatorioCapa</code></td>
+</tr>
+<tr>
+<td>Acompanhamento RD (relatório)</td>
+<td><code>Bloco2/AcompanhamentoRNC</code></td>
+</tr>
+<tr>
+<td>Controle de Emissão de RNC (relatório)</td>
+<td><code>Bloco2/ControleEmissao</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="controle-de-mudancas-8">Controle de Mudanças (8)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Pasta no código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação de Mudanças</td>
+<td><code>RM/SolicitacaoMudanca</code></td>
+</tr>
+<tr>
+<td>Pré-Avaliação de Mudanças</td>
+<td><code>RM/PreAvaliacaoMudanca</code></td>
+</tr>
+<tr>
+<td>Avaliação de Mudanças</td>
+<td><code>Avaliacao/AvaliacaoMudanca</code></td>
+</tr>
+<tr>
+<td>Liberação Avaliação de Mudanças</td>
+<td><code>Avaliacao/LiberacaoAvaliacaoMudanca</code></td>
+</tr>
+<tr>
+<td>Plano de Ação</td>
+<td><code>PlanoAcao/PlanoAcao</code></td>
+</tr>
+<tr>
+<td>Execução Plano de Ação</td>
+<td><code>PlanoAcao/AvaliacaoPlanoAcao</code></td>
+</tr>
+<tr>
+<td>Liberação Plano de Ação (na tela: "Finalização Plano de Ação")</td>
+<td><code>PlanoAcao/LiberacaoPlanoAcao</code></td>
+</tr>
+<tr>
+<td>Controle Mudança Produto</td>
+<td><code>RM/ControleMudancaProduto</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="autoinspecao-e-auditoria-7">Autoinspeção e Auditoria (7)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Pasta no código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cadastro Tipo Qualificação</td>
+<td><code>Bloco2/TipoQualificacao</code></td>
+</tr>
+<tr>
+<td>Cadastro de Roteiro</td>
+<td><code>Bloco2/CadastroRoteiro</code></td>
+</tr>
+<tr>
+<td>Cadastro Autoinspeção e Auditoria</td>
+<td><code>Bloco2/AutoInspecaoAuditoria</code></td>
+</tr>
+<tr>
+<td>Planejamento de Autoinspeção e Auditorias (relatório)</td>
+<td><code>Bloco2/PlanejamentoAutoInspecaoAuditoria</code></td>
+</tr>
+<tr>
+<td>Programação Autoinspeção e Auditoria</td>
+<td><code>Bloco2/ProgramacaoAutoInspecaoAuditoriaQualidade</code></td>
+</tr>
+<tr>
+<td>Registro Autoinspeção e Auditoria</td>
+<td><code>Bloco2/RegistroResultado</code></td>
+</tr>
+<tr>
+<td>Avaliação Autoinspeção e Auditoria</td>
+<td><code>Bloco2/AvaliacaoAutoInspecaoAuditoriaQualidade</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="treinamento-tecnico-8">Treinamento Técnico (8)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Pasta no código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tipo de Treinamento</td>
+<td><code>Bloco2/TipoTreinamento</code></td>
+</tr>
+<tr>
+<td>Motivo de Treinamento</td>
+<td><code>Bloco2/MotivoTreinamento</code></td>
+</tr>
+<tr>
+<td>Cadastro Treinamento</td>
+<td><code>Bloco2/CadastroTreinamento</code></td>
+</tr>
+<tr>
+<td>Solicitação Treinamento</td>
+<td><code>Bloco2/SolicitacaoTreinamento</code></td>
+</tr>
+<tr>
+<td>Programação Treinamento</td>
+<td><code>Bloco2/ProgramacaoTreinamento</code></td>
+</tr>
+<tr>
+<td>Conclusão Treinamento</td>
+<td><code>Bloco2/ConclusaoTreinamento</code></td>
+</tr>
+<tr>
+<td>Matriz Treinamento</td>
+<td><code>Bloco2/MatrizTreinamento</code></td>
+</tr>
+<tr>
+<td>Acompanhamento dos Treinamentos <em>(fora do roteiro)</em></td>
+<td><code>Bloco2/AcompanhamentoTreinamento</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="assuntos-regulatorios-6">Assuntos Regulatórios (6)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Pasta no código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Processo Regulatório</td>
+<td><code>Bloco2/ProcessoRegulatorio</code></td>
+</tr>
+<tr>
+<td>Programação</td>
+<td><code>Bloco2/Programacao</code></td>
+</tr>
+<tr>
+<td>Monitoramento</td>
+<td><code>Bloco2/Monitoramento</code></td>
+</tr>
+<tr>
+<td>Check-list <em>(fora do roteiro)</em></td>
+<td><code>AssRegulatorios/ChecklistPadrao</code></td>
+</tr>
+<tr>
+<td>Controle de Produtos Enviados para Registro Anvisa <em>(fora do roteiro)</em></td>
+<td><code>AssRegulatorios/ControleProdutosAnvisa</code></td>
+</tr>
+<tr>
+<td>Solicitação de Registro <em>(fora do roteiro)</em></td>
+<td><code>AssRegulatorios/SolicitacaoRegistro</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="configuracao-1">Configuração (1)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Pasta no código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Grupo Perfil</td>
+<td><code>Configuracao/GrupoPerfil</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="telas-sem-logica-prototipos-23">Telas sem lógica: protótipos (23)</h3>
+<p>São páginas em HTML puro: têm campos, botões e linhas de tabela <strong>escritas à mão</strong>, mas não leem nem gravam nada. Nenhuma das 21 da pasta <code>Bloco2</code> tem controlador (o componente que abre a tela e busca os dados), então <strong>não abrem</strong> pelo endereço normal. As 2 da área <code>RRPP</code> têm controlador, mas ele só mostra a página vazia (<code>RRPP/Controllers/*Controller.cs</code>, 22 linhas cada).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tema</th>
+<th>Telas (título que mostram)</th>
+<th>Páginas</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Validação e qualificação</strong></td>
+<td>Programação Controle de Validações; Registro Controle de Validações; Fase de Validação; Tipo de Objeto de Validação; Controle de Qualificação; Controle de Calibração; Linhas de Produção; Método Analítico (sem título); Prazos de Validade</td>
+<td>52</td>
+<td>É o maior bloco. Validação de processo, de limpeza e de método, qualificação e calibração são exigências centrais da RDC 658/2022 e <strong>não existem como função</strong></td>
+</tr>
+<tr>
+<td><strong>Fornecedores</strong></td>
+<td>Avaliação Fornecedores; Avaliação Desempenho Qualidade Fornecedor; Gestão de Avaliação</td>
+<td>11</td>
+<td>O Controle da Qualidade tem uma Avaliação de Fornecedor <strong>com lógica</strong> (<code>4.controle_qualidade</code>, área <code>GestaoAvaliacao</code>). Liga com o Estoque (CT-EST-166 e 196)</td>
+</tr>
+<tr>
+<td><strong>Revisão periódica de produto (RRPP)</strong></td>
+<td>Programação RRPP e Registro RRPP (<code>Bloco2</code>); Programação do RRPP e Registro do RRPP (área <code>RRPP</code>)</td>
+<td>10</td>
+<td><strong>Duas versões do mesmo protótipo</strong>, nenhuma funciona. A sigla não é explicada no código; a tela tem campo "Reclamações". <em>Ponto para validar</em></td>
+</tr>
+<tr>
+<td><strong>Assuntos regulatórios (versões antigas)</strong></td>
+<td>Exigências da ANVISA; Produtos Enviados para Registro ANVISA; Solicitação de Registro; Check-List; Petição de Notificação de Produção de Lote Piloto; Histórico - HMP</td>
+<td>12</td>
+<td>Três delas foram refeitas com lógica na área <code>AssRegulatorios</code> (Check-list, Controle de Produtos, Solicitação de Registro). As de Lote Piloto e Histórico HMP têm tabela no banco, mas nenhuma tela que funcione. <strong>Exigências da ANVISA</strong> está quebrada, ver "Achados"</td>
+</tr>
+<tr>
+<td><strong>Controle de Desvio</strong></td>
+<td>Página com o nome técnico "EspecificacaoRegistroRelatorioNaoConformidade"</td>
+<td>2</td>
+<td>Página em branco, esquecida. O Controle de Desvios real é o da seção anterior</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tabelas">Tabelas</h3>
+<p><strong>93 tabelas</strong> no projeto de banco. Por assunto:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Assunto</th>
+<th>Tabelas</th>
+<th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desvios, RNC e CAPA</td>
+<td>23</td>
+<td><code>TBL_REGISTRO_RNC</code>, <code>TBL_PRE_AVALIACAO_RNC</code>, <code>TBL_AVALIACAO_RNC</code>, <code>TBL_PLANO_ACAO_CORRETIVA_RNC</code>, <code>TBL_RELATORIO_CAPA</code>, <code>TBL_DIAGRAMA_CAUSA_EFEITO</code>, <code>TBL_LOTE</code></td>
+</tr>
+<tr>
+<td>Autoinspeção e auditoria</td>
+<td>20</td>
+<td><code>TBL_PROGRAMACAO_INSPECAO_AUDITORIA</code>, <code>TBL_ROTEIRO</code>, <code>TBL_PERGUNTA</code>, <code>TBL_RESPOSTA</code>, <code>TBL_INSPETOR_AUDITOR</code></td>
+</tr>
+<tr>
+<td>Controle de mudanças e plano de ação</td>
+<td>16</td>
+<td><code>TBL_SOLICITACAO_MUDANCA</code>, <code>TBL_PREAVALIACAO_MUDANCA</code>, <code>TBL_LIBERACAO_AVALIACAO_MUDANCA</code>, <code>TBL_PLANO_ACAO</code>, <code>TBL_CONTROLE_MUDANCA</code></td>
+</tr>
+<tr>
+<td>Treinamento</td>
+<td>13</td>
+<td><code>TBL_TREINAMENTO_TECNICO</code>, <code>TBL_PROGRAMACAO_TREINAMENTO</code>, <code>TBL_CONCLUSAO_TREINAMENTO</code>, <code>TBL_INSTRUTOR_TREINAMENTO</code></td>
+</tr>
+<tr>
+<td>Assuntos regulatórios</td>
+<td>13</td>
+<td><code>TBL_PROCESSO_REGULATORIO</code>, <code>TBL_SOLICITACAO_REGISTRO</code>, <code>TBL_EXIGENCIA_ANVISA</code>, <code>TBL_LOTE_PILOTO</code>, <code>TBL_HISTORICO_HMP</code></td>
+</tr>
+<tr>
+<td>Configuração, anexos e histórico</td>
+<td>6</td>
+<td><code>TBL_GRUPOPERFIL</code>, <code>TBL_GRUPOUSUARIO</code>, <code>TBL_ANEXO</code>, <code>TBL_LOG_ALTERACAO</code></td>
+</tr>
+<tr>
+<td>Só na pasta antiga (<code>dbo/Tables</code>)</td>
+<td>2</td>
+<td><code>TBL_AVALIACAO_TREINAMENTO</code>, <code>TBL_ITEM_ALTERACAO</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>A GQ <strong>não usa sinônimos de banco</strong> (o Estoque usa 33 para gravar no Principal). Tudo o que vem de outro módulo chega pela API (próxima seção). A exceção é o roteiro de menu em <code>dml.sql</code>, que foi escrito para rodar direto no banco do Principal (<code>use $(DbPrincipal)</code>).</p>
+<p><strong>Tabelas com o mesmo nome em outros módulos:</strong> só 3, todas de apoio. São <code>TBL_ANEXO</code> (Produção, Controle de Documentos, Comercial, com colunas diferentes), <code>TBL_LOG_ALTERACAO</code> (Principal, Produção e Estoque com colunas diferentes; igual à do Controle de Documentos) e <code>TBL_LOG_ALTERACAO_ITEM</code> (igual à do Controle de Documentos).</p>
+<h3 id="integracoes-com-os-outros-modulos">Integrações com os outros módulos</h3>
+<p>Todas pela <strong>API</strong> dos outros módulos (endereço configurado no <code>Web.config</code>, chaves <code>HostAddress*</code>). Nenhuma gravação em outro módulo foi encontrada: a GQ <strong>só consulta</strong>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>A GQ consulta</th>
+<th>Chamadas distintas</th>
+<th>O quê</th>
+<th>Telas que usam</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Principal</strong></td>
+<td>32</td>
+<td>Entrada no sistema, menu, cabeçalho e rodapé, usuários, permissões (inclusive "nível 3"), áreas e responsáveis, funções profissionais, locais, equipamentos, pessoas jurídicas</td>
+<td>Praticamente todas</td>
+</tr>
+<tr>
+<td><strong>Produção</strong></td>
+<td>5</td>
+<td>Produtos por descrição, <strong>produtos por número de lote</strong>, itens de estoque</td>
+<td>Relatório de Desvios, Ação Corretiva Imediata, Pré Avaliação, Solicitação de Mudanças, telas de Assuntos Regulatórios</td>
+</tr>
+<tr>
+<td><strong>Controle de Documentos</strong></td>
+<td>3</td>
+<td>Documento por código ou identificador</td>
+<td>Cadastro, Programação e Acompanhamento de Treinamento</td>
+</tr>
+<tr>
+<td><strong>Estoque</strong></td>
+<td>0</td>
+<td>O serviço chamado "Estoque" (<code>HSolutions.GQ.Services/Estoque/EstoqueService.cs:19</code>) chama na verdade a API da <strong>Produção</strong> (<code>HostAddressProducao</code>). O endereço do Estoque está configurado, mas não é usado</td>
+<td>Relatório de Desvios, Ação Corretiva Imediata, Pré Avaliação</td>
+</tr>
+<tr>
+<td><strong>Controle da Qualidade</strong></td>
+<td>0</td>
+<td>Nenhuma</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Quem consulta a GQ</th>
+<th>O quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Controle de Documentos</strong></td>
+<td>Treinamentos finalizados, treinamento por documento e programação de treinamento (<code>api/treinamento</code>, em <code>HSolutions.GQ.UI/Api/TreinamentoController.cs</code>). Serve para saber quem foi treinado num documento antes de ele entrar em vigor</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Tem o endereço da GQ configurado (<code>HSolutions.CQ.Domain/Helpers/HelperHostAddress.cs:13</code>), mas nenhuma chamada foi encontrada</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>O que a corrente fabril perde com isso</strong> (inferência, a confirmar no mapa do processo): um desvio aponta para o lote <strong>copiando</strong> o número e a descrição para a tabela própria <code>TBL_LOTE</code> da GQ. Não há nada no código que <strong>bloqueie ou retenha o lote</strong> no Estoque ou no CQ enquanto o desvio está aberto, nem que impeça a liberação do lote com desvio ou mudança pendente. A base de controle da GQ também declara acessos a lote, materiais, pontos de água e ambientes (<code>HSolutions.GQ.UI/Controllers/GQControllerBase.cs:29-33</code>), mas eles nunca são usados.</p>
+<h3 id="achados-iniciais">Achados iniciais</h3>
+<div class="callout">
+<p class="callout-titulo">1. Um terço das telas é protótipo, e os temas que faltam são exigência da ANVISA</p>
+<p>São 23 de 67 telas. Ficaram sem função <strong>validação, qualificação e calibração</strong>, <strong>avaliação de fornecedores</strong> e <strong>revisão periódica de produto</strong>. Também não há tela, nem protótipo, de <strong>reclamações de mercado</strong> nem de <strong>recolhimento</strong> ("Recolhimentos" só aparece como um dos motivos para programar uma autoinspeção, <code>HSolutions.GQ.Domain/Enumeradores/TipoMotivoVersao.cs:15</code>). Esses temas serão confrontados com a RDC 658/2022 na etapa 2.</p>
+</div>
+<div class="callout">
+<p class="callout-titulo">2. A tabela da trilha de auditoria usada pelo código não existe no projeto de banco</p>
+<p>O código grava o histórico de alterações em <code>TBL_LOG_ALTERACAO_GQ</code> e <code>TBL_LOG_ALTERACAO_GQ_ITEM</code> (<code>HSolutions.GQ.Context/Configurations/LogAlteracaoConfiguration.cs:16</code> e <code>LogAlteracaoItemConfiguration.cs:16</code>). O projeto de banco só tem <code>TBL_LOG_ALTERACAO</code> e <code>TBL_LOG_ALTERACAO_ITEM</code>, que o código não usa. O mesmo vale para mais cinco tabelas: <code>TBL_ANEXO_GQ</code>, <code>TBL_AREA</code>, <code>TBL_AVALIACAO</code>, <code>TBL_MATRIZ_TREINAMENTO</code> e <code>TBL_SETOR_ENVOLVIDO</code>. Ou o banco do ambiente de teste foi criado de outro jeito (o código tem um criador automático de banco, <code>GQDbInitializer.cs</code>, e há a tabela de controle <code>__MigrationHistory</code>), ou essas gravações falham. <strong>Precisa do DBA</strong> (RDC 658/2022, art. 125: trilha de auditoria).</p>
+</div>
+<div class="callout">
+<p class="callout-titulo">3. Projeto de banco em duas pastas, uma delas com conflitos de versão não resolvidos</p>
+<p><code>Hsolutions.GQ.DB/Tables</code> (91 arquivos) é a pasta que vale: é a que o projeto de banco usa. <code>Hsolutions.GQ.DB/dbo/Tables</code> (75 arquivos) é uma cópia antiga <strong>fora do projeto</strong>. Das 73 tabelas que estão nas duas, 39 têm colunas diferentes, e <strong>31 arquivos da cópia antiga têm marcas de conflito de mesclagem</strong> (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>), ou seja, duas versões coladas no mesmo arquivo sem que alguém escolhesse qual vale. Isso não roda, mas mostra que o fornecedor entregou o código sem revisão final. O mesmo acontece no <code>.gitignore</code>.</p>
+</div>
+<div class="callout">
+<p class="callout-titulo">4. &quot;Exigências da ANVISA&quot; está quebrada</p>
+<p>O controlador está na área <code>AssRegulatorios</code> e procura a página em <code>Areas/AssRegulatorios/Views/ExigenciasAnvisa/Index.cshtml</code> (<code>ExigenciasAnvisaController.cs:36</code> e <code>:132</code>), que <strong>não existe</strong>. A página que existe está em <code>Bloco2/Views/ExigenciasAnvisa</code> e é um protótipo. Pelo código, abrir essa tela dá erro. <em>A confirmar no teste.</em></p>
+</div>
+<div class="callout">
+<p class="callout-titulo">6. Script que apaga o banco junto com o código</p>
+<p><code>Database/DROP_DATABASE.sql</code> apaga o banco inteiro de desenvolvimento da GQ. Assim como o <code>qryLimpaBase.sql</code> do Estoque, não é executado pelo sistema, mas está no pacote entregue e precisa ficar fora de qualquer ambiente com dados.</p>
+</div>
+<div class="callout">
+<p class="callout-titulo">7. Sobras e cópias</p>
+<p>Três relatórios com cópias "Backup" (<code>Areas/Relatorio/Views/Bloco2/ConclusaoTreinamento/</code>), uma pasta <code>Library_GQ_old</code> com bibliotecas antigas, um serviço vazio para o Controle de Documentos (<code>HSolutions.GQ.Services/CDoc/CDocService.cs</code>) e uma tela genérica de teste (<code>Controllers/TelaController.cs</code>). Os títulos das telas misturam maiúsculas e minúsculas e trazem erros de digitação ("Vizualizar Controle Mudança Produto").</p>
+</div>
+<h3 id="material-do-fornecedor-que-pode-ser-aproveitado">Material do fornecedor que pode ser aproveitado</h3>
+<ul>
+<li><strong>42 casos de teste em HTML</strong> (<code>5.garantia_qualidade/app/TesteUI/</code>) para Configuração, Controle de Desvio e Controle de Mudanças, no formato "consulta, inclusão e edição". Podem servir de base para o nosso plano de testes, depois de conferidos.</li>
+<li><strong>26 arquivos de teste automatizado</strong> (<code>HSolutions.GQ.Tests</code>), não executados aqui.</li>
+</ul>
+<h3 id="pontos-para-validar">Pontos para validar</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Pergunta</th>
+<th>Com quem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Qual é o menu real da GQ? Uma consulta à <code>SIS_FUNCAO</code> do Principal filtrada pelo módulo da GQ, ou uma captura do menu aberto para um usuário administrador</td>
+<td>DBA ou teste de tela</td>
+</tr>
+<tr>
+<td>2</td>
+<td>As tabelas <code>TBL_LOG_ALTERACAO_GQ</code>, <code>TBL_LOG_ALTERACAO_GQ_ITEM</code>, <code>TBL_ANEXO_GQ</code>, <code>TBL_AREA</code>, <code>TBL_AVALIACAO</code>, <code>TBL_MATRIZ_TREINAMENTO</code> e <code>TBL_SETOR_ENVOLVIDO</code> existem no banco de teste da GQ?</td>
+<td>DBA</td>
+</tr>
+<tr>
+<td>3</td>
+<td>As telas protótipo aparecem no menu? (Se aparecem, o usuário vê uma tela "funcionando" que não grava nada)</td>
+<td>Teste de tela</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Exigências da ANVISA dá erro ao abrir?</td>
+<td>Teste de tela</td>
+</tr>
+<tr>
+<td>6</td>
+<td>O que significa RRPP? (Provavelmente revisão periódica de produto)</td>
+<td>Área de Garantia da Qualidade</td>
+</tr>
+<tr>
+<td>7</td>
+<td>A empresa usa a Avaliação de Fornecedor do Controle da Qualidade? Ela substitui os protótipos da GQ?</td>
+<td>Área de Garantia da Qualidade</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="proximos-passos">Próximos passos</h3>
+<ol>
+<li><strong>Etapa 2: mapa de conformidade.</strong> Confrontar o que a RDC 658/2022 (e o Guia 33/2020, quando couber) exige da Garantia da Qualidade com o que este reconhecimento encontrou. Seria uma tabela por exigência, com o que existe e funciona, o que é só protótipo e o que não existe. Os temas são: desvios, CAPA, controle de mudanças, reclamações, recolhimento, autoinspeção, qualificação de fornecedores, treinamento, revisão periódica de produto, validação e qualificação, liberação de lote e trilha de auditoria. Isso define a ordem dos fluxos da etapa 3.</li>
+<li>Enquanto isso, mandar ao DBA as perguntas 1 e 2.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#diferenca-em-relacao-ao-principal-e-ao-estoque">Diferença em relação ao Principal e ao Estoque</a></li><li><a href="#tamanho">Tamanho</a></li><li><a href="#telas-que-funcionam-44-pelo-nome-que-o-usuario-ve">Telas que funcionam (44), pelo nome que o usuário vê</a></li><li><a href="#telas-sem-logica-prototipos-23">Telas sem lógica: protótipos (23)</a></li><li><a href="#tabelas">Tabelas</a></li><li><a href="#integracoes-com-os-outros-modulos">Integrações com os outros módulos</a></li><li><a href="#achados-iniciais">Achados iniciais</a></li><li><a href="#material-do-fornecedor-que-pode-ser-aproveitado">Material do fornecedor que pode ser aproveitado</a></li><li><a href="#pontos-para-validar">Pontos para validar</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

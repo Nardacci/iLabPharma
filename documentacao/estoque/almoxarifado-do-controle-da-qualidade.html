@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almoxarifado do Controle da Qualidade · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html" aria-current=page>Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Almoxarifado do Controle da Qualidade</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Fluxo Almoxarifado do Controle da Qualidade.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o <strong>almoxarifado do Controle da Qualidade</strong> no LabMedSys: a guarda das <strong>amostras de referência, de retenção e de estabilidade</strong>, com entrada, movimentação, saída e consulta.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Almoxarifados especiais (referência, retenção e estabilidade).</li>
+<li>Entrada da amostra e abertura do acompanhamento de estabilidade.</li>
+<li>Movimentação e saída das amostras.</li>
+<li>Consulta da disponibilidade.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> os estudos de estabilidade e as análises em si, que são do módulo Controle da Qualidade.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. A referência ao código fica só nas regras.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/estoque/almoxarifado-cq-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/almoxarifado-cq-fluxograma.png" alt="Workflow do processo do almoxarifado do CQ" loading="lazy"></a><figcaption>Workflow do processo do almoxarifado do CQ</figcaption></figure>
+
+<p>Almoxarifados marcados como <strong>referência</strong>, <strong>retenção</strong> ou <strong>estabilidade</strong> guardam amostras dos lotes, e esse saldo fica separado do estoque comum. Na <strong>Entrada de Material (Referência - Retenção - Estabilidade)</strong>, a amostra é reservada e endereçada. Se é de <strong>estabilidade</strong>, o sistema exige o tipo de estabilidade e abre o <strong>acompanhamento de estabilidade</strong> no Controle da Qualidade.</p>
+<p>As amostras podem ser movimentadas entre endereços e baixadas na <strong>Saída de Material</strong>. A <strong>Consulta Disponibilidade</strong> mostra o que está guardado.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="estrutura">Estrutura</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O almoxarifado pode ser marcado como <strong>referência, retenção ou estabilidade</strong> (<code>TBL_ALMOXARIFADO</code>, campos <code>REFERENCIA</code>, <code>RETENCAO</code>, <code>ESTABILIDADE</code>). O saldo nele aparece separado na disponibilidade e não conta como disponível para uso (visão <code>VW_SALDO_ITEM_LOTE_ENDERECO</code>, almoxarifado especial).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Almoxarifado (cadastros de apoio)</td>
+<td>Marcar o tipo de almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="entrada-da-amostra">Entrada da amostra</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – A entrada exige quantidade, almoxarifado, local, rua, coluna e andar, e o endereço precisa aceitar o lote ("Endereço não pode receber o lote!") (<code>cq/movimentacao_almox_cq_ed.aspx</code>).</li>
+<li>RN002 – O tipo da reserva vem do tipo de movimentação: entrada de referência, de retenção ou de estabilidade (<code>cq/movimentacoes_ed.aspx.cs:507-512</code>).</li>
+<li>RN003 – Amostra de <strong>estabilidade</strong> exige o tipo de estabilidade ("É necessário informar um tipo de estabilidade!") e <strong>abre o acompanhamento de estabilidade</strong> no Controle da Qualidade (<code>movimentacao_almox_cq_ed.aspx.cs:176-237</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Entrada de Material (Referência - Retenção - Estabilidade)</td>
+<td>Reservar a amostra</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Movimentação de Entrada</td>
+<td>Detalhe da entrada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="movimentacao-e-saida">Movimentação e saída</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – A quantidade movimentada não pode passar da disponível ("Quantidade movimentada não pode ser superior a quantidade disponível!"), e os endereços de origem e destino precisam ser válidos (<code>cq/movimentacoes_ed.aspx</code>).</li>
+<li>RN002 – A saída baixa o saldo da amostra, com justificativa (<code>cq/movimentacao_saida_lst.aspx</code>). <em>A validar com a área:</em> se a saída distingue consumo em análise de descarte.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Movimentações (Referência - Retenção - Estabilidade)</td>
+<td>Movimentar amostras</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Saída de Material (Referência - Retenção - Estabilidade)</td>
+<td>Baixar amostras</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="consulta">Consulta</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – A consulta mostra as amostras guardadas por item e lote (<code>cq/consulta_disponibilidade_lst.aspx</code>, <code>cq/consulta_disponibilidade_ed.aspx</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Consulta Disponibilidade (Referência - Retenção - Estabilidade)</td>
+<td>Amostras guardadas</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Disponibilidade do Item</td>
+<td>Detalhe por item</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Ponto para validar com a Garantia da Qualidade</p>
+<p><strong>O código não mostra controle do prazo de guarda das amostras.</strong> Não há data mínima de guarda nem trava contra a saída antes do prazo. A RDC 658/2022 pede que as amostras de referência e de retenção sejam guardadas por um período definido depois da validade do lote. Hoje, isso dependeria de controle fora do sistema.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> um almoxarifado <code>TESTE ALMOX RETENCAO</code> marcado como retenção e outro <code>TESTE ALMOX ESTABILIDADE</code> marcado como estabilidade, com local, rua, coluna e andar <code>TESTE</code>; o lote <code>TESTEPA001</code> do produto acabado liberado.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-170</td>
+<td>Criar os almoxarifados de retenção e de estabilidade</td>
+<td>Salvos; o saldo neles não conta como disponível</td>
+</tr>
+<tr>
+<td>CT-EST-171</td>
+<td>Entrada de amostra de retenção do <code>TESTEPA001</code></td>
+<td>Amostra reservada e endereçada; aparece na consulta</td>
+</tr>
+<tr>
+<td>CT-EST-172</td>
+<td>Entrada de amostra de estabilidade sem tipo de estabilidade</td>
+<td>Recusa: "É necessário informar um tipo de estabilidade!"</td>
+</tr>
+<tr>
+<td>CT-EST-173</td>
+<td>Entrada de estabilidade com tipo</td>
+<td>Acompanhamento de estabilidade aberto no CQ (conferir no módulo CQ)</td>
+</tr>
+<tr>
+<td>CT-EST-174</td>
+<td>Movimentar quantidade maior que a disponível</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-175</td>
+<td>Procurar a amostra de retenção na Separação de Material</td>
+<td>Não aparece (não é saldo disponível)</td>
+</tr>
+<tr>
+<td>CT-EST-176</td>
+<td><strong>Saída da amostra de retenção antes do vencimento do lote</strong></td>
+<td>Pela norma, deveria impedir ou alertar. <strong>Registrar com evidência se aceitar</strong></td>
+</tr>
+<tr>
+<td>CT-EST-177</td>
+<td>Histórico do lote <code>TESTEPA001</code></td>
+<td>Mostra a entrada e a saída da amostra</td>
+</tr>
+<tr>
+<td>CT-EST-178</td>
+<td>Permissão: abrir Entrada de Material (Referência - Retenção - Estabilidade) pelo endereço com usuário sem acesso</td>
+<td>Acesso negado (ver DV-EST-008)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#estrutura">Estrutura</a></li><li class="sub"><a href="#entrada-da-amostra">Entrada da amostra</a></li><li class="sub"><a href="#movimentacao-e-saida">Movimentação e saída</a></li><li class="sub"><a href="#consulta">Consulta</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

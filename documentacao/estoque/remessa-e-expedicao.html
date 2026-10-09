@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remessa e expedição · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html" aria-current=page>Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Remessa e expedição</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Fluxo Remessa e Expedicao.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve a <strong>saída de material para fora da empresa</strong> no LabMedSys: a remessa de material, a remessa por guia (GMM) e a saída por nota fiscal, além do elo com o módulo Rastreabilidade.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Remessa de material: itens, lotes, motivo e local de entrega.</li>
+<li>Remessa de material por guia (GMM).</li>
+<li>Confirmação da remessa e baixa do estoque.</li>
+<li>Saída por nota fiscal.</li>
+<li>Consulta e relatório de saída.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o pedido e o faturamento (módulo Comercial) e a transmissão dos dados à ANVISA (módulo Rastreabilidade; ver <code>Documentação/processo de transmissão do IUM</code>).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. A referência ao código fica só nas regras. <em>A validar com a área:</em> o que significa a sigla GMM.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/estoque/remessa-expedicao-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/remessa-expedicao-fluxograma.png" alt="Workflow do processo de remessa e expedição" loading="lazy"></a><figcaption>Workflow do processo de remessa e expedição</figcaption></figure>
+
+<p>A <strong>Remessa de Material</strong> registra o que sai: almoxarifado, origem, motivo, local de entrega, itens, lotes, quantidades e valor. A lista de lotes mostra só os que têm saldo e não estão em quarentena, bloqueados ou em reanálise. A <strong>Remessa de Material (GMM)</strong> é uma variação com guia, consignatário, centro de custo e datas da guia e do embarque.</p>
+<p>Ao <strong>confirmar</strong>, o sistema registra a data de liberação e baixa o saldo. Se o módulo <strong>Rastreabilidade</strong> estiver ativo, avisa que o envio dos dados à ANVISA é feito por ele. A <strong>Saída por Nota Fiscal</strong> liga a saída à empresa cliente e à chave da nota.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="remessa-de-material">Remessa de material</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige almoxarifado, origem, motivo da remessa, local de entrega, item, lote, quantidade, valor unitário e justificativa (<code>estoque/remessa_ed.aspx</code>, validadores).</li>
+<li>RN002 – A lista de lotes mostra lotes com saldo, <strong>fora de quarentena</strong>, não bloqueados e não em reanálise, dos almoxarifados do grupo do usuário (<code>remessa_ed.aspx.cs:134</code>, <code>LaboSys_DAL/dalItemLote.cs</code>, filtros).</li>
+<li>RN003 – O mesmo lote não pode entrar duas vezes na remessa ("O Lote informado já existe na Remessa!"). A quantidade é conferida contra o saldo do lote (<code>remessa_ed.aspx.cs:604</code>, <code>:905</code>).</li>
+<li>RN004 – A remessa de kit não pode ser excluída ("Remessa de KIT não pode ser excluída!").</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Remessa de Materiais</td>
+<td>Lista das remessas</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Remessa de Material</td>
+<td>Montar a remessa</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Ponto de atenção</p>
+<p><strong>O código da lista de lotes não mostra filtro de validade.</strong> É preciso conferir no teste se um lote <strong>vencido</strong> pode ser incluído numa remessa (CT-EST-114). Também não aparece regra que obrigue a sair primeiro o lote que vence antes.</p>
+</div>
+<h3 id="remessa-por-guia-gmm">Remessa por guia (GMM)</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige almoxarifado, item, quantidade, valor unitário, consignatário, centro de custo, local de entrega e justificativa (<code>estoque/remessa_gmm_ed.aspx</code>).</li>
+<li>RN002 – A data do embarque não pode ser anterior à data da guia ("Data do embarque não pode ser inferior a Data da Guia!").</li>
+<li>RN003 – A guia de kit não pode ser reaberta ("Guia de KIT não pode ser reaberta!").</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Remessa de Material (GMM)</td>
+<td>Remessa com guia e consignatário</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="confirmacao-e-saida">Confirmação e saída</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – A confirmação grava a <strong>data de liberação</strong> da remessa (<code>remessa_ed.aspx.cs:678-679</code>).</li>
+<li>RN002 – Com o módulo Rastreabilidade ativo, a confirmação avisa: "O envio poderá ser feito pelo módulo RASTREABILIDADE" (<code>remessa_ed.aspx.cs:682</code>, <code>:310</code>). O Estoque não envia nada à ANVISA; <em>a confirmar no módulo Rastreabilidade</em> que a remessa aparece lá.</li>
+<li>RN003 – A <strong>Saída por Nota Fiscal</strong> exige a empresa cliente, a chave da nota fiscal e a justificativa (<code>estoque/saidamaterial_ed.aspx</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Saída por Nota Fiscal</td>
+<td>Saída ligada à nota</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Relatório de saída por remessa</td>
+<td>Impressão da remessa</td>
+</tr>
+<tr>
+<td>Rastreabilidade</td>
+<td>(eventos e IUM)</td>
+<td>Envio dos dados à ANVISA; <em>a mapear no módulo Rastreabilidade</em></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> <code>TESTE PRODUTO ACABADO</code>, com o lote <code>TESTEPA001</code> liberado (fluxo de devolução e entradas, CT-EST-101), um lote vencido do mesmo item (<code>TESTEPA002</code>, validade passada) e a pessoa jurídica <code>TESTE PJ FARMACÊUTICA LTDA</code> como cliente ou consignatário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-110</td>
+<td>Remessa de Material sem cada obrigatório; depois completa, com o <code>TESTEPA001</code></td>
+<td>Recusas; completa, a remessa fica aberta</td>
+</tr>
+<tr>
+<td>CT-EST-111</td>
+<td>Incluir o mesmo lote duas vezes</td>
+<td>Recusa: "O Lote informado já existe na Remessa!"</td>
+</tr>
+<tr>
+<td>CT-EST-112</td>
+<td>Incluir quantidade maior que o saldo do lote</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-113</td>
+<td>Procurar na lista um lote em quarentena, bloqueado e em reanálise</td>
+<td>Nenhum aparece</td>
+</tr>
+<tr>
+<td>CT-EST-114</td>
+<td><strong>Procurar o lote vencido <code>TESTEPA002</code></strong></td>
+<td>Pela norma, não deveria aparecer. <strong>Registrar com evidência se aparecer</strong></td>
+</tr>
+<tr>
+<td>CT-EST-115</td>
+<td>Confirmar a remessa</td>
+<td>Data de liberação gravada; saldo baixado; aviso da Rastreabilidade se o módulo estiver ativo</td>
+</tr>
+<tr>
+<td>CT-EST-116</td>
+<td>Conferir no módulo Rastreabilidade se a remessa confirmada aparece para envio</td>
+<td>Registrar o que aparece</td>
+</tr>
+<tr>
+<td>CT-EST-117</td>
+<td>Remessa GMM com data de embarque anterior à data da guia</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-118</td>
+<td>Saída por Nota Fiscal sem chave da nota</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-119</td>
+<td>Histórico do lote <code>TESTEPA001</code></td>
+<td>Mostra a remessa com destino, usuário e data</td>
+</tr>
+<tr>
+<td>CT-EST-120</td>
+<td>Permissão: abrir a Remessa de Material pelo endereço com usuário sem acesso</td>
+<td>Acesso negado (ver DV-EST-008)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#remessa-de-material">Remessa de material</a></li><li class="sub"><a href="#remessa-por-guia-gmm">Remessa por guia (GMM)</a></li><li class="sub"><a href="#confirmacao-e-saida">Confirmação e saída</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

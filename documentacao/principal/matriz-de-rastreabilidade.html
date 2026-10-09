@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de rastreabilidade · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html" aria-current=page>Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html">Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html">Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html">Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Qualidade e ANVISA</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Matriz de rastreabilidade</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> Garantia da Qualidade (validação), equipe de homologação e desenvolvedores.
+<strong>Base:</strong> Guia nº 33/2020, item 9.8.5. Liga cada requisito da nova versão à sua origem (regra atual, achado ou norma), ao risco e à forma de verificação.
+<strong>Situação:</strong> duas rodadas de testes nas telas (versão 3.5.1): rodada 1 em 05/10/2026 (usuários e contas, cadastros e trilha de auditoria) e rodada 2 em 05 e 06/10/2026 (login, sessão, senha, perfis e acesso por tela). Ainda não executados: CT-PRI-081 a 085, 100 a 104 e 110 a 113. Detalhes em execucao/2026-10-05/resultado.md e execucao/2026-10-05-rodada-2/resultado.md.</p>
+<h3 id="como-usar">Como usar</h3>
+<ul>
+<li><strong>Antes dos testes:</strong> confirmar que todo requisito tem uma forma de verificação (seções 2 e 4).</li>
+<li><strong>Durante os testes:</strong> preencher a coluna <strong>Resultado</strong> (Passou, Falhou, Bloqueado). Um requisito só é aprovado quando todos os seus casos passam.</li>
+<li><strong>Na nova versão:</strong> a mesma matriz mostra o que já foi corrigido e testado.</li>
+</ul>
+<p><strong>Atualização:</strong> a tabela da seção 2 é gerada pelo programa <code>homologacao/ferramentas/rastreabilidade.py</code>
+(comando: <code>python3 homologacao/ferramentas/rastreabilidade.py 1.principal PRI</code>). Sempre que os documentos 05, 07 ou 08
+mudarem, gere de novo e cole aqui, preservando os resultados já registrados.</p>
+<hr />
+<h3 id="1-cobertura">1. Cobertura</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Requisitos (RF e RNF)</td>
+<td>70</td>
+</tr>
+<tr>
+<td>Requisitos verificados por caso de teste</td>
+<td>40</td>
+</tr>
+<tr>
+<td>Requisitos verificados de outra forma (inspeção, procedimento, decisão pendente)</td>
+<td>30 (seção 4)</td>
+</tr>
+<tr>
+<td>Riscos com requisito</td>
+<td>20 de 20</td>
+</tr>
+<tr>
+<td>Riscos de prioridade alta com caso de teste</td>
+<td>8 de 10 (os outros 2, por inspeção)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-requisito-origem-risco-verificacao">2. Requisito → origem → risco → verificação</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Descrição</th>
+<th>Prior.</th>
+<th>Origem (regra, achado, norma)</th>
+<th>Risco</th>
+<th>Verificação</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-001</td>
+<td>Autenticar por login e senha, com um único ponto de entrada para todos os módulos</td>
+<td>E</td>
+<td>RN-PRI-001</td>
+<td>—</td>
+<td>CT-PRI-001, CT-PRI-002</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-002</td>
+<td>Recusar o acesso de usuário inexistente, excluído, inativo, com conta inativa ou fora do…</td>
+<td>E</td>
+<td>RN-PRI-002 a 005</td>
+<td>R-PRI-07</td>
+<td>CT-PRI-003, CT-PRI-004, CT-PRI-005, CT-PRI-006, CT-PRI-007</td>
+<td>Falhou: CT-PRI-003</td>
+</tr>
+<tr>
+<td>RF-PRI-005</td>
+<td>Desbloquear por ação do administrador, registrada no histórico</td>
+<td>E</td>
+<td>RN-PRI-009</td>
+<td>—</td>
+<td>CT-PRI-010</td>
+<td>Falhou: CT-PRI-010</td>
+</tr>
+<tr>
+<td>RF-PRI-006</td>
+<td>Encerrar a sessão por inatividade após um tempo configurável, e permitir sair (logout) em…</td>
+<td>E</td>
+<td>Guia 33, 11.12</td>
+<td>—</td>
+<td>CT-PRI-021, CT-PRI-022</td>
+<td>Falhou: CT-PRI-022</td>
+</tr>
+<tr>
+<td>RF-PRI-008</td>
+<td>Listar os usuários conectados (já existe na API do atual: GetUsersOnline)</td>
+<td>D</td>
+<td>API <code>Autenticacao</code></td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-010</td>
+<td>Política de senha configurável: tamanho mínimo (atual: 8), tipos de caractere exigidos (a…</td>
+<td>E</td>
+<td>RN-PRI-020, 024, 025</td>
+<td>—</td>
+<td>CT-PRI-032, CT-PRI-035</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-012</td>
+<td>Trocar a senha exigindo a senha atual</td>
+<td>E</td>
+<td>RN-PRI-021</td>
+<td>—</td>
+<td>CT-PRI-030, CT-PRI-031</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-014</td>
+<td>Avisar o usuário quando a senha estiver perto de vencer (o atual calcula os dias restante…</td>
+<td>I</td>
+<td><code>bllUsuario.cs:185</code></td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-020</td>
+<td>Cadastrar usuários com dados pessoais e funcionais (nome, CPF, matrícula, cargo, setor, c…</td>
+<td>E</td>
+<td>Tabela <code>SIS_USUARIO</code></td>
+<td>—</td>
+<td>CT-PRI-040, CT-PRI-041</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-021</td>
+<td>Coletar só os dados pessoais necessários ao trabalho</td>
+<td>I</td>
+<td>LGPD</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-022</td>
+<td>Login único por usuário</td>
+<td>E</td>
+<td>RN-PRI-030</td>
+<td>—</td>
+<td>CT-PRI-042</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-023</td>
+<td>Período de validade do acesso (data de início e de fim), por exemplo para temporários e t…</td>
+<td>E</td>
+<td>RN-PRI-005</td>
+<td>R-PRI-07</td>
+<td>CT-PRI-006, CT-PRI-007</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-024</td>
+<td>Inativar e reativar com justificativa obrigatória</td>
+<td>E</td>
+<td>RN-PRI-035</td>
+<td>—</td>
+<td>CT-PRI-045</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-025</td>
+<td>Registrar ocupações (CBO) e funções profissionais do usuário, com uma principal</td>
+<td>I</td>
+<td>RN-PRI-033</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-026</td>
+<td>Grupos de usuários e responsáveis por local</td>
+<td>I</td>
+<td>RN-PRI-034</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-027</td>
+<td>Unificar "usuário inativo" e "conta inativa" numa única situação, se o negócio confirmar…</td>
+<td>D</td>
+<td>RN-PRI-003/004</td>
+<td>R-PRI-07</td>
+<td>CT-PRI-005</td>
+<td>Parcial: ressalva ou bloqueio em CT-PRI-005</td>
+</tr>
+<tr>
+<td>RF-PRI-030</td>
+<td>Permissões atribuídas a perfis; o usuário recebe a soma das permissões dos seus perfis</td>
+<td>E</td>
+<td>RN-PRI-031, 040</td>
+<td>—</td>
+<td>CT-PRI-043, CT-PRI-052</td>
+<td>Passou (06/10/2026)</td>
+</tr>
+<tr>
+<td>RF-PRI-031</td>
+<td>Ações por tela: Consultar, Incluir, Alterar, Excluir, Consultar histórico, Imprimir/Expor…</td>
+<td>E</td>
+<td>RN-PRI-042</td>
+<td>—</td>
+<td>CT-PRI-082</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-033</td>
+<td>Tela de edição em modo somente leitura para quem só consulta</td>
+<td>E</td>
+<td>RN-PRI-043</td>
+<td>—</td>
+<td>CT-PRI-050</td>
+<td>Falhou: CT-PRI-050</td>
+</tr>
+<tr>
+<td>RF-PRI-034</td>
+<td>Restringir dados por local/setor ligado ao perfil, se o negócio confirmar que é esse o us…</td>
+<td>I</td>
+<td>RN-PRI-045</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-035</td>
+<td>Herança de permissões de um perfil pai, se o negócio confirmar</td>
+<td>D</td>
+<td>RN-PRI-046</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-036</td>
+<td>Relatório de revisão de acessos: usuários × perfis × permissões, com data da última alter…</td>
+<td>E</td>
+<td>Guia 33, 11.9 e 11.12</td>
+<td>R-PRI-05</td>
+<td>CT-PRI-053, CT-PRI-054</td>
+<td>Parcial: CT-PRI-053 passaram; ressalva ou bloqueio em CT-PRI-054</td>
+</tr>
+<tr>
+<td>RF-PRI-037</td>
+<td>Segregação de funções: impedir que o mesmo usuário administre acessos e execute operações…</td>
+<td>I</td>
+<td>Boa prática BPF</td>
+<td>R-PRI-05</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-040</td>
+<td>Exclusão lógica (nunca apagar fisicamente registros com relevância em BPF)</td>
+<td>E</td>
+<td>RN-PRI-050</td>
+<td>R-PRI-11</td>
+<td>CT-PRI-047, CT-PRI-094</td>
+<td>Falhou: CT-PRI-094</td>
+</tr>
+<tr>
+<td>RF-PRI-041</td>
+<td>Recusar a exclusão de registros com dependentes, dizendo quais dependências impedem</td>
+<td>E</td>
+<td>RN-PRI-051, 052</td>
+<td>R-PRI-11</td>
+<td>CT-PRI-048, CT-PRI-095</td>
+<td>Falhou: CT-PRI-048, CT-PRI-095</td>
+</tr>
+<tr>
+<td>RF-PRI-042</td>
+<td>Justificativa obrigatória em exclusão, inativação e alteração de registros críticos, vali…</td>
+<td>E</td>
+<td>RN-PRI-053, RDC 658 art. 125</td>
+<td>R-PRI-11, R-PRI-12</td>
+<td>CT-PRI-047, CT-PRI-049</td>
+<td>Falhou: passou nos casos de usuário (CT-PRI-047, 049), mas a exclusão de Ambiente e de Equipamento, a alteração e inativação de Pessoa jurídica e a alteração de perfil não pedem justificativa (DV-PRI-009, 013, 024; CT-PRI-053, 080, 094)</td>
+</tr>
+<tr>
+<td>RF-PRI-044</td>
+<td>Consultar o histórico de qualquer registro, para quem tem a permissão</td>
+<td>E</td>
+<td>RN-PRI-042</td>
+<td>—</td>
+<td>CT-PRI-082</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-050</td>
+<td>Pessoas jurídicas (fornecedores, clientes, fabricantes), com tipos de cadastro, contatos…</td>
+<td>E</td>
+<td>Telas <code>pessoa_juridica_*</code>, tabelas <code>GBL_PJ*</code>, <code>TBL_PJ_FILIAL</code></td>
+<td>R-PRI-15</td>
+<td>CT-PRI-090, CT-PRI-091</td>
+<td>Falhou: CT-PRI-090</td>
+</tr>
+<tr>
+<td>RF-PRI-051</td>
+<td>Locais e setores em árvore, com responsáveis; locais físicos</td>
+<td>E</td>
+<td><code>local_*</code>, <code>local_fisico_*</code>, <code>SIS_LOCAL</code></td>
+<td>—</td>
+<td>CT-PRI-091</td>
+<td>Parcial: ressalva ou bloqueio em CT-PRI-091</td>
+</tr>
+<tr>
+<td>RF-PRI-052</td>
+<td>Equipamentos e categorias, com tipos de manutenção; instrumentos</td>
+<td>E</td>
+<td><code>equipamento_*</code>, <code>instrumento_*</code>, <code>categoria_equipamento_*</code></td>
+<td>R-PRI-14</td>
+<td>CT-PRI-090, CT-PRI-091</td>
+<td>Falhou: CT-PRI-090</td>
+</tr>
+<tr>
+<td>RF-PRI-053</td>
+<td>Ambientes (salas) e seus equipamentos, instrumentos e utilidades; grau de contaminação</td>
+<td>E</td>
+<td><code>ambiente_*</code>, <code>grau_contaminacao_*</code></td>
+<td>R-PRI-13</td>
+<td>CT-PRI-090, CT-PRI-091</td>
+<td>Falhou: CT-PRI-090</td>
+</tr>
+<tr>
+<td>RF-PRI-054</td>
+<td>Utilidades, utensílios e pontos de água (com tipo de água)</td>
+<td>E</td>
+<td><code>utilidade_*</code>, <code>utensilio_*</code>, <code>ponto_agua_*</code></td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-055</td>
+<td>Centros de custo, contas contábeis e gerenciais</td>
+<td>I</td>
+<td><code>centro_custo_*</code>, <code>conta_*</code></td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-056</td>
+<td>Tabelas de apoio: país, UF, município, bairro, logradouro, órgão emissor, escolaridade e…</td>
+<td>I</td>
+<td>Tabelas <code>TBL_*</code></td>
+<td>R-PRI-20</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-057</td>
+<td>Relatórios de cada cadastro, com filtros e exportação para Excel</td>
+<td>I</td>
+<td>Telas <code>*_rel</code></td>
+<td>—</td>
+<td>CT-PRI-097, CT-PRI-113</td>
+<td>Parcial: CT-PRI-097 passaram; não executados: CT-PRI-113</td>
+</tr>
+<tr>
+<td>RF-PRI-060</td>
+<td>Tipos de evento por módulo (ex.: documento a aprovar), configuráveis</td>
+<td>I</td>
+<td><code>GST_TIPO_EVENTO</code></td>
+<td>R-PRI-17</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-061</td>
+<td>Evento com prazo de resposta, prazo-limite e escalonamento em níveis</td>
+<td>I</td>
+<td><code>GST_EVENTO</code> (<code>TEMPO_RESPOSTA</code>, <code>TEMPO_LIMITE</code>, <code>NIVEL</code>, <code>ID_EVENTO_PRINCIPAL</code>)</td>
+<td>R-PRI-17</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-062</td>
+<td>Destinatários por usuário, função ou setor</td>
+<td>I</td>
+<td><code>GST_EVENTO_USUARIO</code>, <code>GST_EVENTO_FUNCAO</code>, <code>bllGstEventoSetor.cs</code></td>
+<td>R-PRI-17</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-063</td>
+<td>Avisos dentro do sistema e por e-mail, com modelos de mensagem e variáveis</td>
+<td>I</td>
+<td><code>GST_EVENTO_EMAIL</code>, <code>GST_VARIAVEL</code>, <code>notificacoes.aspx</code></td>
+<td>R-PRI-17</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-064</td>
+<td>Envio por rotina automática, com registro de envio e de falhas</td>
+<td>I</td>
+<td><code>LaboSys.Principal.Batch</code></td>
+<td>R-PRI-17</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-070</td>
+<td>Dados do cliente (nome, logotipo da tela e dos relatórios), habilitação de módulos</td>
+<td>I</td>
+<td><code>SIS_CONFIGURACAO</code>, <code>SIS_MODULO</code></td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-071</td>
+<td>Personalizar rótulos e visibilidade de campos sem alterar o código</td>
+<td>D</td>
+<td>RN-PRI-047</td>
+<td>R-PRI-19</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RF-PRI-072</td>
+<td>Não incluir controle de licença por data na nova versão (o sistema passa a ser da empresa)</td>
+<td>E</td>
+<td><code>Licenca.cs</code></td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-005</td>
+<td>HTTPS obrigatório</td>
+<td>E</td>
+<td>Boa prática</td>
+<td>—</td>
+<td>CT-PRI-104</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-007</td>
+<td>Proteção contra os riscos mais comuns de aplicações web (lista OWASP Top 10), verificada…</td>
+<td>E</td>
+<td>Guia 33, 9.8.1.3.8</td>
+<td>—</td>
+<td>CT-PRI-102</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-008</td>
+<td>Integração futura com o login corporativo (Active Directory / Microsoft Entra ID), se a e…</td>
+<td>D</td>
+<td>Novo</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-012</td>
+<td>Data e hora da trilha vindas do servidor, com fuso horário definido</td>
+<td>E</td>
+<td>Integridade de dados</td>
+<td>—</td>
+<td>CT-PRI-085</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-013</td>
+<td>Retenção do histórico por pelo menos o prazo da RDC 658, art</td>
+<td>E</td>
+<td>RDC 658 art. 127</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-014</td>
+<td>Assinatura eletrônica (usada pelos outros módulos) exige nova digitação da senha e regist…</td>
+<td>E</td>
+<td>Guia 33, 9.3.2.3; IN de sistemas computadorizados (a confirmar)</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-020</td>
+<td>Ambientes separados de desenvolvimento, homologação e produção</td>
+<td>E</td>
+<td>Guia 33, 9.7</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-021</td>
+<td>Controle de versão e de mudanças: cada versão identificada, com registro do que mudou</td>
+<td>E</td>
+<td>Guia 33, 9.8.2 e 11.7</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-022</td>
+<td>Testes automatizados para regras críticas (login, permissões, histórico)</td>
+<td>I</td>
+<td>Guia 33, 9.7</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-023</td>
+<td>Backup e restauração testados, com rotina documentada</td>
+<td>E</td>
+<td>Guia 33, 11.10</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-024</td>
+<td>Migração dos dados do sistema atual com plano, conferência e relatório, preservando o his…</td>
+<td>E</td>
+<td>Guia 33, item 12</td>
+<td>—</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>RNF-PRI-025</td>
+<td>Nenhum módulo lê ou grava tabelas do Principal direto no banco</td>
+<td>E</td>
+<td>06, item 10.2; R-PRI-16</td>
+<td>R-PRI-16</td>
+<td>Ver seção 4</td>
+<td>Não executado</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-rastreabilidade-inversa">3. Rastreabilidade inversa</h3>
+<h4 id="3-2-risco-requisito-teste">3.2 Risco → requisito → teste</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Risco</th>
+<th>Função</th>
+<th>Prioridade</th>
+<th>Requisitos</th>
+<th>Casos de teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-PRI-01</td>
+<td>Armazenamento de senhas</td>
+<td>Alta</td>
+<td>RNF-PRI-001</td>
+<td>Ver seção 4</td>
+</tr>
+<tr>
+<td>R-PRI-02</td>
+<td>Registro de acessos</td>
+<td>Alta</td>
+<td>RF-PRI-045</td>
+<td>CT-PRI-001, CT-PRI-012</td>
+</tr>
+<tr>
+<td>R-PRI-03</td>
+<td>Pesquisas e listagens</td>
+<td>Alta</td>
+<td>RNF-PRI-002</td>
+<td>CT-PRI-100, CT-PRI-101</td>
+</tr>
+<tr>
+<td>R-PRI-04</td>
+<td>Controle de acesso por tela</td>
+<td>Alta</td>
+<td>RF-PRI-032</td>
+<td>CT-PRI-060, CT-PRI-061, CT-PRI-062, CT-PRI-063, CT-PRI-064, CT-PRI-065, CT-PRI-066, CT-PRI-067, CT-PRI-068, CT-PRI-069, CT-PRI-070, CT-PRI-071</td>
+</tr>
+<tr>
+<td>R-PRI-05</td>
+<td>Gestão de perfis e permissões</td>
+<td>Alta</td>
+<td>RF-PRI-036, RF-PRI-037</td>
+<td>CT-PRI-053, CT-PRI-054</td>
+</tr>
+<tr>
+<td>R-PRI-06</td>
+<td>Trilha de auditoria (histórico)</td>
+<td>Alta</td>
+<td>RF-PRI-043, RNF-PRI-010, RNF-PRI-011</td>
+<td>CT-PRI-044, CT-PRI-053, CT-PRI-080, CT-PRI-081, CT-PRI-083, CT-PRI-084, CT-PRI-092</td>
+</tr>
+<tr>
+<td>R-PRI-07</td>
+<td>Login</td>
+<td>Média</td>
+<td>RF-PRI-002, RF-PRI-004, RF-PRI-023, RF-PRI-027</td>
+<td>CT-PRI-003, CT-PRI-004, CT-PRI-005, CT-PRI-006, CT-PRI-007, CT-PRI-008</td>
+</tr>
+<tr>
+<td>R-PRI-08</td>
+<td>Troca obrigatória de senha</td>
+<td>Alta</td>
+<td>RF-PRI-007</td>
+<td>CT-PRI-036, CT-PRI-037</td>
+</tr>
+<tr>
+<td>R-PRI-09</td>
+<td>Redefinição de senha pelo administrador</td>
+<td>Alta</td>
+<td>RF-PRI-013</td>
+<td>CT-PRI-038, CT-PRI-039</td>
+</tr>
+<tr>
+<td>R-PRI-10</td>
+<td>Sessão entre módulos (SSO)</td>
+<td>Alta</td>
+<td>RNF-PRI-004</td>
+<td>CT-PRI-023</td>
+</tr>
+<tr>
+<td>R-PRI-11</td>
+<td>Exclusão de registros</td>
+<td>Baixa</td>
+<td>RF-PRI-040, RF-PRI-041, RF-PRI-042</td>
+<td>CT-PRI-047, CT-PRI-048, CT-PRI-049, CT-PRI-094, CT-PRI-095</td>
+</tr>
+<tr>
+<td>R-PRI-12</td>
+<td>Justificativa de alterações e exclusões</td>
+<td>Média</td>
+<td>RF-PRI-042</td>
+<td>CT-PRI-047, CT-PRI-049</td>
+</tr>
+<tr>
+<td>R-PRI-13</td>
+<td>Cadastro de ambientes e grau de contaminação</td>
+<td>Média</td>
+<td>RF-PRI-053</td>
+<td>CT-PRI-090, CT-PRI-091</td>
+</tr>
+<tr>
+<td>R-PRI-14</td>
+<td>Cadastro de equipamentos e instrumentos</td>
+<td>Baixa</td>
+<td>RF-PRI-052</td>
+<td>CT-PRI-090, CT-PRI-091</td>
+</tr>
+<tr>
+<td>R-PRI-15</td>
+<td>Cadastro de pessoa jurídica (fabricante, fornecedor)</td>
+<td>Baixa</td>
+<td>RF-PRI-050</td>
+<td>CT-PRI-090, CT-PRI-091</td>
+</tr>
+<tr>
+<td>R-PRI-16</td>
+<td>Integração por sinônimos (Estoque e Produção)</td>
+<td>Alta</td>
+<td>RNF-PRI-025</td>
+<td>Ver seção 4</td>
+</tr>
+<tr>
+<td>R-PRI-17</td>
+<td>Notificações</td>
+<td>Média</td>
+<td>RF-PRI-060, RF-PRI-061, RF-PRI-062, RF-PRI-063, RF-PRI-064</td>
+<td>Ver seção 4</td>
+</tr>
+<tr>
+<td>R-PRI-18</td>
+<td>Mensagens e erros</td>
+<td>Média</td>
+<td>RF-PRI-003, RNF-PRI-006</td>
+<td>CT-PRI-003, CT-PRI-103</td>
+</tr>
+<tr>
+<td>R-PRI-19</td>
+<td>Configuração e personalização de telas</td>
+<td>Baixa</td>
+<td>RF-PRI-071</td>
+<td>Ver seção 4</td>
+</tr>
+<tr>
+<td>R-PRI-20</td>
+<td>Tabelas de apoio (endereço, CBO…)</td>
+<td>Baixa</td>
+<td>RF-PRI-056</td>
+<td>Ver seção 4</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="4-requisitos-verificados-de-outra-forma">4. Requisitos verificados de outra forma</h3>
+<p>Nem todo requisito se verifica por um teste na tela. O Guia 33 aceita <strong>inspeção</strong> (revisão de código, configuração ou banco), <strong>verificação documental</strong> (procedimentos) ou o registro de uma <strong>decisão</strong> do negócio.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Forma de verificação</th>
+<th>Como</th>
+<th>Quem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNF-PRI-003 (sem segredos no código)</td>
+<td>Inspeção</td>
+<td>Busca por senhas e strings de conexão no código e nos arquivos de configuração entregues.</td>
+<td>Desenvolvedor / agente</td>
+</tr>
+<tr>
+<td>RNF-PRI-022 (testes automatizados)</td>
+<td>Inspeção</td>
+<td>Conferir a existência e a execução dos testes automatizados das regras críticas.</td>
+<td>Desenvolvedor</td>
+</tr>
+<tr>
+<td>RF-PRI-072 (sem licença por data)</td>
+<td>Inspeção</td>
+<td>Conferir que o código não verifica licença.</td>
+<td>Agente</td>
+</tr>
+<tr>
+<td>RNF-PRI-013 (retenção)</td>
+<td>Documental</td>
+<td>Política de retenção aprovada, com o prazo por tipo de registro.</td>
+<td>Garantia da Qualidade</td>
+</tr>
+<tr>
+<td>RNF-PRI-020, 021, 023, 024 (ambientes, mudanças, backup, migração)</td>
+<td>Documental</td>
+<td>Procedimentos e registros: ambientes separados, controle de mudanças, teste de restauração, plano e relatório de migração.</td>
+<td>TI + Garantia da Qualidade</td>
+</tr>
+<tr>
+<td>RNF-PRI-014 (assinatura eletrônica)</td>
+<td>Teste em outro módulo</td>
+<td>Testada nos módulos que assinam (Estoque primeiro).</td>
+<td>Homologação</td>
+</tr>
+<tr>
+<td>RF-PRI-060 a 064 (notificações)</td>
+<td>Teste a criar</td>
+<td>Fora do escopo desta versão do plano: exige servidor de e-mail no ambiente de teste.</td>
+<td>Homologação</td>
+</tr>
+<tr>
+<td>RF-PRI-008, 014, 025, 026, 054, 055, 056, 070</td>
+<td>Teste a criar</td>
+<td>Funções de prioridade menor (usuários conectados, aviso de senha a vencer, ocupações, grupos, demais cadastros, configuração). Incluir na próxima versão do plano, por amostragem.</td>
+<td>Homologação</td>
+</tr>
+<tr>
+<td>RF-PRI-021, 034, 035, 037, 071, RNF-PRI-008 (e RF-PRI-027, que já tem casos)</td>
+<td>Decisão pendente</td>
+<td>Dependem das decisões listadas no 05, seção 4. Depois da decisão, viram caso de teste ou saem do escopo.</td>
+<td>Negócio + Garantia da Qualidade</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-lacunas-a-fechar">5. Lacunas a fechar</h3>
+<ol>
+<li><strong>Notificações</strong> sem casos de teste: definir se o ambiente de teste terá envio de e-mail.</li>
+<li><strong>Oito requisitos de prioridade menor</strong> sem caso: incluir na próxima versão do plano.</li>
+<li><strong>Sete decisões do negócio</strong> em aberto: enquanto não forem tomadas, os requisitos ligados a elas não podem ser verificados.</li>
+</ol>
+<h3 id="6-resultados-das-rodadas-de-teste">6. Resultados das rodadas de teste</h3>
+<p>Resultado geral por caso. Para os casos 090 a 097, vale o pior resultado entre Ambiente, Equipamento e Pessoa jurídica (detalhe no resultado.md da rodada 1).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Resultado</th>
+<th>Desvio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-001, 002, 004, 007, 009, 011</td>
+<td>Passou</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-006</td>
+<td>Passou (depois da virada do dia)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-005</td>
+<td>Passou parcialmente (registro da tentativa: DBA)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-003</td>
+<td>Falhou</td>
+<td>DV-PRI-015</td>
+</tr>
+<tr>
+<td>CT-PRI-008</td>
+<td>Falhou</td>
+<td>DV-PRI-016</td>
+</tr>
+<tr>
+<td>CT-PRI-010</td>
+<td>Falhou</td>
+<td>DV-PRI-017</td>
+</tr>
+<tr>
+<td>CT-PRI-012</td>
+<td>Bloqueado (depende do DBA)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-020, 021</td>
+<td>Passou</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-022</td>
+<td>Falhou</td>
+<td>DV-PRI-020</td>
+</tr>
+<tr>
+<td>CT-PRI-023</td>
+<td>Falhou</td>
+<td>DV-PRI-019</td>
+</tr>
+<tr>
+<td>CT-PRI-030, 031, 032, 033, 035, 039</td>
+<td>Passou</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-034</td>
+<td>Falhou</td>
+<td>DV-PRI-021</td>
+</tr>
+<tr>
+<td>CT-PRI-036</td>
+<td>Bloqueado (não deu para ver a senha vencida)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-037</td>
+<td>Falhou</td>
+<td>DV-PRI-022</td>
+</tr>
+<tr>
+<td>CT-PRI-038</td>
+<td>Falhou</td>
+<td>DV-PRI-003</td>
+</tr>
+<tr>
+<td>CT-PRI-040 a 043, 045, 046, 049</td>
+<td>Passou</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-044</td>
+<td>Falhou</td>
+<td>DV-PRI-004</td>
+</tr>
+<tr>
+<td>CT-PRI-047</td>
+<td>Passou</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-048</td>
+<td>Falhou</td>
+<td>DV-PRI-006</td>
+</tr>
+<tr>
+<td>CT-PRI-050</td>
+<td>Falhou</td>
+<td>DV-PRI-023</td>
+</tr>
+<tr>
+<td>CT-PRI-051, 052, 053</td>
+<td>Passou (053 com DV-PRI-024: perfil sem justificativa)</td>
+<td>DV-PRI-024</td>
+</tr>
+<tr>
+<td>CT-PRI-054</td>
+<td>Passou parcialmente (relatório sem funções e sem data da última alteração)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-060, 062, 064, 069</td>
+<td>Passou</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-061, 063, 065, 066, 067, 068</td>
+<td>Falhou</td>
+<td>DV-PRI-025</td>
+</tr>
+<tr>
+<td>CT-PRI-070</td>
+<td>Passou parcialmente</td>
+<td>DV-PRI-026</td>
+</tr>
+<tr>
+<td>CT-PRI-071</td>
+<td>Passou</td>
+<td>DV-PRI-026</td>
+</tr>
+<tr>
+<td>CT-PRI-080</td>
+<td>Falhou</td>
+<td>DV-PRI-009, DV-PRI-014</td>
+</tr>
+<tr>
+<td>CT-PRI-090 a 097</td>
+<td>Ver o resultado.md da rodada 1</td>
+<td>DV-PRI-007 a 013</td>
+</tr>
+</tbody>
+</table></div>
+<p>Requisitos com resultado preenchido na seção 2: 8 Passou, 18 Falhou, 5 Parcial. Os 39 restantes continuam "Não executado".</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#como-usar">Como usar</a></li><li><a href="#1-cobertura">1. Cobertura</a></li><li><a href="#2-requisito-origem-risco-verificacao">2. Requisito → origem → risco → verificação</a></li><li><a href="#3-rastreabilidade-inversa">3. Rastreabilidade inversa</a></li><li><a href="#4-requisitos-verificados-de-outra-forma">4. Requisitos verificados de outra forma</a></li><li><a href="#5-lacunas-a-fechar">5. Lacunas a fechar</a></li><li><a href="#6-resultados-das-rodadas-de-teste">6. Resultados das rodadas de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
