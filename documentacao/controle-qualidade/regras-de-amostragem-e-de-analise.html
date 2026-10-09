@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de amostragem e de análise · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html" aria-current=page>Regras de amostragem e de análise</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de amostragem e de análise</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-qualidade/LabMedSys - Modulo Controle da Qualidade - Fluxo Regras de Amostragem e de Analise.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve os <strong>cadastros que definem o que o Controle da Qualidade amostra e analisa</strong>: a <strong>Regra de Amostragem</strong> (quanto coletar, com que tolerância, com quais utensílios e qual checklist), a <strong>Regra de Análise</strong> (quais ensaios, com qual especificação e quais limites) e os cadastros de apoio <strong>Unidade de Medida</strong> e <strong>Motivos</strong>. São esses cadastros que decidem se um laudo está certo: um limite errado aprova ou reprova o lote errado.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Itens de análise (de onde vêm) e tipos de item.</li>
+<li>Regra de Amostragem: regra, itens da regra, utensílios e o checklist de Verificação de Amostragem.</li>
+<li>Regra de Análise: ensaios, especificação, limites e como a regra chega à análise.</li>
+<li>Unidade de Medida e Motivos.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o uso das regras no dia a dia (amostragem, digitação e laudo), descrito no fluxo <code>solicitacao-analise-laudo.md</code>, e a estabilidade.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>4.controle_qualidade/app/</code>. Para encurtar: <code>Coleta/</code> = <code>HSolutions.CQ.UI/Areas/Coleta/Controllers/</code>, <code>Dom/</code> = <code>HSolutions.CQ.Domain/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-qualidade/regras-amostragem-analise-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/regras-amostragem-analise-fluxograma.png" alt="Workflow dos cadastros de regras do Controle da Qualidade" loading="lazy"></a><figcaption>Workflow dos cadastros de regras do Controle da Qualidade · clique para ampliar</figcaption></figure>
+
+<p>O CQ <strong>não cadastra os itens</strong> que analisa: escolhe-os numa busca nos outros módulos (materiais e produto acabado no Estoque; granel e semielaborado na Produção; pontos de água e ambientes no Principal). Na primeira vez que uma regra é salva para um item, o CQ cria uma cópia mínima dele (código e nome).</p>
+<p>Para cada <strong>item e tipo de análise</strong> (físico-químico ou microbiológico), o CQ cadastra:
+- uma <strong>Regra de Amostragem</strong>: a quantidade a coletar, a tolerância, os utensílios e o checklist que o amostrador responde;
+- uma ou mais <strong>Regras de Análise</strong>: cada uma é um ensaio, com a especificação (texto) e os limites (faixa de valores, ou conforme e não conforme).</p>
+<p>Quando uma análise é aberta para digitação, o sistema <strong>copia</strong> as regras de análise ativas daquele item para a análise. A partir daí, a análise guarda a sua própria cópia.</p>
+<p><strong>Não há aprovação nem versão</strong> das regras: o que é salvo passa a valer na hora.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="itens-de-analise-e-tipos-de-item">Itens de análise e tipos de item</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Os <strong>tipos de item</strong> são fixos: ambiente; água potável, purificada e para injetáveis; matéria-prima; material de embalagem; semielaborado; granel; produto acabado; padrão secundário. Não há tela para mudá-los (<code>Dom/Analise/TipoItemAnaliseEnum.cs:5-14</code>).</li>
+<li>RN002 – <strong>Não existe tela de cadastro de item de análise.</strong> O item é escolhido numa busca em outros módulos: materiais e produto acabado no Estoque; granel e semielaborado na Produção; pontos de água e ambientes no Principal (<code>HSolutions.CQ.UI/Controllers/AutoCompleteController.cs:12-44</code>).</li>
+<li>RN003 – Na primeira vez que uma regra é salva para um item, o CQ cria o <strong>item de análise</strong> com o código de origem, o nome e o tipo, <strong>sem histórico</strong> (<code>Coleta/RegraAmostragemController.cs:1502-1519</code>; <code>Coleta/RegraAnaliseController.cs:409-427</code>).</li>
+<li>RN004 – A ligação com o Estoque e a Produção é só pelo <strong>código</strong>. Se o nome mudar na origem, o nome guardado no CQ não muda (<em>inferência</em>) (<code>HSolutions.CQ.Context/Configurations/ItemAnaliseConfiguration.cs:19-24</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque, Produção, Principal</td>
+<td>(consulta automática)</td>
+<td>Fornecem os itens que o CQ escolhe</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="regra-de-amostragem">Regra de Amostragem</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórios: <strong>tipo de item</strong>, <strong>item de análise</strong>, <strong>tipo de análise</strong> e <strong>nome</strong> (até 100 caracteres) ("Item análise não informado!", "Nome informado inválido!"). Item do tipo <strong>ambiente</strong> só aceita análise microbiológica (<code>Coleta/RegraAmostragemController.cs:427-431</code>, <code>:678-681</code>; <code>Dom/Coleta/RegraAmostragem.cs:64-74</code>).</li>
+<li>RN002 – A regra tem só <strong>nome, descrição, item, tipo de análise e ativo</strong>. Não há campos de <strong>método, plano de amostragem, recipiente, precauções, condições de armazenamento nem limpeza</strong> dos utensílios; só a descrição livre (<code>Dom/Coleta/RegraAmostragem.cs:16-23</code>).</li>
+<li>RN003 – Só pode haver <strong>uma regra ativa por item e tipo de análise</strong> ("Regra já existe!"). A conferência é feita na tela; a gravação não repete (<code>Coleta/RegraAmostragemController.cs:776-799</code>).</li>
+<li>RN004 – Cada <strong>item da regra</strong> tem quantidade, unidade, tolerância e tipo de cálculo: <strong>por percentual</strong> ou <strong>por valor absoluto</strong>. A quantidade a coletar é a própria quantidade cadastrada, um <strong>número fixo</strong>: não há plano estatístico (por exemplo, raiz de N + 1 ou por número de volumes). A tolerância é sempre aplicada como <strong>percentual</strong>, mesmo no tipo "valor absoluto". Quantidade ou tolerância inválidas são gravadas como <strong>zero, sem aviso</strong> (<code>Coleta/RegraAmostragemController.cs:89-90</code>, <code>:1404-1424</code>; <code>HSolutions.CQ.UI/Areas/Coleta/Script/Amostragem.js:525-536</code>).</li>
+<li>RN005 – Para <strong>produto e material</strong>, o item da regra precisa estar ligado a um <strong>checklist de Verificação de Amostragem</strong> ("Verificação de Amostragem não foi informada!") (<code>Coleta/RegraAmostragemController.cs:801-807</code>).</li>
+<li>RN006 – <strong>Alteração:</strong> se a regra ainda não foi usada, muda no próprio registro, com justificativa e histórico. Se <strong>já foi usada</strong>, o sistema cria uma regra nova e manda a antiga para a lixeira; as amostragens antigas continuam ligadas à antiga. <strong>Nesse caminho, a alteração do item não grava histórico nem justificativa</strong> (<code>Coleta/RegraAmostragemController.cs:917-982</code>).</li>
+<li>RN007 – <strong>Exclusão:</strong> lógica (vai para a lixeira), com justificativa e histórico. <strong>Não confere se a regra está em uso</strong> (<code>Coleta/RegraAmostragemController.cs:620-656</code>).</li>
+<li>RN008 – <strong>Utensílios</strong> (por item e tipo de análise): nome, descrição e ativo, com histórico. Não há campo obrigatório conferido (<code>Dom/Coleta/UtensilioAmostragem.cs:5-16</code>; <code>Coleta/RegraAmostragemController.cs:1230-1299</code>).</li>
+<li>RN009 – <strong>Checklist de Verificação de Amostragem:</strong> descrição obrigatória e sem repetição ("Descrição já está cadastrada para outro registro!"), perguntas com histórico. Checklist inativo impede registrar a amostragem que o usa. A exclusão só desativa e <strong>não grava histórico</strong> (<code>Coleta/VerificacaoController.cs:205-215</code>, <code>:455-461</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Regra Amostragem</td>
+<td>Pesquisa das regras, dos checklists e dos utensílios</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Regra de Amostragem / Item Regra de Amostragem</td>
+<td>Incluir e alterar a regra e seus itens</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Utensílio de Amostragem</td>
+<td>Cadastro de utensílios</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Verificação de Amostragens</td>
+<td>Cadastro do checklist</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="regra-de-analise">Regra de Análise</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórios: <strong>item de análise</strong>, <strong>tipo de item</strong>, <strong>nome</strong>, <strong>especificação</strong> (texto livre), <strong>tipo de análise</strong> e <strong>tipo de regra</strong> ("Especificação informada inválida!", "Tipo de regra informado inválido!") (<code>Coleta/RegraAnaliseController.cs:82-85</code>, <code>:376-379</code>; <code>Dom/Analise/RegraAnalise.cs:172-218</code>).</li>
+<li>RN002 – Tipo <strong>faixa (intervalo):</strong> exige mínimo e máximo ("Valor inicial e Valor final não foram informados!") e unidade; o mínimo não pode passar do máximo ("Valor inicial não pode ser maior que o valor final!"), mas essa comparação <strong>só é feita quando os dois valores são maiores que zero</strong>. Tipo <strong>conformidade:</strong> o resultado será "conforme" ou "não conforme" (<code>RegraAnaliseController.cs:381-392</code>; <code>RegraAnalise.cs:186-204</code>).</li>
+<li>RN003 – A <strong>classificação</strong> é <strong>padrão</strong> (entra sozinha em toda análise do item) ou <strong>avulsa</strong> (incluída à mão na análise, com justificativa) (<code>RegraAnaliseController.cs:373</code>; <code>HSolutions.CQ.UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:858-905</code>).</li>
+<li>RN004 – <strong>Como a regra chega à análise:</strong> ao abrir a análise para digitação, o sistema <strong>copia</strong> as regras padrão ativas do item (nome, especificação, limites, unidade, tipo). Só copia se a análise ainda não tem ensaios. <strong>Mudar a regra depois não muda as análises já abertas</strong>; as abertas depois recebem a regra nova. Não há registro de <strong>qual versão</strong> foi usada (<code>AnaliseProgramadaController.cs:540-600</code>).</li>
+<li>RN005 – <strong>Alteração</strong> no próprio registro, com justificativa e histórico. Quando o item já tem solicitações, a tela trava os campos, mas <strong>a gravação não</strong>. <strong>Não há versão, situação "em aprovação" nem aprovador</strong> (<code>RegraAnaliseController.cs:239-262</code>, <code>:355-358</code>).</li>
+<li>RN006 – No histórico, uma especificação com mais de 250 caracteres é <strong>cortada e perde o primeiro caractere</strong> (<code>RegraAnaliseController.cs:178-179</code>, <code>:253-256</code>).</li>
+<li>RN007 – <strong>Exclusão:</strong> lógica, com justificativa e histórico; recusada se a regra já foi usada ("Já existe registro de análise para essa regra."). <strong>Não há conferência de duplicidade</strong>: o mesmo item pode ter regras com o mesmo nome (<code>RegraAnaliseController.cs:279-293</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Regra de Análise</td>
+<td>Ensaios de cada item: especificação, limites, tipo e classificação</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="unidade-de-medida-e-motivos">Unidade de Medida e Motivos</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – <strong>Unidade de Medida:</strong> sigla e descrição obrigatórias; sigla sem repetição ("Sigla já está cadastrada para outro registro!"); inclusão e alteração com histórico e justificativa (<code>Coleta/UnidadeMedidaController.cs:114-151</code>, <code>:176-185</code>).</li>
+<li>RN002 – A exclusão da unidade confere o uso só nos itens de regra de amostragem, <strong>não nas regras de análise</strong>, e grava uma justificativa fixa (<code>UnidadeMedidaController.cs:201-210</code>, <code>:242-255</code>).</li>
+<li>RN003 – Ao incluir item de regra de amostragem para produto, se a unidade vinda do Estoque não existir no CQ, ela é <strong>criada sozinha, sem histórico</strong> (<code>Coleta/RegraAmostragemController.cs:687-706</code>).</li>
+<li>RN004 – <strong>Motivos:</strong> descrição, almoxarifado (só os regulatórios do Estoque: retenção e referência) e ativo. <strong>Sem conferência de obrigatórios nem de duplicidade</strong>; a justificativa da alteração é fixa (".") (<code>HSolutions.CQ.UI/Areas/TabelasApoio/Controllers/MotivosController.cs:116-118</code>, <code>:136-189</code>).</li>
+<li>RN005 – O <strong>motivo</strong> marca a solicitação como <strong>regulatória</strong> (retenção, referência ou estabilidade): na amostragem, o CQ pede ao Estoque a retirada da amostra para o almoxarifado do motivo. O motivo em uso não pode ser excluído ("Motivo já está em uso!") (<code>MotivosController.cs:230-247</code>; <code>Coleta/AmostragemController.cs:204-212</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Unidade de Medida</td>
+<td>Unidades usadas nas regras</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Motivos</td>
+<td>Motivos regulatórios e o almoxarifado de cada um</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. O procedimento de amostragem está incompleto para a norma.</strong> A regra tem só quantidade fixa, tolerância, utensílios e checklist. Faltam método, plano de amostragem, recipiente, identificação, precauções, armazenamento e limpeza (RDC 658/2022, art. 247). Não há plano estatístico.</p>
+<p><strong>2. A especificação muda sem aprovação.</strong> A Regra de Análise não tem versão, aprovador nem situação. O texto e os limites são alterados no próprio registro e passam a valer para as próximas análises, sem saber qual versão cada laudo usou (arts. 253 e 255).</p>
+<p><strong>3. A trava contra alterar especificação em uso está só na tela.</strong> A gravação aceita a alteração mesmo quando o item já tem solicitações.</p>
+<p><strong>4. Limites inválidos passam.</strong> Na regra de análise, mínimo maior que máximo só é recusado quando os dois são maiores que zero. Na regra de amostragem, quantidade e tolerância inválidas viram zero sem aviso.</p>
+<p><strong>5. Tolerância "valor absoluto" não funciona.</strong> É sempre aplicada como percentual.</p>
+<p><strong>6. Histórico com falhas.</strong> Alterar item de regra de amostragem já usada não grava histórico; a especificação longa é cortada no histórico e perde o primeiro caractere; motivo e exclusão de unidade gravam justificativas fixas; itens de análise e unidades criados sozinhos não têm histórico (art. 125).</p>
+<p><strong>7. Exclusões fracas.</strong> A regra de amostragem pode ser excluída mesmo em uso; a regra de análise não tem conferência de duplicidade; a exclusão de unidade não olha as regras de análise.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> um material <code>TESTE MATERIA PRIMA</code> (do Estoque); unidade <code>TST</code>; regras com nome começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-020</td>
+<td>Regra de amostragem para um ambiente com análise físico-químico</td>
+<td>Recusa (ambiente só microbiológico)</td>
+</tr>
+<tr>
+<td>CT-CQ-021</td>
+<td>Duas regras de amostragem ativas para o mesmo item e tipo</td>
+<td>Recusa: "Regra já existe!"</td>
+</tr>
+<tr>
+<td>CT-CQ-022</td>
+<td>Item de regra com tolerância "abc"</td>
+<td>Pela regra, recusa. <strong>Registrar se gravar zero</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-CQ-023</td>
+<td>Regra "valor absoluto" com tolerância 5; amostrar 4 unidades a mais que o previsto</td>
+<td><strong>Registrar se a tolerância foi tratada como 5%</strong> (ponto 5)</td>
+</tr>
+<tr>
+<td>CT-CQ-024</td>
+<td>Alterar uma regra de amostragem já usada e consultar o histórico</td>
+<td>Regra nova criada; <strong>registrar a falta de histórico do item</strong> (ponto 6)</td>
+</tr>
+<tr>
+<td>CT-CQ-025</td>
+<td>Excluir uma regra de amostragem em uso</td>
+<td>Pela norma, recusa. <strong>Registrar se excluir</strong> (ponto 7)</td>
+</tr>
+<tr>
+<td>CT-CQ-026</td>
+<td>Regra de análise de faixa com mínimo 10 e máximo 5</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-CQ-027</td>
+<td>Regra de análise de faixa com mínimo 0 e máximo -1 (ou só um valor)</td>
+<td><strong>Registrar se aceitar</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-CQ-028</td>
+<td>Duas regras de análise com o mesmo nome no mesmo item</td>
+<td><strong>Registrar se aceitar</strong> (ponto 7)</td>
+</tr>
+<tr>
+<td>CT-CQ-029</td>
+<td>Abrir uma análise; depois alterar o limite da regra; abrir uma segunda análise</td>
+<td>A primeira mantém o limite antigo; a segunda recebe o novo. <strong>Registrar que nada indica a versão</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-CQ-030</td>
+<td>Alterar uma regra de análise de um item com solicitações</td>
+<td>A tela trava os campos. <strong>Registrar se é possível alterar por outro caminho</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-CQ-031</td>
+<td>Especificação com 300 caracteres; alterar e consultar o histórico</td>
+<td><strong>Registrar o corte e a perda do primeiro caractere</strong> (ponto 6)</td>
+</tr>
+<tr>
+<td>CT-CQ-032</td>
+<td>Excluir regra de análise já usada</td>
+<td>Recusa: "Já existe registro de análise para essa regra."</td>
+</tr>
+<tr>
+<td>CT-CQ-033</td>
+<td>Unidade com sigla repetida</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-CQ-034</td>
+<td>Excluir uma unidade usada só numa regra de análise</td>
+<td>Pela regra, recusa. <strong>Registrar se excluir</strong></td>
+</tr>
+<tr>
+<td>CT-CQ-035</td>
+<td>Motivo sem descrição; excluir um motivo em uso</td>
+<td><strong>Registrar se aceitar</strong> sem descrição; recusa a exclusão</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-CQ-029, 030, 027 e 024 primeiro. Eles tocam a especificação que decide a aprovação do lote e a trilha de auditoria.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#itens-de-analise-e-tipos-de-item">Itens de análise e tipos de item</a></li><li class="sub"><a href="#regra-de-amostragem">Regra de Amostragem</a></li><li class="sub"><a href="#regra-de-analise">Regra de Análise</a></li><li class="sub"><a href="#unidade-de-medida-e-motivos">Unidade de Medida e Motivos</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
