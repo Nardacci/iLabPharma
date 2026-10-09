@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="autoinspecao-e-auditoria.html">Autoinspeção e auditoria</a></li><li><a href="treinamento-tecnico.html">Treinamento técnico</a></li><li><a href="assuntos-regulatorios.html">Assuntos regulatórios</a></li><li><a href="controle-de-mudancas.html">Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>5.garantia_qualidade/app</code>) · <strong>Base:</strong> os cinco fluxos da GQ (<code>fluxos/</code>), o reconhecimento (<code>00-reconhecimento.md</code>) e o mapa de conformidade (<code>04-conformidade-regulatoria.md</code>).</p>
+<p><strong>Situação de todas as regras: Extraída</strong> (lida do código, aguardando o teste nas telas e a validação da área). Caminhos relativos a <code>5.garantia_qualidade/app/</code>.</p>
+<p>As regras das seções 2 a 6 foram <strong>consolidadas por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/consolidar_regras_gq.py</code>). O texto de cada regra é o mesmo do fluxo, para os dois documentos não divergirem. A seção 8 mostra a correspondência entre o número aqui (RN-GQ-nnn) e o número local no fluxo (RN001…). Quando um fluxo mudar, gere de novo as seções 2 a 8.</p>
+<p>Várias "regras" descrevem <strong>falhas</strong>: o que o sistema faz hoje e que não atende à norma. Elas ficam registradas como regra porque são o comportamento atual. A correção vai para os requisitos da nova versão (<code>05-requisitos.md</code>, a fazer).</p>
+<p>O inventário das 67 telas, com a situação de cada uma, está em <code>11-inventario-de-telas.md</code>.</p>
+<hr />
+<h3 id="1-regras-gerais-do-modulo">1. Regras gerais do módulo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-001</td>
+<td>O <strong>menu</strong> da GQ não está no código: vem da tabela <code>SIS_FUNCAO</code> do Principal, pela API (<code>HSolutions.GQ.UI/Controllers/PrincipalController.cs</code>, <code>HSolutions.GQ.Services/Principal/PadraoService.cs</code>). O roteiro de montagem do menu em <code>Hsolutions.GQ.DB/dml.sql</code> está todo comentado.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-002</td>
+<td>O acesso dentro das telas usa três <strong>níveis de grupo de perfil</strong>, cadastrados na tela Grupo Perfil: nível 1 mexe no que criou; nível 2 também no que é da sua área; nível 3 em tudo, e é o único que aprova, libera e finaliza (<code>HSolutions.GQ.Domain/Entities/GrupoPerfil/GrupoPerfil.cs:24-26</code>; os grupos "Nível 01" a "Nível 03" são criados por <code>Hsolutions.GQ.DB/dml.sql:53-63</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-003</td>
+<td>As regras de quem pode editar, cancelar ou excluir em cada situação ficam nos <code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTela*.cs</code> e mostram ou escondem os botões da lista. Na maioria das gravações, <strong>o servidor não confere de novo</strong> (verificado na Avaliação Área, no avanço da auditoria e na edição da programação de auditoria).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-004</td>
+<td><strong>Trilha de auditoria:</strong> a base de gravação registra o histórico na inclusão e na alteração com justificativa (<code>HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:33</code> e <code>:100</code>). A alteração sem justificativa (<code>:94</code>) e a exclusão física (<code>:127</code>) <strong>não</strong> registram. No código da GQ há 72 alterações com histórico e 32 sem.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-005</td>
+<td>O histórico é gravado em <code>TBL_LOG_ALTERACAO_GQ</code> e <code>TBL_LOG_ALTERACAO_GQ_ITEM</code> (<code>HSolutions.GQ.Context/Configurations/LogAlteracaoConfiguration.cs:16</code>), tabelas que <strong>não estão no projeto de banco</strong>. <em>A confirmar com o DBA.</em></td>
+<td>A confirmar</td>
+</tr>
+<tr>
+<td>RN-GQ-006</td>
+<td>Os cadastros são excluídos de forma <strong>lógica</strong> (vão para a lixeira) e, em geral, <strong>sem histórico</strong>: tipo e motivo de treinamento, treinamento, programação de treinamento, roteiro, processo regulatório.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-007</td>
+<td>Em várias etapas, a <strong>data gravada vem da tela</strong>, e não do relógio do servidor no momento de salvar: registro do desvio, ação imediata, pré-avaliação do desvio, revisão, parecer e liberação da mudança.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-008</td>
+<td>A GQ <strong>só consulta</strong> outros módulos pela API: Principal (usuários, áreas, menu, pessoas jurídicas, equipamentos), Produção (produtos e lotes) e Controle de Documentos (documentos). Ela só <strong>é consultada</strong> pelo Controle de Documentos, para os treinamentos (<code>HSolutions.GQ.UI/Api/TreinamentoController.cs</code>). Não grava em outro módulo nem bloqueia nada fora dela.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-009</td>
+<td>Nenhuma aprovação pede <strong>senha</strong> (assinatura eletrônica), e nenhum fluxo envia <strong>aviso</strong> ou e-mail: nem de prazo, nem de vencimento, nem de pendência.</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-desvios-e-capa">2. Desvios e CAPA</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/desvios-capa.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-010</td>
+<td>Registro do Relatório de Desvios</td>
+<td>Obrigatórios: <strong>descrição</strong> e <strong>local da ocorrência</strong> (<code>HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:26</code> e <code>:32</code>). O responsável e a data de criação também são exigidos, mas vêm preenchidos (<code>:72</code> e <code>:78</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-011</td>
+<td>Registro do Relatório de Desvios</td>
+<td>O desvio é ligado a um <strong>item</strong>, de um destes tipos: processo, formulação, regulatórios, produto, projetos, equipamento, metodologia analítica, MP ou ME, sistema computadorizado, mudança de fornecedor, instalações, utilidades, material ou outros (<code>HSolutions.GQ.Domain/Enumeradores/TipoItem.cs</code>). Produtos e lotes são buscados na <strong>Produção</strong>, materiais no "estoque" (na verdade também na API da Produção) e equipamentos no <strong>Principal</strong>.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-012</td>
+<td>Registro do Relatório de Desvios</td>
+<td>Os <strong>lotes</strong> escolhidos são <strong>copiados</strong> para a GQ como número e descrição (<code>HSolutions.GQ.Domain/Entities/Bloco2/ControleDesvios/ItemRegistroDesvio.cs:17</code>). O desvio <strong>não muda nada no lote</strong> em outro módulo.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-013</td>
+<td>Registro do Relatório de Desvios</td>
+<td>Anexo é opcional; se houver, o arquivo e a descrição do anexo são obrigatórios (<code>RelatorioNaoConformidadeValidator.cs:58</code> e <code>:64</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-014</td>
+<td>Registro do Relatório de Desvios</td>
+<td>Ao salvar, o desvio recebe número sequencial por ano e vai para <strong>Pendente Registro Ação Corretiva</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:282</code>). A inclusão grava histórico (<code>:313</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-015</td>
+<td>Registro do Relatório de Desvios</td>
+<td>A <strong>data do relatório</strong> gravada é a que vem da tela (<code>RegistroNaoConformidadeController.cs:208</code>, <code>DateTime.Parse(model.DataRD)</code>), e não a hora do servidor no momento de salvar. <em>A confirmar no teste</em> se o campo pode ser alterado.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-016</td>
+<td>Registro do Relatório de Desvios</td>
+<td><strong>Edição</strong> só enquanto o desvio está em Pendente Registro Ação Corretiva, por quem criou, por nível 3, ou por nível 2 da mesma área de quem criou (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaRelatorioNaoConformidadeIndex.cs</code>). A edição exige <strong>justificativa</strong> e grava histórico (<code>RelatorioNaoConformidadeValidator.cs:40</code>; <code>RegistroNaoConformidadeController.cs:470</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-017</td>
+<td>Registro do Relatório de Desvios</td>
+<td><strong>Cancelamento</strong>: mesmas condições da edição, com <strong>justificativa obrigatória</strong> (<code>RelatorioNaoConformidadeValidator.cs:49</code>). O sistema guarda quem cancelou, quando e o motivo no próprio desvio, mas <strong>não grava na trilha de auditoria</strong> (<code>RegistroNaoConformidadeController.cs:548</code>, alteração sem histórico). Ver ponto de atenção 4.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-018</td>
+<td>Ação corretiva imediata</td>
+<td>Obrigatória a <strong>descrição da ação imediata</strong> (<code>HSolutions.GQ.Domain/Service/AcaoCorretivaImediataRDValidator.cs:26</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-019</td>
+<td>Ação corretiva imediata</td>
+<td>Mesmas regras de acesso do registro: só em Pendente Registro Ação Corretiva; nível 1 não edita o que não criou; nível 2 só da sua área (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAcaoCorretivaImediataRDIndex.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-020</td>
+<td>Ação corretiva imediata</td>
+<td>Ao salvar, o desvio vai para <strong>Pendente Pré Avaliação</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:182</code>), com histórico (<code>:304</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-021</td>
+<td>Ação corretiva imediata</td>
+<td>A data e hora da ação imediata vêm da tela (<code>AcaoCorretivaImediataRDController.cs:193</code>), como na RN006 do registro.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-022</td>
+<td>Ação corretiva imediata</td>
+<td>Esta tela também permite <strong>cancelar</strong> o desvio. Aqui o cancelamento <strong>grava histórico</strong> (<code>AcaoCorretivaImediataRDController.cs:379</code>), ao contrário do cancelamento pela tela Relatório de Desvios.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-023</td>
+<td>Pré-avaliação</td>
+<td>Obrigatório o <strong>método de detecção</strong>: processo/produção, auditoria interna, inspeção sanitária, Controle da Qualidade, Garantia da Qualidade, SAC/Fármaco ou outros. Se for "outros", o campo de texto é obrigatório (<code>HSolutions.GQ.Domain/Service/PreAvaliacaoRNCValidator.cs:27</code> e <code>:35</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-024</td>
+<td>Pré-avaliação</td>
+<td>Registra a observação do <strong>chefe da GQ</strong> (o código chama o campo de "ChefeDGQ"). O responsável é o usuário conectado.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-025</td>
+<td>Pré-avaliação</td>
+<td><strong>Sem áreas envolvidas</strong>, o desvio vai direto para <strong>Pendente Avaliação Relatório de Desvios</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:226</code>). <strong>Com áreas</strong>, vai para <strong>Pendente Responsável Área</strong> (<code>:250</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-026</td>
+<td>Pré-avaliação</td>
+<td>A data e hora da pré-avaliação vêm da tela (<code>PreAvaliacaoRNCController.cs:242</code>). Na tela o campo aparece travado e preenchido com a hora em que a tela foi aberta.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-027</td>
+<td>Pré-avaliação</td>
+<td>Nível 1 não faz pré-avaliação. Nível 2 só da sua área (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaPreAvaliacaoRNCIndex.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-028</td>
+<td>Pré-avaliação</td>
+<td>Não há classificação de risco nem de criticidade nesta etapa. A criticidade só aparece no Relatório de CAPA.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-029</td>
+<td>Avaliação pelas áreas</td>
+<td>Cada área envolvida registra <strong>uma</strong> avaliação, com <strong>observação obrigatória</strong> ("A Observação da Área é obrigatória.", <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:353</code>). A avaliação já nasce <strong>concluída</strong> (<code>:264</code>) e não pode ser refeita.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-030</td>
+<td>Avaliação pelas áreas</td>
+<td>Quando <strong>todas</strong> as áreas avaliaram, o desvio vai para <strong>Pendente Avaliação Relatório de Desvios</strong> (<code>AvaliacaoAreaRDController.cs:274-276</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-031</td>
+<td>Avaliação pelas áreas</td>
+<td>Na lista, o botão de avaliar só aparece para quem é da área (<code>AvaliacaoAreaRDController.cs:116</code>). <strong>Ao salvar, o sistema não confere de novo</strong> se o usuário pertence à área avaliada: a área do usuário é buscada e não é usada (<code>:249</code>). <em>A confirmar no teste</em> (ponto de atenção 5).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-032</td>
+<td>Avaliação pelas áreas</td>
+<td>Nível 1 não avalia (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAvaliacaoAreaRDIndex.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-033</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>Obrigatórias a <strong>avaliação</strong> e a <strong>observação do chefe do SDGQ</strong> (<code>HSolutions.GQ.Domain/Service/AvaliacaoRNCValidator.cs:41</code> e <code>:59</code>). Anexo opcional, com arquivo e descrição se houver.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-034</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>A tela lista os desvios em Pendente Avaliação e em Pendente Responsável Área, mas só libera a edição em <strong>Pendente Avaliação Relatório de Desvios</strong>, ou seja, depois das áreas. O arquivo <code>GerenciadorAcessoTelaRelatorioCapaIndex.cs</code> contém a classe da Avaliação (os nomes dos arquivos estão trocados com o do Relatório de CAPA, sem efeito no funcionamento).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-035</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>A trava "A finalização das avaliações das áreas são obrigatórias" (<code>AvaliacaoRNCValidator.cs:65</code>) só barra avaliação de área <strong>pendente</strong>. Como a avaliação de área já nasce concluída, a trava, na prática, não barra nada. Quem protege a ordem é só a lista (RN002).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-036</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>Duas marcações: <strong>necessário abrir CAPA</strong> e <strong>necessário abrir controle de mudança</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:291</code> e <code>:293</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-037</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td><strong>Sem CAPA</strong>: o campo "Observação para abertura de CAPA" é obrigatório (<code>AvaliacaoRNCValidator.cs:52</code>) e o desvio termina como <strong>Finalizado sem Relatório CAPA</strong> (<code>AvaliacaoRNCController.cs:197</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-038</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td><strong>Com CAPA</strong>: o desvio vai para <strong>Pendente Relatório de CAPA</strong> (<code>AvaliacaoRNCController.cs:296</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-039</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>A marcação de <strong>controle de mudança não abre nenhuma solicitação de mudança</strong>. Fica só registrada no desvio.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-040</td>
+<td>Relatório de CAPA</td>
+<td>O <strong>diagrama de causa e efeito</strong> tem 7 campos de texto, e <strong>todos são obrigatórios</strong> ("O diagrama deve ser totalmente preenchido.", <code>HSolutions.GQ.Domain/Service/RelatorioCapaValidator.cs:37</code>). Os campos ficam em <code>HSolutions.GQ.Domain/Entities/Bloco2/ControleDesvios/RelatorioCapa.cs:28</code> em diante.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-041</td>
+<td>Relatório de CAPA</td>
+<td>Registra a <strong>avaliação de impacto</strong> e a <strong>criticidade</strong>: crítico, maior ou menor (<code>RelatorioCapa.cs:36</code> e <code>:38</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-042</td>
+<td>Relatório de CAPA</td>
+<td>Pelo menos uma <strong>divisão ou seção</strong> precisa participar da reunião (<code>RelatorioCapaValidator.cs:43</code>). A área escolhida precisa ter responsáveis cadastrados ("Essa área não possui responsáveis.", <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RelatorioCapaController.cs:284</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-043</td>
+<td>Relatório de CAPA</td>
+<td>Ao salvar, o desvio vai para <strong>Pendente Plano Ação Corretiva</strong> (<code>RelatorioCapaController.cs:220</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-044</td>
+<td>Relatório de CAPA</td>
+<td>Não há campo para justificar <strong>erro humano</strong> como causa (art. 340 da RDC).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-045</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>Só <strong>nível 3</strong> abre o plano de ação corretiva (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PlanoAcaoCorretivaRNCController.cs:129</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-046</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>Cada ação exige <strong>descrição</strong>, <strong>responsável</strong> e <strong>prazo</strong> (<code>HSolutions.GQ.Domain/Service/PlanoAcaoCorretivaValidator.cs:41</code> a <code>:75</code>). O responsável é escolhido entre os responsáveis de uma área (<code>PlanoAcaoCorretivaRNCController.cs:441</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-047</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>Ao salvar o plano, o desvio vai <strong>direto</strong> para <strong>Pendente Monitoramento do Plano Ação Corretiva</strong> (<code>PlanoAcaoCorretivaRNCController.cs:224</code>). <strong>Não há aprovação do plano antes da execução.</strong> A única aprovação é a do monitoramento, no fim.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-048</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td><strong>Execução:</strong> cada responsável informa a conclusão da sua ação, com <strong>data de conclusão obrigatória e não futura</strong> (<code>HSolutions.GQ.Domain/Service/AvaliacaoPlanoAcaoCorretivaValidator.cs:28</code> e <code>:35</code>). A ação fica concluída (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoPlanoAcaoCorretivaRNCController.cs:266</code>). Concluir as ações <strong>não muda a situação do desvio</strong>.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-049</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td><strong>Monitoramento:</strong> só nível 3 abre (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/LiberacaoPlanoAcaoCorretivaRNCController.cs:122</code>). Obrigatórios: observação de <strong>verificação final</strong> e um <strong>resultado por ação</strong> (número e observação) (<code>HSolutions.GQ.Domain/Service/LiberacaoPlanoAcaoCorretivaValidator.cs:27</code> a <code>:48</code>). A mensagem do último campo está errada: pede "Responsável na Ação Corretiva" quando falta a observação.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-050</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>O monitoramento <strong>não exige que todas as ações estejam concluídas</strong>. O validador não olha a situação das ações. <em>A confirmar no teste.</em></td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-051</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td><strong>Aprovado:</strong> o desvio vai para <strong>Aprovado Plano Ação Corretiva</strong> e segue para o plano preventivo. <strong>Reprovado:</strong> vai para <strong>Reprovado Plano Ação Corretiva</strong> (<code>LiberacaoPlanoAcaoCorretivaRNCController.cs:236-242</code>), situação de onde <strong>nenhuma tela o tira</strong> (ponto de atenção 2).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-052</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>Não há verificação de <strong>eficácia</strong> depois de um prazo: o monitoramento avalia se as ações foram implementadas (ponto de atenção 3).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-053</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>O plano preventivo só pode ser feito depois de o corretivo ser <strong>aprovado</strong> (a tela lista apenas desvios em Aprovado Plano Ação Corretiva). Só nível 3 abre (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PlanoAcaoPreventivaRNCController.cs:100</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-054</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>Mesmas exigências do corretivo para cada ação: descrição, responsável e prazo (<code>HSolutions.GQ.Domain/Service/PlanoAcaoPreventivaValidator.cs</code>). Ao salvar, o desvio vai para <strong>Pendente Monitoramento do Plano Ação Preventiva</strong> (<code>PlanoAcaoPreventivaRNCController.cs:181</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-055</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>Execução igual à corretiva: data de conclusão obrigatória e não futura (<code>HSolutions.GQ.Domain/Service/AvaliacaoPlanoAcaoPreventivaValidator.cs:27</code> e <code>:34</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-056</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>Monitoramento: só nível 3. Obrigatórios: verificação final, observação do monitoramento da implementação e um resultado por ação (<code>HSolutions.GQ.Domain/Service/LiberacaoPlanoAcaoPreventivaValidator.cs:27</code> a <code>:55</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-057</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td><strong>Aprovado ou reprovado, o desvio vai para Concluído</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/LiberacaoPlanoAcaoPreventivaRNCController.cs:241-247</code>). Ponto de atenção 1.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-058</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>Pelo código, <strong>todo desvio com CAPA precisa de plano preventivo</strong> para ser encerrado: não há caminho de Aprovado Plano Ação Corretiva para Concluído sem ele. <em>A validar com a área</em> se isso corresponde à prática.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-059</td>
+<td>Acompanhamento</td>
+<td><strong>Acompanhamento RD</strong> imprime os desvios de um período, por situação (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcompanhamentoRNCController.cs</code>). <strong>Controle de Emissão de RNC</strong> imprime os relatórios emitidos. Nenhum dos dois agrupa por causa, área ou produto, o que seria preciso para a análise de tendência (art. 342 da RDC).</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-controle-de-mudancas">3. Controle de mudanças</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/controle-mudancas.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-061</td>
+<td>Solicitação de mudança</td>
+<td>Obrigatórios: <strong>descrição</strong>, <strong>tipo de mudança</strong> (definitiva ou temporária), <strong>mudança proposta</strong>, <strong>área solicitante</strong>, pelo menos um <strong>item a ser alterado</strong> e o <strong>motivo</strong> (<code>HSolutions.GQ.Domain/Service/SolicitacaoMudancaValidator.cs:25</code> a <code>:86</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-062</td>
+<td>Solicitação de mudança</td>
+<td>Itens a ser alterados: processo, formulação, regulatórios, produto e projetos (<code>Hsolutions.GQ.DB/dml.sql:1-17</code>). Se for <strong>produto</strong>, a descrição do produto é obrigatória; se for <strong>outros</strong>, o texto é obrigatório (<code>SolicitacaoMudancaValidator.cs:72</code> e <code>:78</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-063</td>
+<td>Solicitação de mudança</td>
+<td>Mudança <strong>temporária</strong> exige <strong>data de validade</strong>, que precisa ser futura. A mudança definitiva não aceita data (<code>SolicitacaoMudancaValidator.cs:36</code> e <code>:44</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-064</td>
+<td>Solicitação de mudança</td>
+<td>Registra o <strong>impacto</strong> (cinco níveis, de "vital importância" a "pouca expressão") e a <strong>urgência</strong> (imediata até um mês, curto, médio ou longo prazo) (<code>HSolutions.GQ.Domain/Entities/SolicitacaoMudanca.cs:28-29</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-065</td>
+<td>Solicitação de mudança</td>
+<td>As <strong>áreas de impacto</strong> podem ser informadas, mas <strong>não são obrigatórias</strong>: a regra está desligada no código (<code>SolicitacaoMudancaValidator.cs:92</code>, comentada).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-066</td>
+<td>Solicitação de mudança</td>
+<td>Ao salvar, a mudança vai para <strong>Pendente Revisão</strong> (<code>HSolutions.GQ.UI/Areas/RM/Controllers/SolicitacaoMudancaController.cs:606</code>), com histórico (<code>:275</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-067</td>
+<td>Solicitação de mudança</td>
+<td>Edição só em Pendente Revisão: por nível 2 ou 3, pelo responsável, ou por alguém da mesma área do responsável (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaSolicitacao.cs</code>). A edição grava histórico (<code>SolicitacaoMudancaController.cs:325</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-068</td>
+<td>Solicitação de mudança</td>
+<td><strong>Cancelamento</strong> pela tela, com justificativa e histórico (<code>SolicitacaoMudancaController.cs:383-405</code>). Há um <strong>segundo caminho</strong> no código, "Excluir solicitação", que cancela <strong>sem justificativa, sem histórico e sem conferir a situação</strong> (<code>SolicitacaoMudancaController.cs:750-759</code>). O botão não aparece na lista; a função existe no script da tela (<code>HSolutions.GQ.UI/Areas/RM/Script/SolicitacaoMudancaIndex.js:115</code>). <em>A confirmar no teste</em> se algum botão a usa.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-069</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>A GQ <strong>aceita</strong> ou <strong>não aceita</strong> a solicitação. Não aceitar exige <strong>justificativa</strong> (<code>HSolutions.GQ.Domain/Service/PreAvaliacaoValidator.cs:32</code>) e encerra a mudança como <strong>Não Aceito</strong>. Aceitar leva a <strong>Pendente Definição Áreas Avaliação</strong> (<code>HSolutions.GQ.UI/Areas/RM/Controllers/PreAvaliacaoMudancaController.cs:323-327</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-070</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>Na revisão, a GQ pode ajustar a solicitação (itens, áreas de impacto, validade). As alterações gravam histórico (<code>PreAvaliacaoMudancaController.cs:415</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-071</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>Em seguida, a GQ escolhe <strong>pelo menos uma área</strong> que vai avaliar (<code>HSolutions.GQ.Domain/Service/AreasResponsaveisAvaliacaoValidator.cs:32</code>). A mudança vai <strong>direto</strong> para <strong>Pendente Liberação Avaliação</strong> (<code>PreAvaliacaoMudancaController.cs:556</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-072</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>A data da revisão é a que vem da tela (<code>PreAvaliacaoMudancaController.cs:312</code>), preenchida com a data do dia quando a tela abre (<code>:162</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-073</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>Nível 1 não revisa. A revisão fica bloqueada depois que alguma área avaliou (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaPreAvaliacao.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-074</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>Cada área escolhida registra seu parecer: <strong>aceito</strong> ou <strong>não aceito</strong>. Não aceitar exige <strong>justificativa</strong> (<code>HSolutions.GQ.UI/Areas/Avaliacao/Controllers/AvaliacaoMudancaController.cs:214-216</code>; <code>HSolutions.GQ.Domain/Service/AvaliacaoSolicitacaoValidator.cs:25</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-075</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>A data do parecer é a da tela, se informada (<code>AvaliacaoMudancaController.cs:229</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-076</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>Nível 1 não avalia. A avaliação fica bloqueada depois da liberação (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAvaliacaoMudancaIndex.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-077</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td><strong>Liberação:</strong> só nível 3 (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaLiberacaoSolicitacaoIndex.cs</code>). Aprovar leva a <strong>Pendente Plano de Ação</strong>; reprovar leva a <strong>Não Aceito</strong>, com justificativa obrigatória (<code>HSolutions.GQ.UI/Areas/Avaliacao/Controllers/LiberacaoAvaliacaoMudancaController.cs:177</code>; <code>HSolutions.GQ.Domain/Service/LiberacaoAvaliacaoValidator.cs:25</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-078</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td><strong>A liberação não depende dos pareceres.</strong> O sistema permite liberar enquanto a mudança está em Pendente Liberação Avaliação, situação em que ela entra logo que as áreas são escolhidas. Nenhuma regra exige que todas as áreas tenham avaliado, e um "não aceito" de uma área não impede a aprovação. Ponto de atenção 1.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-079</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>A data da liberação é a da tela, se informada (<code>LiberacaoAvaliacaoMudancaController.cs:167</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-080</td>
+<td>Plano de ação, execução e finalização</td>
+<td>O plano exige <strong>pelo menos uma ação</strong>, cada uma com <strong>descrição</strong>, <strong>prioridade de 1 a 10</strong>, <strong>área</strong>, <strong>responsável</strong> e <strong>data prevista</strong>, que não pode ser anterior à data da solicitação (<code>HSolutions.GQ.Domain/Service/PlanoAcaoValidator.cs:33</code> a <code>:86</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-081</td>
+<td>Plano de ação, execução e finalização</td>
+<td>Ao salvar o plano, a mudança vai <strong>direto</strong> para <strong>Pendente Finalização Plano Ação</strong> (<code>HSolutions.GQ.UI/Areas/PlanoAcao/Controllers/PlanoAcaoController.cs:231</code>). Não há aprovação do plano antes da execução.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-082</td>
+<td>Plano de ação, execução e finalização</td>
+<td><strong>Só abrir</strong> a tela de visualização do plano cria um plano vazio e o liga à solicitação, sem histórico da ligação (<code>PlanoAcaoController.cs:161-193</code>). <em>Efeito colateral:</em> uma consulta altera dados.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-083</td>
+<td>Plano de ação, execução e finalização</td>
+<td><strong>Execução:</strong> cada responsável informa a conclusão da sua ação. A data de conclusão é obrigatória, não pode ser anterior à solicitação nem futura (<code>HSolutions.GQ.Domain/Service/AvaliacaoPlanoAcaoValidator.cs:27</code> a <code>:40</code>). A ação fica <strong>Finalizado</strong> (<code>HSolutions.GQ.UI/Areas/PlanoAcao/Controllers/AvaliacaoPlanoAcaoController.cs:397</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-084</td>
+<td>Plano de ação, execução e finalização</td>
+<td><strong>Finalização:</strong> só nível 3 (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaLiberacaoPlanoAcao.cs</code>). A <strong>conclusão</strong> é obrigatória (<code>HSolutions.GQ.Domain/Service/LiberacaoPlanoAcaoValidator.cs:24</code>). <strong>Não exige que todas as ações estejam concluídas.</strong> Ponto de atenção 2.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-085</td>
+<td>Plano de ação, execução e finalização</td>
+<td>Plano <strong>aprovado</strong>: se algum item alterado é <strong>produto</strong>, a mudança vai para <strong>Pendente Aprovação produto</strong>; senão, termina como <strong>Aceito</strong> (<code>HSolutions.GQ.UI/Areas/PlanoAcao/Controllers/LiberacaoPlanoAcaoController.cs:273-278</code>). Plano <strong>reprovado</strong>: a mudança termina como <strong>Não Aceito</strong> (<code>:304-305</code>), mesmo que parte das ações já tenha sido executada.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-086</td>
+<td>Plano de ação, execução e finalização</td>
+<td>Não há etapa de <strong>verificação da eficácia</strong> depois da implementação (RDC 658/2022, art. 8º, XIII).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-087</td>
+<td>Aprovação do produto</td>
+<td>Só para mudanças com item <strong>produto</strong>, em Pendente Aprovação produto, e só nível 3 (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaControleMudancaProdutoIndex.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-088</td>
+<td>Aprovação do produto</td>
+<td>Registra o <strong>número do lote</strong>, digitado livremente, sem consulta à Produção ou ao Estoque, mais observação e justificativa (<code>HSolutions.GQ.UI/Areas/RM/Controllers/ControleMudancaProdutoController.cs:160</code> em diante).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-089</td>
+<td>Aprovação do produto</td>
+<td>A <strong>justificativa não é obrigatória</strong>: a regra está desligada (<code>HSolutions.GQ.Domain/Service/ControleProdutoMudancaValidator.cs:24</code>, comentada).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-090</td>
+<td>Aprovação do produto</td>
+<td>A mudança termina como <strong>Aceito</strong> (<code>ControleMudancaProdutoController.cs:218</code>), numa gravação <strong>sem histórico</strong> (<code>:227</code>). Ponto de atenção 3.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-091</td>
+<td>Mudança temporária</td>
+<td>A data de validade da mudança temporária só serve de <strong>filtro</strong> na lista da finalização do plano (<code>HSolutions.GQ.UI/Areas/PlanoAcao/Controllers/LiberacaoPlanoAcaoController.cs:81</code>). Quando a validade vence, o sistema <strong>não avisa ninguém</strong>, não volta a situação nem pede o encerramento da mudança. Nenhuma tela de mudanças envia notificação ou e-mail.</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-autoinspecao-e-auditoria">4. Autoinspeção e auditoria</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/autoinspecao-auditoria.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-092</td>
+<td>Cadastros</td>
+<td><strong>Cadastro Tipo Qualificação:</strong> sigla, descrição e observação. Serve para classificar as perguntas dos roteiros (<code>HSolutions.GQ.Domain/Entities/Bloco2/AutoInspecaoAuditoriaQualidade/TipoQualificacao.cs</code>). <em>A validar</em> que classificação a área usa (por exemplo, crítico, maior e menor).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-093</td>
+<td>Cadastros</td>
+<td><strong>Cadastro de Roteiro:</strong> o título não pode repetir ("Título do Roteiro já existe", <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/CadastroRoteiroController.cs:544</code>). Cada pergunta tem número, título, qualificação, forma de resposta (texto curto, texto longo, seleção única ou múltipla), se a resposta é obrigatória, se tem campo de observação e se <strong>pode gerar RNC</strong> (<code>HSolutions.GQ.Domain/Entities/Bloco2/AutoInspecaoAuditoriaQualidade/Pergunta.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-094</td>
+<td>Cadastros</td>
+<td>Excluir um roteiro o manda para a lixeira (exclusão lógica), <strong>sem histórico</strong> (<code>CadastroRoteiroController.cs:600-613</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-095</td>
+<td>Cadastros</td>
+<td><strong>Cadastro Autoinspeção e Auditoria:</strong> nome, tipo e frequência obrigatórios (<code>HSolutions.GQ.Domain/Service/AutoInspecaoAuditoriaQualidadeValidator.cs:25</code> a <code>:39</code>). Os tipos que a tela mostra são <strong>Autoinspeção de rotina, Autoinspeção completa, Autoinspeção específica e Auditoria interna</strong> (<code>HSolutions.GQ.Domain/Enumeradores/TipoAuditoria.cs</code>). A frequência vai de mensal a anual, eventual ou única.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-096</td>
+<td>Programação</td>
+<td>Obrigatórios: nome da versão, <strong>motivo</strong> (planejada, recolhimentos, rejeições repetidas de produtos, inspeção sanitária ou outro, este com descrição), <strong>período</strong> e pelo menos <strong>um departamento auditado</strong> (<code>HSolutions.GQ.Domain/Service/ProgramacaoAutoInspecaoAuditoriaQualidadeValidator.cs:26</code> a <code>:95</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-097</td>
+<td>Programação</td>
+<td>O período não pode começar nem terminar antes de hoje, e o início não pode ser depois do fim (<code>ProgramacaoAutoInspecaoAuditoriaQualidadeValidator.cs:64</code> a <code>:77</code>). Também registra o período e o motivo da última inspeção e a referência bibliográfica.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-098</td>
+<td>Programação</td>
+<td><strong>Inspetores:</strong> internos (usuários) ou externos (com a empresa). A regra que exigia um <strong>coordenador</strong> está desligada (<code>ProgramacaoAutoInspecaoAuditoriaQualidadeValidator.cs:99</code>, comentada).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-099</td>
+<td>Programação</td>
+<td>Cada <strong>departamento auditado</strong> tem um <strong>responsável</strong> e um <strong>contato</strong>. Uma checagem exige que o contato seja um auditor cadastrado ("Necessário ao menos um Inspetor/Auditor interno por Roteiro"). Mas, do jeito que foi escrita, ela <strong>não roda para o primeiro roteiro verificado</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/ProgramacaoAutoInspecaoAuditoriaQualidadeController.cs:684-728</code>). <em>A confirmar no teste.</em></td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-100</td>
+<td>Programação</td>
+<td><strong>Não há regra de independência:</strong> nada impede que o inspetor seja da área auditada (RDC 658/2022, art. 363).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-101</td>
+<td>Programação</td>
+<td>Só se edita e cancela em <strong>Programada</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Models/ProgramacaoAuditoriaInspecaoIndexModel.cs:52</code>). A trava existe só na lista: a gravação da edição <strong>volta a situação para Programada</strong> (<code>ProgramacaoAutoInspecaoAuditoriaQualidadeController.cs:368</code>), e o cancelamento não confere a situação (<code>:327-340</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-102</td>
+<td>Programação</td>
+<td><strong>Iniciar</strong> leva a programação e os roteiros de cada departamento para <strong>Em Curso</strong> (<code>ProgramacaoAutoInspecaoAuditoriaQualidadeController.cs:280</code> e <code>:298</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-103</td>
+<td>Registro das respostas</td>
+<td>Registram as respostas: o <strong>contato</strong> do departamento (o inspetor), o <strong>responsável pelo departamento auditado</strong> e o nível 3 (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaRegistroResultadoIndex.cs</code>). Ou seja, <strong>a própria área auditada pode preencher e alterar o resultado da sua auditoria</strong> (ponto de atenção 3).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-104</td>
+<td>Registro das respostas</td>
+<td>Cada resposta guarda a descrição, a observação, o <strong>item da norma</strong> e o <strong>RNC</strong>. O RNC é um <strong>texto livre</strong> (<code>HSolutions.GQ.Domain/Entities/Bloco2/AutoInspecaoAuditoriaQualidade/Resposta.cs:16</code>), sem ligação com o Relatório de Desvios.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-105</td>
+<td>Registro das respostas</td>
+<td>O roteiro de cada departamento é <strong>concluído</strong> e pode ser reaberto (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RoteiroController.cs:50</code> e <code>:119</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-106</td>
+<td>Registro das respostas</td>
+<td><strong>Avançar para avaliação</strong> leva a programação a <strong>Pendente Avaliação</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroResultadoController.cs:273</code>). O botão só aparece quando os roteiros estão concluídos (<code>HSolutions.GQ.UI/Areas/Bloco2/Script/RegistroResultadoEditar.js:63-66</code>), mas o servidor <strong>não confere</strong> (<code>RegistroResultadoController.cs:263-275</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-107</td>
+<td>Avaliação, desvios e encerramento</td>
+<td>Obrigatórios: <strong>período real</strong> (não futuro), <strong>evidências de não conformidade</strong> e <strong>conclusões</strong> (<code>HSolutions.GQ.Domain/Service/AvaliacaoAutoInspecaoAuditoriaQualidadeValidator.cs:24</code> a <code>:49</code>). Também registram o resultado (<strong>conforme, não conforme ou conforme com restrições</strong>), a lista de quem recebe o relatório e anexos.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-108</td>
+<td>Avaliação, desvios e encerramento</td>
+<td><strong>Desvios da auditoria:</strong> cada desvio tem <strong>número, descrição e situação digitados</strong> ("Nº do Desvio não foi informado!", "Descrição não foi informada!", "Situação não foi informada!", <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAutoInspecaoAuditoriaQualidadeController.cs:829-854</code>). É um <strong>registro paralelo</strong>: não abre nem consulta um Relatório de Desvios, e a alteração de um desvio grava <strong>sem histórico</strong> (<code>:877</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-109</td>
+<td>Avaliação, desvios e encerramento</td>
+<td><strong>Finalizar</strong> cria o registro da avaliação <strong>sem histórico</strong> (<code>AvaliacaoAutoInspecaoAuditoriaQualidadeController.cs:396</code>) e leva a programação a <strong>Finalizado</strong> (<code>:404</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-110</td>
+<td>Avaliação, desvios e encerramento</td>
+<td><strong>Reabrir</strong> devolve a programação e os roteiros para <strong>Em Curso</strong> (<code>:445-446</code>), <strong>sem pedir justificativa</strong> (a alteração é gravada com justificativa vazia, <code>:448</code>). Só a partir de Pendente Avaliação.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-111</td>
+<td>Avaliação, desvios e encerramento</td>
+<td>O relatório da autoinspeção pode ser impresso (<code>HSolutions.GQ.UI/Areas/Relatorio/Views/Bloco2/AvaliacaoAutoInspecaoAuditoria/</code>).</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-treinamento">5. Treinamento</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/treinamento.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-112</td>
+<td>Cadastros</td>
+<td><strong>Tipo</strong> e <strong>Motivo de Treinamento</strong>: só a descrição é obrigatória (<code>HSolutions.GQ.Domain/Service/TipoTreinamentoValidator.cs</code>, <code>HSolutions.GQ.Domain/Service/MotivoTreinamentoValidator.cs</code>). A exclusão vai para a lixeira, <strong>sem histórico</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/TipoTreinamentoController.cs:242</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/MotivoTreinamentoController.cs:225</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-113</td>
+<td>Cadastros</td>
+<td><strong>Cadastro de Treinamento</strong>: obrigatórios o tipo, o <strong>POP</strong>, o nome, o setor responsável, a origem e pelo menos um setor vinculado. Se a origem for externa, a instituição e o CNPJ também (<code>HSolutions.GQ.Domain/Service/CadastroTreinamentoValidator.cs:27</code> a <code>:80</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-114</td>
+<td>Cadastros</td>
+<td>O treinamento registra se é <strong>obrigatório</strong>, a <strong>validade</strong> (em dias, meses e anos), as <strong>funções</strong> e os <strong>setores</strong> vinculados, ou "todos", e o documento do POP no Controle de Documentos (<code>HSolutions.GQ.Domain/Entities/Bloco2/TreinamentoTecnico/TreinamentoTecnico.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-115</td>
+<td>Cadastros</td>
+<td>Não se exclui um treinamento que já tem programação ou solicitação (<code>HSolutions.GQ.UI/Helpers/GerenciarAcessoTelaCadastroTreinamento.cs</code>). Quando pode, a exclusão é <strong>sem histórico</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/CadastroTreinamentoController.cs:527</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-116</td>
+<td>Solicitação</td>
+<td>Obrigatórios: o treinamento, o motivo e <strong>pelo menos um funcionário</strong> (<code>HSolutions.GQ.Domain/Service/SolicitacaoTreinamentoValidator.cs:25</code> a <code>:36</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-117</td>
+<td>Solicitação</td>
+<td>A solicitação nasce <strong>Pendente</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/SolicitacaoTreinamentoController.cs:230</code>), com histórico. O cancelamento grava histórico (<code>:277</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-118</td>
+<td>Programação e matriz</td>
+<td><strong>Programação</strong>: obrigatórios o treinamento, o nome da versão, o local, o período e um número máximo de treinandos maior que um (<code>HSolutions.GQ.Domain/Service/ProgramacaoTreinamentoValidator.cs:27</code> a <code>:51</code>). Registra turnos, horários, custo, instrutores e recursos. Nasce <strong>Pendente</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/ProgramacaoTreinamentoController.cs:251</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-119</td>
+<td>Programação e matriz</td>
+<td><strong>Não há aprovação do programa de treinamento</strong> pelo responsável da Produção ou do CQ (RDC 658/2022, art. 42).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-120</td>
+<td>Programação e matriz</td>
+<td><strong>Matriz</strong>: aloca os treinandos, vindos das solicitações ou avulsos, e a programação passa a <strong>Alocado</strong>. O histórico é gravado de forma manual (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/MatrizTreinamentoController.cs:349-351</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-121</td>
+<td>Programação e matriz</td>
+<td><strong>Iniciar</strong> leva a programação a <strong>Em Curso</strong> (<code>MatrizTreinamentoController.cs:484</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-122</td>
+<td>Programação e matriz</td>
+<td>A exclusão de uma programação é <strong>sem histórico</strong> (<code>ProgramacaoTreinamentoController.cs:601</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-123</td>
+<td>Conclusão e avaliação</td>
+<td>Obrigatórios: a <strong>data de conclusão</strong>, a <strong>avaliação do instrutor</strong> e a avaliação dos treinandos (<code>HSolutions.GQ.Domain/Service/ConclusaoTreinamentoValidator.cs:32</code> a <code>:44</code>). A <strong>nota</strong> de cada treinando também ("Nota não informada!", <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/ConclusaoTreinamentoController.cs:258</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-124</td>
+<td>Conclusão e avaliação</td>
+<td>O <strong>tipo de avaliação</strong> (prática, teórica, escrita, oral) <strong>não é obrigatório</strong>: a regra está desligada (<code>ConclusaoTreinamentoValidator.cs:24-26</code>, comentada).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-125</td>
+<td>Conclusão e avaliação</td>
+<td>O <strong>desempenho</strong> (suficiente ou insuficiente) é <strong>escolhido à mão</strong> e <strong>não depende da nota nem da presença</strong>. O sistema só zera a nota de quem faltou (<code>ConclusaoTreinamentoController.cs:405-451</code>). Não há nota mínima. Um treinando <strong>ausente, com nota zero, pode ser marcado como suficiente</strong> e recebe a data de vencimento do treinamento (<code>:433</code> e <code>:450</code>). Ponto de atenção 1.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-126</td>
+<td>Conclusão e avaliação</td>
+<td>Ao concluir, a programação vai para <strong>Finalizado</strong>; ao cancelar, para <strong>Cancelado</strong>, e todos os treinandos ficam insuficientes. As duas gravações da situação são <strong>sem histórico</strong> (<code>ConclusaoTreinamentoController.cs:287-294</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-127</td>
+<td>Conclusão e avaliação</td>
+<td>Antes de gravar, a tela confere a permissão da função no Principal (<code>ConclusaoTreinamentoController.cs:732</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-128</td>
+<td>Acompanhamento e integração com o Controle de Documentos</td>
+<td>O <strong>Acompanhamento dos Treinamentos</strong> busca no Principal as pessoas de cada função ligada ao treinamento (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcompanhamentoTreinamentoController.cs:190-210</code>). Para cada uma, mostra a situação: <strong>Pendente, Programado, Vigente, Vencido, Substituído ou Obsoleto</strong> (<code>:501-554</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-129</td>
+<td>Acompanhamento e integração com o Controle de Documentos</td>
+<td>O vencimento é calculado <strong>na hora do relatório</strong>. O sistema <strong>não avisa</strong> quem vai vencer e <strong>não impede</strong> que uma pessoa com treinamento vencido ou pendente trabalhe. Nenhum outro módulo consulta essa situação por pessoa.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-130</td>
+<td>Acompanhamento e integração com o Controle de Documentos</td>
+<td>O <strong>Controle de Documentos</strong> consulta a GQ pela interface <code>api/treinamento</code> (<code>HSolutions.GQ.UI/Api/TreinamentoController.cs</code>). A consulta devolve as <strong>turmas concluídas</strong> de um treinamento ou de um documento (<code>HSolutions.GQ.WebApi/TreinamentoApi.cs</code>), e não quem foi aprovado. <em>A verificar no Controle de Documentos</em> como isso é usado para tornar um documento vigente.</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-assuntos-regulatorios">6. Assuntos regulatórios</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/assuntos-regulatorios.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-131</td>
+<td>Processo Regulatório</td>
+<td>Só a <strong>descrição</strong> é obrigatória (<code>HSolutions.GQ.Domain/Service/ProcessoRegulatorioValidator.cs</code>). Também registra o órgão regulador e uma observação.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-132</td>
+<td>Processo Regulatório</td>
+<td>A exclusão vai para a lixeira, <strong>sem histórico</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/ProcessoRegulatorioController.cs:254</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-133</td>
+<td>Programação</td>
+<td>Obrigatórios: processo regulatório, tipo, categoria, grau ou classe, data programada, prazo máximo, validade, nome e número do documento e nome do produto (<code>HSolutions.GQ.Domain/Service/ProgramacaoValidator.cs:26</code> a <code>:80</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-134</td>
+<td>Programação</td>
+<td><strong>Não há regra entre as datas</strong>: o prazo pode ser anterior à data programada e a validade anterior ao prazo.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-135</td>
+<td>Programação</td>
+<td>O <strong>produto</strong> e o <strong>documento</strong> são digitados; não há ligação com a Produção nem com o Controle de Documentos. O fornecedor vem do cadastro de pessoas jurídicas do Principal.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-136</td>
+<td>Programação</td>
+<td>A programação grava histórico (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/ProgramacaoController.cs:238-243</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-137</td>
+<td>Programação</td>
+<td><strong>Nenhum aviso</strong> de prazo ou validade próximos do fim. A lista pode ser filtrada, mas ninguém é avisado.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-138</td>
+<td>Monitoramento</td>
+<td>Para registrar o monitoramento, é <strong>obrigatório anexar um arquivo</strong> (<code>HSolutions.GQ.Domain/Service/MonitoramentoValidator.cs</code>). O registro do monitoramento é criado <strong>sem histórico</strong> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/MonitoramentoController.cs:217</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-139</td>
+<td>Monitoramento</td>
+<td>O monitoramento <strong>finaliza ou cancela</strong> a programação, marcando-a como monitorada, com histórico da mudança de situação (<code>MonitoramentoController.cs:282-315</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-140</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>O <strong>check-list</strong> pode ser padrão ou de registro e lista os documentos necessários, cada um com sequência, seção responsável, responsável, datas de entrega e retorno e situação: <strong>Solicitado, Com Pendências, Concluído ou Outro</strong> (<code>HSolutions.GQ.Domain/Entities/AssRegulatorio/DocumentoCheckList.cs</code>). A edição do check-list e a inclusão ou exclusão de documentos gravam <strong>sem histórico</strong> (<code>HSolutions.GQ.UI/Areas/AssRegulatorios/Controllers/ChecklistPadraoController.cs:250</code>, <code>:353</code> e <code>:395</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-141</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>A <strong>solicitação de registro</strong> busca o produto na <strong>Produção</strong> e registra o tipo de processo (<strong>registro novo, renovação, alteração, lote piloto, HMP</strong> ou outro), o tipo e o grau do produto, a área solicitante e o número da CI. Nasce como <strong>Criado</strong> (<code>HSolutions.GQ.UI/Areas/AssRegulatorios/Controllers/SolicitacaoRegistroController.cs:181</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-142</td>
+<td>Check-list e Solicitação de Registro</td>
+<td><strong>Enviar à ANVISA</strong> muda a solicitação para <strong>Enviada para ANVISA</strong> e cria um registro vazio no Controle de Produtos (<code>SolicitacaoRegistroController.cs:536-562</code>). O envio <strong>não confere se os documentos do check-list estão concluídos</strong>, e a mudança de situação grava <strong>sem histórico</strong> (<code>:548</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-143</td>
+<td>Check-list e Solicitação de Registro</td>
+<td><strong>Fechar</strong> muda para <strong>Fechada</strong>, também sem conferência e sem histórico (<code>SolicitacaoRegistroController.cs:503-515</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-144</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>As situações "Deferida", "Indeferida", "Em exigências", "Pendência de documentos" e "Arquivo temporário" <strong>não são usadas na solicitação</strong>: só aparecem como opções no Controle de Produtos.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-145</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>Para cada produto, guarda o histórico na ANVISA: situação (deferida, indeferida, em exigência, pendência de documentos, arquivo temporário), motivo da exigência, princípio ativo, categoria, apresentação, <strong>publicação no DOU</strong>, <strong>número do processo e do registro</strong>, <strong>validade em meses</strong> e <strong>data de revalidação</strong> (<code>HSolutions.GQ.Domain/Entities/AssRegulatorio/HistoricoProdutoAnvisa.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-146</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>A data de vencimento é a própria data de revalidação (<code>HSolutions.GQ.UI/Areas/AssRegulatorios/Controllers/ControleProdutosAnvisaController.cs:224-225</code>). A lista filtra por vencimento, mas <strong>não avisa</strong> quem vai vencer.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-147</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>A alteração do histórico grava <strong>sem histórico</strong> (<code>ControleProdutosAnvisaController.cs:204</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-148</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>A situação do registro <strong>não chega a nenhum outro módulo</strong>: um produto com registro indeferido ou vencido continua disponível para produção e venda.</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-pontos-de-atencao-dos-fluxos">7. Pontos de atenção dos fluxos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Nº no fluxo</th>
+<th>Ponto de atenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desvios e CAPA</td>
+<td>1</td>
+<td>Plano preventivo reprovado encerra o desvio como "Concluído"</td>
+</tr>
+<tr>
+<td>Desvios e CAPA</td>
+<td>2</td>
+<td>Plano corretivo reprovado não tem saída</td>
+</tr>
+<tr>
+<td>Desvios e CAPA</td>
+<td>3</td>
+<td>A eficácia da CAPA não é verificada</td>
+</tr>
+<tr>
+<td>Desvios e CAPA</td>
+<td>4</td>
+<td>Trilha de auditoria incompleta</td>
+</tr>
+<tr>
+<td>Desvios e CAPA</td>
+<td>5</td>
+<td>Conferência de permissão só na lista</td>
+</tr>
+<tr>
+<td>Desvios e CAPA</td>
+<td>6</td>
+<td>O desvio não chega ao lote</td>
+</tr>
+<tr>
+<td>Desvios e CAPA</td>
+<td>7</td>
+<td>Sem aprovação do plano antes da execução e sem separação de funções</td>
+</tr>
+<tr>
+<td>Controle de mudanças</td>
+<td>1</td>
+<td>A GQ pode aprovar a mudança sem o parecer das áreas</td>
+</tr>
+<tr>
+<td>Controle de mudanças</td>
+<td>2</td>
+<td>Finalizar sem concluir e sem avaliar a eficácia</td>
+</tr>
+<tr>
+<td>Controle de mudanças</td>
+<td>3</td>
+<td>A aprovação final do produto não fica na trilha de auditoria</td>
+</tr>
+<tr>
+<td>Controle de mudanças</td>
+<td>4</td>
+<td>Há dois cancelamentos, um sem rastro</td>
+</tr>
+<tr>
+<td>Controle de mudanças</td>
+<td>5</td>
+<td>Mudanças temporárias não vencem</td>
+</tr>
+<tr>
+<td>Controle de mudanças</td>
+<td>6</td>
+<td>A mudança não conversa com o resto</td>
+</tr>
+<tr>
+<td>Autoinspeção e auditoria</td>
+<td>2</td>
+<td>A auditoria não alimenta o tratamento de desvios</td>
+</tr>
+<tr>
+<td>Autoinspeção e auditoria</td>
+<td>3</td>
+<td>Independência não garantida</td>
+</tr>
+<tr>
+<td>Autoinspeção e auditoria</td>
+<td>4</td>
+<td>Não existe auditoria de fornecedor</td>
+</tr>
+<tr>
+<td>Autoinspeção e auditoria</td>
+<td>5</td>
+<td>Travas só na tela e registros sem histórico</td>
+</tr>
+<tr>
+<td>Treinamento</td>
+<td>1</td>
+<td>"Suficiente" sem critério</td>
+</tr>
+<tr>
+<td>Treinamento</td>
+<td>2</td>
+<td>O treinamento não habilita nem bloqueia ninguém</td>
+</tr>
+<tr>
+<td>Treinamento</td>
+<td>3</td>
+<td>O Controle de Documentos recebe a turma, não a pessoa</td>
+</tr>
+<tr>
+<td>Treinamento</td>
+<td>4</td>
+<td>Programa sem aprovação</td>
+</tr>
+<tr>
+<td>Treinamento</td>
+<td>5</td>
+<td>Registros sem histórico</td>
+</tr>
+<tr>
+<td>Assuntos regulatórios</td>
+<td>1</td>
+<td>Dois sistemas regulatórios que não se falam</td>
+</tr>
+<tr>
+<td>Assuntos regulatórios</td>
+<td>2</td>
+<td>As regras descritas pela equipe não estão no código</td>
+</tr>
+<tr>
+<td>Assuntos regulatórios</td>
+<td>3</td>
+<td>Sem aviso de prazo e sem efeito nos outros módulos</td>
+</tr>
+<tr>
+<td>Assuntos regulatórios</td>
+<td>4</td>
+<td>Envio à ANVISA sem conferência e sem histórico</td>
+</tr>
+<tr>
+<td>Assuntos regulatórios</td>
+<td>5</td>
+<td>A mudança não chega aqui</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-correspondencia-com-os-fluxos">8. Correspondência com os fluxos</h3>
+<p>Cada regra aqui tem o número local (RN001…) que aparece no documento do fluxo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Fluxo</th>
+<th>Etapa</th>
+<th>No fluxo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-010</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-011</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-012</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-013</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-014</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-015</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-016</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-GQ-017</td>
+<td>Desvios e CAPA</td>
+<td>Registro do Relatório de Desvios</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-GQ-018</td>
+<td>Desvios e CAPA</td>
+<td>Ação corretiva imediata</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-019</td>
+<td>Desvios e CAPA</td>
+<td>Ação corretiva imediata</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-020</td>
+<td>Desvios e CAPA</td>
+<td>Ação corretiva imediata</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-021</td>
+<td>Desvios e CAPA</td>
+<td>Ação corretiva imediata</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-022</td>
+<td>Desvios e CAPA</td>
+<td>Ação corretiva imediata</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-023</td>
+<td>Desvios e CAPA</td>
+<td>Pré-avaliação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-024</td>
+<td>Desvios e CAPA</td>
+<td>Pré-avaliação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-025</td>
+<td>Desvios e CAPA</td>
+<td>Pré-avaliação</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-026</td>
+<td>Desvios e CAPA</td>
+<td>Pré-avaliação</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-027</td>
+<td>Desvios e CAPA</td>
+<td>Pré-avaliação</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-028</td>
+<td>Desvios e CAPA</td>
+<td>Pré-avaliação</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-029</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação pelas áreas</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-030</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação pelas áreas</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-031</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação pelas áreas</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-032</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação pelas áreas</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-033</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-034</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-035</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-036</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-037</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-038</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-039</td>
+<td>Desvios e CAPA</td>
+<td>Avaliação do Relatório de Desvios e decisão sobre CAPA</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-GQ-040</td>
+<td>Desvios e CAPA</td>
+<td>Relatório de CAPA</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-041</td>
+<td>Desvios e CAPA</td>
+<td>Relatório de CAPA</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-042</td>
+<td>Desvios e CAPA</td>
+<td>Relatório de CAPA</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-043</td>
+<td>Desvios e CAPA</td>
+<td>Relatório de CAPA</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-044</td>
+<td>Desvios e CAPA</td>
+<td>Relatório de CAPA</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-045</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-046</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-047</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-048</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-049</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-050</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-051</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-GQ-052</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação corretiva, execução e monitoramento</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-GQ-053</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-054</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-055</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-056</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-057</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-058</td>
+<td>Desvios e CAPA</td>
+<td>Plano de ação preventiva, execução, monitoramento e encerramento</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-059</td>
+<td>Desvios e CAPA</td>
+<td>Acompanhamento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-060</td>
+<td>Desvios e CAPA</td>
+<td>Acompanhamento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-061</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-062</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-063</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-064</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-065</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-066</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-067</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-GQ-068</td>
+<td>Controle de mudanças</td>
+<td>Solicitação de mudança</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-GQ-069</td>
+<td>Controle de mudanças</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-070</td>
+<td>Controle de mudanças</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-071</td>
+<td>Controle de mudanças</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-072</td>
+<td>Controle de mudanças</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-073</td>
+<td>Controle de mudanças</td>
+<td>Revisão (pré-avaliação) e definição das áreas</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-074</td>
+<td>Controle de mudanças</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-075</td>
+<td>Controle de mudanças</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-076</td>
+<td>Controle de mudanças</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-077</td>
+<td>Controle de mudanças</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-078</td>
+<td>Controle de mudanças</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-079</td>
+<td>Controle de mudanças</td>
+<td>Avaliação pelas áreas e liberação</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-080</td>
+<td>Controle de mudanças</td>
+<td>Plano de ação, execução e finalização</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-081</td>
+<td>Controle de mudanças</td>
+<td>Plano de ação, execução e finalização</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-082</td>
+<td>Controle de mudanças</td>
+<td>Plano de ação, execução e finalização</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-083</td>
+<td>Controle de mudanças</td>
+<td>Plano de ação, execução e finalização</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-084</td>
+<td>Controle de mudanças</td>
+<td>Plano de ação, execução e finalização</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-085</td>
+<td>Controle de mudanças</td>
+<td>Plano de ação, execução e finalização</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-086</td>
+<td>Controle de mudanças</td>
+<td>Plano de ação, execução e finalização</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-GQ-087</td>
+<td>Controle de mudanças</td>
+<td>Aprovação do produto</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-088</td>
+<td>Controle de mudanças</td>
+<td>Aprovação do produto</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-089</td>
+<td>Controle de mudanças</td>
+<td>Aprovação do produto</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-090</td>
+<td>Controle de mudanças</td>
+<td>Aprovação do produto</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-091</td>
+<td>Controle de mudanças</td>
+<td>Mudança temporária</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-092</td>
+<td>Autoinspeção e auditoria</td>
+<td>Cadastros</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-093</td>
+<td>Autoinspeção e auditoria</td>
+<td>Cadastros</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-094</td>
+<td>Autoinspeção e auditoria</td>
+<td>Cadastros</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-095</td>
+<td>Autoinspeção e auditoria</td>
+<td>Cadastros</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-096</td>
+<td>Autoinspeção e auditoria</td>
+<td>Programação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-097</td>
+<td>Autoinspeção e auditoria</td>
+<td>Programação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-098</td>
+<td>Autoinspeção e auditoria</td>
+<td>Programação</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-099</td>
+<td>Autoinspeção e auditoria</td>
+<td>Programação</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-100</td>
+<td>Autoinspeção e auditoria</td>
+<td>Programação</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-101</td>
+<td>Autoinspeção e auditoria</td>
+<td>Programação</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-GQ-102</td>
+<td>Autoinspeção e auditoria</td>
+<td>Programação</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-GQ-103</td>
+<td>Autoinspeção e auditoria</td>
+<td>Registro das respostas</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-104</td>
+<td>Autoinspeção e auditoria</td>
+<td>Registro das respostas</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-105</td>
+<td>Autoinspeção e auditoria</td>
+<td>Registro das respostas</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-106</td>
+<td>Autoinspeção e auditoria</td>
+<td>Registro das respostas</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-107</td>
+<td>Autoinspeção e auditoria</td>
+<td>Avaliação, desvios e encerramento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-108</td>
+<td>Autoinspeção e auditoria</td>
+<td>Avaliação, desvios e encerramento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-109</td>
+<td>Autoinspeção e auditoria</td>
+<td>Avaliação, desvios e encerramento</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-110</td>
+<td>Autoinspeção e auditoria</td>
+<td>Avaliação, desvios e encerramento</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-111</td>
+<td>Autoinspeção e auditoria</td>
+<td>Avaliação, desvios e encerramento</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-112</td>
+<td>Treinamento</td>
+<td>Cadastros</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-113</td>
+<td>Treinamento</td>
+<td>Cadastros</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-114</td>
+<td>Treinamento</td>
+<td>Cadastros</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-115</td>
+<td>Treinamento</td>
+<td>Cadastros</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-116</td>
+<td>Treinamento</td>
+<td>Solicitação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-117</td>
+<td>Treinamento</td>
+<td>Solicitação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-118</td>
+<td>Treinamento</td>
+<td>Programação e matriz</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-119</td>
+<td>Treinamento</td>
+<td>Programação e matriz</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-120</td>
+<td>Treinamento</td>
+<td>Programação e matriz</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-121</td>
+<td>Treinamento</td>
+<td>Programação e matriz</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-122</td>
+<td>Treinamento</td>
+<td>Programação e matriz</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-123</td>
+<td>Treinamento</td>
+<td>Conclusão e avaliação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-124</td>
+<td>Treinamento</td>
+<td>Conclusão e avaliação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-125</td>
+<td>Treinamento</td>
+<td>Conclusão e avaliação</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-126</td>
+<td>Treinamento</td>
+<td>Conclusão e avaliação</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-127</td>
+<td>Treinamento</td>
+<td>Conclusão e avaliação</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-128</td>
+<td>Treinamento</td>
+<td>Acompanhamento e integração com o Controle de Documentos</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-129</td>
+<td>Treinamento</td>
+<td>Acompanhamento e integração com o Controle de Documentos</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-130</td>
+<td>Treinamento</td>
+<td>Acompanhamento e integração com o Controle de Documentos</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-131</td>
+<td>Assuntos regulatórios</td>
+<td>Processo Regulatório</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-132</td>
+<td>Assuntos regulatórios</td>
+<td>Processo Regulatório</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-133</td>
+<td>Assuntos regulatórios</td>
+<td>Programação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-134</td>
+<td>Assuntos regulatórios</td>
+<td>Programação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-135</td>
+<td>Assuntos regulatórios</td>
+<td>Programação</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-136</td>
+<td>Assuntos regulatórios</td>
+<td>Programação</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-137</td>
+<td>Assuntos regulatórios</td>
+<td>Programação</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-138</td>
+<td>Assuntos regulatórios</td>
+<td>Monitoramento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-139</td>
+<td>Assuntos regulatórios</td>
+<td>Monitoramento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-140</td>
+<td>Assuntos regulatórios</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-141</td>
+<td>Assuntos regulatórios</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-142</td>
+<td>Assuntos regulatórios</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-143</td>
+<td>Assuntos regulatórios</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-GQ-144</td>
+<td>Assuntos regulatórios</td>
+<td>Check-list e Solicitação de Registro</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-GQ-145</td>
+<td>Assuntos regulatórios</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-GQ-146</td>
+<td>Assuntos regulatórios</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-GQ-147</td>
+<td>Assuntos regulatórios</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-GQ-148</td>
+<td>Assuntos regulatórios</td>
+<td>Controle de Produtos Enviados para Registro Anvisa</td>
+<td>RN004</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-regras-gerais-do-modulo">1. Regras gerais do módulo</a></li><li><a href="#2-desvios-e-capa">2. Desvios e CAPA</a></li><li><a href="#3-controle-de-mudancas">3. Controle de mudanças</a></li><li><a href="#4-autoinspecao-e-auditoria">4. Autoinspeção e auditoria</a></li><li><a href="#5-treinamento">5. Treinamento</a></li><li><a href="#6-assuntos-regulatorios">6. Assuntos regulatórios</a></li><li><a href="#7-pontos-de-atencao-dos-fluxos">7. Pontos de atenção dos fluxos</a></li><li><a href="#8-correspondencia-com-os-fluxos">8. Correspondência com os fluxos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
