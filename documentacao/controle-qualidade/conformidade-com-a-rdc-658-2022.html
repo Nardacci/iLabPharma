@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conformidade com a RDC 658/2022 · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html" aria-current=page>Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Qualidade e ANVISA</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Conformidade com a RDC 658/2022</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Versão:</strong> 0.1, feita a partir do código · <strong>Etapa:</strong> 2 do plano do CQ (ver <code>DIARIO-DE-BORDO.md</code>)</p>
+<p>Cruza o que a <strong>RDC nº 658/2022</strong> exige do Controle de Qualidade (sobretudo o Capítulo VII, arts. 229 a 297, e o art. 14) com o que o código do módulo faz. É a base para escolher a ordem dos fluxos e dos testes. <strong>Nada foi testado nas telas:</strong> toda situação abaixo é "pelo código" e precisa ser confirmada no teste. O texto literal de cada referência está no fim do documento ("O que a ANVISA pede"); no portal, basta clicar na referência.</p>
+<p>Caminhos relativos a <code>4.controle_qualidade/app/</code>. Abreviações: <code>UI</code> = <code>HSolutions.CQ.UI</code>, <code>Dom</code> = <code>HSolutions.CQ.Domain</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Atende</strong></td>
+<td>O código tem a função, e ela parece cobrir a exigência</td>
+</tr>
+<tr>
+<td><strong>Parcial</strong></td>
+<td>A função existe, mas falta uma parte que a norma pede</td>
+</tr>
+<tr>
+<td><strong>Não atende</strong></td>
+<td>Não há função, ou ela contraria a exigência</td>
+</tr>
+<tr>
+<td><strong>A verificar</strong></td>
+<td>Depende de teste, do banco (DBA) ou de procedimento fora do sistema</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="1-quadro-geral">1. Quadro geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Exigência</th>
+<th>Referência</th>
+<th>Situação</th>
+<th>Telas no CQ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Só usar material liberado pelo CQ</td>
+<td><a href="#tema-1-so-usar-material-liberado-pelo-cq">Arts. 157 e 189</a></td>
+<td><strong>Parcial</strong></td>
+<td>Emissão Laudo Final (o resultado não chega sozinho ao Estoque)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Aprovação e liberação pela pessoa designada, com decisão clara e assinatura</td>
+<td><a href="#tema-2-aprovacao-e-liberacao-pela-pessoa-designada-com-decisao-clara-e-assinatura">Art. 8º, XV; art. 258, VIII</a></td>
+<td><strong>Não atende</strong></td>
+<td>Emissão Laudo Final</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Amostragem por pessoal autorizado, segundo procedimento aprovado</td>
+<td><a href="#tema-3-amostragem-por-pessoal-autorizado-segundo-procedimento-aprovado">Art. 14, II; art. 247</a></td>
+<td><strong>Parcial</strong></td>
+<td>Regra Amostragem, Consultar Amostragem, Verificação de Amostragens</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Identificação das amostras</td>
+<td><a href="#tema-4-identificacao-das-amostras">Art. 251</a></td>
+<td><strong>Parcial</strong></td>
+<td>Consultar Amostragem (ficha), Gerar Etiqueta</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Registro completo de cada teste</td>
+<td><a href="#tema-5-registro-completo-de-cada-teste">Art. 258</a></td>
+<td><strong>Parcial</strong></td>
+<td>Consultar Análise Programada</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Verificação dos testes e cálculos por outra pessoa</td>
+<td><a href="#tema-6-verificacao-dos-testes-e-calculos-por-outra-pessoa">Art. 257; art. 258, VII</a></td>
+<td><strong>Não atende</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Investigação de resultado fora de especificação</td>
+<td><a href="#tema-7-investigacao-de-resultado-fora-de-especificacao">Art. 245, parágrafo único; art. 287</a></td>
+<td><strong>Não atende</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Avaliação de tendência dos resultados</td>
+<td><a href="#tema-8-avaliacao-de-tendencia-dos-resultados">Arts. 245 e 256</a></td>
+<td><strong>Não atende</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Métodos analíticos aprovados e validados</td>
+<td><a href="#tema-9-metodos-analiticos-aprovados-e-validados">Arts. 253 e 255</a></td>
+<td><strong>Não atende</strong> (no sistema)</td>
+<td>Regra de Análise (método em texto livre)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Controle de reagentes, padrões e meios de cultura</td>
+<td><a href="#tema-10-controle-de-reagentes-padroes-e-meios-de-cultura">Arts. 260 a 264</a></td>
+<td><strong>Não atende</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Amostras de referência e retenção</td>
+<td><a href="#tema-11-amostras-de-referencia-e-retencao">Art. 14, VIII; art. 236, II</a></td>
+<td><strong>Parcial</strong></td>
+<td>Consultar Amostragem</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Programa de estabilidade de acompanhamento</td>
+<td><a href="#tema-12-programa-de-estabilidade-de-acompanhamento">Arts. 271 a 290</a></td>
+<td><strong>Parcial</strong></td>
+<td>Regra Estabilidade, Acompanhamento e Final de Estabilidade</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Trilha de auditoria: toda alteração registrada, com motivo</td>
+<td><a href="#tema-13-trilha-de-auditoria-toda-alteracao-registrada-com-motivo">Art. 125</a></td>
+<td><strong>Parcial</strong></td>
+<td>Todas</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Registro feito no momento da ação</td>
+<td><a href="#tema-14-registro-feito-no-momento-da-acao">Art. 124</a></td>
+<td><strong>Não atende</strong></td>
+<td>Amostragem, Análise Programada</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Validade do laudo e data de reteste</td>
+<td><a href="#tema-15-validade-do-laudo-e-data-de-reteste">Art. 189</a></td>
+<td><strong>Parcial</strong></td>
+<td>Emissão Laudo Final</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Assinatura eletrônica nas aprovações</td>
+<td><a href="#tema-16-assinatura-eletronica-nas-aprovacoes">Guia 33, 9.3.2.3</a></td>
+<td><strong>Não atende</strong></td>
+<td>Emissão Laudo Final</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Em números:</strong> dos 16 temas, <strong>nenhum atende por completo</strong>, <strong>8 atendem em parte</strong> e <strong>8 não atendem</strong>. Os que não atendem tocam o coração do laboratório: quem libera, a revisão dos resultados, a investigação de resultado fora de especificação, os métodos e os reagentes.</p>
+<hr />
+<h3 id="2-detalhe-por-tema">2. Detalhe por tema</h3>
+<h4 id="2-1-liberacao-e-aprovacao-do-laudo-temas-1-2-15-e-16">2.1 Liberação e aprovação do laudo (temas 1, 2, 15 e 16)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o código faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Só material liberado pelo CQ é usado</td>
+<td>Art. 189</td>
+<td>O laudo aprovado fica só no CQ. O Estoque tira o lote da quarentena quando alguém atualiza a análise na tela do Estoque (<code>transversal/04-mapa-de-integracoes.md</code>, seta 16)</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>A decisão de aprovar só com todos os resultados dentro da especificação</td>
+<td>Art. 258, VIII</td>
+<td>A tela só mostra "Aprovar" quando todos os resultados estão dentro dos limites (<code>UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:733-745</code>), mas <strong>a gravação não confere</strong> (<code>Dom/Analise/LiberarLaudoService.cs:12-21</code>)</td>
+<td>Parcial (só na tela)</td>
+</tr>
+<tr>
+<td>Aprovação pela pessoa designada</td>
+<td>Art. 8º, XV</td>
+<td>A gravação <strong>não confere a função</strong> de quem aprova, reprova ou emite o laudo; a função "Chefe de Subdivisão" só muda a visualização (<code>EmissaoLaudoFinalController.cs:967-1000</code>)</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Quem analisou não aprova</td>
+<td>Boa prática; art. 258, VII</td>
+<td><strong>Existe:</strong> a aprovação e a emissão recusam quem alterou algum resultado ("O Responsável pela aprovação precisa ser diferente dos analistas das análises.", <code>Dom/Analise/LiberarLaudoService.cs:47-52</code>). Limite: o analista só fica registrado quando muda o item</td>
+<td>Atende em parte</td>
+</tr>
+<tr>
+<td>Registro de quem aprovou e quando</td>
+<td>Art. 258, VIII</td>
+<td>Aprovar e reprovar <strong>não gravam quem aprovou</strong> nem passam pela trilha; só a etapa "Emitir laudo" grava o responsável (<code>EmissaoLaudoFinalController.cs:425-470</code>, <code>:984-1000</code>). A mesma pessoa pode aprovar e emitir. E a emissão <strong>não exige</strong> a decisão de aprovar ou reprovar nem a análise pronta (<code>Dom/Analise/LiberarLaudoService.cs:40-44</code>; fluxo <code>fluxos/solicitacao-analise-laudo.md</code>, ponto 1)</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Assinatura eletrônica</td>
+<td>Guia 33, 9.3.2.3</td>
+<td>Nenhuma senha é pedida ao aprovar, reprovar ou emitir</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Validade do laudo e reteste</td>
+<td>Art. 189</td>
+<td>A validade vem da solicitação ou é digitada (se "reanálise prevista"); o servidor só exige que seja hoje ou depois (<code>EmissaoLaudoFinalController.cs:445-459</code>). Nada usa a "reanálise prevista" depois</td>
+<td>Parcial</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-2-amostragem-temas-3-4-e-11">2.2 Amostragem (temas 3, 4 e 11)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o código faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amostragem por pessoal autorizado</td>
+<td>Art. 14, II</td>
+<td>A tela sugere só os usuários com a função de amostrador (do Principal), mas a gravação aceita o amostrador que vier do formulário, sem conferir a função (<code>UI/Areas/Coleta/Controllers/AmostragemController.cs:882-887</code>)</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>Procedimento de amostragem com método, equipamento, quantidade, recipiente, precauções e armazenamento</td>
+<td>Art. 247</td>
+<td>A Regra de Amostragem, ligada ao item, tem quantidade, tolerância, utensílios e verificações (<code>Dom/Coleta/RegraAmostragem.cs:16-23</code>, <code>Dom/Coleta/ItemRegraAmostragem.cs:17-26</code>). <strong>Não há campos</strong> de método, tipo de recipiente, precauções nem condições de armazenamento; só a descrição livre</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>Recipientes das amostras rotulados com lote, data e recipiente de origem</td>
+<td>Art. 251</td>
+<td>A ficha de amostragem traz lote, quantidade, número de volumes, quem amostrou e quando, e quem verificou (<code>AmostragemController.cs:441-452</code>). Não identifica cada recipiente; a "etiqueta" gerada é a de situação depois da análise</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>Amostras de referência e retenção</td>
+<td>Art. 14, VIII; art. 236, II</td>
+<td>A amostragem grava as quantidades de retenção, referência e estabilidade e pede ao Estoque a separação (<code>Dom/Coleta/Amostragem.cs:30-32</code>; <code>HSolutions.CQ.Services/Estoque/SolicitacaoEstoque.cs:146-154</code>). <strong>Não há prazo de guarda</strong> nem data de descarte (o Estoque também não controla: <code>3.estoque/fluxos/almoxarifado-cq.md</code>)</td>
+<td>Parcial</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-3-analise-e-resultados-temas-5-a-10">2.3 Análise e resultados (temas 5 a 10)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o código faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registro de cada teste: material, lote, especificação e método, resultado com cálculos, data, quem fez, quem verificou, decisão e equipamento</td>
+<td>Art. 258</td>
+<td>Cada item guarda nome, especificação, limites, unidade, referência e padrão em texto, resultado (texto), data do teste e observação (<code>Dom/Analise/AnaliseItem.cs:20-39</code>). <strong>Faltam:</strong> equipamento usado, cálculos, quem verificou. Quem fez fica só como "último a alterar"</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>Testes e cálculos verificados</td>
+<td>Art. 257; art. 258, VII</td>
+<td>Não há etapa de revisão dos resultados por outra pessoa antes do laudo. O resultado é digitado; o sistema não calcula</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Resultado fora de especificação investigado</td>
+<td>Art. 245, parágrafo único; art. 287</td>
+<td>Fora do limite, o sistema exige só uma observação e oferece "Reprovar" (<code>UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:346-350</code>). Não há investigação nem ligação com desvio na GQ. Há uma reanálise genérica, manual</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Dados registrados para avaliar tendência</td>
+<td>Arts. 245 e 256</td>
+<td>Resultado em texto livre; nenhum relatório de tendência (os relatórios são laudos, boletins, etiquetas e fichas)</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Métodos aprovados e validados</td>
+<td>Arts. 253 e 255</td>
+<td>O "método" é o campo de especificação em texto livre da Regra de Análise (<code>Dom/Analise/RegraAnalise.cs:20-25</code>); sem versão nem ligação com o Controle de Documentos</td>
+<td>Não atende (no sistema); validação é procedimento: a verificar</td>
+</tr>
+<tr>
+<td>Reagentes, soluções, padrões e meios de cultura especificados, identificados e com validade</td>
+<td>Arts. 260 a 264</td>
+<td>Só existe o tipo "padrão secundário", analisado como um material, e um campo "padrão" em texto no resultado. Nenhum controle de reagentes, soluções, meios ou validade de preparo</td>
+<td>Não atende</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-4-estabilidade-tema-12">2.4 Estabilidade (tema 12)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o código faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Programa descrito em protocolo, com lotes, testes, pontos de tempo e condições de armazenamento</td>
+<td>Arts. 275 e 277</td>
+<td>A Regra de Estabilidade define os pontos (em dias) e o tipo de estudo (acelerado, longa duração, acompanhamento, prateleira) (<code>Dom/Estabilidade/RegraEstabilidadeDetalhe.cs:15-19</code>); o acompanhamento gera uma solicitação por ponto. A condição de armazenamento é só uma temperatura em texto no fim</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>Ao menos um lote por ano</td>
+<td>Art. 280</td>
+<td>Não há controle</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Resultado fora de especificação investigado e comunicado</td>
+<td>Arts. 287 e 288</td>
+<td>Nada específico na estabilidade</td>
+<td>Não atende</td>
+</tr>
+<tr>
+<td>Resumo dos dados e conclusões</td>
+<td>Art. 290</td>
+<td>O relatório final traz os resultados por ponto, a conclusão e aprovado ou reprovado (<code>UI/Areas/Estabilidade/Controllers/FinalEstabilidadeController.cs:160-228</code>)</td>
+<td>Atende em parte</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-5-integridade-dos-registros-temas-13-e-14">2.5 Integridade dos registros (temas 13 e 14)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o código faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alteração assinada e datada, com leitura da informação original</td>
+<td>Art. 125</td>
+<td>O histórico campo a campo cobre resultado, análise, regras, solicitação, verificação e motivos (<code>HSolutions.CQ.Auditoria/FluentLogConfigurations.cs:10-18</code>). <strong>Fora dele:</strong> aprovar e reprovar o laudo; "Excluir solicitação" (lixeira sem histórico, <code>HSolutions.CQ.Infrastructure/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:127-130</code>)</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>Motivo da alteração</td>
+<td>Art. 125, parágrafo único</td>
+<td>A justificativa é pedida só pela tela; a gravação aceita vazio e grava "." (<code>UI/Areas/Analise/Controllers/AnaliseLaudoController.cs:456-475</code>). No cancelamento da solicitação, um erro de programação (<code>justificativa.Substring(0,255)</code> com texto mais curto) faz o histórico <strong>não ser gravado</strong> depois de o cancelamento já ter sido salvo (<code>UI/Areas/SolicitacaoAnalise/Controllers/SolicitacaoAnaliseController.cs:378-386</code>)</td>
+<td>Parcial</td>
+</tr>
+<tr>
+<td>Registro no momento da ação</td>
+<td>Art. 124</td>
+<td>As datas da amostragem, da verificação e do teste <strong>vêm do formulário</strong>; só a data de registro da amostragem é do servidor (<code>AmostragemController.cs:882-887</code>; <code>AnaliseProgramadaController.cs:293-297</code>). A regra "data não futura" da amostragem fica numa chamada que só a tela faz (<code>AmostragemController.cs:261-300</code>)</td>
+<td>Não atende</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="3-onde-a-corrente-quebra-resumo-para-a-area">3. Onde a corrente quebra (resumo para a área)</h3>
+<ol>
+<li><strong>Ninguém garante quem libera o lote.</strong> A aprovação do laudo não confere a função nem pede assinatura, e a decisão não chega sozinha ao Estoque.</li>
+<li><strong>O resultado fora de especificação não vira investigação.</strong> Basta uma observação e o botão "Reprovar"; não há ligação com o desvio na GQ.</li>
+<li><strong>O registro do teste é incompleto para a norma:</strong> sem equipamento, sem cálculo, sem verificação por outra pessoa, com resultado em texto livre, o que impede a análise de tendência.</li>
+<li><strong>O que está fora do sistema não tem controle:</strong> métodos (texto livre, sem versão), reagentes, padrões e meios de cultura, prazo de guarda das amostras de retenção.</li>
+<li><strong>As datas são do formulário</strong>, e parte das ações (aprovar, reprovar, excluir solicitação) não deixa histórico.</li>
+</ol>
+<p><strong>Ponto positivo:</strong> quem altera resultados não pode aprovar nem emitir o laudo daquela análise. É a separação de funções que a norma espera, ainda que dependa de o analista ter mexido no item.</p>
+<h3 id="4-proposta-de-ordem-para-os-fluxos-etapa-3-por-risco">4. Proposta de ordem para os fluxos (etapa 3), por risco</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ordem</th>
+<th>Fluxo</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Solicitação → amostragem → análise → laudo</strong> (com a ligação ao Estoque)</td>
+<td>Fecha o ciclo do lote; concentra os temas 1 a 7 e 13 a 16</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Regras de amostragem e de análise</strong> (os cadastros que definem o que é amostrado e analisado e com quais limites)</td>
+<td>Definem se o laudo está certo; temas 3, 5 e 9</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Estabilidade</strong> (regra, acompanhamento, final)</td>
+<td>Tema 12</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Água e ambiente</strong></td>
+<td>Mesmo ciclo, com outros tipos de item; confirmar diferenças</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Reagentes, padrões, meios, métodos, tendência, investigação de fora de especificação</td>
+<td><strong>Não há fluxo a descrever.</strong> Entram como lacunas nos requisitos (05)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-primeiros-casos-de-teste-sugeridos-so-os-que-tocam-a-norma">5. Primeiros casos de teste sugeridos (só os que tocam a norma)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ideia de caso</th>
+<th>Tema</th>
+<th>O que confirma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aprovar um laudo <code>TESTE</code> com um usuário sem a função de chefe do CQ</td>
+<td>2</td>
+<td>Qualquer usuário com o menu aprova</td>
+</tr>
+<tr>
+<td>Aprovar o laudo com o mesmo usuário que digitou um resultado</td>
+<td>2</td>
+<td>A trava "aprovador diferente do analista" funciona</td>
+</tr>
+<tr>
+<td>Com um resultado fora do limite, tentar aprovar (pela tela e repetindo a chamada)</td>
+<td>2, 7</td>
+<td>A gravação não confere os resultados</td>
+</tr>
+<tr>
+<td>Aprovar um laudo e, sem abrir a análise no Estoque, consultar a situação do lote no Estoque</td>
+<td>1</td>
+<td>O lote continua em quarentena</td>
+</tr>
+<tr>
+<td>Registrar uma amostragem com data de ontem e com data futura</td>
+<td>14</td>
+<td>Data vem do formulário</td>
+</tr>
+<tr>
+<td>Alterar um resultado e consultar o histórico; repetir sem justificativa</td>
+<td>13</td>
+<td>Trilha e motivo</td>
+</tr>
+<tr>
+<td>Cancelar uma solicitação com justificativa curta e consultar o histórico</td>
+<td>13</td>
+<td>Erro depois de gravar; histórico ausente</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-pontos-para-validar">6. Pontos para validar</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Pergunta</th>
+<th>Com quem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Quem é a Pessoa Delegada que libera o lote? A aprovação do laudo no CQ é essa liberação, ou ela acontece fora do sistema?</td>
+<td>Garantia da Qualidade e CQ</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Como são controlados hoje os métodos analíticos (versão, validação), os reagentes, padrões e meios de cultura?</td>
+<td>CQ</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Qual o procedimento para resultado fora de especificação (investigação de laboratório)?</td>
+<td>CQ e GQ</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Qual o prazo de guarda das amostras de retenção, e onde é controlado?</td>
+<td>CQ</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Qual instrução normativa de sistemas computadorizados vale para a empresa (IN 134/2022)? Falta na pasta <code>Documentação/</code></td>
+<td>Garantia da Qualidade</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="como-foi-feito">Como foi feito</h3>
+<p>Leitura do art. 14 e do Capítulo VII da RDC 658/2022, extraídos do PDF por <code>homologacao/ferramentas/extrair_normas.py</code>. No código, uma verificação dirigida das telas de amostragem, análise, laudo e estabilidade (entidades, controladores e serviço de liberação), com as citações principais conferidas à mão. O texto literal das normas, no fim, é gerado por <code>homologacao/ferramentas/citar_normas_diagnostico.py</code> a partir de <code>4.controle_qualidade/04-conformidade-normas.json</code>.</p>
+<!-- NORMAS:INICIO -->
+<h2 id="o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</h2>
+<p>Texto literal das normas citadas em cada tema, extraído dos arquivos da pasta <code>Documentação/</code> (RDC nº 658/2022 em português e Guia nº 33/2020) por <code>homologacao/ferramentas/citar_normas_diagnostico.py</code>. "(...)" marca trechos omitidos. No portal, clique na referência de cada tema para ver o texto.</p>
+<h3 id="tema-1-so-usar-material-liberado-pelo-cq">Tema 1 · Só usar material liberado pelo CQ</h3>
+<p><strong>RDC 658/2022, art. 157</strong></p>
+<blockquote>
+<p>Art. 157. Os materiais recebidos e os produtos acabados devem ser fisicamente ou administrativamente colocados em quarentena imediatamente após o recebimento ou processamento, até que sejam liberados para uso ou distribuição.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 189</strong></p>
+<blockquote>
+<p>Art. 189. Somente matérias-primas que tiverem sido liberadas pelo departamento de Controle de Qualidade e que estiverem dentro de sua data de reteste devem ser utilizadas.</p>
+</blockquote>
+<h3 id="tema-2-aprovacao-e-liberacao-pela-pessoa-designada-com-decisao-clara-e-assinatura">Tema 2 · Aprovação e liberação pela pessoa designada, com decisão clara e assinatura</h3>
+<p><strong>RDC 658/2022, art. 8º</strong></p>
+<blockquote>
+<p>Art. 8º Um Sistema da Qualidade Farmacêutica adequado à fabricação de medicamentos deve garantir que:</p>
+<p>(...)</p>
+<p>XV - os medicamentos não sejam comercializados ou distribuídos antes da Pessoa Delegada pelo Sistema de Gestão da Qualidade Farmacêutica ter certificado que cada lote do produto foi produzido e controlado de acordo com os requerimentos de registro e quaisquer outras normas relevantes à produção, ao controle e à liberação de medicamentos;</p>
+<p>(...)</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 258</strong></p>
+<blockquote>
+<p>Art. 258. Os testes realizados devem ser registrados, e os registros devem conter, minimamente, os seguintes dados:</p>
+<p>(...)</p>
+<p>VIII - declaração clara de aprovação ou reprovação (ou outra decisão de status) e a assinatura datada da pessoa responsável designada; e</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-3-amostragem-por-pessoal-autorizado-segundo-procedimento-aprovado">Tema 3 · Amostragem por pessoal autorizado, segundo procedimento aprovado</h3>
+<p><strong>RDC 658/2022, art. 14</strong></p>
+<blockquote>
+<p>Art. 14. Os requerimentos básicos do Controle de Qualidade são:</p>
+<p>(...)</p>
+<p>II - amostras de matérias-primas, materiais de embalagem, produtos intermediários, produtos a granel e produtos acabados devem ser coletadas por pessoal autorizado e por meio de métodos aprovados;</p>
+<p>(...)</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 247</strong></p>
+<blockquote>
+<p>Art. 247. A amostragem deve ser realizada e registrada de acordo com procedimentos escritos e aprovados, contendo:</p>
+<p>I - o método de amostragem;</p>
+<p>II - o equipamento a ser utilizado;</p>
+<p>III - a quantidade da amostra a ser colhida;</p>
+<p>IV - instruções para qualquer subdivisão necessária da amostra;</p>
+<p>V - o tipo e a condição do recipiente de amostra a ser usado;</p>
+<p>VI - a identificação dos recipientes amostrados;</p>
+<p>VII - quaisquer precauções especiais a serem observadas, especialmente no que diz respeito à amostragem de materiais estéreis ou nocivos;</p>
+<p>VIII - as condições de armazenamento; e</p>
+<p>IX - instruções para a limpeza e o armazenamento de equipamentos de amostragem.</p>
+</blockquote>
+<h3 id="tema-4-identificacao-das-amostras">Tema 4 · Identificação das amostras</h3>
+<p><strong>RDC 658/2022, art. 251</strong></p>
+<blockquote>
+<p>Art. 251. Os recipientes das amostras devem ser rotulados indicando o conteúdo, com o número do lote, a data de amostragem e os recipientes dos quais as amostras foram retiradas.</p>
+</blockquote>
+<h3 id="tema-5-registro-completo-de-cada-teste">Tema 5 · Registro completo de cada teste</h3>
+<p><strong>RDC 658/2022, art. 258</strong></p>
+<blockquote>
+<p>Art. 258. Os testes realizados devem ser registrados, e os registros devem conter, minimamente, os seguintes dados:</p>
+<p>I - nome do material ou produto e, quando aplicável, forma farmacêutica;</p>
+<p>II - número do lote e, se for caso, fabricante e/ou fornecedor;</p>
+<p>III - referências às especificações relevantes e procedimentos de teste;</p>
+<p>IV - resultados de testes, incluindo observações e cálculos, e referência a quaisquer certificados de análise;</p>
+<p>V - datas dos testes;</p>
+<p>VI - iniciais ou rubricas das pessoas que realizaram o teste;</p>
+<p>VII - iniciais das pessoas que verificaram os testes e os cálculos, quando apropriado;</p>
+<p>VIII - declaração clara de aprovação ou reprovação (ou outra decisão de status) e a assinatura datada da pessoa responsável designada; e</p>
+<p>IX - referência aos equipamentos utilizados.</p>
+</blockquote>
+<h3 id="tema-6-verificacao-dos-testes-e-calculos-por-outra-pessoa">Tema 6 · Verificação dos testes e cálculos por outra pessoa</h3>
+<p><strong>RDC 658/2022, art. 257</strong></p>
+<blockquote>
+<p>Art. 257. Quaisquer cálculos devem ser examinados criticamente.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 258</strong></p>
+<blockquote>
+<p>Art. 258. Os testes realizados devem ser registrados, e os registros devem conter, minimamente, os seguintes dados:</p>
+<p>(...)</p>
+<p>VII - iniciais das pessoas que verificaram os testes e os cálculos, quando apropriado;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-7-investigacao-de-resultado-fora-de-especificacao">Tema 7 · Investigação de resultado fora de especificação</h3>
+<p><strong>RDC 658/2022, art. 245</strong></p>
+<blockquote>
+<p>Art. 245. Alguns tipos de dados, tais como resultados de testes, rendimentos, controles ambientais, devem ser registrados de maneira a permitir a avaliação de tendência.</p>
+<p>Parágrafo único. Quaisquer dados fora da tendência ou da especificação devem ser abordados e sujeitos a investigação.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 287</strong></p>
+<blockquote>
+<p>Art. 287. Devem ser investigadas as tendências atípicas significativas ou os resultados fora de especificação.</p>
+</blockquote>
+<h3 id="tema-8-avaliacao-de-tendencia-dos-resultados">Tema 8 · Avaliação de tendência dos resultados</h3>
+<p><strong>RDC 658/2022, art. 245</strong></p>
+<blockquote>
+<p>Art. 245. Alguns tipos de dados, tais como resultados de testes, rendimentos, controles ambientais, devem ser registrados de maneira a permitir a avaliação de tendência.</p>
+<p>Parágrafo único. Quaisquer dados fora da tendência ou da especificação devem ser abordados e sujeitos a investigação.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 256</strong></p>
+<blockquote>
+<p>Art. 256. Os resultados dos parâmetros identificados como atributos críticos de qualidade devem ser analisados quanto a tendências e verificados, visando garantir que sejam consistentes entre si.</p>
+</blockquote>
+<h3 id="tema-9-metodos-analiticos-aprovados-e-validados">Tema 9 · Métodos analíticos aprovados e validados</h3>
+<p><strong>RDC 658/2022, art. 253</strong></p>
+<blockquote>
+<p>Art. 253. Os métodos analíticos devem ser validados.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 255</strong></p>
+<blockquote>
+<p>Art. 255. Todos os testes descritos no registro ou na especificação devem ser realizados de acordo com os métodos aprovados.</p>
+<p>Parágrafo único. Os resultados obtidos dos testes devem ser registrados.</p>
+</blockquote>
+<h3 id="tema-10-controle-de-reagentes-padroes-e-meios-de-cultura">Tema 10 · Controle de reagentes, padrões e meios de cultura</h3>
+<p><strong>RDC 658/2022, art. 260</strong></p>
+<blockquote>
+<p>Art. 260. A qualidade dos reagentes de laboratório, soluções, vidrarias, padrões de referência e meios de cultura deve ser especificada.</p>
+<p>§ 1º Os materiais de que trata o caput deste artigo devem ser preparados e controlados de acordo com procedimentos escritos.</p>
+<p>§ 2º As verificações e testes realizados nos materiais de que trata o caput deste artigo devem ser proporcionais ao seu uso e aos dados de estabilidade disponíveis.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 263</strong></p>
+<blockquote>
+<p>Art. 263. Os reagentes de laboratório, as soluções, as substâncias químicas de referência e os meios de cultura devem ser identificados com a data de preparação e abertura e a assinatura da pessoa que os preparou.</p>
+<p>§ 1º A data de validade dos reagentes e meios de cultura deve ser indicada no rótulo, juntamente com as condições de armazenamento específicas.</p>
+<p>§ 2º Para soluções volumétricas, a última data de padronização e o último fator de correção devem ser indicados.</p>
+</blockquote>
+<p><em>O tema completo vai dos arts. 260 a 264.</em></p>
+<h3 id="tema-11-amostras-de-referencia-e-retencao">Tema 11 · Amostras de referência e retenção</h3>
+<p><strong>RDC 658/2022, art. 14</strong></p>
+<blockquote>
+<p>Art. 14. Os requerimentos básicos do Controle de Qualidade são:</p>
+<p>(...)</p>
+<p>VIII - amostras de referência suficientes de matérias-primas e produtos devem ser mantidas de acordo com a instrução normativa específica para permitir a futura análise do produto, se necessário.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 236</strong></p>
+<blockquote>
+<p>Art. 236. O Departamento de Controle de Qualidade tem as seguintes responsabilidades:</p>
+<p>(...)</p>
+<p>II - supervisionar o controle da referência e/ou retenção de amostras de materiais e produtos quando aplicável;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-12-programa-de-estabilidade-de-acompanhamento">Tema 12 · Programa de estabilidade de acompanhamento</h3>
+<p><strong>RDC 658/2022, art. 271</strong></p>
+<blockquote>
+<p>Art. 271. Após a comercialização, a estabilidade do medicamento deve ser monitorada de acordo com um programa contínuo e adequado que permita a detecção de qualquer questão de estabilidade associada à formulação.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 275</strong></p>
+<blockquote>
+<p>Art. 275. O programa de estabilidade de acompanhamento deve ser descrito em um protocolo.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 277</strong></p>
+<blockquote>
+<p>Art. 277. O protocolo para um programa de estabilidade de acompanhamento deve se estender até o final do período de validade, devendo incluir, mas não se limitando, aos seguintes parâmetros:</p>
+<p>I - número de lote(s) por concentração e tamanhos de lotes diferentes, se aplicável;</p>
+<p>II - métodos de ensaio físico, químico, microbiológico e biológico pertinentes;</p>
+<p>III - critérios de aceitação;</p>
+<p>IV - referência a métodos de análise;</p>
+<p>V - descrição do(s) sistema(s) de fechamento de embalagem;</p>
+<p>VI - intervalos de teste (pontos de análise);</p>
+<p>VII - descrição das condições de armazenamento, sendo que devem ser utilizadas as condições padronizadas no regulamento específico vigente; e</p>
+<p>VIII - outros parâmetros aplicáveis específicos do medicamento.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 280</strong></p>
+<blockquote>
+<p>Art. 280. Ao menos um lote por ano de produtos fabricados em todas as concentrações e em todos os tipos de embalagens primárias, deve ser incluído no programa de estabilidade, a menos que se justifique o contrário.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 287</strong></p>
+<blockquote>
+<p>Art. 287. Devem ser investigadas as tendências atípicas significativas ou os resultados fora de especificação.</p>
+</blockquote>
+<p><em>O tema completo vai dos arts. 271 a 290.</em></p>
+<h3 id="tema-13-trilha-de-auditoria-toda-alteracao-registrada-com-motivo">Tema 13 · Trilha de auditoria: toda alteração registrada, com motivo</h3>
+<p><strong>RDC 658/2022, art. 125</strong></p>
+<blockquote>
+<p>Art. 125. Toda a alteração feita no registro de um documento deve ser assinada e datada, devendo permitir a leitura da informação original.</p>
+<p>Parágrafo único. Quando apropriado, o motivo da alteração deve ser registrado.</p>
+</blockquote>
+<h3 id="tema-14-registro-feito-no-momento-da-acao">Tema 14 · Registro feito no momento da ação</h3>
+<p><strong>RDC 658/2022, art. 124</strong></p>
+<blockquote>
+<p>Art. 124. Os registros devem ser realizados ou completados sempre que uma ação for realizada e de modo a permitir que todas as atividades significativas relativas à fabricação de medicamentos sejam rastreáveis.</p>
+</blockquote>
+<h3 id="tema-15-validade-do-laudo-e-data-de-reteste">Tema 15 · Validade do laudo e data de reteste</h3>
+<p><strong>RDC 658/2022, art. 189</strong></p>
+<blockquote>
+<p>Art. 189. Somente matérias-primas que tiverem sido liberadas pelo departamento de Controle de Qualidade e que estiverem dentro de sua data de reteste devem ser utilizadas.</p>
+</blockquote>
+<h3 id="tema-16-assinatura-eletronica-nas-aprovacoes">Tema 16 · Assinatura eletrônica nas aprovações</h3>
+<p><strong>Guia nº 33/2020, item 9.3.2.3 (Requisitos Operacionais)</strong></p>
+<blockquote>
+<p>Funções – são os requisitos funcionais que habilitam o sistema a executar o processo de negócio que está sendo automatizado, tais como:
+- (...)
+- Utilização de assinaturas eletrônicas;
+- (...)</p>
+</blockquote>
+<p><em>A instrução normativa de sistemas computadorizados (IN 134/2022, a confirmar a vigente) não está na pasta Documentação/.</em></p>
+<!-- NORMAS:FIM -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-quadro-geral">1. Quadro geral</a></li><li><a href="#2-detalhe-por-tema">2. Detalhe por tema</a></li><li><a href="#3-onde-a-corrente-quebra-resumo-para-a-area">3. Onde a corrente quebra (resumo para a área)</a></li><li><a href="#4-proposta-de-ordem-para-os-fluxos-etapa-3-por-risco">4. Proposta de ordem para os fluxos (etapa 3), por risco</a></li><li><a href="#5-primeiros-casos-de-teste-sugeridos-so-os-que-tocam-a-norma">5. Primeiros casos de teste sugeridos (só os que tocam a norma)</a></li><li><a href="#6-pontos-para-validar">6. Pontos para validar</a></li><li><a href="#como-foi-feito">Como foi feito</a></li><li><a href="#o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</a></li><li class="sub"><a href="#tema-1-so-usar-material-liberado-pelo-cq">Tema 1 · Só usar material liberado pelo CQ</a></li><li class="sub"><a href="#tema-2-aprovacao-e-liberacao-pela-pessoa-designada-com-decisao-clara-e-assinatura">Tema 2 · Aprovação e liberação pela pessoa designada, com decisão clara e assinatura</a></li><li class="sub"><a href="#tema-3-amostragem-por-pessoal-autorizado-segundo-procedimento-aprovado">Tema 3 · Amostragem por pessoal autorizado, segundo procedimento aprovado</a></li><li class="sub"><a href="#tema-4-identificacao-das-amostras">Tema 4 · Identificação das amostras</a></li><li class="sub"><a href="#tema-5-registro-completo-de-cada-teste">Tema 5 · Registro completo de cada teste</a></li><li class="sub"><a href="#tema-6-verificacao-dos-testes-e-calculos-por-outra-pessoa">Tema 6 · Verificação dos testes e cálculos por outra pessoa</a></li><li class="sub"><a href="#tema-7-investigacao-de-resultado-fora-de-especificacao">Tema 7 · Investigação de resultado fora de especificação</a></li><li class="sub"><a href="#tema-8-avaliacao-de-tendencia-dos-resultados">Tema 8 · Avaliação de tendência dos resultados</a></li><li class="sub"><a href="#tema-9-metodos-analiticos-aprovados-e-validados">Tema 9 · Métodos analíticos aprovados e validados</a></li><li class="sub"><a href="#tema-10-controle-de-reagentes-padroes-e-meios-de-cultura">Tema 10 · Controle de reagentes, padrões e meios de cultura</a></li><li class="sub"><a href="#tema-11-amostras-de-referencia-e-retencao">Tema 11 · Amostras de referência e retenção</a></li><li class="sub"><a href="#tema-12-programa-de-estabilidade-de-acompanhamento">Tema 12 · Programa de estabilidade de acompanhamento</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

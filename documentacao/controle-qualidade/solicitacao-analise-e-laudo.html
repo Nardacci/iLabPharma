@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitação, análise e laudo · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html" aria-current=page>Solicitação, análise e laudo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Solicitação, análise e laudo</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-qualidade/LabMedSys - Modulo Controle da Qualidade - Fluxo Solicitacao, Analise e Laudo.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo principal do <strong>Controle da Qualidade</strong> no LabMedSys: da <strong>solicitação de análise</strong> à <strong>amostragem</strong>, à <strong>análise</strong> com a digitação dos resultados, ao <strong>laudo final</strong> e à <strong>etiqueta</strong>. É o fluxo que decide se um lote de material ou de produto pode sair da quarentena.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Solicitação de Análise (inclusão manual, chegada automática do Estoque e da Produção, priorização, programação de água e ambiente, cancelamento).</li>
+<li>Programação de Amostragem e Amostragens Pendentes.</li>
+<li>Registro de Amostragem, com o checklist de Verificação de Amostragem.</li>
+<li>Programação de Análise.</li>
+<li>Consultar Análise Programada (digitação dos resultados).</li>
+<li>Emissão Laudo Final (aprovar, reprovar, emitir) e o retorno ao Estoque.</li>
+<li>Gerar Etiqueta.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> os cadastros de regras (Regra de Amostragem, Regra de Análise) e a estabilidade, que terão fluxos próprios.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>4.controle_qualidade/app/</code>. Para encurtar: <code>UI/</code> = <code>HSolutions.CQ.UI/</code>, <code>Svc/</code> = <code>HSolutions.CQ.Services/</code>, <code>Infra/</code> = <code>HSolutions.CQ.Infrastructure/</code>, <code>Dom/</code> = <code>HSolutions.CQ.Domain/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-qualidade/solicitacao-analise-laudo-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/solicitacao-analise-laudo-fluxograma.png" alt="Workflow do processo de análise no Controle da Qualidade" loading="lazy"></a><figcaption>Workflow do processo de análise no Controle da Qualidade · clique para ampliar</figcaption></figure>
+
+<p>A <strong>solicitação de análise</strong> chega do Estoque (lote recebido, produto acabado, reanálise), da Produção (granel e semielaborado) ou é aberta no próprio CQ (água, ambiente e inclusões manuais). Ela pode ter <strong>fase de coleta</strong> (o CQ coleta a amostra) e <strong>fase de análise</strong>.</p>
+<p>Com fase de coleta, o CQ <strong>programa a amostragem</strong>, indicando o responsável e a data, e depois <strong>registra a amostragem</strong>: quem amostrou e quem verificou, as quantidades e o checklist. Nesse momento, o CQ pede ao Estoque a separação da amostra.</p>
+<p>Em seguida, o CQ <strong>programa a análise</strong> para um analista. O analista <strong>digita os resultados</strong> de cada ensaio, comparados com os limites da Regra de Análise. Quando todos os ensaios estão preenchidos, a análise fica pronta para o laudo.</p>
+<p>No <strong>laudo final</strong>, uma pessoa diferente dos analistas <strong>aprova ou reprova</strong> e depois <strong>emite o laudo</strong>. O Estoque fica sabendo do resultado quando alguém <strong>atualiza a análise na tela do Estoque</strong>; o CQ não avisa.</p>
+<p><strong>Situações da solicitação (como o código as atribui):</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Situação</th>
+<th>Quando entra</th>
+<th>Próximo passo</th>
+<th>Tela</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Coleta pendente de programação</td>
+<td>Inclusão manual, programação de água e ambiente, ou chegada do Estoque/Produção com fase de coleta</td>
+<td>Programar a amostragem</td>
+<td>Programação de Amostragem</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Em coleta</td>
+<td>Amostragem programada (ou reagendada)</td>
+<td>Registrar a amostragem</td>
+<td>Registro de Amostragem</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Análise pendente de programação</td>
+<td>Amostragem registrada, ou chegada só com fase de análise</td>
+<td>Programar a análise</td>
+<td>Programação de Análise</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Em análise</td>
+<td>Análise programada</td>
+<td>Digitar os resultados e emitir o laudo</td>
+<td>Consultar Análise Programada; Emissão Laudo Final</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Laudo liberado</td>
+<td>Laudo emitido</td>
+<td>— (fim); etiqueta</td>
+<td>Gerar Etiqueta</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Cancelada</td>
+<td>Cancelamento em qualquer ponto</td>
+<td>— (fim)</td>
+<td>Solicitação de Análise; Programação de Análise</td>
+</tr>
+</tbody>
+</table></div>
+<p>As situações "Pendente", "Análise parcial" e "Concluída" existem no cadastro, mas <strong>nenhuma ação do fluxo as atribui</strong> (ver ponto de atenção 7).</p>
+<p><strong>Situações da análise:</strong> Pendente de digitação → Liberar laudo (todos os ensaios preenchidos) → Laudo liberado (laudo emitido). Aprovado ou reprovado é um campo à parte, e não uma situação.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="solicitacao-de-analise">Solicitação de análise</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Na inclusão manual, a tela exige o <strong>item de análise</strong>, o <strong>tipo de item</strong>, pelo menos um <strong>tipo de análise</strong> (físico-químico ou microbiológico) e pelo menos uma <strong>fase</strong> (coleta ou análise) ("Item análise não foi informado!", "Tipo análise não foi informado!", "Fase Coleta ou Fase Análise não foi informada!"). Para produto e material, exige o lote (item de entrada) ou a etapa da produção. Essas conferências ficam numa chamada separada, que a gravação não repete (<code>UI/Areas/SolicitacaoAnalise/Controllers/SolicitacaoAnaliseController.cs:120-148</code>).</li>
+<li>RN002 – O sistema grava <strong>uma solicitação por tipo de análise</strong> marcado. Toda solicitação manual nasce em <strong>Coleta pendente de programação</strong>, mesmo quando só a fase de análise foi marcada. O número leva o ano. A inclusão fica no histórico (<code>SolicitacaoAnaliseController.cs:309-312</code>, <code>:605</code>, <code>:687</code>, <code>:691</code>).</li>
+<li>RN003 – Para produto ou material sem motivo regulatório, a inclusão manual avisa o Estoque, que coloca o lote em reanálise (<em>o efeito no Estoque é inferência</em>) (<code>SolicitacaoAnaliseController.cs:695-699</code>).</li>
+<li>RN004 – A regra "O Valor do Teor, deve ser informado!" existe, mas <strong>nunca é conferida</strong>: o teor não é obrigatório na inclusão (<code>SolicitacaoAnaliseController.cs:303</code>).</li>
+<li>RN005 – <strong>Chegada automática</strong> (Estoque ou Produção): exige lote, validade, data de entrada, código e nome do produto, quantidades, uma fase, um tipo de análise e um tipo de item. Cria uma solicitação por tipo de análise, reunidas num <strong>agrupamento</strong>, cujo número volta ao Estoque. Nasce em <strong>Coleta pendente de programação</strong> se houver fase de coleta, ou em <strong>Análise pendente de programação</strong> se só houver análise. Em caso de erro, devolve 0, sem mensagem (<code>Svc/SolicitacaoAnalise/SolicitacaoAnaliseAutomaticaService.cs:310-330</code>, <code>:720-728</code>; <code>UI/Api/SolicitacaoAnaliseController.cs:32-34</code>).</li>
+<li>RN006 – <strong>Priorização:</strong> marca ou desmarca "Urgente" em várias solicitações de uma vez, com histórico (<code>UI/Areas/SolicitacaoAnalise/Controllers/PriorizarSolicitacaoAnaliseController.cs:63-73</code>).</li>
+<li>RN007 – <strong>Programação de Solicitação de Análise</strong> (água e ambiente): exige código, tipo de item, data e o ponto (tag) ("Tag não informada."). As solicitações são encaixadas de 30 em 30 minutos entre 8h e 18h. A <strong>exclusão</strong> só marca o registro como excluído, <strong>sem justificativa e sem histórico</strong> (<code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:35-58</code>, <code>:119-158</code>).</li>
+<li>RN008 – <strong>Cancelamento:</strong> pede justificativa e só é recusado se a solicitação já estiver cancelada ou concluída. A mensagem diz "...com situação diferente de pendente", mas o sistema <strong>deixa cancelar em análise e até com laudo liberado</strong>. Com justificativa curta, um erro de programação faz o histórico do cancelamento não ser gravado (<code>Dom/SolicitacaoAnalise/CancelarSolicitacaoAnaliseService.cs:11-16</code>; <code>SolicitacaoAnaliseController.cs:378-386</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Solicitação de Análise</td>
+<td>Incluir, consultar e cancelar solicitações</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Priorização de Solicitação Análise</td>
+<td>Marcar urgência</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Programação de Solicitação de Análise</td>
+<td>Agenda de coletas de água e ambiente</td>
+</tr>
+<tr>
+<td>Estoque e Produção</td>
+<td>(automático)</td>
+<td>Abrem a solicitação ao endereçar o lote, na entrada do produto acabado e nas etapas da produção</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="programacao-de-amostragem">Programação de amostragem</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige <strong>data de início</strong> (não anterior a hoje) e o <strong>responsável</strong> pela coleta ("Data de Início não informada.", "Data de Início anterior a data atual.", "Usuário responsável não informado.") (<code>UI/Areas/SolicitacaoAnalise/Controllers/ProgramacaoColetaController.cs:272-291</code>).</li>
+<li>RN002 – Ao salvar, cria a amostragem em <strong>Pendente</strong> e passa a solicitação para <strong>Em coleta</strong>. Não confere a situação anterior (<em>inferência: a mesma solicitação pode ser programada duas vezes</em>) e <strong>não grava histórico</strong> (<code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:197-215</code>).</li>
+<li>RN003 – <strong>Reagendar</strong> troca a data e o responsável e volta a amostragem para Pendente, <strong>sem justificativa e sem histórico</strong> (<code>SolicitacaoAnaliseService.cs:161-183</code>).</li>
+<li>RN004 – Em <strong>Amostragens Pendentes</strong>, cada usuário vê só as coletas em que é o responsável; a visão de administrador mostra todas (<code>UI/Areas/Coleta/Controllers/PendentesController.cs:131-142</code>).</li>
+<li>RN005 – A amostragem só é cancelada enquanto Pendente ("Não é permitido cancelar uma amostragem situação diferente de pendente."), com justificativa e histórico. A solicitação continua Em coleta (<code>Dom/Coleta/CancelarColetaService.cs:11-15</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Programação de Amostragem</td>
+<td>Programar a coleta: data e responsável</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Amostragens Pendentes (e Visão Administrador)</td>
+<td>Coletas a fazer; cancelar coleta</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="registro-de-amostragem">Registro de amostragem</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – A tela só abre com a amostragem Pendente ou Programada e a solicitação Em coleta ("Situação de coleta inválida para Registrar"), e com o checklist de verificação ativo. <strong>A gravação não repete essas conferências</strong> (<code>UI/Areas/Coleta/Controllers/AmostragemController.cs:107-110</code>, <code>:987-995</code>).</li>
+<li>RN002 – Obrigatórios na tela: <strong>verificador</strong>, data e hora da verificação, <strong>amostrador</strong>, data e hora da amostragem e a quantidade. Verificador e amostrador precisam ser <strong>pessoas diferentes</strong> ("Usuário Verificador e Usuário Amostrador não podem ser iguais.") (<code>UI/Areas/Coleta/Script/Amostragem.js:149-184</code>).</li>
+<li>RN003 – A lista de amostradores traz só quem tem a função de amostrador no Principal, mas a gravação aceita qualquer usuário enviado pelo formulário. As <strong>datas vêm do formulário</strong>: não podem ser futuras, e a verificação precisa ser depois da amostragem, mas essa conferência fica numa chamada que só a tela faz (<code>AmostragemController.cs:262-298</code>, <code>:882-887</code>).</li>
+<li>RN004 – A <strong>Regra de Amostragem</strong> (do item e do tipo de análise) diz a quantidade a amostrar e a tolerância. A quantidade fica "OK" quando está dentro da tolerância. A tolerância é sempre tratada como <strong>percentual</strong>, mesmo quando a regra é de valor absoluto (<code>Amostragem.js:495-566</code>).</li>
+<li>RN005 – Grava as quantidades de <strong>análise, retenção, referência e estabilidade</strong>. A tela confere se o lote tem saldo para retenção, referência e análise; a <strong>estabilidade fica fora da conta</strong> ("Total amostrado/reservado superior ao saldo do lote!") (<code>AmostragemController.cs:370-421</code>, <code>:890-893</code>).</li>
+<li>RN006 – O <strong>checklist de verificação</strong> (cadastrado na tela Verificação de Amostragens e ligado à regra) é respondido aqui, pergunta a pergunta ("corresponde": sim ou não) (<code>AmostragemController.cs:926-945</code>).</li>
+<li>RN007 – Ao salvar, a amostragem fica <strong>Executada</strong> e a solicitação vai para <strong>Análise pendente de programação</strong>. O CQ <strong>pede ao Estoque</strong> a separação da amostra (ou, havendo motivo regulatório, a retirada de retenção, referência ou estabilidade). Fica no histórico (<code>AmostragemController.cs:182-219</code>, <code>:965-973</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Registro de Amostragem (pela Consultar Amostragem)</td>
+<td>Registrar quem, quando, quanto e o checklist</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Verificação de Amostragens</td>
+<td>Cadastro do checklist</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>(automático)</td>
+<td>Recebe o pedido de separação ou de retirada da amostra</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="programacao-de-analise">Programação de análise</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige o <strong>responsável</strong> ("Responsável não informado") e a data de início. A conferência da data fica numa chamada separada, que a gravação não repete (<code>UI/Areas/Coleta/Controllers/AnaliseProgramacaoController.cs:238-243</code>, <code>:301-324</code>).</li>
+<li>RN002 – A lista de analistas traz só quem tem a função de analista físico-químico ou microbiológico; a gravação não confere (<code>AnaliseProgramacaoController.cs:184</code>, <code>:194</code>).</li>
+<li>RN003 – Ao salvar, cria a análise em <strong>Pendente de digitação</strong> e passa a solicitação para <strong>Em análise</strong>, <strong>sem histórico</strong> (<code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:255-280</code>).</li>
+<li>RN004 – O <strong>cancelamento nesta tela</strong> muda a solicitação para Cancelada <strong>sem conferir a situação</strong> (o próprio código marca o trecho como provisório). A análise não é cancelada (<code>AnaliseProgramacaoController.cs:153-161</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Programação de Análise</td>
+<td>Escolher o analista e a data</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="digitacao-dos-resultados">Digitação dos resultados</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN001 – Para produto e material, a análise só abre depois que o Estoque separou a amostra ("Solicitação referente a amostra aguardando pesagem/separação.") (<code>UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:205-222</code>).</li>
+<li>RN002 – Na tela: pelo menos um ensaio preenchido; a data do teste não pode ser futura; resultado de <strong>faixa</strong> precisa ser número, e de <strong>conformidade</strong>, "conforme" ou "não conforme". Resultado <strong>fora da faixa</strong> ou "não conforme" exige só uma <strong>observação</strong> ("O campo observação é obrigatório."). A gravação não repete essas conferências (<code>AnaliseProgramadaController.cs:263-356</code>).</li>
+<li>RN003 – A análise passa a <strong>Liberar laudo</strong> quando todos os ensaios têm referência, data e resultado; antes disso, continua em Pendente de digitação, o que permite salvar aos poucos (<code>Dom/Analise/ConfirmarAnaliseProgramadaService.cs:16-41</code>).</li>
+<li>RN004 – Cada usuário vê só as análises programadas para ele; a gravação não confere se quem digita é o analista programado (<code>AnaliseProgramadaController.cs:96</code>, <code>:104</code>).</li>
+<li>RN005 – Ensaios podem ser incluídos e excluídos com justificativa; só quem criou o ensaio pode excluí-lo. Fica no histórico (<code>AnaliseProgramadaController.cs:861-876</code>, <code>:941-967</code>).</li>
+<li>RN006 – O registro guarda, por ensaio, a especificação, os limites, a unidade, a referência e o padrão (texto), o resultado (texto), a data e a observação. <strong>Não guarda</strong> o equipamento usado nem o cálculo; quem digitou fica como "último a alterar" (<code>Dom/Analise/AnaliseItem.cs:20-39</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Consultar Análise Programada (e Visão Administrador)</td>
+<td>Digitar os resultados de cada ensaio</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="laudo-final">Laudo final</h3>
+<h4 id="regras-de-negocio_5">Regras de negócio</h4>
+<ul>
+<li>RN001 – Para aprovar ou reprovar, a análise precisa estar em <strong>Liberar laudo</strong>, e quem aprova <strong>não pode ter digitado</strong> nenhum ensaio ("O Responsável pela aprovação precisa ser diferente dos analistas das análises.") (<code>Dom/Analise/LiberarLaudoService.cs:12-55</code>).</li>
+<li>RN002 – <strong>Aprovar:</strong> o botão só aparece com todos os resultados dentro da especificação, mas <strong>a gravação não confere</strong>. Exige teor quando a solicitação o pede ("Teor obrigatório."). A validade do laudo vem da validade do lote ou é digitada (com "reanálise prevista") e não pode ser anterior a hoje ("A Data de Validade tem que ser maior ou igual a atual.") (<code>UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:441-467</code>, <code>:733-745</code>).</li>
+<li>RN003 – <strong>Reprovar</strong> grava "não aprovado" e a observação. Nem aprovar nem reprovar <strong>gravam quem decidiu</strong> ou deixam histórico (<code>EmissaoLaudoFinalController.cs:489-506</code>).</li>
+<li>RN004 – <strong>Emitir o laudo</strong> só confere que o emissor não digitou ensaios. <strong>Não exige</strong> a análise em Liberar laudo <strong>nem a decisão</strong> de aprovar ou reprovar. Grava o responsável pelo laudo e leva a análise a <strong>Laudo liberado</strong> e a solicitação a <strong>Laudo liberado</strong>, <strong>sem histórico</strong> (<code>Dom/Analise/LiberarLaudoService.cs:40-44</code>; <code>EmissaoLaudoFinalController.cs:996-1011</code>).</li>
+<li>RN005 – Nenhuma das três ações confere a <strong>função</strong> de quem aprova ou emite, e nenhuma pede <strong>senha</strong> (<code>EmissaoLaudoFinalController.cs:967-1000</code>).</li>
+<li>RN006 – Os resultados podem ser <strong>corrigidos</strong> nesta tela, com histórico; a justificativa é exigida só pela tela (<code>UI/Areas/Analise/Controllers/AnaliseLaudoController.cs:456-475</code>).</li>
+<li>RN007 – <strong>Retorno ao Estoque:</strong> quando alguém atualiza a análise na tela do Estoque, o CQ responde, por agrupamento: <strong>reprovada</strong> se alguma análise foi reprovada (<strong>mesmo sem laudo emitido</strong>); <strong>aprovada</strong> só com laudo emitido; <strong>cancelada</strong> se todas foram canceladas; senão, pendente. Também devolve número e validade do laudo, teor e as quantidades de retenção, referência e estabilidade (<code>Svc/SolicitacaoAnalise/SolicitacaoAnaliseAutomaticaService.cs:118-173</code>, <code>:1023-1043</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_5">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Emissão Laudo Final</td>
+<td>Corrigir resultado, aprovar, reprovar, emitir e imprimir o laudo</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Análise (Controle de Análise)</td>
+<td>Atualizar a análise e trazer o resultado do CQ</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="etiqueta">Etiqueta</h3>
+<h4 id="regras-de-negocio_6">Regras de negócio</h4>
+<ul>
+<li>RN001 – A impressão <strong>não confere</strong> a situação nem se o laudo foi emitido: sai etiqueta de qualquer análise (<code>UI/Areas/Analise/Controllers/GerarEtiquetasController.cs:29</code>, <code>:108-123</code>).</li>
+<li>RN002 – A etiqueta traz aprovado (sem decisão, sai como "não"), registro, material, lote do fabricante, número do laudo, responsável, data, teor e validade (<code>UI/Controllers/Services/ObterRelatorioAnaliseService.cs:376-397</code>).</li>
+<li>RN003 – Nada vai para o histórico (<code>GerarEtiquetasController.cs:115-117</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_6">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Gerar Etiqueta</td>
+<td>Imprimir a etiqueta de situação do lote</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. O laudo pode ser emitido sem decisão.</strong> A emissão não exige que a análise tenha sido aprovada ou reprovada, nem que todos os ensaios estejam preenchidos. Um laudo "liberado" pode sair sem resultado de aprovação.</p>
+<p><strong>2. Os atos de decisão não deixam rastro.</strong> Aprovar, reprovar e emitir não gravam histórico; aprovar e reprovar nem gravam quem decidiu (RDC 658/2022, arts. 125 e 258, VIII).</p>
+<p><strong>3. Quem decide não é conferido.</strong> Nenhuma etapa confere a função de quem aprova (art. 8º, XV). A única barreira é não ter digitado ensaios.</p>
+<p><strong>4. O Estoque recebe "reprovada" antes do laudo.</strong> Basta clicar em Reprovar para o Estoque, na próxima atualização, tratar o lote como reprovado, mesmo sem laudo emitido. A aprovação só vale com laudo emitido.</p>
+<p><strong>5. As conferências ficam na tela.</strong> Datas, campos obrigatórios, situação para registrar e resultados dentro da especificação são conferidos pela tela ou por chamadas separadas; a gravação não repete. Detalhe técnico no documento confidencial de segurança do CQ (a fazer).</p>
+<p><strong>6. Cancelamentos sem limite.</strong> A solicitação pode ser cancelada em análise e com laudo liberado; na Programação de Análise, sem conferir nada. A exclusão da agenda de água e ambiente não deixa histórico.</p>
+<p><strong>7. Situações que nunca acontecem.</strong> "Pendente", "Análise parcial" e "Concluída" não são atribuídas por nenhuma ação. Relatórios ou filtros por essas situações sempre virão vazios.</p>
+<p><strong>8. Amostragem: tolerância e saldo.</strong> A tolerância é sempre percentual, mesmo na regra de valor absoluto, e a conferência de saldo deixa a amostra de estabilidade de fora.</p>
+<p><strong>9. Etiqueta sem laudo.</strong> A etiqueta de situação pode ser impressa antes do laudo, com "não aprovado" por falta de decisão.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> um material <code>TESTE</code> com regra de amostragem e regra de análise <code>TESTE</code> (um ensaio de faixa e um de conformidade); o lote <code>TESTELOTE001</code>, se o recebimento do Estoque voltar a funcionar, ou uma solicitação manual; os usuários <code>TESTE AMOSTRADOR</code>, <code>TESTE ANALISTA</code> e <code>TESTE APROVADOR</code> (o último sem a função de chefe do CQ). Todos os registros com nome começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-001</td>
+<td>Solicitação manual sem tipo de análise; depois completa, com os dois tipos</td>
+<td>Recusa; depois duas solicitações em Coleta pendente de programação</td>
+</tr>
+<tr>
+<td>CT-CQ-002</td>
+<td>Solicitação com teor obrigatório e sem valor de teor</td>
+<td>Pela regra, recusa. <strong>Registrar se aceitar</strong> (RN004)</td>
+</tr>
+<tr>
+<td>CT-CQ-003</td>
+<td>Programar a amostragem com data de ontem</td>
+<td>Recusa: "Data de Início anterior a data atual."</td>
+</tr>
+<tr>
+<td>CT-CQ-004</td>
+<td>Programar duas vezes a mesma solicitação</td>
+<td><strong>Registrar se gerar duas amostragens</strong></td>
+</tr>
+<tr>
+<td>CT-CQ-005</td>
+<td>Registrar a amostragem com o mesmo usuário como amostrador e verificador</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-CQ-006</td>
+<td>Registrar a amostragem com data futura; depois com data de ontem</td>
+<td>Recusa; depois aceita. <strong>Registrar que a data vem do formulário</strong></td>
+</tr>
+<tr>
+<td>CT-CQ-007</td>
+<td>Registrar com amostrador sem a função de amostrador (se a tela permitir escolher)</td>
+<td>Pela norma, recusa. <strong>Registrar o comportamento</strong></td>
+</tr>
+<tr>
+<td>CT-CQ-008</td>
+<td>Abrir a análise de um material antes de o Estoque separar a amostra</td>
+<td>Recusa: "...aguardando pesagem/separação."</td>
+</tr>
+<tr>
+<td>CT-CQ-009</td>
+<td>Digitar um resultado fora da faixa sem observação; depois com observação</td>
+<td>Recusa; depois aceita. <strong>Registrar que não abre investigação</strong></td>
+</tr>
+<tr>
+<td>CT-CQ-010</td>
+<td>Aprovar o laudo com o <code>TESTE ANALISTA</code> (que digitou)</td>
+<td>Recusa: "...precisa ser diferente dos analistas..."</td>
+</tr>
+<tr>
+<td>CT-CQ-011</td>
+<td><strong>Aprovar com o <code>TESTE APROVADOR</code>, sem a função de chefe do CQ</strong></td>
+<td>Pela norma, recusa. <strong>Registrar se aprovar</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-CQ-012</td>
+<td><strong>Emitir o laudo sem aprovar nem reprovar</strong></td>
+<td>Pela norma, recusa. <strong>Registrar se emitir</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-CQ-013</td>
+<td>Reprovar sem emitir; atualizar a análise no Estoque</td>
+<td><strong>Registrar se o lote aparecer como reprovado</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-CQ-014</td>
+<td>Aprovar e emitir; consultar o lote no Estoque sem atualizar a análise; depois atualizar</td>
+<td>Continua em quarentena; depois sai. Confirma que o CQ não avisa</td>
+</tr>
+<tr>
+<td>CT-CQ-015</td>
+<td>Consultar o histórico depois de aprovar e emitir</td>
+<td><strong>Registrar a falta de histórico</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-CQ-016</td>
+<td>Corrigir um resultado na Emissão Laudo Final e consultar o histórico</td>
+<td>Valor antigo e novo, usuário, data e justificativa</td>
+</tr>
+<tr>
+<td>CT-CQ-017</td>
+<td>Cancelar uma solicitação com laudo liberado, com justificativa curta</td>
+<td><strong>Registrar se cancelar, o erro e se o histórico ficou</strong> (ponto 6)</td>
+</tr>
+<tr>
+<td>CT-CQ-018</td>
+<td>Imprimir a etiqueta de uma análise sem laudo</td>
+<td><strong>Registrar se imprimir</strong> (ponto 9)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-CQ-011, 012, 013, 014, 015 e 017 primeiro. Eles tocam a liberação do lote, a decisão do CQ e a trilha de auditoria.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#solicitacao-de-analise">Solicitação de análise</a></li><li class="sub"><a href="#programacao-de-amostragem">Programação de amostragem</a></li><li class="sub"><a href="#registro-de-amostragem">Registro de amostragem</a></li><li class="sub"><a href="#programacao-de-analise">Programação de análise</a></li><li class="sub"><a href="#digitacao-dos-resultados">Digitação dos resultados</a></li><li class="sub"><a href="#laudo-final">Laudo final</a></li><li class="sub"><a href="#etiqueta">Etiqueta</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
