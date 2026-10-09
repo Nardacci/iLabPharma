@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html">Regras de amostragem e de análise</a></li><li><a href="estabilidade.html">Estabilidade</a></li><li><a href="agua-e-ambiente.html">Água e ambiente</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Para quem:</strong> desenvolvedores e DBA · <strong>Base:</strong> scripts do projeto de banco (<code>4.controle_qualidade/app/HSolutions.CQ.DB/Tables</code>, 36 arquivos), configurações do Entity Framework (<code>HSolutions.CQ.Context/Configurations</code>) e os fluxos do CQ. Nada foi conferido no banco do ambiente (sem acesso; fica com o DBA).</p>
+<p><strong>Levantamentos automáticos</strong> (em <code>levantamento/</code>): <code>tabelas-automatico.md</code> (<code>levantar_tabelas_gq.py</code>), <code>relacionamentos-automatico.md</code> (<code>levantar_relacionamentos_gq.py</code>) e <code>colunas-codigo-banco-automatico.md</code> (<code>comparar_colunas_codigo_banco.py</code>, script novo).</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas no projeto de banco</td>
+<td>36</td>
+</tr>
+<tr>
+<td>Tabelas que o código usa</td>
+<td>36, das quais <strong>5 com outro nome</strong> (sufixo <code>_CQ</code>)</td>
+</tr>
+<tr>
+<td>Chaves estrangeiras declaradas</td>
+<td>39</td>
+</tr>
+<tr>
+<td>Colunas que o código usa e os scripts não criam</td>
+<td>8, numa tabela (seção 7)</td>
+</tr>
+<tr>
+<td>Referências a usuários do Principal (só o número)</td>
+<td>6 colunas, mais os nomes copiados como texto</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrão das tabelas:</strong> chave numérica, <code>ATIVO</code>, <code>LIXEIRA</code> (exclusão lógica) e os campos de quem criou, alterou e excluiu, com as datas. O <strong>histórico</strong> fica em <code>TBL_LOG_ALTERACAO_2</code> e <code>_ITEM_2</code>, da biblioteca comum, <strong>fora</strong> do projeto do CQ (RN-CQ-002).</p>
+<p><strong>Itens, lotes e pessoas vêm de fora e são copiados como texto.</strong> A solicitação guarda o nome do item, a tag, o ambiente, o <strong>lote interno e o lote do fabricante</strong>, a validade, a quantidade, o fabricante, o fornecedor e o nome do responsável como texto (<code>TBL_SOLICITACAO_ANALISE</code>). Não há chave para o Estoque, a Produção ou o Principal: a ligação é pelo código e pelo número.</p>
+<h3 id="2-solicitacao-e-amostragem">2. Solicitação e amostragem</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Liga-se a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_SOLICITACAO_ANALISE</code></td>
+<td>A solicitação: item, tipo de análise, situação, fases (coleta e análise), urgência, lote, validade, quantidade, motivo, estabilidade, teor</td>
+<td>Item de análise, tipo de análise, situação; a si mesma (<strong>solicitação de origem</strong>, na reanálise)</td>
+</tr>
+<tr>
+<td><code>TBL_AGRUPAMENTO_SOLICITACAO_ANALISE</code></td>
+<td>Agrupa as solicitações abertas juntas pelo Estoque ou pela Produção; o número volta para quem pediu</td>
+<td>Solicitação</td>
+</tr>
+<tr>
+<td><code>TBL_SOLICITACAO_ANALISE_REGRA</code></td>
+<td>Ensaios escolhidos na solicitação (estabilidade e regulatórias)</td>
+<td>Solicitação, regra de análise (<strong>sem chave declarada</strong>)</td>
+</tr>
+<tr>
+<td><code>TBL_AMOSTRAGEM</code></td>
+<td>A coleta: responsável, amostrador, verificador, datas, quantidades de análise, retenção, referência e estabilidade</td>
+<td>Solicitação, situação da amostragem</td>
+</tr>
+<tr>
+<td><code>TBL_ITEM_REGRA_AMOSTRAGEM_RESULTADO</code>, <code>TBL_UTENSILIO_AMOSTRAGEM_RESULTADO</code>, <code>TBL_VERIFICACAO_AMOSTRAGEM_RESULTADO</code></td>
+<td>O que foi coletado por item da regra, os utensílios usados e as respostas do checklist</td>
+<td>Amostragem e o cadastro correspondente</td>
+</tr>
+<tr>
+<td><code>TBL_PONTO_AMOSTRAGEM</code></td>
+<td>Pontos de amostragem da coleta (texto)</td>
+<td>Amostragem (sem chave declarada)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-analise-e-laudo">3. Análise e laudo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Liga-se a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_ANALISE_CQ</code> (no script, <code>TBL_ANALISE</code>)</td>
+<td>A análise: responsável, situação, <strong>aprovado (sim ou não)</strong>, validade do laudo, reanálise prevista, observação do laudo, responsável pelo laudo</td>
+<td>Solicitação, situação da análise</td>
+</tr>
+<tr>
+<td><code>TBL_ANALISE_ITEM_CQ</code> (no script, <code>TBL_ANALISE_ITEM</code>)</td>
+<td>Cada ensaio: <strong>cópia</strong> da regra (nome, especificação, limites, unidade, tipo), referência, <strong>resultado em texto</strong>, data do teste, padrão, observação, justificativa</td>
+<td>Análise, regra de análise de origem</td>
+</tr>
+<tr>
+<td><code>TBL_ANEXO_ANALISE</code></td>
+<td>Anexos da análise (nome, tamanho, tipo, caminho)</td>
+<td>Análise</td>
+</tr>
+<tr>
+<td><code>TBL_ASSOCIACAO_ANALISE</code></td>
+<td>Análises relacionadas a um laudo</td>
+<td>Análise</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Observações:</strong>
+- O <strong>resultado</strong> do ensaio é texto (<code>RESULTADO VARCHAR(255)</code>); a conformidade não é gravada, é calculada na tela. Isso impede a análise de tendência (RDC 658/2022, art. 245).
+- A <strong>especificação</strong> é <code>VARCHAR(MAX)</code> no script da regra, mas o código limita a 250 caracteres na regra e no ensaio (<code>HSolutions.CQ.Context/Configurations/RegraAnaliseConfiguration.cs:30</code>; <code>AnaliseItemConfiguration.cs:38</code>). <em>Inferência:</em> especificações longas não cabem.
+- Não há colunas de <strong>equipamento</strong>, <strong>cálculo</strong> nem <strong>verificador</strong> no ensaio (<code>04-conformidade-regulatoria.md</code>, tema 5).
+- Aprovar e reprovar só mudam <code>APROVADO</code>; não há coluna de <strong>quem aprovou</strong> nem de quando. Só a emissão grava o responsável pelo laudo.</p>
+<h3 id="4-regras-cadastros">4. Regras (cadastros)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Liga-se a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_ITEM_ANALISE</code></td>
+<td>Cópia mínima do item de outro módulo: código externo, nome, tipo</td>
+<td>Tipo de item</td>
+</tr>
+<tr>
+<td><code>TBL_REGRA_AMOSTRAGEM</code>, <code>TBL_ITEM_REGRA_AMOSTRAGEM</code></td>
+<td>Regra de amostragem e seus itens (quantidade, unidade, tolerância, tipo de cálculo)</td>
+<td>Item de análise, tipo de análise</td>
+</tr>
+<tr>
+<td><code>TBL_UTENSILIO_AMOSTRAGEM</code></td>
+<td>Utensílios</td>
+<td>Item de análise, tipo de análise</td>
+</tr>
+<tr>
+<td><code>TBL_VERIFICACAO</code>, <code>TBL_VERIFICACAO_ITEM</code>, <code>TBL_VERIFICACAO_AMOSTRAGEM</code></td>
+<td>Checklist de verificação e suas perguntas</td>
+<td>Item de análise, tipos</td>
+</tr>
+<tr>
+<td><code>TBL_REGRA_ANALISE</code></td>
+<td>Ensaio: especificação, limites, unidade, tipo de regra, classificação</td>
+<td>Item de análise, tipo de análise, tipo de regra</td>
+</tr>
+<tr>
+<td><code>TBL_UNIDADE_MEDIDA_CQ</code> (no script, <code>TBL_UNIDADE_MEDIDA</code>), <code>TBL_MOTIVOS</code></td>
+<td>Unidades; motivos regulatórios com o almoxarifado do Estoque (só o número)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Tabelas de tipos e situações (<code>TBL_TIPO_*</code>, <code>TBL_SITUACAO_*</code>)</td>
+<td>Valores fixos, preenchidos pelo roteiro <code>dml.sql</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Não há versão</strong> em nenhuma regra: alterar a regra de análise muda o mesmo registro (fluxo 2, ponto 2).</p>
+<h3 id="5-estabilidade">5. Estabilidade</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Liga-se a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_REGRA_ESTABILIDADE</code>, <code>TBL_REGRA_ESTABILIDADE_DETALHE</code></td>
+<td>Regra e tempos (dias por tipo de estudo)</td>
+<td>Tipo de análise, tipo de item</td>
+</tr>
+<tr>
+<td><code>TBL_ACOMPANHAMENTO_ESTABILIDADE</code></td>
+<td>O estudo: item, regra, tipo de estudo, situação, temperatura, conclusão e resultado final</td>
+<td>Regra e item (<strong>sem chave declarada</strong>)</td>
+</tr>
+<tr>
+<td><code>TBL_ACOMPANHAMENTO_ESTABILIDADE_DET</code></td>
+<td>Os tempos do estudo e a solicitação de cada um</td>
+<td>Estudo e solicitação (<strong>sem chave declarada</strong>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Nenhuma tabela guarda <strong>condição de armazenamento estruturada</strong>, <strong>protocolo</strong>, <strong>quantidade reservada</strong> ou <strong>data de início</strong> do estudo (fluxo 3).</p>
+<h3 id="6-integracoes">6. Integrações</h3>
+<p>Detalhe em <code>transversal/04-mapa-de-integracoes.md</code> (setas 1, 2, 5 e 16) e em <code>00-reconhecimento.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Origem</th>
+<th>Como chega ao CQ</th>
+<th>Onde fica no CQ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lote, validade, quantidade, fabricante, fornecedor</td>
+<td>Estoque (recebimento, produto acabado)</td>
+<td>API de solicitação</td>
+<td>Texto em <code>TBL_SOLICITACAO_ANALISE</code></td>
+</tr>
+<tr>
+<td>Granel e semielaborado por etapa</td>
+<td>Produção</td>
+<td>API de solicitação</td>
+<td>Texto (etapa, subetapa)</td>
+</tr>
+<tr>
+<td>Itens (materiais, produtos, pontos de água, salas)</td>
+<td>Estoque, Produção, Principal</td>
+<td>Busca na hora (bibliotecas compiladas)</td>
+<td><code>TBL_ITEM_ANALISE</code> (código e nome)</td>
+</tr>
+<tr>
+<td>Usuários e funções</td>
+<td>Principal</td>
+<td>API</td>
+<td>Número e nome copiado</td>
+</tr>
+<tr>
+<td>Almoxarifados regulatórios</td>
+<td>Estoque</td>
+<td>API</td>
+<td>Número em <code>TBL_MOTIVOS</code></td>
+</tr>
+<tr>
+<td>Resultado do laudo</td>
+<td>CQ</td>
+<td><strong>O Estoque consulta</strong>; o CQ não avisa</td>
+<td><code>APROVADO</code>, situação e validade em <code>TBL_ANALISE_CQ</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-desencontros-entre-o-codigo-e-o-projeto-de-banco">7. Desencontros entre o código e o projeto de banco</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Desencontro</th>
+<th>Detalhe</th>
+<th>Leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>5 tabelas com outro nome</strong></td>
+<td>O código usa <code>TBL_ANALISE_CQ</code>, <code>TBL_ANALISE_ITEM_CQ</code>, <code>TBL_TIPO_AGUA_CQ</code>, <code>TBL_TIPO_ANALISE_CQ</code>, <code>TBL_UNIDADE_MEDIDA_CQ</code>; os scripts criam os nomes sem <code>_CQ</code>, iguais aos de tabelas do Estoque e do Principal</td>
+<td>Uma instalação feita só com os scripts não funciona</td>
+</tr>
+<tr>
+<td><strong>8 colunas ausentes</strong></td>
+<td><code>TBL_ACOMPANHAMENTO_ESTABILIDADE_DET</code>: os campos de controle (<code>ATIVO</code>, <code>LIXEIRA</code>, criação, alteração e exclusão) que o código usa não estão no script</td>
+<td>Gravar um tempo do estudo falharia num banco criado pelos scripts</td>
+</tr>
+<tr>
+<td><strong>Tabelas do histórico</strong></td>
+<td><code>TBL_LOG_ALTERACAO_2</code> e <code>_ITEM_2</code> não estão no projeto do CQ</td>
+<td>Vêm da biblioteca comum; confirmar onde são criadas</td>
+</tr>
+<tr>
+<td><strong>Especificação</strong></td>
+<td><code>VARCHAR(MAX)</code> no script, 250 no código</td>
+<td>Ver seção 3</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pergunta ao DBA:</strong> o banco do ambiente de teste tem as tabelas com <code>_CQ</code>, as colunas da seção 7 e as tabelas do histórico? Qual dos dois (scripts ou código) criou o banco?</p>
+<h3 id="8-resumo-das-anomalias-de-estrutura-para-a-nova-versao">8. Resumo das anomalias de estrutura (para a nova versão)</h3>
+<ol>
+<li>Lote, item, fabricante e pessoas guardados como <strong>texto copiado</strong>, sem ligação com a origem.</li>
+<li><strong>Resultado do ensaio em texto</strong>, sem conformidade gravada, sem equipamento, cálculo nem verificador.</li>
+<li><strong>Quem aprovou</strong> o laudo não fica registrado.</li>
+<li><strong>Regras sem versão</strong>: a análise guarda uma cópia, mas não a versão da regra.</li>
+<li>Ligações sem chave declarada (solicitação × regra, estudo × regra, tempo × solicitação, pontos de amostragem).</li>
+<li>Projeto de banco desatualizado em relação ao código (seção 7).</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-solicitacao-e-amostragem">2. Solicitação e amostragem</a></li><li><a href="#3-analise-e-laudo">3. Análise e laudo</a></li><li><a href="#4-regras-cadastros">4. Regras (cadastros)</a></li><li><a href="#5-estabilidade">5. Estabilidade</a></li><li><a href="#6-integracoes">6. Integrações</a></li><li><a href="#7-desencontros-entre-o-codigo-e-o-projeto-de-banco">7. Desencontros entre o código e o projeto de banco</a></li><li><a href="#8-resumo-das-anomalias-de-estrutura-para-a-nova-versao">8. Resumo das anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
