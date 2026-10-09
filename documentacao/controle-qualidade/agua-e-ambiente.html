@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Água e ambiente · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html">Regras de amostragem e de análise</a></li><li><a href="estabilidade.html">Estabilidade</a></li><li><a href="agua-e-ambiente.html" aria-current=page>Água e ambiente</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Água e ambiente</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-qualidade/LabMedSys - Modulo Controle da Qualidade - Fluxo Agua e Ambiente.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o monitoramento de <strong>água</strong> (potável, purificada e para injetáveis) e de <strong>ambiente</strong> (salas) no Controle da Qualidade. O ciclo é o mesmo do fluxo <code>solicitacao-analise-laudo.md</code> (solicitação, amostragem, análise, laudo e etiqueta); aqui ficam só <strong>as diferenças</strong> e a ligação com a Produção, que usa esses pontos e salas.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Programação de Solicitação de Análise (agenda de água e ambiente).</li>
+<li>Diferenças na amostragem, na análise, no laudo e na etiqueta.</li>
+<li>Ligação com a Produção (autorização do ponto de água e controle paralelo de água e ambiente).</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o cadastro dos pontos de água e dos ambientes (Principal) e as telas de água e ambiente da Produção, que serão analisadas com aquele módulo.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>4.controle_qualidade/app/</code>. Para encurtar: <code>UI/</code> = <code>HSolutions.CQ.UI/</code>, <code>Infra/</code> = <code>HSolutions.CQ.Infrastructure/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-qualidade/agua-ambiente-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/agua-ambiente-fluxograma.png" alt="Workflow do monitoramento de água e ambiente" loading="lazy"></a><figcaption>Workflow do monitoramento de água e ambiente · clique para ampliar</figcaption></figure>
+
+<p>O CQ <strong>agenda</strong>, uma a uma, as coletas de água e de ambiente: escolhe o tipo (água potável, purificada, para injetáveis, ou ambiente), o tipo de análise, o <strong>ponto de água ou a sala</strong> (vindos do Principal) e o dia e horário. Cada agendamento vira uma solicitação de análise, que segue o ciclo normal: programação da amostragem, registro, programação da análise, digitação, laudo e etiqueta.</p>
+<p>As diferenças em relação a materiais: <strong>não há pedido ao Estoque</strong> (nem separação, nem reanálise), a análise não espera separação de amostra, ambiente só tem análise microbiológica, e o laudo, o boletim e a etiqueta são próprios de água e ambiente.</p>
+<p>O resultado <strong>não chega à Produção</strong>: a Produção libera o uso do ponto de água pelos <strong>registros dela mesma</strong>, numa decisão manual, e tem telas próprias de análise de água e de ambiente.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="agenda-de-agua-e-ambiente">Agenda de água e ambiente</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – A agenda mostra só os tipos <strong>água</strong> e <strong>ambiente</strong>. O usuário escolhe o tipo de item e o tipo de análise (<code>UI/Areas/SolicitacaoAnalise/Controllers/ProgramacaoSolicitacaoController.cs:63-66</code>).</li>
+<li>RN002 – Os pontos e salas vêm do <strong>Principal</strong>, consultados na hora: para água, os pontos do tipo escolhido; para ambiente, todos os ambientes. A identificação é a <strong>tag</strong> do ponto ou da sala (<code>Infra/SolicitacaoAnalise/ItensProgramaveisService.cs:53-73</code>, <code>:142</code>, <code>:172</code>).</li>
+<li>RN003 – O sistema <strong>não traz a classe nem o grau de limpeza</strong> da sala; só nome, descrição e tag (<code>ItensProgramaveisService.cs:172</code>).</li>
+<li>RN004 – Cada coleta é agendada <strong>uma de cada vez</strong>, para um dia e horário. <strong>Não há frequência nem recorrência</strong> por ponto ou por sala (<code>ProgramacaoSolicitacaoController.cs:102-118</code>).</li>
+<li>RN005 – Não se agenda para hoje nem para trás, e o horário não pode repetir outro do mesmo tipo no mesmo dia ("Horário já agendado"). Ao <strong>mudar a data</strong>, o sistema encaixa o horário de 30 em 30 minutos entre 8h e 18h; <strong>na inclusão</strong>, vale o horário digitado (<code>ProgramacaoSolicitacaoController.cs:271-283</code>; <code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:49</code>, <code>:133-158</code>).</li>
+<li>RN006 – A solicitação nasce em <strong>Coleta pendente de programação</strong>, com fase de coleta. O item de análise é criado no CQ se ainda não existir (<code>SolicitacaoAnaliseService.cs:32-87</code>).</li>
+<li>RN007 – A exclusão vai para a lixeira, <strong>sem justificativa e sem histórico</strong> (<code>SolicitacaoAnaliseService.cs:116-128</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Programação de Solicitação de Análise</td>
+<td>Agenda das coletas de água e ambiente</td>
+</tr>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Consultar Coletas Pendentes de Programação</td>
+<td>Coletas agendadas a programar</td>
+</tr>
+<tr>
+<td>Principal</td>
+<td>(consulta automática)</td>
+<td>Fornece os pontos de água e os ambientes</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="amostragem-analise-e-laudo-o-que-muda">Amostragem, análise e laudo: o que muda</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Água e ambiente <strong>não geram pedido ao Estoque</strong> (nem separação de amostra, nem reanálise), que só existe para produto e material (<code>HSolutions.CQ.Domain/SolicitacaoAnalise/SolicitacaoAnalise.cs:275-297</code>).</li>
+<li>RN002 – A Programação de Amostragem tem um filtro próprio para água e ambiente; para água, mostra os dados do ponto vindos do Principal. O responsável é escolhido entre os amostradores. A conta de quantidade pela regra de amostragem está <strong>desligada</strong> para esses itens (<code>UI/Areas/SolicitacaoAnalise/Controllers/ProgramacaoColetaController.cs:46-87</code>; <code>SolicitacaoAnaliseService.cs:185-225</code>).</li>
+<li>RN003 – <strong>Ambiente só aceita análise microbiológica</strong> (<code>UI/Areas/Coleta/Controllers/RegraAmostragemController.cs:678-681</code>).</li>
+<li>RN004 – A análise <strong>não espera</strong> a separação de amostra no Estoque (<code>UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:205-223</code>).</li>
+<li>RN005 – O <strong>boletim de ambiente</strong> traz quatro condições de controle (sala vazia, fluxo ligado, ar ligado, sala em atividade) <strong>fixas no código e sempre marcadas como "não corresponde"</strong>: a condição real da sala na coleta não é registrada (<code>UI/Controllers/Services/ObterRelatorioAnaliseService.cs:328-347</code>).</li>
+<li>RN006 – Água e ambiente têm <strong>laudo e etiqueta próprios</strong>; a aprovação e a emissão seguem as mesmas regras do fluxo geral (<code>ObterRelatorioAnaliseService.cs:444-460</code>; <code>HSolutions.CQ.Reports/Analise/AnaliseProgramada/GerarEtiquetaReports.cs:26-29</code>).</li>
+<li>RN007 – <strong>Não há limite de alerta nem limite de ação</strong>, nem relatório de tendência: o resultado é só "conforme" ou "não conforme" (<code>ObterRelatorioAnaliseService.cs:350-354</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle da Qualidade</td>
+<td>Programação de Amostragem; Registro de Amostragem; Consultar Análise Programada; Emissão Laudo Final; Gerar Etiqueta</td>
+<td>As mesmas do fluxo geral, com filtro de água e ambiente</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="ligacao-com-a-producao">Ligação com a Produção</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – Na Produção, a <strong>autorização do ponto de água</strong> considera o ponto liberado quando o <strong>registro de análise da própria Produção</strong> mais recente está revisado e dentro da validade. <strong>Não consulta o laudo do CQ</strong> (<code>2.producao/app/LaboSys_UI/autorizacoes/autorizacao_ponto_agua_producao_ed.aspx.cs:444</code>; <code>2.producao/app/LaboSys_BLL/bllRegistroAnalisePontosAgua.cs:77-85</code>).</li>
+<li>RN002 – Autorizar ou não o uso do ponto é uma <strong>escolha manual</strong>, ponto a ponto (sim, não, pendente, cancelada) (<code>autorizacao_ponto_agua_producao_ed.aspx.cs:64-79</code>, <code>:146-162</code>).</li>
+<li>RN003 – A Produção tem <strong>telas próprias</strong> para programar e registrar análises de água e de ambiente (<code>2.producao/app/LaboSys_UI/preparacao/analise_pontos_agua_*</code>, <code>registro_analise_pontos_agua_*</code>, <code>analise_ambiente_*</code>): um <strong>controle paralelo</strong> ao do CQ.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Autorização de ponto de água</td>
+<td>Liberar o uso do ponto para a ordem de produção</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Análise e registro de pontos de água; análise de ambiente</td>
+<td>Controle próprio da Produção (a analisar com o módulo)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Não há programa de monitoramento.</strong> As coletas são agendadas uma a uma, sem frequência por ponto ou sala nem geração periódica. <em>A validar:</em> como a empresa garante a frequência hoje (planilha, procedimento).</p>
+<p><strong>2. Não há limite de alerta nem de ação, nem tendência.</strong> O resultado é só conforme ou não conforme (RDC 658/2022, art. 245).</p>
+<p><strong>3. O resultado do CQ não protege a produção.</strong> Um ponto de água reprovado no CQ pode ser liberado na Produção, que decide pelos próprios registros e à mão.</p>
+<p><strong>4. Dois controles da mesma coisa.</strong> CQ e Produção registram análises de água e de ambiente separadamente; os resultados podem divergir (ver <code>transversal/01-telas-repetidas.md</code>).</p>
+<p><strong>5. A sala não tem classe de limpeza no CQ.</strong> Os critérios não podem variar por grau (A, B, C, D).</p>
+<p><strong>6. Condições da sala fixas no boletim.</strong> As quatro condições de controle saem sempre "não corresponde"; a condição real na coleta não é registrada.</p>
+<p><strong>7. Regra de horário incoerente.</strong> O encaixe de 30 em 30 minutos vale só ao mudar a data; na inclusão, vale qualquer horário.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> um ponto de água purificada e uma sala <code>TESTE</code> cadastrados no Principal (reaproveitar os ambientes <code>TESTE</code> dos testes do Principal, se houver); regras de análise <code>TESTE</code> para água (faixa) e ambiente (conformidade).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-060</td>
+<td>Agendar uma coleta de água para hoje</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-CQ-061</td>
+<td>Agendar duas coletas de água no mesmo dia e horário</td>
+<td>Recusa: "Horário já agendado"</td>
+</tr>
+<tr>
+<td>CT-CQ-062</td>
+<td>Agendar uma coleta de ambiente com análise físico-química</td>
+<td>Recusa (ambiente só microbiológico)</td>
+</tr>
+<tr>
+<td>CT-CQ-063</td>
+<td>Procurar uma opção de frequência ou recorrência por ponto</td>
+<td><strong>Registrar que não existe</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-CQ-064</td>
+<td>Programar e registrar a amostragem de água</td>
+<td>Sem pedido ao Estoque; análise sem esperar separação</td>
+</tr>
+<tr>
+<td>CT-CQ-065</td>
+<td>Imprimir o boletim de ambiente</td>
+<td><strong>Conferir as quatro condições sempre "não corresponde"</strong> (ponto 6)</td>
+</tr>
+<tr>
+<td>CT-CQ-066</td>
+<td>Laudo de água com um resultado não conforme, reprovado e emitido; na Produção, autorizar o uso do mesmo ponto</td>
+<td>Pela norma, a Produção deveria ser impedida. <strong>Registrar se autorizar</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-CQ-067</td>
+<td>Excluir uma coleta agendada e consultar o histórico</td>
+<td><strong>Registrar a falta de justificativa e de histórico</strong></td>
+</tr>
+<tr>
+<td>CT-CQ-068</td>
+<td>Mudar a data de uma coleta para um dia já cheio até 18h</td>
+<td>Recusa: "Já existe programação até horário limite na data"</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-CQ-066 e 063 primeiro. Eles tocam o uso de água e de salas fora de especificação na fabricação.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#agenda-de-agua-e-ambiente">Agenda de água e ambiente</a></li><li class="sub"><a href="#amostragem-analise-e-laudo-o-que-muda">Amostragem, análise e laudo: o que muda</a></li><li class="sub"><a href="#ligacao-com-a-producao">Ligação com a Produção</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
