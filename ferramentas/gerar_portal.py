@@ -104,6 +104,7 @@ MODULOS = [
             ("5.garantia_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
             ("5.garantia_qualidade/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("5.garantia_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
+            ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("5.garantia_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
             ("5.garantia_qualidade/fluxos/desvios-capa.md", "Desvios e CAPA", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Desvios e CAPA.docx"),
@@ -135,7 +136,7 @@ PUBLICOS = [
 # ---------------------------------------------------------------------------------------------
 # Limpeza de segurança
 # ---------------------------------------------------------------------------------------------
-RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran", re.I)
+RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil não valem", re.I)
 TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca", re.I)
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
@@ -143,7 +144,8 @@ RE_LINHA_SEG = re.compile(
     r"criptografia revers[íi]vel|chave fixa|credenciais|senhas? (?:podem ser |s[ãa]o )?recuper[áa]ve|"
     r"senhas podem ser recuperadas|digitando o endere[çc]o|sem senha em outro navegador|token de acesso|"
     r"token no endere[çc]o|sem entrar no sistema|janela an[ôo]nima|Nenhum filtro obrigat[óo]rio|"
-    r"Quem conhece o endere[çc]o|abre(?:m)? telas? .* pelo endere[çc]o|endere[çc]o da p[áa]gina|\btokens?\b|\bhash\b|localStorage",
+    r"Quem conhece o endere[çc]o|abre(?:m)? telas? .* pelo endere[çc]o|endere[çc]o da p[áa]gina|\btokens?\b|\bhash\b|localStorage|"
+    r"a si mesmo o n[íi]vel|se colocar no N[íi]vel 03|perfil completo|Sem login exigido|a[çc][õo]es do perfil ignoradas|HSPermission",
     re.I)
 
 
