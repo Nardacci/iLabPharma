@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de permissões · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html">Regras de amostragem e de análise</a></li><li><a href="estabilidade.html">Estabilidade</a></li><li><a href="agua-e-ambiente.html">Água e ambiente</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html" aria-current=page>Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Matriz de permissões</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · Extraída do código; nada testado ainda. Caminhos relativos a <code>4.controle_qualidade/app/HSolutions.CQ.UI/</code>.</p>
+<p>Este documento tem três partes:</p>
+<ol>
+<li><strong>Como o acesso funciona no CQ</strong> (extraído do código).</li>
+<li><strong>Matriz por tela:</strong> quem pode fazer o quê, e onde a regra é conferida.</li>
+<li><strong>Testes que esta matriz gera.</strong></li>
+</ol>
+<p><strong>Importante:</strong> <em>quem</em> tem <em>qual</em> perfil e <em>qual</em> função está cadastrado no banco do Principal, não no código. Para a matriz por pessoa, é preciso o relatório do Principal ou o DBA.</p>
+<hr />
+<h3 id="1-como-o-acesso-funciona">1. Como o acesso funciona</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Onde é cadastrada</th>
+<th>O que controla</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Ver a tela no menu</strong></td>
+<td>Principal: perfil × funções do sistema</td>
+<td>Quais telas do CQ aparecem no menu (roteiro do fornecedor, 20 itens)</td>
+<td><code>HSolutions.CQ.DB/dml.sql</code>; RN-CQ-001</td>
+</tr>
+<tr>
+<td><strong>2. Abrir a tela</strong></td>
+<td>Principal: permissão de <strong>consulta</strong> da tela no perfil</td>
+<td>Nas telas com o filtro de autorização da biblioteca comum, quem não tem a consulta é levado à página de acesso negado</td>
+<td><code>10.HSolution.Library/HSolutions.UI.MVC/HSolutions.UI.MVC.Handlers/AutorizacaoHandler.cs</code></td>
+</tr>
+<tr>
+<td><strong>3. Funções profissionais</strong></td>
+<td>Principal: funções do usuário (amostrador, analista físico-químico, analista microbiológico, chefe do CQ, estabilidade)</td>
+<td>Quais nomes aparecem nas listas de responsáveis e se a Emissão Laudo Final abre para decisão ou só para leitura</td>
+<td>Ver a tabela abaixo</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="funcoes-profissionais-usadas-pelo-cq">Funções profissionais usadas pelo CQ</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Função (no Principal)</th>
+<th>Onde aparece</th>
+<th>O que faz</th>
+<th>Conferida ao gravar?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amostrador</td>
+<td>Programação de Amostragem, Registro de Amostragem</td>
+<td>Filtra a lista de amostradores e de responsáveis pela coleta</td>
+<td>Não</td>
+</tr>
+<tr>
+<td>Analista físico-químico; analista microbiológico</td>
+<td>Programação de Análise, Análise Programada</td>
+<td>Filtra a lista de analistas</td>
+<td>Não</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="onde-a-regra-e-conferida">Onde a regra é conferida</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Momento</th>
+<th>Conferido?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ao mostrar o menu</td>
+<td>Sim, pelo perfil do Principal</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="2-matriz-por-tela">2. Matriz por tela</h3>
+<h4 id="solicitacao-de-analise-e-amostragem">Solicitação de Análise e Amostragem</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Quem pode, pelo código</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação de Análise</td>
+<td>Quem abre a tela</td>
+<td>Cancelar até com laudo liberado</td>
+<td>Filtro (nas ações principais)</td>
+</tr>
+<tr>
+<td>Priorização de Solicitação Análise</td>
+<td>Quem abre a tela</td>
+<td>—</td>
+<td>Filtro</td>
+</tr>
+<tr>
+<td>Programação de Solicitação de Análise</td>
+<td>Quem abre a tela</td>
+<td>Agenda só de água e ambiente</td>
+<td>Filtro</td>
+</tr>
+<tr>
+<td>Programação de Amostragem</td>
+<td>Quem abre a tela</td>
+<td>Responsável escolhido entre os amostradores (só a lista)</td>
+<td>Filtro</td>
+</tr>
+<tr>
+<td>Amostragens Pendentes</td>
+<td>Cada usuário vê as coletas em que é o responsável</td>
+<td>A visão de administrador vê todas</td>
+<td>Filtro</td>
+</tr>
+<tr>
+<td>Verificação de Amostragens</td>
+<td>Quem abre a tela</td>
+<td>—</td>
+<td>Filtro; Excluir</td>
+</tr>
+<tr>
+<td>Regra Amostragem</td>
+<td>Quem abre a tela</td>
+<td>—</td>
+<td>Filtro; Excluir (a exclusão de item da regra não confere)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="analise-e-laudo">Análise e Laudo</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Quem pode, pelo código</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regra de Análise</td>
+<td>Quem abre a tela</td>
+<td>—</td>
+<td>Filtro; Excluir</td>
+</tr>
+<tr>
+<td>Programação de Análise</td>
+<td>Quem abre a tela</td>
+<td>Analista escolhido entre os analistas (só a lista)</td>
+<td>Filtro</td>
+</tr>
+<tr>
+<td>Gerar Etiqueta</td>
+<td>Quem abre a tela</td>
+<td>—</td>
+<td>Filtro</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="cadastros-de-apoio-e-estabilidade">Cadastros de apoio e estabilidade</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Quem pode, pelo código</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong> o CQ controla <strong>quem abre</strong> a maior parte das telas, mas <strong>não controla quem decide</strong>. Aprovar e emitir o laudo, finalizar e interromper a estabilidade e alterar especificações dependem só de abrir a tela. A única barreira de decisão é que quem digitou ensaios não aprova o laudo.</p>
+<hr />
+<h3 id="3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-070</td>
+<td>Entrar no CQ com um perfil sem a consulta da Emissão Laudo Final e abrir a tela</td>
+<td>Página de acesso negado</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-071</td>
+<td>Com um perfil <strong>só de consulta</strong> na Emissão Laudo Final, aprovar e emitir um laudo <code>TESTE</code></td>
+<td>Pela norma, recusa. <strong>Registrar se aprovar</strong></td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-072</td>
+<td>Com um perfil sem a exclusão em Unidade de Medida, excluir uma unidade <code>TESTE</code> sem uso</td>
+<td>Pela norma, recusa. <strong>Registrar se excluir</strong></td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-073</td>
+<td>Com o analista <code>TESTE ANALISTA</code>, abrir a Consultar Análise Programada</td>
+<td>Vê só as próprias análises</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-074</td>
+<td>Com um usuário sem nenhuma função do CQ, abrir a Regra Estabilidade pelo menu</td>
+<td>Pela norma, sem acesso. <strong>Registrar se abrir</strong></td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Casos dos fluxos que também conferem esta matriz:</strong> CT-CQ-010 e 011 (aprovação do laudo), 049 (interrupção da estabilidade), 005 e 007 (amostrador e verificador).</p>
+<h3 id="o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</h3>
+<ol>
+<li>Lista dos perfis reais com telas do CQ e das pessoas com as funções de amostrador, analista, chefe do CQ e estabilidade (relatório do Principal ou consulta do DBA).</li>
+<li>Confirmar se o menu real do CQ coincide com o roteiro do fornecedor.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-como-o-acesso-funciona">1. Como o acesso funciona</a></li><li><a href="#2-matriz-por-tela">2. Matriz por tela</a></li><li><a href="#3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</a></li><li><a href="#o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

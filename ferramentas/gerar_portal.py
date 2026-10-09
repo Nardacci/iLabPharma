@@ -127,6 +127,7 @@ MODULOS = [
          ("4.controle_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("4.controle_qualidade/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
          ("4.controle_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
+         ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("4.controle_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("4.controle_qualidade/fluxos/solicitacao-analise-laudo.md", "Solicitação, análise e laudo", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Solicitacao, Analise e Laudo.docx"),
          ("4.controle_qualidade/fluxos/regras-amostragem-analise.md", "Regras de amostragem e de análise", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Regras de Amostragem e de Analise.docx"),
@@ -151,7 +152,7 @@ PUBLICOS = [
 # ---------------------------------------------------------------------------------------------
 # Limpeza de segurança
 # ---------------------------------------------------------------------------------------------
-RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil não valem", re.I)
+RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil.*não valem", re.I)
 TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca", re.I)
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
