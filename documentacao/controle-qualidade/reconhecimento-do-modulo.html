@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reconhecimento do módulo · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html" aria-current=page>Reconhecimento do módulo</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Comece por aqui</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Reconhecimento do módulo</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>4.controle_qualidade/app</code>) · <strong>Profundidade:</strong> superficial, por contagem e comparação automática de arquivos. Nada aqui foi testado nas telas.</p>
+<p><strong>Como foi feito:</strong> os mesmos três scripts usados na Garantia da Qualidade, agora com o módulo como parâmetro (<code>homologacao/ferramentas/</code>). A saída completa de cada um está em <code>homologacao/4.controle_qualidade/levantamento/</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Script</th>
+<th>O que levanta</th>
+<th>Saída</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>levantar_telas_mvc.py &lt;app&gt; CQ</code></td>
+<td>Cada pasta de telas: título que o usuário vê, nome no roteiro de menu, controlador, ações, se lê ou grava dados</td>
+<td><code>telas-automatico.md</code></td>
+</tr>
+<tr>
+<td><code>levantar_tabelas_gq.py . 4.controle_qualidade CQ</code></td>
+<td>Tabelas do projeto de banco × tabelas que o código usa × tabelas de mesmo nome nos outros módulos</td>
+<td><code>tabelas-automatico.md</code></td>
+</tr>
+<tr>
+<td><code>levantar_integracoes_gq.py . 4.controle_qualidade CQ</code></td>
+<td>Chamadas do CQ aos outros módulos e dos outros módulos ao CQ</td>
+<td><code>integracoes-automatico.md</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-o-cq-faz-no-processo">O que o CQ faz no processo</h3>
+<p>O CQ recebe <strong>pedidos de análise</strong> e devolve um <strong>laudo</strong>. O ciclo, pelo código:</p>
+<ol>
+<li><strong>Solicitação de análise:</strong> chega do Estoque (lote recebido ou produto acabado em quarentena, reanálise) e da Produção (granel e semielaborado, por etapa), ou é aberta no próprio CQ (água, ambiente).</li>
+<li><strong>Programação da amostragem</strong> e <strong>amostragem:</strong> o CQ pede ao Estoque a separação da amostra e só segue quando ela foi separada.</li>
+<li><strong>Verificação da amostragem.</strong></li>
+<li><strong>Programação da análise</strong> e <strong>análise programada:</strong> os analistas digitam os resultados de cada ensaio, comparados com a regra de análise do item.</li>
+<li><strong>Emissão do laudo final:</strong> aprovar ou reprovar, com validade do laudo e, quando exigido, teor.</li>
+<li><strong>Etiqueta</strong> e relatórios (boletim e laudo).</li>
+<li><strong>Estabilidade:</strong> acompanhamento dos estudos de estabilidade e seu encerramento.</li>
+</ol>
+<p>Os itens que podem ser analisados (tipo de item de análise, <code>HSolutions.CQ.Domain/Analise/TipoItemAnaliseEnum.cs</code>): <strong>ambiente; água potável, purificada e para injetáveis; matéria-prima; material de embalagem; semielaborado; granel; produto acabado; padrão secundário.</strong></p>
+<h3 id="diferenca-em-relacao-a-garantia-da-qualidade">Diferença em relação à Garantia da Qualidade</h3>
+<p>O CQ usa a mesma tecnologia da GQ (ASP.NET MVC, telas <code>.cshtml</code>), mas o <strong>roteiro de menu do fornecedor está ativo</strong> (<code>HSolutions.CQ.DB/dml.sql</code>), e não comentado como na GQ. Os nomes de menu abaixo são os desse roteiro; <em>a confirmar</em> se o menu real do ambiente é igual.</p>
+<h3 id="tamanho">Tamanho</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Controle da Qualidade</th>
+<th>Garantia da Qualidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arquivos de código (<code>.cs</code>, sem bibliotecas)</td>
+<td>495</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Páginas <code>.cshtml</code></td>
+<td>138 (117 nas pastas de telas)</td>
+<td>304</td>
+</tr>
+<tr>
+<td>Itens de menu no roteiro</td>
+<td><strong>20</strong>, em 5 grupos</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Telas de negócio</td>
+<td><strong>25</strong></td>
+<td>67</td>
+</tr>
+<tr>
+<td>... que funcionam pelo código</td>
+<td><strong>22</strong></td>
+<td>44</td>
+</tr>
+<tr>
+<td>... protótipos (tela sem lógica)</td>
+<td><strong>3</strong></td>
+<td>23</td>
+</tr>
+<tr>
+<td>Tabelas no projeto de banco</td>
+<td>36</td>
+<td>91</td>
+</tr>
+<tr>
+<td>Relatórios impressos (<code>.rdlc</code>)</td>
+<td>19 (14 nas telas, 5 no projeto de relatórios)</td>
+<td>33</td>
+</tr>
+<tr>
+<td>Testes automatizados do fornecedor</td>
+<td>64 arquivos em <code>HSolutions.CQ.Tests</code></td>
+<td>26</td>
+</tr>
+</tbody>
+</table></div>
+<p>Fora as telas de negócio, há pastas técnicas: entrada (login), página inicial, página de erro e a pasta de modelos de relatório (<code>Areas/Relatorio</code>, só arquivos <code>.rdlc</code>, sem tela própria).</p>
+<h3 id="telas-pelo-nome-do-menu">Telas, pelo nome do menu</h3>
+<h4 id="solicitacao-de-analise-4">Solicitação de Análise (4)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela (menu)</th>
+<th>Pasta no código</th>
+<th>Situação pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Programação de Solicitação de Análise</td>
+<td><code>SolicitacaoAnalise/ProgramacaoSolicitacao</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Solicitação de Análise</td>
+<td><code>SolicitacaoAnalise/SolicitacaoAnalise</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Priorização de Solicitação Análise</td>
+<td><code>SolicitacaoAnalise/PriorizarSolicitacaoAnalise</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Programação de Amostragem</td>
+<td><code>SolicitacaoAnalise/ProgramacaoColeta</code></td>
+<td>Com lógica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="amostragem-5">Amostragem (5)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela (menu)</th>
+<th>Pasta no código</th>
+<th>Situação pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verificação de Amostragens</td>
+<td><code>Coleta/VerificacaoAmostragem</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Regra Amostragem</td>
+<td><code>Coleta/RegraAmostragem</code></td>
+<td>Com lógica (o maior controlador do módulo: 30 ações)</td>
+</tr>
+<tr>
+<td>Amostragens Pendentes</td>
+<td><code>Coleta/Pendentes</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Consultar Amostragem</td>
+<td><code>Coleta/Amostragem</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Amostragens Pendentes Visão Administrador</td>
+<td><code>Coleta/Pendentes</code> (mesma pasta)</td>
+<td>Com lógica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="analise-e-laudo-6">Análise e Laudo (6)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela (menu)</th>
+<th>Pasta no código</th>
+<th>Situação pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regra de Análise</td>
+<td><code>Coleta/RegraAnalise</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Programação de Análise</td>
+<td><code>Coleta/AnaliseProgramacao</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Consultar Análise Programada</td>
+<td><code>Analise/AnaliseProgramada</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Consultar Análise Programada Visão Administrador</td>
+<td><code>Analise/AnaliseProgramada</code> (mesma pasta)</td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Emissão Laudo Final</td>
+<td><code>Analise/EmissaoLaudoFinal</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Gerar Etiqueta</td>
+<td><code>Analise/GerarEtiquetas</code></td>
+<td>Com lógica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="cadastros-de-apoio-3-e-regulatorio-2">Cadastros de apoio (3) e Regulatório (2)</h4>
+<p>No menu: grupos "Tabelas de Apoio" e "Regulatório".</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela (menu)</th>
+<th>Pasta no código</th>
+<th>Situação pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unidade de Medida</td>
+<td><code>Coleta/UnidadeMedida</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Motivos</td>
+<td><code>TabelasApoio/Motivos</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Regra Estabilidade</td>
+<td><code>Estabilidade/RegraEstabilidade</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Acompanhamento Estabilidade</td>
+<td><code>Estabilidade/Acompanhamento</code></td>
+<td>Com lógica</td>
+</tr>
+<tr>
+<td>Final de Estabilidade</td>
+<td><code>Estabilidade/FinalEstabilidade</code></td>
+<td>Com lógica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="fora-do-menu">Fora do menu</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela (título)</th>
+<th>Pasta no código</th>
+<th>Situação pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consultar Coletas Pendentes de Programação</td>
+<td><code>Views/SolicitacaoAnalise</code> (raiz)</td>
+<td>Com lógica; <em>a confirmar</em> como se chega a ela</td>
+</tr>
+<tr>
+<td>Verificação de Amostragem (segunda versão)</td>
+<td><code>Coleta/Verificacao</code></td>
+<td>Com lógica; <strong>duplica</strong> a Verificação de Amostragens do menu, com os mesmos títulos</td>
+</tr>
+<tr>
+<td>Avaliação Fornecedores</td>
+<td><code>GestaoAvaliacao/AvaliacaoFornecedor</code></td>
+<td><strong>Protótipo</strong> (controlador de 32 linhas, não lê nem grava)</td>
+</tr>
+<tr>
+<td>Avaliação de Desempenho da Qualidade dos Fornecedores</td>
+<td><code>GestaoAvaliacao/AvaliacaoDesempenhoFornecedores</code></td>
+<td><strong>Protótipo</strong></td>
+</tr>
+<tr>
+<td>Gestão de Avaliação</td>
+<td><code>GestaoAvaliacao/Avaliacao</code></td>
+<td><strong>Protótipo</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Há ainda dois controladores de teste sem tela (<code>Coleta/Controllers/Tela1Controller.cs</code>, <code>Tela2Controller.cs</code>).</p>
+<h3 id="situacoes-estados-pelo-codigo">Situações (estados) pelo código</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Registro</th>
+<th>Situações</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação de análise</td>
+<td>Pendente, Em coleta, Coleta pendente de programação, Análise pendente de programação, Em análise, Análise parcial, Concluída, Laudo liberado, Cancelada</td>
+<td><code>HSolutions.CQ.Domain/SolicitacaoAnalise/SituacaoSolicitacaoAnaliseEnum.cs</code></td>
+</tr>
+<tr>
+<td>Amostragem</td>
+<td>Pendente, Programada, Executada, Cancelada</td>
+<td><code>HSolutions.CQ.Domain/Coleta/SituacaoAmostragemEnum.cs</code></td>
+</tr>
+<tr>
+<td>Análise</td>
+<td>Pendente de digitação, Liberar laudo, Laudo liberado, Cancelado</td>
+<td><code>HSolutions.CQ.Domain/Analise/SituacaoAnaliseEnum.cs</code></td>
+</tr>
+<tr>
+<td>Acompanhamento de estabilidade</td>
+<td>Em aberto, Interrompido, Finalizado</td>
+<td><code>HSolutions.CQ.Domain/Enuns/ESituacaoAcompanhamento.cs</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Observação:</strong> "aprovado" e "reprovado" <strong>não são situações</strong> da análise. O resultado fica num campo próprio (aprovado sim ou não): aprovar ou reprovar leva a análise a <strong>Liberar laudo</strong>, e uma etapa seguinte a leva a <strong>Laudo liberado</strong> (<code>HSolutions.CQ.Domain/Analise/LiberarLaudoService.cs:21</code>, <code>:35</code>, <code>:43</code>). As ações ficam em <code>HSolutions.CQ.UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:425</code> (aprovar) e <code>:489</code> (reprovar).</p>
+<h3 id="tabelas">Tabelas</h3>
+<ul>
+<li><strong>36 tabelas</strong> no projeto de banco, todas incluídas no projeto; nenhum conflito entre pastas (na GQ havia duas pastas divergentes).</li>
+<li><strong>Cinco tabelas trocaram de nome e o projeto de banco não acompanhou:</strong> o código usa <code>TBL_ANALISE_CQ</code>, <code>TBL_ANALISE_ITEM_CQ</code>, <code>TBL_TIPO_AGUA_CQ</code>, <code>TBL_TIPO_ANALISE_CQ</code> e <code>TBL_UNIDADE_MEDIDA_CQ</code>, e os scripts ainda criam as mesmas tabelas <strong>sem</strong> o sufixo <code>_CQ</code>. Os nomes sem sufixo são justamente os de tabelas do Estoque (<code>TBL_ANALISE</code>, <code>TBL_ANALISE_ITEM</code>, <code>TBL_TIPO_ANALISE</code>, <code>TBL_UNIDADE_MEDIDA</code>) e do Principal (<code>TBL_TIPO_AGUA</code>). <strong>Inferência:</strong> o sufixo foi criado para evitar choque de nomes num banco comum, e os scripts ficaram desatualizados. Uma instalação feita só com os scripts não funcionaria. <em>Pergunta ao DBA.</em></li>
+<li><strong>Histórico (trilha de auditoria):</strong> o CQ grava o histórico por uma biblioteca comum (<code>FluentLog</code>, configurada em <code>HSolutions.CQ.UI/Global.asax.cs:22</code> e no projeto <code>HSolutions.CQ.Auditoria</code>), nas tabelas <code>TBL_LOG_ALTERACAO_2</code> e <code>TBL_LOG_ALTERACAO_ITEM_2</code> (<code>10.HSolution.Library/HSolutions.Core.Context/HSolutions.Core.Context.Configurations/LogAlteracaoConfiguration.cs</code>). Essas tabelas <strong>não estão</strong> no projeto de banco do CQ. Há uma tela de consulta do histórico (ação "Consultar log" no roteiro de menu). <em>A detalhar na etapa de segurança.</em></li>
+</ul>
+<h3 id="integracoes-com-outros-modulos">Integrações com outros módulos</h3>
+<p>Detalhe e evidências em <code>homologacao/transversal/04-mapa-de-integracoes.md</code> (setas 1, 2, 5 e 16).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Sentido</th>
+<th>Com</th>
+<th>O que trafega</th>
+<th>Meio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recebe</td>
+<td>Estoque</td>
+<td>Solicitação de análise do lote recebido e do produto acabado; abertura de estudo de estabilidade; consulta do resultado do laudo</td>
+<td>API do CQ (<code>HSolutions.CQ.UI/Api/SolicitacaoAnaliseController.cs</code>, <code>AcompanhamentoEstabilidadeController.cs</code>)</td>
+</tr>
+<tr>
+<td>Recebe</td>
+<td>Produção</td>
+<td>Solicitação de análise de granel e semielaborado, por etapa; consulta da situação</td>
+<td>API do CQ</td>
+</tr>
+<tr>
+<td>Envia</td>
+<td>Estoque</td>
+<td>Pedido de separação da amostra (rotina e regulatória: retenção, referência, estabilidade); pedido de reanálise; consulta se a amostra foi separada</td>
+<td>API do Estoque (<code>HSolutions.CQ.Services/Estoque/SolicitacaoEstoque.cs</code>)</td>
+</tr>
+<tr>
+<td>Lê</td>
+<td>Principal</td>
+<td>Usuários, analistas, funções e permissões, menu, cabeçalho e rodapé (12 chamadas)</td>
+<td>API do Principal</td>
+</tr>
+<tr>
+<td>Lê</td>
+<td>Estoque, Produção, Principal</td>
+<td>Lotes, produtos, materiais, insumos, ambientes e pontos de água</td>
+<td><strong>Bibliotecas compiladas</strong> (<code>ServiceHub</code>, <code>Library/HSolutions.Adaptador.*.dll</code>), <strong>sem código-fonte</strong> no repositório</td>
+</tr>
+<tr>
+<td>Não faz</td>
+<td>Estoque</td>
+<td><strong>Avisar o resultado do laudo.</strong> Ao aprovar ou reprovar, o CQ grava só no próprio banco; o lote só sai da quarentena quando alguém atualiza a análise na tela do Estoque</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="achados-iniciais">Achados iniciais</h3>
+<div class="callout">
+<p class="callout-titulo">1. O laudo não avisa o Estoque</p>
+<p>A aprovação ou reprovação do laudo fica no CQ (<code>EmissaoLaudoFinalController.cs:463</code> e <code>:503</code>). O Estoque só conhece o resultado quando alguém atualiza a análise na tela dele. Um lote aprovado pode ficar parado em quarentena, e um lote <strong>reprovado continua com a situação anterior no Estoque</strong> até essa atualização. <em>A confirmar no teste.</em></p>
+</div>
+<div class="callout">
+<p class="callout-titulo">2. Quem aprova o laudo não é conferido</p>
+<p>O botão de aprovar só aparece quando todos os resultados estão dentro da especificação, e o de reprovar quando algum está fora (<code>EmissaoLaudoFinalController.cs:733-745</code>). Mas a ação de aprovar confere a validade do laudo e o teor, e <strong>não confere a função de quem aprova</strong> (<code>:425-460</code>). A função "Chefe de Subdivisão" aparece fixa no código só para marcar linhas da lista (já registrado no Estoque, <code>3.estoque/fluxos/recebimento-quarentena-conferencia.md</code>). <em>A confirmar:</em> se a gravação também confere os resultados, ou só a tela.</p>
+</div>
+<div class="callout">
+<p class="callout-titulo">3. Projeto de banco desatualizado</p>
+<p>Cinco tabelas renomeadas com o sufixo <code>_CQ</code> e as tabelas de histórico fora do projeto (ver "Tabelas").</p>
+</div>
+<div class="callout">
+<p class="callout-titulo">4. Parte da integração está em bibliotecas compiladas</p>
+<p>As consultas de lote, produto, material, ambiente e ponto de água passam por bibliotecas sem código-fonte (<code>Library/HSolutions.Adaptador.Estoque.dll</code>, <code>...Producao.dll</code>, <code>...Principal.dll</code>). Não dá para conferir pelo código o que elas leem nem se acessam o banco dos outros módulos direto. O arquivo de configuração das telas do CQ (<code>HSolutions.CQ.UI/Web.config</code>) tem duas conexões com o banco da Produção (<code>ProducaoContext</code>, <code>LaboSysProducaoConnection</code>); os valores não são copiados aqui. <em>Pergunta ao DBA ou à TI.</em></p>
+</div>
+<div class="callout">
+<p class="callout-titulo">5. Avaliação de fornecedor: protótipo, como na GQ</p>
+<p>As três telas de avaliação de fornecedor são protótipos, iguais em nome às da GQ. O Estoque tem uma terceira versão (Qualificação de Fornecedor), com lógica. Nenhuma é consultada no recebimento (<code>homologacao/transversal/01-telas-repetidas.md</code>, item 2.1).</p>
+</div>
+<div class="callout">
+<p class="callout-titulo">6. Tela duplicada e sobras de desenvolvimento</p>
+<p>Duas pastas de Verificação de Amostragem com os mesmos títulos (só uma no menu); dois controladores de teste (<code>Tela1</code>, <code>Tela2</code>); uma pasta de bibliotecas antigas (<code>Library_CQ_old</code>).</p>
+</div>
+<h3 id="documentos-de-fluxo-da-equipe">Documentos de fluxo da equipe</h3>
+<p>Não há fluxo próprio do CQ em <code>Documentação/</code>. A parte do CQ aparece no fluxo <strong>Estoque quarentena</strong> (solicitação, amostragem, pesagem, análise, laudo, etiqueta e saída da quarentena), já conferido contra o código em <code>homologacao/3.estoque/fluxos/recebimento-quarentena-conferencia.md</code>.</p>
+<h3 id="o-que-a-anvisa-cobra-do-cq-para-a-etapa-de-conformidade">O que a ANVISA cobra do CQ (para a etapa de conformidade)</h3>
+<p>RDC 658/2022: requisitos básicos do Controle de Qualidade (art. 14: amostragem por pessoal autorizado e método aprovado, registros de amostragem e testes, amostras de referência); uso só de material liberado pelo CQ e dentro do reteste (art. 189); liberação do lote pela Pessoa Delegada (art. 8º, XV); estabilidade; e, pelo Guia 33, integridade dos resultados digitados e assinatura do laudo.</p>
+<h3 id="pontos-para-validar">Pontos para validar</h3>
+<ol>
+<li>O menu real do CQ coincide com o roteiro do fornecedor (20 itens)?</li>
+<li>O banco do ambiente tem as tabelas com sufixo <code>_CQ</code> e as de histórico (<code>TBL_LOG_ALTERACAO_2</code>)? (DBA)</li>
+<li>O que as bibliotecas compiladas (<code>HSolutions.Adaptador.*</code>) acessam? (TI)</li>
+<li>Quem, na empresa, aprova o laudo hoje? É a Pessoa Delegada que libera o lote, ou há outra etapa fora do sistema?</li>
+</ol>
+<h3 id="proxima-etapa-proposta">Próxima etapa proposta</h3>
+<p><strong>Etapa 2, conformidade (04):</strong> cruzar o CQ com a RDC 658 e o Guia 33, já com o texto da norma (extrator novo). Depois, os fluxos, por risco: (1) <strong>solicitação → amostragem → análise → laudo</strong>, que fecha o ciclo do lote com o Estoque; (2) <strong>estabilidade</strong>; (3) <strong>regras de amostragem, de análise e de estabilidade</strong> (cadastros que definem o que é analisado); (4) <strong>água e ambiente</strong>.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-o-cq-faz-no-processo">O que o CQ faz no processo</a></li><li><a href="#diferenca-em-relacao-a-garantia-da-qualidade">Diferença em relação à Garantia da Qualidade</a></li><li><a href="#tamanho">Tamanho</a></li><li><a href="#telas-pelo-nome-do-menu">Telas, pelo nome do menu</a></li><li><a href="#situacoes-estados-pelo-codigo">Situações (estados) pelo código</a></li><li><a href="#tabelas">Tabelas</a></li><li><a href="#integracoes-com-outros-modulos">Integrações com outros módulos</a></li><li><a href="#achados-iniciais">Achados iniciais</a></li><li><a href="#documentos-de-fluxo-da-equipe">Documentos de fluxo da equipe</a></li><li><a href="#o-que-a-anvisa-cobra-do-cq-para-a-etapa-de-conformidade">O que a ANVISA cobra do CQ (para a etapa de conformidade)</a></li><li><a href="#pontos-para-validar">Pontos para validar</a></li><li><a href="#proxima-etapa-proposta">Próxima etapa proposta</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
