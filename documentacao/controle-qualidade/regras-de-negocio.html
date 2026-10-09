@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html">Regras de amostragem e de análise</a></li><li><a href="estabilidade.html">Estabilidade</a></li><li><a href="agua-e-ambiente.html">Água e ambiente</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>4.controle_qualidade/app</code>) · <strong>Base:</strong> os quatro fluxos do CQ (<code>fluxos/</code>), o reconhecimento (<code>00-reconhecimento.md</code>) e a conformidade (<code>04-conformidade-regulatoria.md</code>).</p>
+<p><strong>Situação de todas as regras: Extraída</strong> (lida do código, aguardando o teste nas telas e a validação da área). Caminhos relativos a <code>4.controle_qualidade/app/</code>. Abreviações usadas nos fluxos e repetidas aqui: <code>UI/</code> = <code>HSolutions.CQ.UI/</code>, <code>Svc/</code> = <code>HSolutions.CQ.Services/</code>, <code>Infra/</code> = <code>HSolutions.CQ.Infrastructure/</code>, <code>Dom/</code> = <code>HSolutions.CQ.Domain/</code>, <code>Coleta/</code> e <code>Estab/</code> = pastas de controladores das áreas Coleta e Estabilidade.</p>
+<p>As regras das seções 2 a 5 foram <strong>consolidadas por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/consolidar_regras.py</code>). O texto de cada regra é o mesmo do fluxo; a seção 7 liga cada código ao número local do fluxo.</p>
+<p>Várias "regras" descrevem <strong>falhas</strong>: o que o sistema faz hoje e que não atende à norma. Ficam registradas como regra porque são o comportamento atual; a correção vai para os requisitos da nova versão.</p>
+<p>O inventário das 25 telas, com a situação de cada uma, está em <code>11-inventario-de-telas.md</code>.</p>
+<hr />
+<h3 id="1-regras-gerais-do-modulo">1. Regras gerais do módulo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-CQ-001</td>
+<td>O <strong>menu</strong> do CQ é montado pelo roteiro do fornecedor, que está ativo (20 itens em 5 grupos: Solicitação de Análise, Amostragem, Análise e Laudo, Tabelas de Apoio, Regulatório) (<code>HSolutions.CQ.DB/dml.sql</code>, a partir da linha 179). O menu real do ambiente precisa ser confirmado.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-002</td>
+<td>O <strong>histórico</strong> (trilha de auditoria) é gravado por uma biblioteca comum, campo a campo, para nove cadastros e registros: item de análise, análise programada, regra de análise, solicitação, unidade de medida, verificação, item e regra de amostragem e motivo (<code>HSolutions.CQ.Auditoria/FluentLogConfigurations.cs:10-18</code>). As tabelas do histórico (<code>TBL_LOG_ALTERACAO_2</code> e <code>_ITEM_2</code>) <strong>não estão</strong> no projeto de banco do CQ.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-003</td>
+<td>Ficam <strong>sem histórico</strong>: aprovar, reprovar e emitir o laudo; programar amostragem e análise; reagendar; excluir agendamento de água e ambiente; "Excluir solicitação"; a alteração de regra de amostragem já usada; a alteração da regra de estabilidade (ver os fluxos).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-004</td>
+<td>As <strong>datas</strong> da amostragem, da verificação e do teste <strong>vêm do formulário</strong>, e não do relógio do servidor (<code>UI/Areas/Coleta/Controllers/AmostragemController.cs:882-887</code>; <code>UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:293-297</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-005</td>
+<td><strong>Nenhuma aprovação pede senha</strong> (assinatura eletrônica): nem a do laudo, nem a do final da estabilidade.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-006</td>
+<td>Boa parte das <strong>conferências fica na tela</strong> ou numa chamada separada, que a gravação não repete: campos obrigatórios, datas, situação para registrar, resultado dentro da especificação, duplicidade de regra, pendências antes de interromper a estabilidade.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-007</td>
+<td>O CQ <strong>não cadastra os itens</strong> que analisa: busca-os no Estoque, na Produção e no Principal e guarda só o código e o nome (<code>HSolutions.CQ.UI/Controllers/AutoCompleteController.cs:12-44</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-008</td>
+<td><strong>Integrações:</strong> recebe solicitações do Estoque e da Produção e pedidos de abertura de estudo de estabilidade do Estoque; pede ao Estoque a separação de amostras; <strong>não avisa</strong> o Estoque do resultado do laudo (<code>transversal/04-mapa-de-integracoes.md</code>, setas 1, 2, 5 e 16).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-009</td>
+<td>Cinco tabelas foram renomeadas no código com o sufixo <code>_CQ</code>, e os scripts do banco não acompanharam (<code>00-reconhecimento.md</code>, "Tabelas").</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-solicitacao-analise-e-laudo">2. Solicitação, análise e laudo</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/solicitacao-analise-laudo.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-CQ-010</td>
+<td>Solicitação de análise</td>
+<td>Na inclusão manual, a tela exige o <strong>item de análise</strong>, o <strong>tipo de item</strong>, pelo menos um <strong>tipo de análise</strong> (físico-químico ou microbiológico) e pelo menos uma <strong>fase</strong> (coleta ou análise) ("Item análise não foi informado!", "Tipo análise não foi informado!", "Fase Coleta ou Fase Análise não foi informada!"). Para produto e material, exige o lote (item de entrada) ou a etapa da produção. Essas conferências ficam numa chamada separada, que a gravação não repete (<code>UI/Areas/SolicitacaoAnalise/Controllers/SolicitacaoAnaliseController.cs:120-148</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-011</td>
+<td>Solicitação de análise</td>
+<td>O sistema grava <strong>uma solicitação por tipo de análise</strong> marcado. Toda solicitação manual nasce em <strong>Coleta pendente de programação</strong>, mesmo quando só a fase de análise foi marcada. O número leva o ano. A inclusão fica no histórico (<code>SolicitacaoAnaliseController.cs:309-312</code>, <code>:605</code>, <code>:687</code>, <code>:691</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-012</td>
+<td>Solicitação de análise</td>
+<td>Para produto ou material sem motivo regulatório, a inclusão manual avisa o Estoque, que coloca o lote em reanálise (<em>o efeito no Estoque é inferência</em>) (<code>SolicitacaoAnaliseController.cs:695-699</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-013</td>
+<td>Solicitação de análise</td>
+<td>A regra "O Valor do Teor, deve ser informado!" existe, mas <strong>nunca é conferida</strong>: o teor não é obrigatório na inclusão (<code>SolicitacaoAnaliseController.cs:303</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-014</td>
+<td>Solicitação de análise</td>
+<td><strong>Chegada automática</strong> (Estoque ou Produção): exige lote, validade, data de entrada, código e nome do produto, quantidades, uma fase, um tipo de análise e um tipo de item. Cria uma solicitação por tipo de análise, reunidas num <strong>agrupamento</strong>, cujo número volta ao Estoque. Nasce em <strong>Coleta pendente de programação</strong> se houver fase de coleta, ou em <strong>Análise pendente de programação</strong> se só houver análise. Em caso de erro, devolve 0, sem mensagem (<code>Svc/SolicitacaoAnalise/SolicitacaoAnaliseAutomaticaService.cs:310-330</code>, <code>:720-728</code>; <code>UI/Api/SolicitacaoAnaliseController.cs:32-34</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-015</td>
+<td>Solicitação de análise</td>
+<td><strong>Priorização:</strong> marca ou desmarca "Urgente" em várias solicitações de uma vez, com histórico (<code>UI/Areas/SolicitacaoAnalise/Controllers/PriorizarSolicitacaoAnaliseController.cs:63-73</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-016</td>
+<td>Solicitação de análise</td>
+<td><strong>Programação de Solicitação de Análise</strong> (água e ambiente): exige código, tipo de item, data e o ponto (tag) ("Tag não informada."). As solicitações são encaixadas de 30 em 30 minutos entre 8h e 18h. A <strong>exclusão</strong> só marca o registro como excluído, <strong>sem justificativa e sem histórico</strong> (<code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:35-58</code>, <code>:119-158</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-017</td>
+<td>Solicitação de análise</td>
+<td><strong>Cancelamento:</strong> pede justificativa e só é recusado se a solicitação já estiver cancelada ou concluída. A mensagem diz "...com situação diferente de pendente", mas o sistema <strong>deixa cancelar em análise e até com laudo liberado</strong>. Com justificativa curta, um erro de programação faz o histórico do cancelamento não ser gravado (<code>Dom/SolicitacaoAnalise/CancelarSolicitacaoAnaliseService.cs:11-16</code>; <code>SolicitacaoAnaliseController.cs:378-386</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-018</td>
+<td>Programação de amostragem</td>
+<td>Exige <strong>data de início</strong> (não anterior a hoje) e o <strong>responsável</strong> pela coleta ("Data de Início não informada.", "Data de Início anterior a data atual.", "Usuário responsável não informado.") (<code>UI/Areas/SolicitacaoAnalise/Controllers/ProgramacaoColetaController.cs:272-291</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-019</td>
+<td>Programação de amostragem</td>
+<td>Ao salvar, cria a amostragem em <strong>Pendente</strong> e passa a solicitação para <strong>Em coleta</strong>. Não confere a situação anterior (<em>inferência: a mesma solicitação pode ser programada duas vezes</em>) e <strong>não grava histórico</strong> (<code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:197-215</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-020</td>
+<td>Programação de amostragem</td>
+<td><strong>Reagendar</strong> troca a data e o responsável e volta a amostragem para Pendente, <strong>sem justificativa e sem histórico</strong> (<code>SolicitacaoAnaliseService.cs:161-183</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-021</td>
+<td>Programação de amostragem</td>
+<td>Em <strong>Amostragens Pendentes</strong>, cada usuário vê só as coletas em que é o responsável; a visão de administrador mostra todas (<code>UI/Areas/Coleta/Controllers/PendentesController.cs:131-142</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-022</td>
+<td>Programação de amostragem</td>
+<td>A amostragem só é cancelada enquanto Pendente ("Não é permitido cancelar uma amostragem situação diferente de pendente."), com justificativa e histórico. A solicitação continua Em coleta (<code>Dom/Coleta/CancelarColetaService.cs:11-15</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-023</td>
+<td>Registro de amostragem</td>
+<td>A tela só abre com a amostragem Pendente ou Programada e a solicitação Em coleta ("Situação de coleta inválida para Registrar"), e com o checklist de verificação ativo. <strong>A gravação não repete essas conferências</strong> (<code>UI/Areas/Coleta/Controllers/AmostragemController.cs:107-110</code>, <code>:987-995</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-024</td>
+<td>Registro de amostragem</td>
+<td>Obrigatórios na tela: <strong>verificador</strong>, data e hora da verificação, <strong>amostrador</strong>, data e hora da amostragem e a quantidade. Verificador e amostrador precisam ser <strong>pessoas diferentes</strong> ("Usuário Verificador e Usuário Amostrador não podem ser iguais.") (<code>UI/Areas/Coleta/Script/Amostragem.js:149-184</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-025</td>
+<td>Registro de amostragem</td>
+<td>A lista de amostradores traz só quem tem a função de amostrador no Principal, mas a gravação aceita qualquer usuário enviado pelo formulário. As <strong>datas vêm do formulário</strong>: não podem ser futuras, e a verificação precisa ser depois da amostragem, mas essa conferência fica numa chamada que só a tela faz (<code>AmostragemController.cs:262-298</code>, <code>:882-887</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-026</td>
+<td>Registro de amostragem</td>
+<td>A <strong>Regra de Amostragem</strong> (do item e do tipo de análise) diz a quantidade a amostrar e a tolerância. A quantidade fica "OK" quando está dentro da tolerância. A tolerância é sempre tratada como <strong>percentual</strong>, mesmo quando a regra é de valor absoluto (<code>Amostragem.js:495-566</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-027</td>
+<td>Registro de amostragem</td>
+<td>Grava as quantidades de <strong>análise, retenção, referência e estabilidade</strong>. A tela confere se o lote tem saldo para retenção, referência e análise; a <strong>estabilidade fica fora da conta</strong> ("Total amostrado/reservado superior ao saldo do lote!") (<code>AmostragemController.cs:370-421</code>, <code>:890-893</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-028</td>
+<td>Registro de amostragem</td>
+<td>O <strong>checklist de verificação</strong> (cadastrado na tela Verificação de Amostragens e ligado à regra) é respondido aqui, pergunta a pergunta ("corresponde": sim ou não) (<code>AmostragemController.cs:926-945</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-029</td>
+<td>Registro de amostragem</td>
+<td>Ao salvar, a amostragem fica <strong>Executada</strong> e a solicitação vai para <strong>Análise pendente de programação</strong>. O CQ <strong>pede ao Estoque</strong> a separação da amostra (ou, havendo motivo regulatório, a retirada de retenção, referência ou estabilidade). Fica no histórico (<code>AmostragemController.cs:182-219</code>, <code>:965-973</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-030</td>
+<td>Programação de análise</td>
+<td>Exige o <strong>responsável</strong> ("Responsável não informado") e a data de início. A conferência da data fica numa chamada separada, que a gravação não repete (<code>UI/Areas/Coleta/Controllers/AnaliseProgramacaoController.cs:238-243</code>, <code>:301-324</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-031</td>
+<td>Programação de análise</td>
+<td>A lista de analistas traz só quem tem a função de analista físico-químico ou microbiológico; a gravação não confere (<code>AnaliseProgramacaoController.cs:184</code>, <code>:194</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-032</td>
+<td>Programação de análise</td>
+<td>Ao salvar, cria a análise em <strong>Pendente de digitação</strong> e passa a solicitação para <strong>Em análise</strong>, <strong>sem histórico</strong> (<code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:255-280</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-033</td>
+<td>Programação de análise</td>
+<td>O <strong>cancelamento nesta tela</strong> muda a solicitação para Cancelada <strong>sem conferir a situação</strong> (o próprio código marca o trecho como provisório). A análise não é cancelada (<code>AnaliseProgramacaoController.cs:153-161</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-034</td>
+<td>Digitação dos resultados</td>
+<td>Para produto e material, a análise só abre depois que o Estoque separou a amostra ("Solicitação referente a amostra aguardando pesagem/separação.") (<code>UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:205-222</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-035</td>
+<td>Digitação dos resultados</td>
+<td>Na tela: pelo menos um ensaio preenchido; a data do teste não pode ser futura; resultado de <strong>faixa</strong> precisa ser número, e de <strong>conformidade</strong>, "conforme" ou "não conforme". Resultado <strong>fora da faixa</strong> ou "não conforme" exige só uma <strong>observação</strong> ("O campo observação é obrigatório."). A gravação não repete essas conferências (<code>AnaliseProgramadaController.cs:263-356</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-036</td>
+<td>Digitação dos resultados</td>
+<td>A análise passa a <strong>Liberar laudo</strong> quando todos os ensaios têm referência, data e resultado; antes disso, continua em Pendente de digitação, o que permite salvar aos poucos (<code>Dom/Analise/ConfirmarAnaliseProgramadaService.cs:16-41</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-037</td>
+<td>Digitação dos resultados</td>
+<td>Cada usuário vê só as análises programadas para ele; a gravação não confere se quem digita é o analista programado (<code>AnaliseProgramadaController.cs:96</code>, <code>:104</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-038</td>
+<td>Digitação dos resultados</td>
+<td>Ensaios podem ser incluídos e excluídos com justificativa; só quem criou o ensaio pode excluí-lo. Fica no histórico (<code>AnaliseProgramadaController.cs:861-876</code>, <code>:941-967</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-039</td>
+<td>Digitação dos resultados</td>
+<td>O registro guarda, por ensaio, a especificação, os limites, a unidade, a referência e o padrão (texto), o resultado (texto), a data e a observação. <strong>Não guarda</strong> o equipamento usado nem o cálculo; quem digitou fica como "último a alterar" (<code>Dom/Analise/AnaliseItem.cs:20-39</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-040</td>
+<td>Laudo final</td>
+<td>Para aprovar ou reprovar, a análise precisa estar em <strong>Liberar laudo</strong>, e quem aprova <strong>não pode ter digitado</strong> nenhum ensaio ("O Responsável pela aprovação precisa ser diferente dos analistas das análises.") (<code>Dom/Analise/LiberarLaudoService.cs:12-55</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-041</td>
+<td>Laudo final</td>
+<td><strong>Aprovar:</strong> o botão só aparece com todos os resultados dentro da especificação, mas <strong>a gravação não confere</strong>. Exige teor quando a solicitação o pede ("Teor obrigatório."). A validade do laudo vem da validade do lote ou é digitada (com "reanálise prevista") e não pode ser anterior a hoje ("A Data de Validade tem que ser maior ou igual a atual.") (<code>UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:441-467</code>, <code>:733-745</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-042</td>
+<td>Laudo final</td>
+<td><strong>Reprovar</strong> grava "não aprovado" e a observação. Nem aprovar nem reprovar <strong>gravam quem decidiu</strong> ou deixam histórico (<code>EmissaoLaudoFinalController.cs:489-506</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-043</td>
+<td>Laudo final</td>
+<td><strong>Emitir o laudo</strong> só confere que o emissor não digitou ensaios. <strong>Não exige</strong> a análise em Liberar laudo <strong>nem a decisão</strong> de aprovar ou reprovar. Grava o responsável pelo laudo e leva a análise a <strong>Laudo liberado</strong> e a solicitação a <strong>Laudo liberado</strong>, <strong>sem histórico</strong> (<code>Dom/Analise/LiberarLaudoService.cs:40-44</code>; <code>EmissaoLaudoFinalController.cs:996-1011</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-044</td>
+<td>Laudo final</td>
+<td>Nenhuma das três ações confere a <strong>função</strong> de quem aprova ou emite, e nenhuma pede <strong>senha</strong> (<code>EmissaoLaudoFinalController.cs:967-1000</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-045</td>
+<td>Laudo final</td>
+<td>Os resultados podem ser <strong>corrigidos</strong> nesta tela, com histórico; a justificativa é exigida só pela tela (<code>UI/Areas/Analise/Controllers/AnaliseLaudoController.cs:456-475</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-046</td>
+<td>Laudo final</td>
+<td><strong>Retorno ao Estoque:</strong> quando alguém atualiza a análise na tela do Estoque, o CQ responde, por agrupamento: <strong>reprovada</strong> se alguma análise foi reprovada (<strong>mesmo sem laudo emitido</strong>); <strong>aprovada</strong> só com laudo emitido; <strong>cancelada</strong> se todas foram canceladas; senão, pendente. Também devolve número e validade do laudo, teor e as quantidades de retenção, referência e estabilidade (<code>Svc/SolicitacaoAnalise/SolicitacaoAnaliseAutomaticaService.cs:118-173</code>, <code>:1023-1043</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-047</td>
+<td>Etiqueta</td>
+<td>A impressão <strong>não confere</strong> a situação nem se o laudo foi emitido: sai etiqueta de qualquer análise (<code>UI/Areas/Analise/Controllers/GerarEtiquetasController.cs:29</code>, <code>:108-123</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-048</td>
+<td>Etiqueta</td>
+<td>A etiqueta traz aprovado (sem decisão, sai como "não"), registro, material, lote do fabricante, número do laudo, responsável, data, teor e validade (<code>UI/Controllers/Services/ObterRelatorioAnaliseService.cs:376-397</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-049</td>
+<td>Etiqueta</td>
+<td>Nada vai para o histórico (<code>GerarEtiquetasController.cs:115-117</code>).</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-regras-de-amostragem-e-de-analise">3. Regras de amostragem e de análise</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/regras-amostragem-analise.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-CQ-050</td>
+<td>Itens de análise e tipos de item</td>
+<td>Os <strong>tipos de item</strong> são fixos: ambiente; água potável, purificada e para injetáveis; matéria-prima; material de embalagem; semielaborado; granel; produto acabado; padrão secundário. Não há tela para mudá-los (<code>Dom/Analise/TipoItemAnaliseEnum.cs:5-14</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-051</td>
+<td>Itens de análise e tipos de item</td>
+<td><strong>Não existe tela de cadastro de item de análise.</strong> O item é escolhido numa busca em outros módulos: materiais e produto acabado no Estoque; granel e semielaborado na Produção; pontos de água e ambientes no Principal (<code>HSolutions.CQ.UI/Controllers/AutoCompleteController.cs:12-44</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-052</td>
+<td>Itens de análise e tipos de item</td>
+<td>Na primeira vez que uma regra é salva para um item, o CQ cria o <strong>item de análise</strong> com o código de origem, o nome e o tipo, <strong>sem histórico</strong> (<code>Coleta/RegraAmostragemController.cs:1502-1519</code>; <code>Coleta/RegraAnaliseController.cs:409-427</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-053</td>
+<td>Itens de análise e tipos de item</td>
+<td>A ligação com o Estoque e a Produção é só pelo <strong>código</strong>. Se o nome mudar na origem, o nome guardado no CQ não muda (<em>inferência</em>) (<code>HSolutions.CQ.Context/Configurations/ItemAnaliseConfiguration.cs:19-24</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-054</td>
+<td>Regra de Amostragem</td>
+<td>Obrigatórios: <strong>tipo de item</strong>, <strong>item de análise</strong>, <strong>tipo de análise</strong> e <strong>nome</strong> (até 100 caracteres) ("Item análise não informado!", "Nome informado inválido!"). Item do tipo <strong>ambiente</strong> só aceita análise microbiológica (<code>Coleta/RegraAmostragemController.cs:427-431</code>, <code>:678-681</code>; <code>Dom/Coleta/RegraAmostragem.cs:64-74</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-055</td>
+<td>Regra de Amostragem</td>
+<td>A regra tem só <strong>nome, descrição, item, tipo de análise e ativo</strong>. Não há campos de <strong>método, plano de amostragem, recipiente, precauções, condições de armazenamento nem limpeza</strong> dos utensílios; só a descrição livre (<code>Dom/Coleta/RegraAmostragem.cs:16-23</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-056</td>
+<td>Regra de Amostragem</td>
+<td>Só pode haver <strong>uma regra ativa por item e tipo de análise</strong> ("Regra já existe!"). A conferência é feita na tela; a gravação não repete (<code>Coleta/RegraAmostragemController.cs:776-799</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-057</td>
+<td>Regra de Amostragem</td>
+<td>Cada <strong>item da regra</strong> tem quantidade, unidade, tolerância e tipo de cálculo: <strong>por percentual</strong> ou <strong>por valor absoluto</strong>. A quantidade a coletar é a própria quantidade cadastrada, um <strong>número fixo</strong>: não há plano estatístico (por exemplo, raiz de N + 1 ou por número de volumes). A tolerância é sempre aplicada como <strong>percentual</strong>, mesmo no tipo "valor absoluto". Quantidade ou tolerância inválidas são gravadas como <strong>zero, sem aviso</strong> (<code>Coleta/RegraAmostragemController.cs:89-90</code>, <code>:1404-1424</code>; <code>HSolutions.CQ.UI/Areas/Coleta/Script/Amostragem.js:525-536</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-058</td>
+<td>Regra de Amostragem</td>
+<td>Para <strong>produto e material</strong>, o item da regra precisa estar ligado a um <strong>checklist de Verificação de Amostragem</strong> ("Verificação de Amostragem não foi informada!") (<code>Coleta/RegraAmostragemController.cs:801-807</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-059</td>
+<td>Regra de Amostragem</td>
+<td><strong>Alteração:</strong> se a regra ainda não foi usada, muda no próprio registro, com justificativa e histórico. Se <strong>já foi usada</strong>, o sistema cria uma regra nova e manda a antiga para a lixeira; as amostragens antigas continuam ligadas à antiga. <strong>Nesse caminho, a alteração do item não grava histórico nem justificativa</strong> (<code>Coleta/RegraAmostragemController.cs:917-982</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-060</td>
+<td>Regra de Amostragem</td>
+<td><strong>Exclusão:</strong> lógica (vai para a lixeira), com justificativa e histórico. <strong>Não confere se a regra está em uso</strong> (<code>Coleta/RegraAmostragemController.cs:620-656</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-061</td>
+<td>Regra de Amostragem</td>
+<td><strong>Utensílios</strong> (por item e tipo de análise): nome, descrição e ativo, com histórico. Não há campo obrigatório conferido (<code>Dom/Coleta/UtensilioAmostragem.cs:5-16</code>; <code>Coleta/RegraAmostragemController.cs:1230-1299</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-062</td>
+<td>Regra de Amostragem</td>
+<td><strong>Checklist de Verificação de Amostragem:</strong> descrição obrigatória e sem repetição ("Descrição já está cadastrada para outro registro!"), perguntas com histórico. Checklist inativo impede registrar a amostragem que o usa. A exclusão só desativa e <strong>não grava histórico</strong> (<code>Coleta/VerificacaoController.cs:205-215</code>, <code>:455-461</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-063</td>
+<td>Regra de Análise</td>
+<td>Obrigatórios: <strong>item de análise</strong>, <strong>tipo de item</strong>, <strong>nome</strong>, <strong>especificação</strong> (texto livre), <strong>tipo de análise</strong> e <strong>tipo de regra</strong> ("Especificação informada inválida!", "Tipo de regra informado inválido!") (<code>Coleta/RegraAnaliseController.cs:82-85</code>, <code>:376-379</code>; <code>Dom/Analise/RegraAnalise.cs:172-218</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-064</td>
+<td>Regra de Análise</td>
+<td>Tipo <strong>faixa (intervalo):</strong> exige mínimo e máximo ("Valor inicial e Valor final não foram informados!") e unidade; o mínimo não pode passar do máximo ("Valor inicial não pode ser maior que o valor final!"), mas essa comparação <strong>só é feita quando os dois valores são maiores que zero</strong>. Tipo <strong>conformidade:</strong> o resultado será "conforme" ou "não conforme" (<code>RegraAnaliseController.cs:381-392</code>; <code>RegraAnalise.cs:186-204</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-065</td>
+<td>Regra de Análise</td>
+<td>A <strong>classificação</strong> é <strong>padrão</strong> (entra sozinha em toda análise do item) ou <strong>avulsa</strong> (incluída à mão na análise, com justificativa) (<code>RegraAnaliseController.cs:373</code>; <code>HSolutions.CQ.UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:858-905</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-066</td>
+<td>Regra de Análise</td>
+<td><strong>Como a regra chega à análise:</strong> ao abrir a análise para digitação, o sistema <strong>copia</strong> as regras padrão ativas do item (nome, especificação, limites, unidade, tipo). Só copia se a análise ainda não tem ensaios. <strong>Mudar a regra depois não muda as análises já abertas</strong>; as abertas depois recebem a regra nova. Não há registro de <strong>qual versão</strong> foi usada (<code>AnaliseProgramadaController.cs:540-600</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-067</td>
+<td>Regra de Análise</td>
+<td><strong>Alteração</strong> no próprio registro, com justificativa e histórico. Quando o item já tem solicitações, a tela trava os campos, mas <strong>a gravação não</strong>. <strong>Não há versão, situação "em aprovação" nem aprovador</strong> (<code>RegraAnaliseController.cs:239-262</code>, <code>:355-358</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-068</td>
+<td>Regra de Análise</td>
+<td>No histórico, uma especificação com mais de 250 caracteres é <strong>cortada e perde o primeiro caractere</strong> (<code>RegraAnaliseController.cs:178-179</code>, <code>:253-256</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-069</td>
+<td>Regra de Análise</td>
+<td><strong>Exclusão:</strong> lógica, com justificativa e histórico; recusada se a regra já foi usada ("Já existe registro de análise para essa regra."). <strong>Não há conferência de duplicidade</strong>: o mesmo item pode ter regras com o mesmo nome (<code>RegraAnaliseController.cs:279-293</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-070</td>
+<td>Unidade de Medida e Motivos</td>
+<td><strong>Unidade de Medida:</strong> sigla e descrição obrigatórias; sigla sem repetição ("Sigla já está cadastrada para outro registro!"); inclusão e alteração com histórico e justificativa (<code>Coleta/UnidadeMedidaController.cs:114-151</code>, <code>:176-185</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-071</td>
+<td>Unidade de Medida e Motivos</td>
+<td>A exclusão da unidade confere o uso só nos itens de regra de amostragem, <strong>não nas regras de análise</strong>, e grava uma justificativa fixa (<code>UnidadeMedidaController.cs:201-210</code>, <code>:242-255</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-072</td>
+<td>Unidade de Medida e Motivos</td>
+<td>Ao incluir item de regra de amostragem para produto, se a unidade vinda do Estoque não existir no CQ, ela é <strong>criada sozinha, sem histórico</strong> (<code>Coleta/RegraAmostragemController.cs:687-706</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-073</td>
+<td>Unidade de Medida e Motivos</td>
+<td><strong>Motivos:</strong> descrição, almoxarifado (só os regulatórios do Estoque: retenção e referência) e ativo. <strong>Sem conferência de obrigatórios nem de duplicidade</strong>; a justificativa da alteração é fixa (".") (<code>HSolutions.CQ.UI/Areas/TabelasApoio/Controllers/MotivosController.cs:116-118</code>, <code>:136-189</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-074</td>
+<td>Unidade de Medida e Motivos</td>
+<td>O <strong>motivo</strong> marca a solicitação como <strong>regulatória</strong> (retenção, referência ou estabilidade): na amostragem, o CQ pede ao Estoque a retirada da amostra para o almoxarifado do motivo. O motivo em uso não pode ser excluído ("Motivo já está em uso!") (<code>MotivosController.cs:230-247</code>; <code>Coleta/AmostragemController.cs:204-212</code>).</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-estabilidade">4. Estabilidade</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/estabilidade.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-CQ-075</td>
+<td>Regra de Estabilidade</td>
+<td>Obrigatórios: o <strong>item</strong> (produto) e o tipo ("Selecione um item."). Se o item ainda não existe no CQ, é criado na hora com código e descrição (<code>Estab/RegraEstabilidadeController.cs:270-309</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-076</td>
+<td>Regra de Estabilidade</td>
+<td>Cada item tem <strong>no máximo duas regras</strong>: a primeira vira físico-química e a segunda microbiológica, <strong>sem o usuário escolher</strong>. A terceira é recusada ("Item já cadastrado") (<code>RegraEstabilidadeController.cs:282-295</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-077</td>
+<td>Regra de Estabilidade</td>
+<td>A regra é formada por <strong>tempos</strong> (T0, T1, T2…). Cada tempo guarda os <strong>dias</strong> depois do início, por tipo de estudo (acelerado, longa duração, acompanhamento, prateleira). Um tipo só vale se tiver dias maiores que zero. Só o último tempo pode ser excluído (<code>HSolutions.CQ.Domain/Estabilidade/RegraEstabilidadeDetalhe.cs:15-43</code>; <code>RegraEstabilidadeController.cs:505-549</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-078</td>
+<td>Regra de Estabilidade</td>
+<td>Os dias <strong>não são validados</strong>: não se confere a ordem crescente nem valores negativos; um texto que não seja número dá um erro genérico (<code>RegraEstabilidadeController.cs:399-402</code>, <code>:449-458</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-079</td>
+<td>Regra de Estabilidade</td>
+<td>Na alteração, <strong>todos os tempos são apagados e gravados de novo</strong>, sem justificativa e sem histórico campo a campo; fica só quem alterou e quando (<code>RegraEstabilidadeController.cs:404-458</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-080</td>
+<td>Regra de Estabilidade</td>
+<td>Não há exclusão da regra; ela é <strong>desativada</strong> (<code>RegraEstabilidadeController.cs:379</code>, <code>:410</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-081</td>
+<td>Regra de Estabilidade</td>
+<td>A regra <strong>não tem os campos de um protocolo</strong>: condição de armazenamento, métodos, critérios de aceitação, número de lotes (<code>HSolutions.CQ.Domain/Estabilidade/RegraEstabilidade.cs:12-17</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-082</td>
+<td>Abertura do acompanhamento</td>
+<td>O acompanhamento é <strong>aberto só pelo Estoque</strong>, na entrada do produto acabado marcada para estabilidade. O Estoque envia o produto, o lote do fabricante, a entrada, os tipos de análise e de estudo e o usuário. <strong>Não há abertura manual</strong> na tela (<code>HSolutions.CQ.UI/Api/AcompanhamentoEstabilidadeController.cs:80-187</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-083</td>
+<td>Abertura do acompanhamento</td>
+<td>Para cada tipo de análise, o sistema procura a regra do produto e abre <strong>um estudo por tipo de estudo pedido</strong> que tenha dias na regra. <strong>Sem regra, nada é aberto e nenhum aviso volta ao Estoque</strong> (<code>AcompanhamentoEstabilidadeController.cs:102-155</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-084</td>
+<td>Abertura do acompanhamento</td>
+<td>O estudo nasce <strong>Em aberto</strong>, com a data do servidor e um código com ano, sequência e tipo de análise (<code>AcompanhamentoEstabilidadeController.cs:203-214</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-085</td>
+<td>Abertura do acompanhamento</td>
+<td>Cada tempo da regra vira uma linha do estudo com os dias previstos. <strong>Não há data prevista calculada nem aviso</strong> de tempo próximo ou atrasado (<code>AcompanhamentoEstabilidadeController.cs:216-229</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-086</td>
+<td>Abertura do acompanhamento</td>
+<td>O estudo <strong>não guarda</strong> a quantidade reservada para estabilidade, a condição de armazenamento nem a data de início (<code>HSolutions.CQ.Domain/Estabilidade/AcompanhamentoEstabilidade.cs:33-48</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-087</td>
+<td>Execução dos tempos</td>
+<td>A solicitação de cada tempo é gerada <strong>à mão</strong>, pelo botão "Gerar Solicitação", que aparece só no primeiro tempo ainda sem solicitação e com o estudo Em aberto. <strong>Nada é gerado pela data</strong> (<code>Estab/AcompanhamentoController.cs:184-246</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-088</td>
+<td>Execução dos tempos</td>
+<td>Para gerar, o sistema exige o lote no Estoque ("Lote não encontrado!"), o almoxarifado de estabilidade ("Almoxarifado de estabilidade não encontrado!"), o motivo ligado a ele ("Motivo não cadastrado!") e a solicitação do T0 ("Solicitação T0 não encontrada!"). Lote, validade, quantidade e volumes são copiados do T0 (<code>AcompanhamentoController.cs:400-430</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-089</td>
+<td>Execução dos tempos</td>
+<td>O usuário escolhe os <strong>ensaios</strong> da solicitação (<code>AcompanhamentoController.cs:194-222</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-090</td>
+<td>Execução dos tempos</td>
+<td>A solicitação nasce em <strong>Coleta pendente de programação</strong>, marcada como estabilidade, com o número do tempo e o motivo do almoxarifado de estabilidade, e segue o fluxo normal. Fica no histórico (<code>AcompanhamentoController.cs:432-467</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-091</td>
+<td>Execução dos tempos</td>
+<td>A situação de cada tempo vem da solicitação: "Aguardando" sem solicitação; "Laudo liberado" quando a análise termina, com o botão "Imprimir Laudo" (<code>AcompanhamentoController.cs:296-325</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-092</td>
+<td>Execução dos tempos</td>
+<td>Tempo atrasado <strong>não tem tratamento</strong>: nem aviso, nem bloqueio, nem justificativa (<em>inferência: o código não compara datas</em>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-093</td>
+<td>Interrupção</td>
+<td>"Interromper Estudo" pede confirmação e <strong>justificativa</strong>. Se algum tempo tiver solicitação sem laudo liberado, a tela avisa "Existem solicitações pendentes!" e não segue; <strong>essa conferência é só da tela</strong> (<code>HSolutions.CQ.UI/Areas/Estabilidade/Script/AcompanhamentoEdit.js:58-87</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-094</td>
+<td>Interrupção</td>
+<td>O estudo passa a <strong>Interrompido</strong>, com usuário, data e histórico com a justificativa (<code>AcompanhamentoController.cs:133-148</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-095</td>
+<td>Interrupção</td>
+<td>A conferência da função "Estabilidade" existe no código, mas <strong>está desligada</strong> (o resultado é sempre "sim"): qualquer usuário com a tela no menu interrompe (<code>AcompanhamentoController.cs:168-178</code>; <code>Estab/FinalEstabilidadeController.cs:265</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-096</td>
+<td>Interrupção</td>
+<td>Interrompido, o estudo não pode ser editado nem receber novas solicitações; as já geradas continuam como estão (<code>AcompanhamentoController.cs:385</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-097</td>
+<td>Final de Estabilidade</td>
+<td>Para finalizar, <strong>todos os tempos</strong> precisam ter solicitação com <strong>laudo liberado</strong> ("Tempo X sem solicitação!", "Solicitação N está pendente!", "Existem pendências no estudo!") (<code>Estab/FinalEstabilidadeController.cs:176-207</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-098</td>
+<td>Final de Estabilidade</td>
+<td>Obrigatórios: <strong>temperatura</strong> (texto livre), <strong>conclusão</strong> e <strong>resultado</strong> (aprovado ou reprovado) ("Temperatura não foi informada!"). A observação é opcional (<code>FinalEstabilidadeController.cs:209-216</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-099</td>
+<td>Final de Estabilidade</td>
+<td>O sistema <strong>não confere os resultados dos tempos</strong>: o estudo pode ser finalizado como <strong>aprovado mesmo com algum laudo reprovado</strong> (<code>FinalEstabilidadeController.cs:199-224</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-100</td>
+<td>Final de Estabilidade</td>
+<td>O estudo passa a <strong>Finalizado</strong> com o resultado, o usuário e a data, e vai para o histórico com a justificativa digitada ou, sem ela, com o texto fixo "Alteração". <strong>Sem senha</strong> (<code>FinalEstabilidadeController.cs:219-231</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-101</td>
+<td>Final de Estabilidade</td>
+<td>Finalizado ou interrompido, os dados finais ficam bloqueados (<code>FinalEstabilidadeController.cs:343</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-102</td>
+<td>Final de Estabilidade</td>
+<td>O <strong>relatório final</strong> traz o código do estudo, o produto, o lote, a validade, os tipos de estudo e de análise, a temperatura, os resultados de cada ensaio por tempo (com especificação e unidade), a data programada (a do T0 mais os dias) e a realizada, a conclusão e o resultado. <strong>Não traz</strong> o protocolo, os métodos nem quem aprovou, e o campo "Data de Fabricação" mostra, na verdade, a <strong>data de entrada</strong> do T0 (<code>HSolutions.CQ.UI/Controllers/Services/ObterRelatorioFinalEstabilidadeService.cs:80-89</code>, <code>:138-144</code>, <code>:240-263</code>).</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-agua-e-ambiente">5. Água e ambiente</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/agua-ambiente.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-CQ-103</td>
+<td>Agenda de água e ambiente</td>
+<td>A agenda mostra só os tipos <strong>água</strong> e <strong>ambiente</strong>. O usuário escolhe o tipo de item e o tipo de análise (<code>UI/Areas/SolicitacaoAnalise/Controllers/ProgramacaoSolicitacaoController.cs:63-66</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-104</td>
+<td>Agenda de água e ambiente</td>
+<td>Os pontos e salas vêm do <strong>Principal</strong>, consultados na hora: para água, os pontos do tipo escolhido; para ambiente, todos os ambientes. A identificação é a <strong>tag</strong> do ponto ou da sala (<code>Infra/SolicitacaoAnalise/ItensProgramaveisService.cs:53-73</code>, <code>:142</code>, <code>:172</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-105</td>
+<td>Agenda de água e ambiente</td>
+<td>O sistema <strong>não traz a classe nem o grau de limpeza</strong> da sala; só nome, descrição e tag (<code>ItensProgramaveisService.cs:172</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-106</td>
+<td>Agenda de água e ambiente</td>
+<td>Cada coleta é agendada <strong>uma de cada vez</strong>, para um dia e horário. <strong>Não há frequência nem recorrência</strong> por ponto ou por sala (<code>ProgramacaoSolicitacaoController.cs:102-118</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-107</td>
+<td>Agenda de água e ambiente</td>
+<td>Não se agenda para hoje nem para trás, e o horário não pode repetir outro do mesmo tipo no mesmo dia ("Horário já agendado"). Ao <strong>mudar a data</strong>, o sistema encaixa o horário de 30 em 30 minutos entre 8h e 18h; <strong>na inclusão</strong>, vale o horário digitado (<code>ProgramacaoSolicitacaoController.cs:271-283</code>; <code>Infra/SolicitacaoAnalise/SolicitacaoAnaliseService.cs:49</code>, <code>:133-158</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-108</td>
+<td>Agenda de água e ambiente</td>
+<td>A solicitação nasce em <strong>Coleta pendente de programação</strong>, com fase de coleta. O item de análise é criado no CQ se ainda não existir (<code>SolicitacaoAnaliseService.cs:32-87</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-109</td>
+<td>Agenda de água e ambiente</td>
+<td>A exclusão vai para a lixeira, <strong>sem justificativa e sem histórico</strong> (<code>SolicitacaoAnaliseService.cs:116-128</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-110</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>Água e ambiente <strong>não geram pedido ao Estoque</strong> (nem separação de amostra, nem reanálise), que só existe para produto e material (<code>HSolutions.CQ.Domain/SolicitacaoAnalise/SolicitacaoAnalise.cs:275-297</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-111</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>A Programação de Amostragem tem um filtro próprio para água e ambiente; para água, mostra os dados do ponto vindos do Principal. O responsável é escolhido entre os amostradores. A conta de quantidade pela regra de amostragem está <strong>desligada</strong> para esses itens (<code>UI/Areas/SolicitacaoAnalise/Controllers/ProgramacaoColetaController.cs:46-87</code>; <code>SolicitacaoAnaliseService.cs:185-225</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-112</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td><strong>Ambiente só aceita análise microbiológica</strong> (<code>UI/Areas/Coleta/Controllers/RegraAmostragemController.cs:678-681</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-113</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>A análise <strong>não espera</strong> a separação de amostra no Estoque (<code>UI/Areas/Analise/Controllers/AnaliseProgramadaController.cs:205-223</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-114</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>O <strong>boletim de ambiente</strong> traz quatro condições de controle (sala vazia, fluxo ligado, ar ligado, sala em atividade) <strong>fixas no código e sempre marcadas como "não corresponde"</strong>: a condição real da sala na coleta não é registrada (<code>UI/Controllers/Services/ObterRelatorioAnaliseService.cs:328-347</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-115</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>Água e ambiente têm <strong>laudo e etiqueta próprios</strong>; a aprovação e a emissão seguem as mesmas regras do fluxo geral (<code>ObterRelatorioAnaliseService.cs:444-460</code>; <code>HSolutions.CQ.Reports/Analise/AnaliseProgramada/GerarEtiquetaReports.cs:26-29</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-116</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td><strong>Não há limite de alerta nem limite de ação</strong>, nem relatório de tendência: o resultado é só "conforme" ou "não conforme" (<code>ObterRelatorioAnaliseService.cs:350-354</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-117</td>
+<td>Ligação com a Produção</td>
+<td>Na Produção, a <strong>autorização do ponto de água</strong> considera o ponto liberado quando o <strong>registro de análise da própria Produção</strong> mais recente está revisado e dentro da validade. <strong>Não consulta o laudo do CQ</strong> (<code>2.producao/app/LaboSys_UI/autorizacoes/autorizacao_ponto_agua_producao_ed.aspx.cs:444</code>; <code>2.producao/app/LaboSys_BLL/bllRegistroAnalisePontosAgua.cs:77-85</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-118</td>
+<td>Ligação com a Produção</td>
+<td>Autorizar ou não o uso do ponto é uma <strong>escolha manual</strong>, ponto a ponto (sim, não, pendente, cancelada) (<code>autorizacao_ponto_agua_producao_ed.aspx.cs:64-79</code>, <code>:146-162</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-CQ-119</td>
+<td>Ligação com a Produção</td>
+<td>A Produção tem <strong>telas próprias</strong> para programar e registrar análises de água e de ambiente (<code>2.producao/app/LaboSys_UI/preparacao/analise_pontos_agua_*</code>, <code>registro_analise_pontos_agua_*</code>, <code>analise_ambiente_*</code>): um <strong>controle paralelo</strong> ao do CQ.</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-pontos-de-atencao-dos-fluxos">6. Pontos de atenção dos fluxos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Ponto de atenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>1. O laudo pode ser emitido sem decisão</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>2. Os atos de decisão não deixam rastro</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>3. Quem decide não é conferido</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>4. O Estoque recebe "reprovada" antes do laudo</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>5. As conferências ficam na tela</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>6. Cancelamentos sem limite</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>7. Situações que nunca acontecem</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>8. Amostragem: tolerância e saldo</td>
+</tr>
+<tr>
+<td>Solicitação, análise e laudo</td>
+<td>9. Etiqueta sem laudo</td>
+</tr>
+<tr>
+<td>Regras de amostragem e de análise</td>
+<td>1. O procedimento de amostragem está incompleto para a norma</td>
+</tr>
+<tr>
+<td>Regras de amostragem e de análise</td>
+<td>2. A especificação muda sem aprovação</td>
+</tr>
+<tr>
+<td>Regras de amostragem e de análise</td>
+<td>3. A trava contra alterar especificação em uso está só na tela</td>
+</tr>
+<tr>
+<td>Regras de amostragem e de análise</td>
+<td>4. Limites inválidos passam</td>
+</tr>
+<tr>
+<td>Regras de amostragem e de análise</td>
+<td>5. Tolerância "valor absoluto" não funciona</td>
+</tr>
+<tr>
+<td>Regras de amostragem e de análise</td>
+<td>6. Histórico com falhas</td>
+</tr>
+<tr>
+<td>Regras de amostragem e de análise</td>
+<td>7. Exclusões fracas</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>1. A regra não é um protocolo</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>2. Não há controle de lotes por ano</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>3. Os tempos não têm data nem alerta</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>4. Resultado fora de especificação não muda nada</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>5. Histórico frágil</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>6. Quem interrompe ou finaliza não é conferido</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>7. O relatório final está incompleto e com um rótulo errado</td>
+</tr>
+<tr>
+<td>Água e ambiente</td>
+<td>1. Não há programa de monitoramento</td>
+</tr>
+<tr>
+<td>Água e ambiente</td>
+<td>2. Não há limite de alerta nem de ação, nem tendência</td>
+</tr>
+<tr>
+<td>Água e ambiente</td>
+<td>3. O resultado do CQ não protege a produção</td>
+</tr>
+<tr>
+<td>Água e ambiente</td>
+<td>4. Dois controles da mesma coisa</td>
+</tr>
+<tr>
+<td>Água e ambiente</td>
+<td>5. A sala não tem classe de limpeza no CQ</td>
+</tr>
+<tr>
+<td>Água e ambiente</td>
+<td>6. Condições da sala fixas no boletim</td>
+</tr>
+<tr>
+<td>Água e ambiente</td>
+<td>7. Regra de horário incoerente</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-correspondencia-com-os-fluxos">7. Correspondência com os fluxos</h3>
+<p>Cada regra tem o número local (RN001…) que aparece no documento do fluxo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Fluxo</th>
+<th>Etapa</th>
+<th>No fluxo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-CQ-010</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-011</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-012</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-013</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-014</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-015</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-016</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-017</td>
+<td>Solicitação, análise e laudo</td>
+<td>Solicitação de análise</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-CQ-018</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de amostragem</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-019</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de amostragem</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-020</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de amostragem</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-021</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de amostragem</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-022</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de amostragem</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-023</td>
+<td>Solicitação, análise e laudo</td>
+<td>Registro de amostragem</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-024</td>
+<td>Solicitação, análise e laudo</td>
+<td>Registro de amostragem</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-025</td>
+<td>Solicitação, análise e laudo</td>
+<td>Registro de amostragem</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-026</td>
+<td>Solicitação, análise e laudo</td>
+<td>Registro de amostragem</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-027</td>
+<td>Solicitação, análise e laudo</td>
+<td>Registro de amostragem</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-028</td>
+<td>Solicitação, análise e laudo</td>
+<td>Registro de amostragem</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-029</td>
+<td>Solicitação, análise e laudo</td>
+<td>Registro de amostragem</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-030</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de análise</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-031</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de análise</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-032</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de análise</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-033</td>
+<td>Solicitação, análise e laudo</td>
+<td>Programação de análise</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-034</td>
+<td>Solicitação, análise e laudo</td>
+<td>Digitação dos resultados</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-035</td>
+<td>Solicitação, análise e laudo</td>
+<td>Digitação dos resultados</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-036</td>
+<td>Solicitação, análise e laudo</td>
+<td>Digitação dos resultados</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-037</td>
+<td>Solicitação, análise e laudo</td>
+<td>Digitação dos resultados</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-038</td>
+<td>Solicitação, análise e laudo</td>
+<td>Digitação dos resultados</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-039</td>
+<td>Solicitação, análise e laudo</td>
+<td>Digitação dos resultados</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-040</td>
+<td>Solicitação, análise e laudo</td>
+<td>Laudo final</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-041</td>
+<td>Solicitação, análise e laudo</td>
+<td>Laudo final</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-042</td>
+<td>Solicitação, análise e laudo</td>
+<td>Laudo final</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-043</td>
+<td>Solicitação, análise e laudo</td>
+<td>Laudo final</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-044</td>
+<td>Solicitação, análise e laudo</td>
+<td>Laudo final</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-045</td>
+<td>Solicitação, análise e laudo</td>
+<td>Laudo final</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-046</td>
+<td>Solicitação, análise e laudo</td>
+<td>Laudo final</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-047</td>
+<td>Solicitação, análise e laudo</td>
+<td>Etiqueta</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-048</td>
+<td>Solicitação, análise e laudo</td>
+<td>Etiqueta</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-049</td>
+<td>Solicitação, análise e laudo</td>
+<td>Etiqueta</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-050</td>
+<td>Regras de amostragem e de análise</td>
+<td>Itens de análise e tipos de item</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-051</td>
+<td>Regras de amostragem e de análise</td>
+<td>Itens de análise e tipos de item</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-052</td>
+<td>Regras de amostragem e de análise</td>
+<td>Itens de análise e tipos de item</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-053</td>
+<td>Regras de amostragem e de análise</td>
+<td>Itens de análise e tipos de item</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-054</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-055</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-056</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-057</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-058</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-059</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-060</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-061</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-CQ-062</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Amostragem</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-CQ-063</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Análise</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-064</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Análise</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-065</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Análise</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-066</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Análise</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-067</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Análise</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-068</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Análise</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-069</td>
+<td>Regras de amostragem e de análise</td>
+<td>Regra de Análise</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-070</td>
+<td>Regras de amostragem e de análise</td>
+<td>Unidade de Medida e Motivos</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-071</td>
+<td>Regras de amostragem e de análise</td>
+<td>Unidade de Medida e Motivos</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-072</td>
+<td>Regras de amostragem e de análise</td>
+<td>Unidade de Medida e Motivos</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-073</td>
+<td>Regras de amostragem e de análise</td>
+<td>Unidade de Medida e Motivos</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-074</td>
+<td>Regras de amostragem e de análise</td>
+<td>Unidade de Medida e Motivos</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-075</td>
+<td>Estabilidade</td>
+<td>Regra de Estabilidade</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-076</td>
+<td>Estabilidade</td>
+<td>Regra de Estabilidade</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-077</td>
+<td>Estabilidade</td>
+<td>Regra de Estabilidade</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-078</td>
+<td>Estabilidade</td>
+<td>Regra de Estabilidade</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-079</td>
+<td>Estabilidade</td>
+<td>Regra de Estabilidade</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-080</td>
+<td>Estabilidade</td>
+<td>Regra de Estabilidade</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-081</td>
+<td>Estabilidade</td>
+<td>Regra de Estabilidade</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-082</td>
+<td>Estabilidade</td>
+<td>Abertura do acompanhamento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-083</td>
+<td>Estabilidade</td>
+<td>Abertura do acompanhamento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-084</td>
+<td>Estabilidade</td>
+<td>Abertura do acompanhamento</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-085</td>
+<td>Estabilidade</td>
+<td>Abertura do acompanhamento</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-086</td>
+<td>Estabilidade</td>
+<td>Abertura do acompanhamento</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-087</td>
+<td>Estabilidade</td>
+<td>Execução dos tempos</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-088</td>
+<td>Estabilidade</td>
+<td>Execução dos tempos</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-089</td>
+<td>Estabilidade</td>
+<td>Execução dos tempos</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-090</td>
+<td>Estabilidade</td>
+<td>Execução dos tempos</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-091</td>
+<td>Estabilidade</td>
+<td>Execução dos tempos</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-092</td>
+<td>Estabilidade</td>
+<td>Execução dos tempos</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-093</td>
+<td>Estabilidade</td>
+<td>Interrupção</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-094</td>
+<td>Estabilidade</td>
+<td>Interrupção</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-095</td>
+<td>Estabilidade</td>
+<td>Interrupção</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-096</td>
+<td>Estabilidade</td>
+<td>Interrupção</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-097</td>
+<td>Estabilidade</td>
+<td>Final de Estabilidade</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-098</td>
+<td>Estabilidade</td>
+<td>Final de Estabilidade</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-099</td>
+<td>Estabilidade</td>
+<td>Final de Estabilidade</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-100</td>
+<td>Estabilidade</td>
+<td>Final de Estabilidade</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-101</td>
+<td>Estabilidade</td>
+<td>Final de Estabilidade</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-102</td>
+<td>Estabilidade</td>
+<td>Final de Estabilidade</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-103</td>
+<td>Água e ambiente</td>
+<td>Agenda de água e ambiente</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-104</td>
+<td>Água e ambiente</td>
+<td>Agenda de água e ambiente</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-105</td>
+<td>Água e ambiente</td>
+<td>Agenda de água e ambiente</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-106</td>
+<td>Água e ambiente</td>
+<td>Agenda de água e ambiente</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-107</td>
+<td>Água e ambiente</td>
+<td>Agenda de água e ambiente</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-108</td>
+<td>Água e ambiente</td>
+<td>Agenda de água e ambiente</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-109</td>
+<td>Água e ambiente</td>
+<td>Agenda de água e ambiente</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-110</td>
+<td>Água e ambiente</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-111</td>
+<td>Água e ambiente</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-112</td>
+<td>Água e ambiente</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-CQ-113</td>
+<td>Água e ambiente</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-CQ-114</td>
+<td>Água e ambiente</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-CQ-115</td>
+<td>Água e ambiente</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-CQ-116</td>
+<td>Água e ambiente</td>
+<td>Amostragem, análise e laudo: o que muda</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-CQ-117</td>
+<td>Água e ambiente</td>
+<td>Ligação com a Produção</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-CQ-118</td>
+<td>Água e ambiente</td>
+<td>Ligação com a Produção</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-CQ-119</td>
+<td>Água e ambiente</td>
+<td>Ligação com a Produção</td>
+<td>RN003</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-regras-gerais-do-modulo">1. Regras gerais do módulo</a></li><li><a href="#2-solicitacao-analise-e-laudo">2. Solicitação, análise e laudo</a></li><li><a href="#3-regras-de-amostragem-e-de-analise">3. Regras de amostragem e de análise</a></li><li><a href="#4-estabilidade">4. Estabilidade</a></li><li><a href="#5-agua-e-ambiente">5. Água e ambiente</a></li><li><a href="#6-pontos-de-atencao-dos-fluxos">6. Pontos de atenção dos fluxos</a></li><li><a href="#7-correspondencia-com-os-fluxos">7. Correspondência com os fluxos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
