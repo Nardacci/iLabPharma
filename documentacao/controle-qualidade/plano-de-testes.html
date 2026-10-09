@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · Controle da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">✧</span>Controle da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="solicitacao-analise-e-laudo.html">Solicitação, análise e laudo</a></li><li><a href="regras-de-amostragem-e-de-analise.html">Regras de amostragem e de análise</a></li><li><a href="estabilidade.html">Estabilidade</a></li><li><a href="agua-e-ambiente.html">Água e ambiente</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle da Qualidade</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · <strong>Versão a testar:</strong> legado entregue pelo fornecedor · <strong>Executor previsto:</strong> Claude Code no computador da pessoa, pela VPN, com a habilidade <code>executar-testes</code> (passo a passo em <code>homologacao/COMO-EXECUTAR-TESTES.md</code>).</p>
+<p>Os casos das seções 6.1 a 6.4 foram <strong>montados por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/montar_plano_testes.py</code>). Se um fluxo mudar, gere essas seções de novo e mantenha a seção 6.0, escrita à mão.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<p>Confirmar nas telas o que a leitura do código encontrou no Controle da Qualidade: as regras de negócio (<code>01-regras-de-negocio.md</code>), os pontos de atenção dos quatro fluxos, a matriz de permissões (<code>02-matriz-de-permissoes.md</code>) e a situação das 25 telas (<code>11-inventario-de-telas.md</code>).</p>
+<h3 id="2-escopo">2. Escopo</h3>
+<ul>
+<li>Os quatro fluxos: solicitação, análise e laudo; regras de amostragem e de análise; estabilidade; água e ambiente.</li>
+<li>O acesso (seção 6.0).</li>
+<li><strong>Fora:</strong> os 3 protótipos de avaliação de fornecedor, que só serão abertos para registrar que não gravam. O Estoque e a Produção só entram onde um caso pede para conferir o efeito lá (CT-CQ-013, 014, 043, 066).</li>
+</ul>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<h4 id="3-1-antes-de-qualquer-caso-o-cq-abre">3.1 Antes de qualquer caso: o CQ abre?</h4>
+<p>O acesso ao CQ vem do Principal: o <strong>menu</strong> e a permissão de <strong>consulta</strong> de cada tela vêm do perfil. No Estoque, os testes travaram por falta de acesso ao módulo.</p>
+<ol>
+<li>No Principal, criar o perfil <strong><code>TESTECQ</code></strong> com <strong>todas as telas da aba Controle da Qualidade</strong> e todas as ações.</li>
+<li>Dar o <code>TESTECQ</code> como perfil adicional aos usuários da tabela 3.2.</li>
+<li>Entrar no CQ com <code>t.admin</code> e conferir se o menu aparece (20 itens). <strong>Se não aparecer, parar e registrar.</strong></li>
+</ol>
+<h4 id="3-2-usuarios-e-funcoes">3.2 Usuários e funções</h4>
+<p>O CQ usa as <strong>funções profissionais</strong> do Principal para as listas de amostradores e analistas e para a tela do laudo (<code>02-matriz-de-permissoes.md</code>). Reaproveitar os usuários de teste que já existem e dar a cada um a função indicada (no Principal, Funções profissionais):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário (já existe)</th>
+<th>Função no Principal</th>
+<th>Nos fluxos é chamado de</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t.cadastro</code></td>
+<td>Amostrador</td>
+<td><code>TESTE AMOSTRADOR</code></td>
+</tr>
+<tr>
+<td><code>t.semadmin</code></td>
+<td>Analista físico-químico (e microbiológico, para ambiente)</td>
+<td><code>TESTE ANALISTA</code></td>
+</tr>
+<tr>
+<td><code>t.admin</code></td>
+<td>CQ – Chefe de Subdivisão</td>
+<td>aprovador com a função; verificador da amostragem</td>
+</tr>
+<tr>
+<td><code>t.consulta</code></td>
+<td><strong>Nenhuma</strong> função do CQ</td>
+<td><code>TESTE APROVADOR</code> (sem a função de chefe); também o usuário sem a função de estabilidade</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se algum estiver bloqueado ou com a senha vencida, usar o administrador para gerar senha nova. <strong>Não guardar senhas neste repositório.</strong></p>
+<h4 id="3-3-dados-ja-existentes-no-ambiente-reaproveitar">3.3 Dados já existentes no ambiente (reaproveitar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Onde</th>
+<th>Uso aqui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Item <code>TESTE MATERIA PRIMA</code> e lote <code>TESTELOTE001</code></td>
+<td>Estoque (rodada de 07/10)</td>
+<td>Item das regras e da solicitação manual. <em>Atenção:</em> o endereçamento do Estoque não gravou (DV-EST-016), então nenhuma solicitação chegou do Estoque; usar a <strong>solicitação manual</strong></td>
+</tr>
+<tr>
+<td>Ambientes <code>TESTE</code></td>
+<td>Principal</td>
+<td>Sala da agenda de ambiente (fluxo 4)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-4-dados-a-criar-no-proprio-cq-durante-os-testes">3.4 Dados a criar no próprio CQ (durante os testes)</h4>
+<p>Regras de amostragem e de análise <code>TESTE</code> para o material (um ensaio de faixa e um de conformidade), unidade <code>TST</code>, um motivo <code>TESTE</code> e um checklist de verificação <code>TESTE</code>. Os casos do fluxo 2 (CT-CQ-020 a 035) criam esses dados; <strong>rodar o fluxo 2 antes do fluxo 1</strong>.</p>
+<h4 id="3-5-dados-que-faltam-pedir-ou-criar">3.5 Dados que faltam (pedir ou criar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Necessário para</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Um <strong>ponto de água purificada <code>TESTE</code></strong></td>
+<td>Fluxo 4 (CT-CQ-060 a 066)</td>
+<td>Criar no Principal, se não houver</td>
+</tr>
+<tr>
+<td>Um <strong>produto acabado <code>TESTE</code></strong> com entrada no Estoque marcada para estabilidade</td>
+<td>Fluxo 3 (CT-CQ-043 a 052)</td>
+<td>Depende do Estoque (entrada de produto acabado). Sem ele, esses casos ficam <strong>bloqueados</strong></td>
+</tr>
+<tr>
+<td>Almoxarifado e motivo de <strong>estabilidade</strong></td>
+<td>CT-CQ-045, 046</td>
+<td>Criar no Estoque e no CQ</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<p>Como nos outros módulos: captura de cada passo relevante nos casos de prioridade <strong>alta</strong> e do resultado nos de prioridade <strong>média</strong>, em <code>homologacao/4.controle_qualidade/execucao/&lt;AAAA-MM-DD&gt;/evidencias/CT-CQ-xxx-passo-N.png</code>, e o <code>resultado.md</code> da rodada com a lista dos dados <code>TESTE</code> criados.</p>
+<p><strong>Atenção à trilha de auditoria:</strong> vários casos pedem para "consultar o histórico". No CQ, o histórico é gravado por uma biblioteca comum, em tabelas fora do projeto do CQ (<code>06-modelo-de-dados.md</code>). Se o histórico vier vazio para tudo, registrar e perguntar ao DBA.</p>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<ul>
+<li>O teste <strong>confirma o comportamento atual</strong>. Nos casos "Registrar se…", o resultado esperado pela norma é diferente do que o código indica; o caso <strong>falha</strong> se o sistema fizer o que o código mostra.</li>
+<li>Para a nova versão, todos os casos de prioridade <strong>alta</strong> devem passar (as falhas viram requisitos corrigidos).</li>
+<li><strong>Ordem sugerida:</strong> verificação 3.1; seção 6.0; fluxo 2 (cria as regras); fluxo 1; fluxo 4; fluxo 3 (se houver o produto acabado). Em cada um, primeiro os casos de prioridade alta.</li>
+</ul>
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p>Prioridade: <strong>Alta</strong> = citado na prioridade por risco do fluxo; <strong>Média</strong> = pede para registrar uma falha prevista pelo código; <strong>Baixa</strong> = regras de preenchimento e caminhos normais. "Rastreia" aponta o ponto de atenção do fluxo.</p>
+<h4 id="6-0-acesso-da-matriz-de-permissoes">6.0 Acesso (da matriz de permissões)</h4>
+<p>Seção escrita à mão, a partir de <code>02-matriz-de-permissoes.md</code>. Rodar <strong>antes</strong> dos fluxos, logo depois da verificação 3.1.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-070</td>
+<td>Entrar no CQ com um perfil sem a consulta da Emissão Laudo Final e abrir a tela</td>
+<td>Página de acesso negado</td>
+<td>Matriz, camada 2</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-071</td>
+<td>Com um perfil <strong>só de consulta</strong> na Emissão Laudo Final, aprovar e emitir um laudo <code>TESTE</code></td>
+<td>Pela norma, recusa. <strong>Registrar se aprovar</strong></td>
+<td>Matriz: Emissão Laudo Final</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-072</td>
+<td>Com um perfil sem a exclusão em Unidade de Medida, excluir uma unidade <code>TESTE</code> sem uso</td>
+<td>Pela norma, recusa. <strong>Registrar se excluir</strong></td>
+<td>Matriz: cadastros de apoio</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-073</td>
+<td>Com <code>t.semadmin</code> (analista), abrir a Consultar Análise Programada</td>
+<td>Vê só as próprias análises</td>
+<td>Matriz: análise</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-074</td>
+<td>Com <code>t.consulta</code>, sem nenhuma função do CQ, abrir a Regra Estabilidade pelo menu</td>
+<td>Pela norma, sem acesso. <strong>Registrar se abrir</strong></td>
+<td>Matriz: estabilidade</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-1-solicitacao-analise-e-laudo">6.1 Solicitação, análise e laudo</h4>
+<p>Fluxo: <code>fluxos/solicitacao-analise-laudo.md</code>. Dados do fluxo: um material <code>TESTE</code> com regra de amostragem e regra de análise <code>TESTE</code> (um ensaio de faixa e um de conformidade); o lote <code>TESTELOTE001</code>, se o recebimento do Estoque voltar a funcionar, ou uma solicitação manual; os usuários <code>TESTE AMOSTRADOR</code>, <code>TESTE ANALISTA</code> e <code>TESTE APROVADOR</code> (o último sem a função de chefe do CQ). Todos os registros com nome começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-001</td>
+<td>Solicitação manual sem tipo de análise; depois completa, com os dois tipos</td>
+<td>Recusa; depois duas solicitações em Coleta pendente de programação</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-002</td>
+<td>Solicitação com teor obrigatório e sem valor de teor</td>
+<td>Pela regra, recusa. <strong>Registrar se aceitar</strong> (RN004)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-003</td>
+<td>Programar a amostragem com data de ontem</td>
+<td>Recusa: "Data de Início anterior a data atual."</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-004</td>
+<td>Programar duas vezes a mesma solicitação</td>
+<td><strong>Registrar se gerar duas amostragens</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-005</td>
+<td>Registrar a amostragem com o mesmo usuário como amostrador e verificador</td>
+<td>Recusa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-006</td>
+<td>Registrar a amostragem com data futura; depois com data de ontem</td>
+<td>Recusa; depois aceita. <strong>Registrar que a data vem do formulário</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-007</td>
+<td>Registrar com amostrador sem a função de amostrador (se a tela permitir escolher)</td>
+<td>Pela norma, recusa. <strong>Registrar o comportamento</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-008</td>
+<td>Abrir a análise de um material antes de o Estoque separar a amostra</td>
+<td>Recusa: "...aguardando pesagem/separação."</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-009</td>
+<td>Digitar um resultado fora da faixa sem observação; depois com observação</td>
+<td>Recusa; depois aceita. <strong>Registrar que não abre investigação</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-010</td>
+<td>Aprovar o laudo com o <code>TESTE ANALISTA</code> (que digitou)</td>
+<td>Recusa: "...precisa ser diferente dos analistas..."</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-011</td>
+<td><strong>Aprovar com o <code>TESTE APROVADOR</code>, sem a função de chefe do CQ</strong></td>
+<td>Pela norma, recusa. <strong>Registrar se aprovar</strong> (ponto 3)</td>
+<td>Ponto 3: Quem decide não é conferido</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-012</td>
+<td><strong>Emitir o laudo sem aprovar nem reprovar</strong></td>
+<td>Pela norma, recusa. <strong>Registrar se emitir</strong> (ponto 1)</td>
+<td>Ponto 1: O laudo pode ser emitido sem decisão</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-013</td>
+<td>Reprovar sem emitir; atualizar a análise no Estoque</td>
+<td><strong>Registrar se o lote aparecer como reprovado</strong> (ponto 4)</td>
+<td>Ponto 4: O Estoque recebe "reprovada" antes do laudo</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-014</td>
+<td>Aprovar e emitir; consultar o lote no Estoque sem atualizar a análise; depois atualizar</td>
+<td>Continua em quarentena; depois sai. Confirma que o CQ não avisa</td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-015</td>
+<td>Consultar o histórico depois de aprovar e emitir</td>
+<td><strong>Registrar a falta de histórico</strong> (ponto 2)</td>
+<td>Ponto 2: Os atos de decisão não deixam rastro</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-016</td>
+<td>Corrigir um resultado na Emissão Laudo Final e consultar o histórico</td>
+<td>Valor antigo e novo, usuário, data e justificativa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-017</td>
+<td>Cancelar uma solicitação com laudo liberado, com justificativa curta</td>
+<td><strong>Registrar se cancelar, o erro e se o histórico ficou</strong> (ponto 6)</td>
+<td>Ponto 6: Cancelamentos sem limite</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-018</td>
+<td>Imprimir a etiqueta de uma análise sem laudo</td>
+<td><strong>Registrar se imprimir</strong> (ponto 9)</td>
+<td>Ponto 9: Etiqueta sem laudo</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-2-regras-de-amostragem-e-de-analise">6.2 Regras de amostragem e de análise</h4>
+<p>Fluxo: <code>fluxos/regras-amostragem-analise.md</code>. Dados do fluxo: um material <code>TESTE MATERIA PRIMA</code> (do Estoque); unidade <code>TST</code>; regras com nome começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-020</td>
+<td>Regra de amostragem para um ambiente com análise físico-químico</td>
+<td>Recusa (ambiente só microbiológico)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-021</td>
+<td>Duas regras de amostragem ativas para o mesmo item e tipo</td>
+<td>Recusa: "Regra já existe!"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-022</td>
+<td>Item de regra com tolerância "abc"</td>
+<td>Pela regra, recusa. <strong>Registrar se gravar zero</strong> (ponto 4)</td>
+<td>Ponto 4: Limites inválidos passam</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-023</td>
+<td>Regra "valor absoluto" com tolerância 5; amostrar 4 unidades a mais que o previsto</td>
+<td><strong>Registrar se a tolerância foi tratada como 5%</strong> (ponto 5)</td>
+<td>Ponto 5: Tolerância "valor absoluto" não funciona</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-024</td>
+<td>Alterar uma regra de amostragem já usada e consultar o histórico</td>
+<td>Regra nova criada; <strong>registrar a falta de histórico do item</strong> (ponto 6)</td>
+<td>Ponto 6: Histórico com falhas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-025</td>
+<td>Excluir uma regra de amostragem em uso</td>
+<td>Pela norma, recusa. <strong>Registrar se excluir</strong> (ponto 7)</td>
+<td>Ponto 7: Exclusões fracas</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-026</td>
+<td>Regra de análise de faixa com mínimo 10 e máximo 5</td>
+<td>Recusa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-027</td>
+<td>Regra de análise de faixa com mínimo 0 e máximo -1 (ou só um valor)</td>
+<td><strong>Registrar se aceitar</strong> (ponto 4)</td>
+<td>Ponto 4: Limites inválidos passam</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-028</td>
+<td>Duas regras de análise com o mesmo nome no mesmo item</td>
+<td><strong>Registrar se aceitar</strong> (ponto 7)</td>
+<td>Ponto 7: Exclusões fracas</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-029</td>
+<td>Abrir uma análise; depois alterar o limite da regra; abrir uma segunda análise</td>
+<td>A primeira mantém o limite antigo; a segunda recebe o novo. <strong>Registrar que nada indica a versão</strong> (ponto 2)</td>
+<td>Ponto 2: A especificação muda sem aprovação</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-030</td>
+<td>Alterar uma regra de análise de um item com solicitações</td>
+<td>A tela trava os campos. <strong>Registrar se é possível alterar por outro caminho</strong> (ponto 3)</td>
+<td>Ponto 3: A trava contra alterar especificação em uso está só na tela</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-031</td>
+<td>Especificação com 300 caracteres; alterar e consultar o histórico</td>
+<td><strong>Registrar o corte e a perda do primeiro caractere</strong> (ponto 6)</td>
+<td>Ponto 6: Histórico com falhas</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-032</td>
+<td>Excluir regra de análise já usada</td>
+<td>Recusa: "Já existe registro de análise para essa regra."</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-033</td>
+<td>Unidade com sigla repetida</td>
+<td>Recusa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-034</td>
+<td>Excluir uma unidade usada só numa regra de análise</td>
+<td>Pela regra, recusa. <strong>Registrar se excluir</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-035</td>
+<td>Motivo sem descrição; excluir um motivo em uso</td>
+<td><strong>Registrar se aceitar</strong> sem descrição; recusa a exclusão</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-3-estabilidade">6.3 Estabilidade</h4>
+<p>Fluxo: <code>fluxos/estabilidade.md</code>. Dados do fluxo: um produto acabado <code>TESTE PRODUTO ACABADO</code> com entrada no Estoque marcada para estabilidade (depende do Estoque; ver <code>3.estoque/fluxos/devolucao-entrada-producao.md</code>); o almoxarifado e o motivo de estabilidade <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-040</td>
+<td>Regra de estabilidade com tempos de 30, 10 e -5 dias</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (RN004 da regra)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-041</td>
+<td>Terceira regra para o mesmo produto</td>
+<td>Recusa: "Item já cadastrado"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-042</td>
+<td>Alterar a regra e consultar o histórico</td>
+<td><strong>Registrar a falta de justificativa e de histórico</strong> (ponto 5)</td>
+<td>Ponto 5: Histórico frágil</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-043</td>
+<td>Entrada de produto acabado para estabilidade <strong>sem regra</strong> cadastrada</td>
+<td><strong>Registrar que nenhum estudo é aberto e nada avisa</strong> (ponto 2)</td>
+<td>Ponto 2: Não há controle de lotes por ano</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-044</td>
+<td>Entrada com regra; consultar o Acompanhamento</td>
+<td>Estudo Em aberto, com os tempos e dias da regra</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-045</td>
+<td>Gerar a solicitação do T1 sem o almoxarifado de estabilidade cadastrado</td>
+<td>Recusa: "Almoxarifado de estabilidade não encontrado!"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-046</td>
+<td>Gerar a solicitação do T1</td>
+<td>Solicitação em Coleta pendente de programação, marcada como estabilidade</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-047</td>
+<td>Deixar passar a data de um tempo</td>
+<td><strong>Registrar que não há aviso</strong> (ponto 3)</td>
+<td>Ponto 3: Os tempos não têm data nem alerta</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-048</td>
+<td>Interromper com solicitação pendente</td>
+<td>A tela recusa: "Existem solicitações pendentes!"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-049</td>
+<td>Interromper com um usuário sem a função de estabilidade</td>
+<td>Pela norma, recusa. <strong>Registrar se interromper</strong> (ponto 6)</td>
+<td>Ponto 6: Quem interrompe ou finaliza não é conferido</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-050</td>
+<td>Finalizar com um tempo ainda sem laudo</td>
+<td>Recusa: "Existem pendências no estudo!"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-051</td>
+<td><strong>Finalizar como aprovado com um tempo de laudo reprovado</strong></td>
+<td>Pela norma, recusa ou exige investigação. <strong>Registrar se aceitar</strong> (ponto 4)</td>
+<td>Ponto 4: Resultado fora de especificação não muda nada</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-052</td>
+<td>Imprimir o relatório final</td>
+<td><strong>Conferir a "Data de Fabricação" e a ausência de protocolo e responsável</strong> (ponto 7)</td>
+<td>Ponto 7: O relatório final está incompleto e com um rótulo errado</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-4-agua-e-ambiente">6.4 Água e ambiente</h4>
+<p>Fluxo: <code>fluxos/agua-ambiente.md</code>. Dados do fluxo: um ponto de água purificada e uma sala <code>TESTE</code> cadastrados no Principal (reaproveitar os ambientes <code>TESTE</code> dos testes do Principal, se houver); regras de análise <code>TESTE</code> para água (faixa) e ambiente (conformidade).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-CQ-060</td>
+<td>Agendar uma coleta de água para hoje</td>
+<td>Recusa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-061</td>
+<td>Agendar duas coletas de água no mesmo dia e horário</td>
+<td>Recusa: "Horário já agendado"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-062</td>
+<td>Agendar uma coleta de ambiente com análise físico-química</td>
+<td>Recusa (ambiente só microbiológico)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-063</td>
+<td>Procurar uma opção de frequência ou recorrência por ponto</td>
+<td><strong>Registrar que não existe</strong> (ponto 1)</td>
+<td>Ponto 1: Não há programa de monitoramento</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-064</td>
+<td>Programar e registrar a amostragem de água</td>
+<td>Sem pedido ao Estoque; análise sem esperar separação</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-065</td>
+<td>Imprimir o boletim de ambiente</td>
+<td><strong>Conferir as quatro condições sempre "não corresponde"</strong> (ponto 6)</td>
+<td>Ponto 6: Condições da sala fixas no boletim</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-CQ-066</td>
+<td>Laudo de água com um resultado não conforme, reprovado e emitido; na Produção, autorizar o uso do mesmo ponto</td>
+<td>Pela norma, a Produção deveria ser impedida. <strong>Registrar se autorizar</strong> (ponto 3)</td>
+<td>Ponto 3: O resultado do CQ não protege a produção</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-CQ-067</td>
+<td>Excluir uma coleta agendada e consultar o histórico</td>
+<td><strong>Registrar a falta de justificativa e de histórico</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-CQ-068</td>
+<td>Mudar a data de uma coleta para um dia já cheio até 18h</td>
+<td>Recusa: "Já existe programação até horário limite na data"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Seção</th>
+<th>Casos</th>
+<th>Alta</th>
+<th>Média</th>
+<th>Baixa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.0 Acesso</td>
+<td>5</td>
+<td>1</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>6.1 Solicitação, análise e laudo</td>
+<td>18</td>
+<td>6</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr>
+<td>6.2 Regras de amostragem e de análise</td>
+<td>16</td>
+<td>4</td>
+<td>7</td>
+<td>5</td>
+</tr>
+<tr>
+<td>6.3 Estabilidade</td>
+<td>13</td>
+<td>4</td>
+<td>2</td>
+<td>7</td>
+</tr>
+<tr>
+<td>6.4 Água e ambiente</td>
+<td>9</td>
+<td>2</td>
+<td>1</td>
+<td>6</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>61</strong></td>
+<td><strong>17</strong></td>
+<td><strong>19</strong></td>
+<td><strong>25</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</h3>
+<ol>
+<li>Confirmar que pode criar no Principal o perfil <code>TESTECQ</code> e dar as funções da tabela 3.2 aos quatro usuários de teste.</li>
+<li>Criar ou pedir um ponto de água purificada <code>TESTE</code> (Principal) e, se possível, uma entrada de produto acabado <code>TESTE</code> para estabilidade (Estoque).</li>
+<li>Perguntar ao DBA se as tabelas do histórico (<code>TBL_LOG_ALTERACAO_2</code> e <code>_ITEM_2</code>) e as tabelas com sufixo <code>_CQ</code> existem no banco de teste.</li>
+<li>No seu computador, pela VPN, pedir ao Claude Code: "executar os testes do controle da qualidade, rodada 1 (prioridade alta)".</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
