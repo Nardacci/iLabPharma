@@ -44,6 +44,9 @@ CATEGORIAS = {
     "testes": ("Testes", "Plano de testes, resultados e evidências."),
 }
 
+# Áreas que não são módulos do sistema: ficam fora dos cartões e das contagens de módulos.
+ESPECIAIS = {"visao-geral", "como-deve-ser"}
+
 MODULOS = [
     {
         "id": "visao-geral", "nome": "Visão entre módulos", "icone": "◎", "cor": "#2563eb",
@@ -54,6 +57,14 @@ MODULOS = [
             ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
             ("transversal/02-mapa-do-processo-fabril.md", "Mapa do processo fabril", "inicio", "transversal/LabMedSys - Mapa do Processo Fabril.docx"),
             ("transversal/01-telas-repetidas.md", "Telas repetidas entre módulos", "tecnico", None),
+        ],
+    },
+    {
+        "id": "como-deve-ser", "nome": "Como deve ser", "icone": "✓", "cor": "#059669",
+        "situacao": "Em andamento", "nivel": 1,
+        "resumo": "O modelo ideal, em conformidade com a RDC 658/2022 e o Guia 33/2020: como o Controle da Qualidade e a Garantia da Qualidade devem controlar o ERP. Não descreve o legado; mostra a distância entre o que existe e o que a norma pede.",
+        "docs": [
+            ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "inicio", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
         ],
     },
     {
@@ -351,6 +362,7 @@ def cabecalho(titulo, raiz, ativo=""):
   <nav class="topo-nav" aria-label="Principal">
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
     <a href="{raiz}index.html#diretoria">Diretoria</a>
+    <a href="{raiz}documentacao/como-deve-ser/index.html"{' aria-current="page"' if ativo == 'como-deve-ser' else ''}>Como deve ser</a>
     <a href="{raiz}index.html#publicos">Por público</a>
     <a href="{raiz}apresentacao.html">Apresentação</a>
   </nav>
@@ -491,7 +503,7 @@ def pagina_documento(mod, p):
     cat_nome = CATEGORIAS[p["cat"]][0]
     word = f'<a class="botao" href="{p["word"]}" download>⤓ Baixar em Word</a>' if p["word"] else ""
     aviso = '<p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>' if p["limpo"] else ""
-    return (cabecalho(f"{p['titulo']} · {mod['nome']} · iLabMedSys", raiz) + f"""
+    return (cabecalho(f"{p['titulo']} · {mod['nome']} · iLabMedSys", raiz, "como-deve-ser" if mod["id"] == "como-deve-ser" else "") + f"""
 <div class="doc-layout">
   <aside class="lateral" aria-label="Documentos do módulo">
     <a class="lat-modulo" href="index.html" style="--cor:{mod['cor']}"><span class="icone">{mod['icone']}</span>{E(mod['nome'])}</a>
@@ -547,7 +559,7 @@ def pagina_modulo(mod):
             f'<span class="doc-card-meta">{"Word disponível" if p["word"] else "Leitura no portal"}</span></a>' for p in itens)
         blocos.append(f'<section class="secao"><h2>{E(nome_cat)}</h2><p class="secao-desc">{E(desc)}</p><div class="doc-cards">{cards}</div></section>')
 
-    return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
+    return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "como-deve-ser" if mod["id"] == "como-deve-ser" else "modulos") + f"""
 <main class="pagina-modulo" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
   <header class="mod-cabecalho" style="--cor:{mod['cor']}">
@@ -568,7 +580,7 @@ def pagina_inicial(origem):
     raiz = ""
     cards = []
     for mod in MODULOS:
-        if mod["id"] == "visao-geral":
+        if mod["id"] in ESPECIAIS:
             continue
         n = len(mod["paginas"])
         inner = (f'<div class="mc-topo"><span class="mc-icone" style="--cor:{mod["cor"]}">{mod["icone"]}</span>{selo(mod["situacao"])}</div>'
@@ -591,10 +603,11 @@ def pagina_inicial(origem):
         for nome, desc, itens in PUBLICOS)
 
     vg = next(m for m in MODULOS if m["id"] == "visao-geral")
+    cd = next(m for m in MODULOS if m["id"] == "como-deve-ser")
     total_docs = sum(len(m["paginas"]) for m in MODULOS)
     total_fluxos = sum(1 for m in MODULOS for p in m["paginas"] if p["cat"] == "fluxos")
-    modulos_com_doc = sum(1 for m in MODULOS if m["paginas"] and m["id"] != "visao-geral")
-    total_modulos = len([m for m in MODULOS if m["id"] != "visao-geral"])
+    modulos_com_doc = sum(1 for m in MODULOS if m["paginas"] and m["id"] not in ESPECIAIS)
+    total_modulos = len([m for m in MODULOS if m["id"] not in ESPECIAIS])
 
     diretoria = bloco_diretoria(origem)
     return (cabecalho("iLabMedSys · Documentação do sistema", raiz) + f"""
@@ -642,6 +655,14 @@ def pagina_inicial(origem):
       <p>{E(vg['resumo'])}</p>
     </div>
     <a class="botao" href="documentacao/visao-geral/index.html">Ver o mapa do processo fabril →</a>
+  </section>
+
+  <section class="secao destaque" id="como-deve-ser" style="--cor:{cd['cor']}">
+    <div>
+      <h2>Como deve ser</h2>
+      <p>{E(cd['resumo'])}</p>
+    </div>
+    <a class="botao" href="documentacao/como-deve-ser/index.html">Ver o modelo ideal →</a>
   </section>
 
   <section class="secao" id="publicos">
