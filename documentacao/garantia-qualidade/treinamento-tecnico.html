@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treinamento técnico · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="autoinspecao-e-auditoria.html">Autoinspeção e auditoria</a></li><li><a href="treinamento-tecnico.html" aria-current=page>Treinamento técnico</a></li><li><a href="controle-de-mudancas.html">Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Treinamento técnico</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/garantia-qualidade/LabMedSys - Modulo Garantia da Qualidade - Fluxo Treinamento.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo de <strong>treinamento técnico</strong> no LabMedSys. Vai dos cadastros (tipos, motivos e o treinamento ligado ao POP, às funções e aos setores) à solicitação, à programação da turma, à alocação dos treinandos na matriz, à execução, à conclusão com a avaliação de cada treinando e ao acompanhamento de quem está com o treinamento vigente, pendente ou vencido.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Tipo de Treinamento, Motivo de Treinamento e Cadastro de Treinamento.</li>
+<li>Solicitação de Treinamento.</li>
+<li>Programação de Treinamento e Matriz de Treinamento (alocação e início).</li>
+<li>Conclusão do Treinamento.</li>
+<li>Acompanhamento dos Treinamentos.</li>
+<li>Consulta do Controle de Documentos aos treinamentos concluídos.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o que o Controle de Documentos faz com essa consulta, que será analisado com aquele módulo.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código são relativos a <code>5.garantia_qualidade/app/</code>. Para encurtar: <code>Bloco2/</code> quer dizer <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/</code> e <code>Service/</code> quer dizer <code>HSolutions.GQ.Domain/Service/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/garantia-qualidade/treinamento-fluxograma.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/treinamento-fluxograma.png" alt="Workflow do processo de treinamento técnico" loading="lazy"></a><figcaption>Workflow do processo de treinamento técnico</figcaption></figure>
+
+<p>Cada <strong>treinamento</strong> é cadastrado com o <strong>POP</strong> a que se refere (número e versão, ligado a um documento do Controle de Documentos), sua <strong>validade</strong>, os <strong>setores e funções</strong> que precisam dele e se é interno ou externo. As áreas fazem <strong>solicitações</strong> de treinamento para seus funcionários. A GQ <strong>programa</strong> a turma e, na <strong>Matriz de Treinamento</strong>, aloca os treinandos, vindos das solicitações ou avulsos, e <strong>inicia</strong> o treinamento.</p>
+<p>Na <strong>conclusão</strong>, o instrutor registra a avaliação de cada treinando: presença, nota e desempenho (suficiente ou insuficiente). Quem fica "suficiente" recebe a data de vencimento do treinamento. O <strong>Acompanhamento dos Treinamentos</strong> cruza as funções ligadas a cada treinamento com as pessoas e mostra quem está pendente, programado, vigente, vencido, substituído ou obsoleto.</p>
+<p><strong>Situações da programação (como aparecem na tela):</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Situação</th>
+<th>Próximo passo</th>
+<th>Tela</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Pendente</td>
+<td>Alocar treinandos</td>
+<td>Matriz de Treinamento</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Alocado</td>
+<td>Iniciar</td>
+<td>Matriz de Treinamento</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Em Curso</td>
+<td>Concluir ou cancelar</td>
+<td>Conclusão do Treinamento</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Finalizado</td>
+<td>— (fim)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Cancelado</td>
+<td>— (fim)</td>
+<td>Conclusão do Treinamento</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="cadastros">Cadastros</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – <strong>Tipo</strong> e <strong>Motivo de Treinamento</strong>: só a descrição é obrigatória (<code>Service/TipoTreinamentoValidator.cs</code>, <code>Service/MotivoTreinamentoValidator.cs</code>). A exclusão vai para a lixeira, <strong>sem histórico</strong> (<code>Bloco2/TipoTreinamentoController.cs:242</code>; <code>Bloco2/MotivoTreinamentoController.cs:225</code>).</li>
+<li>RN002 – <strong>Cadastro de Treinamento</strong>: obrigatórios o tipo, o <strong>POP</strong>, o nome, o setor responsável, a origem e pelo menos um setor vinculado. Se a origem for externa, a instituição e o CNPJ também (<code>Service/CadastroTreinamentoValidator.cs:27</code> a <code>:80</code>).</li>
+<li>RN003 – O treinamento registra se é <strong>obrigatório</strong>, a <strong>validade</strong> (em dias, meses e anos), as <strong>funções</strong> e os <strong>setores</strong> vinculados, ou "todos", e o documento do POP no Controle de Documentos (<code>HSolutions.GQ.Domain/Entities/Bloco2/TreinamentoTecnico/TreinamentoTecnico.cs</code>).</li>
+<li>RN004 – Não se exclui um treinamento que já tem programação ou solicitação (<code>HSolutions.GQ.UI/Helpers/GerenciarAcessoTelaCadastroTreinamento.cs</code>). Quando pode, a exclusão é <strong>sem histórico</strong> (<code>Bloco2/CadastroTreinamentoController.cs:527</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Tipo de Treinamento</td>
+<td>Tipos</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Motivo de Treinamento</td>
+<td>Motivos da solicitação</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Cadastro de Treinamento</td>
+<td>Treinamento, POP, validade, funções e setores</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="solicitacao">Solicitação</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórios: o treinamento, o motivo e <strong>pelo menos um funcionário</strong> (<code>Service/SolicitacaoTreinamentoValidator.cs:25</code> a <code>:36</code>).</li>
+<li>RN002 – A solicitação nasce <strong>Pendente</strong> (<code>Bloco2/SolicitacaoTreinamentoController.cs:230</code>), com histórico. O cancelamento grava histórico (<code>:277</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Solicitação de Treinamento</td>
+<td>Pedir treinamento para funcionários</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="programacao-e-matriz">Programação e matriz</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – <strong>Programação</strong>: obrigatórios o treinamento, o nome da versão, o local, o período e um número máximo de treinandos maior que um (<code>Service/ProgramacaoTreinamentoValidator.cs:27</code> a <code>:51</code>). Registra turnos, horários, custo, instrutores e recursos. Nasce <strong>Pendente</strong> (<code>Bloco2/ProgramacaoTreinamentoController.cs:251</code>).</li>
+<li>RN002 – <strong>Não há aprovação do programa de treinamento</strong> pelo responsável da Produção ou do CQ (RDC 658/2022, art. 42).</li>
+<li>RN003 – <strong>Matriz</strong>: aloca os treinandos, vindos das solicitações ou avulsos, e a programação passa a <strong>Alocado</strong>. O histórico é gravado de forma manual (<code>Bloco2/MatrizTreinamentoController.cs:349-351</code>).</li>
+<li>RN004 – <strong>Iniciar</strong> leva a programação a <strong>Em Curso</strong> (<code>MatrizTreinamentoController.cs:484</code>).</li>
+<li>RN005 – A exclusão de uma programação é <strong>sem histórico</strong> (<code>ProgramacaoTreinamentoController.cs:601</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Programação de Treinamento</td>
+<td>Turma, local, período e instrutores</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Matriz de Treinamento</td>
+<td>Alocar treinandos e iniciar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="conclusao-e-avaliacao">Conclusão e avaliação</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – Obrigatórios: a <strong>data de conclusão</strong>, a <strong>avaliação do instrutor</strong> e a avaliação dos treinandos (<code>Service/ConclusaoTreinamentoValidator.cs:32</code> a <code>:44</code>). A <strong>nota</strong> de cada treinando também ("Nota não informada!", <code>Bloco2/ConclusaoTreinamentoController.cs:258</code>).</li>
+<li>RN002 – O <strong>tipo de avaliação</strong> (prática, teórica, escrita, oral) <strong>não é obrigatório</strong>: a regra está desligada (<code>ConclusaoTreinamentoValidator.cs:24-26</code>, comentada).</li>
+<li>RN003 – O <strong>desempenho</strong> (suficiente ou insuficiente) é <strong>escolhido à mão</strong> e <strong>não depende da nota nem da presença</strong>. O sistema só zera a nota de quem faltou (<code>ConclusaoTreinamentoController.cs:405-451</code>). Não há nota mínima. Um treinando <strong>ausente, com nota zero, pode ser marcado como suficiente</strong> e recebe a data de vencimento do treinamento (<code>:433</code> e <code>:450</code>). Ponto de atenção 1.</li>
+<li>RN004 – Ao concluir, a programação vai para <strong>Finalizado</strong>; ao cancelar, para <strong>Cancelado</strong>, e todos os treinandos ficam insuficientes. As duas gravações da situação são <strong>sem histórico</strong> (<code>ConclusaoTreinamentoController.cs:287-294</code>).</li>
+<li>RN005 – Antes de gravar, a tela confere a permissão da função no Principal (<code>ConclusaoTreinamentoController.cs:732</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Conclusão do Treinamento</td>
+<td>Presença, nota, desempenho e encerramento; certificado e relatório</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="acompanhamento-e-integracao-com-o-controle-de-documentos">Acompanhamento e integração com o Controle de Documentos</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN001 – O <strong>Acompanhamento dos Treinamentos</strong> busca no Principal as pessoas de cada função ligada ao treinamento (<code>Bloco2/AcompanhamentoTreinamentoController.cs:190-210</code>). Para cada uma, mostra a situação: <strong>Pendente, Programado, Vigente, Vencido, Substituído ou Obsoleto</strong> (<code>:501-554</code>).</li>
+<li>RN002 – O vencimento é calculado <strong>na hora do relatório</strong>. O sistema <strong>não avisa</strong> quem vai vencer e <strong>não impede</strong> que uma pessoa com treinamento vencido ou pendente trabalhe. Nenhum outro módulo consulta essa situação por pessoa.</li>
+<li>RN003 – O <strong>Controle de Documentos</strong> consulta a GQ pela interface <code>api/treinamento</code> (<code>HSolutions.GQ.UI/Api/TreinamentoController.cs</code>). A consulta devolve as <strong>turmas concluídas</strong> de um treinamento ou de um documento (<code>HSolutions.GQ.WebApi/TreinamentoApi.cs</code>), e não quem foi aprovado. <em>A verificar no Controle de Documentos</em> como isso é usado para tornar um documento vigente.</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantia da Qualidade</td>
+<td>Acompanhamento dos Treinamentos</td>
+<td>Situação de cada pessoa por treinamento</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. "Suficiente" sem critério.</strong> O desempenho é marcado à mão, sem nota mínima e sem considerar a presença. Uma pessoa ausente pode receber validade de treinamento. A RDC 658/2022 (art. 41) exige avaliar a efetividade do treinamento.</p>
+<p><strong>2. O treinamento não habilita nem bloqueia ninguém.</strong> O acompanhamento mostra quem está vencido ou pendente, mas só como relatório: não há aviso, e nenhum módulo (Produção, Estoque, CQ) impede a pessoa de executar a tarefa (art. 12, V).</p>
+<p><strong>3. O Controle de Documentos recebe a turma, não a pessoa.</strong> A consulta devolve treinamentos concluídos, sem dizer quem foi aprovado. Uma turma em que todos ficaram insuficientes também aparece como concluída.</p>
+<p><strong>4. Programa sem aprovação.</strong> A programação não tem etapa de aprovação pelo responsável (art. 42).</p>
+<p><strong>5. Registros sem histórico.</strong> A conclusão e o cancelamento da turma e as exclusões de tipo, motivo, treinamento e programação não deixam histórico. O tipo de avaliação deixou de ser obrigatório.</p>
+<p><strong>Ponto positivo:</strong> este é o fluxo mais completo da GQ. Liga treinamento, POP, função e pessoa, controla a validade e mostra a situação de cada pessoa. A matriz grava histórico.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> os usuários <code>TESTE NIVEL 2</code> e <code>TESTE NIVEL 3</code>; dois funcionários de teste numa função <code>TESTE</code>; um POP <code>TESTE</code> no Controle de Documentos, se houver. Todos os treinamentos com nome começando por <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-070</td>
+<td>Cadastro de Treinamento externo sem instituição e sem CNPJ</td>
+<td>Recusa nos dois</td>
+</tr>
+<tr>
+<td>CT-GQ-071</td>
+<td>Treinamento <code>TESTE</code> obrigatório, validade de 1 dia, ligado à função <code>TESTE</code></td>
+<td>Salvo</td>
+</tr>
+<tr>
+<td>CT-GQ-072</td>
+<td>Solicitação sem funcionário; depois com os dois funcionários</td>
+<td>Recusa; depois Pendente</td>
+</tr>
+<tr>
+<td>CT-GQ-073</td>
+<td>Programação com máximo de 1 treinando</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-GQ-074</td>
+<td>Programação válida, alocação dos dois na matriz e início</td>
+<td>Alocado, depois Em Curso; histórico da alocação</td>
+</tr>
+<tr>
+<td>CT-GQ-075</td>
+<td>Conclusão sem nota de um treinando</td>
+<td>Recusa: "Nota não informada!"</td>
+</tr>
+<tr>
+<td>CT-GQ-076</td>
+<td><strong>Conclusão com um treinando ausente, nota 0, marcado "Suficiente"</strong></td>
+<td>Pela norma, deveria recusar. <strong>Registrar se aceitar e se ele receber validade</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-GQ-077</td>
+<td>Conclusão sem tipo de avaliação</td>
+<td><strong>Registrar que aceita</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-078</td>
+<td>Consultar o histórico da programação concluída</td>
+<td><strong>Registrar se a mudança para Finalizado não aparecer</strong> (ponto 5)</td>
+</tr>
+<tr>
+<td>CT-GQ-079</td>
+<td>Acompanhamento no dia seguinte (validade de 1 dia)</td>
+<td>Os dois aparecem como Vencido; <strong>registrar que não há aviso</strong></td>
+</tr>
+<tr>
+<td>CT-GQ-080</td>
+<td>Com um funcionário vencido, executar uma tarefa na Produção ou no Estoque</td>
+<td><strong>Registrar que nada impede</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-GQ-081</td>
+<td>Turma em que todos ficam insuficientes; consultar no Controle de Documentos o treinamento do POP</td>
+<td><strong>Registrar se aparece como concluído</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-GQ-082</td>
+<td>Excluir um treinamento com programação</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-GQ-083</td>
+<td>Excluir um tipo de treinamento sem uso e consultar o histórico</td>
+<td><strong>Registrar a falta de histórico</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-GQ-076, 080, 081 e 078 primeiro. Eles tocam a efetividade do treinamento, a habilitação das pessoas e a trilha de auditoria.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#cadastros">Cadastros</a></li><li class="sub"><a href="#solicitacao">Solicitação</a></li><li class="sub"><a href="#programacao-e-matriz">Programação e matriz</a></li><li class="sub"><a href="#conclusao-e-avaliacao">Conclusão e avaliação</a></li><li class="sub"><a href="#acompanhamento-e-integracao-com-o-controle-de-documentos">Acompanhamento e integração com o Controle de Documentos</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
