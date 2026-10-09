@@ -50,6 +50,7 @@ MODULOS = [
         "situacao": "Em andamento", "nivel": 2,
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
+            ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
             ("transversal/02-mapa-do-processo-fabril.md", "Mapa do processo fabril", "inicio", "transversal/LabMedSys - Mapa do Processo Fabril.docx"),
             ("transversal/01-telas-repetidas.md", "Telas repetidas entre módulos", "tecnico", None),
         ],
@@ -83,6 +84,7 @@ MODULOS = [
         "docs": [
             ("3.estoque/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
+            ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
             ("3.estoque/fluxos/recebimento-quarentena-conferencia.md", "Recebimento e quarentena (conferência)", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Conferencia dos Fluxos de Recebimento e Quarentena.docx"),
             ("3.estoque/fluxos/movimentacao-interna.md", "Movimentação interna", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Movimentacao Interna.docx"),
             ("3.estoque/fluxos/reprovado-reanalise-revalidacao.md", "Reprovado, reanálise e revalidação", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Reprovado, Reanalise e Revalidacao.docx"),
@@ -129,7 +131,7 @@ MODULOS = [
 ]
 
 PUBLICOS = [
-    ("Diretoria", "Situação de cada módulo e decisões.", [("principal", "resumo-executivo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
+    ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("principal", "resumo-executivo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
     ("Usuários das áreas", "Como cada processo funciona nas telas.", [("principal", "manual-do-usuario"), ("estoque", "recebimento-e-quarentena-conferencia"), ("garantia-qualidade", "desvios-e-capa")]),
     ("Garantia da Qualidade", "Conformidade, riscos e rastreabilidade.", [("garantia-qualidade", "conformidade-com-a-rdc-658-2022"), ("principal", "conformidade-regulatoria"), ("principal", "dossie-de-homologacao")]),
     ("Desenvolvimento", "Requisitos e dados para a nova versão.", [("principal", "analise-de-requisitos"), ("principal", "modelo-de-dados-e-integracoes"), ("visao-geral", "telas-repetidas-entre-modulos")]),
@@ -149,6 +151,34 @@ RE_LINHA_SEG = re.compile(
     r"Quem conhece o endere[çc]o|abre(?:m)? telas? .* pelo endere[çc]o|endere[çc]o da p[áa]gina|\btokens?\b|\bhash\b|localStorage|"
     r"a si mesmo o n[íi]vel|se colocar no N[íi]vel 03|perfil completo|Sem login exigido|a[çc][õo]es do perfil ignoradas|HSPermission",
     re.I)
+
+
+
+DIAGNOSTICO = "transversal/03-diagnostico-conformidade.md"
+
+
+def bloco_diretoria(origem):
+    """Destaque da página inicial: diagnóstico de conformidade, com a contagem tirada do próprio documento."""
+    arq = Path(origem) / "homologacao" / DIAGNOSTICO
+    if not arq.exists():
+        return ""
+    texto = arq.read_text(encoding="utf-8")
+    m = re.search(r"\*\*Contagem:\*\* Atende (\d+) · Parcial (\d+).*?Não atende (\d+).*?A verificar (\d+)", texto)
+    nums = m.groups() if m else ("?", "?", "?", "?")
+    rotulos = (("Atendem", "ok"), ("Atendem em parte", "parcial"), ("Não atendem", "nao"), ("A verificar", "verificar"))
+    caixas = "".join(f'<div class="diag-num diag-{c}"><strong>{n}</strong><span>{r}</span></div>' for n, (r, c) in zip(nums, rotulos))
+    return f"""<section class="secao diretoria" id="diretoria">
+    <div class="diretoria-texto">
+      <p class="sobretitulo">Para a diretoria</p>
+      <h2>Diagnóstico de conformidade com a ANVISA</h2>
+      <p>Principal, Estoque e Garantia da Qualidade, como foram entregues pelo fornecedor, comparados com a RDC 658/2022 e o Guia 33/2020: o que atende, o que não atende, as causas e o que corrigir primeiro.</p>
+      <div class="hero-acoes">
+        <a class="botao" href="documentacao/visao-geral/diagnostico-de-conformidade-com-a-anvisa.html">Ler o diagnóstico →</a>
+        <a class="botao botao-secundario" href="documentacao/arquivos/visao-geral/LabMedSys - Diagnostico de Conformidade ANVISA.docx">Baixar em Word</a>
+      </div>
+    </div>
+    <div class="diag-numeros" aria-label="Temas da norma avaliados">{caixas}</div>
+  </section>"""
 
 
 def limpar(md, nome, retirado):
@@ -305,6 +335,7 @@ def cabecalho(titulo, raiz, ativo=""):
   <a class="marca" href="{raiz}index.html" aria-label="iLabMedSys, página inicial"><img src="{raiz}assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
   <nav class="topo-nav" aria-label="Principal">
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
+    <a href="{raiz}index.html#diretoria">Diretoria</a>
     <a href="{raiz}index.html#publicos">Por público</a>
     <a href="{raiz}apresentacao.html">Apresentação</a>
   </nav>
@@ -403,7 +434,7 @@ def gerar(origem, destino, relatorio):
             (pasta / f"{p['slug']}.html").write_text(pagina_documento(mod, p), encoding="utf-8")
         (pasta / "index.html").write_text(pagina_modulo(mod), encoding="utf-8")
 
-    (destino / "index.html").write_text(pagina_inicial(), encoding="utf-8")
+    (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
     (destino / "portal/busca.json").write_text(json.dumps(busca, ensure_ascii=False), encoding="utf-8")
 
     if relatorio:
@@ -518,7 +549,7 @@ def pagina_modulo(mod):
 """ + rodape(raiz))
 
 
-def pagina_inicial():
+def pagina_inicial(origem):
     raiz = ""
     cards = []
     for mod in MODULOS:
@@ -550,6 +581,7 @@ def pagina_inicial():
     modulos_com_doc = sum(1 for m in MODULOS if m["paginas"] and m["id"] != "visao-geral")
     total_modulos = len([m for m in MODULOS if m["id"] != "visao-geral"])
 
+    diretoria = bloco_diretoria(origem)
     return (cabecalho("iLabMedSys · Documentação do sistema", raiz) + f"""
 <main id="conteudo">
   <section class="hero">
@@ -558,7 +590,8 @@ def pagina_inicial():
       <h1>Tudo o que sabemos sobre o sistema, em um só lugar.</h1>
       <p class="hero-desc">A homologação do sistema de gestão da fábrica, módulo por módulo: o que existe e funciona, como cada processo anda nas telas, o que a ANVISA exige e onde o sistema falha.</p>
       <div class="hero-acoes">
-        <a class="botao botao-grande" href="#modulos">Explorar os módulos</a>
+        <a class="botao botao-grande" href="#diretoria">Diagnóstico para a diretoria</a>
+        <a class="botao botao-grande botao-secundario" href="#modulos">Explorar os módulos</a>
         <a class="botao botao-grande botao-secundario" href="apresentacao.html">Ver a apresentação ↗</a>
       </div>
     </div>
@@ -568,6 +601,8 @@ def pagina_inicial():
       <div class="numero"><strong>{total_fluxos}</strong><span>fluxos documentados</span></div>
     </div>
   </section>
+
+  {diretoria}
 
   <section class="secao" id="como-ler">
     <h2>Como a homologação avança</h2>
