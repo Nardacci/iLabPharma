@@ -121,8 +121,11 @@ MODULOS = [
     },
     {"id": "producao", "nome": "Produção", "icone": "⚙", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
      "resumo": "Ordens de produção, pesagem e registros de fabricação.", "docs": []},
-    {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
-     "resumo": "Análises, especificações, liberação e reprovação de materiais e produtos.", "docs": []},
+    {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#2e9b4f", "situacao": "Reconhecimento", "nivel": 1,
+     "resumo": "Solicitação de análise, amostragem, análise, laudo, etiqueta e estabilidade. Reconhecimento feito: 25 telas (22 com lógica, 3 protótipos), integrações com o Estoque e a Produção e primeiros achados.",
+     "docs": [
+         ("4.controle_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+     ]},
     {"id": "controle-documentos", "nome": "Controle de Documentos", "icone": "▤", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
      "resumo": "Elaboração, revisão, aprovação e distribuição de documentos.", "docs": []},
     {"id": "comercial", "nome": "Comercial", "icone": "◈", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
