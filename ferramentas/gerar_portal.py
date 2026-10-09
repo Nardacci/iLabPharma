@@ -50,6 +50,7 @@ MODULOS = [
         "situacao": "Em andamento", "nivel": 2,
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
+            ("transversal/04-mapa-de-integracoes.md", "Mapa de integrações entre os módulos", "inicio", "transversal/LabMedSys - Mapa de Integracoes entre Modulos.docx"),
             ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
             ("transversal/02-mapa-do-processo-fabril.md", "Mapa do processo fabril", "inicio", "transversal/LabMedSys - Mapa do Processo Fabril.docx"),
             ("transversal/01-telas-repetidas.md", "Telas repetidas entre módulos", "tecnico", None),
@@ -131,7 +132,7 @@ MODULOS = [
 ]
 
 PUBLICOS = [
-    ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("principal", "resumo-executivo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
+    ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("visao-geral", "mapa-de-integracoes-entre-os-modulos"), ("principal", "resumo-executivo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
     ("Usuários das áreas", "Como cada processo funciona nas telas.", [("principal", "manual-do-usuario"), ("estoque", "recebimento-e-quarentena-conferencia"), ("garantia-qualidade", "desvios-e-capa")]),
     ("Garantia da Qualidade", "Conformidade, riscos e rastreabilidade.", [("garantia-qualidade", "conformidade-com-a-rdc-658-2022"), ("principal", "conformidade-regulatoria"), ("principal", "dossie-de-homologacao")]),
     ("Desenvolvimento", "Requisitos e dados para a nova versão.", [("principal", "analise-de-requisitos"), ("principal", "modelo-de-dados-e-integracoes"), ("visao-geral", "telas-repetidas-entre-modulos")]),
@@ -303,7 +304,7 @@ class Conversor:
             novo = self.imagem(cam, modulo)
             if not novo:
                 return f"*(imagem não publicada: {E(alt)})*"
-            return f'<figure><a href="{novo}" target="_blank" rel="noopener"><img src="{novo}" alt="{E(alt)}" loading="lazy"></a><figcaption>{E(alt)}</figcaption></figure>'
+            return f'<figure><a href="{novo}" target="_blank" rel="noopener"><img src="{novo}" alt="{E(alt)}" loading="lazy"></a><figcaption>{E(alt)} · clique para ampliar</figcaption></figure>'
         texto = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", troca_img, texto)
         # Links para outros .md viram texto (os documentos publicados têm outro endereço)
         texto = re.sub(r"\[([^\]]+)\]\((?!https?:)[^)]+\.md(?:#[^)]*)?\)", r"\1", texto)
