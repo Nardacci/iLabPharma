@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise de risco · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="autoinspecao-e-auditoria.html">Autoinspeção e auditoria</a></li><li><a href="treinamento-tecnico.html">Treinamento técnico</a></li><li><a href="assuntos-regulatorios.html">Assuntos regulatórios</a></li><li><a href="controle-de-mudancas.html">Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html" aria-current=page>Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Qualidade e ANVISA</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Análise de risco</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> Garantia da Qualidade e equipe de homologação.
+<strong>Método:</strong> Guia nº 33/2020 da ANVISA, item 6 (gerenciamento do risco à qualidade, com base no ICH Q9 e no GAMP 5), com as mesmas escalas usadas no Principal (<code>1.principal/07-analise-de-risco.md</code>).
+<strong>Data:</strong> 09/10/2026 · <strong>Situação:</strong> rascunho para revisão pela Garantia da Qualidade. As notas são uma proposta inicial, a partir do código, das regras (<code>01-regras-de-negocio.md</code>) e da conformidade (<code>04-conformidade-regulatoria.md</code>); os testes de tela em andamento podem mudar a probabilidade.</p>
+<h3 id="para-que-serve">Para que serve</h3>
+<p>Define <strong>o que testar primeiro e com que profundidade</strong>, e a ordem das correções na nova versão. Riscos de prioridade alta recebem todos os cenários, com evidência; os de prioridade baixa, testes por amostragem.</p>
+<hr />
+<h3 id="etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Resposta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O sistema é regulado pelas Boas Práticas de Fabricação?</td>
+<td><strong>Sim.</strong> A GQ registra desvios, CAPA, mudanças, autoinspeções, treinamentos e assuntos regulatórios, que são registros exigidos pela RDC 658/2022 (art. 148).</td>
+</tr>
+<tr>
+<td>Categoria GAMP 5</td>
+<td><strong>5</strong>: aplicação customizada.</td>
+</tr>
+<tr>
+<td>Impacto do módulo</td>
+<td><strong>Alto, direto:</strong> os registros da GQ são a prova, perante a inspeção, de que o sistema da qualidade funciona. Uma falha aqui pode deixar um lote com desvio seguir sem investigação, uma mudança entrar sem avaliação, ou uma pessoa sem treinamento válido operar.</td>
+</tr>
+<tr>
+<td>Particularidade</td>
+<td>A GQ <strong>não bloqueia nada nos outros módulos</strong> (<code>00-reconhecimento.md</code>, integrações): suas decisões dependem de alguém agir à mão no Estoque, no CQ ou na Produção. Isso pesa na probabilidade de quase todos os riscos de processo.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conclusão:</strong> é necessária a avaliação funcional detalhada (etapas 2 e 3).</p>
+<h3 id="escalas-usadas">Escalas usadas</h3>
+<p>Iguais às do Principal.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Severidade (S): se a falha acontecer</th>
+<th>Probabilidade (P): chance de a falha acontecer</th>
+<th>Detecção (D): chance de perceber antes do dano</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alta:</strong> compromete integridade de dados BPF, permite ação não autorizada ou afeta a qualidade do produto</td>
+<td><strong>Alta:</strong> falha já confirmada no código, ou acontece no uso normal</td>
+<td><strong>Baixa:</strong> passa despercebida (ninguém nota)</td>
+</tr>
+<tr>
+<td><strong>Média:</strong> afeta a operação, mas há controle compensatório</td>
+<td><strong>Média:</strong> exige uma condição específica</td>
+<td><strong>Média:</strong> pode ser percebida numa revisão</td>
+</tr>
+<tr>
+<td><strong>Baixa:</strong> incômodo, sem efeito em dados BPF</td>
+<td><strong>Baixa:</strong> improvável</td>
+<td><strong>Alta:</strong> o sistema ou o usuário percebe na hora</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Classe</strong> = Severidade × Probabilidade (Alta×Alta ou Alta×Média ou Média×Alta = 1; Alta×Baixa, Média×Média ou Baixa×Alta = 2; demais = 3).
+<strong>Prioridade</strong> = Classe × Detecção (classe 1: Alta, salvo detecção Alta → Média; classe 2: Baixa/Média/Alta conforme a detecção seja Alta/Média/Baixa; classe 3: Média só com detecção Baixa).</p>
+<hr />
+<h3 id="etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</h3>
+<h4 id="desvios-e-capa">Desvios e CAPA</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo (o que pode dar errado)</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-GQ-01</td>
+<td>Registro do desvio × lote</td>
+<td>Lote com desvio aberto é usado, aprovado ou expedido</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum: a GQ não retém o lote no Estoque nem no CQ</td>
+<td>Desvio de material ou produto põe o lote em retenção até a decisão da GQ</td>
+<td>04 (art. 8º, IX e XV); RN-GQ-012</td>
+</tr>
+<tr>
+<td>R-GQ-02</td>
+<td>Lotes envolvidos no desvio</td>
+<td>Outros lotes afetados não são identificados</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Lote copiado como texto, sem ligação com a rastreabilidade</td>
+<td>Lote ligado ao cadastro real; consulta de lotes relacionados</td>
+<td>04 (art. 335); RN-GQ-012</td>
+</tr>
+<tr>
+<td>R-GQ-03</td>
+<td>Classificação e decisão sobre CAPA</td>
+<td>Desvio crítico encerrado sem investigação de causa</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Sem CAPA, exige só uma justificativa; criticidade só existe no CAPA</td>
+<td>Classificar o risco no registro; CAPA obrigatório para crítico e maior</td>
+<td>RN-GQ-028, 037</td>
+</tr>
+<tr>
+<td>R-GQ-04</td>
+<td>Monitoramento do plano corretivo</td>
+<td>Plano aprovado com ações não concluídas; eficácia nunca verificada</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>O validador não olha a situação das ações</td>
+<td>Exigir todas as ações concluídas; verificação de eficácia com prazo</td>
+<td>RN-GQ-050, 052; 04 (art. 8º, § 4º)</td>
+</tr>
+<tr>
+<td>R-GQ-05</td>
+<td>Encerramento do desvio</td>
+<td>Plano preventivo <strong>reprovado</strong> encerra o desvio como concluído</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Reprovação volta o plano para revisão</td>
+<td>RN-GQ-057</td>
+</tr>
+<tr>
+<td>R-GQ-06</td>
+<td>Ligação desvio → mudança</td>
+<td>"Necessário abrir controle de mudança" marcado e nenhuma mudança aberta</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Só uma marcação</td>
+<td>Abrir a solicitação de mudança ligada ao desvio</td>
+<td>RN-GQ-039</td>
+</tr>
+<tr>
+<td>R-GQ-07</td>
+<td>Erro humano como causa</td>
+<td>Causa atribuída a erro humano sem justificativa formal</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td>Média</td>
+<td>Nenhum campo</td>
+<td>Campo e regra próprios</td>
+<td>RN-GQ-044; 04 (art. 340)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="controle-de-mudancas">Controle de mudanças</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-GQ-08</td>
+<td>Liberação da mudança</td>
+<td>Mudança liberada sem o parecer das áreas, ou com parecer contrário</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Só o nível 3 libera</td>
+<td>Liberar só com todos os pareceres; parecer contrário exige justificativa da GQ</td>
+<td>RN-GQ-078</td>
+</tr>
+<tr>
+<td>R-GQ-09</td>
+<td>Áreas de impacto</td>
+<td>Mudança avaliada sem as áreas afetadas</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Regra desligada no código</td>
+<td>Áreas de impacto obrigatórias</td>
+<td>RN-GQ-065</td>
+</tr>
+<tr>
+<td>R-GQ-10</td>
+<td>Implementação e eficácia</td>
+<td>Mudança implantada sem validação nem verificação de eficácia</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Finalização do plano sem etapa de eficácia</td>
+<td>Etapa de eficácia e de validação, quando aplicável</td>
+<td>RN-GQ-086; 04 (art. 8º, XIII)</td>
+</tr>
+<tr>
+<td>R-GQ-11</td>
+<td>Aprovação do produto</td>
+<td>Lote errado aprovado após a mudança; aprovação sem rastro</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Lote digitado, justificativa opcional, gravação sem histórico</td>
+<td>Lote do cadastro; justificativa obrigatória; histórico</td>
+<td>RN-GQ-088 a 090</td>
+</tr>
+<tr>
+<td>R-GQ-12</td>
+<td>Mudança temporária</td>
+<td>Mudança vencida continua valendo</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Validade só filtra a lista</td>
+<td>Aviso e encerramento ao vencer</td>
+<td>RN-GQ-091</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="autoinspecao-auditoria-e-fornecedores">Autoinspeção, auditoria e fornecedores</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-GQ-13</td>
+<td>Independência da auditoria</td>
+<td>Área auditada por quem trabalha nela, ou que registra as próprias respostas</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Impedir inspetor da área auditada; respostas só pelo inspetor</td>
+<td>RN-GQ-100, 103; 04 (art. 363)</td>
+</tr>
+<tr>
+<td>R-GQ-14</td>
+<td>Desvios da auditoria</td>
+<td>Não conformidade encontrada não vira desvio nem CAPA</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Número e descrição digitados; RNC em texto livre</td>
+<td>Abrir o desvio a partir da auditoria, com ligação</td>
+<td>RN-GQ-104, 108</td>
+</tr>
+<tr>
+<td>R-GQ-15</td>
+<td>Encerramento e reabertura</td>
+<td>Auditoria reaberta e alterada depois de concluída, sem motivo</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td>Média</td>
+<td>Reabrir sem justificativa; finalizar sem histórico</td>
+<td>Justificativa e histórico</td>
+<td>RN-GQ-109, 110</td>
+</tr>
+<tr>
+<td>R-GQ-16</td>
+<td>Auditoria e qualificação de fornecedores</td>
+<td>Fornecedor sem auditoria nem qualificação fornece material</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>1</td>
+<td>Média</td>
+<td>Inexistente na GQ (avaliação é protótipo); controle fora do sistema</td>
+<td>Auditoria de fornecedor e qualificação ligadas ao cadastro de pessoa jurídica</td>
+<td>04, item 5</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="treinamento">Treinamento</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-GQ-17</td>
+<td>Conclusão e desempenho</td>
+<td>Treinando reprovado ou ausente registrado como suficiente</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Desempenho escolhido à mão, sem ligação com nota ou presença</td>
+<td>Desempenho calculado pela nota e pela presença</td>
+<td>RN-GQ-124, 125</td>
+</tr>
+<tr>
+<td>R-GQ-18</td>
+<td>Habilitação e vencimento</td>
+<td>Pessoa sem treinamento válido executa tarefa BPF</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Vencimento só no relatório; nada é bloqueado nem avisado</td>
+<td>Aviso de vencimento; consulta da habilitação pelos outros módulos</td>
+<td>RN-GQ-128, 129</td>
+</tr>
+<tr>
+<td>R-GQ-19</td>
+<td>Programa de treinamento</td>
+<td>Programa não aprovado pelos responsáveis de Produção e CQ</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhuma aprovação</td>
+<td>Aprovação registrada do programa</td>
+<td>RN-GQ-119; 04 (art. 42)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="assuntos-regulatorios">Assuntos regulatórios</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-GQ-20</td>
+<td>Situação do registro do produto</td>
+<td>Produto com registro indeferido ou vencido é fabricado</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum: a situação não sai da GQ</td>
+<td>A Produção consulta a situação do registro antes da ordem</td>
+<td>RN-GQ-148</td>
+</tr>
+<tr>
+<td>R-GQ-21</td>
+<td>Prazos regulatórios</td>
+<td>Prazo de protocolo ou revalidação perdido</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Só filtro na lista; datas sem regra entre si</td>
+<td>Avisos de prazo; coerência entre as datas</td>
+<td>RN-GQ-134, 137</td>
+</tr>
+<tr>
+<td>R-GQ-22</td>
+<td>Envio e fechamento da solicitação</td>
+<td>Solicitação enviada ou fechada sem o check-list completo, sem rastro</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Sem conferência e sem histórico</td>
+<td>Conferir o check-list; histórico</td>
+<td>RN-GQ-142, 143</td>
+</tr>
+<tr>
+<td>R-GQ-23</td>
+<td>Exigências da ANVISA</td>
+<td>Exigência não respondida</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>1</td>
+<td>Média</td>
+<td>Tela não abre (percebe-se na hora)</td>
+<td>Tela funcional, com prazo</td>
+<td><code>11-inventario-de-telas.md</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="integridade-dos-registros-todas-as-telas">Integridade dos registros (todas as telas)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-GQ-24</td>
+<td>Trilha de auditoria</td>
+<td>Alteração, cancelamento ou exclusão sem registro</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Histórico só em parte das gravações; tabela do histórico fora do projeto de banco</td>
+<td>Histórico em toda gravação, sem caminho alternativo</td>
+<td>RN-GQ-004 a 006; 04, item 14</td>
+</tr>
+<tr>
+<td>R-GQ-25</td>
+<td>Data e hora dos registros</td>
+<td>Data informada diferente do momento real (registro não contemporâneo)</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Data vem da tela, travada só na aparência</td>
+<td>Data e hora do servidor</td>
+<td>RN-GQ-007</td>
+</tr>
+<tr>
+<td>R-GQ-26</td>
+<td>Aprovações</td>
+<td>Aprovação sem assinatura; quem faz é quem aprova</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Assinatura eletrônica (senha e motivo); separação de funções</td>
+<td>RN-GQ-009; 04, item 14</td>
+</tr>
+<tr>
+<td>R-GQ-27</td>
+<td>Avisos de prazo</td>
+<td>Ações de CAPA, mudanças e treinamentos vencem sem que o responsável saiba</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum aviso em nenhum fluxo</td>
+<td>Avisos por e-mail e painel de pendências</td>
+<td>RN-GQ-009</td>
+</tr>
+<tr>
+<td>R-GQ-28</td>
+<td>Consulta que grava</td>
+<td>Abrir uma tela de consulta cria registro</td>
+<td>Baixa</td>
+<td>Alta</td>
+<td>Média</td>
+<td>2</td>
+<td>Média</td>
+<td>Nenhum</td>
+<td>Consulta só lê</td>
+<td>RN-GQ-082</td>
+</tr>
+<tr>
+<td>R-GQ-29</td>
+<td>Cadastros de apoio</td>
+<td>Tipo, motivo ou roteiro excluído sem rastro</td>
+<td>Baixa</td>
+<td>Média</td>
+<td>Média</td>
+<td>3</td>
+<td>Baixa</td>
+<td>Exclusão lógica</td>
+<td>Manter; acrescentar histórico</td>
+<td>RN-GQ-006</td>
+</tr>
+<tr>
+<td>R-GQ-30</td>
+<td>Banco de dados × código</td>
+<td>Instalação nova sem tabelas ou colunas que o código usa; dado não gravado</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum (o banco real pode ter sido ajustado à mão)</td>
+<td>Projeto de banco único e conferido com o código</td>
+<td><code>06-modelo-de-dados.md</code>, item 9</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="processos-sem-tela">Processos sem tela</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-GQ-31</td>
+<td>Reclamações e recolhimento</td>
+<td>Processo exigido feito fora do sistema, sem rastro integrado</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>1</td>
+<td>Média</td>
+<td>Inexistente (a ausência é evidente)</td>
+<td>Telas próprias ligadas a desvio, CAPA e lote</td>
+<td>04, itens 7 e 8</td>
+</tr>
+<tr>
+<td>R-GQ-32</td>
+<td>Revisão da qualidade do produto, validação e calibração</td>
+<td>Processo exigido feito fora do sistema</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>1</td>
+<td>Média</td>
+<td>Protótipos sem gravação</td>
+<td>Telas funcionais ou decisão formal de manter fora</td>
+<td>04, itens 9 a 11</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resumo">Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Riscos</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alta</strong></td>
+<td>R-GQ-01 a 06, 08 a 14, 17 a 22, 24 a 27, 30, 33 a 36</td>
+<td>28</td>
+</tr>
+<tr>
+<td><strong>Média</strong></td>
+<td>R-GQ-07, 15, 16, 23, 28, 31, 32, 37</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Baixa</strong></td>
+<td>R-GQ-29</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- Os riscos altos se concentram em três pontos: <strong>(1)</strong> as decisões da GQ não chegam aos outros módulos (lote com desvio, registro indeferido, treinamento vencido não bloqueiam nada); <strong>(2)</strong> os fluxos <strong>avançam sem as condições</strong> que a norma pede (plano aprovado com ações abertas, mudança liberada sem parecer, desvio crítico sem CAPA, auditoria sem independência); <strong>(3)</strong> a <strong>integridade dos registros</strong> é parcial (histórico incompleto, datas da tela, aprovações sem assinatura).
+- Os processos sem tela (reclamações, recolhimento, revisão de produto, validação, calibração) ficaram em prioridade média só porque a ausência é evidente; são lacunas de conformidade graves (<code>04-conformidade-regulatoria.md</code>) e devem entrar no escopo da nova versão.</p>
+<hr />
+<h3 id="etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</h3>
+<p>Cada controle exigido vira:
+- um <strong>requisito corrigido</strong> da nova versão (documento 05, a escrever depois dos testes);
+- um ou mais <strong>casos de teste</strong> (documento 08). Os casos de prioridade alta do plano cobrem os riscos acima por fluxo: desvios (CT-GQ-001 a 026), mudanças (030 a 049), auditoria (050 a 065), treinamento (070 a 083), regulatórios (090 a 101) e acesso (110 a 114).</p>
+<p>A ligação risco → requisito → teste fica na matriz de rastreabilidade (documento 09).</p>
+<h3 id="etapa-5-revisao">Etapa 5: revisão</h3>
+<p>Revisar esta análise:
+- depois dos testes de tela em andamento (a probabilidade baixa para média ou alta conforme o que for confirmado; por exemplo, R-GQ-33 a 35);
+- quando o DBA responder sobre o banco real (R-GQ-24 e R-GQ-30);
+- quando os módulos que recebem as decisões da GQ (CQ, Produção) forem analisados.</p>
+<h3 id="pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</h3>
+<ol>
+<li>A empresa tem matriz de risco própria? Se tiver, adaptamos as notas.</li>
+<li>Os controles hoje feitos <strong>fora do sistema</strong> (retenção de lote com desvio, auditoria de fornecedor, reclamações, recolhimento) existem em procedimento? Isso reduz a probabilidade de R-GQ-01, 16, 31 e 32 no uso atual, mas não muda o requisito da nova versão.</li>
+<li>Confirmar se a criticidade "crítico, maior, menor" do CAPA corresponde à classificação de desvios usada nos procedimentos da empresa (R-GQ-03).</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#para-que-serve">Para que serve</a></li><li><a href="#etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</a></li><li><a href="#escalas-usadas">Escalas usadas</a></li><li><a href="#etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</a></li><li><a href="#etapa-5-revisao">Etapa 5: revisão</a></li><li><a href="#pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

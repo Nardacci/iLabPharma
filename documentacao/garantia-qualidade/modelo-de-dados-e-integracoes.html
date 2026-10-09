@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="autoinspecao-e-auditoria.html">Autoinspeção e auditoria</a></li><li><a href="treinamento-tecnico.html">Treinamento técnico</a></li><li><a href="assuntos-regulatorios.html">Assuntos regulatórios</a></li><li><a href="controle-de-mudancas.html">Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · Extraído do código e dos scripts do projeto de banco; <strong>sem acesso ao banco real</strong>. Caminhos relativos a <code>5.garantia_qualidade/app/</code>.</p>
+<p><strong>Base por script</strong> (saídas em <code>levantamento/</code>):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Saída</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ferramentas/levantar_tabelas_gq.py</code></td>
+<td><code>tabelas-automatico.md</code> (tabelas, pastas, conflitos, tabelas usadas × existentes)</td>
+</tr>
+<tr>
+<td><code>ferramentas/levantar_relacionamentos_gq.py</code></td>
+<td><code>relacionamentos-automatico.md</code> (100 chaves estrangeiras e referências a outros módulos)</td>
+</tr>
+<tr>
+<td><code>ferramentas/levantar_integracoes_gq.py</code></td>
+<td><code>integracoes-automatico.md</code> (chamadas de API)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas no projeto de banco (pasta válida <code>Hsolutions.GQ.DB/Tables</code>)</td>
+<td>91 (mais 2 só na pasta antiga <code>dbo/Tables</code>)</td>
+</tr>
+<tr>
+<td>Tabelas que o código usa</td>
+<td>96</td>
+</tr>
+<tr>
+<td>Usadas pelo código e <strong>ausentes</strong> do projeto de banco</td>
+<td>7, entre elas a do <strong>histórico</strong> (<code>TBL_LOG_ALTERACAO_GQ</code>)</td>
+</tr>
+<tr>
+<td>Colunas que o código usa e <strong>não existem</strong> no script da tabela (ou têm outro nome)</td>
+<td><strong>48, em 16 tabelas</strong> (seção 9)</td>
+</tr>
+<tr>
+<td>Chaves estrangeiras internas</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Colunas que guardam o número de algo de <strong>outro módulo</strong>, sem chave estrangeira</td>
+<td>74</td>
+</tr>
+<tr>
+<td>Colunas que <strong>copiam o nome</strong> de algo de outro módulo (responsável, área, produto)</td>
+<td>64</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Como o banco é criado.</strong> O acesso a dados usa o Entity Framework (<code>HSolutions.GQ.Context/GQContext.cs</code>), que pode criar o banco sozinho a partir do código (<code>GQDbInitializer.cs</code>, <code>CreateDatabaseIfNotExists</code>). A tabela de controle <code>__MigrationHistory</code> está no projeto. Por isso, <strong>o banco real pode ter a forma do código, e não a dos scripts</strong>. Os 48 desencontros da seção 9 mostram que os scripts não foram mantidos. <em>A confirmar com o DBA</em> qual dos dois vale.</p>
+<p><strong>Colunas comuns a quase todas as tabelas</strong> (classe base <code>AuditableEntityConfiguration</code>): <code>ATIVO</code>, <code>LIXEIRA</code> (exclusão lógica), <code>DATA_CRIACAO</code>, <code>ID_USUARIO_CRIACAO</code>, <code>DATA_ALTERACAO</code>, <code>ID_USUARIO_ALTERACAO</code>, <code>DATA_EXCLUSAO</code>, <code>ID_USUARIO_EXCLUSAO</code>. Elas dizem <strong>quem criou e quem mexeu por último</strong>, mas <strong>não substituem a trilha de auditoria</strong>: guardam só a última alteração, sem o valor anterior.</p>
+<h3 id="2-desvios-e-capa-23-tabelas">2. Desvios e CAPA (23 tabelas)</h3>
+<p>O <strong>Relatório de Desvios</strong> (<code>TBL_REGISTRO_RNC</code>) é o centro. Cada etapa do fluxo é uma tabela própria ligada a ele, quase sempre <strong>uma por desvio</strong>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Ligação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_REGISTRO_RNC</code></td>
+<td>O desvio: número por ano, descrição, local, situação, cancelamento</td>
+<td>Centro</td>
+</tr>
+<tr>
+<td><code>TBL_ITEM_REGISTRO_DESVIO</code></td>
+<td>O item envolvido (tipo e número do item em outro módulo)</td>
+<td>→ <code>TBL_REGISTRO_RNC</code>; → <code>TBL_LOTE</code></td>
+</tr>
+<tr>
+<td><code>TBL_LOTE</code></td>
+<td><strong>Cópia</strong> do lote: número e descrição</td>
+<td>← item do desvio; o <code>IdLote</code> é da Produção, sem chave</td>
+</tr>
+<tr>
+<td><code>TBL_ACAO_CORRETIVA_IMEDIATA</code>, <code>TBL_PRE_AVALIACAO_RNC</code>, <code>TBL_AVALIACAO_RNC</code></td>
+<td>Ação imediata, pré-avaliação e avaliação</td>
+<td>→ <code>TBL_REGISTRO_RNC</code></td>
+</tr>
+<tr>
+<td><code>TBL_AREA_ENVOLVIDA</code>, <code>TBL_AVALIACAO_AREA_REGISTRO_DESVIO</code></td>
+<td>Áreas envolvidas e o parecer de cada uma</td>
+<td>→ desvio; o número da área é do Principal</td>
+</tr>
+<tr>
+<td><code>TBL_RELATORIO_CAPA</code>, <code>TBL_RELATORIO_CAPA_AREA_REUNIAO</code></td>
+<td>CAPA: diagrama (7 campos de texto), impacto, criticidade; áreas da reunião</td>
+<td>→ desvio</td>
+</tr>
+<tr>
+<td><code>TBL_DIAGRAMA_CAUSA_EFEITO</code>, <code>TBL_ETAPA_DIAGRAMA_CAUSA_EFEITO</code></td>
+<td>Estrutura de diagrama em etapas</td>
+<td><strong>Não ligada ao Relatório de CAPA</strong>, que usa os 7 campos de texto (a confirmar se é usada)</td>
+</tr>
+<tr>
+<td><code>TBL_PLANO_ACAO_CORRETIVA_RNC</code>, <code>TBL_ACAO_CORRETIVA</code>, <code>TBL_AVALIACAO_PLANO_ACAO_CORRETIVA_RNC</code>, <code>TBL_LIBERACAO_PLANO_ACAO_CORRETIVA_RNC</code></td>
+<td>Plano corretivo, ações, execução e monitoramento</td>
+<td>Plano → desvio; ações → plano; liberação → plano</td>
+</tr>
+<tr>
+<td>As quatro equivalentes <strong>preventivas</strong></td>
+<td>Plano preventivo</td>
+<td>Idem</td>
+</tr>
+<tr>
+<td><code>TBL_ACAO_RESULTADO</code></td>
+<td>Resultado de cada ação no monitoramento</td>
+<td>→ liberação (corretiva ou preventiva)</td>
+</tr>
+<tr>
+<td><code>TBL_RNC_AUXILIAR</code></td>
+<td>Desvios <strong>digitados</strong> na avaliação da auditoria (número, descrição, situação)</td>
+<td><strong>Não liga</strong> a <code>TBL_REGISTRO_RNC</code> (seção 7)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-controle-de-mudancas-16-tabelas">3. Controle de mudanças (16 tabelas)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Ligação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_SOLICITACAO_MUDANCA</code></td>
+<td>A mudança: descrição, proposta, motivo, tipo, validade, impacto, urgência, situação</td>
+<td>Centro</td>
+</tr>
+<tr>
+<td><code>TBL_SOLICITACAO_MUDANCA_ITEM_ALTERADO</code>, <code>TBL_TIPO_ITEM_ALTERADO</code></td>
+<td>Itens alterados (processo, formulação, regulatórios, produto, projetos)</td>
+<td>→ solicitação</td>
+</tr>
+<tr>
+<td><code>TBL_AREA_IMPACTO</code></td>
+<td>Áreas de impacto</td>
+<td>→ solicitação; área do Principal</td>
+</tr>
+<tr>
+<td><code>TBL_PREAVALIACAO_MUDANCA</code></td>
+<td>Revisão pela GQ</td>
+<td>→ solicitação</td>
+</tr>
+<tr>
+<td><code>TBL_AVALIACAO_SOLICITACAO</code>, <code>TBL_AREA_RESPONSAVEL_AVALIACAO_SOLICITACAO</code>, <code>TBL_AREA_RESPONSAVEL_AVALIACAO</code></td>
+<td>Parecer de cada área</td>
+<td>→ solicitação</td>
+</tr>
+<tr>
+<td><code>TBL_LIBERACAO_AVALIACAO_MUDANCA</code></td>
+<td>Liberação</td>
+<td>→ solicitação</td>
+</tr>
+<tr>
+<td><code>TBL_PLANO_ACAO</code>, <code>TBL_ACAO</code>, <code>TBL_AVALIACAO_PLANO_ACAO</code>, <code>TBL_LIBERACAO_PLANO_ACAO</code>, <code>TBL_RECURSO_NECESSARIO</code></td>
+<td>Plano, ações, execução e finalização</td>
+<td>Plano → solicitação</td>
+</tr>
+<tr>
+<td><code>TBL_CONTROLE_MUDANCA</code></td>
+<td>Aprovação do produto: <strong>número do lote digitado</strong></td>
+<td>→ solicitação</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Não há ligação</strong> entre <code>TBL_SOLICITACAO_MUDANCA</code> e <code>TBL_REGISTRO_RNC</code>: o desvio que pede uma mudança não fica ligado a ela.</p>
+<h3 id="4-autoinspecao-e-auditoria-20-tabelas">4. Autoinspeção e auditoria (20 tabelas)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Tabelas</th>
+<th>Ligações principais</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Roteiros</td>
+<td><code>TBL_ROTEIRO</code>, <code>TBL_PERGUNTA</code>, <code>TBL_OPCAO_RESPOSTA</code>, <code>TBL_PERGUNTA_OPCAO_RESPOSTA</code>, <code>TBL_TIPO_QUALIFICACAO</code></td>
+<td>Pergunta → roteiro; pergunta → tipo de qualificação</td>
+</tr>
+<tr>
+<td>Cadastro e programação</td>
+<td><code>TBL_INSPECAO_AUDITORIA_QUALIDADE</code>, <code>TBL_ROTEIRO_AUDITORIA_QUALIDADE</code>, <code>TBL_AUTO_INSPECAO_AUDITORIA_QUALIDADE_PROGRAMCAO</code>, <code>TBL_PROGRAMACAO_INSPECAO_AUDITORIA</code></td>
+<td>Programação → autoinspeção</td>
+</tr>
+<tr>
+<td>Quem e onde</td>
+<td><code>TBL_INSPETOR_AUDITOR</code> (usuário ou empresa externa), <code>TBL_DEPTO_INSPECIONADO_AUDITADO</code> (área, responsável e contato)</td>
+<td>→ programação</td>
+</tr>
+<tr>
+<td>Execução</td>
+<td><code>TBL_ROTEIRO_DEPARTAMENTO_AUDITORIA</code>, <code>TBL_RESPOSTA</code>, <code>TBL_RESPOSTA_MULT_SELECAO</code></td>
+<td>Resposta → roteiro do departamento e → programação. <strong>O RNC da resposta é texto</strong></td>
+</tr>
+<tr>
+<td>Avaliação</td>
+<td><code>TBL_AVALIACAO_INSPECAO_AUDITORIA_QUALIDADE</code>, <code>TBL_ENVOLVIDO_DISTRIBUICAO_RELATORIO</code></td>
+<td>→ programação</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Não há tabela de fornecedor auditado</strong>: a pessoa jurídica que aparece (<code>TBL_INSPETOR_AUDITOR.ID_EMPRESA</code>) é a do inspetor externo.</p>
+<h3 id="5-treinamento-13-tabelas">5. Treinamento (13 tabelas)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Ligação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_TREINAMENTO_TECNICO</code></td>
+<td>Treinamento: POP, validade, obrigatório, origem</td>
+<td>Centro; tipo de treinamento</td>
+</tr>
+<tr>
+<td><code>TBL_FUNCAO_VINCULADA</code>, <code>TBL_DEPARTAMENTO_SETOR_VINCULADO</code>, <code>TBL_DEPARTAMENTO_SETOR_RESPONSAVEL</code></td>
+<td>Funções e setores que precisam do treinamento</td>
+<td>→ treinamento; números do Principal</td>
+</tr>
+<tr>
+<td><code>TBL_SOLICITACAO_TREINAMENTO</code>, <code>TBL_MOTIVO_TREINAMENTO</code></td>
+<td>Pedido das áreas</td>
+<td>→ treinamento; → motivo</td>
+</tr>
+<tr>
+<td><code>TBL_PROGRAMACAO_TREINAMENTO</code>, <code>TBL_INSTRUTOR_TREINAMENTO</code>, <code>TBL_RECURSO_NECESSARIO</code></td>
+<td>Turma</td>
+<td>→ treinamento</td>
+</tr>
+<tr>
+<td><code>TBL_ALOCACAO_TREINAMENTO</code> e as tabelas de ligação com solicitação e programação</td>
+<td>Quem vai a cada turma</td>
+<td>→ solicitação e → programação</td>
+</tr>
+<tr>
+<td><code>TBL_CONCLUSAO_TREINAMENTO</code>, <code>TBL_TREINANDO_CONCLUSAO</code>, <code>TBL_TIPO_AVALIACAO</code></td>
+<td>Conclusão e resultado de cada treinando</td>
+<td>→ programação</td>
+</tr>
+</tbody>
+</table></div>
+<p>O documento do POP é guardado em <code>ID_DOCUMENTO</code> (número do Controle de Documentos), <strong>coluna que não existe nos scripts</strong> de <code>TBL_TREINAMENTO_TECNICO</code> e <code>TBL_PROGRAMACAO_TREINAMENTO</code>. Também faltam no script de <code>TBL_TREINANDO_CONCLUSAO</code> a <strong>nota</strong> e a <strong>data de vencimento</strong> (seção 9).</p>
+<h3 id="6-assuntos-regulatorios-13-tabelas">6. Assuntos regulatórios (13 tabelas)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caminho</th>
+<th>Tabelas</th>
+<th>Ligações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Obrigações (menu)</td>
+<td><code>TBL_PROCESSO_REGULATORIO</code> → <code>TBL_PROGRAMACAO</code> → <code>TBL_MONITORAMENTO</code> (+ <code>TBL_MONITORAMENTO_ANEXO</code>)</td>
+<td>Em cadeia. O <strong>produto e o documento da programação são texto</strong>; o fornecedor é número do Principal</td>
+</tr>
+<tr>
+<td>Registro de produto</td>
+<td><code>TBL_CHECKLIST</code> → <code>TBL_DOCUMENTO_CHECKLIST</code>; <code>TBL_SOLICITACAO_REGISTRO</code> → check-list; <code>TBL_HISTORICO_PRODUTO_ANVISA</code>; <code>TBL_EXIGENCIA_ANVISA</code></td>
+<td>Solicitação e exigência → check-list. O produto é número da Produção</td>
+</tr>
+<tr>
+<td>Protótipos com tabela</td>
+<td><code>TBL_LOTE_PILOTO</code>, <code>TBL_PETICAO_LOTE_PILOTO</code>, <code>TBL_HISTORICO_HMP</code></td>
+<td>As tabelas existem; as telas não gravam</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Os dois caminhos não se ligam</strong>: nenhuma chave estrangeira entre <code>TBL_PROGRAMACAO</code> e <code>TBL_SOLICITACAO_REGISTRO</code> ou <code>TBL_HISTORICO_PRODUTO_ANVISA</code>.</p>
+<h3 id="7-configuracao-anexos-e-historico">7. Configuração, anexos e histórico</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_GRUPOPERFIL</code>, <code>TBL_GRUPOUSUARIO</code></td>
+<td>Níveis 1, 2 e 3 e quem está em cada um</td>
+<td>O usuário é número do Principal</td>
+</tr>
+<tr>
+<td><code>TBL_ANEXO</code></td>
+<td><strong>Uma tabela de anexos para tudo</strong>: desvio, planos, mudança, auditoria, check-list, registro ANVISA</td>
+<td>Uma coluna de chave para cada tipo de "dono"</td>
+</tr>
+<tr>
+<td><code>TBL_LOG_ALTERACAO</code>, <code>TBL_LOG_ALTERACAO_ITEM</code></td>
+<td>Histórico, no projeto de banco</td>
+<td><strong>O código não usa estas</strong>: grava em <code>TBL_LOG_ALTERACAO_GQ</code> e <code>_ITEM</code>, que não estão no projeto</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-integracoes-com-os-outros-modulos">8. Integrações com os outros módulos</h3>
+<h4 id="8-1-o-que-a-gq-guarda-de-outros-modulos">8.1 O que a GQ guarda de outros módulos</h4>
+<p>A GQ <strong>não usa sinônimos de banco</strong> (ao contrário do Estoque). Tudo o que é de outro módulo chega pela API e fica na GQ <strong>só como número</strong>, sem chave estrangeira, quase sempre com <strong>o nome copiado ao lado</strong>:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>De onde vem</th>
+<th>Colunas na GQ</th>
+<th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuários (Principal)</td>
+<td>47</td>
+<td>responsáveis, treinandos, inspetores, instrutores</td>
+</tr>
+<tr>
+<td>Áreas e locais (Principal)</td>
+<td>20</td>
+<td>área responsável, área envolvida, setor do treinando</td>
+</tr>
+<tr>
+<td>Pessoas jurídicas (Principal)</td>
+<td>3</td>
+<td>empresa do inspetor externo, fornecedor da programação regulatória, instituição do treinamento</td>
+</tr>
+<tr>
+<td>Função profissional (Principal)</td>
+<td>1</td>
+<td>funções que precisam de um treinamento</td>
+</tr>
+<tr>
+<td>Produto (Produção)</td>
+<td>1</td>
+<td>produto da solicitação de registro</td>
+</tr>
+<tr>
+<td>Lote (Produção)</td>
+<td>1</td>
+<td>lote copiado no desvio</td>
+</tr>
+<tr>
+<td>Item do desvio (Principal ou Produção, conforme o tipo)</td>
+<td>1</td>
+<td>equipamento, material ou produto</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Consequência:</strong> se um usuário, uma área ou um produto mudar de nome ou for excluído no módulo de origem, a GQ <strong>continua com o nome antigo</strong> (64 colunas de nome copiado) e com um número que pode não existir mais. Para a trilha de auditoria isso até ajuda, porque guarda o nome no momento do registro. Mas não há conferência de que o número ainda existe.</p>
+<h4 id="8-2-chamadas-de-api">8.2 Chamadas de API</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>A GQ consulta</th>
+<th>O quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Principal (32 chamadas)</td>
+<td>Entrada, menu, usuários, permissões, áreas, funções, locais, equipamentos, pessoas jurídicas</td>
+</tr>
+<tr>
+<td>Produção (5)</td>
+<td>Produtos, produtos por lote, itens</td>
+</tr>
+<tr>
+<td>Controle de Documentos (3)</td>
+<td>Documento por código ou número</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Consulta a GQ</th>
+<th>O quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Treinamentos concluídos por treinamento ou por documento (<code>api/treinamento</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>A GQ não grava nada em outro módulo e não é consultada pelo Estoque, pela Produção nem pelo CQ.</strong> Por isso nenhum desvio, mudança, treinamento vencido ou registro indeferido chega a bloquear lote, material, pessoa ou produto (ver <code>transversal/02-mapa-do-processo-fabril.md</code>).</p>
+<h4 id="8-3-tabelas-com-o-mesmo-nome-em-outros-modulos">8.3 Tabelas com o mesmo nome em outros módulos</h4>
+<p>Só 3: <code>TBL_ANEXO</code> (Produção, Controle de Documentos e Comercial, com colunas diferentes), <code>TBL_LOG_ALTERACAO</code> (Principal, Produção e Estoque com colunas diferentes; igual à do Controle de Documentos) e <code>TBL_LOG_ALTERACAO_ITEM</code> (igual à do Controle de Documentos). Detalhe em <code>transversal/01-telas-repetidas.md</code>.</p>
+<h3 id="9-desencontros-entre-o-codigo-e-o-projeto-de-banco">9. Desencontros entre o código e o projeto de banco</h3>
+<p>Colunas que o código grava e que <strong>não existem</strong> no script da tabela, ou existem com outro nome (por exemplo, <code>ID_RESPONSAVEL</code> no código e <code>IdResponsavel</code> no script):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>Colunas do código ausentes do script</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_TREINANDO_CONCLUSAO</code></td>
+<td><code>NOTA</code>, <code>DATA_VENCIMENTO</code></td>
+</tr>
+<tr>
+<td><code>TBL_TREINAMENTO_TECNICO</code>, <code>TBL_PROGRAMACAO_TREINAMENTO</code></td>
+<td><code>ID_DOCUMENTO</code></td>
+</tr>
+<tr>
+<td><code>TBL_CONTROLE_MUDANCA</code></td>
+<td><code>ID_CONTROLE_MUDANCA</code>, <code>ID_RESPONSAVEL</code>, <code>NOME_RESPONSAVEL</code>, <code>NUMERO_LOTE</code></td>
+</tr>
+<tr>
+<td><code>TBL_SOLICITACAO_MUDANCA</code></td>
+<td><code>ANO_CONTROLE</code></td>
+</tr>
+<tr>
+<td><code>TBL_PREAVALIACAO_MUDANCA</code>, <code>TBL_LIBERACAO_AVALIACAO_MUDANCA</code></td>
+<td><code>ID_RESPONSAVEL</code>, <code>NOME_RESPONSAVEL</code></td>
+</tr>
+<tr>
+<td><code>TBL_AREA_RESPONSAVEL_AVALIACAO</code></td>
+<td><code>ID_AREA_RESPONSAVEL</code>, <code>ID_RESPONSAVEL</code> e os dois nomes</td>
+</tr>
+<tr>
+<td><code>TBL_AREA_IMPACTO</code></td>
+<td><code>ID_AREA</code></td>
+</tr>
+<tr>
+<td><code>TBL_AVALIACAO_PLANO_ACAO</code></td>
+<td><code>DATA_CONCLUSAO</code>, <code>ID_RESPONSAVEL_AVALIACAO</code>, <code>NOME_RESPONSAVEL_AVALIACAO</code></td>
+</tr>
+<tr>
+<td><code>TBL_AVALIACAO_INSPECAO_AUDITORIA_QUALIDADE</code></td>
+<td><code>SITUACAO</code></td>
+</tr>
+<tr>
+<td><code>TBL_OPCAO_RESPOSTA</code></td>
+<td><code>DESCRICAO</code>, <code>OBSERVACAO</code>, <code>RNC</code></td>
+</tr>
+<tr>
+<td><code>TBL_CHECKLIST</code></td>
+<td><code>CODIGO_PRODUTO</code>, <code>DOCUMENTOS</code>, <code>ID_PRODUTO</code>, <code>PRODUTO</code>, <code>RESPONSAVEL</code></td>
+</tr>
+<tr>
+<td><code>TBL_GRUPOPERFIL</code>, <code>TBL_GRUPOUSUARIO</code></td>
+<td><code>ID_GRUPOPERFIL</code>, <code>ID_GRUPOUSUARIO</code>, <code>ID_USUARIO</code></td>
+</tr>
+<tr>
+<td><code>TBL_RNC_AUXILIAR</code></td>
+<td>Praticamente todas (o script da tabela não corresponde à entidade)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Total: <strong>48 colunas em 16 tabelas</strong>. Se o banco do ambiente de teste foi criado pelos scripts, essas gravações falham. Se foi criado pelo código, os scripts estão desatualizados. <strong>Pergunta ao DBA</strong>, junto com as 7 tabelas ausentes.</p>
+<h3 id="10-resumo-das-anomalias-de-estrutura-para-a-nova-versao">10. Resumo das anomalias de estrutura (para a nova versão)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Anomalia</th>
+<th>Efeito</th>
+<th>Para a nova versão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Projeto de banco desatualizado (7 tabelas e 48 colunas fora do script; pasta antiga com conflitos de mesclagem)</td>
+<td>Não se sabe a estrutura real; instalação incerta</td>
+<td>Um só modelo, versionado, com migrações</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tabela de histórico usada pelo código fora do projeto</td>
+<td>Trilha de auditoria pode não existir</td>
+<td>Histórico obrigatório, no modelo e protegido</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Dados de outros módulos só como número e nome copiado</td>
+<td>Nenhuma conferência de existência; nenhum efeito no módulo de origem</td>
+<td>Integração por serviço com eventos (por exemplo, "lote com desvio aberto")</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Desvio, mudança e auditoria sem ligação entre si (RNC da auditoria e lote da mudança em texto)</td>
+<td>Não se rastreia uma não conformidade até a CAPA e a mudança</td>
+<td>Chaves entre auditoria → desvio → CAPA → mudança</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Dois caminhos regulatórios separados; produto e documento em texto na programação</td>
+<td>Duplicidade, sem visão do produto</td>
+<td>Um cadastro regulatório por produto, ligado à Produção e ao Controle de Documentos</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Uma tabela de anexos para todos os processos</td>
+<td>Difícil controlar acesso e retenção por tipo</td>
+<td>Anexos por processo, com metadados de retenção</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-desvios-e-capa-23-tabelas">2. Desvios e CAPA (23 tabelas)</a></li><li><a href="#3-controle-de-mudancas-16-tabelas">3. Controle de mudanças (16 tabelas)</a></li><li><a href="#4-autoinspecao-e-auditoria-20-tabelas">4. Autoinspeção e auditoria (20 tabelas)</a></li><li><a href="#5-treinamento-13-tabelas">5. Treinamento (13 tabelas)</a></li><li><a href="#6-assuntos-regulatorios-13-tabelas">6. Assuntos regulatórios (13 tabelas)</a></li><li><a href="#7-configuracao-anexos-e-historico">7. Configuração, anexos e histórico</a></li><li><a href="#8-integracoes-com-os-outros-modulos">8. Integrações com os outros módulos</a></li><li><a href="#9-desencontros-entre-o-codigo-e-o-projeto-de-banco">9. Desencontros entre o código e o projeto de banco</a></li><li><a href="#10-resumo-das-anomalias-de-estrutura-para-a-nova-versao">10. Resumo das anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

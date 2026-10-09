@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de permissões · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="autoinspecao-e-auditoria.html">Autoinspeção e auditoria</a></li><li><a href="treinamento-tecnico.html">Treinamento técnico</a></li><li><a href="assuntos-regulatorios.html">Assuntos regulatórios</a></li><li><a href="controle-de-mudancas.html">Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html" aria-current=page>Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Matriz de permissões</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 09/10/2026 · Extraída do código; nada testado ainda. Caminhos relativos a <code>5.garantia_qualidade/app/</code>.</p>
+<p>Este documento tem três partes:</p>
+<ol>
+<li><strong>Como o acesso funciona na GQ</strong> (extraído do código).</li>
+<li><strong>Matriz por tela:</strong> quem pode fazer o quê, e onde a regra é conferida.</li>
+<li><strong>Testes que esta matriz gera.</strong></li>
+</ol>
+<p><strong>Importante:</strong> <em>quem</em> tem <em>qual</em> perfil está cadastrado no banco (perfis × funções no Principal; usuários × grupos de perfil na GQ), não no código. Para a matriz por pessoa, é preciso o relatório do Principal ou o DBA.</p>
+<hr />
+<h3 id="1-como-o-acesso-funciona">1. Como o acesso funciona</h3>
+<p>O acesso na GQ passa por <strong>três camadas</strong>, das quais só as duas primeiras vêm do Principal.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Onde é cadastrada</th>
+<th>O que controla</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Entrar no módulo</strong></td>
+<td>Principal: perfil com alguma função da GQ</td>
+<td>Sem nenhuma função da GQ, o usuário vai para a página "Acesso Permissão"</td>
+<td><code>HSolutions.GQ.UI/Controllers/PrincipalController.cs:91-93</code></td>
+</tr>
+<tr>
+<td><strong>2. Ver a tela no menu</strong></td>
+<td>Principal: tabela <code>SIS_FUNCAO</code> e perfis</td>
+<td>Quais telas aparecem no menu</td>
+<td>RN-GQ-001</td>
+</tr>
+<tr>
+<td><strong>3. O que fazer dentro da tela</strong></td>
+<td>GQ: tela <strong>Grupo Perfil</strong> (níveis 1, 2 e 3) e regras de cada tela</td>
+<td>Editar, cancelar, aprovar, conforme o nível, a área, o responsável e a situação do registro</td>
+<td><code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTela*.cs</code>; RN-GQ-002 e 003</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="os-niveis-da-gq">Os níveis da GQ</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Nível</th>
+<th>Grupo (já criado pela instalação)</th>
+<th>O que pode, pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Nível 01</td>
+<td>Registrar e mexer no que <strong>ele mesmo</strong> criou, enquanto o registro está na primeira situação</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Nível 02</td>
+<td>Também o que é <strong>da sua área</strong>; pré-avaliar desvios, revisar mudanças, avaliar pela área</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Nível 03</td>
+<td>Tudo; é o <strong>único</strong> que abre planos de ação de desvio, monitora, libera a mudança, finaliza o plano e aprova o produto</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os grupos são criados por <code>Hsolutions.GQ.DB/dml.sql:53-63</code>. O usuário é ligado a um grupo na tela Grupo Perfil (tabela <code>TBL_GRUPOUSUARIO</code>). Um usuário <strong>sem grupo</strong> perde os botões nas telas que exigem grupo (<code>GerenciadorAcesso.cs</code>: sem grupo, não edita).</p>
+<h4 id="onde-a-regra-e-conferida">Onde a regra é conferida</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Momento</th>
+<th>Conferido?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ao mostrar a lista (botões de editar, cancelar, excluir)</td>
+<td>Sim, pelos <code>GerenciadorAcessoTela*</code></td>
+</tr>
+<tr>
+<td>Ao abrir a tela de edição</td>
+<td>Em parte: algumas telas voltam para a lista se o nível não bastar (por exemplo, <code>PlanoAcaoCorretivaRNCController.cs:129</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="2-matriz-por-tela">2. Matriz por tela</h3>
+<p>Legenda da última coluna: <strong>Lista</strong> = a regra só esconde o botão; <strong>Abertura</strong> = também barra ao abrir a tela; <strong>Gravação</strong> = também confere ao salvar; <strong>—</strong> = sem regra própria (vale só o menu).</p>
+<h4 id="controle-de-desvios">Controle de Desvios</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Nível 1</th>
+<th>Nível 2</th>
+<th>Nível 3</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relatório de Desvios (editar, cancelar)</td>
+<td>Só o que criou</td>
+<td>Também os da sua área</td>
+<td>Todos</td>
+<td>Só em Pendente Registro Ação Corretiva</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Registro Ação Corretiva Imediata</td>
+<td>Não</td>
+<td>Da sua área</td>
+<td>Todos</td>
+<td>Só em Pendente Registro Ação Corretiva</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Pré Avaliação Relatório Desvios</td>
+<td>Não</td>
+<td>Da sua área</td>
+<td>Todos</td>
+<td>Antes da pré-avaliação</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Avaliação Área</td>
+<td>Não</td>
+<td>Só a própria área</td>
+<td>Todos</td>
+<td>Uma avaliação por área</td>
+<td>Lista (a gravação não confere a área)</td>
+</tr>
+<tr>
+<td>Avaliação Relatório Desvios</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>Só em Pendente Avaliação Relatório de Desvios</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Relatório de CAPA</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>Só em Pendente Relatório de CAPA</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Plano de Ação Corretiva / Preventiva</td>
+<td>Não</td>
+<td>Não</td>
+<td>Sim</td>
+<td>—</td>
+<td>Abertura</td>
+</tr>
+<tr>
+<td>Execução do Plano (corretiva e preventiva)</td>
+<td>Não</td>
+<td>Responsável pela ação</td>
+<td>Sim</td>
+<td>Em monitoramento</td>
+<td>Lista e abertura</td>
+</tr>
+<tr>
+<td>Monitoramento do Plano (corretiva e preventiva)</td>
+<td>Não</td>
+<td>Não</td>
+<td>Sim</td>
+<td>Em monitoramento</td>
+<td>Abertura</td>
+</tr>
+</tbody>
+</table></div>
+<p>* Sem regra de nível no código: vale quem tem a tela no menu. <em>A confirmar no teste</em> se a área esperava que só a GQ avaliasse.</p>
+<h4 id="controle-de-mudancas">Controle de Mudanças</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Nível 1</th>
+<th>Nível 2</th>
+<th>Nível 3</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação de Mudanças (editar, cancelar)</td>
+<td>Se for o responsável ou da mesma área</td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Só em Pendente Revisão</td>
+<td>Lista ("Excluir" não confere nada)</td>
+</tr>
+<tr>
+<td>Pré-Avaliação de Mudanças</td>
+<td>Não</td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Antes de alguma área avaliar</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Avaliação de Mudanças</td>
+<td>Não</td>
+<td>Responsável pela área</td>
+<td>Sim</td>
+<td>Antes da liberação</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Liberação Avaliação de Mudanças</td>
+<td>Não</td>
+<td>Não</td>
+<td>Sim</td>
+<td>Não exige os pareceres</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Plano de Ação</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Execução Plano de Ação</td>
+<td>Não</td>
+<td>Responsável pela ação</td>
+<td>Sim</td>
+<td>Em Pendente Finalização</td>
+<td>Lista e abertura (<code>HSolutions.GQ.UI/Areas/PlanoAcao/Controllers/AvaliacaoPlanoAcaoController.cs:170</code>)</td>
+</tr>
+<tr>
+<td>Liberação Plano de Ação (Finalização)</td>
+<td>Não</td>
+<td>Não</td>
+<td>Sim</td>
+<td>—</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Controle Mudança Produto</td>
+<td>Não</td>
+<td>Não</td>
+<td>Sim</td>
+<td>Em Pendente Aprovação produto</td>
+<td>Lista</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="autoinspecao-e-auditoria">Autoinspeção e Auditoria</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Nível 1</th>
+<th>Nível 2</th>
+<th>Nível 3</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cadastros (Tipo Qualificação, Roteiro, Autoinspeção)</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>Roteiro concluído não se exclui</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Programação Autoinspeção e Auditoria</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>Editar e cancelar só em Programada</td>
+<td>Lista (a gravação volta a situação para Programada)</td>
+</tr>
+<tr>
+<td>Registro Autoinspeção e Auditoria</td>
+<td>Se for <strong>contato</strong> (inspetor) ou <strong>responsável pela área auditada</strong></td>
+<td>Idem</td>
+<td>Sim</td>
+<td>Em Curso</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Avaliação Autoinspeção e Auditoria</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>Pendente Avaliação</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="treinamento-tecnico">Treinamento Técnico</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Nível 1</th>
+<th>Nível 2</th>
+<th>Nível 3</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cadastros (Tipo, Motivo, Treinamento)</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>Não exclui treinamento com programação ou solicitação</td>
+<td>Lista</td>
+</tr>
+<tr>
+<td>Solicitação, Programação, Matriz</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Conclusão do Treinamento</td>
+<td>Conforme a <strong>ação do perfil no Principal</strong></td>
+<td></td>
+<td></td>
+<td>Em Curso</td>
+<td><strong>Gravação</strong> (única tela que confere a ação)</td>
+</tr>
+<tr>
+<td>Acompanhamento dos Treinamentos</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="assuntos-regulatorios-e-configuracao">Assuntos Regulatórios e Configuração</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Nível 1</th>
+<th>Nível 2</th>
+<th>Nível 3</th>
+<th>Outras condições</th>
+<th>Conferido em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Processo Regulatório, Programação, Monitoramento</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Check-list, Solicitação de Registro, Controle de Produtos</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Grupo Perfil</td>
+<td>Sim*</td>
+<td>Sim*</td>
+<td>Sim</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</h3>
+<p>Estes casos entram no plano de testes como <strong>seção 6.0</strong> (<code>08-plano-de-testes.md</code>), antes dos casos dos fluxos.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-110</td>
+<td>Entrar na GQ com um usuário sem nenhuma função da GQ no perfil</td>
+<td>Vai para "Acesso Permissão"</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-GQ-113</td>
+<td>Com um usuário <strong>sem grupo de perfil</strong> na GQ, abrir as listas de desvio e de mudança</td>
+<td>Sem botões de edição</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-GQ-114</td>
+<td>Com <code>t.cadastro</code> (nível 2), tentar abrir o Monitoramento do Plano de Ação Corretiva pelo menu</td>
+<td>Volta para a lista (só nível 3)</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Casos dos fluxos que também conferem esta matriz:</strong> CT-GQ-005 (nível 1 e registro de outro), 018 (plano só nível 3), 036 (liberação só nível 3), 057 (área auditada nas respostas) e 024 (separação de funções).</p>
+<h3 id="o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</h3>
+<ol>
+<li>Lista dos perfis reais que têm telas da GQ, e de quais usuários estão em cada grupo de perfil (relatório do Principal e da tela Grupo Perfil, ou consulta do DBA).</li>
+<li>Confirmar se o menu real da GQ coincide com o roteiro do fornecedor (<code>00-reconhecimento.md</code>).</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-como-o-acesso-funciona">1. Como o acesso funciona</a></li><li><a href="#2-matriz-por-tela">2. Matriz por tela</a></li><li><a href="#3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</a></li><li><a href="#o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
