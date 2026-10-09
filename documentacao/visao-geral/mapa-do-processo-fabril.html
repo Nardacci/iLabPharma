@@ -37,7 +37,7 @@
       
     </header>
     <article class="texto">
-<p><strong>Uso interno.</strong> Visão de ponta a ponta de como o LabMedSys (legado) acompanha a fabricação de um medicamento, montada a partir do código dos nove módulos em 07/10/2026. Mostra quais fluxos já estão documentados, quais faltam e onde a corrente está quebrada. Nada aqui foi testado nas telas: o que vem do código está marcado como tal, e o que é inferência, como "a validar".</p>
+<p><strong>Uso interno.</strong> Visão de ponta a ponta de como o LabMedSys (legado) acompanha a fabricação de um medicamento, montada a partir do código dos nove módulos em 07/10/2026 e atualizada em 09/10/2026 com a análise da Garantia da Qualidade. Mostra quais fluxos já estão documentados, quais faltam e onde a corrente está quebrada. Nada aqui foi testado nas telas: o que vem do código está marcado como tal, e o que é inferência, como "a validar".</p>
 <h2 id="a-corrente-do-processo">A corrente do processo</h2>
 <div class="tabela"><table>
 <thead>
@@ -52,7 +52,7 @@
 <tr>
 <td>1</td>
 <td>Qualificação do fornecedor</td>
-<td>Estoque (<code>qualificacao_fornecedor</code>), Controle da Qualidade (Avaliação de fornecedor), Garantia da Qualidade (só protótipo)</td>
+<td>Estoque (<code>qualificacao_fornecedor</code>), Controle da Qualidade (Avaliação de fornecedor), Garantia da Qualidade (só protótipo; <strong>nenhum tipo de auditoria de fornecedor</strong>)</td>
 <td>Não</td>
 </tr>
 <tr>
@@ -139,6 +139,12 @@
 <td><strong>Não existe no sistema</strong></td>
 <td>—</td>
 </tr>
+<tr>
+<td>16</td>
+<td>Desvios e CAPA, controle de mudanças, autoinspeção, treinamento e assuntos regulatórios</td>
+<td>Garantia da Qualidade (44 telas com lógica, 23 protótipos)</td>
+<td><strong>Sim:</strong> 5 fluxos em <code>5.garantia_qualidade/fluxos/</code></td>
+</tr>
 </tbody>
 </table></div>
 <p><strong>Apoio a todas as etapas:</strong> Principal (usuários, perfis e cadastros gerais), Controle de Documentos (procedimentos, aprovação, cópias e obsolescência), Garantia da Qualidade (desvios e CAPA, controle de mudanças, autoinspeção e treinamento) e Estoque (inventário e kits).</p>
@@ -161,7 +167,7 @@
 </tr>
 <tr>
 <td>Desvio × lote</td>
-<td>Um desvio registrado na Garantia da Qualidade não bloqueia o lote no Estoque; o número do lote é só digitado</td>
+<td>Um desvio registrado na Garantia da Qualidade não bloqueia o lote no Estoque nem no CQ; o lote é escolhido na Produção, mas copiado como texto, sem ligação com a rastreabilidade (RN-GQ-012)</td>
 <td>Considerar os desvios na liberação do lote (art. 8º, IX)</td>
 <td>Alta</td>
 </tr>
@@ -195,6 +201,36 @@
 <td>Art. 15 a 19</td>
 <td>Média</td>
 </tr>
+<tr>
+<td>Registro do produto × produção</td>
+<td>A situação do registro na ANVISA (deferido, indeferido, vencido) fica só na GQ; a Produção não a consulta antes de abrir a ordem (RN-GQ-148)</td>
+<td>Fabricar só produto com registro válido</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>Treinamento × execução da tarefa</td>
+<td>O vencimento do treinamento só aparece num relatório da GQ; nenhum módulo confere se quem executa está habilitado (RN-GQ-128, 129)</td>
+<td>Pessoal treinado para a função (arts. 39 a 46)</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>Mudança × produção e documentos</td>
+<td>A mudança aprovada não altera nem bloqueia nada: o lote da aprovação do produto é digitado, e a mudança não tem ligação com o Controle de Documentos: só o treinamento consulta documentos (RN-GQ-088; <code>5.garantia_qualidade/00-reconhecimento.md</code>, integrações)</td>
+<td>Implantar a mudança com avaliação e verificação de eficácia (art. 8º, XII e XIII)</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>Desvio × mudança e auditoria × desvio</td>
+<td>Marcar "abrir controle de mudança" no desvio não abre a mudança; os desvios da auditoria são digitados e não entram no Controle de Desvios (RN-GQ-039, 108)</td>
+<td>Investigação e CAPA de toda não conformidade (art. 8º, XIV)</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>Validação e calibração</td>
+<td>Na GQ, só protótipos; a Produção tem calibração e qualificação com lógica (ver <code>01-telas-repetidas.md</code>, item 2.1)</td>
+<td>Equipamentos qualificados e calibrados (art. 148, I e II)</td>
+<td>Média</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="fluxos-a-montar-proposta-de-ordem">Fluxos a montar (proposta de ordem)</h2>
@@ -208,9 +244,12 @@
 <li><strong>7. Rastreabilidade e expedição</strong> (etapas 13 e 14).</li>
 </ul>
 <p>Cada fluxo segue o formato dos fluxos já feitos pela equipe: objetivo, escopo, visão geral e, por etapa, descrição, regras de negócio e telas do sistema. As partes que o código não mostra (atividades manuais e decisões da área) ficam marcadas para validar com a área.</p>
+<h2 id="a-garantia-da-qualidade-na-corrente-09-10-2026">A Garantia da Qualidade na corrente (09/10/2026)</h2>
+<p>A GQ <strong>só lê</strong> os outros módulos (Principal, Produção e Controle de Documentos, pela API) e é lida por um só (o Controle de Documentos consulta os treinamentos). <strong>Nenhuma decisão da GQ chega aos outros módulos:</strong> um desvio aberto, uma mudança em curso, um treinamento vencido ou um registro indeferido não retêm lote, não bloqueiam ordem de produção e não impedem ninguém de operar. Na prática, a GQ funciona como um <strong>arquivo de registros</strong>, e não como o controle que a norma espera. Detalhe em <code>5.garantia_qualidade/00-reconhecimento.md</code> (integrações) e <code>5.garantia_qualidade/07-analise-de-risco.md</code>.</p>
+<p><strong>Como deveria ser:</strong> as decisões da GQ viram <strong>travas</strong> nos outros módulos: lote com desvio em retenção; produto sem registro válido sem ordem de produção; operador sem treinamento válido sem acesso à etapa; mudança aprovada ligada ao documento e ao lote.</p>
     </article>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#a-corrente-do-processo">A corrente do processo</a></li><li><a href="#onde-a-corrente-esta-quebrada">Onde a corrente está quebrada</a></li><li><a href="#fluxos-a-montar-proposta-de-ordem">Fluxos a montar (proposta de ordem)</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#a-corrente-do-processo">A corrente do processo</a></li><li><a href="#onde-a-corrente-esta-quebrada">Onde a corrente está quebrada</a></li><li><a href="#fluxos-a-montar-proposta-de-ordem">Fluxos a montar (proposta de ordem)</a></li><li><a href="#a-garantia-da-qualidade-na-corrente-09-10-2026">A Garantia da Qualidade na corrente (09/10/2026)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
