@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Requisitos da nova versão (rascunho) · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html">Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html">Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html" aria-current=page>Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html">Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Requisitos da nova versão (rascunho)</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> desenvolvedores da nova versão do LabMedSys.
+<strong>Situação:</strong> rascunho para validação com o negócio e a Garantia da Qualidade.</p>
+<h3 id="como-ler">Como ler</h3>
+<ul>
+<li><strong>RF</strong>: requisito funcional (o que o sistema faz). <strong>RNF</strong>: requisito não funcional (como faz: segurança, auditoria, desempenho).</li>
+<li><strong>Prioridade:</strong> <strong>E</strong> = Essencial (sem ele não entra em produção), <strong>I</strong> = Importante, <strong>D</strong> = Desejável.</li>
+<li><strong>Origem:</strong> de onde o requisito veio. <code>RN-</code> = regra atual mantida; <code>SEG-</code> = falha atual que a nova versão deve corrigir; artigo de norma.</li>
+<li><strong>Muda em relação ao atual?</strong> "Igual", "Corrige" ou "Novo".</li>
+</ul>
+<h3 id="1-papel-do-modulo-principal">1. Papel do módulo Principal</h3>
+<p>O Principal é o <strong>núcleo comum</strong> de todos os módulos. Na nova versão, ele continua responsável por:</p>
+<ol>
+<li><strong>Identidade e acesso:</strong> login único (SSO) para todos os módulos, usuários, perfis e permissões.</li>
+<li><strong>Trilha de auditoria:</strong> serviço comum de histórico de alterações e de acessos.</li>
+<li><strong>Cadastros compartilhados:</strong> pessoas jurídicas, locais e setores, equipamentos, instrumentos, ambientes, utilidades, utensílios, centros de custo, contas e tabelas de apoio (país, UF, município etc.).</li>
+<li><strong>Notificações:</strong> eventos com prazo, escalonamento e envio de e-mail, usados pelos módulos.</li>
+<li><strong>Configuração do sistema:</strong> dados do cliente, módulos habilitados, personalização de telas.</li>
+</ol>
+<hr />
+<h3 id="2-requisitos-funcionais">2. Requisitos funcionais</h3>
+<h4 id="2-1-login-e-sessao">2.1 Login e sessão</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-001</td>
+<td>Autenticar por login e senha, com um único ponto de entrada para todos os módulos.</td>
+<td>E</td>
+<td>RN-PRI-001</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-002</td>
+<td>Recusar o acesso de usuário inexistente, excluído, inativo, com conta inativa ou fora do período de validade.</td>
+<td>E</td>
+<td>RN-PRI-002 a 005</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-005</td>
+<td>Desbloquear por ação do administrador, registrada no histórico. Opcional: desbloqueio automático após um tempo configurável.</td>
+<td>E</td>
+<td>RN-PRI-009</td>
+<td>Igual + novo</td>
+</tr>
+<tr>
+<td>RF-PRI-006</td>
+<td>Encerrar a sessão após <strong>10 minutos de inatividade</strong> (valor configurável) e, ao sair (logout), encerrar a sessão em <strong>todos os módulos</strong> de uma vez. <em>(Decisão do responsável em 06/10/2026.)</em></td>
+<td>E</td>
+<td>Guia 33, 11.12</td>
+<td>Novo (a confirmar no atual)</td>
+</tr>
+<tr>
+<td>RF-PRI-008</td>
+<td>Listar os usuários conectados (já existe na API do atual: <code>GetUsersOnline</code>).</td>
+<td>D</td>
+<td>API <code>Autenticacao</code></td>
+<td>Igual</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-2-senha">2.2 Senha</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-010</td>
+<td>Política de senha configurável: tamanho mínimo (atual: 8), tipos de caractere exigidos (atual: letra, número e símbolo), validade em dias (atual: 60) e quantidade de senhas anteriores proibidas (atual: 2).</td>
+<td>E</td>
+<td>RN-PRI-020, 024, 025</td>
+<td>Igual (configurável)</td>
+</tr>
+<tr>
+<td>RF-PRI-012</td>
+<td>Trocar a senha exigindo a senha atual.</td>
+<td>E</td>
+<td>RN-PRI-021</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-014</td>
+<td>Avisar o usuário quando a senha estiver perto de vencer (o atual calcula os dias restantes).</td>
+<td>I</td>
+<td><code>bllUsuario.cs:185</code></td>
+<td>Igual</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-3-usuarios-e-contas">2.3 Usuários e contas</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-020</td>
+<td>Cadastrar usuários com dados pessoais e funcionais (nome, CPF, matrícula, cargo, setor, contatos).</td>
+<td>E</td>
+<td>Tabela <code>SIS_USUARIO</code></td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-021</td>
+<td>Coletar só os dados pessoais necessários ao trabalho. Revisar a necessidade de campos como nome da mãe e do pai, naturalidade e "nome de guerra" (LGPD, princípio da necessidade).</td>
+<td>I</td>
+<td>LGPD</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-PRI-022</td>
+<td>Login único por usuário.</td>
+<td>E</td>
+<td>RN-PRI-030</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-023</td>
+<td>Período de validade do acesso (data de início e de fim), por exemplo para temporários e terceiros.</td>
+<td>E</td>
+<td>RN-PRI-005</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-024</td>
+<td>Inativar e reativar com justificativa obrigatória.</td>
+<td>E</td>
+<td>RN-PRI-035</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-025</td>
+<td>Registrar ocupações (CBO) e funções profissionais do usuário, com uma principal. Usado em treinamentos e qualificações de outros módulos (a confirmar).</td>
+<td>I</td>
+<td>RN-PRI-033</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-026</td>
+<td>Grupos de usuários e responsáveis por local.</td>
+<td>I</td>
+<td>RN-PRI-034</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-027</td>
+<td>Unificar "usuário inativo" e "conta inativa" numa única situação, se o negócio confirmar que não há diferença.</td>
+<td>D</td>
+<td>RN-PRI-003/004</td>
+<td>A decidir</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-4-perfis-e-permissoes">2.4 Perfis e permissões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-030</td>
+<td>Permissões atribuídas a perfis; o usuário recebe a soma das permissões dos seus perfis. Toda conta exige ao menos um perfil.</td>
+<td>E</td>
+<td>RN-PRI-031, 040</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-031</td>
+<td>Ações por tela: Consultar, Incluir, Alterar, Excluir, Consultar histórico, Imprimir/Exportar. Prever ações específicas de processo (ex.: Aprovar, Liberar, Assinar) para os outros módulos.</td>
+<td>E</td>
+<td>RN-PRI-042</td>
+<td>Igual + novo</td>
+</tr>
+<tr>
+<td>RF-PRI-033</td>
+<td>Tela em modo <strong>somente leitura</strong> para quem só consulta: nenhum campo editável nem botão de inclusão. <em>(Decisão do responsável em 06/10/2026.)</em></td>
+<td>E</td>
+<td>RN-PRI-043</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-034</td>
+<td>Restringir dados por local/setor ligado ao perfil, se o negócio confirmar que é esse o uso atual.</td>
+<td>I</td>
+<td>RN-PRI-045</td>
+<td>A decidir</td>
+</tr>
+<tr>
+<td>RF-PRI-035</td>
+<td>Herança de permissões de um perfil pai, se o negócio confirmar.</td>
+<td>D</td>
+<td>RN-PRI-046</td>
+<td>A decidir</td>
+</tr>
+<tr>
+<td>RF-PRI-036</td>
+<td>Relatório de revisão de acessos: usuários × perfis × permissões, com data da última alteração, para a revisão periódica da Garantia da Qualidade.</td>
+<td>E</td>
+<td>Guia 33, 11.9 e 11.12</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>RF-PRI-037</td>
+<td>Segregação de funções: impedir que o mesmo usuário administre acessos e execute operações críticas, quando configurado.</td>
+<td>I</td>
+<td>Boa prática BPF</td>
+<td>Novo</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-5-exclusao-e-historico">2.5 Exclusão e histórico</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-040</td>
+<td>Exclusão lógica (nunca apagar fisicamente registros com relevância em BPF).</td>
+<td>E</td>
+<td>RN-PRI-050</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-041</td>
+<td>Recusar a exclusão de registros com dependentes, dizendo <strong>quais</strong> dependências impedem. Quando forem itens vinculados no próprio cadastro, orientar a excluí-los antes.</td>
+<td>E</td>
+<td>RN-PRI-051, 052, RN-PRI-071, DV-PRI-011</td>
+<td>Igual + melhora</td>
+</tr>
+<tr>
+<td>RF-PRI-042</td>
+<td>Justificativa obrigatória em <strong>toda exclusão e toda alteração (inclusive inativação) de todos os cadastros</strong>, validada também no servidor e registrada no histórico. Regra comum do sistema, não tela a tela. <em>(Decisão do responsável em 06/10/2026.)</em></td>
+<td>E</td>
+<td>RN-PRI-053, RN-PRI-070, DV-PRI-009, DV-PRI-013, RDC 658 art. 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-PRI-044</td>
+<td>Consultar o histórico de qualquer registro, para quem tem a permissão. Exportar o histórico (PDF/Excel) para auditorias. O histórico continua consultável <strong>depois que o registro é excluído</strong> (DV-PRI-014).</td>
+<td>E</td>
+<td>RN-PRI-042</td>
+<td>Igual + novo</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-6-cadastros-compartilhados">2.6 Cadastros compartilhados</h4>
+<p>Regras detalhadas destes cadastros: próxima versão do documento 01.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-050</td>
+<td>Pessoas jurídicas (fornecedores, clientes, fabricantes), com tipos de cadastro, contatos e filiais.</td>
+<td>E</td>
+<td>Telas <code>pessoa_juridica_*</code>, tabelas <code>GBL_PJ*</code>, <code>TBL_PJ_FILIAL</code></td>
+</tr>
+<tr>
+<td>RF-PRI-051</td>
+<td>Locais e setores em árvore, com responsáveis; locais físicos.</td>
+<td>E</td>
+<td><code>local_*</code>, <code>local_fisico_*</code>, <code>SIS_LOCAL</code></td>
+</tr>
+<tr>
+<td>RF-PRI-052</td>
+<td>Equipamentos e categorias, com tipos de manutenção; instrumentos.</td>
+<td>E</td>
+<td><code>equipamento_*</code>, <code>instrumento_*</code>, <code>categoria_equipamento_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-053</td>
+<td>Ambientes (salas) e seus equipamentos, instrumentos e utilidades; grau de contaminação.</td>
+<td>E</td>
+<td><code>ambiente_*</code>, <code>grau_contaminacao_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-054</td>
+<td>Utilidades, utensílios e pontos de água (com tipo de água).</td>
+<td>E</td>
+<td><code>utilidade_*</code>, <code>utensilio_*</code>, <code>ponto_agua_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-055</td>
+<td>Centros de custo, contas contábeis e gerenciais.</td>
+<td>I</td>
+<td><code>centro_custo_*</code>, <code>conta_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-056</td>
+<td>Tabelas de apoio: país, UF, município, bairro, logradouro, órgão emissor, escolaridade e outras. Preferir fontes oficiais (IBGE) a cadastro manual.</td>
+<td>I</td>
+<td>Tabelas <code>TBL_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-057</td>
+<td>Relatórios de cada cadastro, com filtros e exportação para Excel.</td>
+<td>I</td>
+<td>Telas <code>*_rel</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-7-notificacoes">2.7 Notificações</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-060</td>
+<td>Tipos de evento por módulo (ex.: documento a aprovar), configuráveis.</td>
+<td>I</td>
+<td><code>GST_TIPO_EVENTO</code></td>
+</tr>
+<tr>
+<td>RF-PRI-061</td>
+<td>Evento com prazo de resposta, prazo-limite e <strong>escalonamento</strong> em níveis.</td>
+<td>I</td>
+<td><code>GST_EVENTO</code> (<code>TEMPO_RESPOSTA</code>, <code>TEMPO_LIMITE</code>, <code>NIVEL</code>, <code>ID_EVENTO_PRINCIPAL</code>)</td>
+</tr>
+<tr>
+<td>RF-PRI-062</td>
+<td>Destinatários por usuário, função ou setor.</td>
+<td>I</td>
+<td><code>GST_EVENTO_USUARIO</code>, <code>GST_EVENTO_FUNCAO</code>, <code>bllGstEventoSetor.cs</code></td>
+</tr>
+<tr>
+<td>RF-PRI-063</td>
+<td>Avisos dentro do sistema e por e-mail, com modelos de mensagem e variáveis.</td>
+<td>I</td>
+<td><code>GST_EVENTO_EMAIL</code>, <code>GST_VARIAVEL</code>, <code>notificacoes.aspx</code></td>
+</tr>
+<tr>
+<td>RF-PRI-064</td>
+<td>Envio por rotina automática, com registro de envio e de falhas.</td>
+<td>I</td>
+<td><code>LaboSys.Principal.Batch</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="2-8-configuracao">2.8 Configuração</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-070</td>
+<td>Dados do cliente (nome, logotipo da tela e dos relatórios), habilitação de módulos.</td>
+<td>I</td>
+<td><code>SIS_CONFIGURACAO</code>, <code>SIS_MODULO</code></td>
+</tr>
+<tr>
+<td>RF-PRI-071</td>
+<td>Personalizar rótulos e visibilidade de campos sem alterar o código. Avaliar se ainda é necessário (o recurso existia para vender a vários clientes).</td>
+<td>D</td>
+<td>RN-PRI-047</td>
+</tr>
+<tr>
+<td>RF-PRI-072</td>
+<td>Não incluir controle de licença por data na nova versão (o sistema passa a ser da empresa).</td>
+<td>E</td>
+<td><code>Licenca.cs</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h4 id="2-9-requisitos-acrescentados-pelos-testes-06-10-2026">2.9 Requisitos acrescentados pelos testes (06/10/2026)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-073</td>
+<td>A pesquisa por nome encontra o registro com ou sem acento e sem diferenciar maiúsculas e minúsculas.</td>
+<td>I</td>
+<td>DV-PRI-008</td>
+</tr>
+<tr>
+<td>RF-PRI-074</td>
+<td>Todo campo obrigatório não preenchido é informado com mensagem clara (sem erro técnico nem tela parada), inclusive a Categoria do equipamento.</td>
+<td>E</td>
+<td>DV-PRI-010</td>
+</tr>
+<tr>
+<td>RF-PRI-075</td>
+<td>Definir e informar os caracteres permitidos em descrições e logins, sem remover caracteres em silêncio.</td>
+<td>I</td>
+<td>DV-PRI-001, 002</td>
+</tr>
+<tr>
+<td>RF-PRI-076</td>
+<td>Não permitir descrições repetidas nos cadastros em que a descrição identifica o registro (Ambiente, Perfil), se o negócio confirmar.</td>
+<td>I</td>
+<td>DV-PRI-007</td>
+</tr>
+<tr>
+<td>RF-PRI-077</td>
+<td>Não permitir excluir um profissional com conta de acesso ativa sem tratar a conta antes.</td>
+<td>E</td>
+<td>DV-PRI-006</td>
+</tr>
+<tr>
+<td>RF-PRI-078</td>
+<td>O histórico registra só os campos efetivamente alterados.</td>
+<td>D</td>
+<td>DV-PRI-005</td>
+</tr>
+<tr>
+<td>RF-PRI-079</td>
+<td>Os endereços dos módulos na tela inicial são configurados por ambiente (nada apontando para o próprio servidor).</td>
+<td>D</td>
+<td>DV-PRI-018</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-requisitos-nao-funcionais">3. Requisitos não funcionais</h3>
+<h4 id="3-2-integridade-de-dados-e-auditoria">3.2 Integridade de dados e auditoria</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNF-PRI-012</td>
+<td>Data e hora da trilha vindas do servidor, com fuso horário definido.</td>
+<td>E</td>
+<td>Integridade de dados</td>
+</tr>
+<tr>
+<td>RNF-PRI-013</td>
+<td>Retenção do histórico por pelo menos o prazo da RDC 658, art. 127 (o maior prazo aplicável aos registros do sistema).</td>
+<td>E</td>
+<td>RDC 658 art. 127</td>
+</tr>
+<tr>
+<td>RNF-PRI-014</td>
+<td>Assinatura eletrônica (usada pelos outros módulos) exige nova digitação da senha e registra quem assinou, quando e o significado (ex.: "aprovado").</td>
+<td>E</td>
+<td>Guia 33, 9.3.2.3; IN de sistemas computadorizados (a confirmar)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-3-validacao-e-operacao">3.3 Validação e operação</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNF-PRI-020</td>
+<td>Ambientes separados de desenvolvimento, homologação e produção.</td>
+<td>E</td>
+<td>Guia 33, 9.7</td>
+</tr>
+<tr>
+<td>RNF-PRI-021</td>
+<td>Controle de versão e de mudanças: cada versão identificada, com registro do que mudou.</td>
+<td>E</td>
+<td>Guia 33, 9.8.2 e 11.7</td>
+</tr>
+<tr>
+<td>RNF-PRI-022</td>
+<td>Testes automatizados para regras críticas (login, permissões, histórico). Os casos do documento 08 servem de base.</td>
+<td>I</td>
+<td>Guia 33, 9.7</td>
+</tr>
+<tr>
+<td>RNF-PRI-023</td>
+<td>Backup e restauração testados, com rotina documentada.</td>
+<td>E</td>
+<td>Guia 33, 11.10</td>
+</tr>
+<tr>
+<td>RNF-PRI-024</td>
+<td>Migração dos dados do sistema atual com plano, conferência e relatório, preservando o histórico (trilha de auditoria) existente.</td>
+<td>E</td>
+<td>Guia 33, item 12</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-4-integracao-entre-modulos">3.4 Integração entre módulos</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="4-decisoes-pendentes-negocio-e-garantia-da-qualidade">4. Decisões pendentes (negócio e Garantia da Qualidade)</h3>
+<ol>
+<li>Usuário inativo × conta inativa: é a mesma coisa? (RF-PRI-027)</li>
+<li>Para que serve, hoje, o vínculo do perfil com locais? (RF-PRI-034)</li>
+<li>Perfis herdam permissões do perfil pai? (RF-PRI-035)</li>
+<li>Quais dados pessoais do usuário são realmente necessários? (RF-PRI-021)</li>
+<li>A personalização de telas por cliente continua necessária? (RF-PRI-071)</li>
+<li>A empresa usa login corporativo (Active Directory / Entra ID)? (RNF-PRI-008)</li>
+<li>Qual o prazo de retenção a adotar para cada tipo de registro? (RNF-PRI-013)</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#como-ler">Como ler</a></li><li><a href="#1-papel-do-modulo-principal">1. Papel do módulo Principal</a></li><li><a href="#2-requisitos-funcionais">2. Requisitos funcionais</a></li><li><a href="#3-requisitos-nao-funcionais">3. Requisitos não funcionais</a></li><li><a href="#4-decisoes-pendentes-negocio-e-garantia-da-qualidade">4. Decisões pendentes (negócio e Garantia da Qualidade)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

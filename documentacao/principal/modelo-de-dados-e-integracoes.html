@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html">Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html">Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html">Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html">Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> desenvolvedores da nova versão.
+<strong>Base:</strong> definições do banco em <code>Hsolutions.Principal.DB/Tables/*.sql</code> (83 tabelas), procedimentos em <code>Stored Procedures/</code>, sinônimos dos módulos Estoque e Produção e configuração dos serviços.
+<strong>Situação:</strong> extraído do código. Pontos marcados "anomalia" são falhas de estrutura a corrigir na nova versão.</p>
+<hr />
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<p>O banco do Principal tem quatro grupos de tabelas, identificados pelo prefixo:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prefixo</th>
+<th>Grupo</th>
+<th>Tabelas</th>
+<th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIS_</code></td>
+<td>Segurança e sistema</td>
+<td>15</td>
+<td>Usuário, perfil, função, local, módulo, configuração, acessos</td>
+</tr>
+<tr>
+<td><code>GST_</code></td>
+<td>Notificações (gestão de eventos)</td>
+<td>13</td>
+<td>Tipo de evento, evento, destinatários, e-mail, notificação</td>
+</tr>
+<tr>
+<td><code>GBL_PJ*</code>, <code>TBL_PJ_FILIAL</code></td>
+<td>Pessoa jurídica</td>
+<td>4</td>
+<td>Empresa, contatos, tipos de cadastro, filiais</td>
+</tr>
+<tr>
+<td><code>TBL_</code></td>
+<td>Cadastros e tabelas de apoio</td>
+<td>51</td>
+<td>Equipamento, ambiente, instrumento, utilidade, município, histórico</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrões presentes na maioria das tabelas de cadastro:</strong></p>
+<ul>
+<li><strong>Auditoria de registro:</strong> <code>ID_USUARIO_CRIACAO</code>, <code>DATA_CRIACAO</code>, <code>ID_USUARIO_ALTERACAO</code>, <code>DATA_ALTERACAO</code> (e, em algumas, <code>ID_USUARIO_EXCLUSAO</code>, <code>DATA_EXCLUSAO</code>), todos ligados a <code>SIS_USUARIO</code>.</li>
+<li><strong>Exclusão lógica:</strong> <code>LIXEIRA</code> (0/1) e, às vezes, <code>JUSTIFICATIVA_LIXEIRA</code>. Presente em mais de 20 tabelas (nas de notificação, o campo se chama <code>EXCLUIDO</code>).</li>
+<li><strong>Situação:</strong> <code>ATIVO</code> (0/1).</li>
+<li><strong>Chave:</strong> número sequencial (<code>IDENTITY</code>), com nomes variados (<code>ID</code>, <code>ID_EQUIPAMENTO</code>, <code>CODIGO_PJ</code>, <code>id</code>).</li>
+</ul>
+<hr />
+<h3 id="2-seguranca-usuarios-perfis-e-permissoes">2. Segurança: usuários, perfis e permissões</h3>
+<p><code>mermaid
+erDiagram
+    SIS_USUARIO ||--o{ SIS_USUARIO_PERFIL : "tem"
+    SIS_PERFIL ||--o{ SIS_USUARIO_PERFIL : "atribuído a"
+    SIS_PERFIL ||--o{ SIS_PERFIL_FUNCAO : "permite"
+    SIS_FUNCAO ||--o{ SIS_PERFIL_FUNCAO : "liberada por"
+    SIS_PERFIL ||--o{ SIS_PERFIL_LOCAL : "ligado a"
+    SIS_LOCAL ||--o{ SIS_PERFIL_LOCAL : "ligado a"
+    SIS_PERFIL |o--o{ SIS_PERFIL : "perfil pai"
+    SIS_FUNCAO |o--o{ SIS_FUNCAO : "função pai (menu)"
+    SIS_MODULO ||--o{ SIS_FUNCAO : "agrupa"
+    SIS_LOCAL |o--o{ SIS_LOCAL : "local pai"
+    SIS_LOCAL ||--o{ SIS_USUARIO : "seção do usuário"
+    SIS_LOCAL ||--o{ SIS_LOCAL_RESPONSAVEL : "tem"
+    SIS_USUARIO ||--o{ SIS_LOCAL_RESPONSAVEL : "é responsável"
+    TBL_GRUPO_USUARIO ||--o{ SIS_USUARIO : "agrupa"
+    SIS_USUARIO ||--o{ SIS_OCUPACAO_USUARIO : "tem (CBO)"
+    SIS_USUARIO ||--o{ SIS_ATIVIDADE_USUARIO : "exerce"
+    TBL_FUNCAO_PROFISSIONAL ||--o{ SIS_ATIVIDADE_USUARIO : "função"
+    SIS_USUARIO ||--o{ SIS_ACESSO : "tentativas de login"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Chave</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIS_PERFIL</code></td>
+<td>Perfis de acesso</td>
+<td><code>ID</code></td>
+<td><code>ID_PERFIL_PAI</code> para hierarquia; <code>CHAVE</code> para identificar perfis fixos no código.</td>
+</tr>
+<tr>
+<td><code>SIS_USUARIO_PERFIL</code></td>
+<td>Usuário × perfil</td>
+<td><code>ID_USUARIO + ID_PERFIL</code></td>
+<td><strong>Anomalia:</strong> sem chave estrangeira para <code>SIS_USUARIO</code>.</td>
+</tr>
+<tr>
+<td><code>SIS_FUNCAO</code></td>
+<td>Telas, itens de menu e ações, em árvore</td>
+<td><code>ID</code></td>
+<td><code>COD_FUNCAO</code> (ex.: <code>INCLUIR</code>), <code>LINK</code>, <code>ITEM_MENU</code>, <code>ORDEM</code>, <code>ID_MODULO</code>, <code>ID_TIPO_FUNCAO</code>. <strong>Anomalia:</strong> <code>ID_MODULO</code> e <code>ID_TIPO_FUNCAO</code> sem chave estrangeira.</td>
+</tr>
+<tr>
+<td><code>SIS_PERFIL_FUNCAO</code></td>
+<td>Perfil × função</td>
+<td><code>ID</code></td>
+<td>Campo <code>ESCRITA</code> (permissão de escrita) além das ações.</td>
+</tr>
+<tr>
+<td><code>SIS_PERFIL_LOCAL</code></td>
+<td>Perfil × local</td>
+<td><code>ID_PERFIL + ID_LOCAL</code></td>
+<td><strong>Anomalia:</strong> sem chave estrangeira para <code>SIS_LOCAL</code>.</td>
+</tr>
+<tr>
+<td><code>SIS_LOCAL</code></td>
+<td>Estrutura da empresa (divisões, seções, setores) em árvore</td>
+<td><code>ID</code></td>
+<td>Campos <code>IP_SOM</code>, <code>IP_VIDEO</code>, <code>TEM_LEITO</code> parecem herdados de outro produto (sistema hospitalar).</td>
+</tr>
+<tr>
+<td><code>SIS_LOCAL_RESPONSAVEL</code></td>
+<td>Responsáveis por local</td>
+<td><code>ID</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>SIS_MODULO</code></td>
+<td>Módulos e endereços</td>
+<td><code>ID_MODULO</code></td>
+<td>IDs fixos usados pelo código (não alterar, segundo a documentação).</td>
+</tr>
+<tr>
+<td><code>TBL_GRUPO_USUARIO</code></td>
+<td>Grupos de usuários</td>
+<td><code>ID_GRUPO</code></td>
+<td><code>ID_EMPRESA</code> obrigatório sem tabela de empresa correspondente: possível resto de versão com várias empresas.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-trilha-de-auditoria-historico-de-alteracoes">3. Trilha de auditoria (histórico de alterações)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_LOG_ALTERACAO_2</code></td>
+<td>Modelo novo: cabeçalho da alteração (objeto, id, usuário, data, justificativa, tipo)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_LOG_ALTERACAO_ITEM_2</code></td>
+<td>Itens do modelo novo: campo, valor antigo, valor novo</td>
+<td>Valores limitados a 255 caracteres.</td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_ALTERACAO</code></td>
+<td>Tipos de alteração (inclusão, alteração, exclusão…)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Anomalia:</strong> dois modelos de histórico convivem. Na nova versão, unificar num só e migrar os dois.</p>
+<h3 id="4-pessoa-juridica">4. Pessoa jurídica</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Relacionamentos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GBL_PJ</code></td>
+<td>Empresas: fornecedores, fabricantes, clientes (43 colunas: razão social, CNPJ, endereço, contatos)</td>
+<td>Município, bairro, país, UF, operadora</td>
+</tr>
+<tr>
+<td><code>GBL_PJ_TIPO_CADASTRO</code></td>
+<td>Papéis da empresa (fornecedor, fabricante…)</td>
+<td><code>GBL_PJ</code></td>
+</tr>
+<tr>
+<td><code>GBL_PJ_CONTATO</code></td>
+<td>Pessoas de contato</td>
+<td><strong>Anomalia:</strong> <code>codigo_pj</code> sem chave estrangeira para <code>GBL_PJ</code> (só índice).</td>
+</tr>
+<tr>
+<td><code>TBL_PJ_FILIAL</code></td>
+<td>Filiais</td>
+<td><code>GBL_PJ</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>GBL_PJ</code> é usada como <strong>fabricante</strong> e <strong>fornecedor</strong> de equipamentos, instrumentos, utilidades e utensílios, e como dona de contas gerenciais.</p>
+<h3 id="5-estrutura-fisica-e-equipamentos">5. Estrutura física e equipamentos</h3>
+<p><code>mermaid
+erDiagram
+    SIS_LOCAL ||--o{ TBL_AMBIENTE : "estrutura funcional"
+    TBL_GRAU_CONTAMINACAO ||--o{ TBL_AMBIENTE : "grau do ar / microbiológico"
+    TBL_AMBIENTE ||--o{ TBL_EQUIPAMENTO_AMBIENTE : "contém"
+    TBL_EQUIPAMENTO ||--o{ TBL_EQUIPAMENTO_AMBIENTE : "instalado em"
+    TBL_AMBIENTE ||--o{ TBL_INSTRUMENTO_AMBIENTE : "contém"
+    TBL_INSTRUMENTO ||--o{ TBL_INSTRUMENTO_AMBIENTE : "instalado em"
+    TBL_AMBIENTE ||--o{ TBL_UTILIDADE_AMBIENTE : "contém"
+    TBL_UTILIDADE ||--o{ TBL_UTILIDADE_AMBIENTE : "instalada em"
+    TBL_AMBIENTE ||--o{ TBL_PONTOS_AGUA : "tem"
+    TBL_TIPO_AGUA ||--o{ TBL_PONTOS_AGUA : "tipo"
+    TBL_CATEGORIA_EQUIPAMENTO ||--o{ TBL_EQUIPAMENTO : "categoria"
+    TBL_EQUIPAMENTO ||--o{ TBL_EQUIPAMENTO_TIPO_MANUTENCAO : "manutenções"
+    TBL_CATEGORIA_EQUIPAMENTO ||--o{ TBL_CATEGORIA_EQUIPAMENTO_TIPO_MANUTENCAO : "manutenções padrão"
+    GBL_PJ ||--o{ TBL_EQUIPAMENTO : "fabricante / fornecedor"
+    GBL_PJ ||--o{ TBL_INSTRUMENTO : "fabricante / fornecedor"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_AMBIENTE</code></td>
+<td>Salas e áreas, com grau de contaminação do ar e microbiológico</td>
+<td>Central para BPF (áreas limpas).</td>
+</tr>
+<tr>
+<td><code>TBL_EQUIPAMENTO</code></td>
+<td>Equipamentos (27 colunas), categoria, local, fabricante, fornecedor</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_INSTRUMENTO</code></td>
+<td>Instrumentos de medição</td>
+<td>Calibração provavelmente controlada em outro módulo (a confirmar).</td>
+</tr>
+<tr>
+<td><code>TBL_UTILIDADE</code></td>
+<td>Utilidades (ar comprimido, vapor, água…)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_UTENSILIO</code></td>
+<td>Utensílios</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_PONTOS_AGUA</code></td>
+<td>Pontos de coleta de água por ambiente</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_GRAU_CONTAMINACAO</code></td>
+<td>Classificação de áreas</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_MANUTENCAO_EQUIPAMENTO</code>, <code>TBL_CATEGORIA_EQUIPAMENTO_TIPO_MANUTENCAO</code>, <code>TBL_EQUIPAMENTO_TIPO_MANUTENCAO</code></td>
+<td>Tipos de manutenção</td>
+<td><strong>Anomalia:</strong> as três tabelas não têm chave primária.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-financeiro-e-locais-fisicos">6. Financeiro e locais físicos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Relacionamentos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_CENTRO_CUSTO</code></td>
+<td>Centros de custo</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TBL_CONTA_CONTABIL</code></td>
+<td>Plano de contas, em árvore</td>
+<td>Conta pai</td>
+</tr>
+<tr>
+<td><code>TBL_CONTA_GERENCIAL</code></td>
+<td>Contas gerenciais</td>
+<td><code>GBL_PJ</code></td>
+</tr>
+<tr>
+<td><code>TBL_LOCAL_FISICO</code></td>
+<td>Locais físicos (ex.: almoxarifado)</td>
+<td>Centro de custo, conta gerencial</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-notificacoes">7. Notificações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GST_TIPO_EVENTO</code></td>
+<td>Tipos de evento por módulo, com o objeto e o campo-chave de referência</td>
+</tr>
+<tr>
+<td><code>GST_TIPO_EVENTO_CAMPO</code>, <code>GST_TIPO_EVENTO_VARIAVEL</code>, <code>GST_VARIAVEL</code></td>
+<td>Campos e variáveis usados nas mensagens</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO</code></td>
+<td>Evento configurado: título, prazo de resposta, prazo-limite, nível de escalonamento, envio de e-mail</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO_USUARIO</code>, <code>GST_EVENTO_FUNCAO</code></td>
+<td>Destinatários por usuário e por função</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO_EMAIL</code></td>
+<td>Modelo de e-mail (assunto e mensagem)</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO_STATUS</code></td>
+<td>Situações de uma notificação</td>
+</tr>
+<tr>
+<td><code>GST_NOTIFICACAO</code>, <code>GST_NOTIFICACAO_USUARIO</code>, <code>GST_NOTIFICACAO_EMAIL_USUARIO</code></td>
+<td>Notificações geradas, para quem e e-mails enviados</td>
+</tr>
+<tr>
+<td><code>TBL_NOTIFICACAO</code>, <code>TBL_NOTIFICACAO_PADRAO</code></td>
+<td>Modelo anterior de notificações</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Anomalias:</strong>
+- <code>GST_NOTIFICACAO.ID_STATUS</code> tem chave estrangeira para <strong><code>GST_EVENTO_FUNCAO</code></strong>, quando deveria apontar para <code>GST_EVENTO_STATUS</code>. O código trata o campo como situação (Notificado, Lido: <code>dalGstNotificacao.cs:81</code>). Provável erro de estrutura; <strong>a confirmar no teste</strong> se a gravação falha.
+- <code>GST_TIPO_EVENTO_CAMPO</code> tem a própria chave primária como chave estrangeira para <code>GST_TIPO_EVENTO</code>.
+- Dois modelos de notificação convivem (<code>GST_*</code> e <code>TBL_NOTIFICACAO*</code>).</p>
+<h3 id="8-tabelas-de-apoio">8. Tabelas de apoio</h3>
+<p>Endereço: <code>TBL_PAIS</code>, <code>TBL_UF</code>, <code>TBL_MUNICIPIO</code>, <code>TBL_BAIRRO</code>, <code>TBL_LOGRADOURO</code>, <code>TBL_TIPO_LOGRADOURO</code>, <code>TBL_MUNICIPIO_FAIXA</code>, <code>TBL_BAIRRO_FAIXA</code> (faixas de CEP).
+Pessoas: <code>TBL_ESCOLARIDADE</code>, <code>TBL_ESTADO_CIVIL</code>, <code>TBL_RELIGIAO</code>, <code>TBL_PROFISSAO</code>, <code>TBL_OCUPACAO</code> (CBO), <code>TBL_ORGAO_EMISSOR</code>, <code>TBL_POSTO</code>, <code>TBL_TIPO_FUNCIONARIO</code>, <code>TBL_FUNCAO_PROFISSIONAL</code>.
+Outras: <code>TBL_BANCO</code>, <code>TBL_OPERADORA_TELEFONIA</code>, <code>TBL_VALOR_GRUPO</code>, <code>TBL_ESPECIFICACAO</code>.</p>
+<p><strong>Anomalias:</strong> <code>TBL_BANCO</code>, <code>TBL_MUNICIPIO_FAIXA</code> e <code>TBL_BAIRRO_FAIXA</code> sem chave primária; <code>TBL_ESPECIFICACAO</code> definida em dois arquivos (<code>TBL_ESPECIFICACAO.sql</code> e <code>TBL_ESPECIFICACAO_1.sql</code>). <code>TBL_RELIGIAO</code>, <code>TBL_ESTADO_CIVIL</code> e <code>TBL_POSTO</code> (posto militar) sugerem campos herdados de outro produto; avaliar a necessidade (RF-PRI-021).</p>
+<h3 id="9-sistema-e-configuracao">9. Sistema e configuração</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIS_CONFIGURACAO</code></td>
+<td>Dados do cliente, versão do sistema e do banco, tema, logotipos, campos de licença (<code>VALIDADOR1/2</code>)</td>
+</tr>
+<tr>
+<td><code>TBL_OBJETOS_TELA</code></td>
+<td>Personalização de rótulos e visibilidade por cliente</td>
+</tr>
+<tr>
+<td><code>TBL_CONFIGURACAO_PLUGIN</code>, <code>TBL_CLIQUE</code>, <code>TBL_LEITURA</code></td>
+<td>Uso a confirmar</td>
+</tr>
+<tr>
+<td><code>SIS_LOG_SCRIPT</code></td>
+<td>Scripts de atualização do banco já aplicados (sem chave primária)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Procedimentos: <code>pPossoExcluir</code> (verifica dependências antes de excluir), <code>pListaPerfis</code>, <code>pListaLocais</code>, <code>pListaLocaisPorNome</code>, <code>pListaConfigCliente</code>, <code>pInsertSisFuncao</code>, <code>pInsertSisFuncaoPermissao</code>. Funções: <code>TIRA_ACENTO</code>, <code>fn_proximo_prontuario</code> (prontuário: outro sinal de origem hospitalar).</p>
+<hr />
+<h3 id="10-integracoes-com-os-outros-modulos">10. Integrações com os outros módulos</h3>
+<p>Cada módulo tem banco próprio (exceto o OPE). O Principal é usado de três formas:</p>
+<h4 id="10-1-login-e-permissoes-por-servico-todos-os-modulos">10.1 Login e permissões, por serviço (todos os módulos)</h4>
+<p>O Principal oferece um serviço de autenticação (SSO) e de permissões, consumido pelos módulos:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Serviço</th>
+<th>Operações</th>
+<th>Quem usa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Autenticação (<code>HSolutions.Principal.Microservice</code>, rota <code>Autenticacao/</code>)</td>
+<td><code>AuthenticateUser</code>, <code>IsAuthenticated</code>, <code>GetUserLogged</code>, <code>GetUsersOnline</code>, <code>LogoutUser</code></td>
+<td>Todos os módulos (via <code>svcAutenticacao</code>)</td>
+</tr>
+<tr>
+<td>Permissões (<code>IsvcPermissao</code>)</td>
+<td>Permissões do usuário por tela</td>
+<td>Configurado em vários módulos</td>
+</tr>
+<tr>
+<td>Cadastros (<code>Ambiente</code>, <code>Area</code>, <code>Equipamento</code>, <code>Local</code>, <code>PessoaJuridica</code>, <code>PJFilial</code>, <code>Utensilio</code>, <code>Utilidade</code>, <code>FuncaoProfissional</code>, <code>Usuario</code>, <code>Notificacao</code>)</td>
+<td>Listas e consultas</td>
+<td>Módulos que precisam desses cadastros</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="10-2-leitura-direta-do-banco-por-sinonimos-estoque-e-producao">10.2 Leitura direta do banco, por sinônimos (Estoque e Produção)</h4>
+<p>Estoque e Produção leem tabelas do Principal <strong>direto no banco</strong>, por sinônimos (atalhos para tabelas de outro banco). A documentação do fornecedor registra isso como um acoplamento que deveria ter sido eliminado.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabelas do Principal lidas</th>
+<th>Estoque</th>
+<th>Produção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segurança: <code>SIS_USUARIO</code>, <code>SIS_PERFIL</code>, <code>SIS_USUARIO_PERFIL</code>, <code>SIS_PERFIL_FUNCAO</code>, <code>SIS_PERFIL_LOCAL</code>, <code>SIS_FUNCAO</code>, <code>SIS_LOCAL</code>, <code>SIS_MODULO</code>, <code>SIS_ACESSO</code>, <code>SIS_ATIVIDADE_USUARIO</code>, <code>SIS_OCUPACAO_USUARIO</code></td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Pessoa jurídica: <code>GBL_PJ</code>, <code>GBL_PJ_CONTATO</code>, <code>GBL_PJ_TIPO_CADASTRO</code></td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Tabelas de apoio (endereço, pessoas, banco, operadora)</td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Estrutura física: <code>TBL_AMBIENTE</code>, <code>TBL_EQUIPAMENTO</code>, <code>TBL_INSTRUMENTO</code>, <code>TBL_UTILIDADE</code> e ligações com ambiente, <code>TBL_PONTOS_AGUA</code>, <code>TBL_TIPO_AGUA</code>, <code>TBL_GRAU_CONTAMINACAO</code>, <code>TBL_CENTRO_CUSTO</code>, <code>SIS_TIPO_FUNCAO</code>, <code>TBL_TIPO_FUNCIONARIO</code></td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><code>TBL_GRUPO_USUARIO</code>, procedimento <code>pListaMenuNivel3</code></td>
+<td>Sim</td>
+<td>Não</td>
+</tr>
+<tr>
+<td>Procedimentos <code>pListaPerfis</code>, <code>pListaLocais</code></td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+</tbody>
+</table></div>
+<p>Fontes: <code>3.estoque/**/Synonyms/*.sql</code> (36), <code>2.producao/**/Synonyms/*.sql</code> (47), <code>2.producao/app/ScriptBD/CREATE_SINONIMO_PRODUCAO.sql</code>.</p>
+<p><strong>Consequências para a nova versão:</strong>
+- Qualquer mudança nessas tabelas do Principal (nome de coluna, tipo, exclusão de campo) <strong>quebra o Estoque e a Produção</strong>. É o principal risco técnico da atualização.
+- <strong>Recomendação:</strong> substituir os sinônimos por chamadas ao serviço do Principal, ou, no mínimo, por visões (<em>views</em>) que exponham só as colunas necessárias, sem senha.</p>
+<h4 id="10-3-tabelas-com-o-mesmo-nome-em-varios-modulos">10.3 Tabelas com o mesmo nome em vários módulos</h4>
+<p>A documentação do fornecedor avisa que há tabelas com o mesmo nome em módulos diferentes, mas com estrutura própria. Isso impede unificar os bancos sem análise. O levantamento por módulo entra no documento 06 de cada módulo.</p>
+<hr />
+<h3 id="11-resumo-das-anomalias-de-estrutura-para-a-nova-versao">11. Resumo das anomalias de estrutura (para a nova versão)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Anomalia</th>
+<th>Tabela(s)</th>
+<th>Correção sugerida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Chave estrangeira faltando</td>
+<td><code>SIS_USUARIO_PERFIL.ID_USUARIO</code>, <code>SIS_PERFIL_LOCAL.ID_LOCAL</code>, <code>SIS_FUNCAO.ID_MODULO</code>, <code>SIS_FUNCAO.ID_TIPO_FUNCAO</code>, <code>GBL_PJ_CONTATO.codigo_pj</code></td>
+<td>Criar as chaves; antes, verificar registros órfãos</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Chave estrangeira para a tabela errada</td>
+<td><code>GST_NOTIFICACAO.ID_STATUS</code> → <code>GST_EVENTO_FUNCAO</code></td>
+<td>Apontar para <code>GST_EVENTO_STATUS</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tabelas sem chave primária</td>
+<td><code>TBL_BANCO</code>, <code>TBL_MUNICIPIO_FAIXA</code>, <code>TBL_BAIRRO_FAIXA</code>, tabelas de tipo de manutenção, <code>SIS_LOG_SCRIPT</code></td>
+<td>Criar chave primária</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Dois modelos para a mesma coisa</td>
+<td>Histórico (<code>TBL_LOG_ALTERACAO</code> e <code>_2</code>), notificações (<code>GST_*</code> e <code>TBL_NOTIFICACAO*</code>)</td>
+<td>Unificar e migrar</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Campos e tabelas herdados de outro produto</td>
+<td><code>SIS_LOCAL</code> (IP de som e vídeo, leito), <code>fn_proximo_prontuario</code>, <code>TBL_RELIGIAO</code>, <code>TBL_POSTO</code></td>
+<td>Confirmar uso e remover</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Leitura direta do banco por outros módulos</td>
+<td>Sinônimos do Estoque e da Produção</td>
+<td>Serviço ou visões restritas</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Nomes de chave inconsistentes</td>
+<td><code>ID</code>, <code>id</code>, <code>ID_EQUIPAMENTO</code>, <code>CODIGO_PJ</code>…</td>
+<td>Padronizar na nova versão</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-seguranca-usuarios-perfis-e-permissoes">2. Segurança: usuários, perfis e permissões</a></li><li><a href="#3-trilha-de-auditoria-historico-de-alteracoes">3. Trilha de auditoria (histórico de alterações)</a></li><li><a href="#4-pessoa-juridica">4. Pessoa jurídica</a></li><li><a href="#5-estrutura-fisica-e-equipamentos">5. Estrutura física e equipamentos</a></li><li><a href="#6-financeiro-e-locais-fisicos">6. Financeiro e locais físicos</a></li><li><a href="#7-notificacoes">7. Notificações</a></li><li><a href="#8-tabelas-de-apoio">8. Tabelas de apoio</a></li><li><a href="#9-sistema-e-configuracao">9. Sistema e configuração</a></li><li><a href="#10-integracoes-com-os-outros-modulos">10. Integrações com os outros módulos</a></li><li><a href="#11-resumo-das-anomalias-de-estrutura-para-a-nova-versao">11. Resumo das anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

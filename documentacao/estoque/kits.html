@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kits · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html" aria-current=page>Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Kits</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Fluxo Kits.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo de <strong>kits</strong> no LabMedSys: conjuntos de itens montados para clientes, com cadastro, planejamento, solicitação, envio por guia de movimentação e controle dos lotes enviados, incluindo a reposição dos que vencem.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. <strong>O uso de kits pela empresa precisa ser confirmado com a área.</strong> Pelo código, parecem kits enviados a clientes em consignação, por exemplo para hospitais. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Parâmetros e cadastro de kits.</li>
+<li>Planejamento por cliente e análise do planejamento.</li>
+<li>Solicitação de kits e envio por guia (Remessa de Material (GMM)).</li>
+<li>Controle dos kits enviados, lotes dos componentes e reposição.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> a separação e o atendimento em si (fluxo de solicitação) e a remessa comum (fluxo de remessa).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. Pelo código, GMM é a <strong>guia de movimentação</strong>: a solicitação de kit fica "vinculada a uma Guia de Movimentação". <em>A confirmar o nome completo com a área.</em></p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/estoque/kits-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/kits-fluxograma.png" alt="Workflow do processo de kits" loading="lazy"></a><figcaption>Workflow do processo de kits</figcaption></figure>
+
+<p>O <strong>kit</strong> é cadastrado com descrição, tipo, almoxarifado e itens componentes. O <strong>planejamento</strong> define, por cliente e filial, quantos kits enviar e a <strong>validade mínima</strong> dos componentes. A <strong>análise do planejamento</strong> mostra a necessidade por período.</p>
+<p>A <strong>solicitação de kits</strong> segue a separação e o atendimento e é enviada por <strong>guia de movimentação</strong>. O <strong>Controle de Kits</strong> acompanha os lotes que estão no cliente e permite <strong>repor</strong> um lote ou todos os <strong>lotes vencidos</strong>.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="cadastro-e-parametros">Cadastro e parâmetros</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O kit exige descrição, tipo de kit, almoxarifado, itens componentes e quantidades, e justificativa na alteração (<code>kit/cadastro_kit_ed.aspx</code>).</li>
+<li>RN002 – Os Parâmetros de Configuração (Kit) definem regras gerais; <em>a detalhar no teste</em> quais são.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Parâmetros de Configuração (Kit)</td>
+<td>Regras gerais</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Cadastro de Kits</td>
+<td>Composição do kit</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="planejamento">Planejamento</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige cliente, filial, kit, quantidade e <strong>validade mínima</strong> (<code>kit/planejamento_kit_ed.aspx</code>).</li>
+<li>RN002 – O mesmo kit não pode repetir no planejamento atual ("O KIT informado já existe no planejamento atual!").</li>
+<li>RN003 – A análise do planejamento exige o período.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Planejamento de Kits</td>
+<td>Planejar por cliente</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Análise do Planejamento de Kits</td>
+<td>Necessidade por período</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="solicitacao-e-envio">Solicitação e envio</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige tipo de solicitação, cliente, centro de custo, local de entrega, kit, componentes, quantidade de kits e almoxarifado (<code>kit/solicitacao_kit_ed.aspx</code>).</li>
+<li>RN002 – A solicitação de kit gera itens de solicitação comuns, e a separação segue o fluxo de solicitação. O gatilho do banco que recalculava a situação da solicitação está <strong>desligado</strong> (<code>TBL_SOLICITACAO_ITEM.sql:76</code>).</li>
+<li>RN003 – Solicitação ligada a uma guia de movimentação não pode ser alterada livremente ("Solicitação vinculada a uma Guia de Movimentação"). A guia de kit não pode ser reaberta e a remessa de kit não pode ser excluída (fluxo de remessa).</li>
+<li>RN004 – <em>A confirmar no teste:</em> se a <strong>validade mínima</strong> do planejamento impede separar componentes com validade menor.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Solicitação de Kits</td>
+<td>Pedir a montagem</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Remessa de Material (GMM)</td>
+<td>Enviar por guia</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="controle-e-reposicao">Controle e reposição</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN001 – O Controle de Kits mostra os kits enviados e os lotes de cada componente, por remessa (<code>kit/controle_kit_lote_op.aspx.cs:62</code>).</li>
+<li>RN002 – Permite <strong>repor um lote</strong> ou <strong>repor os lotes vencidos</strong> (<code>controle_kit_lote_op.aspx.cs:114-149</code>). <em>A confirmar no teste:</em> o que a reposição gera (nova solicitação ou remessa) e o que acontece com o lote vencido que está no cliente.</li>
+<li>RN003 – Na tela de lotes do componente, o código não mostra justificativa nem histórico.</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Controle de Kits</td>
+<td>Kits enviados</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Controle de Kits - Detalhes</td>
+<td>Detalhe do kit</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Controle de Kits - Lotes do Componente</td>
+<td>Lotes no cliente e reposição</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Relatório - Reposição de Itens a Vencer (Kit)</td>
+<td>Lotes a vencer</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Relatório - Reposição de Componentes do Kit</td>
+<td>Reposições</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Relatório - Planejamento de Kits</td>
+<td>Planejamento</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Relatório - Listagem de Lotes (Kit)</td>
+<td>Lotes por kit</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Ponto para validar com a área</p>
+<p>Para a ANVISA, o que importa é saber <strong>em que cliente está cada lote</strong> (rastreabilidade para um eventual recolhimento) e <strong>não deixar lote vencido em uso</strong>. O controle de kits parece cobrir isso, mas sem justificativa nem histórico na reposição. Confirmar com a área se os kits são usados e qual é o processo real.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> o kit <code>TESTE KIT</code> com dois componentes (<code>TESTE MATERIA PRIMA</code> e <code>TESTE EMBALAGEM</code>); a pessoa jurídica <code>TESTE PJ FARMACÊUTICA LTDA</code> como cliente; o centro de custo <code>TESTE CC ESTOQUE</code>; lotes com validades diferentes, um vencendo em poucos dias.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-150</td>
+<td>Cadastrar o <code>TESTE KIT</code> sem componente e depois completo</td>
+<td>Recusa; completo, salvo</td>
+</tr>
+<tr>
+<td>CT-EST-151</td>
+<td>Planejar o <code>TESTE KIT</code> para o cliente com validade mínima de 180 dias; repetir o mesmo kit</td>
+<td>Primeiro salvo; segundo recusado</td>
+</tr>
+<tr>
+<td>CT-EST-152</td>
+<td>Análise do planejamento sem período e com período</td>
+<td>Recusa; com período, mostra a necessidade</td>
+</tr>
+<tr>
+<td>CT-EST-153</td>
+<td>Solicitar o kit e separar: tentar usar o lote que vence em poucos dias</td>
+<td>Registrar se a validade mínima é respeitada (RN004)</td>
+</tr>
+<tr>
+<td>CT-EST-154</td>
+<td>Enviar pela Remessa de Material (GMM) e tentar reabrir a guia</td>
+<td>Enviado; reabertura recusada</td>
+</tr>
+<tr>
+<td>CT-EST-155</td>
+<td>Controle de Kits: ver os lotes do componente no cliente</td>
+<td>Mostra lote, validade e remessa</td>
+</tr>
+<tr>
+<td>CT-EST-156</td>
+<td>Repor o lote que está vencendo</td>
+<td>Registrar o que é gerado e se fica no histórico</td>
+</tr>
+<tr>
+<td>CT-EST-157</td>
+<td>Relatórios de kit (reposição a vencer, reposição de componentes, planejamento, listagem de lotes)</td>
+<td>Mostram os dados <code>TESTE</code></td>
+</tr>
+<tr>
+<td>CT-EST-158</td>
+<td>Permissão: abrir Controle de Kits pelo endereço com usuário sem acesso</td>
+<td>Acesso negado (ver DV-EST-008)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#cadastro-e-parametros">Cadastro e parâmetros</a></li><li class="sub"><a href="#planejamento">Planejamento</a></li><li class="sub"><a href="#solicitacao-e-envio">Solicitação e envio</a></li><li class="sub"><a href="#controle-e-reposicao">Controle e reposição</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

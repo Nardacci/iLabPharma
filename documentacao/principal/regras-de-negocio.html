@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html">Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html">Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html">Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html">Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/principal/LabMedSys - Modulo Principal - Regras de Negocio.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<h2 id="introducao">Introdução</h2>
+<p>Este documento consolida as <strong>regras de negócio do módulo Principal</strong> do LabMedSys. Ele é a base para a equipe de negócio validar o comportamento esperado e para os desenvolvedores implementarem a nova versão.</p>
+<p>As regras vêm de três fontes:</p>
+<ul>
+<li><strong>Documento de análise v1.0</strong> do módulo Principal (análise funcional das telas);</li>
+<li><strong>Código-fonte</strong> do sistema atual (versão 3.5.1), com a indicação do arquivo de origem;</li>
+<li><strong>Testes nas telas</strong> realizados no ambiente de teste em 05/10/2026 e 06/10/2026 (duas rodadas, 78 casos).</li>
+</ul>
+<p>Cada regra traz a sua <strong>situação</strong> depois dos testes:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validada</td>
+<td>O teste confirmou que o sistema cumpre a regra.</td>
+</tr>
+<tr>
+<td>Validada em parte</td>
+<td>O sistema cumpre a regra, com ressalva descrita.</td>
+</tr>
+<tr>
+<td>Diferente</td>
+<td>O sistema não cumpre a regra como esperado. O desvio (DV-PRI-nnn) descreve o que foi visto.</td>
+</tr>
+<tr>
+<td>Não testada</td>
+<td>A regra ainda não foi verificada nas telas.</td>
+</tr>
+<tr>
+<td>Decisão</td>
+<td>Regra definida pelo responsável do negócio.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Como usar este documento na nova versão</p>
+<ul>
+<li>Regra <strong>Validada</strong>: manter o comportamento.</li>
+<li>Regra <strong>Diferente</strong>: implementar o comportamento descrito na regra, e não o atual. O desvio indica o erro a corrigir.</li>
+<li>Regra <strong>Não testada</strong>: confirmar com o negócio antes de implementar.</li>
+</ul>
+</div>
+<h2 id="regras-gerais-do-modulo">Regras gerais do módulo</h2>
+<p>As regras desta seção valem para todo o sistema, porque o módulo Principal controla o acesso e o histórico de todos os módulos.</p>
+<h3 id="acesso-ao-sistema-login">Acesso ao sistema (login)</h3>
+<p>O login é feito por um serviço central do Principal, usado por todos os módulos. As verificações acontecem na ordem da tabela; a primeira que falhar interrompe o acesso.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Origem</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-001</td>
+<td>Login e senha são obrigatórios.</td>
+<td>Código (<code>bllUsuario.cs:90</code>)</td>
+<td>Validada (a tela exige os dois campos antes de enviar)</td>
+</tr>
+<tr>
+<td>RN-PRI-002</td>
+<td>Usuário inexistente ou excluído não entra.</td>
+<td>Código</td>
+<td>Validada ("O usuário informado é inválido!")</td>
+</tr>
+<tr>
+<td>RN-PRI-003</td>
+<td>Usuário com a conta inativa não entra.</td>
+<td>Código</td>
+<td>Validada ("A conta do usuário informado está inativa!")</td>
+</tr>
+<tr>
+<td>RN-PRI-004</td>
+<td>Usuário inativo não entra.</td>
+<td>Código</td>
+<td>Validada ("O usuário informado está inativo!")</td>
+</tr>
+<tr>
+<td>RN-PRI-005</td>
+<td>O usuário só entra dentro do período de validade da conta (data inicial e final).</td>
+<td>Código</td>
+<td>Validada (antes do início e depois do fim: "A data de validade do usuário informado não permite o acesso ao sistema!")</td>
+</tr>
+<tr>
+<td>RN-PRI-006</td>
+<td>Após 4 senhas erradas seguidas, o usuário é bloqueado; bloqueado, nem a senha certa entra.</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-007</td>
+<td>A cada senha errada, o sistema informa quantas tentativas restam.</td>
+<td>Código</td>
+<td>Diferente: mostra 4, 3, 2, 1 e bloqueia no 4º erro (DV-PRI-016)</td>
+</tr>
+<tr>
+<td>RN-PRI-008</td>
+<td>Login com sucesso zera o contador de tentativas.</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-009</td>
+<td>O desbloqueio é feito pelo administrador, com nova senha, e fica registrado no histórico.</td>
+<td>Código</td>
+<td>Diferente: desbloqueia, mas não registra no histórico (DV-PRI-017)</td>
+</tr>
+<tr>
+<td>RN-PRI-010</td>
+<td>Toda tentativa de acesso é registrada (usuário, data, resultado).</td>
+<td>Código</td>
+<td>Não testada pelas telas (nenhuma tela mostra o registro; depende do DBA)</td>
+</tr>
+<tr>
+<td>RN-PRI-011</td>
+<td>Usuário cujo perfil não tem nenhuma permissão não entra.</td>
+<td>Código</td>
+<td>Validada ("Seu perfil não possuí permissão!")</td>
+</tr>
+<tr>
+<td>RN-PRI-012</td>
+<td>Sessão expirada leva à tela de sessão expirada; sem login, nenhuma tela mostra dados.</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-013</td>
+<td>Módulos podem ser habilitados e desabilitados na tela inicial.</td>
+<td>Documentação do fornecedor</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRI-072</td>
+<td>A mensagem de recusa não pode revelar se o usuário existe.</td>
+<td>Requisito da nova versão</td>
+<td>Diferente: mensagens distintas para usuário inexistente e senha errada (DV-PRI-015)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sessao">Sessão</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Origem</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-073</td>
+<td>A sessão expira após <strong>10 minutos</strong> de inatividade (decisão de 06/10/2026).</td>
+<td>Decisão</td>
+<td>Hoje expira entre 10 e 20 minutos, sem valor definido</td>
+</tr>
+<tr>
+<td>RN-PRI-075</td>
+<td>Sair encerra a sessão em todos os módulos (decisão de 06/10/2026).</td>
+<td>Decisão</td>
+<td>Hoje não atendida: o módulo Produção continuou logado (DV-PRI-020)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="senha">Senha</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Origem</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-020</td>
+<td>A senha tem no mínimo 8 caracteres e combina pelo menos 3 tipos: letras minúsculas, maiúsculas, números e caracteres especiais.</td>
+<td>Código e tela</td>
+<td>Validada (senhas curtas, só letras, sem número e sem símbolo foram recusadas). A tela diz "máximo 14", mas aceitou 40 caracteres.</td>
+</tr>
+<tr>
+<td>RN-PRI-021</td>
+<td>Para trocar a senha é preciso informar a senha atual correta.</td>
+<td>Código</td>
+<td>Validada ("Senha atual incorreta!")</td>
+</tr>
+<tr>
+<td>RN-PRI-022</td>
+<td>A nova senha e a confirmação devem ser iguais, diferenciando maiúsculas e minúsculas.</td>
+<td>Código</td>
+<td>Diferente: a comparação ignora maiúsculas e minúsculas (DV-PRI-021)</td>
+</tr>
+<tr>
+<td>RN-PRI-023</td>
+<td>A nova senha não pode ser igual à atual.</td>
+<td>Código</td>
+<td>Validada (mas ignora maiúsculas e minúsculas, DV-PRI-021)</td>
+</tr>
+<tr>
+<td>RN-PRI-024</td>
+<td>A nova senha não pode repetir as 3 últimas (a atual e as duas anteriores).</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-025</td>
+<td>A senha vence após o prazo em dias definido na conta (padrão: 60).</td>
+<td>Código e tela</td>
+<td>Validada em parte: a data de expiração é calculada; a entrada com senha vencida não foi vista (CT-PRI-036 pendente)</td>
+</tr>
+<tr>
+<td>RN-PRI-027</td>
+<td>O administrador gera a senha provisória sem conhecê-la.</td>
+<td>Requisito da nova versão</td>
+<td>Diferente: a senha provisória aparece na tela do administrador (DV-PRI-003)</td>
+</tr>
+<tr>
+<td>RN-PRI-028</td>
+<td>A senha provisória vale por 5 dias e exige troca no primeiro acesso.</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="perfis-e-permissoes">Perfis e permissões</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Origem</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-040</td>
+<td>As permissões são dadas ao perfil; o usuário soma as permissões de todos os seus perfis.</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-041</td>
+<td>As funções formam uma árvore por módulo (grupo, tela, ação).</td>
+<td>Código e tela</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-042</td>
+<td>Ações por tela: Incluir, Alterar, Excluir, Imprimir/Excel e Consultar log. <strong>Ter a tela marcada dá a consulta</strong> (não existe ação "Consultar").</td>
+<td>Teste</td>
+<td>Validada (diferente do código, que previa "Consultar")</td>
+</tr>
+<tr>
+<td>RN-PRI-043</td>
+<td>Quem só consulta vê a tela em modo <strong>somente leitura</strong> (decisão de 06/10/2026).</td>
+<td>Decisão</td>
+<td>Hoje não atendida: 38 de 51 campos ficam editáveis (DV-PRI-023)</td>
+</tr>
+<tr>
+<td>RN-PRI-044</td>
+<td>Botões Imprimir, Excel e Excluir só aparecem com a permissão correspondente.</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-077</td>
+<td>Toda tela verifica a permissão do usuário, inclusive quando aberta pelo endereço.</td>
+<td>Requisito da nova versão</td>
+<td>Diferente: telas de edição, configuração, Microservices e relatórios abrem sem permissão (DV-PRI-025)</td>
+</tr>
+<tr>
+<td>RN-PRI-031</td>
+<td>Toda conta precisa de pelo menos um perfil.</td>
+<td>Código</td>
+<td>Validada ("O perfil do usuário é obrigatório!")</td>
+</tr>
+<tr>
+<td>RN-PRI-046</td>
+<td>Um perfil pode ter um perfil pai.</td>
+<td>Código (banco)</td>
+<td>Não testada (herança a decidir)</td>
+</tr>
+<tr>
+<td>RN-PRI-045</td>
+<td>O perfil pode ser ligado a locais (setores).</td>
+<td>Código (banco)</td>
+<td>Não testada (uso a decidir)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="exclusao-justificativa-e-historico">Exclusão, justificativa e histórico</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Origem</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-050</td>
+<td>A exclusão é lógica: o registro sai das listas e continua no banco (lixeira).</td>
+<td>Código</td>
+<td>Validada (confirmado pelo responsável com o DBA)</td>
+</tr>
+<tr>
+<td>RN-PRI-051</td>
+<td>Registro com dependentes não pode ser excluído.</td>
+<td>Código</td>
+<td>Validada em parte: funciona para Ambiente; um profissional com conta foi excluído sem aviso (DV-PRI-006)</td>
+</tr>
+<tr>
+<td>RN-PRI-052</td>
+<td>A recusa informa <strong>quais</strong> registros impedem a exclusão.</td>
+<td>Requisito da nova versão</td>
+<td>Diferente: mensagem genérica "Exclusão inválida, existem referências com outras tabelas." (DV-PRI-011)</td>
+</tr>
+<tr>
+<td>RN-PRI-071</td>
+<td>Itens vinculados na própria tela do cadastro precisam ser excluídos antes da exclusão do cadastro.</td>
+<td>Responsável do negócio</td>
+<td>Validada (reteste do equipamento, DV-PRI-012)</td>
+</tr>
+<tr>
+<td>RN-PRI-070</td>
+<td><strong>A justificativa é obrigatória em toda exclusão e em toda alteração (inclusive inativação) de todos os cadastros</strong>, e fica no histórico.</td>
+<td>Decisão de 06/10/2026</td>
+<td>Decisão. Hoje não atendida em Ambiente e Equipamento (exclusão, DV-PRI-009), Pessoa jurídica (DV-PRI-013) e Perfil (DV-PRI-024)</td>
+</tr>
+<tr>
+<td>RN-PRI-054</td>
+<td>Todo registro guarda quem o criou e alterou, e quando.</td>
+<td>Código</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN-PRI-055</td>
+<td>As alterações ficam no histórico campo a campo: valor antigo, valor novo, usuário, data, hora e justificativa.</td>
+<td>Código</td>
+<td>Validada em parte: o valor novo do Cargo sai em branco (DV-PRI-004) e um campo não alterado aparece como alterado</td>
+</tr>
+<tr>
+<td>RN-PRI-078</td>
+<td>O histórico de um registro excluído continua consultável.</td>
+<td>Requisito da nova versão</td>
+<td>Diferente: o registro excluído some junto com o histórico (DV-PRI-014)</td>
+</tr>
+<tr>
+<td>RN-PRI-060</td>
+<td>Antes de gravar, o sistema pede confirmação ("Confirma a inclusão / alteração / exclusão do item?").</td>
+<td>Teste</td>
+<td>Validada. Os campos obrigatórios só são verificados depois do "SIM".</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="regras-por-funcionalidade">Regras por funcionalidade</h2>
+<p>As regras desta seção seguem a numeração por tela do documento de análise v1.0 (RN001, VL001…). A coluna <strong>Teste</strong> mostra o resultado.</p>
+<h3 id="perfil">Perfil</h3>
+<div class="callout">
+<p class="callout-titulo">Pesquisa</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN001</td>
+<td>O sistema deverá permitir pesquisar utilizando um ou mais filtros simultaneamente.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN002</td>
+<td>Quando nenhum filtro for informado, deverão ser apresentados todos os perfis cadastrados, respeitando a paginação.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN003</td>
+<td>A pesquisa por Código deverá retornar apenas o registro correspondente.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN004</td>
+<td>A pesquisa por Descrição deverá permitir busca parcial, sem diferenciar maiúsculas e minúsculas.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN005</td>
+<td>O filtro Ativo deverá permitir selecionar perfis ativos, inativos ou todos.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN006</td>
+<td>A opção Incluir deverá direcionar o usuário para o Cadastro de Perfil.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN007</td>
+<td>A opção Editar somente estará disponível para usuários com permissão de manutenção de perfis.</td>
+<td>Validada na lista; a tela de edição abre pelo endereço sem permissão (DV-PRI-025)</td>
+</tr>
+<tr>
+<td>RN008</td>
+<td>A opção Log deverá apresentar o histórico de alterações do perfil.</td>
+<td>Validada ("PERMISSÃO EXCLUÍDA — PROFISSIONAL / INCLUIR", com usuário, data e hora)</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="callout">
+<p class="callout-titulo">Cadastro</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN009</td>
+<td>O campo Descrição é de preenchimento obrigatório.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN010</td>
+<td>Não deverá ser permitido cadastrar dois perfis com a mesma descrição.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN011</td>
+<td>O Código será gerado automaticamente pelo sistema.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN012</td>
+<td>A Data do Cadastro será registrada automaticamente na inclusão.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN013</td>
+<td>Pelo menos uma funcionalidade deverá estar selecionada para o perfil ser utilizado.</td>
+<td>Diferente: o sistema grava perfil sem nenhuma função; o usuário com esse perfil não entra</td>
+</tr>
+<tr>
+<td>RN014</td>
+<td>Perfis inativos não poderão ser vinculados a novos usuários.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN015</td>
+<td>Alterações nas permissões produzem efeito para os usuários do perfil.</td>
+<td>Validada (no próximo acesso)</td>
+</tr>
+<tr>
+<td>RN016</td>
+<td>Somente usuários autorizados poderão cadastrar ou alterar perfis.</td>
+<td>Diferente: a tela de cadastro abre sem permissão (DV-PRI-025)</td>
+</tr>
+<tr>
+<td>RN017</td>
+<td>Marcar uma ação marca a tela; desmarcar a última ação desmarca a tela; marcar só a tela é permitido (dá a consulta).</td>
+<td>Validada (observada no teste)</td>
+</tr>
+<tr>
+<td>RN018</td>
+<td>A descrição do perfil não aceita <code>_</code>, <code>'</code>, <code>-</code> e <code>/</code>: os caracteres são removidos sem aviso.</td>
+<td>Observada no teste; a nova versão deve definir os caracteres permitidos e avisar (DV-PRI-001)</td>
+</tr>
+<tr>
+<td>RN019</td>
+<td>A alteração de permissões exige justificativa (RN-PRI-070).</td>
+<td>Diferente: grava sem justificativa e o histórico do perfil não tem justificativa (DV-PRI-024)</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="callout">
+<p class="callout-titulo">Validações</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Validação</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VL001</td>
+<td>Verificar preenchimento obrigatório da Descrição.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>VL002</td>
+<td>Validar duplicidade da Descrição.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>VL003</td>
+<td>Impedir gravação sem permissões atribuídas (se for a regra definida pela organização).</td>
+<td>Diferente (ver RN013)</td>
+</tr>
+<tr>
+<td>VL004</td>
+<td>Validar consistência das permissões selecionadas.</td>
+<td>Validada (ver RN017)</td>
+</tr>
+<tr>
+<td>VL005</td>
+<td>Registrar todas as alterações do perfil na trilha de auditoria.</td>
+<td>Validada em parte (sem justificativa, DV-PRI-024)</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<h3 id="profissional-usuario">Profissional (usuário)</h3>
+<div class="callout">
+<p class="callout-titulo">Pesquisa</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN001</td>
+<td>Pesquisa com qualquer combinação dos filtros disponíveis.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN002</td>
+<td>O CPF deverá ser único no cadastro de profissionais.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN003</td>
+<td>A pesquisa por Nome deverá aceitar pesquisa parcial.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN004</td>
+<td>Usuário precisa ter permissão para excluir.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN005</td>
+<td>A opção Excluir abre a tela de justificativa da exclusão.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN006</td>
+<td>O botão Log disponibiliza o histórico completo das alterações.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN007</td>
+<td>Somente usuários autorizados poderão incluir, alterar ou excluir profissionais.</td>
+<td>Diferente: a tela de edição abre sem permissão (DV-PRI-025) e, só com consulta, fica editável (DV-PRI-023)</td>
+</tr>
+<tr>
+<td>RN008</td>
+<td>Justificativa obrigatória na exclusão.</td>
+<td>Validada ("A justificativa da exclusão do usuário é obrigatória!")</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="callout">
+<p class="callout-titulo">Cadastro</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN009</td>
+<td>Campos obrigatórios: nome, data de nascimento, sexo, nome da mãe, UF e naturalidade, CPF, CEP, logradouro, número, bairro e grupo.</td>
+<td>Validada (os 12 recusados um a um, com mensagem clara)</td>
+</tr>
+<tr>
+<td>RN010</td>
+<td>O sistema não deverá permitir CPF duplicado.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN011</td>
+<td>O Grupo é obrigatório e define o vínculo organizacional.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN012</td>
+<td>A Data do Cadastro é registrada automaticamente.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN013</td>
+<td>A inativação exige justificativa, que fica no histórico.</td>
+<td>Validada ("ATIVO SIM → NÃO" com a justificativa)</td>
+</tr>
+<tr>
+<td>RN014</td>
+<td>Profissional inativo não entra no sistema nem deve ser usado em operações.</td>
+<td>Validada (login recusado)</td>
+</tr>
+<tr>
+<td>RN015</td>
+<td>O profissional pode ter várias ocupações e funções.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN016</td>
+<td>Toda alteração exige justificativa e fica no histórico campo a campo.</td>
+<td>Validada em parte: o valor novo do Cargo sai em branco (DV-PRI-004)</td>
+</tr>
+<tr>
+<td>RN017</td>
+<td>O CEP preenche o endereço automaticamente, quando existe na base.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN018</td>
+<td>Profissional com conta de acesso vinculada não pode ser excluído sem tratar a conta.</td>
+<td>Diferente: foi excluído sem aviso (DV-PRI-006)</td>
+</tr>
+<tr>
+<td>RN019</td>
+<td>Com o profissional inativo, o campo de justificativa da exclusão fica desabilitado e a exclusão não prossegue.</td>
+<td>Observada no teste; causa a confirmar</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="callout">
+<p class="callout-titulo">Validações</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Validação</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VL001</td>
+<td>Validar obrigatoriedade dos campos marcados com (*).</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>VL002</td>
+<td>Validar formato do CPF ("O CPF informado é inválido!").</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>VL003</td>
+<td>Validar unicidade do CPF.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>VL004</td>
+<td>Validar formato do e-mail.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>VL005</td>
+<td>Validar existência do Grupo selecionado.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>VL006</td>
+<td>Exigir justificativa na inativação.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>VL007</td>
+<td>Registrar inclusões e alterações na trilha de auditoria.</td>
+<td>Validada em parte (DV-PRI-004)</td>
+</tr>
+<tr>
+<td>VL008</td>
+<td>Datas devem ser válidas.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>VL009</td>
+<td>CEP numérico.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<h3 id="conta-usuario">Conta Usuário</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN001</td>
+<td>A conta só pode ser criada para um profissional existente (botão Incluir na linha do profissional).</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN002</td>
+<td>O login deve ser único no sistema, sem diferenciar maiúsculas e minúsculas.</td>
+<td>Validada ("O login informando já foi cadastrado: [nome]!")</td>
+</tr>
+<tr>
+<td>RN003</td>
+<td>O login é gravado em maiúsculas.</td>
+<td>Observada no teste (DV-PRI-002): a nova versão deve definir a regra</td>
+</tr>
+<tr>
+<td>RN004</td>
+<td>A conta exige pelo menos um perfil.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN005</td>
+<td>A validade da conta (data inicial) é obrigatória; a data final é opcional e não pode ser anterior à data atual.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN006</td>
+<td>A senha tem prazo de validade em dias (padrão 60); a data de expiração é calculada e não é digitada.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN007</td>
+<td>Ao criar a conta, o sistema gera a senha provisória.</td>
+<td>Validada (exibida ao administrador, DV-PRI-003)</td>
+</tr>
+<tr>
+<td>RN008</td>
+<td>O "Reset de senha" gera nova senha provisória com validade de 5 dias e desbloqueia o usuário.</td>
+<td>Validada (não registrado no histórico, DV-PRI-017)</td>
+</tr>
+<tr>
+<td>RN009</td>
+<td>Com a conta inativa, o botão "Reset de senha" não aparece.</td>
+<td>Observada no teste</td>
+</tr>
+<tr>
+<td>RN010</td>
+<td>Alterações da conta exigem justificativa.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN011</td>
+<td>O histórico da conta registra: inclusão da conta, ativação, login, validades, novo perfil e perfil excluído.</td>
+<td>Validada; aparece também uma linha "VALIDADE INÍCIO" sem mudança a cada gravação (DV-PRI-005)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="ambiente">Ambiente</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN001</td>
+<td>A Descrição é obrigatória (até 255 caracteres); a Tag, opcional (até 10).</td>
+<td>Validada ("A Descrição é obrigatória!")</td>
+</tr>
+<tr>
+<td>RN002</td>
+<td>O ambiente pode ter equipamentos, instrumentos e utilidades vinculados, e grau de contaminação do ar e microbiológico.</td>
+<td>Validada (inclusão com todos os campos)</td>
+</tr>
+<tr>
+<td>RN003</td>
+<td>Alterações exigem justificativa e ficam no histórico campo a campo.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN004</td>
+<td>O ambiente pode ser inativado (com justificativa); inativo, deixa de aparecer nas listas de escolha (ex.: Ponto de água).</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN005</td>
+<td>A exclusão exige justificativa (RN-PRI-070).</td>
+<td>Diferente: exclui só com a confirmação (DV-PRI-009)</td>
+</tr>
+<tr>
+<td>RN006</td>
+<td>Ambiente com dependentes (ex.: ponto de água) não pode ser excluído.</td>
+<td>Validada (mensagem genérica, DV-PRI-011)</td>
+</tr>
+<tr>
+<td>RN007</td>
+<td>Não permitir duplicidade de descrição.</td>
+<td>Diferente: aceitou duas descrições iguais (DV-PRI-007); confirmar a regra</td>
+</tr>
+<tr>
+<td>RN008</td>
+<td>A pesquisa encontra o registro com ou sem acento.</td>
+<td>Diferente: "laboratorio" não encontra "LABORATÓRIO" (DV-PRI-008)</td>
+</tr>
+<tr>
+<td>RN009</td>
+<td>Imprimir e Exportar para Excel respeitam o filtro da pesquisa.</td>
+<td>Validada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="equipamento">Equipamento</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN001</td>
+<td>Obrigatórios: Tipo de equipamento (móvel ou fixo), Descrição, Tag, Capacidade de produção, Valor e <strong>Categoria</strong>.</td>
+<td>Validada em parte: sem Categoria o sistema dá erro e a tela trava, sem mensagem (DV-PRI-010)</td>
+</tr>
+<tr>
+<td>RN002</td>
+<td>Tamanhos: descrição até 255; tag, patrimônio, modelo e nº de série até 30.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN003</td>
+<td>O equipamento pode ter vários tipos de manutenção.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN004</td>
+<td>Alterações exigem justificativa e ficam no histórico campo a campo.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN005</td>
+<td>O equipamento pode ser inativado (com justificativa).</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN006</td>
+<td>A exclusão exige justificativa (RN-PRI-070).</td>
+<td>Diferente: exclui só com a confirmação (DV-PRI-009)</td>
+</tr>
+<tr>
+<td>RN007</td>
+<td>Tipos de manutenção vinculados precisam ser removidos antes da exclusão (RN-PRI-071).</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN008</td>
+<td>Fabricante e Fornecedor vêm do cadastro de Pessoa jurídica (só ativos).</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN009</td>
+<td>Datas consistentes (data válida; fim depois do início).</td>
+<td>Não testada (repetir manualmente)</td>
+</tr>
+<tr>
+<td>RN010</td>
+<td>A pesquisa encontra o registro com ou sem acento.</td>
+<td>Diferente (DV-PRI-008)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="pessoa-juridica">Pessoa Jurídica</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Regra</th>
+<th>Teste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN001</td>
+<td>Obrigatórios: tipo de cadastro, razão social, CNPJ, CEP, logradouro, número e bairro.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN002</td>
+<td>O CNPJ é validado ("CNPJ inválido!") e único ("CNPJ já cadastrado!").</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN003</td>
+<td>Tipos de cadastro: Cliente, Fornecedor, Transportadora, Fabricante e Empresa; uma empresa pode ter vários tipos.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN004</td>
+<td>Pode ter vários contatos e várias filiais.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN005</td>
+<td>Pode ser inativada; inativa, sai das listas de Fabricante e Fornecedor.</td>
+<td>Validada</td>
+</tr>
+<tr>
+<td>RN006</td>
+<td>Alteração e inativação exigem justificativa, guardada no histórico (RN-PRI-070).</td>
+<td>Diferente: grava sem justificativa e o histórico não tem justificativa (DV-PRI-013)</td>
+</tr>
+<tr>
+<td>RN007</td>
+<td>Não há exclusão de pessoa jurídica (só inativação).</td>
+<td>Observada no teste: confirmar se é a regra desejada</td>
+</tr>
+<tr>
+<td>RN008</td>
+<td>O CNPJ deve aceitar o novo formato alfanumérico.</td>
+<td>Não testada (requisito do documento v1.0)</td>
+</tr>
+<tr>
+<td>RN009</td>
+<td>A pesquisa encontra o registro com ou sem acento.</td>
+<td>Diferente (DV-PRI-008)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="demais-funcionalidades">Demais funcionalidades</h3>
+<p>As funcionalidades abaixo têm as regras descritas no documento de análise v1.0 e <strong>ainda não foram testadas</strong>. Até o teste, valem as regras gerais deste documento (justificativa, histórico, exclusão lógica e permissões).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Funcionalidade</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Notificações padrão, Notificação, Microservices</td>
+<td>Não testadas (Microservices abre sem permissão, DV-PRI-025)</td>
+</tr>
+<tr>
+<td>Grau de contaminação</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>Centro de custo, Estrutura funcional, Local físico</td>
+<td>Não testadas</td>
+</tr>
+<tr>
+<td>Pontos de água</td>
+<td>Usado só como dependente de Ambiente no teste</td>
+</tr>
+<tr>
+<td>Instrumentos, Utilidades, Utensílios</td>
+<td>Não testadas</td>
+</tr>
+<tr>
+<td>Conta gerencial, Conta contábil</td>
+<td>Não testadas</td>
+</tr>
+<tr>
+<td>Grupo de usuário, Função profissional, Categoria de equipamento</td>
+<td>Não testadas (Grupo de usuário: a tela de edição abre sem permissão, DV-PRI-025)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="matriz-de-permissoes">Matriz de permissões</h2>
+<h3 id="arvore-de-funcoes-do-modulo-principal">Árvore de funções do módulo Principal</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Telas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administração</td>
+<td>Configurar notificação, Conta usuário, Microservices, Notificações do sistema, Notificações padrão, Perfil, Profissional</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Ambientes, Equipamentos, Instrumentos, Pontos de água, Utensílios, Utilidades, Categoria de equipamento, Centro de custo, Conta contábil, Conta gerencial, Estrutura funcional, Funções profissionais, Grupo de usuários, Local físico, Pessoa jurídica</td>
+</tr>
+<tr>
+<td>Tabelas de apoio</td>
+<td>Grau de contaminação</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ações de cada tela: Incluir, Alterar, Excluir, Imprimir/Excel e Consultar log. Exceções: <strong>Perfil não tem Imprimir/Excel</strong> e <strong>Pessoa jurídica não tem Excluir</strong>.</p>
+<h3 id="efeito-dos-perfis-no-teste">Efeito dos perfis no teste</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Permissões</th>
+<th>O que o usuário conseguiu</th>
+<th>Confere?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Só consulta</td>
+<td>Perfil e Profissional, sem ações</td>
+<td>Lista sem Novo, Editar e Excluir; detalhe do usuário editável</td>
+<td>Não (DV-PRI-023)</td>
+</tr>
+<tr>
+<td>Cadastro</td>
+<td>Ambiente, Equipamento e Pessoa jurídica com Incluir e Alterar</td>
+<td>Novo e Editar; sem Imprimir, Excel e Excluir</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Soma de perfis</td>
+<td>Consulta + Alterar em Profissional</td>
+<td>Passou a alterar usuários</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Sem administração</td>
+<td>Só Centro de custo</td>
+<td>Listas de Administração negadas; telas de edição, configuração, Microservices e relatórios abrem</td>
+<td>Não (DV-PRI-025)</td>
+</tr>
+<tr>
+<td>Sem funções</td>
+<td>Nenhuma</td>
+<td>Não entra no sistema</td>
+<td>Sim</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="acesso-direto-pelo-endereco-usuario-sem-administracao">Acesso direto pelo endereço (usuário sem administração)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Resultado</th>
+<th>Esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Listas de usuário, perfil, conta, grupo de usuário e notificações</td>
+<td>Negado</td>
+<td>Negado</td>
+</tr>
+<tr>
+<td>Edição de usuário, perfil e grupo de usuário</td>
+<td><strong>Abre</strong></td>
+<td>Negado</td>
+</tr>
+<tr>
+<td>Configuração e Microservices</td>
+<td><strong>Abre</strong></td>
+<td>Negado</td>
+</tr>
+<tr>
+<td>Relatórios de usuário e de perfil</td>
+<td><strong>Abre</strong></td>
+<td>Negado</td>
+</tr>
+<tr>
+<td>Qualquer tela, sem login</td>
+<td>Sessão expirada</td>
+<td>Sessão expirada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="desvios-que-afetam-as-regras">Desvios que afetam as regras</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Desvio</th>
+<th>Gravidade</th>
+<th>Descrição</th>
+<th>Regra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-PRI-001</td>
+<td>Baixa</td>
+<td>A descrição do perfil remove <code>_</code>, <code>'</code>, <code>-</code> e <code>/</code> sem aviso.</td>
+<td>Perfil RN018</td>
+</tr>
+<tr>
+<td>DV-PRI-002</td>
+<td>Baixa</td>
+<td>O login é gravado em maiúsculas.</td>
+<td>Conta RN003</td>
+</tr>
+<tr>
+<td>DV-PRI-003</td>
+<td>Alta</td>
+<td>A senha provisória aparece na tela do administrador.</td>
+<td>RN-PRI-027</td>
+</tr>
+<tr>
+<td>DV-PRI-004</td>
+<td>Média</td>
+<td>O histórico do profissional grava o Cargo sem o valor novo e mostra o DDI como alterado.</td>
+<td>RN-PRI-055</td>
+</tr>
+<tr>
+<td>DV-PRI-005</td>
+<td>Baixa</td>
+<td>O histórico da conta ganha uma linha "VALIDADE INÍCIO" sem mudança a cada gravação.</td>
+<td>Conta RN011</td>
+</tr>
+<tr>
+<td>DV-PRI-006</td>
+<td>Média</td>
+<td>Profissional com conta vinculada foi excluído sem aviso.</td>
+<td>RN-PRI-051</td>
+</tr>
+<tr>
+<td>DV-PRI-007</td>
+<td>Baixa</td>
+<td>Ambiente aceita descrição repetida.</td>
+<td>Ambiente RN007</td>
+</tr>
+<tr>
+<td>DV-PRI-008</td>
+<td>Baixa</td>
+<td>A pesquisa não ignora acentos.</td>
+<td>Ambiente, Equipamento e PJ</td>
+</tr>
+<tr>
+<td>DV-PRI-009</td>
+<td>Alta</td>
+<td>Ambiente e Equipamento são excluídos sem justificativa.</td>
+<td>RN-PRI-070</td>
+</tr>
+<tr>
+<td>DV-PRI-010</td>
+<td>Média</td>
+<td>Equipamento sem Categoria causa erro de servidor e a tela trava.</td>
+<td>Equipamento RN001</td>
+</tr>
+<tr>
+<td>DV-PRI-011</td>
+<td>Média</td>
+<td>A recusa de exclusão não diz qual registro impede.</td>
+<td>RN-PRI-052</td>
+</tr>
+<tr>
+<td>DV-PRI-012</td>
+<td>—</td>
+<td>Explicado pela RN-PRI-071 (item vinculado na própria tela). Encerrado.</td>
+<td>RN-PRI-071</td>
+</tr>
+<tr>
+<td>DV-PRI-013</td>
+<td>Média</td>
+<td>Pessoa jurídica altera e inativa sem justificativa.</td>
+<td>RN-PRI-070</td>
+</tr>
+<tr>
+<td>DV-PRI-014</td>
+<td>Alta</td>
+<td>O histórico de um registro excluído não pode ser consultado.</td>
+<td>RN-PRI-078</td>
+</tr>
+<tr>
+<td>DV-PRI-015</td>
+<td>Média</td>
+<td>Mensagens de login revelam se o usuário existe.</td>
+<td>RN-PRI-072</td>
+</tr>
+<tr>
+<td>DV-PRI-016</td>
+<td>Baixa</td>
+<td>Contagem de tentativas restantes errada.</td>
+<td>RN-PRI-007</td>
+</tr>
+<tr>
+<td>DV-PRI-017</td>
+<td>Média</td>
+<td>Reset de senha e desbloqueio não aparecem no histórico da conta.</td>
+<td>RN-PRI-009</td>
+</tr>
+<tr>
+<td>DV-PRI-018</td>
+<td>Baixa</td>
+<td>O link do módulo Patrimônio aponta para o próprio servidor (<code>localhost</code>).</td>
+<td>—</td>
+</tr>
+<tr>
+<td>DV-PRI-020</td>
+<td>Média</td>
+<td>Sair no Principal não encerra os outros módulos.</td>
+<td>RN-PRI-075</td>
+</tr>
+<tr>
+<td>DV-PRI-021</td>
+<td>Baixa</td>
+<td>A senha não diferencia maiúsculas de minúsculas nas comparações.</td>
+<td>RN-PRI-022</td>
+</tr>
+<tr>
+<td>DV-PRI-022</td>
+<td>Alta</td>
+<td>A troca obrigatória de senha pode ser contornada pelo endereço.</td>
+<td>RN-PRI-026</td>
+</tr>
+<tr>
+<td>DV-PRI-023</td>
+<td>Média</td>
+<td>A tela de consulta de usuário fica editável.</td>
+<td>RN-PRI-043</td>
+</tr>
+<tr>
+<td>DV-PRI-024</td>
+<td>Média</td>
+<td>A alteração de permissões de perfil não pede justificativa.</td>
+<td>Perfil RN019</td>
+</tr>
+<tr>
+<td>DV-PRI-025</td>
+<td>Alta</td>
+<td>Telas de edição, configuração, Microservices e relatórios abrem sem permissão.</td>
+<td>RN-PRI-077</td>
+</tr>
+<tr>
+<td>DV-PRI-026</td>
+<td>Média</td>
+<td>Erros mostram a página técnica do ASP.NET.</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="decisoes">Decisões</h2>
+<h3 id="decisoes-tomadas">Decisões tomadas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Decisão</th>
+<th>Regra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>06/10/2026</td>
+<td>A justificativa é obrigatória em toda exclusão e alteração de todos os cadastros.</td>
+<td>RN-PRI-070</td>
+</tr>
+<tr>
+<td>06/10/2026</td>
+<td>Os registros excluídos permanecem no banco (lixeira).</td>
+<td>RN-PRI-050</td>
+</tr>
+<tr>
+<td>06/10/2026</td>
+<td>Itens vinculados na própria tela devem ser excluídos antes do cadastro.</td>
+<td>RN-PRI-071</td>
+</tr>
+<tr>
+<td>06/10/2026</td>
+<td>A sessão expira após 10 minutos de inatividade.</td>
+<td>RN-PRI-073</td>
+</tr>
+<tr>
+<td>06/10/2026</td>
+<td>"Sair" encerra a sessão em todos os módulos.</td>
+<td>RN-PRI-075</td>
+</tr>
+<tr>
+<td>06/10/2026</td>
+<td>A tela de quem só consulta é somente leitura.</td>
+<td>RN-PRI-043</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="decisoes-pendentes">Decisões pendentes</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Assunto</th>
+<th>Recomendação</th>
+<th>Regra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relatório de revisão de acessos</td>
+<td>Usuário, perfis, telas e ações liberadas, data da última alteração e último acesso</td>
+<td>RN-PRI-040</td>
+</tr>
+<tr>
+<td>Duplicidade de descrição (Ambiente, Perfil)</td>
+<td>Não permitir</td>
+<td>Ambiente RN007, Perfil RN010</td>
+</tr>
+<tr>
+<td>Exclusão de pessoa jurídica</td>
+<td>Manter só inativação</td>
+<td>PJ RN007</td>
+</tr>
+<tr>
+<td>Herança de perfil pai e vínculo de perfil com locais</td>
+<td>Definir com a Garantia da Qualidade</td>
+<td>RN-PRI-045, 046</td>
+</tr>
+<tr>
+<td>Diferença entre "usuário inativo" e "conta inativa"</td>
+<td>Unificar, se não houver diferença de negócio</td>
+<td>RN-PRI-003, 004</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#regras-gerais-do-modulo">Regras gerais do módulo</a></li><li class="sub"><a href="#acesso-ao-sistema-login">Acesso ao sistema (login)</a></li><li class="sub"><a href="#sessao">Sessão</a></li><li class="sub"><a href="#senha">Senha</a></li><li class="sub"><a href="#perfis-e-permissoes">Perfis e permissões</a></li><li class="sub"><a href="#exclusao-justificativa-e-historico">Exclusão, justificativa e histórico</a></li><li><a href="#regras-por-funcionalidade">Regras por funcionalidade</a></li><li class="sub"><a href="#perfil">Perfil</a></li><li class="sub"><a href="#profissional-usuario">Profissional (usuário)</a></li><li class="sub"><a href="#conta-usuario">Conta Usuário</a></li><li class="sub"><a href="#ambiente">Ambiente</a></li><li class="sub"><a href="#equipamento">Equipamento</a></li><li class="sub"><a href="#pessoa-juridica">Pessoa Jurídica</a></li><li class="sub"><a href="#demais-funcionalidades">Demais funcionalidades</a></li><li><a href="#matriz-de-permissoes">Matriz de permissões</a></li><li class="sub"><a href="#arvore-de-funcoes-do-modulo-principal">Árvore de funções do módulo Principal</a></li><li class="sub"><a href="#efeito-dos-perfis-no-teste">Efeito dos perfis no teste</a></li><li class="sub"><a href="#acesso-direto-pelo-endereco-usuario-sem-administracao">Acesso direto pelo endereço (usuário sem administração)</a></li><li><a href="#desvios-que-afetam-as-regras">Desvios que afetam as regras</a></li><li><a href="#decisoes">Decisões</a></li><li class="sub"><a href="#decisoes-tomadas">Decisões tomadas</a></li><li class="sub"><a href="#decisoes-pendentes">Decisões pendentes</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

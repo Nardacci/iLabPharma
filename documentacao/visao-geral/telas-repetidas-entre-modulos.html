@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Telas repetidas entre módulos · Visão entre módulos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2563eb"><span class="icone">◎</span>Visão entre módulos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="mapa-do-processo-fabril.html">Mapa do processo fabril</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="telas-repetidas-entre-modulos.html" aria-current=page>Telas repetidas entre módulos</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Visão entre módulos</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Telas repetidas entre módulos</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Atualizado em:</strong> 07/10/2026 (Principal × Estoque). Comparação automática dos arquivos de tela (<code>.aspx</code>) e do código por trás de cada uma (<code>.aspx.cs</code>).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Principal</th>
+<th>Estoque</th>
+<th>Linhas diferentes (tela / código)</th>
+<th>Grava em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Profissional</td>
+<td><code>administracao/usuario_*</code></td>
+<td><code>administracao/usuario_*</code></td>
+<td>até 1.756 / 431</td>
+<td>Tabelas do Principal (<code>SIS_USUARIO</code>), pelos sinônimos</td>
+</tr>
+<tr>
+<td>Conta usuário</td>
+<td><code>administracao/usuario_conta_*</code></td>
+<td>igual</td>
+<td>até 650 / 209</td>
+<td><code>SIS_USUARIO</code>, <code>SIS_USUARIO_PERFIL</code></td>
+</tr>
+<tr>
+<td>Perfil</td>
+<td><code>administracao/perfil_*</code></td>
+<td>igual</td>
+<td>até 670 / 920</td>
+<td><code>SIS_PERFIL</code>, <code>SIS_PERFIL_FUNCAO</code>; <strong>sem histórico no Estoque</strong></td>
+</tr>
+<tr>
+<td>Grupo de usuários</td>
+<td><code>administracao/grupo_usuario_*</code></td>
+<td>igual</td>
+<td>até 591 / 37</td>
+<td>A confirmar</td>
+</tr>
+<tr>
+<td>Funções profissionais</td>
+<td><code>administracao/funcao_profissional_*</code></td>
+<td>igual</td>
+<td>até 98 / 39</td>
+<td>A confirmar</td>
+</tr>
+<tr>
+<td>Local (Estrutura funcional)</td>
+<td><code>administrativas/local_*</code></td>
+<td>igual</td>
+<td>até 311 / 209</td>
+<td><code>SIS_LOCAL</code></td>
+</tr>
+<tr>
+<td>Pessoa jurídica</td>
+<td><code>administrativas/pessoa_juridica_*</code></td>
+<td>igual</td>
+<td>até 1.630 / 1.236</td>
+<td><code>GBL_PJ</code></td>
+</tr>
+<tr>
+<td>Página de teste de notificação</td>
+<td><code>principal/inicio/TesteNotificacao.aspx</code></td>
+<td><code>NotificacaoTeste.aspx</code></td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Problema:</strong> são cópias que foram mudando separadamente. A mesma informação pode ser alterada por dois caminhos, com regras e histórico diferentes.</p>
+<p><strong>Como deveria ser:</strong> um só lugar para manter usuários, perfis e cadastros gerais (o Principal); os outros módulos só consultam.</p>
+<p>Próximas comparações: tabelas com o mesmo nome em bancos diferentes e código repetido, ao entrar cada módulo.</p>
+    </article>
+  </main>
+  
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

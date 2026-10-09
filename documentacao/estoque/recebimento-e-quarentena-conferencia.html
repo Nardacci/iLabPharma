@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recebimento e quarentena (conferência) · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html" aria-current=page>Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Recebimento e quarentena (conferência)</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Conferencia dos Fluxos de Recebimento e Quarentena.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento <strong>complementa os fluxos da equipe</strong> de Recebimento de Materiais e de Estoque Quarentena (em <code>Documentação/</code>). Ele não os substitui. Tem duas funções:</p>
+<ol>
+<li><strong>Responder pelo código</strong> às perguntas que esses fluxos deixaram para a homologação ("o QA deverá validar…") e apontar onde o código diverge do que o fluxo descreve.</li>
+<li><strong>Dar casos de teste</strong> aos dois fluxos, que ainda não tinham.</li>
+</ol>
+<p>O que vem do código está como <strong>Extraído</strong>, a confirmar no teste. O que o código não mostra está como <strong>a validar</strong>.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li><strong>Recebimento:</strong> inspeção veicular, recebimento da nota fiscal, itens e lotes, autorização, conferência, entrada e endereçamento.</li>
+<li><strong>Quarentena:</strong> abertura da análise, amostragem, pesagem, análise, laudo, etiqueta e saída da quarentena.</li>
+</ul>
+<p>A saída da quarentena (aprovado e reprovado) já está detalhada no fluxo de reprovado, reanálise e revalidação. Aqui entram só as regras que faltavam.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. A referência ao código fica só nas respostas.</p>
+<h2 id="recebimento-de-materiais-respostas-do-codigo">Recebimento de materiais: respostas do código</h2>
+<h3 id="inspecao-veicular">Inspeção veicular</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta do fluxo da equipe</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Só veículos <strong>aprovados</strong> podem ser selecionados no recebimento?</td>
+<td><strong>Não.</strong> A lista de checklists oferecida no recebimento filtra só os que ainda não foram usados em outro recebimento e cujo veículo ainda não saiu. <strong>Não filtra pelo parecer aprovado.</strong> Um checklist reprovado pode ser escolhido</td>
+<td><code>LaboSys_DAL/dalPortaria.cs:355-356</code>, <code>estoque/recebimento_ed2.aspx.cs:153</code></td>
+</tr>
+<tr>
+<td>Como o sistema se comporta sem checklist?</td>
+<td><em>A confirmar no teste:</em> o código carrega a lista, mas não mostra trava que obrigue escolher um checklist</td>
+<td><code>recebimento_ed2.aspx.cs:153-158</code></td>
+</tr>
+<tr>
+<td>O checklist prova a inspeção?</td>
+<td><strong>Não totalmente.</strong> O Checklist de Inspeção Veicular salvou com parecer "Aprovado" e as 15 perguntas sem resposta (DV-EST-004, teste de 07/10/2026)</td>
+<td><code>homologacao/3.estoque/execucao/2026-10-07/resultado.md</code></td>
+</tr>
+<tr>
+<td>Campos obrigatórios</td>
+<td>Placa, condutor, tipo e número do documento, tipo de movimento e justificativa; peso de entrada e de saída validados</td>
+<td><code>estoque/portaria_ed2.aspx</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="aprovacao-e-autorizacao-do-recebimento">Aprovação e autorização do recebimento</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta do fluxo da equipe</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Onde é feita a aprovação para receber?</td>
+<td>O sistema não pede aprovação <strong>antes</strong> do recebimento. O que existe é a <strong>autorização depois do cadastro</strong>: o botão "Autorizar recebimento" pede login e senha de outro usuário</td>
+<td><code>estoque/recebimento_ed2.aspx.cs:1050-1081</code></td>
+</tr>
+<tr>
+<td>Quais perfis podem autorizar?</td>
+<td><strong>Qualquer usuário com login válido.</strong> O sistema não confere perfil, grupo nem permissão; só recusa se for o mesmo usuário que confirmou o recebimento ("Usuário não pode autorizar!")</td>
+<td>Idem (DV-EST-009)</td>
+</tr>
+<tr>
+<td>Fica registrada?</td>
+<td><strong>Sim:</strong> data e usuário da autorização</td>
+<td>Idem</td>
+</tr>
+<tr>
+<td>O fornecedor está aprovado?</td>
+<td><strong>Não é conferido.</strong> O recebimento exige um fornecedor, mas não consulta nenhuma lista de fornecedor aprovado (ver o fluxo de compras e avaliação do fornecedor)</td>
+<td><code>bllQualificacaoFornecedor.cs</code>, sem outro uso</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="nota-fiscal-itens-e-lotes">Nota fiscal, itens e lotes</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta do fluxo da equipe</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O lote é criado automaticamente ou informado pelo operador?</td>
+<td><strong>Informado pelo operador</strong>, item a item: código do lote, quantidade, volumes, apresentação, fabricante e validade. O gatilho que criava um lote padrão está <strong>desligado</strong> no banco</td>
+<td><code>estoque/recebimentoNfItemLote_ed.aspx.cs:482-490</code>; <code>TBL_RECEBIMENTO.sql:81</code> (<code>DISABLE TRIGGER</code>)</td>
+</tr>
+<tr>
+<td>Há tratamento para <strong>validade vencida</strong>?</td>
+<td><strong>Não.</strong> O sistema só confere se a data é válida, e aceita data passada. <strong>Se a validade ficar em branco, grava 31/12/2099</strong></td>
+<td><code>recebimentoNfItemLote_ed.aspx.cs:479-486</code></td>
+</tr>
+<tr>
+<td>O código do lote é preservado?</td>
+<td><strong>Não:</strong> o sistema grava o código em maiúsculas e o campo remove hífens (<code>TESTE-LOTE-001</code> virou <code>TESTELOTE001</code>, DV-EST-001)</td>
+<td><code>recebimentoNfItemLote_ed.aspx.cs:482</code>; teste de 07/10/2026</td>
+</tr>
+<tr>
+<td>Quantidade do lote</td>
+<td>A máscara de 3 casas faz <code>100</code> virar <code>0,100</code>; a divergência só aparece no fim (DV-EST-002)</td>
+<td>Teste de 07/10/2026</td>
+</tr>
+<tr>
+<td>Dados fiscais</td>
+<td>A nota exige número, série, fornecedor, tipo de documento, de frete, de pagamento e de movimentação e todos os valores; o item exige CFOP, NCM, CSTs, valores e impostos</td>
+<td><code>estoque/recebimentoNF_ed.aspx</code>, <code>recebimentoNfItem_ed.aspx</code></td>
+</tr>
+<tr>
+<td>O mesmo número de item pode repetir na nota?</td>
+<td>Não: "Nº do Item já existe na Nota Fiscal!"</td>
+<td><code>estoque/recebimento_ed.aspx</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="conferencia">Conferência</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta do fluxo da equipe</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quem confirma a conferência?</td>
+<td>A conferência pede <strong>login, senha e justificativa</strong> (uma assinatura) e grava o usuário que autorizou. Mas aceita <strong>qualquer usuário válido</strong>: não confere permissão nem impede que seja quem cadastrou</td>
+<td><code>estoque/conferencia_ed.aspx.cs:270-301</code></td>
+</tr>
+<tr>
+<td>Há tratamento para <strong>divergência de quantidade</strong>?</td>
+<td>Sim, em parte: "Item com divergência na quantidade do lote!" impede finalizar (teste de 07/10/2026). <em>A confirmar:</em> como registrar uma divergência real (entrega a menor)</td>
+<td>Teste de 07/10/2026</td>
+</tr>
+<tr>
+<td>O sistema marca a nota como conferida?</td>
+<td>O gatilho que marcava a nota como conferida está <strong>desligado</strong> no banco. <em>A confirmar no teste:</em> onde a conferência fica registrada</td>
+<td><code>TBL_NF_ITEM_LOTE.sql:73</code> (<code>DISABLE TRIGGER</code>)</td>
+</tr>
+<tr>
+<td>Reprovação na conferência e integração com a Garantia da Qualidade</td>
+<td><strong>Não existe no código</strong> uma reprovação na conferência nem envio de não conformidade à Garantia da Qualidade</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="entrada-e-enderecamento">Entrada e endereçamento</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta do fluxo da equipe</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quando nasce a solicitação de análise do CQ?</td>
+<td><strong>No Endereçamento</strong>, não na entrada da nota: ao endereçar, o sistema gera as análises da nota e as envia ao módulo Controle da Qualidade pela integração</td>
+<td><code>estoque/enderecamento_ed.aspx.cs:129</code>; <code>LaboSys_BLL/bllNotaFiscal.cs:283-327</code></td>
+</tr>
+<tr>
+<td>O sistema obriga escolher um endereço?</td>
+<td>Sim: endereçamento exige almoxarifado, local, rua, coluna, andar, item, lote e quantidade</td>
+<td>Fluxo de movimentação interna</td>
+</tr>
+<tr>
+<td>Impede local incompatível?</td>
+<td>A lista de locais respeita as marcações do item (quarentena, umidade, refrigeração), mas só na tela (ver o fluxo de movimentação interna)</td>
+<td><code>estoque/movimentacao_ed.aspx.cs:858</code></td>
+</tr>
+<tr>
+<td>Há controle de capacidade do endereço?</td>
+<td><strong>Sim</strong> na movimentação (altura, largura, profundidade, peso). <em>A confirmar</em> no endereçamento do recebimento</td>
+<td><code>movimentacao_ed.aspx.cs:581-593</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="estoque-quarentena-respostas-do-codigo">Estoque quarentena: respostas do código</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Etapa do fluxo da equipe</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação de análise gerada automaticamente</td>
+<td><strong>Confirmado</strong>, mas no momento do <strong>Endereçamento</strong> do lote recebido, e enviada ao módulo CQ pela integração. Para devolução, entrada avulsa e produto acabado, a análise nasce na própria entrada (fluxo de devolução e entradas)</td>
+<td><code>enderecamento_ed.aspx.cs:129</code>; <code>bllNotaFiscal.cs:313-327</code></td>
+</tr>
+<tr>
+<td>Emissão do laudo por <strong>revisor</strong> configurado no Principal</td>
+<td><strong>Divergente.</strong> O código usa a função <strong>"48 CQ - Chefe de Subdivisão"</strong> (número fixo no código), e <strong>só para marcar as linhas da lista</strong>. A aprovação do laudo não confere essa função: qualquer usuário com acesso à tela aprova. <em>A confirmar no teste</em>, inclusive se o analista pode aprovar o próprio laudo</td>
+<td><code>4.controle_qualidade/app/HSolutions.CQ.UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:425-464</code>, <code>:942-972</code></td>
+</tr>
+<tr>
+<td>Validade do laudo</td>
+<td><strong>Confirmado:</strong> vem da solicitação e pode ser alterada; precisa ser hoje ou depois ("A Data de Validade tem que ser maior ou igual a atual.")</td>
+<td><code>EmissaoLaudoFinalController.cs:449-457</code></td>
+</tr>
+<tr>
+<td>Pesagem da amostra</td>
+<td>Confirmado: tag da balança, lacre, peso bruto, tara e volumes (ver o fluxo de solicitação)</td>
+<td><code>estoque/pesagem_ed.aspx</code></td>
+</tr>
+<tr>
+<td>Movimentação do material aprovado</td>
+<td>Confirmado: destino só em locais comuns; o reprovado só vai para refugo. <strong>Garantido só pela lista da tela</strong> (fluxo de reprovado, reanálise e revalidação)</td>
+<td><code>estoque/movimentacao_cq_ed.aspx.cs:101</code>, <code>:839-873</code></td>
+</tr>
+<tr>
+<td>Lote liberado pela pessoa designada (RDC 658/2022, art. 8º, XV)</td>
+<td>Não há no código uma etapa de liberação separada por pessoa designada; a liberação é a aprovação do laudo (ver acima)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="novos-pontos-de-atencao-para-a-anvisa">Novos pontos de atenção para a ANVISA</h2>
+<div class="callout">
+<p class="callout-titulo">Do recebimento</p>
+<ul>
+<li><strong>Validade em branco vira 31/12/2099,</strong> e validade vencida é aceita.</li>
+<li><strong>Checklist veicular reprovado pode ser usado</strong> no recebimento.</li>
+<li><strong>Autorização e conferência aceitam qualquer login válido</strong> (DV-EST-009).</li>
+<li><strong>Fornecedor aprovado não é conferido.</strong></li>
+</ul>
+</div>
+<div class="callout">
+<p class="callout-titulo">Da quarentena</p>
+<ul>
+<li><strong>A aprovação do laudo não confere a função de revisor.</strong></li>
+<li><strong>Os destinos da quarentena são protegidos só pela tela,</strong> e a trava do servidor está desligada na movimentação.</li>
+</ul>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> os cadastros <code>TESTE</code> já criados (<code>TESTE ALMOX</code>, locais, <code>TESTE MATERIA PRIMA</code>), o fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>, um segundo usuário de teste (<code>t.admin</code>) e o recebimento 00013, já finalizado e aguardando autorização. Antes de tudo, ligar o <code>TESTE ALMOX</code> ao grupo do <code>t.admin</code>.</p>
+<h3 id="recebimento">Recebimento</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-180</td>
+<td>Checklist de Inspeção Veicular sem placa, sem condutor e sem documento</td>
+<td>Recusas</td>
+</tr>
+<tr>
+<td>CT-EST-181</td>
+<td>Checklist sem responder às perguntas, com parecer "Aprovado"</td>
+<td>Pela norma, deveria exigir as respostas. <strong>Registrar se salva</strong> (reteste do DV-EST-004)</td>
+</tr>
+<tr>
+<td>CT-EST-182</td>
+<td>Checklist com parecer <strong>Reprovado</strong>; depois, no Recebimento, procurar esse checklist na lista</td>
+<td>Pela norma, não deveria aparecer. <strong>Registrar com evidência se aparecer</strong></td>
+</tr>
+<tr>
+<td>CT-EST-183</td>
+<td>Recebimento sem escolher checklist</td>
+<td>Registrar se o sistema exige</td>
+</tr>
+<tr>
+<td>CT-EST-184</td>
+<td>Nota fiscal sem cada campo obrigatório; item repetido na nota</td>
+<td>Recusas</td>
+</tr>
+<tr>
+<td>CT-EST-185</td>
+<td>Lote com <strong>validade em branco</strong></td>
+<td>Pela norma, deveria exigir. <strong>Registrar se grava 31/12/2099</strong></td>
+</tr>
+<tr>
+<td>CT-EST-186</td>
+<td>Lote com <strong>validade vencida</strong> (ontem)</td>
+<td>Pela norma, deveria recusar ou alertar. <strong>Registrar se aceita</strong></td>
+</tr>
+<tr>
+<td>CT-EST-187</td>
+<td>Lote <code>TESTE-LOTE-002</code> com hífen e quantidade 100</td>
+<td>Registrar o código e a quantidade gravados (DV-EST-001 e 002)</td>
+</tr>
+<tr>
+<td>CT-EST-188</td>
+<td><strong>Autorizar o recebimento 00013</strong> com o ADMIN logado, informando login e senha do <code>t.admin</code> no quadro</td>
+<td>Autorizado; registra o <code>t.admin</code> (testa o DV-EST-009, já que o <code>t.admin</code> não precisa de permissão no Estoque)</td>
+</tr>
+<tr>
+<td>CT-EST-189</td>
+<td>Autorizar com o mesmo usuário que confirmou</td>
+<td>Recusa: "Usuário não pode autorizar!"</td>
+</tr>
+<tr>
+<td>CT-EST-190</td>
+<td>Autorizar com um usuário sem nenhuma permissão no Estoque</td>
+<td>Pela norma, deveria recusar. <strong>Registrar se aceita</strong></td>
+</tr>
+<tr>
+<td>CT-EST-191</td>
+<td>Conferência com quantidade diferente da nota</td>
+<td>Registrar como o sistema trata a divergência</td>
+</tr>
+<tr>
+<td>CT-EST-192</td>
+<td>Conferência assinada por um usuário sem permissão de conferir</td>
+<td>Pela norma, deveria recusar. <strong>Registrar se aceita</strong></td>
+</tr>
+<tr>
+<td>CT-EST-193</td>
+<td>Concluir a conferência e ver onde ela fica registrada</td>
+<td>Registrar a tela e o campo que mostram a conferência</td>
+</tr>
+<tr>
+<td>CT-EST-194</td>
+<td>Endereçar o lote no <code>TESTE LOCAL QUARENTENA</code></td>
+<td>Endereçado; a solicitação de análise aparece no módulo CQ</td>
+</tr>
+<tr>
+<td>CT-EST-195</td>
+<td>Endereçar em local comum um item com controle de quarentena</td>
+<td>Local comum não aparece na lista</td>
+</tr>
+<tr>
+<td>CT-EST-196</td>
+<td>Recebimento de fornecedor marcado como "não qualificado" na avaliação</td>
+<td>Registrar se o sistema alerta (fluxo de compras, CT-EST-166)</td>
+</tr>
+<tr>
+<td>CT-EST-197</td>
+<td>Histórico do lote depois do endereçamento</td>
+<td>Mostra recebimento, autorização, conferência e endereçamento, com usuários</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="quarentena">Quarentena</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-200</td>
+<td>No CQ, conferir se a solicitação de análise do lote existe e com qual tipo (físico-químico, microbiológico)</td>
+<td>Existe, conforme os controles do item</td>
+</tr>
+<tr>
+<td>CT-EST-201</td>
+<td>Programar a amostragem e a análise; pesar a amostra na Central de Pesagem</td>
+<td>Amostra pesada; o saldo do lote diminui pela quantidade retirada</td>
+</tr>
+<tr>
+<td>CT-EST-202</td>
+<td>Registrar o resultado com regra de intervalo, com valor fora do intervalo</td>
+<td>Registrar como o sistema classifica</td>
+</tr>
+<tr>
+<td>CT-EST-203</td>
+<td>Aprovar o laudo com validade anterior a hoje</td>
+<td>Recusa: "A Data de Validade tem que ser maior ou igual a atual."</td>
+</tr>
+<tr>
+<td>CT-EST-204</td>
+<td><strong>Aprovar o laudo com um usuário sem a função "48 CQ - Chefe de Subdivisão"</strong></td>
+<td>Pela regra do fluxo da equipe, deveria recusar. <strong>Registrar se aprova</strong></td>
+</tr>
+<tr>
+<td>CT-EST-205</td>
+<td>O mesmo usuário que fez a análise aprova o laudo</td>
+<td>Registrar se o sistema permite (separação de funções)</td>
+</tr>
+<tr>
+<td>CT-EST-206</td>
+<td>Emitir a etiqueta de aprovação</td>
+<td>Etiqueta emitida com lote, laudo e validade</td>
+</tr>
+<tr>
+<td>CT-EST-207</td>
+<td>Movimentação de Quarentena do lote aprovado</td>
+<td>Só locais comuns; número do laudo e resultado APROVADO aparecem; o lote fica disponível</td>
+</tr>
+<tr>
+<td>CT-EST-208</td>
+<td>Antes do laudo, tentar separar o lote para a produção</td>
+<td>Não aparece (em quarentena)</td>
+</tr>
+<tr>
+<td>CT-EST-209</td>
+<td>Histórico do lote no fim</td>
+<td>Mostra a análise, o laudo, o aprovador e a movimentação</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#recebimento-de-materiais-respostas-do-codigo">Recebimento de materiais: respostas do código</a></li><li class="sub"><a href="#inspecao-veicular">Inspeção veicular</a></li><li class="sub"><a href="#aprovacao-e-autorizacao-do-recebimento">Aprovação e autorização do recebimento</a></li><li class="sub"><a href="#nota-fiscal-itens-e-lotes">Nota fiscal, itens e lotes</a></li><li class="sub"><a href="#conferencia">Conferência</a></li><li class="sub"><a href="#entrada-e-enderecamento">Entrada e endereçamento</a></li><li><a href="#estoque-quarentena-respostas-do-codigo">Estoque quarentena: respostas do código</a></li><li><a href="#novos-pontos-de-atencao-para-a-anvisa">Novos pontos de atenção para a ANVISA</a></li><li><a href="#casos-de-teste">Casos de teste</a></li><li class="sub"><a href="#recebimento">Recebimento</a></li><li class="sub"><a href="#quarentena">Quarentena</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

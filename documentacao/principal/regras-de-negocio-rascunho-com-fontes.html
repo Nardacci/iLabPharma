@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio (rascunho com fontes) · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html">Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html">Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html">Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html" aria-current=page>Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio (rascunho com fontes)</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Escopo desta versão:</strong> acesso ao sistema, senha, usuários e contas, perfis e permissões, exclusão e trilha de auditoria.
+Os cadastros administrativos (equipamentos, ambientes, locais, pessoa jurídica, centros de custo etc.) entram na próxima versão.</p>
+<p><strong>Situação de todas as regras abaixo: Extraída</strong> (lida do código, aguardando validação), salvo indicação. As regras testadas nas telas em 05/10/2026 (versão 3.5.1) têm a situação nova na <a href="#6-resultado-do-teste-nas-telas-05102026">seção 6</a>.
+Caminhos relativos a <code>1.principal/app/</code>.</p>
+<hr />
+<h3 id="1-acesso-ao-sistema-login">1. Acesso ao sistema (login)</h3>
+<p>O login é feito por um serviço central (SSO) do módulo Principal, usado por todos os módulos.
+As verificações acontecem nesta ordem; a primeira que falhar interrompe o acesso.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Mensagem ao usuário</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-001</td>
+<td>Login e senha são obrigatórios.</td>
+<td>"Login e/ou senha não foram informados."</td>
+<td><code>LaboSys_BLL/bllUsuario.cs:90</code></td>
+</tr>
+<tr>
+<td>RN-PRI-002</td>
+<td>Usuário inexistente ou excluído (na lixeira) não entra.</td>
+<td>"O usuário informado é inválido!"</td>
+<td><code>bllUsuario.cs:101</code>, <code>LaboSys_DAL/dalUsuario.cs</code> (<code>validarUsuario</code>, filtro <code>LIXEIRA = 0</code>)</td>
+</tr>
+<tr>
+<td>RN-PRI-003</td>
+<td>Usuário com a <strong>conta</strong> inativa não entra.</td>
+<td>"A conta do usuário informado está inativa!"</td>
+<td><code>bllUsuario.cs:110</code></td>
+</tr>
+<tr>
+<td>RN-PRI-004</td>
+<td>Usuário <strong>inativo</strong> não entra.</td>
+<td>"O usuário informado está inativo!"</td>
+<td><code>bllUsuario.cs:118</code></td>
+</tr>
+<tr>
+<td>RN-PRI-005</td>
+<td>O usuário só entra dentro do seu período de validade (data de início e de fim). Sem datas, não há limite.</td>
+<td>"A data de validade do usuário informado não permite o acesso ao sistema!"</td>
+<td><code>bllUsuario.cs:127</code>, <code>:187-189</code></td>
+</tr>
+<tr>
+<td>RN-PRI-006</td>
+<td>Após <strong>4 senhas erradas seguidas</strong>, o usuário é bloqueado. O bloqueio é verificado <strong>antes</strong> da senha: bloqueado, nem a senha certa entra.</td>
+<td>"O usuário informado foi bloqueado devido o limite de tentativas de acesso ao sistema!"</td>
+<td><code>bllUsuario.cs:136</code>, <code>:181</code></td>
+</tr>
+<tr>
+<td>RN-PRI-007</td>
+<td>Cada senha errada soma 1 ao contador e informa quantas tentativas restam.</td>
+<td>"A senha está incorreta, você tem mais N tentativa(s)…"</td>
+<td><code>bllUsuario.cs:145-150</code>, <code>dalUsuario.cs:1307</code></td>
+</tr>
+<tr>
+<td>RN-PRI-008</td>
+<td>Login com sucesso zera o contador de tentativas.</td>
+<td>—</td>
+<td><code>bllUsuario.cs:156</code></td>
+</tr>
+<tr>
+<td>RN-PRI-009</td>
+<td>O desbloqueio é feito pelo administrador, ao gerar uma nova senha para o usuário (zera o contador).</td>
+<td>—</td>
+<td><code>dalUsuario.cs:1126-1136</code></td>
+</tr>
+<tr>
+<td>RN-PRI-010</td>
+<td>Toda tentativa de acesso é registrada (usuário, login digitado, data e resultado: inexistente, inativo, inválido, bloqueado, senha inválida, permitido).</td>
+<td>—</td>
+<td><code>bllUsuario.cs:756</code>, <code>dalUsuario.cs:1285</code>, tabela <code>SIS_ACESSO</code></td>
+</tr>
+<tr>
+<td>RN-PRI-011</td>
+<td>Usuário sem nenhuma permissão cadastrada não entra.</td>
+<td>"Seu perfil não possui permissão!"</td>
+<td><code>LaboSys_UI/Default.aspx.cs:48-54</code></td>
+</tr>
+<tr>
+<td>RN-PRI-012</td>
+<td>Sessão expirada leva à página de sessão expirada.</td>
+<td>—</td>
+<td><code>LaboSys_Util/BaseController.cs:15-17</code></td>
+</tr>
+<tr>
+<td>RN-PRI-013</td>
+<td>Módulos podem ser ligados e desligados na tela inicial (campo <code>HABILITADO</code> da tabela <code>SIS_MODULO</code>).</td>
+<td>—</td>
+<td><code>Hsolutions.Principal.DB/Tables/SIS_MODULO.sql</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pontos para validar:</strong>
+- RN-PRI-003: tentativa com conta inativa <strong>não</strong> é registrada em <code>SIS_ACESSO</code>, ao contrário das demais. Isso é intencional?
+- RN-PRI-007: pelo código, depois do 1º erro a mensagem diz "mais 4 tentativas", mas o bloqueio vem no 4º erro (restariam 3). <strong>A confirmar no teste.</strong>
+- Qual a diferença, para o negócio, entre "usuário inativo" e "conta inativa"?</p>
+<h3 id="2-senha">2. Senha</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-020</td>
+<td>A senha tem de <strong>8 a 14 caracteres</strong>, com pelo menos 1 letra, 1 número e 1 caractere especial (<code>! @ # $ % &amp; * ?</code>).</td>
+<td><code>LaboSys_UI/trocaSenha.aspx:115-117</code></td>
+</tr>
+<tr>
+<td>RN-PRI-021</td>
+<td>Para trocar a senha, é preciso informar a senha atual correta.</td>
+<td><code>trocaSenha.aspx.cs:91</code></td>
+</tr>
+<tr>
+<td>RN-PRI-022</td>
+<td>A nova senha e a confirmação devem ser iguais.</td>
+<td><code>trocaSenha.aspx.cs:99</code></td>
+</tr>
+<tr>
+<td>RN-PRI-023</td>
+<td>A nova senha não pode ser igual à atual.</td>
+<td><code>trocaSenha.aspx.cs:107</code></td>
+</tr>
+<tr>
+<td>RN-PRI-024</td>
+<td>A nova senha não pode repetir as 2 anteriores (a mensagem fala em "3 últimas", contando a atual).</td>
+<td><code>trocaSenha.aspx.cs:120-131</code></td>
+</tr>
+<tr>
+<td>RN-PRI-025</td>
+<td>A senha vence após um período em dias definido por usuário (padrão: <strong>60 dias</strong>).</td>
+<td><code>LaboSys_UI/administracao/usuario_conta_ed.aspx:141</code>, <code>usuario_conta_ed.aspx.cs:392</code></td>
+</tr>
+<tr>
+<td>RN-PRI-026</td>
+<td>Com a senha vencida ou marcada para troca, o usuário é levado à tela de troca de senha ao entrar. Se desistir da troca, sai do sistema.</td>
+<td><code>Default.aspx.cs:278-279</code>, <code>trocaSenha.aspx.cs:51</code></td>
+</tr>
+<tr>
+<td>RN-PRI-027</td>
+<td>Ao criar a conta ou quando o administrador gera nova senha, o sistema cria uma <strong>senha provisória</strong> de 8 caracteres e a mostra na tela do administrador.</td>
+<td><code>usuario_conta_ed.aspx.cs:390</code>, <code>:465</code>, <code>:526</code></td>
+</tr>
+<tr>
+<td>RN-PRI-028</td>
+<td>A senha provisória obriga a troca no próximo acesso e vale por <strong>5 dias</strong>.</td>
+<td><code>dalUsuario.cs:1130-1134</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pontos para validar:</strong>
+- RN-PRI-022 e RN-PRI-023: as comparações <strong>não diferenciam maiúsculas de minúsculas</strong>. "Senha@123" e "SENHA@123" contam como iguais. É o esperado?
+- RN-PRI-026: o código só verifica a troca obrigatória na entrada. <strong>A confirmar no teste:</strong> se o usuário digitar o endereço de outra tela, ele consegue usar o sistema sem trocar a senha?
+- A senha provisória é entregue ao usuário como? (Hoje ela aparece só na tela do administrador.)</p>
+<h3 id="3-usuarios-e-contas">3. Usuários e contas</h3>
+<p>O cadastro tem duas partes: o <strong>usuário</strong> (dados pessoais e funcionais) e a <strong>conta</strong> (login, validade, senha e perfis).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-030</td>
+<td>O login é único: não pode haver dois usuários com o mesmo login.</td>
+<td><code>usuario_conta_ed.aspx.cs:395-398</code>, <code>bllUsuario.cs:209</code></td>
+</tr>
+<tr>
+<td>RN-PRI-031</td>
+<td>Toda conta precisa de pelo menos um perfil.</td>
+<td><code>usuario_conta_ed.aspx.cs:400-401</code></td>
+</tr>
+<tr>
+<td>RN-PRI-032</td>
+<td>Um usuário pode ter vários perfis.</td>
+<td>Tabela <code>SIS_USUARIO_PERFIL</code></td>
+</tr>
+<tr>
+<td>RN-PRI-033</td>
+<td>O usuário pode ter ocupações (CBO) e atividades/funções profissionais, uma delas marcada como cargo principal.</td>
+<td>Tabelas <code>SIS_OCUPACAO_USUARIO</code>, <code>SIS_ATIVIDADE_USUARIO</code></td>
+</tr>
+<tr>
+<td>RN-PRI-034</td>
+<td>O usuário pode pertencer a um grupo de usuários e ser responsável por locais.</td>
+<td>Tabelas <code>TBL_GRUPO_USUARIO</code>, <code>SIS_LOCAL_RESPONSAVEL</code></td>
+</tr>
+<tr>
+<td>RN-PRI-035</td>
+<td>A inativação do usuário guarda uma justificativa.</td>
+<td>Campo <code>SIS_USUARIO.JUSTIFICATIVA_INATIVO</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-perfis-e-permissoes">4. Perfis e permissões</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-040</td>
+<td>As permissões são dadas ao <strong>perfil</strong>, nunca direto ao usuário. O usuário recebe as permissões de todos os seus perfis.</td>
+<td>Tabelas <code>SIS_PERFIL_FUNCAO</code>, <code>SIS_USUARIO_PERFIL</code></td>
+</tr>
+<tr>
+<td>RN-PRI-041</td>
+<td>As funções (telas e itens de menu) formam uma árvore por módulo.</td>
+<td>Tabela <code>SIS_FUNCAO</code> (<code>ID_FUNCAO_PAI</code>, <code>ID_MODULO</code>)</td>
+</tr>
+<tr>
+<td>RN-PRI-042</td>
+<td>Em cada tela, a permissão se divide em ações: <strong>Consultar, Incluir, Alterar, Excluir, Consultar histórico (log) e Imprimir/Exportar para Excel.</strong></td>
+<td><code>LaboSys_Util/ClassePaiEd.cs:118-149</code></td>
+</tr>
+<tr>
+<td>RN-PRI-043</td>
+<td>Quem pode consultar mas não alterar vê a tela de edição <strong>travada</strong> (somente leitura).</td>
+<td><code>ClassePaiEd.cs:151-154</code></td>
+</tr>
+<tr>
+<td>RN-PRI-044</td>
+<td>Os botões Imprimir e Exportar para Excel só aparecem com a permissão correspondente.</td>
+<td><code>ClassePaiEd.cs:141-149</code></td>
+</tr>
+<tr>
+<td>RN-PRI-045</td>
+<td>O perfil também pode ser ligado a <strong>locais</strong> (setores).</td>
+<td>Tabela <code>SIS_PERFIL_LOCAL</code></td>
+</tr>
+<tr>
+<td>RN-PRI-046</td>
+<td>Um perfil pode ter um <strong>perfil pai</strong>.</td>
+<td>Tabela <code>SIS_PERFIL</code> (<code>ID_PERFIL_PAI</code>)</td>
+</tr>
+<tr>
+<td>RN-PRI-047</td>
+<td>Rótulos e visibilidade de campos podem ser ajustados por cliente, sem mudar o código.</td>
+<td>Tabela <code>TBL_OBJETOS_TELA</code>, <code>ClassePaiEd.cs:157</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pontos para validar:</strong>
+- RN-PRI-045: o que o vínculo do perfil com locais controla na prática? Restringe os dados que o usuário vê?
+- RN-PRI-046: o perfil filho <strong>herda</strong> as permissões do pai? O código desta versão não mostra herança.</p>
+<h3 id="5-exclusao-e-trilha-de-auditoria">5. Exclusão e trilha de auditoria</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-050</td>
+<td>A exclusão é <strong>lógica</strong>: o registro vai para a lixeira (<code>LIXEIRA = 1</code>) e não é apagado do banco.</td>
+<td><code>dalUsuario.cs:1213-1235</code></td>
+</tr>
+<tr>
+<td>RN-PRI-051</td>
+<td>Antes de excluir, o sistema verifica se há registros que dependem deste. Havendo, a exclusão é recusada.</td>
+<td><code>dalUsuario.cs</code> (<code>PossoExcluir</code>), procedimento <code>pPossoExcluir</code></td>
+</tr>
+<tr>
+<td>RN-PRI-052</td>
+<td>Mensagem ao recusar: "O Usuário contém histórico no sistema e não poderá ser excluído (REFERENCE)!"</td>
+<td><code>dalUsuario.cs</code> (<code>excluirUsuario</code>)</td>
+</tr>
+<tr>
+<td>RN-PRI-053</td>
+<td>A exclusão do usuário exige justificativa.</td>
+<td><code>usuario_ed.aspx:61-64</code></td>
+</tr>
+<tr>
+<td>RN-PRI-054</td>
+<td>Todo registro guarda quem o criou e quando, e quem o alterou por último e quando.</td>
+<td>Campos <code>ID_USUARIO_CRIACAO</code>, <code>DATA_CRIACAO</code>, <code>ID_USUARIO_ALTERACAO</code>, <code>DATA_ALTERACAO</code></td>
+</tr>
+<tr>
+<td>RN-PRI-055</td>
+<td>As alterações são registradas <strong>campo a campo</strong> (valor antigo, valor novo, quem, quando e justificativa).</td>
+<td>Tabelas <code>TBL_LOG_ALTERACAO</code>, <code>TBL_LOG_ALTERACAO_2</code>, <code>TBL_LOG_ALTERACAO_ITEM_2</code>; classes <code>dalLogAlteracao*.cs</code></td>
+</tr>
+<tr>
+<td>RN-PRI-056</td>
+<td>Na conta do usuário, o histórico registra: inclusão da conta, ativação, login, validade de início e fim, validade da senha, perfil incluído e perfil excluído.</td>
+<td><code>bllUsuario.cs:1210</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pontos para validar:</strong>
+- RN-PRI-053: a justificativa é obrigatória na tela, mas o banco aceita vazio (<code>dalUsuario.cs</code>: vazio vira nulo). Vale para todos os cadastros? <em>(Decidido em 06/10/2026: </em><em>sim, para todos os cadastros</em><em>, na exclusão e na alteração. Ver RN-PRI-070.)</em>
+- RN-PRI-055: o histórico existe para os cadastros do Principal (há uma classe de log para cada um). <strong>A confirmar no teste:</strong> a consulta ao histórico aparece em todas as telas para quem tem a permissão "Consultar log"? <em>(Teste de 05/10/2026: aparece em Profissional, Conta, Ambiente, Equipamento e Pessoa jurídica para o administrador; falta testar com usuário sem a permissão, CT-PRI-082.)</em></p>
+<h3 id="6-resultado-do-teste-nas-telas-05-10-2026">6. Resultado do teste nas telas (05/10/2026)</h3>
+<p>Teste feito no ambiente de teste, versão 3.5.1, com o login administrador. Fonte: execucao/2026-10-05/resultado.md. Só aparecem as regras que o teste tocou; as demais continuam <strong>Extraída</strong>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Situação</th>
+<th>O que foi visto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-004</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>Usuário inativo tenta entrar: "O usuário informado está inativo!" (CT-PRI-045).</td>
+</tr>
+<tr>
+<td>RN-PRI-005</td>
+<td><strong>Diferente do código</strong></td>
+<td>A conta não aceita validade final anterior à data atual nem à data inicial; por isso não dá para cadastrar uma conta já vencida. A recusa ao entrar fora da validade não foi testada.</td>
+</tr>
+<tr>
+<td>RN-PRI-025</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>O prazo padrão da senha é 60 dias (a data de expiração é calculada, não digitada).</td>
+</tr>
+<tr>
+<td>RN-PRI-026</td>
+<td>Validada em parte</td>
+<td>Entrando com senha provisória o sistema leva à tela de troca de senha. A tentativa de burlar com outro endereço (CT-PRI-037) não foi testada.</td>
+</tr>
+<tr>
+<td>RN-PRI-028</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>Depois do reset, a data de expiração ficou 5 dias adiante.</td>
+</tr>
+<tr>
+<td>RN-PRI-030</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>Login repetido recusado: "O login informando já foi cadastrado: [nome]!" A comparação ignora maiúsculas e minúsculas.</td>
+</tr>
+<tr>
+<td>RN-PRI-031</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>"O perfil do usuário é obrigatório!"</td>
+</tr>
+<tr>
+<td>RN-PRI-032</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>Foi possível dar dois perfis à mesma conta e retirar um deles.</td>
+</tr>
+<tr>
+<td>RN-PRI-035</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>A inativação exige justificativa, que fica no histórico ("ATIVO SIM → NÃO").</td>
+</tr>
+<tr>
+<td>RN-PRI-042</td>
+<td><strong>Diferente do código</strong></td>
+<td>A árvore de permissões tem Alterar, Consultar log, Excluir, Imprimir/Excel e Incluir. <strong>Não existe a ação "Consultar"</strong>: ter a tela marcada já dá a consulta. Perfil não tem Imprimir/Excel e Pessoa jurídica não tem Excluir.</td>
+</tr>
+<tr>
+<td>RN-PRI-050</td>
+<td><strong>Validada</strong> (teste de 05/10/2026 + confirmação do responsável em 06/10/2026)</td>
+<td>Os registros excluídos saem das listas e continuam no banco, na lixeira.</td>
+</tr>
+<tr>
+<td>RN-PRI-051</td>
+<td><strong>Diferente do esperado</strong></td>
+<td>Um profissional com conta vinculada foi excluído sem aviso (DV-PRI-006). Ambiente ligado a Ponto de água foi recusado. Equipamento recém-criado também foi recusado, sem motivo claro (DV-PRI-012).</td>
+</tr>
+<tr>
+<td>RN-PRI-052</td>
+<td><strong>Diferente do código</strong></td>
+<td>Nos cadastros, a recusa diz "Exclusão inválida, existem referências com outras tabelas." (sem o "(REFERENCE)" e sem dizer a dependência; DV-PRI-011).</td>
+</tr>
+<tr>
+<td>RN-PRI-053</td>
+<td><strong>Diferente do código</strong></td>
+<td>A exclusão de usuário exige justificativa. A exclusão de <strong>Ambiente e Equipamento não pede</strong> (DV-PRI-009). Resposta ao ponto a validar: a regra <strong>não</strong> vale para todos os cadastros.</td>
+</tr>
+<tr>
+<td>RN-PRI-054</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>A inclusão aparece no histórico com usuário, data e hora (usuário, conta, ambiente, equipamento, pessoa jurídica).</td>
+</tr>
+<tr>
+<td>RN-PRI-055</td>
+<td>Validada em parte</td>
+<td>Histórico campo a campo com valor antigo, valor novo, usuário, data, hora e justificativa em Profissional, Conta, Ambiente e Equipamento. Falhas: o valor novo do Cargo sai em branco (DV-PRI-004) e a Pessoa jurídica não pede nem guarda justificativa (DV-PRI-013). O histórico de um registro excluído não pode ser consultado (DV-PRI-014).</td>
+</tr>
+<tr>
+<td>RN-PRI-056</td>
+<td>Validada no teste (05/10/2026)</td>
+<td>Conta: "INCLUSÃO DA CONTA", "NOVO PERFIL" e "PERFIL EXCLUÍDO" registrados, com a linha extra "VALIDADE INÍCIO" sem mudança (DV-PRI-005).</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="regras-novas-observadas-no-teste">Regras novas observadas no teste</h4>
+<p>Situação de todas: <strong>Observada no teste (05/10/2026)</strong>, a validar com a equipe.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra observada</th>
+<th>Cadastro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-060</td>
+<td>Antes de gravar, o sistema pede confirmação ("Confirma a inclusão / alteração / exclusão do item?"). Os campos obrigatórios só são cobrados <strong>depois</strong> do SIM.</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td>RN-PRI-061</td>
+<td>A alteração exige justificativa e a recusa aparece depois do SIM ("A Justificativa é obrigatória!"). Vale para Profissional, Conta, Ambiente e Equipamento; <strong>não</strong> vale para Pessoa jurídica.</td>
+<td>Cadastros</td>
+</tr>
+<tr>
+<td>RN-PRI-062</td>
+<td>O login é gravado em maiúsculas e o nome do perfil não aceita <code>_</code> (nem <code>'</code>, <code>-</code>, <code>/</code> quando digitados).</td>
+<td>Conta, Perfil</td>
+</tr>
+<tr>
+<td>RN-PRI-063</td>
+<td>Campos obrigatórios do profissional: nome, data de nascimento, sexo, nome da mãe, UF e naturalidade, CPF, CEP, logradouro, número, bairro e grupo.</td>
+<td>Profissional</td>
+</tr>
+<tr>
+<td>RN-PRI-064</td>
+<td>Pessoa jurídica: CNPJ validado (dígitos) e único ("CNPJ inválido!", "CNPJ já cadastrado!"); obrigatórios: tipo de cadastro, razão social, CNPJ, CEP, logradouro, número e bairro. Tipos: Cliente, Fornecedor, Transportadora, Fabricante e Empresa.</td>
+<td>Pessoa jurídica</td>
+</tr>
+<tr>
+<td>RN-PRI-065</td>
+<td>Ambiente: só a Descrição é obrigatória; aceita descrições repetidas; liga-se à estrutura funcional; é escolhido no cadastro de Ponto de água. Ambiente e Pessoa jurídica inativos deixam de aparecer nas listas de escolha.</td>
+<td>Ambiente, Pessoa jurídica</td>
+</tr>
+<tr>
+<td>RN-PRI-066</td>
+<td>Equipamento: obrigatórios Tipo, Descrição, Tag, Capacidade de produção e Valor; na prática a <strong>Categoria também é obrigatória</strong> (sem ela o sistema dá erro, DV-PRI-010).</td>
+<td>Equipamento</td>
+</tr>
+<tr>
+<td>RN-PRI-067</td>
+<td>A pesquisa por nome ignora maiúsculas e minúsculas, mas <strong>não ignora acentos</strong>.</td>
+<td>Ambiente, Equipamento, Pessoa jurídica</td>
+</tr>
+<tr>
+<td>RN-PRI-068</td>
+<td>As listas têm Imprimir (relatório em nova janela) e Exportar para Excel, que respeitam o filtro.</td>
+<td>Ambiente, Equipamento, Pessoa jurídica</td>
+</tr>
+<tr>
+<td>RN-PRI-069</td>
+<td>Para um usuário <strong>inativo</strong> (que também tinha conta), o campo de justificativa da exclusão ficou desabilitado e a exclusão não prosseguiu. Falta saber se a causa é a inativação ou a conta vinculada.</td>
+<td>Profissional</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="decisoes-da-equipe-06-10-2026">Decisões da equipe (06/10/2026)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Situação</th>
+<th>Comportamento atual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-070</td>
+<td><strong>A justificativa é obrigatória em toda exclusão e em toda alteração (inclusive inativação) de todos os cadastros.</strong> Fica registrada no histórico.</td>
+<td><strong>Validada</strong> (decisão do responsável)</td>
+<td>Não atende por completo: Ambiente e Equipamento excluem sem justificativa (DV-PRI-009); Pessoa jurídica altera e inativa sem justificativa (DV-PRI-013).</td>
+</tr>
+<tr>
+<td>RN-PRI-073</td>
+<td>A sessão expira após <strong>10 minutos</strong> de inatividade.</td>
+<td><strong>Validada</strong> (decisão do responsável)</td>
+<td>Hoje expira entre 10 e 20 minutos.</td>
+</tr>
+<tr>
+<td>RN-PRI-075</td>
+<td>"Sair" encerra a sessão em <strong>todos os módulos</strong>.</td>
+<td><strong>Validada</strong> (decisão do responsável)</td>
+<td>Hoje não atende (DV-PRI-020).</td>
+</tr>
+<tr>
+<td>RN-PRI-043</td>
+<td>Quem só consulta vê a tela em modo <strong>somente leitura</strong>.</td>
+<td><strong>Validada</strong> (decisão do responsável)</td>
+<td>Hoje não atende (DV-PRI-023).</td>
+</tr>
+<tr>
+<td>RN-PRI-071</td>
+<td>Um cadastro que tem itens vinculados <strong>na própria tela</strong> (por exemplo, itens incluídos dentro do equipamento) só pode ser excluído depois que esses itens forem excluídos. Até lá, a exclusão é recusada.</td>
+<td><strong>Validada</strong> (comportamento atual, informado pelo responsável)</td>
+<td>A recusa usa mensagem genérica, sem dizer quais itens impedem (DV-PRI-011). <strong>Confirmado no reteste de 06/10/2026:</strong> o equipamento tinha "Manutenção preventiva" marcada; ao removê-la com justificativa, a exclusão funcionou (DV-PRI-012 explicado).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resultado-do-teste-nas-telas-rodada-2-05-e-06-10-2026">7. Resultado do teste nas telas, rodada 2 (05 e 06/10/2026)</h3>
+<p>Teste no ambiente de teste, versão 3.5.1, entrando como os usuários <code>t.*</code>. Fonte: execucao/2026-10-05-rodada-2/resultado.md. Só aparecem as regras que a rodada tocou.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Situação</th>
+<th>O que foi visto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-001</td>
+<td><strong>Diferente do código</strong></td>
+<td>Com login ou senha vazios, o navegador mostra "Preencha o Usuário" e "Preencha a Senha"; a mensagem do servidor não aparece (CT-PRI-002).</td>
+</tr>
+<tr>
+<td>RN-PRI-002</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>"O usuário informado é inválido!" (e é diferente da mensagem de senha errada: DV-PRI-015).</td>
+</tr>
+<tr>
+<td>RN-PRI-003</td>
+<td>Validada em parte</td>
+<td>"A conta do usuário informado está inativa!". Se a tentativa fica registrada, só o DBA confirma.</td>
+</tr>
+<tr>
+<td>RN-PRI-005</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>Validade futura e validade vencida recusam com "A data de validade do usuário informado não permite o acesso ao sistema!" (CT-PRI-006 e 007).</td>
+</tr>
+<tr>
+<td>RN-PRI-006</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>O usuário é bloqueado no 4º erro; depois disso nem a senha certa entra.</td>
+</tr>
+<tr>
+<td>RN-PRI-007</td>
+<td><strong>Diferente do código</strong> (confirma o ponto a validar)</td>
+<td>As mensagens mostram "mais 4, 3, 2 e 1 tentativa(s)", mas o bloqueio vem no 4º erro (DV-PRI-016).</td>
+</tr>
+<tr>
+<td>RN-PRI-008</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>Depois de um acerto o contador zera: 2 erros, acerto e 3 erros não bloquearam.</td>
+</tr>
+<tr>
+<td>RN-PRI-009</td>
+<td>Validada em parte</td>
+<td>O reset do administrador desbloqueia e leva à troca de senha, mas <strong>não fica no histórico da conta</strong> (DV-PRI-017).</td>
+</tr>
+<tr>
+<td>RN-PRI-010</td>
+<td>A confirmar com o DBA</td>
+<td>Nenhuma tela mostra os registros de acesso.</td>
+</tr>
+<tr>
+<td>RN-PRI-011</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>Perfil sem funções: "Seu perfil não possuí permissão!" (com erro de acentuação), e a recusa vem <strong>antes</strong> da troca obrigatória de senha.</td>
+</tr>
+<tr>
+<td>RN-PRI-012</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>Sem login, qualquer tela leva a "Sessão expirada", sem mostrar dados.</td>
+</tr>
+<tr>
+<td>RN-PRI-020</td>
+<td>Validada em parte</td>
+<td>A estrutura da senha é exigida ("A estrutura da senha não é permitida!"). <strong>O limite de 14 caracteres não se confirmou</strong>: uma senha de 40 foi aceita.</td>
+</tr>
+<tr>
+<td>RN-PRI-021</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>"Senha atual incorreta!"</td>
+</tr>
+<tr>
+<td>RN-PRI-022</td>
+<td><strong>Diferente do código</strong></td>
+<td>A confirmação com caixa diferente da nova senha é aceita (DV-PRI-021).</td>
+</tr>
+<tr>
+<td>RN-PRI-023</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>"Nova senha e senha anterior não devem ser iguais!", comparando sem diferenciar caixa (DV-PRI-021).</td>
+</tr>
+<tr>
+<td>RN-PRI-024</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>Depois de A, B e C, voltar para A ou B é recusado: "Senha não pode ser igual as 3 últimas senhas utilizadas!"</td>
+</tr>
+<tr>
+<td>RN-PRI-026</td>
+<td>Validada em parte</td>
+<td>A senha provisória leva à troca, mas <strong>a troca pode ser contornada</strong> digitando outro endereço (DV-PRI-022). A senha vencida de verdade não foi vista (CT-PRI-036).</td>
+</tr>
+<tr>
+<td>RN-PRI-040</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>Um segundo perfil soma as permissões (o usuário passou a poder alterar usuários).</td>
+</tr>
+<tr>
+<td>RN-PRI-043</td>
+<td><strong>Diferente do código</strong></td>
+<td>A tela de consulta de usuário não fica travada: 38 de 51 campos editáveis e botões "Adicionar Ocupação/Função" (DV-PRI-023).</td>
+</tr>
+<tr>
+<td>RN-PRI-044</td>
+<td>Validada no teste (06/10/2026)</td>
+<td>Sem as permissões, não aparecem Imprimir, Exportar para Excel nem Excluir nas listas de Ambiente, Equipamento e Pessoa jurídica.</td>
+</tr>
+<tr>
+<td>RN-PRI-055</td>
+<td>Validada em parte</td>
+<td>O histórico do perfil registra "PERMISSÃO EXCLUÍDA" (tela e ação), usuário, data e hora, <strong>sem justificativa</strong> (DV-PRI-024).</td>
+</tr>
+<tr>
+<td>RN-PRI-070</td>
+<td>Validada (decisão)</td>
+<td>Mais um cadastro fora da regra: <strong>a alteração de permissões de perfil não pede justificativa</strong> (DV-PRI-024).</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="regras-novas-observadas-na-rodada-2">Regras novas observadas na rodada 2</h4>
+<p>Situação de todas: <strong>Observada no teste (05 e 06/10/2026)</strong>, a validar com a equipe.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra observada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-072</td>
+<td>A sessão expira entre <strong>10 e 20 minutos</strong> de inatividade e leva à tela "Sessão Expirada! Faça login novamente." O Web.config não define o tempo.</td>
+</tr>
+<tr>
+<td>RN-PRI-074</td>
+<td>Primeiro acesso com senha provisória: tela de troca com confirmação ("Confirma a troca de senha?") e, depois de "Senha alterada com sucesso!", volta ao login.</td>
+</tr>
+<tr>
+<td>RN-PRI-075</td>
+<td>Conta inativa não tem o botão "Reset de senha"; é preciso reativar, gerar a senha e inativar de novo.</td>
+</tr>
+<tr>
+<td>RN-PRI-076</td>
+<td>O "Reset de senha" renova a data de expiração (+5 dias). Prazo da senha <strong>0 = sem vencimento</strong>; a data de expiração é calculada, não digitada.</td>
+</tr>
+<tr>
+<td>RN-PRI-077</td>
+<td>O histórico de senhas barra as 3 últimas (a atual e as duas anteriores).</td>
+</tr>
+<tr>
+<td>RN-PRI-078</td>
+<td>Nas telas de Administração, a <strong>lista</strong> exige permissão, mas a tela de <strong>edição</strong>, a de configuração, a de Microservices e os relatórios abrem para quem não tem permissão (comportamento atual, falha: DV-PRI-025).</td>
+</tr>
+<tr>
+<td>RN-PRI-079</td>
+<td>Erros não tratados mostram a página técnica do ASP.NET, com exceção, stack trace e versão do .NET (DV-PRI-026).</td>
+</tr>
+<tr>
+<td>RN-PRI-080</td>
+<td>O sistema aceita criar um perfil sem nenhuma função (o usuário dele entra e recebe "Seu perfil não possuí permissão!").</td>
+</tr>
+<tr>
+<td>RN-PRI-081</td>
+<td>O link do módulo Patrimônio aponta para <code>localhost:10100</code> e não abre para o usuário (DV-PRI-018).</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="regras-acrescentadas-na-consolidacao-06-10-2026">Regras acrescentadas na consolidação (06/10/2026)</h4>
+<p>Incluídas ao gerar o documento final de Regras de Negócio, para cobrir o que os testes mostraram.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Regra</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRI-072</td>
+<td>A mensagem de recusa do login não pode revelar se o usuário existe.</td>
+<td>Diferente (DV-PRI-015)</td>
+</tr>
+<tr>
+<td>RN-PRI-073</td>
+<td>A sessão expira após um tempo de inatividade definido.</td>
+<td>Validada em parte: entre 10 e 20 minutos, sem valor definido</td>
+</tr>
+<tr>
+<td>RN-PRI-075</td>
+<td>Sair encerra a sessão em todos os módulos.</td>
+<td>Diferente (DV-PRI-020)</td>
+</tr>
+<tr>
+<td>RN-PRI-076</td>
+<td>O acesso entre módulos não pode ser reaproveitado copiando o endereço.</td>
+<td>Diferente (DV-PRI-019)</td>
+</tr>
+<tr>
+<td>RN-PRI-077</td>
+<td>Toda tela verifica a permissão, inclusive quando aberta pelo endereço.</td>
+<td>Diferente (DV-PRI-025)</td>
+</tr>
+<tr>
+<td>RN-PRI-078</td>
+<td>O histórico de um registro excluído continua consultável.</td>
+<td>Diferente (DV-PRI-014)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-acesso-ao-sistema-login">1. Acesso ao sistema (login)</a></li><li><a href="#2-senha">2. Senha</a></li><li><a href="#3-usuarios-e-contas">3. Usuários e contas</a></li><li><a href="#4-perfis-e-permissoes">4. Perfis e permissões</a></li><li><a href="#5-exclusao-e-trilha-de-auditoria">5. Exclusão e trilha de auditoria</a></li><li><a href="#6-resultado-do-teste-nas-telas-05-10-2026">6. Resultado do teste nas telas (05/10/2026)</a></li><li><a href="#7-resultado-do-teste-nas-telas-rodada-2-05-e-06-10-2026">7. Resultado do teste nas telas, rodada 2 (05 e 06/10/2026)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

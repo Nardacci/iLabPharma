@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de permissões · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html" aria-current=page>Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html">Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html">Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html">Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html">Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Matriz de permissões</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p>Este documento tem duas partes:</p>
+<ol>
+<li><strong>Como o sistema controla o acesso</strong> (extraído do código).</li>
+<li><strong>Inventário das telas do Principal</strong>, com o controle de permissão que cada uma faz no código.</li>
+</ol>
+<p><strong>Importante:</strong> <em>quem</em> tem <em>qual</em> permissão está cadastrado no banco (perfis × funções), não no código.
+Para completar a matriz por perfil, veja "O que falta" no final.</p>
+<hr />
+<h3 id="1-como-o-acesso-funciona">1. Como o acesso funciona</h3>
+<p><code>Usuário ──(1 ou mais)──► Perfil ──(várias)──► Função (tela) + ações permitidas
+                           │
+                           └──(vários)──► Local (setor)</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Tabela</th>
+<th>O que guarda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuário</td>
+<td><code>SIS_USUARIO</code></td>
+<td>Pessoa, login, situação, validade</td>
+</tr>
+<tr>
+<td>Perfil</td>
+<td><code>SIS_PERFIL</code></td>
+<td>Grupo de permissões, com perfil pai opcional</td>
+</tr>
+<tr>
+<td>Usuário × Perfil</td>
+<td><code>SIS_USUARIO_PERFIL</code></td>
+<td>Quais perfis cada usuário tem</td>
+</tr>
+<tr>
+<td>Função</td>
+<td><code>SIS_FUNCAO</code></td>
+<td>Telas, itens de menu e ações, em árvore, por módulo</td>
+</tr>
+<tr>
+<td>Perfil × Função</td>
+<td><code>SIS_PERFIL_FUNCAO</code></td>
+<td>O que cada perfil pode fazer</td>
+</tr>
+<tr>
+<td>Perfil × Local</td>
+<td><code>SIS_PERFIL_LOCAL</code></td>
+<td>A que locais cada perfil está ligado</td>
+</tr>
+<tr>
+<td>Módulo</td>
+<td><code>SIS_MODULO</code></td>
+<td>Módulos do sistema e se estão habilitados</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="acoes-por-tela">Ações por tela</h4>
+<p>Cada tela tem um código (<code>IdTela</code>) e até seis ações:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ação</th>
+<th>Código</th>
+<th>Efeito na tela</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consultar</td>
+<td><code>CONSULTAR</code></td>
+<td>Ver a lista e os detalhes</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td><code>INCLUIR</code></td>
+<td>Criar registros</td>
+</tr>
+<tr>
+<td>Alterar</td>
+<td><code>ALTERAR</code></td>
+<td>Editar. Sem esta ação, a tela de edição abre travada.</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td><code>EXCLUIR</code></td>
+<td>Mandar para a lixeira</td>
+</tr>
+<tr>
+<td>Consultar histórico</td>
+<td><code>CONSULTAR_LOG</code></td>
+<td>Ver o histórico de alterações</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td><code>IMPRIMIR_EXCEL</code></td>
+<td>Mostra os botões de imprimir e exportar</td>
+</tr>
+</tbody>
+</table></div>
+<p>Fonte: <code>LaboSys_Util/ClassePaiEd.cs:115-155</code>.</p>
+<h4 id="como-as-telas-verificam">Como as telas verificam</h4>
+<p>Há duas formas de verificação no código:</p>
+<ul>
+<li><strong>Bloqueio de entrada</strong> (<code>CarregaFuncao</code>): quem não tem a função é levado para "Acesso negado". Fonte: <code>LaboSys_Util/BaseController.cs:23-27</code>.</li>
+<li><strong>Ajuste da tela</strong> (<code>PermissaoIncluir</code>, <code>PermissaoAlterar</code> etc.): a classe-base calcula as ações permitidas. <strong>Cabe a cada tela</strong> esconder ou bloquear os botões. A classe-base, sozinha, <strong>não impede a entrada</strong> de quem não tem permissão.</li>
+</ul>
+<p>Por isso a proteção real depende do que cada tela faz, e precisa ser testada tela a tela.</p>
+<hr />
+<h3 id="2-inventario-das-telas">2. Inventário das telas</h3>
+<p>Legenda da coluna <strong>Controle no código</strong>:
+- <strong>Bloqueia entrada</strong>: usa <code>CarregaFuncao</code>.
+- <strong>Ajusta botões</strong>: usa as permissões calculadas.
+- <strong>Nenhum encontrado</strong>: nem uma coisa nem outra. <strong>Prioridade de teste.</strong></p>
+<p>Telas <code>_lst</code> são listas, <code>_ed</code> são edição e <code>_rel</code> são relatórios.</p>
+<h4 id="administracao-usuarios-e-acesso">Administração (usuários e acesso)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>IdTela</th>
+<th>Controle no código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>administracao/usuario_lst</code></td>
+<td>14</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/usuario_ed</code></td>
+<td>14</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td><code>administracao/usuario_rel</code></td>
+<td>—</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/usuario_conta_lst</code></td>
+<td>95</td>
+<td>Bloqueia entrada + ajusta botões</td>
+</tr>
+<tr>
+<td><code>administracao/usuario_conta_ed</code></td>
+<td>95</td>
+<td>Bloqueia entrada + ajusta botões</td>
+</tr>
+<tr>
+<td><code>administracao/usuario_conta_rel</code></td>
+<td>—</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/perfil_lst</code></td>
+<td>13</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/perfil_ed</code></td>
+<td>13</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td><code>administracao/perfil_rel</code></td>
+<td>—</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/grupo_usuario_lst</code></td>
+<td>518</td>
+<td>Bloqueia entrada</td>
+</tr>
+<tr>
+<td><code>administracao/grupo_usuario_ed</code></td>
+<td>518</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/grupo_usuario_rel</code></td>
+<td>—</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/funcao_profissional_lst</code></td>
+<td>—</td>
+<td>Bloqueia entrada + ajusta botões</td>
+</tr>
+<tr>
+<td><code>administracao/funcao_profissional_ed</code></td>
+<td>—</td>
+<td>Bloqueia entrada</td>
+</tr>
+<tr>
+<td><code>administracao/funcao_profissional_rel</code></td>
+<td>—</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/configuracao_ed</code></td>
+<td>CONFIGURACAO</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/microservice_ed</code></td>
+<td>—</td>
+<td>Nenhum encontrado (não herda a classe-base: <strong>sem verificação de sessão no código</strong>)</td>
+</tr>
+<tr>
+<td><code>administracao/notificacao_padrao_lst</code></td>
+<td>NOTIFICACAO</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/notificacao_padrao_ed</code></td>
+<td>NOTIFICACAO</td>
+<td>Bloqueia entrada</td>
+</tr>
+<tr>
+<td><code>administracao/gst_configurar_notificacao_ed</code></td>
+<td>518</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/gst_notificacao_usuario_lst</code></td>
+<td>ADMINISTRACAO/LISTA_NOTIFICACAO</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/gst_notificacao_usuario_ed</code></td>
+<td>ADMINISTRACAO/LISTA_NOTIFICACAO</td>
+<td>Nenhum encontrado</td>
+</tr>
+<tr>
+<td><code>administracao/gst_tipo_notificacao_lst</code></td>
+<td>ADMINISTRACAO/TIPO_NOTIFICACAO</td>
+<td>Nenhum encontrado</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Atenção:</strong> as telas de <strong>usuários</strong> (<code>usuario_lst</code>) e <strong>perfis</strong> (<code>perfil_lst</code>), as mais sensíveis do sistema, não bloqueiam a entrada no código. <strong>Primeira prioridade no teste de segurança.</strong></p>
+<h4 id="cadastros-administrativos">Cadastros administrativos</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Cadastro</th>
+<th>IdTela</th>
+<th>Lista</th>
+<th>Edição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ambiente</td>
+<td>93</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Categoria de equipamento</td>
+<td>CATEGORIA_EQUIPAMENTO</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Centro de custo</td>
+<td>33</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Conta contábil</td>
+<td>CONTA CONTÁBIL</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Conta gerencial</td>
+<td>CONTA GERENCIAL</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Equipamento</td>
+<td>94</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Instrumento</td>
+<td>89</td>
+<td>Bloqueia entrada</td>
+<td>Bloqueia entrada + ajusta botões</td>
+</tr>
+<tr>
+<td>Local</td>
+<td>12</td>
+<td>Ajusta botões</td>
+<td>Bloqueia entrada</td>
+</tr>
+<tr>
+<td>Local físico</td>
+<td>LOCAL FÍSICO</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Pessoa jurídica</td>
+<td>10</td>
+<td>Nenhum encontrado</td>
+<td>Bloqueia entrada + ajusta botões</td>
+</tr>
+<tr>
+<td>Ponto de água</td>
+<td>115</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Utensílio</td>
+<td>UTENSILIO</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Utilidade</td>
+<td>91</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+<tr>
+<td>Grau de contaminação</td>
+<td>90</td>
+<td>Nenhum encontrado</td>
+<td>Ajusta botões</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os relatórios (<code>_rel</code>) desses cadastros não têm verificação própria de permissão no código.</p>
+<hr />
+<h3 id="3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</h3>
+<p>Para cada tela marcada "Nenhum encontrado", e por amostragem nas demais:</p>
+<ol>
+<li>Entrar com um usuário <strong>sem</strong> a função da tela e digitar o endereço da tela direto no navegador.
+   - Esperado: "Acesso negado".</li>
+<li>Entrar com um usuário que só tem <strong>Consultar</strong>.
+   - Esperado: tela travada, sem Incluir, Alterar nem Excluir.</li>
+<li>Com o mesmo usuário, tentar salvar mesmo assim (por exemplo, reenviando o formulário).
+   - Esperado: o sistema recusa no servidor, e não só esconde o botão.</li>
+<li>Sem estar logado, abrir o endereço da tela.
+   - Esperado: página de sessão expirada ou de login.</li>
+</ol>
+<p>Esses casos entram no plano de testes (documento 6).</p>
+<hr />
+<h3 id="o-que-falta-precisa-de-voce">O que falta (precisa de você)</h3>
+<p>Para fechar a matriz <strong>perfil × tela × ação</strong>:</p>
+<ul>
+<li>Peça ao responsável (ou gere no sistema, se tiver acesso) o <strong>relatório de perfis</strong> (<code>administracao/perfil_rel</code>) com as funções de cada perfil.</li>
+<li>Ou peça ao DBA uma exportação, <strong>só leitura</strong>, das tabelas <code>SIS_PERFIL</code>, <code>SIS_FUNCAO</code> e <code>SIS_PERFIL_FUNCAO</code>. Não contêm senhas.</li>
+<li>Diga quais perfis existem na prática (por exemplo: administrador, garantia da qualidade, produção, consulta) e o que cada um <strong>deveria</strong> poder fazer. Assim o teste compara o "deveria" com o "está".</li>
+</ul>
+<hr />
+<h3 id="4-resultado-do-teste-nas-telas-05-10-2026">4. Resultado do teste nas telas (05/10/2026)</h3>
+<p>Teste no ambiente de teste, versão 3.5.1. Fonte: execucao/2026-10-05/resultado.md.</p>
+<h4 id="funcoes-do-modulo-principal-vistas-na-tela-de-perfil">Funções do módulo Principal vistas na tela de perfil</h4>
+<p>A árvore de permissões do Principal tem 3 grupos e as ações abaixo. <strong>Não existe a ação "Consultar"</strong>: ter a tela marcada já dá acesso de consulta (diferença em relação à tabela "Ações por tela" da seção 1).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo (ID)</th>
+<th>Telas (ID)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administração (1)</td>
+<td>Configurar notificação (3579), Conta usuário (14), Microservices (26), Notificações do sistema (3580), Notificações padrão (20), Perfil (2), Profissional (8)</td>
+</tr>
+<tr>
+<td>Cadastros (32)</td>
+<td>Ambientes (69), Equipamentos (75), Instrumentos (57), Pontos de água (51), Utensílios (117), Utilidades (63), Categoria de equipamento (111), Centro de custo (33), Conta contábil (93), Conta gerencial (81), Estrutura funcional (39), Funções profissionais (105), Grupo de usuários (99), Local físico (87), Pessoa jurídica (45)</td>
+</tr>
+<tr>
+<td>Tabelas de apoio (123)</td>
+<td>Grau de contaminação (124)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ações de cada tela: Incluir, Alterar, Excluir, Imprimir/Excel e Consultar log. Exceções: <strong>Perfil não tem Imprimir/Excel</strong> e <strong>Pessoa jurídica não tem Excluir</strong>.</p>
+<h4 id="perfis-de-teste-criados">Perfis de teste criados</h4>
+<p>O sistema removeu o <code>_</code> do nome (DV-PRI-001); os perfis ficaram com os nomes abaixo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Permissões gravadas</th>
+<th>Confere com o plano (3.1)?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TESTEADMIN</td>
+<td>Todas as telas de Administração, com todas as ações</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>TESTECONSULTA</td>
+<td>Perfil e Profissional, sem nenhuma ação (só a tela marcada)</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>TESTECADASTRO</td>
+<td>Ambientes, Equipamentos e Pessoa jurídica com Incluir e Alterar; sem Excluir e sem Imprimir/Excel</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>TESTESEMADMIN</td>
+<td>Só a tela Centro de custo (sem ações)</td>
+<td>Sim</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="ainda-a-confirmar">Ainda a confirmar</h4>
+<p>Na criação do perfil, marcar uma ação marca a tela automaticamente; desmarcar a última ação desmarca a tela. Marcar só a tela é permitido.</p>
+<hr />
+<h3 id="5-resultado-do-teste-nas-telas-rodada-2-05-e-06-10-2026">5. Resultado do teste nas telas, rodada 2 (05 e 06/10/2026)</h3>
+<p>Fonte: execucao/2026-10-05-rodada-2/resultado.md. Agora o <strong>efeito</strong> dos perfis de teste foi visto entrando como cada usuário.</p>
+<h4 id="o-que-cada-perfil-de-teste-conseguiu-fazer">O que cada perfil de teste conseguiu fazer</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil (usuário)</th>
+<th>Telas e ações vistas</th>
+<th>Confere com o esperado?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TESTECONSULTA (<code>t.consulta</code>)</td>
+<td>Lista de usuários e de perfis com o ícone "Consultar" e sem Novo, Editar ou Excluir. A tela de detalhe do usuário <strong>não fica travada</strong> (38 de 51 campos editáveis, com "Adicionar Ocupação/Função").</td>
+<td><strong>Não</strong>: deveria ser somente leitura (DV-PRI-023).</td>
+</tr>
+<tr>
+<td>TESTECADASTRO (<code>t.cadastro</code>)</td>
+<td>Ambiente, Equipamento e Pessoa jurídica com Novo e Editar; <strong>sem</strong> Imprimir, Exportar para Excel e Excluir. Incluiu um ambiente.</td>
+<td>Sim.</td>
+</tr>
+<tr>
+<td>TESTEUSUALT somado a TESTECONSULTA</td>
+<td>Passou a poder alterar usuários: 37 de 51 campos editáveis, botão Salvar presente, alteração gravada.</td>
+<td>Sim (soma de perfis, RN-PRI-040).</td>
+</tr>
+<tr>
+<td>TESTEVAZIO (<code>t.vazio</code>)</td>
+<td>Sem nenhuma função: o usuário não entra ("Seu perfil não possuí permissão!").</td>
+<td>Sim.</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="acesso-direto-pelo-endereco-como-t-semadmin">Acesso direto pelo endereço, como <code>t.semadmin</code></h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>administracao/usuario_lst.aspx</code>, <code>perfil_lst.aspx</code>, <code>usuario_conta_lst.aspx</code>, <code>grupo_usuario_lst.aspx</code></td>
+<td>Negado</td>
+</tr>
+<tr>
+<td><code>administracao/notificacao_padrao_lst.aspx</code>, <code>gst_tipo_notificacao_lst.aspx</code>, <code>gst_notificacao_usuario_lst.aspx</code></td>
+<td>Negado</td>
+</tr>
+<tr>
+<td><code>administracao/usuario_ed.aspx</code>, <code>perfil_ed.aspx</code>, <code>grupo_usuario_ed.aspx</code></td>
+<td><strong>Abre</strong></td>
+</tr>
+<tr>
+<td><code>administracao/configuracao_ed.aspx</code>, <code>microservice_ed.aspx</code></td>
+<td><strong>Abre</strong> (Microservices sem login: negado)</td>
+</tr>
+<tr>
+<td><code>administracao/usuario_rel.aspx</code>, <code>perfil_rel.aspx</code></td>
+<td><strong>Abre</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="ainda-a-confirmar_1">Ainda a confirmar</h4>
+<ul>
+<li>Se as telas que abriram sem permissão <strong>gravam</strong> (só foi testada a abertura).</li>
+<li>A checagem de permissão <strong>no servidor</strong> para quem tem a tela aberta: o envio forçado foi recusado pela validação técnica do ASP.NET, o que não prova a checagem de permissão (CT-PRI-070).</li>
+<li>A permissão <strong>Consultar log</strong> (CT-PRI-082) e as telas de notificação com usuários que têm permissão parcial.</li>
+</ul>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-como-o-acesso-funciona">1. Como o acesso funciona</a></li><li><a href="#2-inventario-das-telas">2. Inventário das telas</a></li><li><a href="#3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</a></li><li><a href="#o-que-falta-precisa-de-voce">O que falta (precisa de você)</a></li><li><a href="#4-resultado-do-teste-nas-telas-05-10-2026">4. Resultado do teste nas telas (05/10/2026)</a></li><li><a href="#5-resultado-do-teste-nas-telas-rodada-2-05-e-06-10-2026">5. Resultado do teste nas telas, rodada 2 (05 e 06/10/2026)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

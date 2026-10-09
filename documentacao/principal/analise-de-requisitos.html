@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise de requisitos · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#f57c00"><span class="icone">⌂</span>Principal</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="resumo-executivo.html">Resumo executivo</a></li><li><a href="dossie-de-homologacao.html">Dossiê de homologação</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="manual-do-usuario.html">Manual do usuário</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria.html">Conformidade regulatória</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li><li><a href="matriz-de-rastreabilidade.html">Matriz de rastreabilidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="analise-de-requisitos.html" aria-current=page>Análise de requisitos</a></li><li><a href="requisitos-da-nova-versao-rascunho.html">Requisitos da nova versão (rascunho)</a></li><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li><li><a href="comparacao-com-a-nova-versao.html">Comparação com a nova versão</a></li><li><a href="regras-de-negocio-rascunho-com-fontes.html">Regras de negócio (rascunho com fontes)</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Principal</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Análise de requisitos</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/principal/LabMedSys - Modulo Principal - Analise de Requisitos.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<h2 id="introducao">Introdução</h2>
+<p>Este documento é a <strong>Especificação dos Requisitos do Usuário (ERU)</strong> do módulo Principal para a nova versão do LabMedSys. Ele diz aos desenvolvedores <strong>o que a nova versão deve fazer</strong>, a partir de quatro fontes:</p>
+<ul>
+<li>o comportamento atual extraído do código-fonte (versão 3.5.1);</li>
+<li>o documento de análise v1.0 do módulo Principal;</li>
+<li>os testes nas telas de 05 e 06/10/2026 (78 casos, 26 desvios);</li>
+<li>as exigências da ANVISA (RDC nº 658/2022 e Guia nº 33/2020).</li>
+</ul>
+<p>Falhas do sistema atual não foram copiadas: viraram requisitos <strong>corrigidos</strong>, com a indicação do achado ou do desvio de origem. As regras detalhadas de cada tela estão no documento <strong>Regras de Negócio</strong> do módulo Principal.</p>
+<h2 id="papel-do-modulo-principal">Papel do módulo Principal</h2>
+<p>O Principal é o <strong>núcleo comum</strong> de todos os módulos. Na nova versão, ele continua responsável por:</p>
+<ol>
+<li><strong>Identidade e acesso:</strong> login único (SSO) para todos os módulos, usuários, perfis e permissões.</li>
+<li><strong>Trilha de auditoria:</strong> serviço comum de histórico de alterações e de acessos.</li>
+<li><strong>Cadastros compartilhados:</strong> pessoas jurídicas, locais e setores, equipamentos, instrumentos, ambientes, utilidades, utensílios, centros de custo, contas e tabelas de apoio (país, UF, município etc.).</li>
+<li><strong>Notificações:</strong> eventos com prazo, escalonamento e envio de e-mail, usados pelos módulos.</li>
+<li><strong>Configuração do sistema:</strong> dados do cliente, módulos habilitados, personalização de telas.</li>
+</ol>
+<hr />
+<h2 id="classificacao-do-sistema">Classificação do sistema</h2>
+<ul>
+<li><strong>Categoria GAMP 5: 5 (aplicação customizada).</strong> O LabMedSys foi desenvolvido sob medida, com código-fonte próprio.</li>
+<li><strong>Consequência (Guia 33, item 9.8.5):</strong> para a categoria 5, a rastreabilidade deve ir dos <strong>requisitos do usuário</strong> às <strong>especificações funcionais</strong> e <strong>de projeto</strong> até os <strong>testes</strong>. A validação também pode incluir revisão de código.</li>
+<li><strong>Impacto em Boas Práticas:</strong> alto. O sistema registra produção, estoque, controle e garantia da qualidade e rastreabilidade, que afetam a qualidade do produto e a integridade dos dados.</li>
+</ul>
+<h2 id="como-ler-os-requisitos">Como ler os requisitos</h2>
+<ul>
+<li><strong>RF</strong>: requisito funcional (o que o sistema faz). <strong>RNF</strong>: requisito não funcional (como faz: segurança, auditoria, desempenho).</li>
+<li><strong>Prioridade:</strong> <strong>E</strong> = Essencial (sem ele não entra em produção), <strong>I</strong> = Importante, <strong>D</strong> = Desejável.</li>
+<li><strong>Origem:</strong> de onde o requisito veio. <code>RN-</code> = regra atual mantida; <code>SEG-</code> = falha atual que a nova versão deve corrigir; artigo de norma.</li>
+<li><strong>Muda em relação ao atual?</strong> "Igual", "Corrige" ou "Novo".</li>
+</ul>
+<h2 id="requisitos-funcionais">Requisitos funcionais</h2>
+<h3 id="login-e-sessao">Login e sessão</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-001</td>
+<td>Autenticar por login e senha, com um único ponto de entrada para todos os módulos.</td>
+<td>E</td>
+<td>RN-PRI-001</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-002</td>
+<td>Recusar o acesso de usuário inexistente, excluído, inativo, com conta inativa ou fora do período de validade.</td>
+<td>E</td>
+<td>RN-PRI-002 a 005</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-005</td>
+<td>Desbloquear por ação do administrador, registrada no histórico. Opcional: desbloqueio automático após um tempo configurável.</td>
+<td>E</td>
+<td>RN-PRI-009</td>
+<td>Igual + novo</td>
+</tr>
+<tr>
+<td>RF-PRI-006</td>
+<td>Encerrar a sessão após <strong>10 minutos de inatividade</strong> (valor configurável) e, ao sair (logout), encerrar a sessão em <strong>todos os módulos</strong> de uma vez. <em>(Decisão do responsável em 06/10/2026.)</em></td>
+<td>E</td>
+<td>Guia 33, 11.12</td>
+<td>Novo (a confirmar no atual)</td>
+</tr>
+<tr>
+<td>RF-PRI-008</td>
+<td>Listar os usuários conectados (já existe na API do atual: <code>GetUsersOnline</code>).</td>
+<td>D</td>
+<td>API <code>Autenticacao</code></td>
+<td>Igual</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="senha">Senha</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-010</td>
+<td>Política de senha configurável: tamanho mínimo (atual: 8), tipos de caractere exigidos (atual: letra, número e símbolo), validade em dias (atual: 60) e quantidade de senhas anteriores proibidas (atual: 2).</td>
+<td>E</td>
+<td>RN-PRI-020, 024, 025</td>
+<td>Igual (configurável)</td>
+</tr>
+<tr>
+<td>RF-PRI-012</td>
+<td>Trocar a senha exigindo a senha atual.</td>
+<td>E</td>
+<td>RN-PRI-021</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-014</td>
+<td>Avisar o usuário quando a senha estiver perto de vencer (o atual calcula os dias restantes).</td>
+<td>I</td>
+<td><code>bllUsuario.cs:185</code></td>
+<td>Igual</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="usuarios-e-contas">Usuários e contas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-020</td>
+<td>Cadastrar usuários com dados pessoais e funcionais (nome, CPF, matrícula, cargo, setor, contatos).</td>
+<td>E</td>
+<td>Tabela <code>SIS_USUARIO</code></td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-021</td>
+<td>Coletar só os dados pessoais necessários ao trabalho. Revisar a necessidade de campos como nome da mãe e do pai, naturalidade e "nome de guerra" (LGPD, princípio da necessidade).</td>
+<td>I</td>
+<td>LGPD</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-PRI-022</td>
+<td>Login único por usuário.</td>
+<td>E</td>
+<td>RN-PRI-030</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-023</td>
+<td>Período de validade do acesso (data de início e de fim), por exemplo para temporários e terceiros.</td>
+<td>E</td>
+<td>RN-PRI-005</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-024</td>
+<td>Inativar e reativar com justificativa obrigatória.</td>
+<td>E</td>
+<td>RN-PRI-035</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-025</td>
+<td>Registrar ocupações (CBO) e funções profissionais do usuário, com uma principal. Usado em treinamentos e qualificações de outros módulos (a confirmar).</td>
+<td>I</td>
+<td>RN-PRI-033</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-026</td>
+<td>Grupos de usuários e responsáveis por local.</td>
+<td>I</td>
+<td>RN-PRI-034</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-027</td>
+<td>Unificar "usuário inativo" e "conta inativa" numa única situação, se o negócio confirmar que não há diferença.</td>
+<td>D</td>
+<td>RN-PRI-003/004</td>
+<td>A decidir</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="perfis-e-permissoes">Perfis e permissões</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-030</td>
+<td>Permissões atribuídas a perfis; o usuário recebe a soma das permissões dos seus perfis. Toda conta exige ao menos um perfil.</td>
+<td>E</td>
+<td>RN-PRI-031, 040</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-031</td>
+<td>Ações por tela: Consultar, Incluir, Alterar, Excluir, Consultar histórico, Imprimir/Exportar. Prever ações específicas de processo (ex.: Aprovar, Liberar, Assinar) para os outros módulos.</td>
+<td>E</td>
+<td>RN-PRI-042</td>
+<td>Igual + novo</td>
+</tr>
+<tr>
+<td>RF-PRI-033</td>
+<td>Tela em modo <strong>somente leitura</strong> para quem só consulta: nenhum campo editável nem botão de inclusão. <em>(Decisão do responsável em 06/10/2026.)</em></td>
+<td>E</td>
+<td>RN-PRI-043</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-034</td>
+<td>Restringir dados por local/setor ligado ao perfil, se o negócio confirmar que é esse o uso atual.</td>
+<td>I</td>
+<td>RN-PRI-045</td>
+<td>A decidir</td>
+</tr>
+<tr>
+<td>RF-PRI-035</td>
+<td>Herança de permissões de um perfil pai, se o negócio confirmar.</td>
+<td>D</td>
+<td>RN-PRI-046</td>
+<td>A decidir</td>
+</tr>
+<tr>
+<td>RF-PRI-036</td>
+<td>Relatório de revisão de acessos: usuários × perfis × permissões, com data da última alteração, para a revisão periódica da Garantia da Qualidade.</td>
+<td>E</td>
+<td>Guia 33, 11.9 e 11.12</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>RF-PRI-037</td>
+<td>Segregação de funções: impedir que o mesmo usuário administre acessos e execute operações críticas, quando configurado.</td>
+<td>I</td>
+<td>Boa prática BPF</td>
+<td>Novo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="exclusao-e-historico">Exclusão e histórico</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+<th>Muda?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-040</td>
+<td>Exclusão lógica (nunca apagar fisicamente registros com relevância em BPF).</td>
+<td>E</td>
+<td>RN-PRI-050</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>RF-PRI-041</td>
+<td>Recusar a exclusão de registros com dependentes, dizendo <strong>quais</strong> dependências impedem. Quando forem itens vinculados no próprio cadastro, orientar a excluí-los antes.</td>
+<td>E</td>
+<td>RN-PRI-051, 052, RN-PRI-071, DV-PRI-011</td>
+<td>Igual + melhora</td>
+</tr>
+<tr>
+<td>RF-PRI-042</td>
+<td>Justificativa obrigatória em <strong>toda exclusão e toda alteração (inclusive inativação) de todos os cadastros</strong>, validada também no servidor e registrada no histórico. Regra comum do sistema, não tela a tela. <em>(Decisão do responsável em 06/10/2026.)</em></td>
+<td>E</td>
+<td>RN-PRI-053, RN-PRI-070, DV-PRI-009, DV-PRI-013, RDC 658 art. 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-PRI-044</td>
+<td>Consultar o histórico de qualquer registro, para quem tem a permissão. Exportar o histórico (PDF/Excel) para auditorias. O histórico continua consultável <strong>depois que o registro é excluído</strong> (DV-PRI-014).</td>
+<td>E</td>
+<td>RN-PRI-042</td>
+<td>Igual + novo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="cadastros-compartilhados">Cadastros compartilhados</h3>
+<p>Regras detalhadas destes cadastros: próxima versão do documento 01.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-050</td>
+<td>Pessoas jurídicas (fornecedores, clientes, fabricantes), com tipos de cadastro, contatos e filiais.</td>
+<td>E</td>
+<td>Telas <code>pessoa_juridica_*</code>, tabelas <code>GBL_PJ*</code>, <code>TBL_PJ_FILIAL</code></td>
+</tr>
+<tr>
+<td>RF-PRI-051</td>
+<td>Locais e setores em árvore, com responsáveis; locais físicos.</td>
+<td>E</td>
+<td><code>local_*</code>, <code>local_fisico_*</code>, <code>SIS_LOCAL</code></td>
+</tr>
+<tr>
+<td>RF-PRI-052</td>
+<td>Equipamentos e categorias, com tipos de manutenção; instrumentos.</td>
+<td>E</td>
+<td><code>equipamento_*</code>, <code>instrumento_*</code>, <code>categoria_equipamento_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-053</td>
+<td>Ambientes (salas) e seus equipamentos, instrumentos e utilidades; grau de contaminação.</td>
+<td>E</td>
+<td><code>ambiente_*</code>, <code>grau_contaminacao_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-054</td>
+<td>Utilidades, utensílios e pontos de água (com tipo de água).</td>
+<td>E</td>
+<td><code>utilidade_*</code>, <code>utensilio_*</code>, <code>ponto_agua_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-055</td>
+<td>Centros de custo, contas contábeis e gerenciais.</td>
+<td>I</td>
+<td><code>centro_custo_*</code>, <code>conta_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-056</td>
+<td>Tabelas de apoio: país, UF, município, bairro, logradouro, órgão emissor, escolaridade e outras. Preferir fontes oficiais (IBGE) a cadastro manual.</td>
+<td>I</td>
+<td>Tabelas <code>TBL_*</code></td>
+</tr>
+<tr>
+<td>RF-PRI-057</td>
+<td>Relatórios de cada cadastro, com filtros e exportação para Excel.</td>
+<td>I</td>
+<td>Telas <code>*_rel</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="notificacoes">Notificações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-060</td>
+<td>Tipos de evento por módulo (ex.: documento a aprovar), configuráveis.</td>
+<td>I</td>
+<td><code>GST_TIPO_EVENTO</code></td>
+</tr>
+<tr>
+<td>RF-PRI-061</td>
+<td>Evento com prazo de resposta, prazo-limite e <strong>escalonamento</strong> em níveis.</td>
+<td>I</td>
+<td><code>GST_EVENTO</code> (<code>TEMPO_RESPOSTA</code>, <code>TEMPO_LIMITE</code>, <code>NIVEL</code>, <code>ID_EVENTO_PRINCIPAL</code>)</td>
+</tr>
+<tr>
+<td>RF-PRI-062</td>
+<td>Destinatários por usuário, função ou setor.</td>
+<td>I</td>
+<td><code>GST_EVENTO_USUARIO</code>, <code>GST_EVENTO_FUNCAO</code>, <code>bllGstEventoSetor.cs</code></td>
+</tr>
+<tr>
+<td>RF-PRI-063</td>
+<td>Avisos dentro do sistema e por e-mail, com modelos de mensagem e variáveis.</td>
+<td>I</td>
+<td><code>GST_EVENTO_EMAIL</code>, <code>GST_VARIAVEL</code>, <code>notificacoes.aspx</code></td>
+</tr>
+<tr>
+<td>RF-PRI-064</td>
+<td>Envio por rotina automática, com registro de envio e de falhas.</td>
+<td>I</td>
+<td><code>LaboSys.Principal.Batch</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="configuracao">Configuração</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-070</td>
+<td>Dados do cliente (nome, logotipo da tela e dos relatórios), habilitação de módulos.</td>
+<td>I</td>
+<td><code>SIS_CONFIGURACAO</code>, <code>SIS_MODULO</code></td>
+</tr>
+<tr>
+<td>RF-PRI-071</td>
+<td>Personalizar rótulos e visibilidade de campos sem alterar o código. Avaliar se ainda é necessário (o recurso existia para vender a vários clientes).</td>
+<td>D</td>
+<td>RN-PRI-047</td>
+</tr>
+<tr>
+<td>RF-PRI-072</td>
+<td>Não incluir controle de licença por data na nova versão (o sistema passa a ser da empresa).</td>
+<td>E</td>
+<td><code>Licenca.cs</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="requisitos-acrescentados-pelos-testes-06-10-2026">Requisitos acrescentados pelos testes (06/10/2026)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-073</td>
+<td>A pesquisa por nome encontra o registro com ou sem acento e sem diferenciar maiúsculas e minúsculas.</td>
+<td>I</td>
+<td>DV-PRI-008</td>
+</tr>
+<tr>
+<td>RF-PRI-074</td>
+<td>Todo campo obrigatório não preenchido é informado com mensagem clara (sem erro técnico nem tela parada), inclusive a Categoria do equipamento.</td>
+<td>E</td>
+<td>DV-PRI-010</td>
+</tr>
+<tr>
+<td>RF-PRI-075</td>
+<td>Definir e informar os caracteres permitidos em descrições e logins, sem remover caracteres em silêncio.</td>
+<td>I</td>
+<td>DV-PRI-001, 002</td>
+</tr>
+<tr>
+<td>RF-PRI-076</td>
+<td>Não permitir descrições repetidas nos cadastros em que a descrição identifica o registro (Ambiente, Perfil), se o negócio confirmar.</td>
+<td>I</td>
+<td>DV-PRI-007</td>
+</tr>
+<tr>
+<td>RF-PRI-077</td>
+<td>Não permitir excluir um profissional com conta de acesso ativa sem tratar a conta antes.</td>
+<td>E</td>
+<td>DV-PRI-006</td>
+</tr>
+<tr>
+<td>RF-PRI-078</td>
+<td>O histórico registra só os campos efetivamente alterados.</td>
+<td>D</td>
+<td>DV-PRI-005</td>
+</tr>
+<tr>
+<td>RF-PRI-079</td>
+<td>Os endereços dos módulos na tela inicial são configurados por ambiente (nada apontando para o próprio servidor).</td>
+<td>D</td>
+<td>DV-PRI-018</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="requisitos-nao-funcionais">Requisitos não funcionais</h2>
+<h3 id="integridade-de-dados-e-auditoria">Integridade de dados e auditoria</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNF-PRI-012</td>
+<td>Data e hora da trilha vindas do servidor, com fuso horário definido.</td>
+<td>E</td>
+<td>Integridade de dados</td>
+</tr>
+<tr>
+<td>RNF-PRI-013</td>
+<td>Retenção do histórico por pelo menos o prazo da RDC 658, art. 127 (o maior prazo aplicável aos registros do sistema).</td>
+<td>E</td>
+<td>RDC 658 art. 127</td>
+</tr>
+<tr>
+<td>RNF-PRI-014</td>
+<td>Assinatura eletrônica (usada pelos outros módulos) exige nova digitação da senha e registra quem assinou, quando e o significado (ex.: "aprovado").</td>
+<td>E</td>
+<td>Guia 33, 9.3.2.3; IN de sistemas computadorizados (a confirmar)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="validacao-e-operacao">Validação e operação</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNF-PRI-020</td>
+<td>Ambientes separados de desenvolvimento, homologação e produção.</td>
+<td>E</td>
+<td>Guia 33, 9.7</td>
+</tr>
+<tr>
+<td>RNF-PRI-021</td>
+<td>Controle de versão e de mudanças: cada versão identificada, com registro do que mudou.</td>
+<td>E</td>
+<td>Guia 33, 9.8.2 e 11.7</td>
+</tr>
+<tr>
+<td>RNF-PRI-022</td>
+<td>Testes automatizados para regras críticas (login, permissões, histórico). Os casos do documento 08 servem de base.</td>
+<td>I</td>
+<td>Guia 33, 9.7</td>
+</tr>
+<tr>
+<td>RNF-PRI-023</td>
+<td>Backup e restauração testados, com rotina documentada.</td>
+<td>E</td>
+<td>Guia 33, 11.10</td>
+</tr>
+<tr>
+<td>RNF-PRI-024</td>
+<td>Migração dos dados do sistema atual com plano, conferência e relatório, preservando o histórico (trilha de auditoria) existente.</td>
+<td>E</td>
+<td>Guia 33, item 12</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="integracao-entre-modulos">Integração entre módulos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="confirmacao-pelos-testes">Confirmação pelos testes</h2>
+<p>Os testes nas telas confirmaram a necessidade dos requisitos corrigidos abaixo: o sistema atual apresentou exatamente a falha que o requisito corrige.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>O que o teste mostrou no sistema atual</th>
+<th>Desvio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-003</td>
+<td>Mensagens de login diferentes para usuário inexistente e senha errada.</td>
+<td>DV-PRI-015</td>
+</tr>
+<tr>
+<td>RF-PRI-004</td>
+<td>Contagem de tentativas restantes errada (4, 3, 2, 1; bloqueia no 4º erro).</td>
+<td>DV-PRI-016</td>
+</tr>
+<tr>
+<td>RF-PRI-005</td>
+<td>Desbloqueio e reset de senha não aparecem no histórico da conta.</td>
+<td>DV-PRI-017</td>
+</tr>
+<tr>
+<td>RF-PRI-006</td>
+<td>Sessão expira entre 10 e 20 minutos sem valor definido; Sair não encerra os outros módulos.</td>
+<td>DV-PRI-020</td>
+</tr>
+<tr>
+<td>RF-PRI-011</td>
+<td>Comparações de senha ignoram maiúsculas e minúsculas.</td>
+<td>DV-PRI-021</td>
+</tr>
+<tr>
+<td>RF-PRI-013</td>
+<td>Senha provisória exibida na tela do administrador.</td>
+<td>DV-PRI-003</td>
+</tr>
+<tr>
+<td>RF-PRI-032</td>
+<td>Telas de edição, configuração, Microservices e relatórios abrem sem permissão.</td>
+<td>DV-PRI-025</td>
+</tr>
+<tr>
+<td>RF-PRI-033</td>
+<td>Tela de consulta de usuário editável (38 de 51 campos).</td>
+<td>DV-PRI-023</td>
+</tr>
+<tr>
+<td>RF-PRI-036</td>
+<td>O relatório existente não lista as funções de cada perfil nem a data da última alteração.</td>
+<td>CT-PRI-054</td>
+</tr>
+<tr>
+<td>RF-PRI-041</td>
+<td>Recusa de exclusão com mensagem genérica, sem dizer o que impede.</td>
+<td>DV-PRI-011</td>
+</tr>
+<tr>
+<td>RF-PRI-042</td>
+<td>Exclusão de Ambiente e Equipamento sem justificativa; Pessoa jurídica e Perfil alteram sem justificativa.</td>
+<td>DV-PRI-009, 013, 024</td>
+</tr>
+<tr>
+<td>RF-PRI-043</td>
+<td>Histórico do profissional sem o valor novo do Cargo.</td>
+<td>DV-PRI-004</td>
+</tr>
+<tr>
+<td>RF-PRI-044</td>
+<td>Histórico de registro excluído não pode ser consultado.</td>
+<td>DV-PRI-014</td>
+</tr>
+<tr>
+<td>RNF-PRI-006</td>
+<td>Erros mostram a página técnica do ASP.NET, com o rastro do erro.</td>
+<td>DV-PRI-026</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os requisitos acrescentados a partir dos testes (RF-PRI-073 a 079) estão na seção de requisitos funcionais.</p>
+<h2 id="modelo-de-dados">Modelo de dados</h2>
+<p>O banco do módulo Principal tem 83 tabelas. Esta seção descreve as entidades, os relacionamentos e as falhas de estrutura a corrigir.</p>
+<h3 id="visao-geral">Visão geral</h3>
+<p>O banco do Principal tem quatro grupos de tabelas, identificados pelo prefixo:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prefixo</th>
+<th>Grupo</th>
+<th>Tabelas</th>
+<th>Exemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIS_</code></td>
+<td>Segurança e sistema</td>
+<td>15</td>
+<td>Usuário, perfil, função, local, módulo, configuração, acessos</td>
+</tr>
+<tr>
+<td><code>GST_</code></td>
+<td>Notificações (gestão de eventos)</td>
+<td>13</td>
+<td>Tipo de evento, evento, destinatários, e-mail, notificação</td>
+</tr>
+<tr>
+<td><code>GBL_PJ*</code>, <code>TBL_PJ_FILIAL</code></td>
+<td>Pessoa jurídica</td>
+<td>4</td>
+<td>Empresa, contatos, tipos de cadastro, filiais</td>
+</tr>
+<tr>
+<td><code>TBL_</code></td>
+<td>Cadastros e tabelas de apoio</td>
+<td>51</td>
+<td>Equipamento, ambiente, instrumento, utilidade, município, histórico</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrões presentes na maioria das tabelas de cadastro:</strong></p>
+<ul>
+<li><strong>Auditoria de registro:</strong> <code>ID_USUARIO_CRIACAO</code>, <code>DATA_CRIACAO</code>, <code>ID_USUARIO_ALTERACAO</code>, <code>DATA_ALTERACAO</code> (e, em algumas, <code>ID_USUARIO_EXCLUSAO</code>, <code>DATA_EXCLUSAO</code>), todos ligados a <code>SIS_USUARIO</code>.</li>
+<li><strong>Exclusão lógica:</strong> <code>LIXEIRA</code> (0/1) e, às vezes, <code>JUSTIFICATIVA_LIXEIRA</code>. Presente em mais de 20 tabelas (nas de notificação, o campo se chama <code>EXCLUIDO</code>).</li>
+<li><strong>Situação:</strong> <code>ATIVO</code> (0/1).</li>
+<li><strong>Chave:</strong> número sequencial (<code>IDENTITY</code>), com nomes variados (<code>ID</code>, <code>ID_EQUIPAMENTO</code>, <code>CODIGO_PJ</code>, <code>id</code>).</li>
+</ul>
+<hr />
+<h3 id="seguranca-usuarios-perfis-e-permissoes">Segurança: usuários, perfis e permissões</h3>
+<p><code>mermaid
+erDiagram
+    SIS_USUARIO ||--o{ SIS_USUARIO_PERFIL : "tem"
+    SIS_PERFIL ||--o{ SIS_USUARIO_PERFIL : "atribuído a"
+    SIS_PERFIL ||--o{ SIS_PERFIL_FUNCAO : "permite"
+    SIS_FUNCAO ||--o{ SIS_PERFIL_FUNCAO : "liberada por"
+    SIS_PERFIL ||--o{ SIS_PERFIL_LOCAL : "ligado a"
+    SIS_LOCAL ||--o{ SIS_PERFIL_LOCAL : "ligado a"
+    SIS_PERFIL |o--o{ SIS_PERFIL : "perfil pai"
+    SIS_FUNCAO |o--o{ SIS_FUNCAO : "função pai (menu)"
+    SIS_MODULO ||--o{ SIS_FUNCAO : "agrupa"
+    SIS_LOCAL |o--o{ SIS_LOCAL : "local pai"
+    SIS_LOCAL ||--o{ SIS_USUARIO : "seção do usuário"
+    SIS_LOCAL ||--o{ SIS_LOCAL_RESPONSAVEL : "tem"
+    SIS_USUARIO ||--o{ SIS_LOCAL_RESPONSAVEL : "é responsável"
+    TBL_GRUPO_USUARIO ||--o{ SIS_USUARIO : "agrupa"
+    SIS_USUARIO ||--o{ SIS_OCUPACAO_USUARIO : "tem (CBO)"
+    SIS_USUARIO ||--o{ SIS_ATIVIDADE_USUARIO : "exerce"
+    TBL_FUNCAO_PROFISSIONAL ||--o{ SIS_ATIVIDADE_USUARIO : "função"
+    SIS_USUARIO ||--o{ SIS_ACESSO : "tentativas de login"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Chave</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIS_PERFIL</code></td>
+<td>Perfis de acesso</td>
+<td><code>ID</code></td>
+<td><code>ID_PERFIL_PAI</code> para hierarquia; <code>CHAVE</code> para identificar perfis fixos no código.</td>
+</tr>
+<tr>
+<td><code>SIS_USUARIO_PERFIL</code></td>
+<td>Usuário × perfil</td>
+<td><code>ID_USUARIO + ID_PERFIL</code></td>
+<td><strong>Anomalia:</strong> sem chave estrangeira para <code>SIS_USUARIO</code>.</td>
+</tr>
+<tr>
+<td><code>SIS_FUNCAO</code></td>
+<td>Telas, itens de menu e ações, em árvore</td>
+<td><code>ID</code></td>
+<td><code>COD_FUNCAO</code> (ex.: <code>INCLUIR</code>), <code>LINK</code>, <code>ITEM_MENU</code>, <code>ORDEM</code>, <code>ID_MODULO</code>, <code>ID_TIPO_FUNCAO</code>. <strong>Anomalia:</strong> <code>ID_MODULO</code> e <code>ID_TIPO_FUNCAO</code> sem chave estrangeira.</td>
+</tr>
+<tr>
+<td><code>SIS_PERFIL_FUNCAO</code></td>
+<td>Perfil × função</td>
+<td><code>ID</code></td>
+<td>Campo <code>ESCRITA</code> (permissão de escrita) além das ações.</td>
+</tr>
+<tr>
+<td><code>SIS_PERFIL_LOCAL</code></td>
+<td>Perfil × local</td>
+<td><code>ID_PERFIL + ID_LOCAL</code></td>
+<td><strong>Anomalia:</strong> sem chave estrangeira para <code>SIS_LOCAL</code>.</td>
+</tr>
+<tr>
+<td><code>SIS_LOCAL</code></td>
+<td>Estrutura da empresa (divisões, seções, setores) em árvore</td>
+<td><code>ID</code></td>
+<td>Campos <code>IP_SOM</code>, <code>IP_VIDEO</code>, <code>TEM_LEITO</code> parecem herdados de outro produto (sistema hospitalar).</td>
+</tr>
+<tr>
+<td><code>SIS_LOCAL_RESPONSAVEL</code></td>
+<td>Responsáveis por local</td>
+<td><code>ID</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>SIS_MODULO</code></td>
+<td>Módulos e endereços</td>
+<td><code>ID_MODULO</code></td>
+<td>IDs fixos usados pelo código (não alterar, segundo a documentação).</td>
+</tr>
+<tr>
+<td><code>TBL_GRUPO_USUARIO</code></td>
+<td>Grupos de usuários</td>
+<td><code>ID_GRUPO</code></td>
+<td><code>ID_EMPRESA</code> obrigatório sem tabela de empresa correspondente: possível resto de versão com várias empresas.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="trilha-de-auditoria-historico-de-alteracoes">Trilha de auditoria (histórico de alterações)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_LOG_ALTERACAO_2</code></td>
+<td>Modelo novo: cabeçalho da alteração (objeto, id, usuário, data, justificativa, tipo)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_LOG_ALTERACAO_ITEM_2</code></td>
+<td>Itens do modelo novo: campo, valor antigo, valor novo</td>
+<td>Valores limitados a 255 caracteres.</td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_ALTERACAO</code></td>
+<td>Tipos de alteração (inclusão, alteração, exclusão…)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Anomalia:</strong> dois modelos de histórico convivem. Na nova versão, unificar num só e migrar os dois.</p>
+<h3 id="pessoa-juridica">Pessoa jurídica</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Relacionamentos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GBL_PJ</code></td>
+<td>Empresas: fornecedores, fabricantes, clientes (43 colunas: razão social, CNPJ, endereço, contatos)</td>
+<td>Município, bairro, país, UF, operadora</td>
+</tr>
+<tr>
+<td><code>GBL_PJ_TIPO_CADASTRO</code></td>
+<td>Papéis da empresa (fornecedor, fabricante…)</td>
+<td><code>GBL_PJ</code></td>
+</tr>
+<tr>
+<td><code>GBL_PJ_CONTATO</code></td>
+<td>Pessoas de contato</td>
+<td><strong>Anomalia:</strong> <code>codigo_pj</code> sem chave estrangeira para <code>GBL_PJ</code> (só índice).</td>
+</tr>
+<tr>
+<td><code>TBL_PJ_FILIAL</code></td>
+<td>Filiais</td>
+<td><code>GBL_PJ</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>GBL_PJ</code> é usada como <strong>fabricante</strong> e <strong>fornecedor</strong> de equipamentos, instrumentos, utilidades e utensílios, e como dona de contas gerenciais.</p>
+<h3 id="estrutura-fisica-e-equipamentos">Estrutura física e equipamentos</h3>
+<p><code>mermaid
+erDiagram
+    SIS_LOCAL ||--o{ TBL_AMBIENTE : "estrutura funcional"
+    TBL_GRAU_CONTAMINACAO ||--o{ TBL_AMBIENTE : "grau do ar / microbiológico"
+    TBL_AMBIENTE ||--o{ TBL_EQUIPAMENTO_AMBIENTE : "contém"
+    TBL_EQUIPAMENTO ||--o{ TBL_EQUIPAMENTO_AMBIENTE : "instalado em"
+    TBL_AMBIENTE ||--o{ TBL_INSTRUMENTO_AMBIENTE : "contém"
+    TBL_INSTRUMENTO ||--o{ TBL_INSTRUMENTO_AMBIENTE : "instalado em"
+    TBL_AMBIENTE ||--o{ TBL_UTILIDADE_AMBIENTE : "contém"
+    TBL_UTILIDADE ||--o{ TBL_UTILIDADE_AMBIENTE : "instalada em"
+    TBL_AMBIENTE ||--o{ TBL_PONTOS_AGUA : "tem"
+    TBL_TIPO_AGUA ||--o{ TBL_PONTOS_AGUA : "tipo"
+    TBL_CATEGORIA_EQUIPAMENTO ||--o{ TBL_EQUIPAMENTO : "categoria"
+    TBL_EQUIPAMENTO ||--o{ TBL_EQUIPAMENTO_TIPO_MANUTENCAO : "manutenções"
+    TBL_CATEGORIA_EQUIPAMENTO ||--o{ TBL_CATEGORIA_EQUIPAMENTO_TIPO_MANUTENCAO : "manutenções padrão"
+    GBL_PJ ||--o{ TBL_EQUIPAMENTO : "fabricante / fornecedor"
+    GBL_PJ ||--o{ TBL_INSTRUMENTO : "fabricante / fornecedor"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observações</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_AMBIENTE</code></td>
+<td>Salas e áreas, com grau de contaminação do ar e microbiológico</td>
+<td>Central para BPF (áreas limpas).</td>
+</tr>
+<tr>
+<td><code>TBL_EQUIPAMENTO</code></td>
+<td>Equipamentos (27 colunas), categoria, local, fabricante, fornecedor</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_INSTRUMENTO</code></td>
+<td>Instrumentos de medição</td>
+<td>Calibração provavelmente controlada em outro módulo (a confirmar).</td>
+</tr>
+<tr>
+<td><code>TBL_UTILIDADE</code></td>
+<td>Utilidades (ar comprimido, vapor, água…)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_UTENSILIO</code></td>
+<td>Utensílios</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_PONTOS_AGUA</code></td>
+<td>Pontos de coleta de água por ambiente</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_GRAU_CONTAMINACAO</code></td>
+<td>Classificação de áreas</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_MANUTENCAO_EQUIPAMENTO</code>, <code>TBL_CATEGORIA_EQUIPAMENTO_TIPO_MANUTENCAO</code>, <code>TBL_EQUIPAMENTO_TIPO_MANUTENCAO</code></td>
+<td>Tipos de manutenção</td>
+<td><strong>Anomalia:</strong> as três tabelas não têm chave primária.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="financeiro-e-locais-fisicos">Financeiro e locais físicos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Relacionamentos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_CENTRO_CUSTO</code></td>
+<td>Centros de custo</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TBL_CONTA_CONTABIL</code></td>
+<td>Plano de contas, em árvore</td>
+<td>Conta pai</td>
+</tr>
+<tr>
+<td><code>TBL_CONTA_GERENCIAL</code></td>
+<td>Contas gerenciais</td>
+<td><code>GBL_PJ</code></td>
+</tr>
+<tr>
+<td><code>TBL_LOCAL_FISICO</code></td>
+<td>Locais físicos (ex.: almoxarifado)</td>
+<td>Centro de custo, conta gerencial</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="notificacoes_1">Notificações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GST_TIPO_EVENTO</code></td>
+<td>Tipos de evento por módulo, com o objeto e o campo-chave de referência</td>
+</tr>
+<tr>
+<td><code>GST_TIPO_EVENTO_CAMPO</code>, <code>GST_TIPO_EVENTO_VARIAVEL</code>, <code>GST_VARIAVEL</code></td>
+<td>Campos e variáveis usados nas mensagens</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO</code></td>
+<td>Evento configurado: título, prazo de resposta, prazo-limite, nível de escalonamento, envio de e-mail</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO_USUARIO</code>, <code>GST_EVENTO_FUNCAO</code></td>
+<td>Destinatários por usuário e por função</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO_EMAIL</code></td>
+<td>Modelo de e-mail (assunto e mensagem)</td>
+</tr>
+<tr>
+<td><code>GST_EVENTO_STATUS</code></td>
+<td>Situações de uma notificação</td>
+</tr>
+<tr>
+<td><code>GST_NOTIFICACAO</code>, <code>GST_NOTIFICACAO_USUARIO</code>, <code>GST_NOTIFICACAO_EMAIL_USUARIO</code></td>
+<td>Notificações geradas, para quem e e-mails enviados</td>
+</tr>
+<tr>
+<td><code>TBL_NOTIFICACAO</code>, <code>TBL_NOTIFICACAO_PADRAO</code></td>
+<td>Modelo anterior de notificações</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Anomalias:</strong>
+- <code>GST_NOTIFICACAO.ID_STATUS</code> tem chave estrangeira para <strong><code>GST_EVENTO_FUNCAO</code></strong>, quando deveria apontar para <code>GST_EVENTO_STATUS</code>. O código trata o campo como situação (Notificado, Lido: <code>dalGstNotificacao.cs:81</code>). Provável erro de estrutura; <strong>a confirmar no teste</strong> se a gravação falha.
+- <code>GST_TIPO_EVENTO_CAMPO</code> tem a própria chave primária como chave estrangeira para <code>GST_TIPO_EVENTO</code>.
+- Dois modelos de notificação convivem (<code>GST_*</code> e <code>TBL_NOTIFICACAO*</code>).</p>
+<h3 id="tabelas-de-apoio">Tabelas de apoio</h3>
+<p>Endereço: <code>TBL_PAIS</code>, <code>TBL_UF</code>, <code>TBL_MUNICIPIO</code>, <code>TBL_BAIRRO</code>, <code>TBL_LOGRADOURO</code>, <code>TBL_TIPO_LOGRADOURO</code>, <code>TBL_MUNICIPIO_FAIXA</code>, <code>TBL_BAIRRO_FAIXA</code> (faixas de CEP).
+Pessoas: <code>TBL_ESCOLARIDADE</code>, <code>TBL_ESTADO_CIVIL</code>, <code>TBL_RELIGIAO</code>, <code>TBL_PROFISSAO</code>, <code>TBL_OCUPACAO</code> (CBO), <code>TBL_ORGAO_EMISSOR</code>, <code>TBL_POSTO</code>, <code>TBL_TIPO_FUNCIONARIO</code>, <code>TBL_FUNCAO_PROFISSIONAL</code>.
+Outras: <code>TBL_BANCO</code>, <code>TBL_OPERADORA_TELEFONIA</code>, <code>TBL_VALOR_GRUPO</code>, <code>TBL_ESPECIFICACAO</code>.</p>
+<p><strong>Anomalias:</strong> <code>TBL_BANCO</code>, <code>TBL_MUNICIPIO_FAIXA</code> e <code>TBL_BAIRRO_FAIXA</code> sem chave primária; <code>TBL_ESPECIFICACAO</code> definida em dois arquivos (<code>TBL_ESPECIFICACAO.sql</code> e <code>TBL_ESPECIFICACAO_1.sql</code>). <code>TBL_RELIGIAO</code>, <code>TBL_ESTADO_CIVIL</code> e <code>TBL_POSTO</code> (posto militar) sugerem campos herdados de outro produto; avaliar a necessidade (RF-PRI-021).</p>
+<h3 id="sistema-e-configuracao">Sistema e configuração</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SIS_CONFIGURACAO</code></td>
+<td>Dados do cliente, versão do sistema e do banco, tema, logotipos, campos de licença (<code>VALIDADOR1/2</code>)</td>
+</tr>
+<tr>
+<td><code>TBL_OBJETOS_TELA</code></td>
+<td>Personalização de rótulos e visibilidade por cliente</td>
+</tr>
+<tr>
+<td><code>TBL_CONFIGURACAO_PLUGIN</code>, <code>TBL_CLIQUE</code>, <code>TBL_LEITURA</code></td>
+<td>Uso a confirmar</td>
+</tr>
+<tr>
+<td><code>SIS_LOG_SCRIPT</code></td>
+<td>Scripts de atualização do banco já aplicados (sem chave primária)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Procedimentos: <code>pPossoExcluir</code> (verifica dependências antes de excluir), <code>pListaPerfis</code>, <code>pListaLocais</code>, <code>pListaLocaisPorNome</code>, <code>pListaConfigCliente</code>, <code>pInsertSisFuncao</code>, <code>pInsertSisFuncaoPermissao</code>. Funções: <code>TIRA_ACENTO</code>, <code>fn_proximo_prontuario</code> (prontuário: outro sinal de origem hospitalar).</p>
+<hr />
+<h2 id="integracoes-com-os-outros-modulos">Integrações com os outros módulos</h2>
+<p>Cada módulo tem banco próprio (exceto o OPE). O Principal é usado de três formas:</p>
+<h3 id="login-e-permissoes-por-servico-todos-os-modulos">Login e permissões, por serviço (todos os módulos)</h3>
+<p>O Principal oferece um serviço de autenticação (SSO) e de permissões, consumido pelos módulos:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Serviço</th>
+<th>Operações</th>
+<th>Quem usa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Autenticação (<code>HSolutions.Principal.Microservice</code>, rota <code>Autenticacao/</code>)</td>
+<td><code>AuthenticateUser</code>, <code>IsAuthenticated</code>, <code>GetUserLogged</code>, <code>GetUsersOnline</code>, <code>LogoutUser</code></td>
+<td>Todos os módulos (via <code>svcAutenticacao</code>)</td>
+</tr>
+<tr>
+<td>Permissões (<code>IsvcPermissao</code>)</td>
+<td>Permissões do usuário por tela</td>
+<td>Configurado em vários módulos</td>
+</tr>
+<tr>
+<td>Cadastros (<code>Ambiente</code>, <code>Area</code>, <code>Equipamento</code>, <code>Local</code>, <code>PessoaJuridica</code>, <code>PJFilial</code>, <code>Utensilio</code>, <code>Utilidade</code>, <code>FuncaoProfissional</code>, <code>Usuario</code>, <code>Notificacao</code>)</td>
+<td>Listas e consultas</td>
+<td>Módulos que precisam desses cadastros</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="leitura-direta-do-banco-por-sinonimos-estoque-e-producao">Leitura direta do banco, por sinônimos (Estoque e Produção)</h3>
+<p>Estoque e Produção leem tabelas do Principal <strong>direto no banco</strong>, por sinônimos (atalhos para tabelas de outro banco). A documentação do fornecedor registra isso como um acoplamento que deveria ter sido eliminado.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabelas do Principal lidas</th>
+<th>Estoque</th>
+<th>Produção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segurança: <code>SIS_USUARIO</code>, <code>SIS_PERFIL</code>, <code>SIS_USUARIO_PERFIL</code>, <code>SIS_PERFIL_FUNCAO</code>, <code>SIS_PERFIL_LOCAL</code>, <code>SIS_FUNCAO</code>, <code>SIS_LOCAL</code>, <code>SIS_MODULO</code>, <code>SIS_ACESSO</code>, <code>SIS_ATIVIDADE_USUARIO</code>, <code>SIS_OCUPACAO_USUARIO</code></td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Pessoa jurídica: <code>GBL_PJ</code>, <code>GBL_PJ_CONTATO</code>, <code>GBL_PJ_TIPO_CADASTRO</code></td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Tabelas de apoio (endereço, pessoas, banco, operadora)</td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Estrutura física: <code>TBL_AMBIENTE</code>, <code>TBL_EQUIPAMENTO</code>, <code>TBL_INSTRUMENTO</code>, <code>TBL_UTILIDADE</code> e ligações com ambiente, <code>TBL_PONTOS_AGUA</code>, <code>TBL_TIPO_AGUA</code>, <code>TBL_GRAU_CONTAMINACAO</code>, <code>TBL_CENTRO_CUSTO</code>, <code>SIS_TIPO_FUNCAO</code>, <code>TBL_TIPO_FUNCIONARIO</code></td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><code>TBL_GRUPO_USUARIO</code>, procedimento <code>pListaMenuNivel3</code></td>
+<td>Sim</td>
+<td>Não</td>
+</tr>
+<tr>
+<td>Procedimentos <code>pListaPerfis</code>, <code>pListaLocais</code></td>
+<td>Sim</td>
+<td>Sim</td>
+</tr>
+</tbody>
+</table></div>
+<p>Fontes: <code>3.estoque/**/Synonyms/*.sql</code> (36), <code>2.producao/**/Synonyms/*.sql</code> (47), <code>2.producao/app/ScriptBD/CREATE_SINONIMO_PRODUCAO.sql</code>.</p>
+<p><strong>Consequências para a nova versão:</strong>
+- Qualquer mudança nessas tabelas do Principal (nome de coluna, tipo, exclusão de campo) <strong>quebra o Estoque e a Produção</strong>. É o principal risco técnico da atualização.
+- <strong>Recomendação:</strong> substituir os sinônimos por chamadas ao serviço do Principal, ou, no mínimo, por visões (<em>views</em>) que exponham só as colunas necessárias, sem senha.</p>
+<h3 id="tabelas-com-o-mesmo-nome-em-varios-modulos">Tabelas com o mesmo nome em vários módulos</h3>
+<p>A documentação do fornecedor avisa que há tabelas com o mesmo nome em módulos diferentes, mas com estrutura própria. Isso impede unificar os bancos sem análise. O levantamento por módulo entra no documento 06 de cada módulo.</p>
+<hr />
+<h2 id="anomalias-de-estrutura-a-corrigir">Anomalias de estrutura a corrigir</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Anomalia</th>
+<th>Tabela(s)</th>
+<th>Correção sugerida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Chave estrangeira faltando</td>
+<td><code>SIS_USUARIO_PERFIL.ID_USUARIO</code>, <code>SIS_PERFIL_LOCAL.ID_LOCAL</code>, <code>SIS_FUNCAO.ID_MODULO</code>, <code>SIS_FUNCAO.ID_TIPO_FUNCAO</code>, <code>GBL_PJ_CONTATO.codigo_pj</code></td>
+<td>Criar as chaves; antes, verificar registros órfãos</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Chave estrangeira para a tabela errada</td>
+<td><code>GST_NOTIFICACAO.ID_STATUS</code> → <code>GST_EVENTO_FUNCAO</code></td>
+<td>Apontar para <code>GST_EVENTO_STATUS</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tabelas sem chave primária</td>
+<td><code>TBL_BANCO</code>, <code>TBL_MUNICIPIO_FAIXA</code>, <code>TBL_BAIRRO_FAIXA</code>, tabelas de tipo de manutenção, <code>SIS_LOG_SCRIPT</code></td>
+<td>Criar chave primária</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Dois modelos para a mesma coisa</td>
+<td>Histórico (<code>TBL_LOG_ALTERACAO</code> e <code>_2</code>), notificações (<code>GST_*</code> e <code>TBL_NOTIFICACAO*</code>)</td>
+<td>Unificar e migrar</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Campos e tabelas herdados de outro produto</td>
+<td><code>SIS_LOCAL</code> (IP de som e vídeo, leito), <code>fn_proximo_prontuario</code>, <code>TBL_RELIGIAO</code>, <code>TBL_POSTO</code></td>
+<td>Confirmar uso e remover</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Leitura direta do banco por outros módulos</td>
+<td>Sinônimos do Estoque e da Produção</td>
+<td>Serviço ou visões restritas</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Nomes de chave inconsistentes</td>
+<td><code>ID</code>, <code>id</code>, <code>ID_EQUIPAMENTO</code>, <code>CODIGO_PJ</code>…</td>
+<td>Padronizar na nova versão</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="conformidade-regulatoria">Conformidade regulatória</h2>
+<p>Cruzamento das exigências da ANVISA com o sistema atual. Legenda: Atende, Atende parcialmente, Não atende, A verificar.</p>
+<h3 id="controle-de-acesso-e-senhas">Controle de acesso e senhas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o sistema faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segurança incluindo controle de acesso, definida nos requisitos</td>
+<td>Guia 33, 9.3.2.3</td>
+<td>Usuário, perfil, função e ação por tela (RN-PRI-040 a 047)</td>
+<td>Atende</td>
+</tr>
+<tr>
+<td>Papéis (perfis de acesso) definidos, como operador e supervisor</td>
+<td>Guia 33, 9.5</td>
+<td>Perfis cadastráveis; os perfis em uso estão no banco</td>
+<td>A verificar</td>
+</tr>
+<tr>
+<td>Responsabilidade pelo controle de acesso acordada entre dono do processo e dono do sistema</td>
+<td>Guia 33, 11.12.3</td>
+<td>Fora do código</td>
+<td>A verificar (procedimento)</td>
+</tr>
+<tr>
+<td>Gestão de senhas tratada como item de alto impacto, com avaliação de risco</td>
+<td>Guia 33, 7.3.1</td>
+<td>Bloqueio por tentativas, validade, complexidade e histórico (RN-PRI-006, 020 a 028)</td>
+<td>Atende parcialmente</td>
+</tr>
+<tr>
+<td>Usuário identificado de forma única</td>
+<td>Guia 33, 9.3.2.3 (controle de acesso)</td>
+<td>Login único (RN-PRI-030)</td>
+<td>Atende</td>
+</tr>
+<tr>
+<td>### Trilha de auditoria e registros</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o sistema faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Motivo da alteração registrado quando apropriado</td>
+<td>RDC 658, art. 125, parágrafo único</td>
+<td>Campo de justificativa no histórico e justificativa obrigatória na exclusão</td>
+<td>Atende (a confirmar em todas as telas)</td>
+</tr>
+<tr>
+<td>Atividades significativas rastreáveis</td>
+<td>RDC 658, art. 124</td>
+<td>Criação e alteração registradas com usuário e data (RN-PRI-054)</td>
+<td>Atende</td>
+</tr>
+<tr>
+<td>Retenção mínima (documentação de lote: 1 ano após o vencimento ou 5 anos)</td>
+<td>RDC 658, art. 127</td>
+<td>Não há expurgo no código do Principal</td>
+<td>A verificar (política de backup e arquivo)</td>
+</tr>
+<tr>
+<td>Teste das trilhas de auditoria e do registro de ações críticas</td>
+<td>Guia 33, 9.7.7.1.2 (OQ)</td>
+<td>—</td>
+<td>Entra no plano de testes</td>
+</tr>
+<tr>
+<td>Registro de acessos ao sistema</td>
+<td>Guia 33, 11.12</td>
+<td>Toda tentativa de login registrada (RN-PRI-010), exceto conta inativa</td>
+<td>Atende parcialmente</td>
+</tr>
+<tr>
+<td>### Assinatura eletrônica</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o sistema faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Uso de assinaturas eletrônicas definido nos requisitos e testado</td>
+<td>Guia 33, 9.3.2.3 e 9.7.7.1.2</td>
+<td>O Principal não tem assinatura própria. Os módulos Estoque, Controle de Documentos, Comercial e Produção têm funções de assinatura, que dependem das contas do Principal</td>
+<td>A verificar no módulo piloto</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="mensagens-dados-e-fase-operacional">Mensagens, dados e fase operacional</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Exigência</th>
+<th>Referência</th>
+<th>O que o sistema faz</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validação da entrada de dados</td>
+<td>Guia 33, 9.7.7.1.2</td>
+<td>Validações de formulário (complexidade de senha, campos obrigatórios)</td>
+<td>A verificar por tela</td>
+</tr>
+<tr>
+<td>Backup e restauração; continuidade do negócio</td>
+<td>Guia 33, 11.10 e 11.11</td>
+<td>Fora do código (infraestrutura)</td>
+<td>A verificar com a TI</td>
+</tr>
+<tr>
+<td>Gerenciamento de mudanças e de configuração</td>
+<td>Guia 33, 9.8.2 e 11.7</td>
+<td>A tabela <code>SIS_LOG_SCRIPT</code> sugere controle de versão do banco</td>
+<td>A verificar</td>
+</tr>
+<tr>
+<td>Revisão periódica</td>
+<td>Guia 33, 11.9</td>
+<td>Procedimento</td>
+<td>A verificar</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="decisoes-pendentes">Decisões pendentes</h2>
+<ol>
+<li>Usuário inativo × conta inativa: é a mesma coisa? (RF-PRI-027)</li>
+<li>Para que serve, hoje, o vínculo do perfil com locais? (RF-PRI-034)</li>
+<li>Perfis herdam permissões do perfil pai? (RF-PRI-035)</li>
+<li>Quais dados pessoais do usuário são realmente necessários? (RF-PRI-021)</li>
+<li>A personalização de telas por cliente continua necessária? (RF-PRI-071)</li>
+<li>A empresa usa login corporativo (Active Directory / Entra ID)? (RNF-PRI-008)</li>
+<li>Qual o prazo de retenção a adotar para cada tipo de registro? (RNF-PRI-013)</li>
+</ol>
+<div class="callout">
+<p class="callout-titulo">Decisão levantada nos testes, ainda pendente</p>
+<ul>
+<li>Conteúdo do relatório de revisão de acessos (recomendação: usuário, perfis, telas e ações liberadas, data da última alteração e último acesso).</li>
+</ul>
+</div>
+<div class="callout">
+<p class="callout-titulo">Decisões tomadas em 06/10/2026</p>
+<ul>
+<li>A justificativa é obrigatória em toda exclusão e alteração de todos os cadastros (RF-PRI-042).</li>
+<li>A sessão expira após 10 minutos de inatividade, e "Sair" encerra todos os módulos (RF-PRI-006).</li>
+<li>A tela de quem só consulta é somente leitura (RF-PRI-033).</li>
+</ul>
+</div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#papel-do-modulo-principal">Papel do módulo Principal</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#como-ler-os-requisitos">Como ler os requisitos</a></li><li><a href="#requisitos-funcionais">Requisitos funcionais</a></li><li class="sub"><a href="#login-e-sessao">Login e sessão</a></li><li class="sub"><a href="#senha">Senha</a></li><li class="sub"><a href="#usuarios-e-contas">Usuários e contas</a></li><li class="sub"><a href="#perfis-e-permissoes">Perfis e permissões</a></li><li class="sub"><a href="#exclusao-e-historico">Exclusão e histórico</a></li><li class="sub"><a href="#cadastros-compartilhados">Cadastros compartilhados</a></li><li class="sub"><a href="#notificacoes">Notificações</a></li><li class="sub"><a href="#configuracao">Configuração</a></li><li class="sub"><a href="#requisitos-acrescentados-pelos-testes-06-10-2026">Requisitos acrescentados pelos testes (06/10/2026)</a></li><li><a href="#requisitos-nao-funcionais">Requisitos não funcionais</a></li><li class="sub"><a href="#integridade-de-dados-e-auditoria">Integridade de dados e auditoria</a></li><li class="sub"><a href="#validacao-e-operacao">Validação e operação</a></li><li class="sub"><a href="#integracao-entre-modulos">Integração entre módulos</a></li><li><a href="#confirmacao-pelos-testes">Confirmação pelos testes</a></li><li><a href="#modelo-de-dados">Modelo de dados</a></li><li class="sub"><a href="#visao-geral">Visão geral</a></li><li class="sub"><a href="#seguranca-usuarios-perfis-e-permissoes">Segurança: usuários, perfis e permissões</a></li><li class="sub"><a href="#trilha-de-auditoria-historico-de-alteracoes">Trilha de auditoria (histórico de alterações)</a></li><li class="sub"><a href="#pessoa-juridica">Pessoa jurídica</a></li><li class="sub"><a href="#estrutura-fisica-e-equipamentos">Estrutura física e equipamentos</a></li><li class="sub"><a href="#financeiro-e-locais-fisicos">Financeiro e locais físicos</a></li><li class="sub"><a href="#notificacoes_1">Notificações</a></li><li class="sub"><a href="#tabelas-de-apoio">Tabelas de apoio</a></li><li class="sub"><a href="#sistema-e-configuracao">Sistema e configuração</a></li><li><a href="#integracoes-com-os-outros-modulos">Integrações com os outros módulos</a></li><li class="sub"><a href="#login-e-permissoes-por-servico-todos-os-modulos">Login e permissões, por serviço (todos os módulos)</a></li><li class="sub"><a href="#leitura-direta-do-banco-por-sinonimos-estoque-e-producao">Leitura direta do banco, por sinônimos (Estoque e Produção)</a></li><li class="sub"><a href="#tabelas-com-o-mesmo-nome-em-varios-modulos">Tabelas com o mesmo nome em vários módulos</a></li><li><a href="#anomalias-de-estrutura-a-corrigir">Anomalias de estrutura a corrigir</a></li><li><a href="#conformidade-regulatoria">Conformidade regulatória</a></li><li class="sub"><a href="#controle-de-acesso-e-senhas">Controle de acesso e senhas</a></li><li class="sub"><a href="#mensagens-dados-e-fase-operacional">Mensagens, dados e fase operacional</a></li><li><a href="#decisoes-pendentes">Decisões pendentes</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

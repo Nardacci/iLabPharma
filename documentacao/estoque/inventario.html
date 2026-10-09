@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventário · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html" aria-current=page>Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Inventário</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Fluxo Inventario.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o <strong>inventário do estoque</strong> no LabMedSys: a abertura, a contagem física (até três contagens), a justificativa das divergências e a apuração, que ajusta os saldos.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Geração do inventário e trava dos endereços.</li>
+<li>Contagens e justificativa de divergência.</li>
+<li>Apuração, cancelamento e reabertura de contagem.</li>
+<li>Relatórios do inventário.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o inventário de bens patrimoniais (relatório "inventário de bens", a mapear) e os ajustes de saldo feitos fora do inventário (Saída de Material (Outras), no fluxo de solicitação).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. A referência ao código fica só nas regras.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/estoque/inventario-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/inventario-fluxograma.png" alt="Workflow do processo de inventário" loading="lazy"></a><figcaption>Workflow do processo de inventário</figcaption></figure>
+
+<p>O <strong>inventário</strong> é aberto com tipo, motivo, data, almoxarifado, local, grupo e subgrupo. O sistema <strong>não deixa abrir</strong> se houver recebimento ou solicitação pendente. Ao abrir, <strong>trava os endereços</strong> envolvidos: o saldo deles deixa de contar como disponível até o fim.</p>
+<p>Na <strong>contagem</strong>, registra-se a quantidade física por endereço e item. Se diverge do sistema, conta-se de novo, até a terceira vez. A terceira contagem divergente exige <strong>justificativa</strong>. A <strong>apuração</strong> só roda com as contagens finalizadas e justificadas: ajusta os saldos, libera os endereços e gera o relatório. Antes disso, é possível cancelar o inventário ou reabrir uma contagem.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<p>"A numeração das regras de negócio é reiniciada em cada atividade, visando facilitar sua identificação e manutenção."</p>
+<h3 id="abertura-do-inventario">Abertura do inventário</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Exige data, tipo, motivo, almoxarifado, local, grupo e subgrupo (<code>inventario/inventario_ed.aspx</code>, validadores).</li>
+<li>RN002 – A data não pode ser anterior a hoje ("A data do inventário não pode ser anterior a data atual!").</li>
+<li>RN003 – Não gera inventário com <strong>itens pendentes de recebimento</strong> nem com <strong>solicitações pendentes</strong> (mensagens do código).</li>
+<li>RN004 – Os endereços do inventário ficam <strong>travados</strong>, e o saldo deles sai do disponível (<code>LaboSys_DAL/dalInventarioItem.cs:553</code>; visão de saldo, coluna de inventário).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Inventário</td>
+<td>Abrir e acompanhar o inventário</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="contagem-e-justificativa">Contagem e justificativa</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN001 – A contagem exige o código da contagem, o endereço, o item e a quantidade (<code>inventario/inventario_contagem.aspx</code>, <code>inventario_ed.aspx</code>).</li>
+<li>RN002 – Até <strong>três contagens</strong>. A terceira contagem divergente exige justificativa: "Informe a justificativa para a contagem divergente!" (<code>inventario_ed.aspx</code>); a apuração recusa "Terceira contagem ainda não foi Justificada!" (<code>inventario_apuracao_op.aspx.cs:148</code>).</li>
+<li>RN003 – <em>A validar com a área e a Garantia da Qualidade:</em> se as contagens devem ser feitas por pessoas diferentes. O código não mostra essa trava.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Inventário - Contagem</td>
+<td>Registrar as contagens</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Inventário - Justificativa</td>
+<td>Justificar a divergência</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Etiquetas de inventário (relatório)</td>
+<td>Identificar os endereços contados</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="apuracao">Apuração</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN001 – Só apura com a contagem finalizada ("A contagem não foi finalizada!") e a terceira contagem justificada (<code>inventario_apuracao_op.aspx.cs:145-148</code>).</li>
+<li>RN002 – A apuração processa os itens, ajusta os saldos e informa quantos itens processou (<code>inventario_apuracao_op.aspx.cs:155</code>). Gera o relatório de apuração (<code>:107</code>).</li>
+<li>RN003 – O inventário pode ser <strong>cancelado</strong> e uma contagem pode ser <strong>reaberta</strong> (<code>inventario_apuracao_op.aspx.cs:184-211</code>).</li>
+<li>RN004 – <em>A validar:</em> quem pode apurar, cancelar e reabrir. O código desta tela não mostra conferência de perfil além da permissão de acesso à tela. <em>A confirmar no teste:</em> se o ajuste de saldo fica no histórico do lote com usuário e justificativa.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Inventário - Apuração / Auditoria</td>
+<td>Apurar, cancelar ou reabrir</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Relatórios de inventário</td>
+<td>Apuração, inventário do mês, itens do inventário</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong> o almoxarifado <code>TESTE ALMOX</code> com o lote <code>TESTELOTE001</code> endereçado no <code>TESTE LOCAL NORMAL</code> e saldo conhecido; grupo e subgrupo <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-130</td>
+<td>Abrir inventário com data de ontem</td>
+<td>Recusa</td>
+</tr>
+<tr>
+<td>CT-EST-131</td>
+<td>Abrir inventário com uma solicitação <code>TESTE</code> pendente no almoxarifado</td>
+<td>Recusa: "O Inventário não pode ser gerado com solicitações pendentes!"</td>
+</tr>
+<tr>
+<td>CT-EST-132</td>
+<td>Abrir inventário do <code>TESTE ALMOX</code>, <code>TESTE LOCAL NORMAL</code>, grupo <code>TESTE</code></td>
+<td>Aberto; os endereços ficam travados</td>
+</tr>
+<tr>
+<td>CT-EST-133</td>
+<td>Durante o inventário, tentar separar ou movimentar o <code>TESTELOTE001</code></td>
+<td>Não aparece como disponível</td>
+</tr>
+<tr>
+<td>CT-EST-134</td>
+<td>Primeira contagem igual ao saldo</td>
+<td>Sem divergência</td>
+</tr>
+<tr>
+<td>CT-EST-135</td>
+<td>Contagem divergente três vezes, sem justificativa na terceira</td>
+<td>Recusa a terceira sem justificativa</td>
+</tr>
+<tr>
+<td>CT-EST-136</td>
+<td>Apurar antes de finalizar a contagem</td>
+<td>Recusa: "A contagem não foi finalizada!"</td>
+</tr>
+<tr>
+<td>CT-EST-137</td>
+<td>Justificar e apurar</td>
+<td>Saldo ajustado; endereços liberados; relatório de apuração gerado</td>
+</tr>
+<tr>
+<td>CT-EST-138</td>
+<td>Histórico do lote <code>TESTELOTE001</code> depois da apuração</td>
+<td>Mostra o ajuste com usuário, data e justificativa. <strong>Registrar se não mostrar</strong></td>
+</tr>
+<tr>
+<td>CT-EST-139</td>
+<td>Reabrir uma contagem e cancelar um segundo inventário <code>TESTE</code></td>
+<td>Funciona; os endereços do cancelado são liberados</td>
+</tr>
+<tr>
+<td>CT-EST-140</td>
+<td>A mesma pessoa conta as três vezes e apura</td>
+<td>Registrar se o sistema permite (RN003 da contagem)</td>
+</tr>
+<tr>
+<td>CT-EST-141</td>
+<td>Permissão: abrir Inventário - Apuração / Auditoria pelo endereço com usuário sem acesso</td>
+<td>Acesso negado (ver DV-EST-008)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#abertura-do-inventario">Abertura do inventário</a></li><li class="sub"><a href="#contagem-e-justificativa">Contagem e justificativa</a></li><li class="sub"><a href="#apuracao">Apuração</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 09/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
