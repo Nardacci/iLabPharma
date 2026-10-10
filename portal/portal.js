@@ -119,7 +119,7 @@
   }
   // Links de tabela para um título da mesma página (ex.: referência da norma no diagnóstico):
   // abrem o conteúdo daquela seção numa janela, sem sair da tabela.
-  var refs = document.querySelectorAll('article.texto td a[href^="#"]');
+  var refs = document.querySelectorAll('article.texto td a[href^="#tema-"]');
   if (refs.length && typeof HTMLDialogElement === 'function') {
     var janela = document.createElement('dialog');
     janela.className = 'janela-ref';
