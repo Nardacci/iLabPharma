@@ -784,6 +784,31 @@ def _chave_norma(item):
         return (1, tuple(int(x) for x in re.findall(r"\d+", str(item[1]))), f"Guia 33/2020, item {item[1]}")
     return None
 
+ANV_BUSCA_JS = """<script>
+(function(){
+  var campo=document.getElementById("anv-busca"), info=document.getElementById("anv-busca-info");
+  function norm(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\bn\.?\s?[oº]\b/g," ");}
+  var temas=[].slice.call(document.querySelectorAll(".anv-tema")).map(function(e){return {e:e,t:norm(e.textContent)};});
+  var linhas=[].slice.call(document.querySelectorAll(".anv-indice tbody tr")).map(function(e){return {e:e,t:norm(e.textContent)};});
+  var secoes=[].slice.call(document.querySelectorAll(".anv-modulo"));
+  function filtrar(){
+    var q=norm(campo.value).split(/[^a-z0-9]+/).filter(Boolean);
+    var n=0, mods={};
+    temas.forEach(function(x){var ok=q.every(function(w){return x.t.indexOf(w)>=0;});x.e.hidden=!ok;
+      if(ok&&q.length){n++;mods[x.e.closest(".anv-modulo").id]=1;}});
+    var nl=0; linhas.forEach(function(x){var ok=q.every(function(w){return x.t.indexOf(w)>=0;});x.e.hidden=!ok;if(ok)nl++;});
+    secoes.forEach(function(s){
+      if(s.id==="por-artigo"){s.hidden=q.length>0&&nl===0;return;}
+      s.hidden=q.length>0&&!mods[s.id];});
+    info.textContent=q.length?(n?n+" tema(s) em "+Object.keys(mods).length+" módulo(s); "+nl+" artigo(s) no índice":"Nada encontrado."):"";
+    try{history.replaceState(null,"",q.length?"#busca="+encodeURIComponent(campo.value):location.pathname);}catch(e){}
+  }
+  campo.addEventListener("input",filtrar);
+  [].slice.call(document.querySelectorAll(".anv-atalho")).forEach(function(b){b.addEventListener("click",function(){campo.value=b.dataset.q;filtrar();campo.focus();});});
+  var m=location.hash.match(/^#busca=(.*)$/); if(m){campo.value=decodeURIComponent(m[1]);filtrar();}
+})();
+</script>"""
+
 
 def pagina_anvisa(origem, busca):
     hom = origem / "homologacao"
@@ -854,6 +879,12 @@ def pagina_anvisa(origem, busca):
     <p>Os temas da RDC 658/2022 e do Guia 33/2020 que valem para cada módulo, com o <strong>texto exato da norma</strong> e a situação do sistema entregue pelo fornecedor. Clique num tema para abrir o texto. No fim, o índice por artigo mostra quais módulos cada artigo atinge.</p>
   </header>
   <nav class="submenu" aria-label="Módulos">{"".join(chips)}<a href="#por-artigo" class="submenu-ideal">Por artigo</a></nav>
+  <div class="anv-busca">
+    <label for="anv-busca">Buscar nas normas</label>
+    <input id="anv-busca" type="search" placeholder="Ex.: Guia 33/2020, art. 121, obsoleto, treinamento" autocomplete="off">
+    <div class="anv-atalhos">Atalhos: <button type="button" class="anv-atalho" data-q="RDC 658/2022">RDC 658/2022</button><button type="button" class="anv-atalho" data-q="Guia 33/2020">Guia 33/2020</button><button type="button" class="anv-atalho" data-q="assinatura">Assinatura</button><button type="button" class="anv-atalho" data-q="trilha de auditoria">Trilha de auditoria</button><button type="button" class="anv-atalho" data-q="treinamento">Treinamento</button><button type="button" class="anv-atalho" data-q="">Limpar</button></div>
+    <p class="anv-busca-info" id="anv-busca-info" aria-live="polite"></p>
+  </div>
   <p class="nota anv-legenda">Situação: {legenda}. Principal, Estoque e Garantia da Qualidade vêm do diagnóstico de conformidade entre os módulos; Controle da Qualidade e Controle de Documentos, da conformidade de cada módulo. Detalhes de acesso e senha não são publicados.</p>
   {"".join(secoes)}
   <section class="anv-modulo" id="por-artigo">
@@ -861,6 +892,7 @@ def pagina_anvisa(origem, busca):
     <p class="secao-desc">Cada artigo ou item citado e os temas de cada módulo em que ele aparece. Clique para ir ao tema.</p>
     <div class="tabela"><table class="anv-indice"><thead><tr><th>Artigo ou item</th><th>Onde aparece</th></tr></thead><tbody>{"".join(linhas)}</tbody></table></div>
   </section>
+{ANV_BUSCA_JS}
 <script>function anvAbrir(){{var e=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(e&&e.tagName==="DETAILS"){{e.open=true;e.scrollIntoView();}}}}addEventListener("hashchange",anvAbrir);anvAbrir();</script>
 </main>
 """ + rodape(raiz))
