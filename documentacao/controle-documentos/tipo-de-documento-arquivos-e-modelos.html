@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tipo de documento, arquivos e modelos · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html">Ciclo do documento</a></li><li><a href="controle-de-copias.html">Controle de cópias</a></li><li><a href="documento-externo-e-documento-legado.html">Documento externo e documento legado</a></li><li><a href="tipo-de-documento-arquivos-e-modelos.html" aria-current=page>Tipo de documento, arquivos e modelos</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Tipo de documento, arquivos e modelos</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-documentos/LabMedSys - Modulo Controle de Documentos - Fluxo Tipo de Documento, Arquivos e Modelos.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve dois pontos do <strong>Controle de Documentos</strong> que definem como os outros fluxos se comportam:
+- o cadastro de <strong>Tipo de Documento</strong>, que configura, para cada tipo, a codificação, a validade, o treinamento e o <strong>caminho de aprovação</strong>;
+- a <strong>gestão de arquivos e modelos</strong>, com um <strong>ciclo de vida básico</strong> que leva o documento a vigente sem passar pelo ciclo de aprovação.</p>
+<p>É a base da regra de que documentos sejam definidos, aprovados e mantidos atualizados (RDC 658/2022, arts. 114, 117, 119 e 121).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Tipo de Documento (Tabelas de Apoio): cadastro, caminho de aprovação por tipo e exclusão.</li>
+<li>Cadastro de Arquivos, Arquivos e Modelos: o ciclo de vida básico. Essas telas têm lógica completa, mas <strong>não aparecem no roteiro de menu do fornecedor</strong> (<code>00-reconhecimento.md</code>, seção 2).</li>
+</ul>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>6.controle_documento/app/</code>. Para encurtar: <code>Tipo</code> = <code>HSolutions.ControleDoc.UI/Areas/TabelasApoio/Controllers/TipoDocumentoController.cs</code>, <code>Ged</code> = <code>HSolutions.ControleDoc.UI/Areas/Documento/Controllers/DocGestaoController.cs</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-documentos/tipo-arquivos-modelos-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-documentos/tipo-arquivos-modelos-fluxograma.png" alt="Workflow do tipo de documento e da gestão de arquivos e modelos" loading="lazy"></a><figcaption>Workflow do tipo de documento e da gestão de arquivos e modelos · clique para ampliar</figcaption></figure>
+
+<p><strong>Tipo de documento.</strong> O cadastro define, para cada tipo:
+- se o código é <strong>automático</strong> (com sequencial);
+- a <strong>validade</strong> e o <strong>alerta</strong>;
+- se exige <strong>treinamento</strong>;
+- se controla os <strong>arquivos</strong> (GED) e o <strong>ciclo de vida</strong>;
+- o <strong>caminho</strong>: quais etapas (revisão, pré-aprovação, aprovação…) o documento percorre até ficar vigente.</p>
+<p><strong>Ciclo de vida básico.</strong> Em Arquivos e Modelos, o documento é incluído e, ao ser salvo com anexo e aplicação, fica <strong>vigente na hora</strong>. A nova revisão marca a anterior como Substituída no momento em que é criada.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="tipo-de-documento">Tipo de documento</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O nome do tipo não pode se repetir ("O campo TIPO DOCUMENTO digitado já esta cadastrado!") (<code>Tipo:221, 236</code>).</li>
+<li>RN002 – O tipo guarda:</li>
+<li>codificação automática com sequencial (<code>Tipo:409</code>);</li>
+<li>validade e alerta;</li>
+<li>exigência de treinamento;</li>
+<li>controle de arquivos e de ciclo de vida (<code>HSolutions.ControleDoc.Domain/Entities/TipoDocumento.cs:8-24</code>).
+  O <strong>alerta</strong> e o <strong>treinamento</strong> são cadastrados, mas não produzem efeito (fluxo 1, RN015; conformidade, tema 4).</li>
+<li>RN003 – <strong>Caminho de aprovação por tipo:</strong> a tela lista as etapas em ordem, e o usuário marca as que valem. A etapa <strong>Vigente</strong> sempre entra (<code>Tipo:620-660</code>). Ao salvar, a configuração anterior é <strong>apagada e regravada</strong> (<code>Tipo:666-680</code>).</li>
+<li>Nada impede um caminho <strong>sem nenhuma aprovação</strong>.</li>
+<li><em>Inferência, a confirmar no teste:</em> a troca do caminho não fica no histórico de alterações do tipo, porque os registros são recriados.</li>
+<li>RN004 – A <strong>exclusão</strong> do tipo é recusada quando há documento ou documento externo ativo daquele tipo, e pede justificativa (<code>Tipo:313-342</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Tipo de Documento</td>
+<td>Cadastrar tipos, o caminho de aprovação e os anexos do tipo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="ciclo-de-vida-basico-arquivos-e-modelos">Ciclo de vida básico (arquivos e modelos)</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN005 – A pesquisa mostra os <strong>modelos</strong> e os documentos <strong>vigentes</strong> dos tipos que controlam arquivos (<code>Ged:127-132</code>). Cada documento aparece como ciclo <strong>BÁSICO</strong> (modelo) ou <strong>COMPLETO</strong> (<code>Ged:239</code>).</li>
+<li>RN006 – O documento do ciclo básico nasce <strong>Em inclusão</strong> (<code>Ged:169-187</code>).</li>
+<li>RN007 – Ao <strong>salvar</strong>, exige anexo ("Anexo pendente!") e uma aplicação ("Adicione, pelo menos, uma Aplicação!"). O documento passa a <strong>Vigente na hora</strong>, sem revisão, pré-aprovação ou aprovação (<code>Ged:341-450</code>). A tela tem conferência de usuário e senha (<code>Ged:1199-1203</code>). <em>A confirmar no teste:</em> se ela é pedida ao salvar.</li>
+<li>RN008 – <strong>Nova revisão no ciclo básico:</strong></li>
+<li>cria a nova versão Em inclusão;</li>
+<li><strong>na mesma hora</strong>, marca a anterior como <strong>Substituída</strong> e <strong>inativa</strong> (<code>Ged:600-631</code>).
+  Até a nova ser salva, <strong>não há nenhuma versão vigente</strong>. Se a nova nunca for salva, o documento some de uso.</li>
+<li>RN009 – A <strong>exclusão</strong> só vale para documento Em inclusão ("O documento não pode ser excluído!") e passa a Excluído (<code>Ged:709-727</code>).</li>
+<li>RN010 – As datas de emissão e validade são conferidas como datas válidas ("Data de Emissão inválida!", "Data de Validade inválida!") (<code>Ged:479, 489</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Cadastro de Arquivos / Arquivos / Modelos <em>(fora do menu)</em></td>
+<td>Incluir, manter e revisar arquivos e modelos no ciclo básico</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Terceiro caminho para vigente sem aprovação.</strong> Além do tipo configurado sem aprovação (fluxo 1) e do documento legado (fluxo 3), o ciclo básico põe o documento em vigor ao salvar (RN007). <em>A validar:</em> quais tipos usam o ciclo básico e se a área considera esses arquivos documentos controlados.</p>
+<p><strong>2. A nova revisão tira a anterior de uso antes da hora</strong> (RN008). É o mesmo risco do fluxo 1 (RN016), mais grave aqui: acontece sempre, na criação da nova revisão.</p>
+<p><strong>3. O caminho de aprovação pode ficar vazio</strong> (RN003). Nenhuma trava exige pelo menos uma aprovação.</p>
+<p><strong>4. Mudança do caminho sem rastro</strong> (RN003, a confirmar).</p>
+<p><strong>5. Telas fora do menu.</strong> Arquivos e Modelos têm lógica completa, mas não estão no roteiro de menu do fornecedor. <em>A validar:</em> como os usuários chegam a elas e quem tem acesso.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Dois tipos de documento <code>TESTE</code>: um com o caminho completo e um configurado só com "Vigente".
+- Um tipo <code>TESTE</code> que controla arquivos (GED) sem ciclo de vida.
+- Arquivo PDF de teste.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-040</td>
+<td>Cadastrar tipo <code>TESTE</code> com nome já usado</td>
+<td>Recusa (RN001)</td>
+</tr>
+<tr>
+<td>CT-DOC-041</td>
+<td>Configurar um tipo <code>TESTE</code> desmarcando todas as etapas de aprovação</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-DOC-042</td>
+<td>Mudar o caminho de um tipo e consultar o histórico do tipo</td>
+<td><strong>Registrar se a mudança aparece</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-DOC-043</td>
+<td>Excluir um tipo com documento ativo; depois um sem uso</td>
+<td>Recusa no primeiro; exclusão com justificativa no segundo</td>
+</tr>
+<tr>
+<td>CT-DOC-044</td>
+<td>Em Arquivos/Modelos, incluir um modelo <code>TESTE</code> e salvar com anexo e aplicação</td>
+<td><strong>Registrar se fica vigente sem aprovação</strong> e se a senha é pedida (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-DOC-045</td>
+<td>Abrir nova revisão do modelo do CT-DOC-044 <strong>sem salvar</strong>; procurar o modelo em Visualizar Documento e pela API (outro módulo)</td>
+<td><strong>Registrar se a revisão anterior já está Substituída e se nenhuma versão vigente aparece</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-DOC-046</td>
+<td>Descobrir pelo navegador o caminho até Arquivos/Modelos com um usuário comum</td>
+<td><strong>Registrar se a tela abre e por onde</strong> (ponto 5)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#tipo-de-documento">Tipo de documento</a></li><li class="sub"><a href="#ciclo-de-vida-basico-arquivos-e-modelos">Ciclo de vida básico (arquivos e modelos)</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
