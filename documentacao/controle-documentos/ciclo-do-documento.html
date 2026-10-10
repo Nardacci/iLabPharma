@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciclo do documento · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html" aria-current=page>Ciclo do documento</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Ciclo do documento</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-documentos/LabMedSys - Modulo Controle de Documentos - Fluxo Ciclo do Documento.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo principal do <strong>Controle de Documentos</strong> no LabMedSys: o <strong>ciclo do documento</strong>. O documento é incluído, revisado pelos setores, pré-aprovado, aprovado e posto em vigor. Depois pode ganhar uma nova revisão, que substitui a anterior, ou ser obsoletado. É o fluxo que garante que só a versão aprovada e vigente de um procedimento esteja em uso (RDC 658/2022, arts. 119 e 121).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Documento: inclusão, envio para revisão, exclusão em inclusão.</li>
+<li>Revisão Documento: revisão e devolução por setor; confirmação da revisão (análise crítica).</li>
+<li>Pré-Aprovação Documento e Aprovação Documento, com devolução.</li>
+<li>Vigência de Documento: tornar vigente e substituir a revisão anterior.</li>
+<li>Nova Revisão de Documento.</li>
+<li>Obsolescência de Documento.</li>
+<li>Histórico do documento.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> Controle de Cópias, Documento Externo, Documento Legado, Tipo de Documento, Arquivos e Modelos. Terão fluxos próprios. O <strong>Tipo de Documento</strong> entra aqui só no que define o fluxo (RN005).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>6.controle_documento/app/</code>. Para encurtar: <code>UI/</code> = <code>HSolutions.ControleDoc.UI/</code>, <code>App/</code> = <code>HSolutions.ControleDoc.Application/</code>, <code>Doc</code> = <code>UI/Areas/Documento/Controllers/DocController.cs</code>, <code>Serv</code> = <code>App/Services/DocumentoAppService.cs</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-documentos/ciclo-documento-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-documentos/ciclo-documento-fluxograma.png" alt="Workflow do ciclo do documento no Controle de Documentos" loading="lazy"></a><figcaption>Workflow do ciclo do documento no Controle de Documentos · clique para ampliar</figcaption></figure>
+
+<p>O autor <strong>inclui o documento</strong>: tipo, código, título, setor responsável e o arquivo (anexo). Indica também os <strong>setores revisores</strong> e as <strong>aplicações</strong>. Cada setor revisor <strong>revisa</strong> ou <strong>devolve</strong>, com justificativa. Depois, a revisão é <strong>confirmada</strong> (a análise crítica).</p>
+<p>Seguem a <strong>pré-aprovação</strong> (aprovador inicial) e a <strong>aprovação</strong> (aprovador final). Em cada uma é possível devolver, com justificativa. Aprovado, o documento é <strong>posto em vigor</strong>, com o anexo final e as datas de emissão e validade. Se for uma nova revisão, a versão anterior passa a <strong>Substituída</strong>.</p>
+<p>Um documento vigente pode ganhar uma <strong>nova revisão</strong>, que recomeça o ciclo em inclusão, ou ser <strong>obsoletado</strong>. As decisões pedem <strong>usuário e senha</strong>, e cada passo grava o <strong>histórico</strong>: ação, justificativa e quem assinou.</p>
+<p><strong>Situações do documento</strong> (<code>HSolutions.ControleDoc.Domain/Enumerators/SituacaoDocumentoEnum.cs</code>): Em inclusão, Em revisão, Em pré-aprovação, Em aprovação, Aprovado, Vigente, Cancelado, Substituído, Obsoleto e Excluído.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="inclusao">Inclusão</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O documento nasce <strong>Em inclusão</strong> (<code>Doc:104-121</code>).</li>
+<li>RN002 – Para seguir para a revisão, o documento precisa de <strong>anexo</strong>, de <strong>pelo menos um setor revisor</strong> e de <strong>pelo menos uma aplicação</strong>. Mensagens: "Anexo pendente!", "Adicione, pelo menos, um Setor Revisor!", "Adicione, pelo menos, uma Aplicação!" (<code>Doc:2582-2597</code>).</li>
+<li>RN003 – <strong>Exclusão</strong> só <strong>Em inclusão</strong> ("O documento não pode ser excluído!"), com justificativa. O documento passa a <strong>Excluído</strong> e não é apagado do banco (<code>Doc:345-370</code>).</li>
+<li>RN004 – A criação grava no histórico "CRIAÇÃO DO DOCUMENTO", com justificativa e assinante (<code>Doc:2795</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Documento</td>
+<td>Incluir, consultar, excluir em inclusão e enviar para revisão</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="revisao">Revisão</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN005 – <strong>O fluxo depende do tipo de documento.</strong> A próxima situação vem da configuração do tipo (<code>TBL_TIPO_DOCUMENTO_SITUACAO</code>, <code>App/Services/TipoDocumentoAppService.cs:58-75</code>). Sem configuração, vale a sequência padrão: revisão → pré-aprovação → aprovação. <em>A validar:</em> quais tipos pulam etapas. Um tipo pode, por configuração, <strong>pular a aprovação</strong>.</li>
+<li>RN006 – Cada <strong>setor revisor</strong> revisa ou devolve, com justificativa. A ação é gravada no histórico como "REVISADO" ou "DEVOLVIDO". O documento devolvido <strong>volta para Em inclusão</strong> (<code>Doc:1485-1593</code>).</li>
+<li>RN007 – <strong>Confirmar a revisão</strong> (análise crítica) exige anexo. Grava quem confirmou e a <strong>data do servidor</strong> (<code>Serv:1036-1062</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Revisão Documento</td>
+<td>Revisar ou devolver por setor; confirmar a revisão</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="pre-aprovacao-e-aprovacao">Pré-aprovação e aprovação</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN008 – A <strong>pré-aprovação</strong> só vale <strong>Em pré-aprovação</strong> ("A situação do documento não permite pré-aprovação!"). Ela grava o aprovador inicial e a data do servidor. Numa nova revisão, <strong>soma 1 ao número da revisão</strong> (<code>Serv:765-812</code>).</li>
+<li>RN009 – A <strong>aprovação</strong> só vale <strong>Em aprovação</strong> ("A situação do documento não permite aprovação!") e exige anexo. Grava o aprovador final e a data do servidor (<code>Serv:849-884</code>).</li>
+<li>RN010 – <strong>Devolver</strong> na pré-aprovação ou na aprovação pede justificativa e grava no histórico ("DEVOLVIDO PRÉ-APROVAÇÃO", "DEVOLVIDO APROVAÇÃO") (<code>Doc:1690-1725, 1893-1928</code>).</li>
+<li>RN011 – <strong>Quem pré-aprovou não vê o documento na lista de aprovação</strong> (<code>UI/Areas/Documento/Model/DocAprovacaoIndexResultadoModel.cs:89-93</code>). Essa é a única separação entre o aprovador inicial e o final, e ela está <strong>só na lista</strong>: a gravação da aprovação não confere quem pré-aprovou.</li>
+<li>RN012 – As decisões pedem <strong>usuário e senha</strong> (<code>Doc:2550-2554</code>). Quem pode decidir e como a senha conferida se liga à gravação ficam para a etapa de permissões.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Pré-Aprovação Documento</td>
+<td>Pré-aprovar ou devolver</td>
+</tr>
+<tr>
+<td>Controle de Documentos</td>
+<td>Aprovação Documento</td>
+<td>Aprovar ou devolver</td>
+</tr>
+<tr>
+<td>Controle de Documentos</td>
+<td>Aprovação de Documentos (Documento Aprovação)</td>
+<td>Lista e aprovação pela tela de aprovação</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="vigencia">Vigência</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN013 – <strong>Tornar vigente</strong> só vale para documento <strong>Aprovado</strong> ("A situação do documento não permite tornar vigente!"). Exige <strong>anexo final</strong> ("É necessário informar um anexo final.") e as datas de <strong>emissão</strong> e <strong>validade</strong>, com a validade posterior à emissão. As duas datas são <strong>digitadas</strong>. Grava quem tornou vigente (<code>Serv:921-1000</code>).</li>
+<li>RN014 – Na vigência de uma nova revisão, a versão de origem passa a <strong>Substituída</strong>, com histórico "SUBSTITUÍDO" (<code>Serv:935-950</code>; <code>Doc:2736-2765</code>).</li>
+<li>RN015 – A conferência do <strong>treinamento</strong> antes da vigência existe no código, mas está <strong>desligada</strong> (comentada) (<code>Serv:975-978</code>). O documento entra em vigor mesmo quando o tipo exige treinamento.</li>
+<li>RN016 – <strong>Ordem das conferências:</strong> a versão anterior é marcada como Substituída <strong>antes</strong> de conferir se a nova pode entrar em vigor (<code>Serv:935-950</code> antes de <code>Serv:969-971</code>). <em>Inferência, a confirmar no teste:</em> se a nova for recusada, a anterior pode ficar Substituída sem nenhuma vigente.</li>
+<li>RN017 – A vigência está programada <strong>em dois lugares</strong>, no controlador (<code>Doc:2736-2765</code>) e no serviço (<code>Serv:921-1000</code>), com regras que podem divergir. Código repetido.</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Vigência de Documento</td>
+<td>Tornar vigente ou devolver</td>
+</tr>
+<tr>
+<td>Controle de Documentos</td>
+<td>Vigência de Documentos (Documento Aprovação)</td>
+<td>Vigência pela tela de aprovação</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="nova-revisao-e-obsolescencia">Nova revisão e obsolescência</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN018 – A <strong>nova revisão</strong> cria um documento novo <strong>Em inclusão</strong>, ligado ao de origem, com os dados copiados. Ela recomeça o ciclo (<code>Doc:453-545</code>). <em>A validar:</em> se pode partir de um documento que não esteja vigente, porque o código não mostra essa conferência.</li>
+<li>RN019 – A <strong>obsolescência</strong> só vale para documento <strong>Vigente</strong> e pede usuário, senha e justificativa. O documento passa a <strong>Obsoleto</strong> (<code>UI/Areas/Documento/Controllers/DocObsolescenciaController.cs:176, 285, 447</code>).</li>
+<li>RN020 – Os outros módulos só recebem documentos <strong>vigentes</strong> pela API (<code>UI/Api/DocumentoApiController.cs:35, 72</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Nova Revisão de Documento</td>
+<td>Abrir a nova revisão de um documento</td>
+</tr>
+<tr>
+<td>Controle de Documentos</td>
+<td>Obsolescência de Documento</td>
+<td>Retirar um documento de uso</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="historico">Histórico</h3>
+<h4 id="regras-de-negocio_5">Regras de negócio</h4>
+<ul>
+<li>RN021 – Cada passo grava no <strong>histórico do documento</strong>: ação, justificativa, responsável, setor, data e <strong>assinante</strong> (<code>Serv:1157</code>; <code>HSolutions.ControleDoc.Domain/Entities/DocumentoHistorico.cs:9-21</code>). Há relatório do histórico (<code>Doc:1145</code>).</li>
+<li>RN022 – As tabelas desse histórico <strong>não estão no projeto de banco</strong> (<code>00-reconhecimento.md</code>, seção 4). Perguntar ao DBA se existem no ambiente.</li>
+</ul>
+<h4 id="telas-do-sistema_5">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Documento (histórico)</td>
+<td>Consultar e imprimir o histórico</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. A separação entre quem pré-aprova e quem aprova está só na lista.</strong> Quem pré-aprovou não vê o documento na lista de aprovação, mas a gravação não confere (RN011). <em>A confirmar no teste.</em></p>
+<p><strong>2. Um tipo de documento pode pular a aprovação.</strong> O fluxo é configurado por tipo (RN005). Não há trava que exija pelo menos uma aprovação (RDC 658/2022, art. 119).</p>
+<p><strong>3. Vigência sem treinamento.</strong> A conferência existe e está desligada (RN015).</p>
+<p><strong>4. A revisão anterior pode ser substituída antes da hora</strong> (RN016). Risco de ficar sem nenhuma versão vigente.</p>
+<p><strong>5. Datas de emissão e validade digitadas</strong> (RN013), e a validade não é cobrada depois. O documento vencido continua vigente (<code>04-conformidade-regulatoria.md</code>, tema 4).</p>
+<p><strong>6. Regra repetida</strong> (RN017): a vigência está programada em dois lugares.</p>
+<p><strong>7. Cópias em papel não recolhidas</strong> na substituição e na obsolescência (<code>04-conformidade-regulatoria.md</code>, tema 6). Será tratado no fluxo de Controle de Cópias.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Um tipo de documento <code>TESTE</code> com o fluxo completo (revisão, pré-aprovação, aprovação) e um segundo tipo <code>TESTE</code> sem aprovação, se a configuração permitir.
+- Usuários de teste: <code>t.admin</code> como autor, um usuário de outro setor como revisor e dois aprovadores diferentes.
+- Arquivos PDF de teste.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-001</td>
+<td>Incluir documento <code>TESTE</code> sem anexo, sem setor revisor e sem aplicação; tentar enviar para revisão</td>
+<td>Recusa, com as três mensagens (RN002)</td>
+</tr>
+<tr>
+<td>CT-DOC-002</td>
+<td>Incluir documento <code>TESTE</code> completo e enviar para revisão</td>
+<td>Em revisão; histórico "CRIAÇÃO DO DOCUMENTO"</td>
+</tr>
+<tr>
+<td>CT-DOC-003</td>
+<td>Excluir um documento Em inclusão; tentar excluir um Em revisão</td>
+<td>O primeiro passa a Excluído, com justificativa; o segundo é recusado (RN003)</td>
+</tr>
+<tr>
+<td>CT-DOC-004</td>
+<td>Revisor devolve o documento</td>
+<td>Volta para Em inclusão; histórico "DEVOLVIDO" com justificativa</td>
+</tr>
+<tr>
+<td>CT-DOC-005</td>
+<td>Revisar e confirmar a revisão</td>
+<td>Em pré-aprovação; analista e data gravados</td>
+</tr>
+<tr>
+<td>CT-DOC-006</td>
+<td>Pré-aprovar e, <strong>com o mesmo usuário</strong>, tentar aprovar (pela lista e pelo endereço da tela)</td>
+<td>Pela norma, recusa. <strong>Registrar se aprovar</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-DOC-007</td>
+<td>Aprovar com outro usuário, informando senha errada; depois a certa</td>
+<td>Recusa com a senha errada; aprova com a certa; aprovador e data gravados</td>
+</tr>
+<tr>
+<td>CT-DOC-008</td>
+<td>Tornar vigente com validade anterior à emissão</td>
+<td>Recusa (RN013)</td>
+</tr>
+<tr>
+<td>CT-DOC-009</td>
+<td>Tornar vigente com emissão <strong>retroativa</strong> (mês passado)</td>
+<td><strong>Registrar se aceitar</strong> (ponto 5)</td>
+</tr>
+<tr>
+<td>CT-DOC-010</td>
+<td>Tornar vigente um documento cujo tipo exige treinamento, sem treinamento</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-DOC-011</td>
+<td>Criar nova revisão de um vigente, levar até a vigência</td>
+<td>Nova revisão vigente com número +1; a anterior Substituída, com histórico</td>
+</tr>
+<tr>
+<td>CT-DOC-012</td>
+<td>Na nova revisão, tentar tornar vigente <strong>sem anexo final</strong> e consultar a revisão anterior</td>
+<td>Recusa; <strong>registrar se a anterior ficou Substituída</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-DOC-013</td>
+<td>Com o tipo <code>TESTE</code> sem aprovação, levar um documento até a vigência</td>
+<td><strong>Registrar se entra em vigor sem nenhuma aprovação</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-DOC-014</td>
+<td>Obsoletar um vigente com senha e justificativa; tentar obsoletar um Em inclusão</td>
+<td>O primeiro passa a Obsoleto; o segundo é recusado (RN019)</td>
+</tr>
+<tr>
+<td>CT-DOC-015</td>
+<td>Em outro módulo (GQ, treinamento), procurar o documento substituído e o obsoleto</td>
+<td>Não aparecem; só o vigente (RN020)</td>
+</tr>
+<tr>
+<td>CT-DOC-016</td>
+<td>Abrir o relatório do histórico do documento do CT-DOC-011</td>
+<td>Todas as ações, com justificativa, data e assinante</td>
+</tr>
+<tr>
+<td>CT-DOC-017</td>
+<td>Criar nova revisão a partir de um documento <strong>Obsoleto</strong> ou <strong>Substituído</strong></td>
+<td>Pela norma, recusa. <strong>Registrar se permitir</strong> (RN018)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#inclusao">Inclusão</a></li><li class="sub"><a href="#revisao">Revisão</a></li><li class="sub"><a href="#pre-aprovacao-e-aprovacao">Pré-aprovação e aprovação</a></li><li class="sub"><a href="#vigencia">Vigência</a></li><li class="sub"><a href="#nova-revisao-e-obsolescencia">Nova revisão e obsolescência</a></li><li class="sub"><a href="#historico">Histórico</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
