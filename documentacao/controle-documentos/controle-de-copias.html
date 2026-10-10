@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de cópias · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html">Ciclo do documento</a></li><li><a href="controle-de-copias.html" aria-current=page>Controle de cópias</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Controle de cópias</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-documentos/LabMedSys - Modulo Controle de Documentos - Fluxo Controle de Copias.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o <strong>Controle de Cópias</strong> do LabMedSys: como as cópias impressas de um documento são registradas, numeradas e entregues aos setores ou a solicitantes externos. A norma pede que a reprodução não gere erros e que os documentos obsoletos não sejam usados por engano (RDC 658/2022, arts. 118 e 121). Na prática, isso inclui <strong>recolher as cópias em papel</strong> quando o documento muda.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Controle de Cópias: pesquisa, inclusão, salvamento, impressão e remoção de cópias.</li>
+<li>O que acontece com as cópias quando o documento é substituído ou obsoletado (ciclo do documento, fluxo 1).</li>
+</ul>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>6.controle_documento/app/</code>. Para encurtar: <code>Copia</code> = <code>HSolutions.ControleDoc.UI/Areas/ControleCopia/Controllers/CopiaController.cs</code>, <code>Serv</code> = <code>HSolutions.ControleDoc.Application/Services/ControleCopiaAppService.cs</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-documentos/controle-copias-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-documentos/controle-copias-fluxograma.png" alt="Workflow do Controle de Cópias" loading="lazy"></a><figcaption>Workflow do Controle de Cópias · clique para ampliar</figcaption></figure>
+
+<p>O usuário pesquisa o documento e inclui as cópias:
+- <strong>controladas</strong>, para setores internos, numeradas em sequência;
+- <strong>não controladas</strong>, para solicitantes externos, sem número.</p>
+<p>Ao salvar, as cópias passam a ativas. Na <strong>impressão</strong>, o sistema usa o arquivo final do documento, leva o número, o setor e o tipo da cópia, e registra no histórico quem imprimiu e para quem.</p>
+<p>O fluxo <strong>termina na entrega</strong>. Não há devolução nem recolhimento: quando o documento é substituído ou obsoletado, as cópias em papel da versão antiga não são chamadas de volta.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="pesquisa">Pesquisa</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Sem filtro de situação, a lista mostra os documentos <strong>Vigentes</strong> e <strong>Aprovados</strong> (<code>Copia:132-136</code>). Um documento <strong>aprovado, ainda não vigente</strong>, já pode ter cópias. <em>A validar com a área.</em></li>
+<li>RN002 – Com o filtro de situação preenchido, a lista mostra a situação escolhida, inclusive Substituído ou Obsoleto. <em>Inferência, a confirmar no teste:</em> é possível abrir e imprimir cópias de um documento que não vale mais.</li>
+<li>RN003 – A tela confere permissões por função para alterar, imprimir e consultar o histórico (<code>Copia:76-90, 159, 649</code>). Detalhe na etapa de permissões.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Controle de Cópias</td>
+<td>Pesquisar documentos e abrir o controle de cópias de cada um</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="inclusao-e-numeracao">Inclusão e numeração</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN004 – Há dois <strong>tipos de cópia</strong>: <strong>Controlada</strong>, para um setor interno, e <strong>Não controlada</strong>, para um solicitante externo (<code>HSolutions.ControleDoc.Infra.DB/dml.sql:31-35</code>).</li>
+<li>RN005 – A cópia <strong>controlada</strong> recebe o <strong>número seguinte</strong> ao da última cópia controlada do documento. A não controlada fica <strong>sem número</strong> (<code>Serv:130-165</code>).</li>
+<li>RN006 – A cópia nasce <strong>provisória</strong> e passa a <strong>ativa</strong> quando é salva ou impressa (<code>Copia:529-560</code>; <code>Serv:70-74</code>).</li>
+<li>RN007 – A ativação grava no histórico "Inclusão Cópia", com o setor ou o solicitante. O usuário gravado é <strong>quem criou</strong> a cópia, não quem a ativou (<code>Serv:77-110</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Controle de Cópias (edição)</td>
+<td>Incluir e salvar as cópias de um documento</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="impressao">Impressão</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN008 – A impressão usa o <strong>anexo final</strong> do documento ("Anexo não encontrado." quando falta) e leva o número da cópia, o setor ou o solicitante, se é controlada e a situação do documento (<code>Copia:389-445</code>).</li>
+<li>RN009 – Cada impressão grava no histórico "Impressão do documento … para …", com o usuário e o tipo da cópia (<code>Copia:446-470</code>).</li>
+<li>RN010 – A impressão <strong>não confere a situação</strong> do documento antes de imprimir (<code>Copia:389-445</code>).</li>
+<li>RN011 – A marca d'água "Copia controlada impressão não autorizada." <strong>existe, mas não é usada</strong>: nenhum trecho do código a chama (<code>HSolutions.ControleDoc.UI/Controllers/ControleDocBaseController.cs:201-220</code>).</li>
+<li>RN012 – O relatório da grade de cópias inclui documentos Vigentes, Substituídos e Obsoletos (<code>Copia:695-697</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Controle de Cópias (impressão)</td>
+<td>Imprimir a cópia e a grade de cópias</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="remocao-e-recolhimento">Remoção e recolhimento</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN013 – <strong>Remover</strong> uma cópia só a marca como excluída, <strong>sem justificativa e sem histórico</strong> (<code>Serv:64-68</code>).</li>
+<li>RN014 – <strong>Não há recolhimento.</strong> Nenhum campo guarda a devolução ou o recolhimento de uma cópia, e nada avisa os setores quando o documento é substituído ou obsoletado. Nenhuma ocorrência no código.</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Controle de Cópias (edição)</td>
+<td>Remover cópias</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Cópias antigas continuam em uso.</strong> Sem recolhimento (RN014), a cópia em papel da revisão substituída fica no setor. É o risco que o art. 121, parágrafo único, quer evitar.</p>
+<p><strong>2. A marca d'água não é aplicada</strong> (RN011). A cópia impressa não se distingue de um original nem avisa que a reimpressão é proibida. <em>A confirmar no teste:</em> o que sai impresso.</p>
+<p><strong>3. A remoção não deixa rastro</strong> (RN013). Não se sabe quem removeu nem por quê.</p>
+<p><strong>4. Cópia de documento que não vale.</strong> A lista inclui aprovados ainda não vigentes (RN001), e a impressão não confere a situação (RN010). Pelo filtro, talvez seja possível imprimir um substituído (RN002).</p>
+<p><strong>5. O histórico da inclusão grava o usuário errado</strong> (RN007): grava quem criou a cópia, não quem a confirmou.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Um documento <code>TESTE</code> vigente, com anexo final (do fluxo 1, CT-DOC-011).
+- A revisão anterior do mesmo documento, já Substituída.
+- Um setor de teste.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-020</td>
+<td>Incluir duas cópias controladas para o setor de teste e uma não controlada para "TESTE EXTERNO"; salvar</td>
+<td>Controladas numeradas em sequência (n e n+1); a não controlada sem número; histórico "Inclusão Cópia" com o usuário certo (ponto 5)</td>
+</tr>
+<tr>
+<td>CT-DOC-021</td>
+<td>Imprimir uma cópia controlada</td>
+<td>O impresso traz o número, o setor e "controlada"; <strong>registrar se há marca d'água</strong> (ponto 2); histórico da impressão</td>
+</tr>
+<tr>
+<td>CT-DOC-022</td>
+<td>Remover uma cópia e consultar o histórico</td>
+<td>Pela norma, pede motivo e fica no histórico. <strong>Registrar se não pedir nem registrar</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-DOC-023</td>
+<td>Na pesquisa, filtrar por <strong>Substituído</strong> e tentar imprimir uma cópia da revisão antiga</td>
+<td>Pela norma, recusa. <strong>Registrar se imprimir</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-DOC-024</td>
+<td>Criar cópia de um documento <strong>Aprovado</strong>, ainda não vigente</td>
+<td><strong>Registrar se permitir</strong> (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-DOC-025</td>
+<td>Tornar vigente uma nova revisão de um documento com cópias distribuídas; procurar aviso aos setores ou pedido de recolhimento</td>
+<td>Pela norma, as cópias antigas devem ser recolhidas. <strong>Registrar que nada acontece</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-DOC-026</td>
+<td>Imprimir a grade de cópias com um perfil sem a função "IMPRIMIR / EXCEL"</td>
+<td>Recusa (RN003)</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#pesquisa">Pesquisa</a></li><li class="sub"><a href="#inclusao-e-numeracao">Inclusão e numeração</a></li><li class="sub"><a href="#impressao">Impressão</a></li><li class="sub"><a href="#remocao-e-recolhimento">Remoção e recolhimento</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
