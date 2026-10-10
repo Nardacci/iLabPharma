@@ -150,9 +150,11 @@ MODULOS = [
          ("4.controle_qualidade/fluxos/agua-ambiente.md", "Água e ambiente", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Agua e Ambiente.docx"),
      ]},
     {"id": "controle-documentos", "nome": "Controle de Documentos", "icone": "▤", "cor": "#4f6d8f", "situacao": "Em análise", "nivel": 1,
-     "resumo": "Ciclo do documento (inclusão, revisão, pré-aprovação, aprovação com senha, vigência, nova revisão, obsolescência), controle de cópias, documentos externos e legados, tipos de documento, arquivos e modelos. Reconhecimento e conformidade com a RDC 658/2022 feitos: 11 pastas de telas, 72 páginas, 10 situações do documento; dos 13 temas da norma, 1 atendido, 8 em parte, 3 não atendidos e 1 a verificar. Os quatro fluxos prontos (ciclo do documento, controle de cópias, documento externo e legado, tipo de documento e arquivos): 56 regras e 39 casos de teste.",
+     "resumo": "Ciclo do documento (inclusão, revisão, pré-aprovação, aprovação com senha, vigência, nova revisão, obsolescência), controle de cópias, documentos externos e legados, tipos de documento, arquivos e modelos. Reconhecimento e conformidade com a RDC 658/2022 feitos: 11 pastas de telas, 72 páginas, 10 situações do documento; dos 13 temas da norma, 1 atendido, 8 em parte, 3 não atendidos e 1 a verificar. Os quatro fluxos prontos (ciclo do documento, controle de cópias, documento externo e legado, tipo de documento e arquivos), as 67 regras de negócio e o inventário das 17 telas.",
      "docs": [
          ("6.controle_documento/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+         ("6.controle_documento/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
+         ("6.controle_documento/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("6.controle_documento/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("6.controle_documento/fluxos/ciclo-documento.md", "Ciclo do documento", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Ciclo do Documento.docx"),
          ("6.controle_documento/fluxos/controle-copias.md", "Controle de cópias", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Controle de Copias.docx"),
