@@ -75,6 +75,7 @@ MODULOS = [
             ("1.principal/04-conformidade-regulatoria.md", "Conformidade regulatória", "qualidade", None),
             ("1.principal/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
             ("1.principal/09-matriz-de-rastreabilidade.md", "Matriz de rastreabilidade", "qualidade", None),
+            ("1.principal/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "1.principal/defeitos/LabMedSys - Modulo Principal - Defeitos para Correcao.docx"),
             ("1.principal/entregaveis/fonte/analise-de-requisitos.md", "Análise de requisitos", "tecnico", "1.principal/entregaveis/LabMedSys - Modulo Principal - Analise de Requisitos.docx"),
             ("1.principal/05-requisitos.md", "Requisitos da nova versão (rascunho)", "tecnico", None),
             ("1.principal/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
@@ -102,6 +103,7 @@ MODULOS = [
             ("3.estoque/fluxos/compras-fornecedor.md", "Compras e avaliação do fornecedor", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Compras e Avaliacao do Fornecedor.docx"),
             ("3.estoque/fluxos/almoxarifado-cq.md", "Almoxarifado do Controle da Qualidade", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Almoxarifado do Controle da Qualidade.docx"),
             ("3.estoque/01-cadastros-de-apoio.md", "Cadastros de apoio", "negocio", None),
+            ("3.estoque/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "3.estoque/defeitos/LabMedSys - Modulo Estoque - Defeitos para Correcao.docx"),
         ],
     },
     {
