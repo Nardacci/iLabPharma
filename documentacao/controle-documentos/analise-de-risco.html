@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise de risco · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html">Ciclo do documento</a></li><li><a href="controle-de-copias.html">Controle de cópias</a></li><li><a href="documento-externo-e-documento-legado.html">Documento externo e documento legado</a></li><li><a href="tipo-de-documento-arquivos-e-modelos.html">Tipo de documento, arquivos e modelos</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html" aria-current=page>Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Qualidade e ANVISA</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Análise de risco</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> Garantia da Qualidade e equipe de homologação.</p>
+<p><strong>Método:</strong> Guia nº 33/2020 da ANVISA, item 6 (gerenciamento do risco à qualidade, com base no ICH Q9 e no GAMP 5), com as mesmas escalas do Principal, da GQ e do CQ.</p>
+<p><strong>Data:</strong> 10/10/2026 · <strong>Situação:</strong> rascunho para revisão pela Garantia da Qualidade.</p>
+<p><strong>Base:</strong> as notas são uma proposta inicial, tiradas de:
+- o código;
+- as regras (<code>01-regras-de-negocio.md</code>);
+- a conformidade (<code>04-conformidade-regulatoria.md</code>);
+- os quatro fluxos;
+- a matriz de permissões (<code>02-matriz-de-permissoes.md</code>).</p>
+<h3 id="para-que-serve">Para que serve</h3>
+<p>Define <strong>o que testar primeiro e com que profundidade</strong> e a ordem das correções na nova versão.</p>
+<hr />
+<h3 id="etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Resposta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O sistema é regulado pelas Boas Práticas de Fabricação?</td>
+<td><strong>Sim.</strong> O módulo controla os procedimentos, instruções e especificações que a fábrica segue (RDC 658/2022, arts. 114 a 128).</td>
+</tr>
+<tr>
+<td>Categoria GAMP 5</td>
+<td><strong>5</strong>: aplicação customizada.</td>
+</tr>
+<tr>
+<td>Impacto do módulo</td>
+<td><strong>Alto, indireto, sobre o paciente:</strong> um procedimento errado, obsoleto ou não aprovado em uso leva a fabricar ou a analisar fora do aprovado.</td>
+</tr>
+<tr>
+<td>Particularidade</td>
+<td>O ciclo principal é bem desenhado (aprovação com senha, histórico, substituição), mas há <strong>atalhos</strong> para vigente e o controle <strong>depois</strong> da vigência é fraco.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conclusão:</strong> é necessária a avaliação funcional detalhada (etapas 2 e 3).</p>
+<h3 id="escalas-usadas">Escalas usadas</h3>
+<p>Iguais às do Principal (<code>1.principal/07-analise-de-risco.md</code>):
+- <strong>Severidade (S)</strong> e <strong>Probabilidade (P):</strong> Alta, Média ou Baixa.
+- <strong>Detecção (D):</strong> Baixa quando ninguém nota, Alta quando se percebe na hora.</p>
+<p><strong>Classe</strong> = S × P:
+- <strong>Classe 1:</strong> Alta × Alta, Alta × Média ou Média × Alta.
+- <strong>Classe 2:</strong> Alta × Baixa, Média × Média ou Baixa × Alta.
+- <strong>Classe 3:</strong> as demais combinações.</p>
+<p><strong>Prioridade</strong> = Classe × D:
+- <strong>Classe 1:</strong> Alta; passa a Média se D for Alta.
+- <strong>Classe 2:</strong> Alta, Média ou Baixa, conforme D seja Baixa, Média ou Alta.
+- <strong>Classe 3:</strong> Média só com D Baixa; nos outros casos, Baixa.</p>
+<hr />
+<h3 id="etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</h3>
+<h4 id="aprovacao-e-vigencia">Aprovação e vigência</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-DOC-01</td>
+<td>Vigência</td>
+<td>Documento entra em vigor <strong>sem nenhuma aprovação</strong> (tipo sem aprovação, documento legado, ciclo básico)</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Ao menos uma aprovação obrigatória em todo caminho; legado só por perfil de migração, com o original assinado</td>
+<td>Fluxos 1, 3 e 4</td>
+</tr>
+<tr>
+<td>R-DOC-02</td>
+<td>Aprovação</td>
+<td>Aprovação feita por quem não tem a função da etapa</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Função por etapa no perfil</td>
+<td>Conferir a função da etapa em toda gravação</td>
+<td><code>02</code>, seção 1</td>
+</tr>
+<tr>
+<td>R-DOC-03</td>
+<td>Assinatura</td>
+<td>Assinante registrado não é quem de fato decidiu</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Senha pedida na decisão</td>
+<td>Assinatura na própria gravação, do usuário logado, com significado e hora do servidor</td>
+<td><code>02</code>, seção 1; RN-DOC-007</td>
+</tr>
+<tr>
+<td>R-DOC-04</td>
+<td>Separação de funções</td>
+<td>A mesma pessoa pré-aprova e aprova</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Só a lista esconde o documento</td>
+<td>Recusar na gravação</td>
+<td>RN-DOC-020</td>
+</tr>
+<tr>
+<td>R-DOC-05</td>
+<td>Treinamento</td>
+<td>Documento entra em vigor antes do treinamento</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Conferência desligada no código</td>
+<td>Vigência só com treinamento concluído quando o tipo exigir</td>
+<td>RN-DOC-024</td>
+</tr>
+<tr>
+<td>R-DOC-06</td>
+<td>Continuidade</td>
+<td>Ficar sem nenhuma versão vigente (substituição antes da hora)</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Nenhum</td>
+<td>Substituir a anterior só quando a nova entrar em vigor</td>
+<td>RN-DOC-025; fluxo 4</td>
+</tr>
+<tr>
+<td>R-DOC-07</td>
+<td>Legado</td>
+<td>Aprovadores do original registrados sem prova</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nomes digitados</td>
+<td>Anexar o original assinado; separar quem registrou de quem aprovou</td>
+<td>Fluxo 3</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="uso-de-documento-obsoleto-ou-vencido">Uso de documento obsoleto ou vencido</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-DOC-08</td>
+<td>Cópias</td>
+<td>Cópia em papel de revisão substituída continua em uso</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Recolhimento obrigatório, com aviso aos setores e baixa de cada cópia</td>
+<td>Fluxo 2; <code>04</code>, tema 6</td>
+</tr>
+<tr>
+<td>R-DOC-09</td>
+<td>Revisão periódica</td>
+<td>Documento vencido continua vigente</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Validade só no relatório</td>
+<td>Aviso antes do vencimento; vencido bloqueado ou em revisão</td>
+<td><code>04</code>, tema 4</td>
+</tr>
+<tr>
+<td>R-DOC-10</td>
+<td>Cópias</td>
+<td>Cópia impressa sem identificação de controlada</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Marca d'água não aplicada</td>
+<td>Marca e número em toda página</td>
+<td>Fluxo 2</td>
+</tr>
+<tr>
+<td>R-DOC-11</td>
+<td>Cópias</td>
+<td>Cópia impressa de documento que não está vigente</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Imprimir só documento vigente</td>
+<td>Fluxo 2</td>
+</tr>
+<tr>
+<td>R-DOC-12</td>
+<td>Documento externo</td>
+<td>Documento externo vencido ou não analisado em uso</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Análise registrada antes do uso; aviso de vencimento</td>
+<td>Fluxo 3</td>
+</tr>
+<tr>
+<td>R-DOC-13</td>
+<td>Datas</td>
+<td>Emissão ou validade retroativas</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Só validade &gt; emissão</td>
+<td>Data de emissão do servidor; justificativa para retroagir</td>
+<td>RN-DOC-006, 022</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="registros-e-rastreabilidade">Registros e rastreabilidade</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-DOC-14</td>
+<td>Histórico</td>
+<td>Histórico do documento ausente ou perdido (tabelas fora do projeto de banco)</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Depende do banco do ambiente</td>
+<td>Histórico no projeto de banco, protegido contra alteração</td>
+<td><code>06</code>, seção 6</td>
+</tr>
+<tr>
+<td>R-DOC-15</td>
+<td>Cópias</td>
+<td>Remoção de cópia sem rastro</td>
+<td>Baixa</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>3</td>
+<td><strong>Média</strong></td>
+<td>Nenhum</td>
+<td>Justificativa e histórico</td>
+<td>Fluxo 2</td>
+</tr>
+<tr>
+<td>R-DOC-16</td>
+<td>Tipo</td>
+<td>Mudança do caminho de aprovação sem rastro</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>Baixa</td>
+<td>3</td>
+<td><strong>Média</strong></td>
+<td>A confirmar</td>
+<td>Histórico da configuração</td>
+<td>Fluxo 4</td>
+</tr>
+<tr>
+<td>R-DOC-17</td>
+<td>Mudança</td>
+<td>Nova revisão sem mudança aprovada</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Nova revisão ligada a uma mudança aprovada da GQ</td>
+<td><code>04</code>, tema 11</td>
+</tr>
+<tr>
+<td>R-DOC-18</td>
+<td>Retenção</td>
+<td>Documento descartado antes do prazo ou guardado sem prazo</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>Baixa</td>
+<td>3</td>
+<td><strong>Média</strong></td>
+<td>Nenhum</td>
+<td>Prazo de retenção por tipo</td>
+<td><code>04</code>, tema 10</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="acesso-arquivos-e-estrutura">Acesso, arquivos e estrutura</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-DOC-19</td>
+<td>Arquivos</td>
+<td>Acesso aos arquivos dos documentos fora do sistema, sem trilha</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>A ver com a TI</td>
+<td>Acesso aos arquivos só pelo sistema</td>
+<td><code>06</code>, seção 5</td>
+</tr>
+<tr>
+<td>R-DOC-20</td>
+<td>Acesso</td>
+<td>Telas fora do menu usadas por quem não deveria</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Menu por perfil</td>
+<td>Função de consulta conferida em toda tela</td>
+<td><code>02</code>; fluxo 4</td>
+</tr>
+<tr>
+<td>R-DOC-21</td>
+<td>Regra duplicada</td>
+<td>As duas implementações da vigência divergem</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>Média</td>
+<td>3</td>
+<td><strong>Baixa</strong></td>
+<td>Nenhum</td>
+<td>Uma única regra de vigência</td>
+<td>RN-DOC-026</td>
+</tr>
+<tr>
+<td>R-DOC-22</td>
+<td>Instalação</td>
+<td>Banco criado pelos scripts sem o caminho por tipo</td>
+<td>Média</td>
+<td>Média</td>
+<td>Alta</td>
+<td>2</td>
+<td><strong>Baixa</strong></td>
+<td>Erro aparece na hora</td>
+<td>Projeto de banco alinhado ao código</td>
+<td><code>06</code>, seção 6</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resumo">Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Riscos</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alta</strong></td>
+<td>R-DOC-01 a 05, 07 a 13, 17, 19, 20</td>
+<td>15</td>
+</tr>
+<tr>
+<td><strong>Média</strong></td>
+<td>R-DOC-06, 14, 15, 16, 18</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>Baixa</strong></td>
+<td>R-DOC-21, 22</td>
+<td>2</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- <strong>Os maiores riscos estão nos atalhos e nas brechas de quem decide.</strong> O documento pode entrar em vigor sem aprovação, e a conferência da função e da assinatura precisa ser comprovada nos testes.
+- <strong>O segundo bloco é o uso de documento obsoleto ou vencido:</strong> as cópias em papel não são recolhidas, a validade não é cobrada e a cópia não é marcada.
+- O ciclo principal, em si, é o trecho mais sólido. Os controles exigidos são, em boa parte, <strong>ligar travas que o próprio módulo já desenhou</strong> (treinamento, alerta, função por etapa).</p>
+<hr />
+<h3 id="etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</h3>
+<p>Cada controle exigido vira um <strong>requisito corrigido</strong> da nova versão (documento 05, depois dos testes) e um ou mais <strong>casos de teste</strong> (documento 08):
+- fluxo 1: CT-DOC-001 a 017;
+- fluxo 2: 020 a 026;
+- fluxo 3: 030 a 037;
+- fluxo 4: 040 a 046;
+- acesso: 050 a 055.</p>
+<h3 id="etapa-5-revisao">Etapa 5: revisão</h3>
+<p>Revisar depois dos testes de tela, quando o DBA responder sobre o banco (R-DOC-14 e 22) e quando a TI informar como o acesso aos arquivos na nuvem é controlado (R-DOC-19).</p>
+<h3 id="pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</h3>
+<ol>
+<li>Quais tipos de documento usam o ciclo básico ou um caminho sem aprovação, e se a área os considera documentos controlados.</li>
+<li>Como as cópias em papel são recolhidas hoje.</li>
+<li>O prazo de revisão periódica e de retenção de cada tipo.</li>
+<li>Se o legado ainda é usado, e por quem.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#para-que-serve">Para que serve</a></li><li><a href="#etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</a></li><li><a href="#escalas-usadas">Escalas usadas</a></li><li><a href="#etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</a></li><li><a href="#etapa-5-revisao">Etapa 5: revisão</a></li><li><a href="#pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

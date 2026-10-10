@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html">Ciclo do documento</a></li><li><a href="controle-de-copias.html">Controle de cópias</a></li><li><a href="documento-externo-e-documento-legado.html">Documento externo e documento legado</a></li><li><a href="tipo-de-documento-arquivos-e-modelos.html">Tipo de documento, arquivos e modelos</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 10/10/2026 · <strong>Para quem:</strong> desenvolvedores e DBA · <strong>Base:</strong>
+- os scripts do projeto de banco (<code>6.controle_documento/app/HSolutions.ControleDoc.Infra.DB/Tables</code>, 15 arquivos);
+- os mapeamentos do Entity Framework (<code>HSolutions.ControleDoc.Infra.Data/EntityConfig</code>);
+- as entidades (<code>HSolutions.ControleDoc.Domain/Entities</code>);
+- os fluxos do módulo.</p>
+<p>Nada foi conferido no banco do ambiente (sem acesso; fica com o DBA).</p>
+<p><strong>Levantamentos automáticos</strong> (em <code>levantamento/</code>):
+- <code>tabelas-automatico.md</code>;
+- <code>relacionamentos-automatico.md</code>;
+- <code>colunas-codigo-banco-automatico.md</code> (<code>comparar_colunas_codigo_banco.py</code>).</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas no projeto de banco</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Tabelas que o código usa</td>
+<td>20, das quais <strong>9 não estão nos scripts</strong></td>
+</tr>
+<tr>
+<td>Tabelas dos scripts que o código não usa com esse nome</td>
+<td>4 (o código usa a versão com sufixo <code>_CONTROLE_DOC</code>)</td>
+</tr>
+<tr>
+<td>Colunas que o código usa e os scripts não criam</td>
+<td><strong>10, em 4 tabelas</strong> (seção 6)</td>
+</tr>
+<tr>
+<td>Chaves estrangeiras declaradas nos scripts</td>
+<td>6, quase todas da tabela de anexos</td>
+</tr>
+<tr>
+<td>Referências ao Principal (só o número)</td>
+<td>áreas, usuários, pessoa jurídica</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrão das tabelas:</strong>
+- chave numérica;
+- <code>ATIVO</code> e <code>LIXEIRA</code>, para exclusão lógica;
+- quem criou, alterou e excluiu, com as datas.</p>
+<p>Os nomes de pessoas e setores também são guardados <strong>como texto copiado</strong> (por exemplo, <code>NomeUsuarioAprovadorFim</code>, <code>SetorResponsavel</code>), ao lado do número.</p>
+<h3 id="2-documento-e-ciclo">2. Documento e ciclo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Liga-se a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_DOCUMENTO</code></td>
+<td>Código, título, revisão, tipo, setor responsável e revisor, situação, datas de emissão e validade, quem fez cada etapa (análise crítica, pré-aprovação, aprovação, vigência, obsolescência), legado, modelo (ciclo básico), observação</td>
+<td>Tipo; ele mesmo (<strong>documento de origem</strong>, na nova revisão); áreas e usuários do Principal (só o número)</td>
+</tr>
+<tr>
+<td><code>TBL_DOCUMENTO_HISTORICO</code> <em>(fora dos scripts)</em></td>
+<td>Cada ação do ciclo: ação, justificativa, responsável, setor, data e <strong>assinante</strong></td>
+<td>Documento</td>
+</tr>
+<tr>
+<td><code>TBL_DOCUMENTO_SETOR</code> <em>(fora dos scripts)</em></td>
+<td>Setores revisores e a ordem</td>
+<td>Documento; área do Principal</td>
+</tr>
+<tr>
+<td><code>TBL_DOCUMENTO_APLICACAO</code>, <code>TBL_DOCUMENTO_TAG</code>, <code>TBL_DOCUMENTO_REFERENCIA</code></td>
+<td>Onde o documento se aplica, equipamentos (tags) e documentos de referência</td>
+<td>Documento; área e equipamento do Principal</td>
+</tr>
+<tr>
+<td><code>TBL_DOCUMENTO_TREINAMENTO</code></td>
+<td>Programas de treinamento da GQ ligados ao documento</td>
+<td>Documento; GQ (só o número)</td>
+</tr>
+<tr>
+<td><code>TBL_DOCUMENTO_ARQUIVO</code> <em>(fora dos scripts)</em></td>
+<td>Arquivos da gestão de arquivos (ciclo básico)</td>
+<td>Documento</td>
+</tr>
+<tr>
+<td><code>TBL_ANEXO_CONTROLE_DOC</code> <em>(fora dos scripts; os scripts criam <code>TBL_ANEXO</code>)</em></td>
+<td>Anexos: arquivo de trabalho, anexo final, anexos do tipo e do documento externo; o arquivo fica no armazenamento na nuvem</td>
+<td>Documento, documento externo, tipo, controle de cópias</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-tipo-de-documento-e-caminho-de-aprovacao">3. Tipo de documento e caminho de aprovação</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Liga-se a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_TIPO_DOCUMENTO_CONTROLE_DOC</code> <em>(os scripts criam <code>TBL_TIPO_DOCUMENTO</code>)</em></td>
+<td>Tipo, descrição, validade, alerta, treinamento, codificação automática, sequencial, controle de arquivos e de ciclo</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_DOCUMENTO_SITUACAO</code> <em>(fora dos scripts)</em></td>
+<td>O <strong>caminho de aprovação</strong> do tipo: quais situações valem e em que ordem</td>
+<td>Tipo, situação</td>
+</tr>
+<tr>
+<td><code>TBL_SITUACAO_DOCUMENTO</code></td>
+<td>As situações, com ordem, etapa, obrigatória e prazo de resposta</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_DOCUMENTO_CODIGO</code> <em>(fora dos scripts)</em></td>
+<td>Codificação do tipo</td>
+<td>Tipo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-copias-e-documento-externo">4. Cópias e documento externo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Liga-se a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_DOCUMENTO_CONTROLE_COPIA</code></td>
+<td>O controle de cópias de um documento</td>
+<td>Documento</td>
+</tr>
+<tr>
+<td><code>TBL_CONTROLE_COPIA_DETALHE</code></td>
+<td>Cada cópia: tipo (controlada ou não), setor ou solicitante externo, número, data de entrega, provisória ou ativa</td>
+<td>Controle de cópias, tipo de cópia, área do Principal</td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_COPIA</code></td>
+<td>Controlada e Não controlada (roteiro <code>dml.sql</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TBL_DOCUMENTO_EXTERNO</code>, <code>TBL_DOCUMENTO_EXTERNO_APLICACAO</code></td>
+<td>Documento externo: código, título, empresa de origem, revisão, situação, datas; e onde se aplica</td>
+<td>Tipo; pessoa jurídica e área do Principal</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Não existe</strong> coluna de devolução ou recolhimento de cópia, nem de prazo de retenção (fluxo 2; conformidade, temas 6 e 10).</p>
+<h3 id="5-integracoes">5. Integrações</h3>
+<p>Detalhe em <code>levantamento/integracoes-automatico.md</code> e em <code>transversal/04-mapa-de-integracoes.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Origem</th>
+<th>Como chega</th>
+<th>Onde fica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Áreas, responsáveis por área, usuários, funções</td>
+<td>Principal</td>
+<td>API (27 chamadas)</td>
+<td>Número e nome copiado</td>
+</tr>
+<tr>
+<td>Equipamentos (tags)</td>
+<td>Principal</td>
+<td>API</td>
+<td>Número</td>
+</tr>
+<tr>
+<td>Pessoa jurídica (empresa do documento externo)</td>
+<td>Principal</td>
+<td>API</td>
+<td>Número e nome copiado</td>
+</tr>
+<tr>
+<td>Programas de treinamento</td>
+<td>GQ</td>
+<td>API</td>
+<td><code>TBL_DOCUMENTO_TREINAMENTO</code> (número, nome e versão)</td>
+</tr>
+<tr>
+<td>Documentos vigentes</td>
+<td>Controle de Documentos</td>
+<td><strong>Os outros módulos consultam</strong> a API do módulo (a GQ, com 30 referências)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Arquivos dos documentos</td>
+<td>Armazenamento na nuvem</td>
+<td>Biblioteca de armazenamento, pela chave do anexo</td>
+<td>Chave em <code>TBL_ANEXO_CONTROLE_DOC</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-desencontros-entre-o-codigo-e-o-projeto-de-banco">6. Desencontros entre o código e o projeto de banco</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Desencontro</th>
+<th>Detalhe</th>
+<th>Leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>9 tabelas fora dos scripts</strong></td>
+<td>Histórico do documento, setores, arquivos, anexos, histórico de alterações (2), codificação, tipo, caminho do tipo</td>
+<td>Uma instalação feita só com os scripts não funciona</td>
+</tr>
+<tr>
+<td><strong>4 tabelas com outro nome</strong></td>
+<td>O código usa o sufixo <code>_CONTROLE_DOC</code> em anexo, tipo e histórico de alterações</td>
+<td>Os scripts criam os nomes sem sufixo, iguais aos de outros módulos</td>
+</tr>
+<tr>
+<td><strong>10 colunas ausentes</strong></td>
+<td><code>TBL_DOCUMENTO</code>: <code>GESTAO_MODELO</code>, <code>ID_ASSINATURA_INICIO</code>, <code>OBSERVACAO</code>. <code>TBL_SITUACAO_DOCUMENTO</code>: <code>ETAPA</code>, <code>ORDEM</code>, <code>OBRIGATORIO</code>, <code>PRAZO_RESPOSTA</code>. <code>TBL_DOCUMENTO_REFERENCIA</code>: <code>ID_DOC_REFERENCIA</code>, <code>REVISAO</code>. <code>TBL_DOCUMENTO_EXTERNO_APLICACAO</code>: <code>ID_DOCUMENTO</code></td>
+<td>Sem <code>ORDEM</code> e <code>ETAPA</code>, o <strong>caminho de aprovação por tipo</strong> não funciona; sem <code>ID_ASSINATURA_INICIO</code>, o assinante não é gravado no documento</td>
+</tr>
+<tr>
+<td><strong>Chaves estrangeiras</strong></td>
+<td>Só 6 nos scripts, quase todas da tabela de anexos</td>
+<td>O documento não tem chave declarada para tipo, situação nem documento de origem</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Perguntas ao DBA:</strong>
+1. O banco do ambiente tem as 9 tabelas, os nomes com <code>_CONTROLE_DOC</code> e as 10 colunas acima?
+2. Qual dos dois (scripts ou código) criou o banco?</p>
+<h3 id="7-resumo-das-anomalias-de-estrutura-para-a-nova-versao">7. Resumo das anomalias de estrutura (para a nova versão)</h3>
+<ol>
+<li>Projeto de banco <strong>muito defasado</strong> em relação ao código, inclusive no histórico e no caminho de aprovação (seção 6).</li>
+<li>Pessoas, setores e empresas guardados também <strong>como texto copiado</strong>.</li>
+<li><strong>Sem recolhimento</strong> de cópias nem <strong>prazo de retenção</strong> no modelo.</li>
+<li>Assinante guardado só como número, sem o significado da assinatura.</li>
+<li>Ligações sem chave declarada (documento × tipo, situação, origem).</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-documento-e-ciclo">2. Documento e ciclo</a></li><li><a href="#3-tipo-de-documento-e-caminho-de-aprovacao">3. Tipo de documento e caminho de aprovação</a></li><li><a href="#4-copias-e-documento-externo">4. Cópias e documento externo</a></li><li><a href="#5-integracoes">5. Integrações</a></li><li><a href="#6-desencontros-entre-o-codigo-e-o-projeto-de-banco">6. Desencontros entre o código e o projeto de banco</a></li><li><a href="#7-resumo-das-anomalias-de-estrutura-para-a-nova-versao">7. Resumo das anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
