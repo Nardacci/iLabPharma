@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documento externo e documento legado · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html">Ciclo do documento</a></li><li><a href="controle-de-copias.html">Controle de cópias</a></li><li><a href="documento-externo-e-documento-legado.html" aria-current=page>Documento externo e documento legado</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Documento externo e documento legado</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/controle-documentos/LabMedSys - Modulo Controle de Documentos - Fluxo Documento Externo e Legado.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve dois caminhos do <strong>Controle de Documentos</strong> que ficam fora do ciclo de aprovação:
+- o <strong>documento externo</strong>: normas, farmacopeias, documentos de clientes e de fornecedores, que a empresa usa mas não escreve;
+- o <strong>documento legado</strong>: documento anterior ao sistema, trazido para ele já em vigor.</p>
+<p>A norma pede que todos os tipos de documento sejam definidos e controlados, inclusive os externos, e que os documentos sejam aprovados e mantidos atualizados (RDC 658/2022, arts. 114, 117, 119 e 121).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Documento Externo: cadastro, validade, pesquisa, relatório e exclusão.</li>
+<li>Documento Legado: inclusão e vigência direta.</li>
+<li>Visualizar Documento: consulta e abertura do arquivo.</li>
+</ul>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>6.controle_documento/app/</code>. Para encurtar: <code>Ext</code> = <code>HSolutions.ControleDoc.UI/Areas/Documento/Controllers/DocumentoExternoController.cs</code>, <code>Leg</code> = <code>HSolutions.ControleDoc.UI/Areas/Documento/Controllers/DocumentoController.cs</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/controle-documentos/externo-legado-fluxograma.png" target="_blank" rel="noopener"><img src="../img/controle-documentos/externo-legado-fluxograma.png" alt="Workflow do documento externo e do documento legado" loading="lazy"></a><figcaption>Workflow do documento externo e do documento legado · clique para ampliar</figcaption></figure>
+
+<p><strong>Documento externo.</strong> O usuário cadastra:
+- código, título, empresa de origem, revisão e tipo;
+- setor responsável, aplicações e o arquivo;
+- validade.</p>
+<p>A <strong>situação</strong> é escolhida numa lista. Não passa por revisão nem aprovação. O relatório mostra quantos dias faltam para vencer, mas nada avisa nem bloqueia quando vence.</p>
+<p><strong>Documento legado.</strong> Nasce em inclusão, marcado como legado, e é <strong>tornado vigente direto</strong>. Quem revisou e quem aprovou são <strong>digitados</strong> na tela, como informação do papel original.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="documento-externo">Documento externo</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O <strong>código</strong> não pode se repetir ("O campo CÓDIGO digitado já esta cadastrado!") (<code>Ext:265, 280</code>).</li>
+<li>RN002 – A <strong>situação</strong> do documento externo é a que o usuário escolhe na tela (<code>Ext:560</code>). Não há ciclo de revisão ou aprovação para o documento externo. <em>A validar:</em> se a área precisa registrar a análise de um documento externo antes de usá-lo.</li>
+<li>RN003 – A <strong>validade</strong> é sugerida pelo prazo do tipo de documento (<code>Ext:702-716</code>). Se ficar <strong>em branco</strong>, o sistema grava a <strong>data de hoje</strong>, e o documento já nasce vencido (<code>Ext:546-547</code>). O mesmo vale para a data de emissão.</li>
+<li>RN004 – O relatório mostra os dias que faltam para vencer (<code>Ext:768</code>). <strong>Nenhum aviso nem bloqueio</strong> quando vence.</li>
+<li>RN005 – O responsável é o usuário da sessão (<code>Ext:562</code>).</li>
+<li>RN006 – A <strong>exclusão</strong> pede justificativa e marca o documento e as aplicações como excluídos, sem apagar (<code>Ext:385-471</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Documento Externo</td>
+<td>Cadastrar, alterar, pesquisar, imprimir a lista e excluir</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="documento-legado">Documento legado</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN007 – O documento legado nasce <strong>Em inclusão</strong>, marcado como <strong>legado</strong> (<code>Leg:102-122</code>).</li>
+<li>RN008 – <strong>Tornar vigente</strong> é direto, sem revisão nem aprovação no sistema e <strong>sem senha</strong>. Exige as datas de emissão e validade, com a validade posterior à emissão (<code>Leg:145-188</code>).</li>
+<li>RN009 – Os nomes e números de <strong>quem fez a análise crítica, pré-aprovou, aprovou e tornou vigente</strong> vêm <strong>digitados na tela</strong> (<code>Leg:190-199</code>). É informação declarada, não assinatura. <em>A validar:</em> se a área guarda o documento original assinado como evidência.</li>
+<li>RN010 – A vigência do legado grava o histórico de alterações com justificativa (<code>Leg:205</code>), mas <strong>não grava no histórico do documento</strong> (as ações e assinaturas do fluxo 1).</li>
+<li>RN011 – A lista e o relatório do legado mostram só documentos marcados como legado e os dias que faltam para vencer (<code>Leg:617, 642</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Documento Legado</td>
+<td>Incluir e tornar vigente um documento anterior ao sistema</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="consulta">Consulta</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN012 – <strong>Visualizar Documento</strong> permite pesquisar os documentos e abrir o arquivo ("Chave do anexo inválido.", "Anexo não encontrado.", "Arquivo não encontrado.") (<code>Leg:368-383, 514-530</code>). <em>A confirmar no teste:</em> quais situações aparecem, e se um documento substituído ou obsoleto pode ser aberto por quem só consulta.</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controle de Documentos</td>
+<td>Visualizar Documento</td>
+<td>Consultar e abrir documentos</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Documento externo sem análise.</strong> Ele entra com a situação escolhida pelo usuário, sem revisão nem aprovação (RN002).</p>
+<p><strong>2. Validade em branco vira "hoje"</strong> (RN003). O documento externo nasce vencido sem ninguém perceber, porque nada avisa (RN004).</p>
+<p><strong>3. O legado vira vigente sem aprovação no sistema.</strong> Os aprovadores são digitados (RN008 e RN009). Aceitável na migração, se houver o original assinado como evidência. Mas o caminho também pode ser usado para pôr em vigor <strong>qualquer documento novo</strong> sem passar pelo ciclo. <em>A validar:</em> quem pode usar a tela Documento Legado.</p>
+<p><strong>4. O legado não entra no histórico do documento</strong> (RN010).</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Um tipo de documento <code>TESTE</code> com prazo de validade.
+- Uma empresa (pessoa jurídica) <code>TESTE</code> já cadastrada no Principal.
+- Arquivo PDF de teste.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-030</td>
+<td>Cadastrar documento externo <code>TESTE</code> com código já usado</td>
+<td>Recusa (RN001)</td>
+</tr>
+<tr>
+<td>CT-DOC-031</td>
+<td>Cadastrar documento externo <code>TESTE</code> deixando a validade em branco</td>
+<td>Pela norma, a validade deve ser informada ou calculada. <strong>Registrar se gravar a data de hoje</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-DOC-032</td>
+<td>Cadastrar documento externo escolhendo a situação <strong>Vigente</strong> direto</td>
+<td><strong>Registrar se aceitar sem análise</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>CT-DOC-033</td>
+<td>Imprimir a lista de documentos externos</td>
+<td>Coluna dos dias a vencer; o vencido do CT-DOC-031 com 0 ou negativo</td>
+</tr>
+<tr>
+<td>CT-DOC-034</td>
+<td>Excluir um documento externo com justificativa e consultar o histórico</td>
+<td>Excluído; justificativa no histórico</td>
+</tr>
+<tr>
+<td>CT-DOC-035</td>
+<td>Incluir documento legado <code>TESTE</code> e torná-lo vigente digitando nomes de aprovadores</td>
+<td>Vigente sem senha; <strong>registrar</strong> (ponto 3) e conferir que não aparece no histórico do documento (ponto 4)</td>
+</tr>
+<tr>
+<td>CT-DOC-036</td>
+<td>Com um usuário sem função no Controle de Documentos, abrir Documento Legado e tentar tornar vigente</td>
+<td>Pela norma, recusa. <strong>Registrar se permitir</strong> (ponto 3)</td>
+</tr>
+<tr>
+<td>CT-DOC-037</td>
+<td>Em Visualizar Documento, procurar uma revisão substituída e um obsoleto (do fluxo 1)</td>
+<td>Pela norma, não devem abrir para uso. <strong>Registrar se abrirem</strong></td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#documento-externo">Documento externo</a></li><li class="sub"><a href="#documento-legado">Documento legado</a></li><li class="sub"><a href="#consulta">Consulta</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
