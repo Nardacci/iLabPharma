@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Defeitos para correção · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Defeitos para correção</div><ul><li><a href="defeitos-para-correcao.html" aria-current=page>Defeitos para correção</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Defeitos para correção</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Defeitos para correção</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Defeitos para Correcao.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para a equipe de desenvolvimento.</strong> Defeitos do módulo Estoque encontrados nos testes de tela, com o passo a passo para reproduzir, as capturas, o trecho do código onde o problema está e uma sugestão de correção. Cada defeito traz também como confirmar a correção (o caso de teste a repetir). Atualizado em 10/10/2026.</p>
+<h2 id="resumo">Resumo</h2>
+<p><strong>12 defeitos registrados, 12 em aberto.</strong> Pendentes por gravidade: 3 alta · 6 média · 3 baixa.</p>
+<p><strong>Gravidade:</strong> <strong>Alta</strong> = afeta a qualidade do produto, a conformidade com a ANVISA ou impede uma tarefa; <strong>Média</strong> = atrapalha, mas há como contornar; <strong>Baixa</strong> = incômodo ou texto.</p>
+<p><strong>Situação:</strong> <strong>Aberto:</strong> ainda não corrigido · <strong>Em correção:</strong> um desenvolvedor assumiu · <strong>Corrigido:</strong> o desenvolvedor entregou, falta o reteste · <strong>Validado:</strong> o reteste passou.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Id</th>
+<th>Defeito</th>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Encontrado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#dv-est-014">DV-EST-014</a></td>
+<td>Lote com validade vencida é aceito no recebimento, sem aviso</td>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal › Item › Lote</td>
+<td>CT-EST-186, 08/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-015">DV-EST-015</a></td>
+<td>Finalizar a conferência dá "Erro ao redistribuir quantidade dos volumes", mas a nota fica marcada como conferida</td>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Conferência de Recebimento</td>
+<td>CT-EST-191 e CT-EST-193, 08/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-016">DV-EST-016</a></td>
+<td>Endereçamento mostra "sucesso", mas nada foi gravado: lote sem saldo, sem histórico e sem análise no CQ</td>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Endereçamento de Material</td>
+<td>CT-EST-194 e CT-EST-197, 08/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-001">DV-EST-001</a></td>
+<td>Código do lote perde os hífens: "TESTE-LOTE-001" vira "TESTELOTE001"</td>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal › Item › Lote</td>
+<td>Preparação do recebimento; reconfirmado no CT-EST-187 em 08/10/2026, 07/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-002">DV-EST-002</a></td>
+<td>Quantidade do lote: digitar 100 grava 0,100</td>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal › Item › Lote</td>
+<td>Preparação do recebimento; reconfirmado no CT-EST-187 em 08/10/2026, 07/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-004">DV-EST-004</a></td>
+<td>Checklist de inspeção veicular não mostra as opções de resposta e salva "Aprovado" sem nenhuma resposta</td>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Checklist de Inspeção Veicular</td>
+<td>Preparação do recebimento; reteste CT-EST-181 em 08/10/2026, 07/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-010">DV-EST-010</a></td>
+<td>"Confirmar recebimento" falha com erro genérico quando o item não tem almoxarifado de identificação</td>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material (botão CONFIRMAR RECEBIMENTO)</td>
+<td>Confirmar recebimento dos recebimentos 00013, 00014 e 00016, 08/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-011">DV-EST-011</a></td>
+<td>Checklist com parecer "Reprovado" aparece na lista de veículos para usar no recebimento</td>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material (campo Veículo (Checklist))</td>
+<td>CT-EST-182, 08/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-012">DV-EST-012</a></td>
+<td>Recebimento é salvo sem checklist de inspeção, sem placa e sem motorista</td>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material</td>
+<td>CT-EST-183, 08/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-003">DV-EST-003</a></td>
+<td>Sem a Data do Recebimento, o botão SIM não faz nada e não mostra mensagem</td>
+<td>Baixa</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material</td>
+<td>Preparação do recebimento (observação 5), 07/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-006">DV-EST-006</a></td>
+<td>Na tela do Item, alguns botões e marcações recarregam a tela e apagam os números digitados</td>
+<td>Baixa</td>
+<td>Aberto</td>
+<td>Estoque › Cadastros › Item</td>
+<td>Preparação do item TESTE MATERIA PRIMA (observação 4), 07/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-013">DV-EST-013</a></td>
+<td>Nota fiscal sem a série não grava e não avisa; mensagens apontam o campo errado</td>
+<td>Baixa</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal</td>
+<td>CT-EST-184, 08/10/2026</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dv-est-014">DV-EST-014</h2>
+<p><strong>Lote com validade vencida é aceito no recebimento, sem aviso</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal › Item › Lote</td>
+<td>CT-EST-186</td>
+<td>08/10/2026 (rodada de 08/10/2026, etapa 1 (recebimento e quarentena))</td>
+<td>RDC 658/2022, art. 189 (só usar material dentro da validade)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece">O que acontece</h3>
+<p>Na tela <strong>Recebimento de Materiais - Lote</strong>, um lote com <strong>Data de Validade de ontem</strong> (07/10/2026, teste feito em 08/10/2026) foi gravado com "Inclusão realizada!" e aparece na grade de lotes do item, sem recusa e sem alerta. O código só confere se a validade foi informada e se é uma data válida; não compara com a data de hoje nem com a data do recebimento.</p>
+<h3 id="como-reproduzir">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Recebimento de Material</strong>, abrir o recebimento <strong>00015</strong>, a NF <strong>9003</strong> e o item 1 (<code>TST0001 - TESTE MATERIA PRIMA</code>).</li>
+<li>Clicar em <strong>INCLUIR LOTE</strong>.</li>
+<li>Preencher Fabricante <code>TESTE PJ FARMACÊUTICA LTDA</code>, <strong>Código do Lote</strong> <code>TESTELOTE004</code>, <strong>Data de Validade</strong> com a data de ontem (no teste, <code>07/10/2026</code>), <strong>Quantidade</strong> <code>50,000</code>, <strong>Nº Volumes</strong> <code>1</code>.</li>
+<li>Clicar em <strong>SALVAR</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Recebimento <code>00015</code> (placa TST-5555, mantido aberto), NF <code>9003</code>, item <code>TST0001 - TESTE MATERIA PRIMA</code>, lote <code>TESTELOTE004</code> (50,000, validade 07/10/2026).</p>
+<h3 id="esperado-e-obtido">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recusar o lote vencido com mensagem clara (por exemplo, "Data de validade vencida"), ou, se a área de Qualidade decidir aceitar para registro, exigir justificativa e bloquear o lote (reprovado/não disponível). <em>Ponto para validar com a Garantia da Qualidade.</em></td>
+<td>"Inclusão realizada!". O lote <code>TESTELOTE004</code> com validade 07/10/2026 ficou na grade do item, sem nenhum alerta.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-014-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-014-1.png" alt="Lote com Data de Validade 07/10/2026; o calendário mostra &quot;Hoje: 08/10/2026&quot;" loading="lazy"></a><figcaption>Lote com Data de Validade 07/10/2026; o calendário mostra &quot;Hoje: 08/10/2026&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Lote com Data de Validade 07/10/2026; o calendário mostra "Hoje: 08/10/2026"</em></p>
+<figure><a href="../img/estoque/dv-est-014-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-014-2.png" alt="Depois de SALVAR: &quot;Inclusão realizada!&quot;" loading="lazy"></a><figcaption>Depois de SALVAR: &quot;Inclusão realizada!&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Depois de SALVAR: "Inclusão realizada!"</em></p>
+<figure><a href="../img/estoque/dv-est-014-3.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-014-3.png" alt="Grade de lotes do item com TESTELOTE004 e validade 07/10/2026" loading="lazy"></a><figcaption>Grade de lotes do item com TESTELOTE004 e validade 07/10/2026 · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Grade de lotes do item com TESTELOTE004 e validade 07/10/2026</em></p>
+<h3 id="onde-esta-no-codigo">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> a gravação do lote confere só se a validade foi informada (para item com controle de validade) e se é uma data válida. Não há nenhuma comparação com a data atual ou com a data do recebimento.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNfItemLote_ed.aspx.cs</code></td>
+<td>471-484</td>
+<td>Validações da validade: obrigatória e data válida; nada sobre data vencida.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNfItemLote_ed.aspx.cs</code></td>
+<td>490</td>
+<td>Grava a validade digitada (ou 31/12/2099 quando vazia, para item sem controle de validade).</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao">Sugestão de correção</h3>
+<ul>
+<li>Recusar validade menor que a data do recebimento (ou que a data de hoje), com mensagem que diga o motivo.</li>
+<li>Avisar também quando a validade estiver próxima (prazo mínimo de validade definido pela Qualidade), se a área pedir. <em>Ponto para validar.</em></li>
+<li>Fazer a mesma conferência no servidor (BLL), e não só na tela, para valer também na importação de XML.</li>
+<li>Se o negócio precisar registrar a entrada de um vencido (por exemplo, para devolução), exigir justificativa e deixar o lote bloqueado, sem saldo disponível.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-186</strong> com validade de ontem (deve recusar) e com validade futura (deve aceitar). Conferir também a alteração de um lote existente para uma data vencida.</p>
+<h3 id="observacoes">Observações</h3>
+<p>Gravidade proposta pelo agente como Média e elevada para Alta na revisão (relatório consolidado). Sem essa barreira, o vencido só seria barrado nas etapas seguintes, se for.</p>
+<h2 id="dv-est-015">DV-EST-015</h2>
+<p><strong>Finalizar a conferência dá "Erro ao redistribuir quantidade dos volumes", mas a nota fica marcada como conferida</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Conferência de Recebimento</td>
+<td>CT-EST-191 e CT-EST-193</td>
+<td>08/10/2026 (rodada de 08/10/2026, etapa 2 (recebimento e quarentena))</td>
+<td>RDC 658/2022, art. 183 (verificação de cada entrega documentada)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_1">O que acontece</h3>
+<p>Ao clicar em <strong>FINALIZAR</strong> na Conferência, aparece <strong>"Erro ao redistribuir quantidade dos volumes"</strong> (22,8 s), tanto com quantidade divergente (90 de 100) quanto com a quantidade igual à da nota (100 de 100). Mesmo com o erro, a nota passa a aparecer como <strong>Conferido = SIM</strong> na lista, e a tela só oferece "Cancelar conferência". O código marca a nota como conferida e grava <strong>antes</strong> de ajustar os volumes, sem uma transação que junte as duas gravações. Além disso, uma <strong>divergência de quantidade</strong> é aceita só com "Deseja Continuar?", sem justificativa nem aviso à Garantia da Qualidade.</p>
+<h3 id="como-reproduzir_1">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Conferência de Recebimento</strong>, clicar em <strong>PESQUISAR</strong> e abrir o recebimento <strong>00016</strong> (NF 9006).</li>
+<li>Clicar no lápis do lote <code>TESTELOTE002</code>; em <strong>Conferido</strong> digitar <code>90</code> e clicar em <strong>CONFIRMAR LOTE</strong>. Aparece "Quantidade divergente. Deseja Continuar?"; clicar em <strong>SIM</strong>.</li>
+<li>Clicar em <strong>FINALIZAR</strong> e confirmar "Deseja finalizar a conferência?".</li>
+<li>Cancelar a conferência, refazer com <strong>Conferido</strong> = <code>100</code> (igual à nota) e clicar de novo em <strong>FINALIZAR</strong>.</li>
+<li>Voltar à lista da Conferência e clicar em <strong>PESQUISAR</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Recebimento <code>00016</code>, NF <code>9006</code>, item <code>TST0002 - TESTE MATERIA PRIMA 2</code>, lote <code>TESTELOTE002</code> (100,000), item de entrada <code>TA0001/26</code>; usuário <code>T.ADMIN</code> (TESTE ADMIN).</p>
+<h3 id="esperado-e-obtido_1">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Com 100 de 100, a conferência é finalizada sem erro. Se algo falhar, nada é gravado (a nota continua não conferida) e a mensagem diz o motivo. Com divergência, o sistema exige justificativa e registra/encaminha a divergência à Garantia da Qualidade.</td>
+<td>"Erro ao redistribuir quantidade dos volumes" nas duas tentativas. A lista passa a mostrar Conferido = SIM para o recebimento 00016. Com 90 de 100, gravou "Registro alterado com sucesso!" sem pedir justificativa.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_1">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-015-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-015-1.png" alt="Conferido = 90 de 100: só a pergunta &quot;Quantidade divergente. Deseja Continuar?&quot;, sem campo de justificativa" loading="lazy"></a><figcaption>Conferido = 90 de 100: só a pergunta &quot;Quantidade divergente. Deseja Continuar?&quot;, sem campo de justificativa · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Conferido = 90 de 100: só a pergunta "Quantidade divergente. Deseja Continuar?", sem campo de justificativa</em></p>
+<figure><a href="../img/estoque/dv-est-015-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-015-2.png" alt="Conferido 100 de 100 e, ao FINALIZAR, &quot;Erro ao redistribuir quantidade dos volumes&quot;" loading="lazy"></a><figcaption>Conferido 100 de 100 e, ao FINALIZAR, &quot;Erro ao redistribuir quantidade dos volumes&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Conferido 100 de 100 e, ao FINALIZAR, "Erro ao redistribuir quantidade dos volumes"</em></p>
+<figure><a href="../img/estoque/dv-est-015-3.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-015-3.png" alt="Lista da Conferência: o recebimento 00016 aparece como Conferido = SIM apesar do erro" loading="lazy"></a><figcaption>Lista da Conferência: o recebimento 00016 aparece como Conferido = SIM apesar do erro · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Lista da Conferência: o recebimento 00016 aparece como Conferido = SIM apesar do erro</em></p>
+<h3 id="onde-esta-no-codigo_1">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> A <strong>nota conferida apesar do erro</strong> está confirmada no código: a tela faz <code>objNf.Conferido = true</code> e grava, e só depois chama o ajuste dos volumes; as duas gravações não estão na mesma transação. O erro em si vem de um <code>catch</code> que esconde qualquer exceção. Com 100 de 100 o procedimento <code>pAjustaVolume</code> não teria o que ajustar e devolveria 1, então o erro indica falha na própria chamada (procedimento ausente ou diferente no banco de teste, ou sem permissão): <strong>provável</strong>, a confirmar com o DBA. Achado extra: quando o procedimento falha de forma controlada devolve -1, mas o código só trata 0 como erro, então essa falha passaria sem aviso.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/conferencia_ed2.aspx.cs</code></td>
+<td>294-306</td>
+<td>Marca Conferido = true e grava (295-297) antes de chamar ajustarQtdVolume (302); depois mostra "Conferência realizada com sucesso!".</td>
+</tr>
+<tr>
+<td><code>LaboSys_BLL/bllNotaFiscal.cs</code></td>
+<td>252-268</td>
+<td>ajustarQtdVolume: o catch troca qualquer exceção por "Erro ao redistribuir quantidade dos volumes".</td>
+</tr>
+<tr>
+<td><code>LaboSys_DAL/dalNotaFiscal.cs</code></td>
+<td>895-914</td>
+<td>Executa pAjustaVolume e só considera erro o retorno 0; o procedimento devolve -1 quando falha.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/conferencia_ed2.aspx.cs</code></td>
+<td>159-165, 380-381, 424-428</td>
+<td>Divergência: só pergunta "Quantidade divergente. Deseja Continuar?" e, com SIM, salva sem pedir justificativa.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_1">Sugestão de correção</h3>
+<ul>
+<li>Fazer a marcação de conferido e o ajuste dos volumes numa <strong>única transação</strong>: ou grava tudo, ou não grava nada.</li>
+<li>Tratar como erro qualquer retorno diferente de 1 de <code>pAjustaVolume</code> (inclusive -1) e registrar no log o erro real em vez de escondê-lo no <code>catch</code>.</li>
+<li>Com divergência de quantidade, exigir justificativa (motivo) e registrar quem conferiu, quando e por quê; comportamento esperado pela norma: a divergência fica documentada e é comunicada à Garantia da Qualidade.</li>
+<li>"Cancelar conferência" também deve pedir justificativa e ficar registrado.</li>
+<li>Conferir com o DBA se <code>pAjustaVolume</code> existe no banco de teste, igual ao do código, e se o usuário da aplicação pode executá-lo.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_1">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-193</strong> (100 de 100: deve finalizar sem erro e mostrar Conferido = SIM) e o <strong>CT-EST-191</strong> (90 de 100: deve exigir justificativa). Forçar uma falha no ajuste e conferir que a nota continua Conferido = NÃO.</p>
+<h3 id="observacoes_1">Observações</h3>
+<p>A grafia do aviso "cacelar" na confirmação de "Cancelar conferência" também precisa ser corrigida. A mensagem "Item com divergência na quantidade do lote!" vista em 07/10 não apareceu nesta rodada. Possível ligação com o DV-EST-016 (<em>ponto para validar</em>).</p>
+<h2 id="dv-est-016">DV-EST-016</h2>
+<p><strong>Endereçamento mostra "sucesso", mas nada foi gravado: lote sem saldo, sem histórico e sem análise no CQ</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Endereçamento de Material</td>
+<td>CT-EST-194 e CT-EST-197</td>
+<td>08/10/2026 (rodada de 08/10/2026, etapa 2 (recebimento e quarentena))</td>
+<td>RDC 658/2022, art. 157 (quarentena logo após o recebimento) e art. 124 (registro de cada ação quando é feita)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_2">O que acontece</h3>
+<p>Ao clicar em <strong>FINALIZAR</strong> no Endereçamento, a tela mostra <strong>"Endereçamento Finalizado com sucesso!"</strong>. Mas depois disso: a nota continua com <strong>Endereçado = NÃO</strong> e a tela reabre com o botão FINALIZAR; a <strong>Disponibilidade do Lote</strong> e o <strong>Histórico do Lote</strong> não mostram nada; e <strong>nenhuma solicitação de análise</strong> chega ao Controle da Qualidade. O procedimento do banco que faz tudo isso numa só transação (<code>pFinalizaRecebimento</code>) desfaz tudo quando falha, e a tela <strong>nunca confere</strong> se ele deu certo. Resultado: o sistema diz que o material entrou em quarentena e foi para o CQ quando nada aconteceu, e o fluxo recebimento → quarentena → análise → liberação fica sem saída.</p>
+<h3 id="como-reproduzir_2">Como reproduzir</h3>
+<ol>
+<li>Ter um recebimento autorizado, confirmado e com a conferência finalizada (no teste: recebimento <strong>00016</strong>, NF <strong>9006</strong>; ver DV-EST-015).</li>
+<li>Abrir <strong>Estoque › Endereçamento de Material</strong>, clicar em <strong>PESQUISAR</strong> e abrir a NF 9006.</li>
+<li>Em <strong>Informações do Endereçamento</strong>, escolher Item, Lote/Validade, Almoxarifado <code>TESTE ALMOX</code>, Local <code>902 - TESTE LOCAL QUARENTENA</code>, Rua, Coluna e Andar; em <strong>Qtde Endereçar</strong> digitar <code>100</code> e clicar em <strong>ENDEREÇAR</strong>.</li>
+<li>Com <strong>Pendente = 0,000</strong>, clicar em <strong>FINALIZAR</strong> e confirmar.</li>
+<li>Voltar à lista do Endereçamento e pesquisar: a NF 9006 continua com <strong>Endereçado = NÃO</strong>.</li>
+<li>Abrir <strong>Estoque › Disponibilidade do Lote</strong> com Código do Item <code>TST0002</code> e clicar em <strong>PESQUISAR</strong>; abrir também <strong>Histórico do Lote</strong> com <code>TA0001/26</code>.</li>
+<li>No módulo Controle da Qualidade, abrir <strong>Solicitação de Análise</strong> e procurar o lote <code>TA0001/26</code>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Item <code>TST0002 - TESTE MATERIA PRIMA 2</code> (com Controle de Qualidade e análise química); recebimento <code>00016</code>, NF <code>9006</code>, lote <code>TESTELOTE002</code> (100,000, validade 07/10/2028), item de entrada <code>TA0001/26</code>; endereço <code>L902-R901-C901-A901</code> no local <code>902 - TESTE LOCAL QUARENTENA</code> do almoxarifado <code>TESTE ALMOX</code> (00017).</p>
+<h3 id="esperado-e-obtido_2">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Só mostrar sucesso quando o lote estiver no estoque, em quarentena, com saldo de 100, com o histórico registrado, a nota marcada como endereçada e a solicitação de análise aberta no CQ. Se qualquer parte falhar, mostrar erro claro e não dizer "sucesso".</td>
+<td>"Endereçamento Finalizado com sucesso!" (7,7 s). Depois: lista com Endereçado = NÃO; Disponibilidade do Lote: "A pesquisa não retornou nenhum resultado."; Histórico do Lote vazio; nenhuma solicitação de análise no CQ nem na tela "Análise de controle" do Estoque.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_2">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-016-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-016-1.png" alt="Depois de FINALIZAR: &quot;Endereçamento Finalizado com sucesso!&quot;" loading="lazy"></a><figcaption>Depois de FINALIZAR: &quot;Endereçamento Finalizado com sucesso!&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Depois de FINALIZAR: "Endereçamento Finalizado com sucesso!"</em></p>
+<figure><a href="../img/estoque/dv-est-016-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-016-2.png" alt="A mesma nota reaberta: continua pendente de finalização, com o botão FINALIZAR" loading="lazy"></a><figcaption>A mesma nota reaberta: continua pendente de finalização, com o botão FINALIZAR · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: A mesma nota reaberta: continua pendente de finalização, com o botão FINALIZAR</em></p>
+<figure><a href="../img/estoque/dv-est-016-3.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-016-3.png" alt="Disponibilidade do Lote para o item TST0002: nenhum resultado (saldo zero)" loading="lazy"></a><figcaption>Disponibilidade do Lote para o item TST0002: nenhum resultado (saldo zero) · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Disponibilidade do Lote para o item TST0002: nenhum resultado (saldo zero)</em></p>
+<h3 id="onde-esta-no-codigo_2">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> A <strong>mensagem de sucesso falsa</strong> está confirmada no código. O procedimento <code>pFinalizaRecebimento</code> faz tudo numa transação (cria o lote, a movimentação que dá saldo, os volumes, a solicitação de análise e marca a nota como endereçada) e, se der erro, desfaz tudo e devolve <code>-1</code> com <code>RETURN</code>; ele não devolve nenhuma tabela. O acesso a dados (<code>confirmaEnderecamento</code>) tenta ler a primeira linha de uma tabela que não vem e, no erro, devolve 0: o valor é sempre 0, dê certo ou não. A tela nem olha esse valor e mostra o sucesso. <strong>Ainda desconhecida:</strong> a causa da falha dentro do banco (pergunta ao DBA). A mais provável é a mesma família do DV-EST-015 (volumes), mas não foi isolada.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/enderecamento_ed.aspx.cs</code></td>
+<td>127-133</td>
+<td>Chama confirmarEnderecamento, guarda o retorno em iRet e não confere; depois mostra "Endereçamento Finalizado com sucesso!".</td>
+</tr>
+<tr>
+<td><code>LaboSys_DAL/dalNotaFiscal.cs</code></td>
+<td>763-781</td>
+<td>confirmaEnderecamento executa pFinalizaRecebimento e lê Rows[0][0] de uma tabela que o procedimento não devolve; no erro, retorna 0.</td>
+</tr>
+<tr>
+<td><code>Hsolutions.Estoque.DB/Stored Procedures/pFinalizaRecebimento.sql</code></td>
+<td>60, 269, 290-291, 335-346</td>
+<td>Abre a transação, grava a análise do CQ e marca ENDERECADO = 1; em erro faz ROLLBACK e RETURN '-1', sem mensagem.</td>
+</tr>
+<tr>
+<td><code>LaboSys_BLL/bllNotaFiscal.cs</code></td>
+<td>211-223</td>
+<td>confirmarEnderecamento troca qualquer exceção por uma mensagem genérica, perdendo o erro real.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_2">Sugestão de correção</h3>
+<ul>
+<li>Fazer o procedimento devolver o resultado de forma que a aplicação leia (parâmetro de saída ou <code>SELECT</code> do código de retorno) e, em erro, levantar a mensagem real (<code>THROW</code>/<code>RAISERROR</code>) em vez de só <code>RETURN '-1'</code>.</li>
+<li>Na tela, só mostrar sucesso quando o retorno for positivo; em qualquer outro caso, mostrar o erro e manter a nota como pendente.</li>
+<li>Registrar no log da aplicação o texto do erro do banco (hoje ele é descartado nas camadas BLL e DAL).</li>
+<li>Comportamento esperado pela norma: ao finalizar, o lote fica com saldo <strong>em quarentena</strong>, o histórico registra a entrada, e a solicitação de análise nasce no CQ. Se uma dessas partes falhar, nenhuma é gravada e o usuário é avisado.</li>
+<li>Depois de corrigir a mensagem, descobrir com o DBA o erro real de <code>pFinalizaRecebimento</code> para a NF 9006 e corrigir a causa.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_2">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-194</strong> (endereçar e finalizar) e o <strong>CT-EST-197</strong> (Histórico e Disponibilidade do Lote) com um recebimento novo. Conferir: nota com Endereçado = SIM; saldo 100 em quarentena; histórico com a entrada; solicitação de análise visível no CQ (libera os casos CT-EST-200 a 209). Forçar uma falha (por exemplo, no banco de teste) e conferir que a tela mostra erro, não sucesso.</p>
+<h3 id="observacoes_2">Observações</h3>
+<p>Bloqueia os casos CT-EST-200 a 209 (quarentena, amostragem, laudo e liberação). Pode ser consequência do DV-EST-015 (conferência marcada como feita sem o ajuste dos volumes); <em>ponto para validar</em> com o DBA executando <code>pFinalizaRecebimento</code> para a NF 9006. Também pode ter relação com o gatilho <code>trg_Conferido</code>, desligado no código.</p>
+<h2 id="dv-est-001">DV-EST-001</h2>
+<p><strong>Código do lote perde os hífens: "TESTE-LOTE-001" vira "TESTELOTE001"</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal › Item › Lote</td>
+<td>Preparação do recebimento; reconfirmado no CT-EST-187 em 08/10/2026</td>
+<td>07/10/2026 (rodada de 07/10/2026 (preparação) e 08/10/2026, etapa 1)</td>
+<td>RDC 658/2022, art. 141, V (registro com o lote do fabricante)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_3">O que acontece</h3>
+<p>No campo <strong>Código do Lote</strong>, o hífen digitado é descartado sem aviso: <code>TESTE-LOTE-001</code> foi gravado como <code>TESTELOTE001</code> e <code>TESTE-LOTE-002</code> como <code>TESTELOTE002</code>. O campo só aceita letras, números e espaço. O registro de entrada deixa de trazer o lote do fabricante como ele é, o que atrapalha a rastreabilidade (busca, comparação com o laudo do fabricante, recolhimento).</p>
+<h3 id="como-reproduzir_3">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Recebimento de Material</strong>, um recebimento em aberto, a nota fiscal e o item.</li>
+<li>Clicar em <strong>INCLUIR LOTE</strong>.</li>
+<li>No campo <strong>Código do Lote</strong>, digitar <code>TESTE-LOTE-002</code>.</li>
+<li>Preencher os demais campos e clicar em <strong>SALVAR</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Recebimento <code>00013</code> (NF 9001, lote gravado como <code>TESTELOTE001</code>) e recebimento <code>00014</code> (NF 9002, lote gravado como <code>TESTELOTE002</code>); item <code>TST0001 - TESTE MATERIA PRIMA</code>.</p>
+<h3 id="esperado-e-obtido_3">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Guardar o código exatamente como digitado (com hífens, barras, pontos e outros caracteres usados por fabricantes).</td>
+<td>O campo mostra e grava <code>TESTELOTE002</code>, sem os hífens e sem aviso.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_3">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-001-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-001-1.png" alt="Digitado TESTE-LOTE-002: o campo Código do Lote mostra TESTELOTE002" loading="lazy"></a><figcaption>Digitado TESTE-LOTE-002: o campo Código do Lote mostra TESTELOTE002 · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Digitado TESTE-LOTE-002: o campo Código do Lote mostra TESTELOTE002</em></p>
+<figure><a href="../img/estoque/dv-est-001-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-001-2.png" alt="Grade de lotes do item: lote gravado como TESTELOTE002" loading="lazy"></a><figcaption>Grade de lotes do item: lote gravado como TESTELOTE002 · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Grade de lotes do item: lote gravado como TESTELOTE002</em></p>
+<h3 id="onde-esta-no-codigo_3">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> o campo tem um filtro de caracteres (<code>FilteredTextBoxExtender</code>) que só deixa passar letras sem acento, números e espaço. Achado extra no mesmo filtro: a lista de maiúsculas não tem a letra <strong>W</strong> ("...UVXYZ"), então um lote com W maiúsculo também seria alterado.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNfItemLote_ed.aspx</code></td>
+<td>319-323</td>
+<td>txtCodLote com ValidChars só de letras, números e espaço; falta o W maiúsculo.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNfItemLote_ed.aspx.cs</code></td>
+<td>486</td>
+<td>Grava o texto do campo em maiúsculas, como chegou.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_3">Sugestão de correção</h3>
+<ul>
+<li>Retirar o filtro de caracteres do código do lote, ou ampliá-lo para os caracteres que os fabricantes usam (hífen, barra, ponto, sublinhado), incluindo a letra W.</li>
+<li>Se algum caractere tiver de ser recusado, avisar o usuário em vez de descartá-lo em silêncio.</li>
+<li>Verificar se o mesmo filtro existe em outras telas que recebem o lote (por exemplo, importação de XML e telas de lote do Principal, DV-PRI-001).</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_3">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-187</strong> com <code>TESTE-LOTE-010</code> e com um código com W maiúsculo: o lote deve ser gravado e mostrado exatamente como digitado.</p>
+<h3 id="observacoes_3">Observações</h3>
+<p>Mesma família do DV-PRI-001 do módulo Principal (o "_" é removido em alguns campos).</p>
+<h2 id="dv-est-002">DV-EST-002</h2>
+<p><strong>Quantidade do lote: digitar 100 grava 0,100</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal › Item › Lote</td>
+<td>Preparação do recebimento; reconfirmado no CT-EST-187 em 08/10/2026</td>
+<td>07/10/2026 (rodada de 07/10/2026 (preparação) e 08/10/2026, etapa 1)</td>
+<td>RDC 658/2022, art. 141, VI (quantidade recebida no registro de entrada)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_4">O que acontece</h3>
+<p>O campo <strong>Quantidade</strong> do lote tem uma máscara que trata os últimos 3 dígitos como casas decimais: digitar <code>100</code> vira <code>0,100</code>. O erro só aparece no fim, ao finalizar o recebimento, como "Item com divergência na quantidade do lote!". Para gravar 100 é preciso digitar <code>100000</code> ou <code>100,000</code>. Há risco de registrar a quantidade errada.</p>
+<h3 id="como-reproduzir_4">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Recebimento de Material</strong>, um recebimento em aberto, a nota fiscal e o item (quantidade 100).</li>
+<li>Clicar em <strong>INCLUIR LOTE</strong>.</li>
+<li>No campo <strong>Quantidade</strong>, digitar <code>100</code>.</li>
+<li>Observar o campo e o campo <strong>Qtde. Recebida</strong>; clicar em <strong>SALVAR</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Recebimento <code>00013</code>, NF <code>9001</code>, item <code>TST0001 - TESTE MATERIA PRIMA</code> (100 TST), lote <code>TESTELOTE001</code>.</p>
+<h3 id="esperado-e-obtido_4">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Digitar <code>100</code> grava 100 (100,000). As casas decimais só entram quando o usuário digita a vírgula.</td>
+<td>O campo mostra <code>0,100</code> e a Qtde. Recebida <code>0,100</code>. Foi preciso alterar o lote para <code>100,000</code> ("Alteração realizada!").</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_4">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-002-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-002-1.png" alt="Digitado 100: o campo Quantidade mostra 0,100 e a Qtde. Recebida 0,100" loading="lazy"></a><figcaption>Digitado 100: o campo Quantidade mostra 0,100 e a Qtde. Recebida 0,100 · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Digitado 100: o campo Quantidade mostra 0,100 e a Qtde. Recebida 0,100</em></p>
+<figure><a href="../img/estoque/dv-est-002-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-002-2.png" alt="Correção manual para 100,000: &quot;Alteração realizada!&quot;" loading="lazy"></a><figcaption>Correção manual para 100,000: &quot;Alteração realizada!&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Correção manual para 100,000: "Alteração realizada!"</em></p>
+<h3 id="onde-esta-no-codigo_4">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> a função de máscara <code>fmCampoVal(campo, evt, 3)</code> remove tudo que não é número e sempre coloca a vírgula antes dos 3 últimos dígitos (1 dígito vira 0,00X; 3 dígitos viram 0,XXX). No servidor, o valor é lido tirando os pontos, sem outra conferência.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNfItemLote_ed.aspx</code></td>
+<td>34-44, 68-78</td>
+<td>fmCampoVal: filtra só números e monta as casas decimais a partir dos últimos dígitos.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNfItemLote_ed.aspx</code></td>
+<td>350-351</td>
+<td>Campo Quantidade usa a máscara com 3 casas a cada tecla e ao sair do campo.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNfItemLote_ed.aspx.cs</code></td>
+<td>487</td>
+<td>Converte o texto para número tirando os pontos.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_4">Sugestão de correção</h3>
+<ul>
+<li>Usar uma máscara numérica em que o número digitado é inteiro até o usuário digitar a vírgula.</li>
+<li>Ao salvar o lote, avisar na hora quando a quantidade do lote não bate com a do item (hoje só aparece ao finalizar).</li>
+<li>Revisar as outras telas que usam a mesma função (<code>fmCampoVal</code> aparece copiada em várias páginas).</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_4">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-187</strong> digitando <code>100</code> sem vírgula: o lote deve gravar 100,000. Testar também <code>1,5</code> (deve gravar 1,500).</p>
+<h3 id="observacoes_4">Observações</h3>
+<p>A mesma máscara com 2 casas é usada nos valores da nota fiscal; não foi vista falha lá, mas vale conferir.</p>
+<h2 id="dv-est-004">DV-EST-004</h2>
+<p><strong>Checklist de inspeção veicular não mostra as opções de resposta e salva "Aprovado" sem nenhuma resposta</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Checklist de Inspeção Veicular</td>
+<td>Preparação do recebimento; reteste CT-EST-181 em 08/10/2026</td>
+<td>07/10/2026 (rodada de 07/10/2026 (preparação) e 08/10/2026, etapa 1)</td>
+<td>RDC 658/2022, art. 183, parágrafo único (verificações de cada entrega documentadas)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_5">O que acontece</h3>
+<p>No Checklist, a coluna <strong>Avaliação</strong> das 15 perguntas aparece <strong>vazia</strong>: não há opção para responder. Mesmo assim, o registro é salvo com Parecer <strong>Aprovado</strong> ("Registro cadastrado com sucesso!"). A inspeção pode ser "aprovada" sem ter sido feita, e não há como provar o que foi verificado.</p>
+<h3 id="como-reproduzir_5">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Checklist de Inspeção Veicular</strong> e clicar em <strong>Incluir</strong>.</li>
+<li>Preencher Placa <code>TST2222</code>, Condutor <code>TESTE CONDUTOR</code>, Tipo de Documento CPF, Nº Documento, Tipo Movimento <strong>DESCARGA</strong>, Cliente/Fornecedor, Transportadora e Nota Fiscal.</li>
+<li>Observar a coluna <strong>Avaliação</strong> das perguntas 1 a 11 (15 linhas): está vazia.</li>
+<li>Em <strong>Parecer</strong>, marcar <strong>Aprovado</strong> e clicar em <strong>SALVAR REGISTRO</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Checklists <code>00003</code> (placa TST-1234, 07/10) e <code>00004</code> (placa TST2222, 08/10), condutor <code>TESTE CONDUTOR</code>, fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>, transportadora <code>TRANSLOG TRANSPORTES</code>.</p>
+<h3 id="esperado-e-obtido_5">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cada pergunta mostra as opções de resposta (por exemplo, Sim/Não/Não se aplica) e o registro só é salvo com todas respondidas. Parecer "Aprovado" não é aceito se alguma resposta indicar problema sem justificativa.</td>
+<td>Coluna Avaliação vazia; "Registro cadastrado com sucesso!" com Parecer Aprovado e nenhuma resposta.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_5">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-004-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-004-1.png" alt="Formulário com Parecer Aprovado; a coluna Avaliação está vazia em todas as perguntas" loading="lazy"></a><figcaption>Formulário com Parecer Aprovado; a coluna Avaliação está vazia em todas as perguntas · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Formulário com Parecer Aprovado; a coluna Avaliação está vazia em todas as perguntas</em></p>
+<figure><a href="../img/estoque/dv-est-004-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-004-2.png" alt="Depois de SALVAR REGISTRO: &quot;Registro cadastrado com sucesso!&quot;" loading="lazy"></a><figcaption>Depois de SALVAR REGISTRO: &quot;Registro cadastrado com sucesso!&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Depois de SALVAR REGISTRO: "Registro cadastrado com sucesso!"</em></p>
+<h3 id="onde-esta-no-codigo_5">Onde está no código</h3>
+<p><strong>Causa (provável):</strong> <strong>Confirmado no código:</strong> ao salvar, a tela lê a resposta de cada pergunta e, se estiver vazia, simplesmente segue em frente; o Parecer é gravado sem relação com as respostas. <strong>Provável (a investigar):</strong> a coluna vazia vem de perguntas sem respostas cadastradas no banco, porque a lista de opções de cada linha é montada a partir de <code>Respostas</code> da pergunta. Conferir com o DBA o cadastro de respostas das perguntas do checklist.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/portaria_ed2.aspx.cs</code></td>
+<td>263</td>
+<td>Grava o Parecer (Aprovado/Reprovado) sem conferir as respostas.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/portaria_ed2.aspx.cs</code></td>
+<td>275-288</td>
+<td>Para cada pergunta, se a resposta vier vazia, nada acontece: não há recusa.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/portaria_ed2.aspx.cs</code></td>
+<td>476-497</td>
+<td>Monta as opções de cada linha a partir de Respostas da pergunta; sem respostas cadastradas, a coluna fica vazia.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_5">Sugestão de correção</h3>
+<ul>
+<li>Garantir que cada pergunta do checklist tenha as opções de resposta (cadastro ou carga inicial) e que elas apareçam na coluna Avaliação.</li>
+<li>Recusar o salvamento se alguma pergunta não for respondida, dizendo qual.</li>
+<li>Impedir Parecer "Aprovado" quando alguma resposta indicar problema, ou exigir justificativa nesse caso.</li>
+<li>Fazer a validação no servidor, não só na tela.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_5">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-181</strong>: com nenhuma resposta, o sistema deve recusar; com todas respondidas, deve gravar e mostrar as respostas ao reabrir o checklist.</p>
+<h3 id="observacoes_5">Observações</h3>
+<p>A placa e o número do documento têm máscara. O mesmo comportamento foi visto em 07/10 (checklist 00003) e em 08/10 (00004 e 00005).</p>
+<h2 id="dv-est-010">DV-EST-010</h2>
+<p><strong>"Confirmar recebimento" falha com erro genérico quando o item não tem almoxarifado de identificação</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material (botão CONFIRMAR RECEBIMENTO)</td>
+<td>Confirmar recebimento dos recebimentos 00013, 00014 e 00016</td>
+<td>08/10/2026 (rodada de 08/10/2026, etapas 1 e 2)</td>
+<td>RDC 658/2022, art. 141 (registro de cada entrega recebida)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_6">O que acontece</h3>
+<p>Depois de autorizado, o recebimento precisa do botão <strong>CONFIRMAR RECEBIMENTO</strong>. Para o item <code>TESTE MATERIA PRIMA</code>, que foi salvo <strong>sem "Almoxarifado de Identificação"</strong>, o botão falhou quatro vezes com <strong>"Erro ao Finalizar Recebimento!"</strong>, depois de 23 a 26 s. Com o item <code>TST0002</code>, que tem esse campo preenchido, o mesmo botão funcionou em 4,5 s. O cadastro do item <strong>deixa salvar sem esse campo</strong> (que não tem asterisco), o campo fica <strong>travado</strong> depois que o item tem movimento, e o recebimento não diz o que falta.</p>
+<h3 id="como-reproduzir_6">Como reproduzir</h3>
+<ol>
+<li>Em <strong>Cadastros › Item</strong>, ter um item com <strong>Almoxarifado de Identificação</strong> = SELECIONE (no teste, <code>TST0001 - TESTE MATERIA PRIMA</code>).</li>
+<li>Em <strong>Estoque › Recebimento de Material</strong>, criar o recebimento com NF, item e lote, clicar em <strong>FINALIZAR</strong> e autorizar com outro usuário.</li>
+<li>Clicar em <strong>CONFIRMAR RECEBIMENTO</strong> e confirmar.</li>
+<li>Repetir com um item que tem <strong>Almoxarifado de Identificação</strong> = <code>TESTE ALMOX</code> (no teste, <code>TST0002</code>, recebimento 00016).</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Itens <code>TST0001 - TESTE MATERIA PRIMA</code> (sem almoxarifado de identificação) e <code>TST0002 - TESTE MATERIA PRIMA 2</code> (com <code>TESTE ALMOX</code>); recebimentos <code>00013</code> (NF 9001) e <code>00014</code> (NF 9002) com erro; <code>00016</code> (NF 9006) que passou; almoxarifado <code>TESTE ALMOX</code> (00017) com lote identificado, sigla <code>TA</code>.</p>
+<h3 id="esperado-e-obtido_6">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O cadastro do item exige o almoxarifado de identificação quando o item vai ser recebido (ou o recebimento usa outro dado), e, se faltar algo, a mensagem diz exatamente o quê (por exemplo, "Item TST0001 sem almoxarifado de identificação").</td>
+<td>"Erro ao Finalizar Recebimento!" nos recebimentos 00013 e 00014, em 23 a 26 s. No 00016: "Recebimento finalizado!" em 4,5 s, status RECEBIDO, item de entrada <code>TA0001/26</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_6">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-010-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-010-1.png" alt="Item TST0001: &quot;Almoxarifado de Identificação&quot; = SELECIONE e travado; TESTE ALMOX só aparece em &quot;Almoxarifados (Movimentação)&quot;" loading="lazy"></a><figcaption>Item TST0001: &quot;Almoxarifado de Identificação&quot; = SELECIONE e travado; TESTE ALMOX só aparece em &quot;Almoxarifados (Movimentação)&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Item TST0001: "Almoxarifado de Identificação" = SELECIONE e travado; TESTE ALMOX só aparece em "Almoxarifados (Movimentação)"</em></p>
+<figure><a href="../img/estoque/dv-est-010-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-010-2.png" alt="Recebimento 00014 autorizado; ao CONFIRMAR RECEBIMENTO: &quot;Erro ao Finalizar Recebimento!&quot;" loading="lazy"></a><figcaption>Recebimento 00014 autorizado; ao CONFIRMAR RECEBIMENTO: &quot;Erro ao Finalizar Recebimento!&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Recebimento 00014 autorizado; ao CONFIRMAR RECEBIMENTO: "Erro ao Finalizar Recebimento!"</em></p>
+<figure><a href="../img/estoque/dv-est-010-3.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-010-3.png" alt="Recebimento 00016 (item com almoxarifado de identificação): &quot;Recebimento finalizado!&quot;" loading="lazy"></a><figcaption>Recebimento 00016 (item com almoxarifado de identificação): &quot;Recebimento finalizado!&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Recebimento 00016 (item com almoxarifado de identificação): "Recebimento finalizado!"</em></p>
+<h3 id="onde-esta-no-codigo_6">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> na confirmação, a sigla usada para gerar o item de entrada vem do almoxarifado padrão do item (<code>LEFT JOIN</code> em <code>ID_ALMOXARIFADO_PADRAO</code>). Sem ele, a sigla é nula, o item de entrada fica nulo e o código do volume também. O banco recusa, porque <code>COD_VOLUME</code> é obrigatório em <code>TBL_NF_ITEM_LOTE_VOLUME</code>. A camada de regra troca o erro por uma mensagem genérica. O texto exato da exceção do banco não foi visto (sem acesso ao banco), mas a comparação 00014 × 00016 e o código fecham a causa.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_DAL/dalRecebimento.cs</code></td>
+<td>569, 582-583</td>
+<td>A sigla (A.COD_SIGLA) vem do almoxarifado padrão do item, por LEFT JOIN: fica nula quando o item não tem esse campo.</td>
+</tr>
+<tr>
+<td><code>LaboSys_DAL/dalRecebimento.cs</code></td>
+<td>609-635, 680-690</td>
+<td>Monta o item de entrada e o código do volume a partir da sigla; com sigla nula, COD_VOLUME fica nulo e o INSERT falha.</td>
+</tr>
+<tr>
+<td><code>LaboSys_BLL/bllRecebimento.cs</code></td>
+<td>229-243</td>
+<td>concluirRecebimento troca a exceção por "Erro ao Finalizar Recebimento!".</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/administracao/tabelas_apoio/item_ed.aspx</code></td>
+<td>311-315</td>
+<td>Campo "Almoxarifado de Identificação" sem asterisco e sem validação.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/administracao/tabelas_apoio/item_ed.aspx.cs</code></td>
+<td>490, 819</td>
+<td>Salva o item com qualquer valor (inclusive SELECIONE) e trava o campo quando o item já tem movimento.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_6">Sugestão de correção</h3>
+<ul>
+<li>No cadastro do item, tornar o <strong>Almoxarifado de Identificação</strong> obrigatório para itens com controle de lote (ou sempre, se a área confirmar).</li>
+<li>Antes de confirmar o recebimento, conferir os dados de cada item e mostrar mensagem clara, com o item e o campo que falta.</li>
+<li>Não esconder o erro do banco: registrar a exceção no log e mostrar ao usuário uma mensagem útil.</li>
+<li>Permitir corrigir o campo em item com movimento, com justificativa e trilha de auditoria (hoje ele fica travado e o item não pode mais ser recebido).</li>
+<li>Rever o tempo de 23 a 26 s até o erro.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_6">Como confirmar a correção</h3>
+<p>Confirmar o recebimento de um item sem almoxarifado de identificação: o cadastro do item não deve deixar salvar assim, ou o recebimento deve mostrar a mensagem com o campo que falta. Confirmar com item completo (como o 00016) e conferir que continua funcionando.</p>
+<h3 id="observacoes_6">Observações</h3>
+<p>Era Alta; baixada para Média porque há contorno (preencher o campo no item). Continua importante se itens reais forem cadastrados sem ele. O nome na tela ("Almoxarifado de Identificação") é diferente do usado no código (AlmoxarifadoPadrao), e o item também tem a lista "Almoxarifados (Movimentação)": o usuário pode achar que já preencheu.</p>
+<h2 id="dv-est-011">DV-EST-011</h2>
+<p><strong>Checklist com parecer "Reprovado" aparece na lista de veículos para usar no recebimento</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material (campo Veículo (Checklist))</td>
+<td>CT-EST-182</td>
+<td>08/10/2026 (rodada de 08/10/2026, etapa 1)</td>
+<td>RDC 658/2022, art. 156 (problemas que afetam a qualidade investigados e relatados) e art. 183</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_7">O que acontece</h3>
+<p>Um checklist salvo com Parecer <strong>Reprovado</strong> (00005, placa TST9999) aparece na lista <strong>Veículo (Checklist)</strong> do Recebimento, junto com os aprovados ("00005 - TST9999"). Nada impede usar um veículo reprovado na inspeção para receber material.</p>
+<h3 id="como-reproduzir_7">Como reproduzir</h3>
+<ol>
+<li>Em <strong>Estoque › Checklist de Inspeção Veicular</strong>, incluir um checklist com placa <code>TST9999</code>, Parecer <strong>Reprovado</strong>, e clicar em <strong>SALVAR REGISTRO</strong>.</li>
+<li>Abrir <strong>Estoque › Recebimento de Material</strong> e incluir um novo recebimento.</li>
+<li>Abrir a lista <strong>Veículo (Checklist)</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Checklist <code>00005</code> (placa TST9999, Reprovado); checklists aprovados <code>00003</code> e <code>00004</code>.</p>
+<h3 id="esperado-e-obtido_7">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Checklists reprovados não aparecem para seleção no recebimento (ou aparecem marcados e bloqueados), e o recebimento com veículo reprovado é recusado com mensagem.</td>
+<td>A lista mostra "00005 - TST9999" junto com os aprovados. O teste não chegou a salvar um recebimento com ele.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_7">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-011-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-011-1.png" alt="Checklist TST9999 com Parecer Reprovado, antes de salvar" loading="lazy"></a><figcaption>Checklist TST9999 com Parecer Reprovado, antes de salvar · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Checklist TST9999 com Parecer Reprovado, antes de salvar</em></p>
+<figure><a href="../img/estoque/dv-est-011-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-011-2.png" alt="Lista de checklists: 00005 (TST9999) gravado" loading="lazy"></a><figcaption>Lista de checklists: 00005 (TST9999) gravado · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Lista de checklists: 00005 (TST9999) gravado</em></p>
+<figure><a href="../img/estoque/dv-est-011-3.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-011-3.png" alt="Recebimento novo com o campo Veículo (Checklist); o conteúdo da lista foi lido pelo roteiro do teste" loading="lazy"></a><figcaption>Recebimento novo com o campo Veículo (Checklist); o conteúdo da lista foi lido pelo roteiro do teste · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Recebimento novo com o campo Veículo (Checklist); o conteúdo da lista foi lido pelo roteiro do teste</em></p>
+<h3 id="onde-esta-no-codigo_7">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> as duas consultas que alimentam a lista de checklists filtram só por excluído (LIXEIRA), empresa e, na versão "pendente", por saída e uso em outro recebimento. Nenhuma filtra o parecer (aprovado).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_DAL/dalPortaria.cs</code></td>
+<td>394-406</td>
+<td>retornarLista: sem filtro de parecer; o filtro de checklist já usado está comentado.</td>
+</tr>
+<tr>
+<td><code>LaboSys_DAL/dalPortaria.cs</code></td>
+<td>345-357</td>
+<td>retornaListaPendente: filtra saída e uso em outro recebimento, mas não o parecer.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimento_ed2.aspx.cs</code></td>
+<td>152-160</td>
+<td>Recebimento novo usa retornarLista (todos os checklists); recebimento existente usa a lista "pendente".</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_7">Sugestão de correção</h3>
+<ul>
+<li>Mostrar na lista só checklists <strong>aprovados</strong>, sem saída e ainda não usados em outro recebimento.</li>
+<li>Recusar no servidor um recebimento ligado a checklist reprovado, com mensagem clara.</li>
+<li>Comportamento esperado pela norma: veículo reprovado gera registro do problema (desvio) e o material não é recebido sem decisão da Qualidade. <em>Ponto para validar com a Garantia da Qualidade.</em></li>
+<li>Rever a condição da linha 152: parece invertida (o recebimento novo deveria usar a lista de pendentes). <em>Ponto para validar.</em></li>
+</ul>
+<h3 id="como-confirmar-a-correcao_7">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-182</strong>: o checklist 00005 (Reprovado) não deve aparecer em Veículo (Checklist); tentar forçar o uso e conferir a recusa.</p>
+<h3 id="observacoes_7">Observações</h3>
+<p>Ligado ao DV-EST-004 (checklist sem respostas) e ao DV-EST-012 (checklist opcional).</p>
+<h2 id="dv-est-012">DV-EST-012</h2>
+<p><strong>Recebimento é salvo sem checklist de inspeção, sem placa e sem motorista</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Média</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material</td>
+<td>CT-EST-183</td>
+<td>08/10/2026 (rodada de 08/10/2026, etapa 1)</td>
+<td>RDC 658/2022, art. 183, parágrafo único (verificação de cada entrega documentada)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_8">O que acontece</h3>
+<p>Na tela <strong>Recebimento de Materiais</strong>, só a Data do Recebimento e a Transportadora são exigidas. Com <strong>Veículo (Checklist)</strong> = SELECIONE, <strong>Placa do Veículo</strong> e <strong>Motorista/Entregador</strong> em branco, o sistema grava ("Recebimento gerado!", nº 00014). A inspeção veicular deixa de ser obrigatória.</p>
+<h3 id="como-reproduzir_8">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Recebimento de Material</strong> e incluir um recebimento.</li>
+<li>Preencher só <strong>Data do Recebimento</strong> e <strong>Transportadora</strong> (<code>TRANSLOG TRANSPORTES</code>); deixar Veículo (Checklist), Placa do Veículo e Motorista/Entregador vazios.</li>
+<li>Clicar em <strong>SALVAR</strong> e confirmar com <strong>SIM</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Recebimento <code>00014</code> (sem checklist, sem placa, sem motorista), transportadora <code>TRANSLOG TRANSPORTES</code>.</p>
+<h3 id="esperado-e-obtido_8">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exigir o checklist de inspeção (aprovado) e, por consequência, placa e motorista, antes de gravar o recebimento. Se a área quiser exceções (por exemplo, entrega por correio), exigir justificativa. <em>Ponto para validar com a área.</em></td>
+<td>"Recebimento gerado!" (nº 00014) sem checklist, placa ou motorista.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_8">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-012-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-012-1.png" alt="SALVAR sem checklist, placa e motorista: &quot;Recebimento gerado!&quot;" loading="lazy"></a><figcaption>SALVAR sem checklist, placa e motorista: &quot;Recebimento gerado!&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: SALVAR sem checklist, placa e motorista: "Recebimento gerado!"</em></p>
+<figure><a href="../img/estoque/dv-est-012-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-012-2.png" alt="Recebimento 00014 gravado com Veículo (Checklist) = SELECIONE e placa e motorista vazios" loading="lazy"></a><figcaption>Recebimento 00014 gravado com Veículo (Checklist) = SELECIONE e placa e motorista vazios · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Recebimento 00014 gravado com Veículo (Checklist) = SELECIONE e placa e motorista vazios</em></p>
+<h3 id="onde-esta-no-codigo_8">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> os campos Veículo (Checklist), Placa do Veículo e Motorista/Entregador não têm validação na tela, e o método de salvar grava o que vier, inclusive checklist 0.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimento_ed2.aspx</code></td>
+<td>152-182</td>
+<td>Veículo (Checklist), Placa e Motorista sem asterisco e sem validador (só a Transportadora tem).</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimento_ed2.aspx.cs</code></td>
+<td>212-220</td>
+<td>salvar grava motorista, placa e checklist sem conferir se foram informados.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_8">Sugestão de correção</h3>
+<ul>
+<li>Tornar o checklist de inspeção obrigatório no recebimento e conferir no servidor que ele está aprovado e não foi usado em outro recebimento.</li>
+<li>Preencher placa e motorista a partir do checklist e não deixar editá-los à mão (hoje podem divergir do checklist).</li>
+<li>Se houver exceções aceitas pela Qualidade, exigir justificativa e registrar quem decidiu.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_8">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-183</strong>: sem checklist, o recebimento deve ser recusado com mensagem. Com checklist aprovado, deve gravar com placa e motorista do checklist.</p>
+<h3 id="observacoes_8">Observações</h3>
+<p>Ver também DV-EST-011 (checklist reprovado na lista).</p>
+<h2 id="dv-est-003">DV-EST-003</h2>
+<p><strong>Sem a Data do Recebimento, o botão SIM não faz nada e não mostra mensagem</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baixa</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material</td>
+<td>Preparação do recebimento (observação 5)</td>
+<td>07/10/2026 (rodada de 07/10/2026 (preparação))</td>
+<td>Usabilidade</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_9">O que acontece</h3>
+<p>A <strong>Data do Recebimento</strong> é obrigatória, mas a tela não avisa. Ao salvar sem ela, a confirmação aparece e o botão <strong>SIM</strong> não faz nada: não grava e não mostra mensagem.</p>
+<h3 id="como-reproduzir_9">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Recebimento de Material</strong> e incluir um recebimento.</li>
+<li>Escolher a <strong>Transportadora</strong> e deixar a <strong>Data do Recebimento</strong> em branco.</li>
+<li>Clicar em <strong>SALVAR</strong> e depois em <strong>SIM</strong>.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Transportadora <code>TRANSLOG TRANSPORTES</code> (o recebimento 00013 foi criado depois, já com a data).</p>
+<h3 id="esperado-e-obtido_9">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mensagem "Data do Recebimento é obrigatória!" (ou parecida), sem gravar.</td>
+<td>O botão SIM não faz nada e nenhuma mensagem aparece.</td>
+</tr>
+<tr>
+<td>### Onde está no código</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Causa (provável):</strong> <strong>Confirmado no código:</strong> o validador da data aponta para outro campo (<code>txtDtSolic</code>, que não existe nesta tela) e está num grupo de validação (<code>gpvRecebimento</code>) que o salvar não usa (ele valida <code>FormValidacao</code>). <strong>Provável:</strong> com a data vazia, a conversão <code>Convert.ToDateTime("")</code> gera um erro de formato, que não é capturado (o <code>catch</code> só pega <code>ArgumentException</code>); numa atualização parcial da página isso fica invisível ao usuário. Investigar no console do navegador ou no log do servidor.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimento_ed2.aspx</code></td>
+<td>110-116</td>
+<td>Validador da data com ControlToValidate="txtDtSolic" e ValidationGroup="gpvRecebimento"; mensagens falam de "solicitação".</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimento_ed2.aspx.cs</code></td>
+<td>197-216, 238</td>
+<td>salvar valida o grupo FormValidacao, converte a data sem conferir se está vazia e só trata ArgumentException.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_9">Sugestão de correção</h3>
+<ul>
+<li>Ligar o validador ao campo certo (<code>txtDtRec</code>), com mensagem sobre a data do recebimento, no grupo que o salvar usa.</li>
+<li>No servidor, conferir se a data foi informada antes de converter e mostrar mensagem clara.</li>
+<li>Capturar e registrar qualquer erro inesperado, mostrando ao usuário uma mensagem em vez de não fazer nada.</li>
+<li>Marcar o campo com asterisco de obrigatório.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_9">Como confirmar a correção</h3>
+<p>Incluir um recebimento sem a data e clicar em SALVAR: deve aparecer a mensagem e nada ser gravado. Com a data, deve gravar normalmente.</p>
+<h3 id="observacoes_9">Observações</h3>
+<p>Sem captura da tela neste ponto; o comportamento foi registrado no resultado de 07/10/2026 (seção 4, observação 5).</p>
+<h2 id="dv-est-006">DV-EST-006</h2>
+<p><strong>Na tela do Item, alguns botões e marcações recarregam a tela e apagam os números digitados</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baixa</td>
+<td>Aberto</td>
+<td>Estoque › Cadastros › Item</td>
+<td>Preparação do item TESTE MATERIA PRIMA (observação 4)</td>
+<td>07/10/2026 (rodada de 07/10/2026 (preparação))</td>
+<td>Usabilidade</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_10">O que acontece</h3>
+<p>Ao incluir um item, o botão <strong>INCLUIR</strong> de "Almoxarifados (Movimentação)" e as marcações de controle (lote, validade, quarentena) recarregam parte da tela e <strong>apagam os números já digitados</strong> (estoque mínimo e máximo, peso, medidas). A ordem de preenchimento passa a importar. Também aparece o erro de script "<code>$(...).nanoScroller is not a function</code>" em várias telas do Estoque.</p>
+<h3 id="como-reproduzir_10">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Cadastros › Item</strong> e clicar em incluir.</li>
+<li>Preencher os números de <strong>Parâmetros de Armazenagem</strong> (Est. Mínimo, Est. Máximo, Peso, Altura, Largura, Profundidade, Emp. Máximo).</li>
+<li>Marcar <strong>CONTROLE DE QUARENTENA</strong> ou, em <strong>Almoxarifados (Movimentação)</strong>, escolher um almoxarifado e clicar em <strong>INCLUIR</strong>.</li>
+<li>Conferir os números digitados no passo 2.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Item <code>TST0001 - TESTE MATERIA PRIMA</code> (grupo <code>TESTE GRUPO</code>, subgrupo <code>TESTE SUBGRUPO</code>, unidade <code>TST</code>, almoxarifado <code>TESTE ALMOX</code>).</p>
+<h3 id="esperado-e-obtido_10">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Os valores já digitados continuam preenchidos depois de qualquer botão ou marcação. Nenhum erro de script no navegador.</td>
+<td>Os números digitados foram apagados e precisaram ser digitados de novo. Erro de script "$(...).nanoScroller is not a function" no console do navegador.</td>
+</tr>
+<tr>
+<td>### Onde está no código</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Causa (provável):</strong> a marcação CONTROLE DE QUARENTENA e o botão INCLUIR do almoxarifado fazem ida ao servidor (<code>AutoPostBack</code>/botão em <code>UpdatePanel</code>); a forma exata como os números se perdem não foi identificada. Investigar se os campos de número com máscara estão fora dos painéis atualizados ou são reescritos no retorno. O <code>nanoScroller</code> não aparece no código do Estoque: deve vir de um script comum (página-mestra ou tema) que chama o componente sem carregá-lo; a investigar.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/administracao/tabelas_apoio/item_ed.aspx</code></td>
+<td>465-467</td>
+<td>CONTROLE DE QUARENTENA com AutoPostBack="True".</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/administracao/tabelas_apoio/item_ed.aspx</code></td>
+<td>664-665</td>
+<td>Botão INCLUIR do almoxarifado (btnNovoLocal), que faz ida ao servidor.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_10">Sugestão de correção</h3>
+<ul>
+<li>Manter os valores digitados nas idas ao servidor (rever os painéis atualizados e o ViewState dos campos), ou fazer essas ações sem recarregar.</li>
+<li>Carregar o script do <code>nanoScroller</code> onde ele é chamado, ou retirar a chamada.</li>
+<li>Testar a tela do Item preenchendo os campos em ordens diferentes.</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_10">Como confirmar a correção</h3>
+<p>Incluir um item, preencher os números, marcar CONTROLE DE QUARENTENA e incluir um almoxarifado: os números devem continuar preenchidos; o console não deve mostrar erro de script.</p>
+<h3 id="observacoes_10">Observações</h3>
+<p>Sem captura do momento em que os números somem; registrado no resultado de 07/10/2026 (seção 4, observações 4 e 8).</p>
+<h2 id="dv-est-013">DV-EST-013</h2>
+<p><strong>Nota fiscal sem a série não grava e não avisa; mensagens apontam o campo errado</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baixa</td>
+<td>Aberto</td>
+<td>Estoque › Estoque › Recebimento de Material › Nota Fiscal</td>
+<td>CT-EST-184</td>
+<td>08/10/2026 (rodada de 08/10/2026, etapa 1)</td>
+<td>Usabilidade</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_11">O que acontece</h3>
+<p>Na tela <strong>Recebimento de Materiais - Nota Fiscal</strong>, com a <strong>Série</strong> em branco, o sistema pergunta "Deseja salvar a Nota Fiscal?", repete a pergunta depois do SIM e <strong>não grava, sem nenhuma mensagem</strong>. Outras mensagens apontam o campo errado: sem o Nº da NF aparece também "Campo Série é obrigatório!" (com a série preenchida); sem a Data de Entrada aparece "Data da Nota Fiscal não informada"; sem o Total Produto aparece também "Valor do Frete da Nota Fiscal não foi informado!" (com o frete preenchido). "Tipo de Movimentacao" está sem acento.</p>
+<h3 id="como-reproduzir_11">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Estoque › Recebimento de Material</strong>, um recebimento em aberto, e clicar em <strong>INCLUIR NOTA FISCAL</strong>.</li>
+<li>Preencher todos os campos obrigatórios, menos a <strong>Série</strong>.</li>
+<li>Clicar em <strong>SALVAR NOTA FISCAL</strong> e depois em <strong>SIM</strong>.</li>
+<li>Repetir deixando em branco, um de cada vez, o <strong>Nº da NF</strong>, a <strong>Data de Entrada</strong> e o <strong>Total Produto</strong>, e ler as mensagens no rodapé.</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Recebimento <code>00015</code>, fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>, NF de teste <code>9004</code> (não gravada).</p>
+<h3 id="esperado-e-obtido_11">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sem a série: "Campo Série é obrigatório!" e nada gravado. Cada mensagem cita só o campo que falta.</td>
+<td>Sem a série: a pergunta se repete e nada é gravado, sem mensagem. Sem o Total Produto: "Valor Total do Produto na Nota Fiscal não foi informado!" e "Valor do Frete da Nota Fiscal não foi informado!" com o frete preenchido.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_9">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-013-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-013-1.png" alt="Série em branco: depois do SIM, a pergunta &quot;Deseja salvar a Nota Fiscal?&quot; aparece de novo" loading="lazy"></a><figcaption>Série em branco: depois do SIM, a pergunta &quot;Deseja salvar a Nota Fiscal?&quot; aparece de novo · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Série em branco: depois do SIM, a pergunta "Deseja salvar a Nota Fiscal?" aparece de novo</em></p>
+<figure><a href="../img/estoque/dv-est-013-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-013-2.png" alt="Sem o Total Produto: aparece também a mensagem do frete, que está preenchido" loading="lazy"></a><figcaption>Sem o Total Produto: aparece também a mensagem do frete, que está preenchido · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Sem o Total Produto: aparece também a mensagem do frete, que está preenchido</em></p>
+<h3 id="onde-esta-no-codigo_9">Onde está no código</h3>
+<p><strong>Causa (confirmada):</strong> os validadores estão ligados aos campos errados: o da Série valida o Nº da NF, o do Frete valida o Total Produto, e o da Data de Entrada usa o texto da Data da Nota. Sem validador real na série, o código converte a série vazia com <code>Convert.ToInt32</code> ao verificar nota repetida; esse erro de formato não é capturado (o <code>catch</code> só pega <code>ArgumentException</code>), o que explica a falta de mensagem (esta última parte é <strong>provável</strong>).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNF_ed.aspx</code></td>
+<td>261-263</td>
+<td>rqfvSerie ("Campo Série é obrigatório!") com ControlToValidate="txtNumNF".</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNF_ed.aspx</code></td>
+<td>451-453</td>
+<td>Validador "Valor do Frete..." com ControlToValidate="txtValTotProduto".</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNF_ed.aspx</code></td>
+<td>302-305</td>
+<td>Validador da Data de Entrada com a mensagem "Data da Nota Fiscal não informada".</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/estoque/recebimentoNF_ed.aspx.cs</code></td>
+<td>516, 525</td>
+<td>validarNf converte a série com Convert.ToInt32 e só trata ArgumentException.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_11">Sugestão de correção</h3>
+<ul>
+<li>Ligar cada validador ao seu campo: Série → <code>txtSerie</code>, Frete → <code>txtValFrete</code>; corrigir o texto da Data de Entrada.</li>
+<li>No servidor, conferir os campos obrigatórios antes de converter e mostrar a mensagem do campo que falta.</li>
+<li>Capturar e registrar erros inesperados em vez de deixar a tela sem resposta.</li>
+<li>Corrigir os textos sem acento ("Tipo de Movimentacao", "Data de Emissao").</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_11">Como confirmar a correção</h3>
+<p>Repetir o <strong>CT-EST-184</strong> campo a campo: cada falta deve gerar só a mensagem do próprio campo; sem a série, a mensagem deve aparecer e nada ser gravado.</p>
+<h3 id="observacoes_11">Observações</h3>
+<p>No mesmo caso, o item repetido na nota foi recusado só pela soma dos valores; a recusa por item repetido não foi isolada (<em>ponto para validar</em> num novo teste com nota de valor maior).</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#dv-est-014">DV-EST-014</a></li><li class="sub"><a href="#o-que-acontece">O que acontece</a></li><li class="sub"><a href="#como-reproduzir">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido">Esperado e obtido</a></li><li class="sub"><a href="#evidencias">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes">Observações</a></li><li><a href="#dv-est-015">DV-EST-015</a></li><li class="sub"><a href="#o-que-acontece_1">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_1">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_1">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_1">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_1">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_1">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_1">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_1">Observações</a></li><li><a href="#dv-est-016">DV-EST-016</a></li><li class="sub"><a href="#o-que-acontece_2">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_2">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_2">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_2">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_2">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_2">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_2">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_2">Observações</a></li><li><a href="#dv-est-001">DV-EST-001</a></li><li class="sub"><a href="#o-que-acontece_3">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_3">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_3">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_3">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_3">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_3">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_3">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_3">Observações</a></li><li><a href="#dv-est-002">DV-EST-002</a></li><li class="sub"><a href="#o-que-acontece_4">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_4">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_4">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_4">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_4">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_4">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_4">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_4">Observações</a></li><li><a href="#dv-est-004">DV-EST-004</a></li><li class="sub"><a href="#o-que-acontece_5">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_5">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_5">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_5">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_5">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_5">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_5">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_5">Observações</a></li><li><a href="#dv-est-010">DV-EST-010</a></li><li class="sub"><a href="#o-que-acontece_6">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_6">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_6">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_6">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_6">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_6">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_6">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_6">Observações</a></li><li><a href="#dv-est-011">DV-EST-011</a></li><li class="sub"><a href="#o-que-acontece_7">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_7">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_7">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_7">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_7">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_7">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_7">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_7">Observações</a></li><li><a href="#dv-est-012">DV-EST-012</a></li><li class="sub"><a href="#o-que-acontece_8">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_8">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_8">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_8">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_8">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_8">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_8">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_8">Observações</a></li><li><a href="#dv-est-003">DV-EST-003</a></li><li class="sub"><a href="#o-que-acontece_9">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_9">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_9">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_9">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_9">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_9">Observações</a></li><li><a href="#dv-est-006">DV-EST-006</a></li><li class="sub"><a href="#o-que-acontece_10">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_10">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_10">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_10">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_10">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_10">Observações</a></li><li><a href="#dv-est-013">DV-EST-013</a></li><li class="sub"><a href="#o-que-acontece_11">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_11">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_11">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_9">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_9">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_11">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_11">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_11">Observações</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
