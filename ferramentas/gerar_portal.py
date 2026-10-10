@@ -33,7 +33,7 @@ HOJE = datetime.date.today().strftime("%d/%m/%Y")
 
 # ---------------------------------------------------------------------------------------------
 # Catálogo: o que entra no portal. "arq" é relativo a homologacao/. "word" é o .docx original.
-# Categorias: inicio (comece por aqui), ideal (como deve ser), fluxos, negocio, qualidade, tecnico, testes.
+# Categorias: inicio (comece por aqui), ideal (como deve ser), defeitos (para os devs), fluxos, negocio, qualidade, tecnico, testes.
 # ---------------------------------------------------------------------------------------------
 CATEGORIAS = {
     "inicio": ("Comece por aqui", "Visão geral e resumos para quem quer entender rápido."),
@@ -42,6 +42,7 @@ CATEGORIAS = {
     "negocio": ("Regras e uso", "Regras de negócio, telas e manual para quem usa o sistema."),
     "qualidade": ("Qualidade e ANVISA", "Conformidade com a RDC 658/2022, riscos e rastreabilidade."),
     "tecnico": ("Requisitos e dados", "Para a equipe de desenvolvimento da nova versão."),
+    "defeitos": ("Defeitos para correção", "Para a equipe de desenvolvimento: cada defeito encontrado nos testes, com o passo a passo para reproduzir, as capturas, o trecho do código e uma sugestão de correção."),
     "testes": ("Testes", "Plano de testes, resultados e evidências."),
 }
 
@@ -137,6 +138,7 @@ MODULOS = [
          ("4.controle_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("4.controle_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
+         ("4.controle_qualidade/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "4.controle_qualidade/defeitos/LabMedSys - Modulo Controle da Qualidade - Defeitos para Correcao.docx"),
          ("4.controle_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("4.controle_qualidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
          ("4.controle_qualidade/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
