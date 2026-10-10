@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html">Ciclo do documento</a></li><li><a href="controle-de-copias.html">Controle de cópias</a></li><li><a href="documento-externo-e-documento-legado.html">Documento externo e documento legado</a></li><li><a href="tipo-de-documento-arquivos-e-modelos.html">Tipo de documento, arquivos e modelos</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 10/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>6.controle_documento/app</code>) · <strong>Base:</strong> os quatro fluxos do módulo (<code>fluxos/</code>), o reconhecimento (<code>00-reconhecimento.md</code>) e a conformidade (<code>04-conformidade-regulatoria.md</code>).</p>
+<p><strong>Situação de todas as regras: Extraída.</strong> Elas foram lidas do código e aguardam o teste nas telas e a validação da área.</p>
+<p><strong>Caminhos:</strong> relativos a <code>6.controle_documento/app/</code>. As abreviações dos fluxos se repetem aqui:
+- <code>UI/</code> = <code>HSolutions.ControleDoc.UI/</code>
+- <code>App/</code> = <code>HSolutions.ControleDoc.Application/</code>
+- <code>Doc</code> = <code>UI/Areas/Documento/Controllers/DocController.cs</code>
+- <code>Serv</code> = <code>App/Services/DocumentoAppService.cs</code>
+- <code>Copia</code>, <code>Ext</code>, <code>Leg</code>, <code>Tipo</code> e <code>Ged</code> = os controladores de cada tela, como definidos em cada fluxo.</p>
+<p><strong>Como foi montado:</strong> as regras das seções 2 a 5 foram <strong>consolidadas por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/consolidar_regras.py</code>). O texto de cada regra é o mesmo do fluxo, e a seção 7 liga cada código ao número local do fluxo.</p>
+<p><strong>Total: 67 regras.</strong> São 9 gerais (RN-DOC-001 a 009) e 58 dos fluxos (RN-DOC-010 a 067).</p>
+<h3 id="1-regras-gerais-do-modulo">1. Regras gerais do módulo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Tema</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-DOC-001</td>
+<td>Menu</td>
+<td>As telas aparecem conforme o roteiro de menu do fornecedor e o perfil do Principal (<code>HSolutions.ControleDoc.Infra.DB/dml.sql</code>). Arquivos e Modelos têm lógica completa, mas <strong>não estão no roteiro</strong> (<code>00-reconhecimento.md</code>, seção 2).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-002</td>
+<td>Situações</td>
+<td>O documento tem 10 situações: Em inclusão, Em revisão, Em pré-aprovação, Em aprovação, Aprovado, Vigente, Cancelado, Substituído, Obsoleto e Excluído (<code>HSolutions.ControleDoc.Domain/Enumerators/SituacaoDocumentoEnum.cs</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-003</td>
+<td>Caminho por tipo</td>
+<td>O caminho entre as situações é configurado por tipo de documento (<code>App/Services/TipoDocumentoAppService.cs:58-75</code>). Sem configuração, vale o padrão: revisão → pré-aprovação → aprovação → vigência.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-004</td>
+<td>Histórico</td>
+<td>Há dois registros. O <strong>histórico do documento</strong> guarda ação, justificativa, responsável e assinante (<code>Serv:1157</code>). O <strong>histórico de alterações</strong> guarda campo a campo, com valor antigo e novo (<code>HSolutions.ControleDoc.Infra.Data/LogConfig/</code>). As tabelas dos dois não estão no projeto de banco (<code>00-reconhecimento.md</code>, seção 4).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-005</td>
+<td>Exclusão</td>
+<td>Nada é apagado: documentos passam a <strong>Excluído</strong>, e os demais registros são marcados como excluídos (lixeira).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-006</td>
+<td>Datas</td>
+<td>As datas das decisões (análise crítica, pré-aprovação, aprovação) vêm do servidor (<code>Serv:810, 882, 1058</code>). As de emissão e validade são digitadas.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-007</td>
+<td>Senha</td>
+<td>As decisões do ciclo, a obsolescência e a gestão de arquivos pedem usuário e senha (<code>Doc:2550-2554</code>). Como a senha se liga ao registro é analisado na etapa de permissões.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-008</td>
+<td>Integração</td>
+<td>Os outros módulos só recebem documentos <strong>vigentes</strong> (<code>UI/Api/DocumentoApiController.cs:35, 72</code>). O módulo consulta o Principal para áreas, responsáveis, usuários e equipamentos (27 chamadas, <code>levantamento/integracoes-automatico.md</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-DOC-009</td>
+<td>Funções</td>
+<td>Algumas telas conferem funções do perfil ("ALTERAR", "IMPRIMIR / EXCEL", "CONSULTAR LOG") (<code>UI/Areas/ControleCopia/Controllers/CopiaController.cs:76-90</code>). O detalhe fica na etapa de permissões.</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-ciclo-do-documento">2. Ciclo do documento</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/ciclo-documento.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-DOC-010</td>
+<td>Inclusão</td>
+<td>O documento nasce <strong>Em inclusão</strong> (<code>Doc:104-121</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-011</td>
+<td>Inclusão</td>
+<td>Para seguir para a revisão, o documento precisa de <strong>anexo</strong>, de <strong>pelo menos um setor revisor</strong> e de <strong>pelo menos uma aplicação</strong>. Mensagens: "Anexo pendente!", "Adicione, pelo menos, um Setor Revisor!", "Adicione, pelo menos, uma Aplicação!" (<code>Doc:2582-2597</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-012</td>
+<td>Inclusão</td>
+<td><strong>Exclusão</strong> só <strong>Em inclusão</strong> ("O documento não pode ser excluído!"), com justificativa. O documento passa a <strong>Excluído</strong> e não é apagado do banco (<code>Doc:345-370</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-013</td>
+<td>Inclusão</td>
+<td>A criação grava no histórico "CRIAÇÃO DO DOCUMENTO", com justificativa e assinante (<code>Doc:2795</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-014</td>
+<td>Revisão</td>
+<td><strong>O fluxo depende do tipo de documento.</strong> A próxima situação vem da configuração do tipo (<code>TBL_TIPO_DOCUMENTO_SITUACAO</code>, <code>App/Services/TipoDocumentoAppService.cs:58-75</code>). Sem configuração, vale a sequência padrão: revisão → pré-aprovação → aprovação. <em>A validar:</em> quais tipos pulam etapas. Um tipo pode, por configuração, <strong>pular a aprovação</strong>.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-015</td>
+<td>Revisão</td>
+<td>Cada <strong>setor revisor</strong> revisa ou devolve, com justificativa. A ação é gravada no histórico como "REVISADO" ou "DEVOLVIDO". O documento devolvido <strong>volta para Em inclusão</strong> (<code>Doc:1485-1593</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-016</td>
+<td>Revisão</td>
+<td><strong>Confirmar a revisão</strong> (análise crítica) exige anexo. Grava quem confirmou e a <strong>data do servidor</strong> (<code>Serv:1036-1062</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-017</td>
+<td>Pré-aprovação e aprovação</td>
+<td>A <strong>pré-aprovação</strong> só vale <strong>Em pré-aprovação</strong> ("A situação do documento não permite pré-aprovação!"). Ela grava o aprovador inicial e a data do servidor. Numa nova revisão, <strong>soma 1 ao número da revisão</strong> (<code>Serv:765-812</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-018</td>
+<td>Pré-aprovação e aprovação</td>
+<td>A <strong>aprovação</strong> só vale <strong>Em aprovação</strong> ("A situação do documento não permite aprovação!") e exige anexo. Grava o aprovador final e a data do servidor (<code>Serv:849-884</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-019</td>
+<td>Pré-aprovação e aprovação</td>
+<td><strong>Devolver</strong> na pré-aprovação ou na aprovação pede justificativa e grava no histórico ("DEVOLVIDO PRÉ-APROVAÇÃO", "DEVOLVIDO APROVAÇÃO") (<code>Doc:1690-1725, 1893-1928</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-020</td>
+<td>Pré-aprovação e aprovação</td>
+<td><strong>Quem pré-aprovou não vê o documento na lista de aprovação</strong> (<code>UI/Areas/Documento/Model/DocAprovacaoIndexResultadoModel.cs:89-93</code>). Essa é a única separação entre o aprovador inicial e o final, e ela está <strong>só na lista</strong>: a gravação da aprovação não confere quem pré-aprovou.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-021</td>
+<td>Pré-aprovação e aprovação</td>
+<td>As decisões pedem <strong>usuário e senha</strong> (<code>Doc:2550-2554</code>). Quem pode decidir e como a senha conferida se liga à gravação ficam para a etapa de permissões.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-022</td>
+<td>Vigência</td>
+<td><strong>Tornar vigente</strong> só vale para documento <strong>Aprovado</strong> ("A situação do documento não permite tornar vigente!"). Exige <strong>anexo final</strong> ("É necessário informar um anexo final.") e as datas de <strong>emissão</strong> e <strong>validade</strong>, com a validade posterior à emissão. As duas datas são <strong>digitadas</strong>. Grava quem tornou vigente (<code>Serv:921-1000</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-023</td>
+<td>Vigência</td>
+<td>Na vigência de uma nova revisão, a versão de origem passa a <strong>Substituída</strong>, com histórico "SUBSTITUÍDO" (<code>Serv:935-950</code>; <code>Doc:2736-2765</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-024</td>
+<td>Vigência</td>
+<td>A conferência do <strong>treinamento</strong> antes da vigência existe no código, mas está <strong>desligada</strong> (comentada) (<code>Serv:975-978</code>). O documento entra em vigor mesmo quando o tipo exige treinamento.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-025</td>
+<td>Vigência</td>
+<td><strong>Ordem das conferências:</strong> a versão anterior é marcada como Substituída <strong>antes</strong> de conferir se a nova pode entrar em vigor (<code>Serv:935-950</code> antes de <code>Serv:969-971</code>). <em>Inferência, a confirmar no teste:</em> se a nova for recusada, a anterior pode ficar Substituída sem nenhuma vigente.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-026</td>
+<td>Vigência</td>
+<td>A vigência está programada <strong>em dois lugares</strong>, no controlador (<code>Doc:2736-2765</code>) e no serviço (<code>Serv:921-1000</code>), com regras que podem divergir. Código repetido.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-027</td>
+<td>Nova revisão e obsolescência</td>
+<td>A <strong>nova revisão</strong> cria um documento novo <strong>Em inclusão</strong>, ligado ao de origem, com os dados copiados. Ela recomeça o ciclo (<code>Doc:453-545</code>). <em>A validar:</em> se pode partir de um documento que não esteja vigente, porque o código não mostra essa conferência.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-028</td>
+<td>Nova revisão e obsolescência</td>
+<td>A <strong>obsolescência</strong> só vale para documento <strong>Vigente</strong> e pede usuário, senha e justificativa. O documento passa a <strong>Obsoleto</strong> (<code>UI/Areas/Documento/Controllers/DocObsolescenciaController.cs:176, 285, 447</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-029</td>
+<td>Nova revisão e obsolescência</td>
+<td>Os outros módulos só recebem documentos <strong>vigentes</strong> pela API (<code>UI/Api/DocumentoApiController.cs:35, 72</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-030</td>
+<td>Histórico</td>
+<td>Cada passo grava no <strong>histórico do documento</strong>: ação, justificativa, responsável, setor, data e <strong>assinante</strong> (<code>Serv:1157</code>; <code>HSolutions.ControleDoc.Domain/Entities/DocumentoHistorico.cs:9-21</code>). Há relatório do histórico (<code>Doc:1145</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-031</td>
+<td>Histórico</td>
+<td>As tabelas desse histórico <strong>não estão no projeto de banco</strong> (<code>00-reconhecimento.md</code>, seção 4). Perguntar ao DBA se existem no ambiente.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-controle-de-copias">3. Controle de cópias</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/controle-copias.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-DOC-032</td>
+<td>Pesquisa</td>
+<td>Sem filtro de situação, a lista mostra os documentos <strong>Vigentes</strong> e <strong>Aprovados</strong> (<code>Copia:132-136</code>). Um documento <strong>aprovado, ainda não vigente</strong>, já pode ter cópias. <em>A validar com a área.</em></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-033</td>
+<td>Pesquisa</td>
+<td>Com o filtro de situação preenchido, a lista mostra a situação escolhida, inclusive Substituído ou Obsoleto. <em>Inferência, a confirmar no teste:</em> é possível abrir e imprimir cópias de um documento que não vale mais.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-034</td>
+<td>Pesquisa</td>
+<td>A tela confere permissões por função para alterar, imprimir e consultar o histórico (<code>Copia:76-90, 159, 649</code>). Detalhe na etapa de permissões.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-035</td>
+<td>Inclusão e numeração</td>
+<td>Há dois <strong>tipos de cópia</strong>: <strong>Controlada</strong>, para um setor interno, e <strong>Não controlada</strong>, para um solicitante externo (<code>HSolutions.ControleDoc.Infra.DB/dml.sql:31-35</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-036</td>
+<td>Inclusão e numeração</td>
+<td>A cópia <strong>controlada</strong> recebe o <strong>número seguinte</strong> ao da última cópia controlada do documento. A não controlada fica <strong>sem número</strong> (<code>Serv:130-165</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-037</td>
+<td>Inclusão e numeração</td>
+<td>A cópia nasce <strong>provisória</strong> e passa a <strong>ativa</strong> quando é salva ou impressa (<code>Copia:529-560</code>; <code>Serv:70-74</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-038</td>
+<td>Inclusão e numeração</td>
+<td>A ativação grava no histórico "Inclusão Cópia", com o setor ou o solicitante. O usuário gravado é <strong>quem criou</strong> a cópia, não quem a ativou (<code>Serv:77-110</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-039</td>
+<td>Impressão</td>
+<td>A impressão usa o <strong>anexo final</strong> do documento ("Anexo não encontrado." quando falta) e leva o número da cópia, o setor ou o solicitante, se é controlada e a situação do documento (<code>Copia:389-445</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-040</td>
+<td>Impressão</td>
+<td>Cada impressão grava no histórico "Impressão do documento … para …", com o usuário e o tipo da cópia (<code>Copia:446-470</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-041</td>
+<td>Impressão</td>
+<td>A impressão <strong>não confere a situação</strong> do documento antes de imprimir (<code>Copia:389-445</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-042</td>
+<td>Impressão</td>
+<td>A marca d'água "Copia controlada impressão não autorizada." <strong>existe, mas não é usada</strong>: nenhum trecho do código a chama (<code>HSolutions.ControleDoc.UI/Controllers/ControleDocBaseController.cs:201-220</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-043</td>
+<td>Impressão</td>
+<td>O relatório da grade de cópias inclui documentos Vigentes, Substituídos e Obsoletos (<code>Copia:695-697</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-044</td>
+<td>Remoção e recolhimento</td>
+<td><strong>Remover</strong> uma cópia só a marca como excluída, <strong>sem justificativa e sem histórico</strong> (<code>Serv:64-68</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-045</td>
+<td>Remoção e recolhimento</td>
+<td><strong>Não há recolhimento.</strong> Nenhum campo guarda a devolução ou o recolhimento de uma cópia, e nada avisa os setores quando o documento é substituído ou obsoletado. Nenhuma ocorrência no código.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-documento-externo-e-documento-legado">4. Documento externo e documento legado</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/externo-legado.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-DOC-046</td>
+<td>Documento externo</td>
+<td>O <strong>código</strong> não pode se repetir ("O campo CÓDIGO digitado já esta cadastrado!") (<code>Ext:265, 280</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-047</td>
+<td>Documento externo</td>
+<td>A <strong>situação</strong> do documento externo é a que o usuário escolhe na tela (<code>Ext:560</code>). Não há ciclo de revisão ou aprovação para o documento externo. <em>A validar:</em> se a área precisa registrar a análise de um documento externo antes de usá-lo.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-048</td>
+<td>Documento externo</td>
+<td>A <strong>validade</strong> é sugerida pelo prazo do tipo de documento (<code>Ext:702-716</code>). Se ficar <strong>em branco</strong>, o sistema grava a <strong>data de hoje</strong>, e o documento já nasce vencido (<code>Ext:546-547</code>). O mesmo vale para a data de emissão.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-049</td>
+<td>Documento externo</td>
+<td>O relatório mostra os dias que faltam para vencer (<code>Ext:768</code>). <strong>Nenhum aviso nem bloqueio</strong> quando vence.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-050</td>
+<td>Documento externo</td>
+<td>O responsável é o usuário da sessão (<code>Ext:562</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-051</td>
+<td>Documento externo</td>
+<td>A <strong>exclusão</strong> pede justificativa e marca o documento e as aplicações como excluídos, sem apagar (<code>Ext:385-471</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-052</td>
+<td>Documento legado</td>
+<td>O documento legado nasce <strong>Em inclusão</strong>, marcado como <strong>legado</strong> (<code>Leg:102-122</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-053</td>
+<td>Documento legado</td>
+<td><strong>Tornar vigente</strong> é direto, sem revisão nem aprovação no sistema e <strong>sem senha</strong>. Exige as datas de emissão e validade, com a validade posterior à emissão (<code>Leg:145-188</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-054</td>
+<td>Documento legado</td>
+<td>Os nomes e números de <strong>quem fez a análise crítica, pré-aprovou, aprovou e tornou vigente</strong> vêm <strong>digitados na tela</strong> (<code>Leg:190-199</code>). É informação declarada, não assinatura. <em>A validar:</em> se a área guarda o documento original assinado como evidência.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-055</td>
+<td>Documento legado</td>
+<td>A vigência do legado grava o histórico de alterações com justificativa (<code>Leg:205</code>), mas <strong>não grava no histórico do documento</strong> (as ações e assinaturas do fluxo 1).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-056</td>
+<td>Documento legado</td>
+<td>A lista e o relatório do legado mostram só documentos marcados como legado e os dias que faltam para vencer (<code>Leg:617, 642</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-057</td>
+<td>Consulta</td>
+<td><strong>Visualizar Documento</strong> permite pesquisar os documentos e abrir o arquivo ("Chave do anexo inválido.", "Anexo não encontrado.", "Arquivo não encontrado.") (<code>Leg:368-383, 514-530</code>). <em>A confirmar no teste:</em> quais situações aparecem, e se um documento substituído ou obsoleto pode ser aberto por quem só consulta.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-tipo-de-documento-arquivos-e-modelos">5. Tipo de documento, arquivos e modelos</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/tipo-arquivos-modelos.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-DOC-058</td>
+<td>Tipo de documento</td>
+<td>O nome do tipo não pode se repetir ("O campo TIPO DOCUMENTO digitado já esta cadastrado!") (<code>Tipo:221, 236</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-059</td>
+<td>Tipo de documento</td>
+<td>O tipo guarda:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-060</td>
+<td>Tipo de documento</td>
+<td><strong>Caminho de aprovação por tipo:</strong> a tela lista as etapas em ordem, e o usuário marca as que valem. A etapa <strong>Vigente</strong> sempre entra (<code>Tipo:620-660</code>). Ao salvar, a configuração anterior é <strong>apagada e regravada</strong> (<code>Tipo:666-680</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-061</td>
+<td>Tipo de documento</td>
+<td>A <strong>exclusão</strong> do tipo é recusada quando há documento ou documento externo ativo daquele tipo, e pede justificativa (<code>Tipo:313-342</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-062</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>A pesquisa mostra os <strong>modelos</strong> e os documentos <strong>vigentes</strong> dos tipos que controlam arquivos (<code>Ged:127-132</code>). Cada documento aparece como ciclo <strong>BÁSICO</strong> (modelo) ou <strong>COMPLETO</strong> (<code>Ged:239</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-063</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>O documento do ciclo básico nasce <strong>Em inclusão</strong> (<code>Ged:169-187</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-064</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>Ao <strong>salvar</strong>, exige anexo ("Anexo pendente!") e uma aplicação ("Adicione, pelo menos, uma Aplicação!"). O documento passa a <strong>Vigente na hora</strong>, sem revisão, pré-aprovação ou aprovação (<code>Ged:341-450</code>). A tela tem conferência de usuário e senha (<code>Ged:1199-1203</code>). <em>A confirmar no teste:</em> se ela é pedida ao salvar.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-065</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td><strong>Nova revisão no ciclo básico:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-066</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>A <strong>exclusão</strong> só vale para documento Em inclusão ("O documento não pode ser excluído!") e passa a Excluído (<code>Ged:709-727</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-DOC-067</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>As datas de emissão e validade são conferidas como datas válidas ("Data de Emissão inválida!", "Data de Validade inválida!") (<code>Ged:479, 489</code>).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-pontos-de-atencao-dos-fluxos">6. Pontos de atenção dos fluxos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Ponto de atenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ciclo do documento</td>
+<td>1. A separação entre quem pré-aprova e quem aprova está só na lista</td>
+</tr>
+<tr>
+<td>Ciclo do documento</td>
+<td>2. Um tipo de documento pode pular a aprovação</td>
+</tr>
+<tr>
+<td>Ciclo do documento</td>
+<td>3. Vigência sem treinamento</td>
+</tr>
+<tr>
+<td>Ciclo do documento</td>
+<td>4. A revisão anterior pode ser substituída antes da hora</td>
+</tr>
+<tr>
+<td>Ciclo do documento</td>
+<td>5. Datas de emissão e validade digitadas</td>
+</tr>
+<tr>
+<td>Ciclo do documento</td>
+<td>6. Regra repetida</td>
+</tr>
+<tr>
+<td>Ciclo do documento</td>
+<td>7. Cópias em papel não recolhidas</td>
+</tr>
+<tr>
+<td>Controle de cópias</td>
+<td>1. Cópias antigas continuam em uso</td>
+</tr>
+<tr>
+<td>Controle de cópias</td>
+<td>2. A marca d'água não é aplicada</td>
+</tr>
+<tr>
+<td>Controle de cópias</td>
+<td>3. A remoção não deixa rastro</td>
+</tr>
+<tr>
+<td>Controle de cópias</td>
+<td>4. Cópia de documento que não vale</td>
+</tr>
+<tr>
+<td>Controle de cópias</td>
+<td>5. O histórico da inclusão grava o usuário errado</td>
+</tr>
+<tr>
+<td>Documento externo e documento legado</td>
+<td>1. Documento externo sem análise</td>
+</tr>
+<tr>
+<td>Documento externo e documento legado</td>
+<td>2. Validade em branco vira "hoje"</td>
+</tr>
+<tr>
+<td>Documento externo e documento legado</td>
+<td>3. O legado vira vigente sem aprovação no sistema</td>
+</tr>
+<tr>
+<td>Documento externo e documento legado</td>
+<td>4. O legado não entra no histórico do documento</td>
+</tr>
+<tr>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>1. Terceiro caminho para vigente sem aprovação</td>
+</tr>
+<tr>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>2. A nova revisão tira a anterior de uso antes da hora</td>
+</tr>
+<tr>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>3. O caminho de aprovação pode ficar vazio</td>
+</tr>
+<tr>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>4. Mudança do caminho sem rastro</td>
+</tr>
+<tr>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>5. Telas fora do menu</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-correspondencia-com-os-fluxos">7. Correspondência com os fluxos</h3>
+<p>Cada regra tem o número local (RN001…) que aparece no documento do fluxo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Fluxo</th>
+<th>Etapa</th>
+<th>No fluxo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-DOC-010</td>
+<td>Ciclo do documento</td>
+<td>Inclusão</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-DOC-011</td>
+<td>Ciclo do documento</td>
+<td>Inclusão</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-DOC-012</td>
+<td>Ciclo do documento</td>
+<td>Inclusão</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-DOC-013</td>
+<td>Ciclo do documento</td>
+<td>Inclusão</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-DOC-014</td>
+<td>Ciclo do documento</td>
+<td>Revisão</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-DOC-015</td>
+<td>Ciclo do documento</td>
+<td>Revisão</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-DOC-016</td>
+<td>Ciclo do documento</td>
+<td>Revisão</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-DOC-017</td>
+<td>Ciclo do documento</td>
+<td>Pré-aprovação e aprovação</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-DOC-018</td>
+<td>Ciclo do documento</td>
+<td>Pré-aprovação e aprovação</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-DOC-019</td>
+<td>Ciclo do documento</td>
+<td>Pré-aprovação e aprovação</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-DOC-020</td>
+<td>Ciclo do documento</td>
+<td>Pré-aprovação e aprovação</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-DOC-021</td>
+<td>Ciclo do documento</td>
+<td>Pré-aprovação e aprovação</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-DOC-022</td>
+<td>Ciclo do documento</td>
+<td>Vigência</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-DOC-023</td>
+<td>Ciclo do documento</td>
+<td>Vigência</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-DOC-024</td>
+<td>Ciclo do documento</td>
+<td>Vigência</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-DOC-025</td>
+<td>Ciclo do documento</td>
+<td>Vigência</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-DOC-026</td>
+<td>Ciclo do documento</td>
+<td>Vigência</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-DOC-027</td>
+<td>Ciclo do documento</td>
+<td>Nova revisão e obsolescência</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-DOC-028</td>
+<td>Ciclo do documento</td>
+<td>Nova revisão e obsolescência</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-DOC-029</td>
+<td>Ciclo do documento</td>
+<td>Nova revisão e obsolescência</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-DOC-030</td>
+<td>Ciclo do documento</td>
+<td>Histórico</td>
+<td>RN021</td>
+</tr>
+<tr>
+<td>RN-DOC-031</td>
+<td>Ciclo do documento</td>
+<td>Histórico</td>
+<td>RN022</td>
+</tr>
+<tr>
+<td>RN-DOC-032</td>
+<td>Controle de cópias</td>
+<td>Pesquisa</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-DOC-033</td>
+<td>Controle de cópias</td>
+<td>Pesquisa</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-DOC-034</td>
+<td>Controle de cópias</td>
+<td>Pesquisa</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-DOC-035</td>
+<td>Controle de cópias</td>
+<td>Inclusão e numeração</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-DOC-036</td>
+<td>Controle de cópias</td>
+<td>Inclusão e numeração</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-DOC-037</td>
+<td>Controle de cópias</td>
+<td>Inclusão e numeração</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-DOC-038</td>
+<td>Controle de cópias</td>
+<td>Inclusão e numeração</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-DOC-039</td>
+<td>Controle de cópias</td>
+<td>Impressão</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-DOC-040</td>
+<td>Controle de cópias</td>
+<td>Impressão</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-DOC-041</td>
+<td>Controle de cópias</td>
+<td>Impressão</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-DOC-042</td>
+<td>Controle de cópias</td>
+<td>Impressão</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-DOC-043</td>
+<td>Controle de cópias</td>
+<td>Impressão</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-DOC-044</td>
+<td>Controle de cópias</td>
+<td>Remoção e recolhimento</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-DOC-045</td>
+<td>Controle de cópias</td>
+<td>Remoção e recolhimento</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-DOC-046</td>
+<td>Documento externo e documento legado</td>
+<td>Documento externo</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-DOC-047</td>
+<td>Documento externo e documento legado</td>
+<td>Documento externo</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-DOC-048</td>
+<td>Documento externo e documento legado</td>
+<td>Documento externo</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-DOC-049</td>
+<td>Documento externo e documento legado</td>
+<td>Documento externo</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-DOC-050</td>
+<td>Documento externo e documento legado</td>
+<td>Documento externo</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-DOC-051</td>
+<td>Documento externo e documento legado</td>
+<td>Documento externo</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-DOC-052</td>
+<td>Documento externo e documento legado</td>
+<td>Documento legado</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-DOC-053</td>
+<td>Documento externo e documento legado</td>
+<td>Documento legado</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-DOC-054</td>
+<td>Documento externo e documento legado</td>
+<td>Documento legado</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-DOC-055</td>
+<td>Documento externo e documento legado</td>
+<td>Documento legado</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-DOC-056</td>
+<td>Documento externo e documento legado</td>
+<td>Documento legado</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-DOC-057</td>
+<td>Documento externo e documento legado</td>
+<td>Consulta</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-DOC-058</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Tipo de documento</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-DOC-059</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Tipo de documento</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-DOC-060</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Tipo de documento</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-DOC-061</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Tipo de documento</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-DOC-062</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-DOC-063</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-DOC-064</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-DOC-065</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-DOC-066</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-DOC-067</td>
+<td>Tipo de documento, arquivos e modelos</td>
+<td>Ciclo de vida básico (arquivos e modelos)</td>
+<td>RN010</td>
+</tr>
+</tbody>
+</table></div>
+<!-- total: 58 regras -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-regras-gerais-do-modulo">1. Regras gerais do módulo</a></li><li><a href="#2-ciclo-do-documento">2. Ciclo do documento</a></li><li><a href="#3-controle-de-copias">3. Controle de cópias</a></li><li><a href="#4-documento-externo-e-documento-legado">4. Documento externo e documento legado</a></li><li><a href="#5-tipo-de-documento-arquivos-e-modelos">5. Tipo de documento, arquivos e modelos</a></li><li><a href="#6-pontos-de-atencao-dos-fluxos">6. Pontos de atenção dos fluxos</a></li><li><a href="#7-correspondencia-com-os-fluxos">7. Correspondência com os fluxos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
