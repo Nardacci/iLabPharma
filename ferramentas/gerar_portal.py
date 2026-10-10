@@ -379,6 +379,7 @@ def cabecalho(titulo, raiz, ativo=""):
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
     <a href="{raiz}index.html#diretoria">Diretoria</a>
     <a href="{raiz}index.html#publicos">Por público</a>
+    <a href="{raiz}anvisa.html"{' aria-current="page"' if ativo == 'anvisa' else ''}>ANVISA</a>
     <a href="{raiz}apresentacao.html">Apresentação</a>
   </nav>
   <div class="topo-acoes">
@@ -477,6 +478,7 @@ def gerar(origem, destino, relatorio):
         (pasta / "index.html").write_text(pagina_modulo(mod), encoding="utf-8")
 
     (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
+    (destino / "anvisa.html").write_text(pagina_anvisa(origem, busca), encoding="utf-8")
     (destino / "portal/busca.json").write_text(json.dumps(busca, ensure_ascii=False), encoding="utf-8")
 
     if relatorio:
@@ -688,6 +690,178 @@ def pagina_inicial(origem):
     </div>
     <a class="botao botao-secundario" href="apresentacao.html">Abrir a apresentação ↗</a>
   </section>
+</main>
+""" + rodape(raiz))
+
+
+# ---------------------------------------------------------------------------------------------
+# Página ANVISA: o que a norma pede, por módulo
+# ---------------------------------------------------------------------------------------------
+# Fonte de cada módulo: (documento com o quadro de temas e o apêndice da norma, JSON dos trechos,
+# coluna da situação no quadro; None = 4ª coluna, como nas conformidades de módulo).
+FONTES_ANVISA = {
+    "principal": [(DIAGNOSTICO, "transversal/03-diagnostico-normas.json", "Principal")],
+    "estoque": [(DIAGNOSTICO, "transversal/03-diagnostico-normas.json", "Estoque")],
+    "garantia-qualidade": [(DIAGNOSTICO, "transversal/03-diagnostico-normas.json", "GQ")],
+    "controle-qualidade": [("4.controle_qualidade/04-conformidade-regulatoria.md", "4.controle_qualidade/04-conformidade-normas.json", None)],
+    "controle-documentos": [("6.controle_documento/04-conformidade-regulatoria.md", "6.controle_documento/04-conformidade-normas.json", None)],
+}
+# Detalhe da situação que toca acesso, senha ou login não é publicado: fica só o selo.
+RE_DETALHE_RESTRITO = re.compile(r"permiss|senha|login|acesso|autoriza|perfil|endere[çc]o", re.I)
+SITUACOES = (("Não atende", "Não atende", "nao"), ("Não existe", "Não atende", "nao"), ("Protótipo", "Protótipo", "nao"),
+             ("Atende em parte", "Parcial", "parcial"), ("Parcial", "Parcial", "parcial"), ("Atende", "Atende", "ok"),
+             ("A verificar", "A verificar", "verificar"))
+
+
+def _celulas(linha):
+    return [c.strip() for c in linha.strip().strip("|").split("|")]
+
+
+def _texto_simples(md):
+    md = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", md)
+    return re.sub(r"\*\*|\*|`", "", md).strip()
+
+
+def _situacao(txt):
+    for inicio, rotulo, classe in SITUACOES:
+        if txt.lower().startswith(inicio.lower()):
+            return rotulo, classe
+    return "Ver o detalhe", "verificar"
+
+
+def temas_anvisa(hom, arq, col):
+    """Temas do quadro (só as linhas com link para o apêndice) e o texto da norma de cada um."""
+    texto = ler(hom / arq)
+    temas, cab = [], None
+    for linha in texto.splitlines():
+        if linha.startswith("| # |"):
+            cab = _celulas(linha)
+            continue
+        m = re.match(r"^\| (\d+) \|", linha)
+        if not m or "](#tema-" not in linha or not cab:
+            continue
+        c = _celulas(linha)
+        if col is None:
+            sit = c[3] if len(c) > 3 else ""
+        elif col in cab and cab.index(col) < len(c):
+            sit = c[cab.index(col)]
+        else:
+            continue
+        sit = _texto_simples(sit)
+        if not sit or sit in ("—", "-"):
+            continue
+        i = cab.index(col) if col in cab else 0
+        while sit == "Idem" and i > 3:                        # repete a coluna anterior
+            i -= 1
+            sit = _texto_simples(c[i])
+        rot, classe = _situacao(sit)
+        if sit.startswith("Usa o Principal"):
+            rot, classe = "Usa o Principal", "verificar"
+        elif rot == "Ver o detalhe" and "Situação geral" in cab and cab.index("Situação geral") < len(c):
+            rot, classe = _situacao(_texto_simples(c[cab.index("Situação geral")]))   # situação geral da linha
+        detalhe = re.sub(r"^(Não atende|Atende em parte|Atende|Parcial|Protótipos?|A verificar|Não existe)\s*(\([^)]*\))?\s*[:;,]?\s*",
+                         "", sit, flags=re.I)
+        detalhe = detalhe[:1].upper() + detalhe[1:]
+        nome = _texto_simples(c[1])
+        if RE_LINHA_SEG.search(linha) or RE_DETALHE_RESTRITO.search(nome + " " + detalhe):
+            detalhe = ""
+        temas.append({"n": m.group(1), "nome": nome, "ref": _texto_simples(c[2]), "rot": rot, "classe": classe,
+                      "detalhe": detalhe})
+    # Apêndice: "## Tema N · título" até o próximo tema ou o fim do bloco
+    ap = texto.split("<!-- NORMAS:INICIO -->", 1)[-1].split("<!-- NORMAS:FIM -->", 1)[0]
+    blocos = dict(re.findall(r"^## Tema (\d+) · [^\n]*\n(.*?)(?=^## Tema \d+ · |\Z)", ap, re.M | re.S))
+    for tm in temas:
+        tm["norma"] = markdown.markdown(blocos.get(tm["n"], "*Texto da norma não encontrado.*").strip(),
+                                        extensions=["sane_lists"])
+    return temas
+
+
+def _chave_norma(item):
+    if item[0] == "rdc":
+        n = int(item[1])
+        return (0, (n,), f"RDC 658/2022, art. {n}º" if n < 10 else f"RDC 658/2022, art. {n}")
+    if item[0] == "guia":
+        return (1, tuple(int(x) for x in re.findall(r"\d+", str(item[1]))), f"Guia 33/2020, item {item[1]}")
+    return None
+
+
+def pagina_anvisa(origem, busca):
+    hom = origem / "homologacao"
+    raiz = ""
+    secoes, chips, indice = [], [], {}
+    for mod in MODULOS:
+        if mod["id"] in ESPECIAIS:
+            continue
+        fontes = FONTES_ANVISA.get(mod["id"])
+        ancora = f"mod-{mod['id']}"
+        icone = f'<span class="mc-icone" style="--cor:{mod["cor"]}">{mod["icone"]}</span>'
+        chips.append(f'<a href="#{ancora}">{E(mod["nome"])}</a>')
+        if not fontes:
+            secoes.append(f'<section class="anv-modulo" id="{ancora}"><h2>{icone} {E(mod["nome"])}</h2>'
+                          '<p class="secao-desc">Módulo ainda não analisado. Os temas da norma entram aqui quando a '
+                          'conformidade dele for feita.</p></section>')
+            continue
+        temas = []
+        for arq, js, col in fontes:
+            novos = temas_anvisa(hom, arq, col)
+            temas += novos
+            normas = json.loads((hom / js).read_text(encoding="utf-8")) if (hom / js).exists() else {}
+            for tm in novos:
+                for item in normas.get(tm["n"], []):
+                    k = _chave_norma(item)
+                    if k:
+                        indice.setdefault(k[:2], [k[2], []])[1].append((mod, tm))
+        conta = {}
+        for tm in temas:
+            conta[tm["rot"]] = conta.get(tm["rot"], 0) + 1
+        ordem = ("Atende", "Parcial", "Não atende", "Protótipo", "A verificar", "Usa o Principal", "Ver o detalhe")
+        resumo = " · ".join(f"{r} {conta[r]}" for r in ordem if r in conta)
+        itens = []
+        for tm in temas:
+            anc = f"{mod['id']}-tema-{tm['n']}"
+            det = f'<p class="anv-detalhe"><strong>No sistema hoje:</strong> {E(tm["detalhe"])}</p>' if tm["detalhe"] else ""
+            itens.append(
+                f'<details class="anv-tema" id="{anc}" style="--cor:{mod["cor"]}">'
+                f'<summary><span class="anv-num">{tm["n"]}</span>'
+                f'<span class="anv-nome">{E(tm["nome"])}<small>{E(tm["ref"])}</small></span>'
+                f'<span class="anv-sit anv-{tm["classe"]}">{E(tm["rot"])}</span></summary>'
+                f'<div class="anv-corpo">{det}<div class="texto">{tm["norma"]}</div></div></details>')
+            busca.append({"t": f"ANVISA · {tm['nome']}", "m": mod["nome"], "u": f"anvisa.html#{anc}",
+                          "h": [tm["ref"]], "x": re.sub(r"<[^>]+>", " ", tm["norma"])[:1500]})
+        link = f' · <a href="documentacao/{mod["id"]}/index.html">Abrir o módulo →</a>' if mod.get("paginas") else ""
+        secoes.append(f'<section class="anv-modulo" id="{ancora}"><h2>{icone} {E(mod["nome"])}</h2>'
+                      f'<p class="secao-desc">{len(temas)} temas da norma · {E(resumo)}{link}</p>{"".join(itens)}</section>')
+
+    linhas = []
+    for k in sorted(indice):
+        nome, usos = indice[k]
+        vistos, links = set(), []
+        for mod, tm in usos:
+            anc = f"{mod['id']}-tema-{tm['n']}"
+            if anc in vistos:
+                continue
+            vistos.add(anc)
+            links.append(f'<a href="#{anc}" class="anv-uso" style="--cor:{mod["cor"]}">{E(mod["nome"])}: {E(tm["nome"])}</a>')
+        linhas.append(f'<tr><th scope="row">{E(nome)}</th><td>{"".join(links)}</td></tr>')
+
+    legenda = ('<span class="anv-sit anv-ok">Atende</span> <span class="anv-sit anv-parcial">Parcial</span> '
+               '<span class="anv-sit anv-nao">Não atende</span> <span class="anv-sit anv-verificar">A verificar</span>')
+    return (cabecalho("ANVISA por módulo · iLabMedSys", raiz, "anvisa") + f"""
+<main id="conteudo" class="pagina-modulo anvisa">
+  <nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <span>ANVISA</span></nav>
+  <header class="mod-cabecalho" style="--cor:var(--laranja)">
+    <h1>O que a ANVISA pede, por módulo</h1>
+    <p>Os temas da RDC 658/2022 e do Guia 33/2020 que valem para cada módulo, com o <strong>texto exato da norma</strong> e a situação do sistema entregue pelo fornecedor. Clique num tema para abrir o texto. No fim, o índice por artigo mostra quais módulos cada artigo atinge.</p>
+  </header>
+  <nav class="submenu" aria-label="Módulos">{"".join(chips)}<a href="#por-artigo" class="submenu-ideal">Por artigo</a></nav>
+  <p class="nota anv-legenda">Situação: {legenda}. Principal, Estoque e Garantia da Qualidade vêm do diagnóstico de conformidade entre os módulos; Controle da Qualidade e Controle de Documentos, da conformidade de cada módulo. Detalhes de acesso e senha não são publicados.</p>
+  {"".join(secoes)}
+  <section class="anv-modulo" id="por-artigo">
+    <h2>Por artigo</h2>
+    <p class="secao-desc">Cada artigo ou item citado e os temas de cada módulo em que ele aparece. Clique para ir ao tema.</p>
+    <div class="tabela"><table class="anv-indice"><thead><tr><th>Artigo ou item</th><th>Onde aparece</th></tr></thead><tbody>{"".join(linhas)}</tbody></table></div>
+  </section>
+<script>function anvAbrir(){{var e=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(e&&e.tagName==="DETAILS"){{e.open=true;e.scrollIntoView();}}}}addEventListener("hashchange",anvAbrir);anvAbrir();</script>
 </main>
 """ + rodape(raiz))
 
