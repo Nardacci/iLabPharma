@@ -154,7 +154,7 @@ MODULOS = [
      "docs": [
          ("6.controle_documento/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("6.controle_documento/ideal/doc-ideal.md", "O Controle de Documentos ideal", "ideal", "6.controle_documento/ideal/LabMedSys - Modulo Controle de Documentos - O Ideal.docx"),
-         ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "ideal", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
+         ("6.controle_documento/ideal/doc-entre-modulos.md", "Documentos entre os módulos: versão vigente e travas", "ideal", "6.controle_documento/ideal/LabMedSys - Modulo Controle de Documentos - Documentos entre os Modulos.docx"),
          ("6.controle_documento/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
          ("6.controle_documento/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("6.controle_documento/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
