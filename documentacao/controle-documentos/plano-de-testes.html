@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="ciclo-do-documento.html">Ciclo do documento</a></li><li><a href="controle-de-copias.html">Controle de cópias</a></li><li><a href="documento-externo-e-documento-legado.html">Documento externo e documento legado</a></li><li><a href="tipo-de-documento-arquivos-e-modelos.html">Tipo de documento, arquivos e modelos</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 10/10/2026 · <strong>Versão a testar:</strong> legado entregue pelo fornecedor · <strong>Executor previsto:</strong> Claude Code no computador da pessoa, pela VPN, com a habilidade <code>executar-testes</code> (passo a passo em <code>homologacao/COMO-EXECUTAR-TESTES.md</code>).</p>
+<p>Os casos das seções 6.1 a 6.4 foram <strong>montados por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/montar_plano_testes.py</code>). Se um fluxo mudar, gere essas seções de novo e mantenha a seção 6.0, escrita à mão.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<p>Confirmar nas telas o que a leitura do código encontrou no Controle de Documentos:
+- as regras de negócio (<code>01-regras-de-negocio.md</code>);
+- os pontos de atenção dos quatro fluxos;
+- a matriz de permissões (<code>02-matriz-de-permissoes.md</code>);
+- os riscos de prioridade alta (<code>07-analise-de-risco.md</code>);
+- a situação das 17 telas (<code>11-inventario-de-telas.md</code>).</p>
+<h3 id="2-escopo">2. Escopo</h3>
+<ul>
+<li>Os quatro fluxos: ciclo do documento; controle de cópias; documento externo e legado; tipo de documento, arquivos e modelos.</li>
+<li>O acesso (seção 6.0).</li>
+<li>A GQ só entra onde um caso pede para conferir o documento lá (CT-DOC-015, treinamento). A consulta pela API de outro módulo (CT-DOC-045) pode ficar para a rodada da GQ.</li>
+</ul>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<h4 id="3-1-antes-de-qualquer-caso-o-modulo-abre">3.1 Antes de qualquer caso: o módulo abre?</h4>
+<p>O acesso vem do Principal: o <strong>menu</strong> e as <strong>funções</strong> de cada tela vêm do perfil. No Estoque, os testes travaram por falta de acesso ao módulo.</p>
+<ol>
+<li>No Principal, criar o perfil <strong><code>TESTEDOC</code></strong> com <strong>todas as telas da aba Controle de Documentos</strong> e todas as ações.</li>
+<li>Dar o <code>TESTEDOC</code> como perfil adicional a <code>t.admin</code>.</li>
+<li>Entrar no módulo com <code>t.admin</code> e conferir se o menu aparece. <strong>Se não aparecer, parar e registrar.</strong></li>
+</ol>
+<h4 id="3-2-usuarios-e-funcoes-por-etapa">3.2 Usuários e funções por etapa</h4>
+<p>O módulo tem <strong>uma função por etapa</strong> (<code>DOC_REVISAO</code>, <code>DOC_PREAPROVACAO</code>, <code>DOC_APROVACAO</code>, <code>DOC_VIGENCIA</code>). Para testar a separação de funções, cada etapa precisa de um usuário diferente. Reaproveitar os usuários de teste que já existem:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário (já existe)</th>
+<th>Perfil ou funções a dar no Principal</th>
+<th>Papel nos testes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t.admin</code></td>
+<td><code>TESTEDOC</code> (tudo)</td>
+<td>Autor do documento; quem põe em vigor</td>
+</tr>
+<tr>
+<td><code>t.cadastro</code></td>
+<td>Só <code>DOC_REVISAO</code>, de outro setor</td>
+<td>Revisor</td>
+</tr>
+<tr>
+<td><code>t.semadmin</code></td>
+<td><code>DOC_PREAPROVACAO</code> e <code>DOC_APROVACAO</code></td>
+<td>Pré-aprovador; também o usuário do CT-DOC-006 (mesma pessoa nas duas etapas)</td>
+</tr>
+<tr>
+<td><code>t.consulta</code></td>
+<td><code>DOC_APROVACAO</code>; <strong>sem</strong> <code>DOCARQUIVO</code> e <strong>sem</strong> IMPRIMIR / EXCEL no Controle de Cópias</td>
+<td>Aprovador final; usuário comum dos casos de acesso</td>
+</tr>
+<tr>
+<td>Um usuário sem nenhuma função no sistema</td>
+<td>Nenhuma</td>
+<td>CT-DOC-050 e 036</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se algum estiver bloqueado ou com a senha vencida, usar o administrador para gerar senha nova. <strong>Não guardar senhas neste repositório.</strong></p>
+<h4 id="3-3-dados-ja-existentes-no-ambiente-reaproveitar">3.3 Dados já existentes no ambiente (reaproveitar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Onde</th>
+<th>Uso aqui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuários <code>t.*</code></td>
+<td>Principal</td>
+<td>Tabela 3.2</td>
+</tr>
+<tr>
+<td>Áreas e setores <code>TESTE</code></td>
+<td>Principal</td>
+<td>Setor responsável, setor revisor, aplicação e setor das cópias</td>
+</tr>
+<tr>
+<td>Pessoa jurídica <code>TESTE</code></td>
+<td>Principal</td>
+<td>Empresa de origem do documento externo (fluxo 3)</td>
+</tr>
+<tr>
+<td>Programa de treinamento <code>TESTE</code>, se houver</td>
+<td>GQ</td>
+<td>CT-DOC-010</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-4-dados-a-criar-no-proprio-modulo-durante-os-testes">3.4 Dados a criar no próprio módulo (durante os testes)</h4>
+<ul>
+<li>Tipos de documento <code>TESTE</code>: um com o caminho completo, um sem aprovação (só "Vigente"), um com prazo de validade, um que exige treinamento e um que controla arquivos (ciclo básico). Os casos do fluxo 4 (CT-DOC-040 a 043) criam os tipos; <strong>rodar o fluxo 4 antes do fluxo 1</strong>.</li>
+<li>Arquivos PDF de teste, pequenos, com <code>TESTE</code> no nome.</li>
+</ul>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<p>Como nos outros módulos: captura de cada passo relevante nos casos de prioridade <strong>alta</strong> e do resultado nos de prioridade <strong>média</strong>, em <code>homologacao/6.controle_documento/execucao/&lt;AAAA-MM-DD&gt;/evidencias/CT-DOC-xxx-passo-N.png</code>, e o <code>resultado.md</code> da rodada com a lista dos dados <code>TESTE</code> criados.</p>
+<p><strong>Atenção ao histórico:</strong> vários casos pedem para consultar o histórico do documento. As tabelas do histórico não estão no projeto de banco do módulo (<code>06-modelo-de-dados.md</code>, seção 6). Se o histórico vier vazio ou der erro, registrar e perguntar ao DBA.</p>
+<p><strong>Assinatura:</strong> nos casos de decisão com senha (CT-DOC-007, 014, 053), anotar <strong>quem aparece como assinante</strong> no histórico e conferir com quem estava logado.</p>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<ul>
+<li>O teste <strong>confirma o comportamento atual</strong>. Nos casos "Registrar se…", o resultado esperado pela norma é diferente do que o código indica; o caso <strong>falha</strong> se o sistema fizer o que o código mostra.</li>
+<li>Para a nova versão, todos os casos de prioridade <strong>alta</strong> devem passar (as falhas viram requisitos corrigidos).</li>
+<li><strong>Ordem sugerida:</strong> verificação 3.1; seção 6.0; fluxo 4 (cria os tipos); fluxo 1; fluxo 2 (usa o documento vigente do CT-DOC-011); fluxo 3. Em cada um, primeiro os casos de prioridade alta.</li>
+</ul>
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p>Prioridade: <strong>Alta</strong> = citado na prioridade por risco do fluxo (ligada à análise de risco); <strong>Média</strong> = pede para registrar uma falha prevista pelo código; <strong>Baixa</strong> = regras de preenchimento e caminhos normais. "Rastreia" aponta o ponto de atenção do fluxo.</p>
+<h4 id="6-0-acesso-da-matriz-de-permissoes">6.0 Acesso (da matriz de permissões)</h4>
+<p>Seção escrita à mão, a partir de <code>02-matriz-de-permissoes.md</code>. Rodar <strong>antes</strong> dos fluxos, logo depois da verificação 3.1.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-050</td>
+<td>Entrar com um usuário sem nenhuma função no sistema</td>
+<td>Página de acesso negado</td>
+<td>Matriz, camada 1</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-DOC-051</td>
+<td>Com <code>t.cadastro</code> (sem <code>DOC_APROVACAO</code>), abrir a Aprovação Documento de um documento <code>TESTE</code></td>
+<td>A edição não abre</td>
+<td>Matriz: Aprovação Documento; R-DOC-02</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-052</td>
+<td>Com <code>t.cadastro</code> (só revisor), tentar pré-aprovar e aprovar o mesmo documento <code>TESTE</code></td>
+<td>Pela norma, recusa nas duas. <strong>Registrar se gravar</strong></td>
+<td>Matriz: funções por etapa; R-DOC-02</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-053</td>
+<td>Na decisão de aprovação, logado como <code>t.consulta</code>, informar usuário e senha de <code>t.semadmin</code></td>
+<td>Pela norma, a assinatura deve ser de quem está logado. <strong>Registrar quem fica como assinante</strong></td>
+<td>Matriz, camada 4; R-DOC-03</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-054</td>
+<td>Com <code>t.consulta</code> (sem <code>DOCARQUIVO</code>), abrir Cadastro de Arquivos pelo endereço</td>
+<td>A inclusão não abre</td>
+<td>Matriz: Cadastro de Arquivos; R-DOC-20</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-DOC-055</td>
+<td>Com <code>t.consulta</code> (sem IMPRIMIR / EXCEL), imprimir a grade do Controle de Cópias</td>
+<td>Recusa</td>
+<td>Matriz: Controle de Cópias</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<p>O CT-DOC-055 e o CT-DOC-026 (fluxo 2) conferem a mesma coisa: rodar um só e registrar o resultado nos dois.</p>
+<h4 id="6-1-ciclo-do-documento">6.1 Ciclo do documento</h4>
+<p>Fluxo: <code>fluxos/ciclo-documento.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-001</td>
+<td>Incluir documento <code>TESTE</code> sem anexo, sem setor revisor e sem aplicação; tentar enviar para revisão</td>
+<td>Recusa, com as três mensagens (RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-002</td>
+<td>Incluir documento <code>TESTE</code> completo e enviar para revisão</td>
+<td>Em revisão; histórico "CRIAÇÃO DO DOCUMENTO"</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-003</td>
+<td>Excluir um documento Em inclusão; tentar excluir um Em revisão</td>
+<td>O primeiro passa a Excluído, com justificativa; o segundo é recusado (RN003)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-004</td>
+<td>Revisor devolve o documento</td>
+<td>Volta para Em inclusão; histórico "DEVOLVIDO" com justificativa</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-005</td>
+<td>Revisar e confirmar a revisão</td>
+<td>Em pré-aprovação; analista e data gravados</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-006</td>
+<td>Pré-aprovar e, <strong>com o mesmo usuário</strong>, tentar aprovar (pela lista e pelo endereço da tela)</td>
+<td>Pela norma, recusa. <strong>Registrar se aprovar</strong> (ponto 1)</td>
+<td>Ponto 1: A separação entre quem pré-aprova e quem aprova está só na lista</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-007</td>
+<td>Aprovar com outro usuário, informando senha errada; depois a certa</td>
+<td>Recusa com a senha errada; aprova com a certa; aprovador e data gravados</td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-008</td>
+<td>Tornar vigente com validade anterior à emissão</td>
+<td>Recusa (RN013)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-009</td>
+<td>Tornar vigente com emissão <strong>retroativa</strong> (mês passado)</td>
+<td><strong>Registrar se aceitar</strong> (ponto 5)</td>
+<td>Ponto 5: Datas de emissão e validade digitadas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-010</td>
+<td>Tornar vigente um documento cujo tipo exige treinamento, sem treinamento</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (ponto 3)</td>
+<td>Ponto 3: Vigência sem treinamento</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-011</td>
+<td>Criar nova revisão de um vigente, levar até a vigência</td>
+<td>Nova revisão vigente com número +1; a anterior Substituída, com histórico</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-012</td>
+<td>Na nova revisão, tentar tornar vigente <strong>sem anexo final</strong> e consultar a revisão anterior</td>
+<td>Recusa; <strong>registrar se a anterior ficou Substituída</strong> (ponto 4)</td>
+<td>Ponto 4: A revisão anterior pode ser substituída antes da hora</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-DOC-013</td>
+<td>Com o tipo <code>TESTE</code> sem aprovação, levar um documento até a vigência</td>
+<td><strong>Registrar se entra em vigor sem nenhuma aprovação</strong> (ponto 2)</td>
+<td>Ponto 2: Um tipo de documento pode pular a aprovação</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-014</td>
+<td>Obsoletar um vigente com senha e justificativa; tentar obsoletar um Em inclusão</td>
+<td>O primeiro passa a Obsoleto; o segundo é recusado (RN019)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-015</td>
+<td>Em outro módulo (GQ, treinamento), procurar o documento substituído e o obsoleto</td>
+<td>Não aparecem; só o vigente (RN020)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-016</td>
+<td>Abrir o relatório do histórico do documento do CT-DOC-011</td>
+<td>Todas as ações, com justificativa, data e assinante</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-017</td>
+<td>Criar nova revisão a partir de um documento <strong>Obsoleto</strong> ou <strong>Substituído</strong></td>
+<td>Pela norma, recusa. <strong>Registrar se permitir</strong> (RN018)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-2-controle-de-copias">6.2 Controle de cópias</h4>
+<p>Fluxo: <code>fluxos/controle-copias.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-020</td>
+<td>Incluir duas cópias controladas para o setor de teste e uma não controlada para "TESTE EXTERNO"; salvar</td>
+<td>Controladas numeradas em sequência (n e n+1); a não controlada sem número; histórico "Inclusão Cópia" com o usuário certo (ponto 5)</td>
+<td>Ponto 5: O histórico da inclusão grava o usuário errado</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-021</td>
+<td>Imprimir uma cópia controlada</td>
+<td>O impresso traz o número, o setor e "controlada"; <strong>registrar se há marca d'água</strong> (ponto 2); histórico da impressão</td>
+<td>Ponto 2: A marca d'água não é aplicada</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-022</td>
+<td>Remover uma cópia e consultar o histórico</td>
+<td>Pela norma, pede motivo e fica no histórico. <strong>Registrar se não pedir nem registrar</strong> (ponto 3)</td>
+<td>Ponto 3: A remoção não deixa rastro</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-DOC-023</td>
+<td>Na pesquisa, filtrar por <strong>Substituído</strong> e tentar imprimir uma cópia da revisão antiga</td>
+<td>Pela norma, recusa. <strong>Registrar se imprimir</strong> (ponto 4)</td>
+<td>Ponto 4: Cópia de documento que não vale</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-024</td>
+<td>Criar cópia de um documento <strong>Aprovado</strong>, ainda não vigente</td>
+<td><strong>Registrar se permitir</strong> (ponto 4)</td>
+<td>Ponto 4: Cópia de documento que não vale</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-025</td>
+<td>Tornar vigente uma nova revisão de um documento com cópias distribuídas; procurar aviso aos setores ou pedido de recolhimento</td>
+<td>Pela norma, as cópias antigas devem ser recolhidas. <strong>Registrar que nada acontece</strong> (ponto 1)</td>
+<td>Ponto 1: Cópias antigas continuam em uso</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-026</td>
+<td>Imprimir a grade de cópias com um perfil sem a função "IMPRIMIR / EXCEL"</td>
+<td>Recusa (RN003)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-3-documento-externo-e-legado">6.3 Documento externo e legado</h4>
+<p>Fluxo: <code>fluxos/externo-legado.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-030</td>
+<td>Cadastrar documento externo <code>TESTE</code> com código já usado</td>
+<td>Recusa (RN001)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-031</td>
+<td>Cadastrar documento externo <code>TESTE</code> deixando a validade em branco</td>
+<td>Pela norma, a validade deve ser informada ou calculada. <strong>Registrar se gravar a data de hoje</strong> (ponto 2)</td>
+<td>Ponto 2: Validade em branco vira "hoje"</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-032</td>
+<td>Cadastrar documento externo escolhendo a situação <strong>Vigente</strong> direto</td>
+<td><strong>Registrar se aceitar sem análise</strong> (ponto 1)</td>
+<td>Ponto 1: Documento externo sem análise</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-033</td>
+<td>Imprimir a lista de documentos externos</td>
+<td>Coluna dos dias a vencer; o vencido do CT-DOC-031 com 0 ou negativo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-034</td>
+<td>Excluir um documento externo com justificativa e consultar o histórico</td>
+<td>Excluído; justificativa no histórico</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-035</td>
+<td>Incluir documento legado <code>TESTE</code> e torná-lo vigente digitando nomes de aprovadores</td>
+<td>Vigente sem senha; <strong>registrar</strong> (ponto 3) e conferir que não aparece no histórico do documento (ponto 4)</td>
+<td>Ponto 3: O legado vira vigente sem aprovação no sistema; Ponto 4: O legado não entra no histórico do documento</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-036</td>
+<td>Com um usuário sem função no Controle de Documentos, abrir Documento Legado e tentar tornar vigente</td>
+<td>Pela norma, recusa. <strong>Registrar se permitir</strong> (ponto 3)</td>
+<td>Ponto 3: O legado vira vigente sem aprovação no sistema</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-037</td>
+<td>Em Visualizar Documento, procurar uma revisão substituída e um obsoleto (do fluxo 1)</td>
+<td>Pela norma, não devem abrir para uso. <strong>Registrar se abrirem</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-4-tipo-de-documento-arquivos-e-modelos">6.4 Tipo de documento, arquivos e modelos</h4>
+<p>Fluxo: <code>fluxos/tipo-arquivos-modelos.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-DOC-040</td>
+<td>Cadastrar tipo <code>TESTE</code> com nome já usado</td>
+<td>Recusa (RN001)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-041</td>
+<td>Configurar um tipo <code>TESTE</code> desmarcando todas as etapas de aprovação</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (ponto 3)</td>
+<td>Ponto 3: O caminho de aprovação pode ficar vazio</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-042</td>
+<td>Mudar o caminho de um tipo e consultar o histórico do tipo</td>
+<td><strong>Registrar se a mudança aparece</strong> (ponto 4)</td>
+<td>Ponto 4: Mudança do caminho sem rastro</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-DOC-043</td>
+<td>Excluir um tipo com documento ativo; depois um sem uso</td>
+<td>Recusa no primeiro; exclusão com justificativa no segundo</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-DOC-044</td>
+<td>Em Arquivos/Modelos, incluir um modelo <code>TESTE</code> e salvar com anexo e aplicação</td>
+<td><strong>Registrar se fica vigente sem aprovação</strong> e se a senha é pedida (ponto 1)</td>
+<td>Ponto 1: Terceiro caminho para vigente sem aprovação</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-DOC-045</td>
+<td>Abrir nova revisão do modelo do CT-DOC-044 <strong>sem salvar</strong>; procurar o modelo em Visualizar Documento e pela API (outro módulo)</td>
+<td><strong>Registrar se a revisão anterior já está Substituída e se nenhuma versão vigente aparece</strong> (ponto 2)</td>
+<td>Ponto 2: A nova revisão tira a anterior de uso antes da hora</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-DOC-046</td>
+<td>Descobrir pelo navegador o caminho até Arquivos/Modelos com um usuário comum</td>
+<td><strong>Registrar se a tela abre e por onde</strong> (ponto 5)</td>
+<td>Ponto 5: Telas fora do menu</td>
+<td>Alta</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Seção</th>
+<th>Casos</th>
+<th>Alta</th>
+<th>Média</th>
+<th>Baixa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.0 Acesso</td>
+<td>6</td>
+<td>3</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>6.1 Ciclo do documento</td>
+<td>17</td>
+<td>5</td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td>6.2 Controle de cópias</td>
+<td>7</td>
+<td>4</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6.3 Documento externo e legado</td>
+<td>8</td>
+<td>4</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>6.4 Tipo de documento, arquivos e modelos</td>
+<td>7</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>45</strong></td>
+<td><strong>19</strong></td>
+<td><strong>9</strong></td>
+<td><strong>17</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Cobertura dos riscos de prioridade alta</strong> (<code>07-analise-de-risco.md</code>):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Risco</th>
+<th>Casos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-DOC-01 Vigência sem aprovação</td>
+<td>CT-DOC-013, 035, 041, 044</td>
+</tr>
+<tr>
+<td>R-DOC-02 Aprovação sem a função</td>
+<td>CT-DOC-051, 052</td>
+</tr>
+<tr>
+<td>R-DOC-03 Assinante não é quem decidiu</td>
+<td>CT-DOC-007, 053</td>
+</tr>
+<tr>
+<td>R-DOC-04 Mesma pessoa pré-aprova e aprova</td>
+<td>CT-DOC-006</td>
+</tr>
+<tr>
+<td>R-DOC-05 Vigência antes do treinamento</td>
+<td>CT-DOC-010</td>
+</tr>
+<tr>
+<td>R-DOC-07 Aprovadores do legado sem prova</td>
+<td>CT-DOC-035, 036</td>
+</tr>
+<tr>
+<td>R-DOC-08 Cópia obsoleta em uso</td>
+<td>CT-DOC-023, 025</td>
+</tr>
+<tr>
+<td>R-DOC-09 Documento vencido vigente</td>
+<td>Nenhum caso de tela consegue esperar o vencimento; conferir com um tipo de validade curta, se o cadastro permitir, ou pelo relatório de validade</td>
+</tr>
+<tr>
+<td>R-DOC-10 Cópia sem identificação</td>
+<td>CT-DOC-021</td>
+</tr>
+<tr>
+<td>R-DOC-11 Cópia de documento não vigente</td>
+<td>CT-DOC-024</td>
+</tr>
+<tr>
+<td>R-DOC-12 Externo vencido ou não analisado</td>
+<td>CT-DOC-031, 032</td>
+</tr>
+<tr>
+<td>R-DOC-13 Datas retroativas</td>
+<td>CT-DOC-009</td>
+</tr>
+<tr>
+<td>R-DOC-17 Nova revisão sem mudança aprovada</td>
+<td>CT-DOC-011 (registrar se pede a mudança da GQ)</td>
+</tr>
+<tr>
+<td>R-DOC-19 Acesso aos arquivos fora do sistema</td>
+<td>Fora dos testes de tela: depende da TI</td>
+</tr>
+<tr>
+<td>R-DOC-20 Telas fora do menu</td>
+<td>CT-DOC-046, 054</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</h3>
+<ol>
+<li>Confirmar que pode criar no Principal o perfil <code>TESTEDOC</code> e dar as funções da tabela 3.2 aos quatro usuários de teste.</li>
+<li>Indicar ou criar um usuário sem nenhuma função no sistema (CT-DOC-050 e 036).</li>
+<li>Perguntar ao DBA se as tabelas do histórico e do caminho de aprovação por tipo existem no banco de teste (<code>06-modelo-de-dados.md</code>, seção 6). Sem o caminho por tipo, o fluxo 4 e o ciclo inteiro podem falhar.</li>
+<li>No seu computador, pela VPN, pedir ao Claude Code: "executar os testes do controle de documentos, rodada 1 (prioridade alta)".</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
