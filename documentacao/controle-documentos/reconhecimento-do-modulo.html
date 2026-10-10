@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reconhecimento do módulo · Controle de Documentos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#4f6d8f"><span class="icone">▤</span>Controle de Documentos</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html" aria-current=page>Reconhecimento do módulo</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Controle de Documentos</a> › <span>Comece por aqui</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Reconhecimento do módulo</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 10/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>6.controle_documento/app</code>) · <strong>Profundidade:</strong> superficial, por contagem e comparação automática de arquivos. Nada aqui foi testado nas telas.</p>
+<p><strong>Como foi feito:</strong> os três scripts usados no CQ e na GQ. Eles passaram a aceitar o nome do projeto quando é diferente da sigla: aqui os projetos se chamam <code>HSolutions.ControleDoc.*</code>, e o banco fica em <code>Infra.DB</code>. Comando: variáveis <code>LEV_PROJETO=ControleDoc</code> e <code>LEV_LIB_OLD=Library_CD_old</code>. A saída completa está em <code>homologacao/6.controle_documento/levantamento/</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Script</th>
+<th>O que levanta</th>
+<th>Saída</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>levantar_telas_mvc.py &lt;app&gt; DOC</code></td>
+<td>Cada pasta de telas: título que o usuário vê, nome no roteiro de menu, controlador, ações, se lê ou grava dados</td>
+<td><code>telas-automatico.md</code></td>
+</tr>
+<tr>
+<td><code>levantar_tabelas_gq.py . 6.controle_documento DOC</code></td>
+<td>Tabelas do projeto de banco × tabelas que o código usa × tabelas de mesmo nome nos outros módulos</td>
+<td><code>tabelas-automatico.md</code></td>
+</tr>
+<tr>
+<td><code>levantar_integracoes_gq.py . 6.controle_documento DOC</code></td>
+<td>Chamadas do módulo aos outros e dos outros a ele</td>
+<td><code>integracoes-automatico.md</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pastas de telas</td>
+<td>11 (9 com lógica; 2 técnicas, de erro e de entrada)</td>
+</tr>
+<tr>
+<td>Páginas (.cshtml) nas pastas de telas</td>
+<td>72</td>
+</tr>
+<tr>
+<td>Maior controlador</td>
+<td><code>DocController.cs</code>: 49 ações, 2.940 linhas</td>
+</tr>
+<tr>
+<td>Tabelas no projeto de banco</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Tabelas que o código usa</td>
+<td>20, das quais <strong>9 não estão no projeto de banco</strong></td>
+</tr>
+<tr>
+<td>Chamadas a outros módulos</td>
+<td>27 ao Principal</td>
+</tr>
+<tr>
+<td>Referências de outros módulos a este</td>
+<td>30 da GQ, 1 do Estoque, 1 do CQ</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Tecnologia:</strong> ASP.NET MVC, como o CQ e a GQ, mas com outra organização em camadas (<code>Application</code>, <code>Domain</code>, <code>Infra.Data</code>, <code>Infra.Service</code>). <em>Inferência:</em> outra equipe ou outra época do fornecedor; confirmar nas próximas etapas se as regras ficam no <code>Domain</code> ou nos controladores.</p>
+<h3 id="2-telas">2. Telas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo (menu)</th>
+<th>Telas, pelo título que o usuário vê</th>
+<th>Controlador</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Documento › Documento</td>
+<td>Documento; Revisão Documento; Pré-Aprovação Documento; Aprovação Documento; Vigência de Documento; Nova Revisão de Documento</td>
+<td><code>DocController.cs</code> (49 ações)</td>
+</tr>
+<tr>
+<td>Documento › Documento Aprovação</td>
+<td>Aprovação de Documentos; Vigência de Documentos; Documento Aprovação</td>
+<td><code>DocAprovacaoController.cs</code> (11)</td>
+</tr>
+<tr>
+<td>Documento › Obsolescência</td>
+<td>Obsolescência de Documento</td>
+<td><code>DocObsolescenciaController.cs</code> (8)</td>
+</tr>
+<tr>
+<td>Documento › Documento Legado</td>
+<td>Documento Legado; Visualizar Documento</td>
+<td><code>DocumentoController.cs</code> (13)</td>
+</tr>
+<tr>
+<td>Documento › Documento Externo</td>
+<td>Documento Externo</td>
+<td><code>DocumentoExternoController.cs</code> (11)</td>
+</tr>
+<tr>
+<td>Documento › Controle de Cópias</td>
+<td>Controle de Cópias</td>
+<td><code>CopiaController.cs</code> (12)</td>
+</tr>
+<tr>
+<td>Tabelas de Apoio › Tipo de Documento</td>
+<td>Tipo de Documento</td>
+<td><code>TipoDocumentoController.cs</code> (9)</td>
+</tr>
+<tr>
+<td><em>(fora do roteiro de menu)</em></td>
+<td>Cadastro de Arquivos; Arquivos; Modelos</td>
+<td><code>DocGestaoController.cs</code> (31)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Observações:</strong>
+- <strong>Gestão de arquivos e modelos</strong> (<code>DocGestao</code>) tem 31 ações e lógica completa, mas <strong>não aparece no roteiro de menu do fornecedor</strong>. Ponto para validar: como o usuário chega a essas telas.
+- O roteiro de menu tem o item <strong>Controle de Cópias › Consultar Log</strong> sem tela correspondente.
+- Há um controlador de integração (<code>DocIntegracaoController.cs</code>) e uma API (<code>Api/DocumentoApiController.cs</code>) sem telas: é por onde os outros módulos consultam documentos.</p>
+<h3 id="3-o-ciclo-do-documento">3. O ciclo do documento</h3>
+<p>O código define estas situações do documento (<code>HSolutions.ControleDoc.Domain/Enumerators/SituacaoDocumentoEnum.cs</code>):</p>
+<p><strong>Em inclusão → Em revisão → Em pré-aprovação → Em aprovação → Aprovado → Vigente</strong>, e depois <strong>Substituído</strong> (por uma nova revisão) ou <strong>Cancelado</strong>. A obsolescência tem tela própria.</p>
+<p><strong>Indício de assinatura eletrônica:</strong> na aprovação, o controlador pede <strong>usuário e senha</strong> e confere a autenticação (<code>HSolutions.ControleDoc.UI/Areas/Documento/Controllers/DocController.cs:2552</code>). É o primeiro módulo em que isso aparece. <em>A confirmar na etapa de regras:</em> em quais decisões isso é pedido, se grava quem assinou, quando e o significado da assinatura.</p>
+<h3 id="4-banco-de-dados">4. Banco de dados</h3>
+<ul>
+<li><strong>9 tabelas usadas pelo código não estão no projeto de banco</strong>, entre elas o histórico do documento (<code>TBL_DOCUMENTO_HISTORICO</code>), os arquivos do documento (<code>TBL_DOCUMENTO_ARQUIVO</code>), os setores (<code>TBL_DOCUMENTO_SETOR</code>) e o histórico de alterações do módulo (<code>TBL_LOG_ALTERACAO_CONTROLE_DOC</code> e <code>_ITEM</code>). É o mesmo padrão visto no CQ, mas em maior número: uma instalação feita só com os scripts do projeto não funcionaria. <strong>Pergunta ao DBA:</strong> essas tabelas existem no banco do ambiente de teste?</li>
+<li><strong>4 tabelas do projeto não são usadas pelo código com esse nome:</strong> o código usa, para as quatro, uma versão com o sufixo <code>_CONTROLE_DOC</code> (por exemplo, <code>TBL_TIPO_DOCUMENTO</code> → <code>TBL_TIPO_DOCUMENTO_CONTROLE_DOC</code>), e essa versão não está nos scripts. É o mesmo desencontro do CQ, que usa o sufixo <code>_CQ</code>.</li>
+<li><strong>Tabelas de mesmo nome com estrutura diferente</strong> em outros módulos: <code>TBL_ANEXO</code> (Produção, GQ, Comercial), <code>TBL_LOG_ALTERACAO</code> (Principal, Produção, Estoque, GQ) e <code>TBL_TIPO_DOCUMENTO</code> (Estoque). Entra na análise de tabelas repetidas (<code>transversal/01-telas-repetidas.md</code>).</li>
+</ul>
+<h3 id="5-integracoes">5. Integrações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Direção</th>
+<th>Com</th>
+<th>Para quê (pelos nomes das chamadas)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sai</td>
+<td><strong>Principal</strong> (27 chamadas)</td>
+<td>Áreas e responsáveis por área, usuário autenticado, equipamentos, notificações, arquivos centralizados</td>
+</tr>
+<tr>
+<td>Entra</td>
+<td><strong>Garantia da Qualidade</strong> (30 referências)</td>
+<td><em>Inferência:</em> treinamento sobre documentos vigentes e mudanças que geram nova versão. A análise da GQ já mostrou essa ligação no treinamento</td>
+</tr>
+<tr>
+<td>Entra</td>
+<td>Estoque (1) e CQ (1)</td>
+<td>A confirmar</td>
+</tr>
+</tbody>
+</table></div>
+<p>Detalhe em <code>levantamento/integracoes-automatico.md</code>. As ligações entram no mapa de integrações (<code>transversal/04-mapa-de-integracoes.md</code>) na etapa de modelo de dados.</p>
+<h3 id="6-primeiros-pontos-de-atencao">6. Primeiros pontos de atenção</h3>
+<ol>
+<li><strong>Controle de acesso:</strong> organizado de forma diferente do CQ e da GQ. Será analisado na etapa de permissões.</li>
+<li><strong>Tabelas fora do projeto de banco</strong>, inclusive as de histórico (seção 4).</li>
+<li><strong>Gestão de arquivos fora do menu</strong> (seção 2).</li>
+</ol>
+<h3 id="7-fluxos-propostos-para-as-proximas-etapas">7. Fluxos propostos para as próximas etapas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fluxo</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Ciclo do documento:</strong> inclusão → revisão → pré-aprovação → aprovação (com senha) → vigência → nova revisão, substituição, obsolescência e cancelamento</td>
+<td>O coração do módulo e o que a norma mais cobra: aprovação, versão vigente, retirada dos obsoletos</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Controle de cópias</strong></td>
+<td>Distribuição e recolhimento das cópias controladas</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Documento externo e documento legado</strong></td>
+<td>Documentos de fora e os anteriores ao sistema</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Tipo de documento, arquivos e modelos</strong></td>
+<td>Cadastros que definem a codificação e os modelos</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Mesmo roteiro de 7 etapas do CQ e da GQ:</strong>
+1. reconhecimento (este documento);
+2. conformidade com a RDC 658/2022;
+3. fluxos;
+4. regras de negócio e inventário das telas;
+5. permissões e segurança;
+6. modelo de dados e risco;
+7. plano de testes.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-telas">2. Telas</a></li><li><a href="#3-o-ciclo-do-documento">3. O ciclo do documento</a></li><li><a href="#4-banco-de-dados">4. Banco de dados</a></li><li><a href="#5-integracoes">5. Integrações</a></li><li><a href="#6-primeiros-pontos-de-atencao">6. Primeiros pontos de atenção</a></li><li><a href="#7-fluxos-propostos-para-as-proximas-etapas">7. Fluxos propostos para as próximas etapas</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

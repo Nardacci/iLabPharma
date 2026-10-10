@@ -149,8 +149,11 @@ MODULOS = [
          ("4.controle_qualidade/fluxos/estabilidade.md", "Estabilidade", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Estabilidade.docx"),
          ("4.controle_qualidade/fluxos/agua-ambiente.md", "Água e ambiente", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Agua e Ambiente.docx"),
      ]},
-    {"id": "controle-documentos", "nome": "Controle de Documentos", "icone": "▤", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
-     "resumo": "Elaboração, revisão, aprovação e distribuição de documentos.", "docs": []},
+    {"id": "controle-documentos", "nome": "Controle de Documentos", "icone": "▤", "cor": "#4f6d8f", "situacao": "Em análise", "nivel": 1,
+     "resumo": "Ciclo do documento (inclusão, revisão, pré-aprovação, aprovação com senha, vigência, nova revisão, obsolescência), controle de cópias, documentos externos e legados, tipos de documento, arquivos e modelos. Reconhecimento feito: 11 pastas de telas, 72 páginas, 8 situações do documento, ligação com a Garantia da Qualidade (treinamento e mudanças).",
+     "docs": [
+         ("6.controle_documento/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+     ]},
     {"id": "comercial", "nome": "Comercial", "icone": "◈", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
      "resumo": "Pedidos, faturamento e distribuição.", "docs": []},
     {"id": "rastreabilidade", "nome": "Rastreabilidade", "icone": "⟲", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
