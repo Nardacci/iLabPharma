@@ -784,28 +784,41 @@ def _chave_norma(item):
         return (1, tuple(int(x) for x in re.findall(r"\d+", str(item[1]))), f"Guia 33/2020, item {item[1]}")
     return None
 
-ANV_BUSCA_JS = """<script>
+ANV_JS = """<script>
 (function(){
-  var campo=document.getElementById("anv-busca"), info=document.getElementById("anv-busca-info");
-  function norm(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/\bn\.?\s?[oº]\b/g," ");}
+  var campo=document.getElementById("anv-busca"), info=document.getElementById("anv-info");
+  function norm(s){return s.normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().replace(/\\bn\\.?\\s?[o\\u00ba]\\b/g," ");}
   var temas=[].slice.call(document.querySelectorAll(".anv-tema")).map(function(e){return {e:e,t:norm(e.textContent)};});
-  var linhas=[].slice.call(document.querySelectorAll(".anv-indice tbody tr")).map(function(e){return {e:e,t:norm(e.textContent)};});
-  var secoes=[].slice.call(document.querySelectorAll(".anv-modulo"));
+  var linhas=[].slice.call(document.querySelectorAll(".anv-indice tr[data-norma]")).map(function(e){return {e:e,t:norm(e.textContent)};});
+  var caixas=[].slice.call(document.querySelectorAll(".anv-filtros input[type=checkbox]"));
+  function marcados(g){return caixas.filter(function(c){return c.name===g&&c.checked;}).map(function(c){return c.value;});}
   function filtrar(){
-    var q=norm(campo.value).split(/[^a-z0-9]+/).filter(Boolean);
-    var n=0, mods={};
-    temas.forEach(function(x){var ok=q.every(function(w){return x.t.indexOf(w)>=0;});x.e.hidden=!ok;
-      if(ok&&q.length){n++;mods[x.e.closest(".anv-modulo").id]=1;}});
-    var nl=0; linhas.forEach(function(x){var ok=q.every(function(w){return x.t.indexOf(w)>=0;});x.e.hidden=!ok;if(ok)nl++;});
-    secoes.forEach(function(s){
-      if(s.id==="por-artigo"){s.hidden=q.length>0&&nl===0;return;}
-      s.hidden=q.length>0&&!mods[s.id];});
-    info.textContent=q.length?(n?n+" tema(s) em "+Object.keys(mods).length+" módulo(s); "+nl+" artigo(s) no índice":"Nada encontrado."):"";
+    var q=norm(campo.value).split(/[^a-z0-9]+/).filter(Boolean), nor=marcados("norma"), mods=marcados("modulo"), sits=marcados("situacao");
+    var n=0, vm={};
+    temas.forEach(function(x){
+      var d=x.e.dataset, ok=q.every(function(w){return x.t.indexOf(w)>=0;}) && mods.indexOf(d.mod)>=0 && sits.indexOf(d.sit)>=0 &&
+        d.normas.split(" ").some(function(k){return nor.indexOf(k)>=0;});
+      x.e.hidden=!ok; if(ok){n++;vm[d.mod]=1;}
+    });
+    var nl=0;
+    linhas.forEach(function(x){
+      var vis=0;
+      [].slice.call(x.e.querySelectorAll(".anv-uso")).forEach(function(a){var ok=mods.indexOf(a.dataset.mod)>=0;a.hidden=!ok;if(ok)vis++;});
+      var ok=vis>0 && nor.indexOf(x.e.dataset.norma)>=0 && q.every(function(w){return x.t.indexOf(w)>=0;});
+      x.e.hidden=!ok; if(ok)nl++;
+    });
+    info.innerHTML=n?"<strong>"+n+"</strong> tema(s) em <strong>"+Object.keys(vm).length+"</strong> m\\u00f3dulo(s)":"Nada encontrado.";
+    document.getElementById("anv-indice-info").textContent=nl+" artigo(s) ou item(ns)";
     try{history.replaceState(null,"",q.length?"#busca="+encodeURIComponent(campo.value):location.pathname);}catch(e){}
   }
   campo.addEventListener("input",filtrar);
-  [].slice.call(document.querySelectorAll(".anv-atalho")).forEach(function(b){b.addEventListener("click",function(){campo.value=b.dataset.q;filtrar();campo.focus();});});
-  var m=location.hash.match(/^#busca=(.*)$/); if(m){campo.value=decodeURIComponent(m[1]);filtrar();}
+  caixas.forEach(function(c){c.addEventListener("change",filtrar);});
+  [].slice.call(document.querySelectorAll(".anv-atalho")).forEach(function(b){b.addEventListener("click",function(){campo.value=b.dataset.q;filtrar();});});
+  document.getElementById("anv-limpar").addEventListener("click",function(){campo.value="";caixas.forEach(function(c){c.checked=true;});filtrar();});
+  function abrir(){var h=decodeURIComponent(location.hash.slice(1));var m=h.match(/^busca=(.*)$/);
+    if(m){campo.value=m[1];filtrar();return;}
+    var e=document.getElementById(h); if(e&&e.tagName==="DETAILS"){e.hidden=false;e.open=true;e.scrollIntoView();}}
+  addEventListener("hashchange",abrir); filtrar(); abrir();
 })();
 </script>"""
 
@@ -813,89 +826,98 @@ ANV_BUSCA_JS = """<script>
 def pagina_anvisa(origem, busca):
     hom = origem / "homologacao"
     raiz = ""
-    secoes, chips, indice = [], [], {}
+    itens, indice, mods_ok, mods_futuros, conta_sit = [], {}, [], [], {}
     for mod in MODULOS:
         if mod["id"] in ESPECIAIS:
             continue
         fontes = FONTES_ANVISA.get(mod["id"])
-        ancora = f"mod-{mod['id']}"
-        icone = f'<span class="mc-icone" style="--cor:{mod["cor"]}">{mod["icone"]}</span>'
-        chips.append(f'<a href="#{ancora}">{E(mod["nome"])}</a>')
         if not fontes:
-            secoes.append(f'<section class="anv-modulo" id="{ancora}"><h2>{icone} {E(mod["nome"])}</h2>'
-                          '<p class="secao-desc">Módulo ainda não analisado. Os temas da norma entram aqui quando a '
-                          'conformidade dele for feita.</p></section>')
+            mods_futuros.append(mod["nome"])
             continue
-        temas = []
+        n_mod = 0
         for arq, js, col in fontes:
-            novos = temas_anvisa(hom, arq, col)
-            temas += novos
             normas = json.loads((hom / js).read_text(encoding="utf-8")) if (hom / js).exists() else {}
-            for tm in novos:
+            for tm in temas_anvisa(hom, arq, col):
+                anc = f"{mod['id']}-tema-{tm['n']}"
+                tipos = set()
                 for item in normas.get(tm["n"], []):
                     k = _chave_norma(item)
                     if k:
-                        indice.setdefault(k[:2], [k[2], []])[1].append((mod, tm))
-        conta = {}
-        for tm in temas:
-            conta[tm["rot"]] = conta.get(tm["rot"], 0) + 1
-        ordem = ("Atende", "Parcial", "Não atende", "Protótipo", "A verificar", "Usa o Principal", "Ver o detalhe")
-        resumo = " · ".join(f"{r} {conta[r]}" for r in ordem if r in conta)
-        itens = []
-        for tm in temas:
-            anc = f"{mod['id']}-tema-{tm['n']}"
-            det = f'<p class="anv-detalhe"><strong>No sistema hoje:</strong> {E(tm["detalhe"])}</p>' if tm["detalhe"] else ""
-            itens.append(
-                f'<details class="anv-tema" id="{anc}" style="--cor:{mod["cor"]}">'
-                f'<summary><span class="anv-num">{tm["n"]}</span>'
-                f'<span class="anv-nome">{E(tm["nome"])}<small>{E(tm["ref"])}</small></span>'
-                f'<span class="anv-sit anv-{tm["classe"]}">{E(tm["rot"])}</span></summary>'
-                f'<div class="anv-corpo">{det}<div class="texto">{tm["norma"]}</div></div></details>')
-            busca.append({"t": f"ANVISA · {tm['nome']}", "m": mod["nome"], "u": f"anvisa.html#{anc}",
-                          "h": [tm["ref"]], "x": re.sub(r"<[^>]+>", " ", tm["norma"])[:1500]})
-        link = f' · <a href="documentacao/{mod["id"]}/index.html">Abrir o módulo →</a>' if mod.get("paginas") else ""
-        secoes.append(f'<section class="anv-modulo" id="{ancora}"><h2>{icone} {E(mod["nome"])}</h2>'
-                      f'<p class="secao-desc">{len(temas)} temas da norma · {E(resumo)}{link}</p>{"".join(itens)}</section>')
+                        tipos.add("rdc" if k[0] == 0 else "guia")
+                        indice.setdefault(k[:2], [k[2], "rdc" if k[0] == 0 else "guia", []])[2].append((mod, tm, anc))
+                if not tipos:
+                    tipos = {"guia"} if "guia" in tm["ref"].lower() else {"rdc"}
+                det = f'<p class="anv-detalhe"><strong>No sistema hoje:</strong> {E(tm["detalhe"])}</p>' if tm["detalhe"] else ""
+                itens.append(
+                    f'<details class="anv-tema" id="{anc}" style="--cor:{mod["cor"]}" data-mod="{mod["id"]}" '
+                    f'data-sit="{tm["classe"]}" data-normas="{" ".join(sorted(tipos))}">'
+                    f'<summary><span class="anv-nome"><span class="anv-mod">{E(mod["nome"])}</span>{E(tm["nome"])}'
+                    f'<small>{E(tm["ref"])}</small></span>'
+                    f'<span class="anv-sit anv-{tm["classe"]}">{E(tm["rot"])}</span></summary>'
+                    f'<div class="anv-corpo">{det}<div class="texto">{tm["norma"]}</div>'
+                    f'<p class="anv-link"><a href="documentacao/{mod["id"]}/index.html">Abrir o módulo {E(mod["nome"])} →</a></p></div></details>')
+                busca.append({"t": f"ANVISA · {tm['nome']}", "m": mod["nome"], "u": f"anvisa.html#{anc}",
+                              "h": [tm["ref"]], "x": re.sub(r"<[^>]+>", " ", tm["norma"])[:1500]})
+                conta_sit[tm["classe"]] = conta_sit.get(tm["classe"], 0) + 1
+                n_mod += 1
+        mods_ok.append((mod, n_mod))
 
     linhas = []
     for k in sorted(indice):
-        nome, usos = indice[k]
+        nome, tipo, usos = indice[k]
         vistos, links = set(), []
-        for mod, tm in usos:
-            anc = f"{mod['id']}-tema-{tm['n']}"
-            if anc in vistos:
-                continue
-            vistos.add(anc)
-            links.append(f'<a href="#{anc}" class="anv-uso" style="--cor:{mod["cor"]}">{E(mod["nome"])}: {E(tm["nome"])}</a>')
-        linhas.append(f'<tr><th scope="row">{E(nome)}</th><td>{"".join(links)}</td></tr>')
+        for mod, tm, anc in usos:
+            if anc not in vistos:
+                vistos.add(anc)
+                links.append(f'<a href="#{anc}" class="anv-uso" data-mod="{mod["id"]}" style="--cor:{mod["cor"]}">'
+                             f'{E(mod["nome"])}: {E(tm["nome"])}</a>')
+        linhas.append(f'<tr data-norma="{tipo}"><th scope="row">{E(nome)}</th><td>{"".join(links)}</td></tr>')
 
-    legenda = ('<span class="anv-sit anv-ok">Atende</span> <span class="anv-sit anv-parcial">Parcial</span> '
-               '<span class="anv-sit anv-nao">Não atende</span> <span class="anv-sit anv-verificar">A verificar</span>')
+    def caixa(grupo, valor, rotulo, qtd=None, cor=None):
+        bolinha = f'<span class="anv-bolinha" style="background:{cor}"></span>' if cor else ""
+        q = f'<span class="anv-qtd">{qtd}</span>' if qtd is not None else ""
+        return f'<label><input type="checkbox" name="{grupo}" value="{valor}" checked>{bolinha}<span>{E(rotulo)}</span>{q}</label>'
+
+    f_norma = caixa("norma", "rdc", "RDC 658/2022") + caixa("norma", "guia", "Guia 33/2020")
+    f_mod = "".join(caixa("modulo", m["id"], m["nome"], n, m["cor"]) for m, n in mods_ok)
+    sits = (("nao", "Não atende"), ("parcial", "Parcial"), ("ok", "Atende"), ("verificar", "A verificar"))
+    f_sit = "".join(caixa("situacao", c, r, conta_sit.get(c, 0)) for c, r in sits)
+    atalhos = "".join(f'<button type="button" class="anv-atalho" data-q="{q}">{q}</button>'
+                      for q in ("assinatura", "trilha de auditoria", "treinamento", "obsoleto", "lote"))
+    futuros = f'<p class="anv-futuros">Ainda não analisados: {E(", ".join(mods_futuros))}.</p>' if mods_futuros else ""
+
     return (cabecalho("ANVISA por módulo · iLabMedSys", raiz, "anvisa") + f"""
-<main id="conteudo" class="pagina-modulo anvisa">
-  <nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <span>ANVISA</span></nav>
-  <header class="mod-cabecalho" style="--cor:var(--laranja)">
+<main id="conteudo" class="anvisa">
+  <div class="anv-topo">
+    <nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <span>ANVISA</span></nav>
     <h1>O que a ANVISA pede, por módulo</h1>
-    <p>Os temas da RDC 658/2022 e do Guia 33/2020 que valem para cada módulo, com o <strong>texto exato da norma</strong> e a situação do sistema entregue pelo fornecedor. Clique num tema para abrir o texto. No fim, o índice por artigo mostra quais módulos cada artigo atinge.</p>
-  </header>
-  <nav class="submenu" aria-label="Módulos">{"".join(chips)}<a href="#por-artigo" class="submenu-ideal">Por artigo</a></nav>
-  <div class="anv-busca">
-    <label for="anv-busca">Buscar nas normas</label>
-    <input id="anv-busca" type="search" placeholder="Ex.: Guia 33/2020, art. 121, obsoleto, treinamento" autocomplete="off">
-    <div class="anv-atalhos">Atalhos: <button type="button" class="anv-atalho" data-q="RDC 658/2022">RDC 658/2022</button><button type="button" class="anv-atalho" data-q="Guia 33/2020">Guia 33/2020</button><button type="button" class="anv-atalho" data-q="assinatura">Assinatura</button><button type="button" class="anv-atalho" data-q="trilha de auditoria">Trilha de auditoria</button><button type="button" class="anv-atalho" data-q="treinamento">Treinamento</button><button type="button" class="anv-atalho" data-q="">Limpar</button></div>
-    <p class="anv-busca-info" id="anv-busca-info" aria-live="polite"></p>
+    <p>Os temas da RDC 658/2022 e do Guia 33/2020 que valem para cada módulo, com o <strong>texto exato da norma</strong> e a situação do sistema entregue pelo fornecedor. Busque, filtre e clique num tema para abrir o texto.</p>
   </div>
-  <p class="nota anv-legenda">Situação: {legenda}. Principal, Estoque e Garantia da Qualidade vêm do diagnóstico de conformidade entre os módulos; Controle da Qualidade e Controle de Documentos, da conformidade de cada módulo. Detalhes de acesso e senha não são publicados.</p>
-  {"".join(secoes)}
-  <section class="anv-modulo" id="por-artigo">
-    <h2>Por artigo</h2>
-    <p class="secao-desc">Cada artigo ou item citado e os temas de cada módulo em que ele aparece. Clique para ir ao tema.</p>
-    <div class="tabela"><table class="anv-indice"><thead><tr><th>Artigo ou item</th><th>Onde aparece</th></tr></thead><tbody>{"".join(linhas)}</tbody></table></div>
-  </section>
-{ANV_BUSCA_JS}
-<script>function anvAbrir(){{var e=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(e&&e.tagName==="DETAILS"){{e.open=true;e.scrollIntoView();}}}}addEventListener("hashchange",anvAbrir);anvAbrir();</script>
+  <div class="anv-layout">
+    <aside class="anv-filtros" aria-label="Busca e filtros">
+      <label class="anv-rotulo" for="anv-busca">Buscar nas normas</label>
+      <input id="anv-busca" type="search" placeholder="Ex.: Guia 33/2020, art 121" autocomplete="off">
+      <div class="anv-atalhos">{atalhos}</div>
+      <fieldset><legend>Norma</legend>{f_norma}</fieldset>
+      <fieldset><legend>Módulo</legend>{f_mod}{futuros}</fieldset>
+      <fieldset><legend>Situação</legend>{f_sit}</fieldset>
+      <button type="button" class="botao botao-secundario anv-limpar" id="anv-limpar">Limpar filtros</button>
+      <p class="anv-nota">Principal, Estoque e Garantia da Qualidade vêm do diagnóstico entre os módulos; Controle da Qualidade e Controle de Documentos, da conformidade de cada módulo. Detalhes de acesso e senha não são publicados.</p>
+    </aside>
+    <div class="anv-resultados">
+      <div class="anv-cabeca"><p id="anv-info" aria-live="polite"></p><a href="#por-artigo">Índice por artigo ↓</a></div>
+      {"".join(itens)}
+      <section id="por-artigo" class="anv-indice-sec">
+        <h2>Índice por artigo</h2>
+        <p class="anv-sub">Cada artigo ou item citado e os temas em que ele aparece, conforme a busca e os filtros · <span id="anv-indice-info"></span></p>
+        <div class="tabela"><table class="anv-indice"><thead><tr><th>Artigo ou item</th><th>Onde aparece</th></tr></thead><tbody>{"".join(linhas)}</tbody></table></div>
+      </section>
+    </div>
+  </div>
 </main>
+{ANV_JS}
 """ + rodape(raiz))
+
 
 
 def main():
