@@ -217,8 +217,11 @@ MODULOS = [
          ("7.comercial/fluxos/cotacao-requisicao-reserva.md", "Cotação, requisição de PA e reserva no Estoque", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Cotacao, Requisicao e Reserva.docx"),
          ("7.comercial/fluxos/fatura-remessa-cancelamento.md", "Fatura, remessa e cancelamento", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Fatura, Remessa e Cancelamento.docx"),
      ]},
-    {"id": "rastreabilidade", "nome": "Rastreabilidade", "icone": "⟲", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
-     "resumo": "Serialização e rastreio dos lotes no mercado.", "docs": []},
+    {"id": "rastreabilidade", "nome": "Rastreabilidade", "icone": "⟲", "cor": "#475569", "situacao": "Em análise", "nivel": 1,
+     "resumo": "Gera o IUM (Identificador Único de Medicamento) de cada embalagem de um lote liberado, monta as agregações e registra os eventos para o Sistema Nacional de Controle de Medicamentos (SNCM) da ANVISA. Reconhecimento feito: o envio à ANVISA é simulado no código, e a tela diz que o envio foi feito com sucesso sem ler a resposta; o número de série pode se repetir; a quantidade de IUM não é limitada ao lote.",
+     "docs": [
+         ("8.rastreabilidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+     ]},
 ]
 
 PUBLICOS = [
