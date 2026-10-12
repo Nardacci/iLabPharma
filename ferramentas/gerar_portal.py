@@ -129,8 +129,12 @@ MODULOS = [
             ("5.garantia_qualidade/fluxos/controle-mudancas.md", "Controle de mudanças", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Controle de Mudancas.docx"),
         ],
     },
-    {"id": "producao", "nome": "Produção", "icone": "⚙", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
-     "resumo": "Ordens de produção, pesagem e registros de fabricação.", "docs": []},
+    {"id": "producao", "nome": "Produção", "icone": "⚙", "cor": "#b45309", "situacao": "Em análise", "nivel": 1,
+     "resumo": "Ordem de produção, autorizações para produzir, pesagem, registro de lote por etapas, preparação (limpeza, calibração, qualificação, manutenção, água e ambiente), final da produção e envio do produto acabado ao Estoque. Reconhecimento feito: 238 páginas, 79 itens de menu em 7 grupos, 137 tabelas; o registro de lote é montado por modelos XML e programado produto a produto. Conformidade com a RDC 658/2022: dos 18 temas, 1 atendido, 12 em parte e 5 não atendidos.",
+     "docs": [
+         ("2.producao/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+         ("2.producao/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
+     ]},
     {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#2e9b4f", "situacao": "Pronto para testes", "nivel": 2,
      "resumo": "Solicitação de análise, amostragem, análise, laudo, etiqueta e estabilidade. Reconhecimento e conformidade com a RDC 658/2022 feitos: 25 telas (22 com lógica, 3 protótipos); dos 16 temas da norma, 8 atendidos em parte e 8 não atendidos. Os quatro fluxos prontos (solicitação ao laudo, regras de amostragem e de análise, estabilidade, água e ambiente), as 119 regras de negócio, o inventário das telas, as permissões, o modelo de dados, a análise de risco e o plano de testes (61 casos). Análise pelo código concluída.",
      "docs": [
@@ -709,6 +713,7 @@ FONTES_ANVISA = {
     "garantia-qualidade": [(DIAGNOSTICO, "transversal/03-diagnostico-normas.json", "GQ")],
     "controle-qualidade": [("4.controle_qualidade/04-conformidade-regulatoria.md", "4.controle_qualidade/04-conformidade-normas.json", None)],
     "controle-documentos": [("6.controle_documento/04-conformidade-regulatoria.md", "6.controle_documento/04-conformidade-normas.json", None)],
+    "producao": [("2.producao/04-conformidade-regulatoria.md", "2.producao/04-conformidade-normas.json", None)],
 }
 # Detalhe da situação que toca acesso, senha ou login não é publicado: fica só o selo.
 RE_DETALHE_RESTRITO = re.compile(r"permiss|senha|login|acesso|autoriza|perfil|endere[çc]o", re.I)
@@ -870,7 +875,7 @@ def pagina_anvisa(origem, busca):
       <p class="anv-sub">Cada artigo ou item citado e os temas em que ele aparece, conforme a busca · <span id="anv-indice-info"></span></p>
       <div class="tabela"><table class="anv-indice"><thead><tr><th>Artigo ou item</th><th>Onde aparece</th></tr></thead><tbody>{"".join(linhas)}</tbody></table></div>
     </section>
-    <p class="anv-nota">Principal, Estoque e Garantia da Qualidade vêm do diagnóstico de conformidade entre os módulos; Controle da Qualidade e Controle de Documentos, da conformidade de cada módulo.{nota_futuros} Detalhes de acesso e senha não são publicados.</p>
+    <p class="anv-nota">Principal, Estoque e Garantia da Qualidade vêm do diagnóstico de conformidade entre os módulos; Produção, Controle da Qualidade e Controle de Documentos, da conformidade de cada módulo.{nota_futuros} Detalhes de acesso e senha não são publicados.</p>
   </div>
 </main>
 {ANV_JS}
