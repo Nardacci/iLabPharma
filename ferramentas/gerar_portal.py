@@ -129,8 +129,11 @@ MODULOS = [
             ("5.garantia_qualidade/fluxos/controle-mudancas.md", "Controle de mudanças", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Controle de Mudancas.docx"),
         ],
     },
-    {"id": "producao", "nome": "Produção", "icone": "⚙", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
-     "resumo": "Ordens de produção, pesagem e registros de fabricação.", "docs": []},
+    {"id": "producao", "nome": "Produção", "icone": "⚙", "cor": "#b45309", "situacao": "Em análise", "nivel": 1,
+     "resumo": "Ordem de produção, autorizações para produzir, pesagem, registro de lote por etapas, preparação (limpeza, calibração, qualificação, manutenção, água e ambiente), final da produção e envio do produto acabado ao Estoque. Reconhecimento feito: 238 páginas, 79 itens de menu em 7 grupos, 137 tabelas; o registro de lote é montado por modelos XML e programado produto a produto.",
+     "docs": [
+         ("2.producao/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+     ]},
     {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#2e9b4f", "situacao": "Pronto para testes", "nivel": 2,
      "resumo": "Solicitação de análise, amostragem, análise, laudo, etiqueta e estabilidade. Reconhecimento e conformidade com a RDC 658/2022 feitos: 25 telas (22 com lógica, 3 protótipos); dos 16 temas da norma, 8 atendidos em parte e 8 não atendidos. Os quatro fluxos prontos (solicitação ao laudo, regras de amostragem e de análise, estabilidade, água e ambiente), as 119 regras de negócio, o inventário das telas, as permissões, o modelo de dados, a análise de risco e o plano de testes (61 casos). Análise pelo código concluída.",
      "docs": [
