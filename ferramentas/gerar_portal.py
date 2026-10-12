@@ -60,6 +60,7 @@ MODULOS = [
             ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
             ("transversal/02-mapa-do-processo-fabril.md", "Mapa do processo fabril", "inicio", "transversal/LabMedSys - Mapa do Processo Fabril.docx"),
             ("transversal/01-telas-repetidas.md", "Telas repetidas entre módulos", "tecnico", None),
+            ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "ideal", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
         ],
     },
     {
@@ -114,7 +115,7 @@ MODULOS = [
         "docs": [
             ("5.garantia_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
             ("5.garantia_qualidade/ideal/gq-ideal.md", "A Garantia da Qualidade ideal", "ideal", "5.garantia_qualidade/ideal/LabMedSys - Modulo Garantia da Qualidade - O Ideal.docx"),
-            ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "ideal", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
+            ("5.garantia_qualidade/ideal/gq-entre-modulos.md", "A Garantia da Qualidade entre os módulos: as travas", "ideal", "5.garantia_qualidade/ideal/LabMedSys - Modulo Garantia da Qualidade - Entre os Modulos.docx"),
             ("5.garantia_qualidade/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("5.garantia_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
@@ -134,7 +135,7 @@ MODULOS = [
      "docs": [
          ("2.producao/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("2.producao/ideal/pro-ideal.md", "A Produção ideal", "ideal", "2.producao/ideal/LabMedSys - Modulo Producao - O Ideal.docx"),
-         ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "ideal", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
+         ("2.producao/ideal/pro-entre-modulos.md", "A Produção entre os módulos: as travas", "ideal", "2.producao/ideal/LabMedSys - Modulo Producao - Entre os Modulos.docx"),
          ("2.producao/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
          ("2.producao/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("2.producao/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
@@ -153,7 +154,7 @@ MODULOS = [
      "docs": [
          ("4.controle_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("4.controle_qualidade/ideal/cq-ideal.md", "O Controle da Qualidade ideal", "ideal", "4.controle_qualidade/ideal/LabMedSys - Modulo Controle da Qualidade - O Ideal.docx"),
-         ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "ideal", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
+         ("4.controle_qualidade/ideal/cq-entre-modulos.md", "O Controle da Qualidade entre os módulos: as travas", "ideal", "4.controle_qualidade/ideal/LabMedSys - Modulo Controle da Qualidade - Entre os Modulos.docx"),
          ("4.controle_qualidade/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
          ("4.controle_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
