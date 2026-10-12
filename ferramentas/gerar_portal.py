@@ -110,8 +110,8 @@ MODULOS = [
     },
     {
         "id": "garantia-qualidade", "nome": "Garantia da Qualidade", "icone": "◇", "cor": "#8b1e3f",
-        "situacao": "Fluxos prontos", "nivel": 2,
-        "resumo": "Desvios e CAPA, controle de mudanças, autoinspeção e auditoria, treinamento e assuntos regulatórios. Reconhecimento, mapa de conformidade com a RDC 658/2022, os cinco fluxos (desvios e CAPA, controle de mudanças, autoinspeção, treinamento e assuntos regulatórios), as regras de negócio, o inventário das 67 telas, a matriz de permissões, o modelo de dados, a análise de risco e o plano de testes prontos. Testes de tela em andamento.",
+        "situacao": "Em testes", "nivel": 2,
+        "resumo": "Desvios e CAPA, controle de mudanças, autoinspeção e auditoria, treinamento e assuntos regulatórios. Reconhecimento, mapa de conformidade com a RDC 658/2022, os cinco fluxos (desvios e CAPA, controle de mudanças, autoinspeção, treinamento e assuntos regulatórios), as regras de negócio, o inventário das 67 telas, a matriz de permissões, o modelo de dados, a análise de risco e o plano de testes prontos. Testes de tela: rodada 1 em 12/10/2026, com 12 casos de prioridade Alta (1 passou, 10 falharam, 1 bloqueado). Confirmados na tela: plano corretivo aprovado com ação pendente; mudança liberada sem parecer das áreas e aprovada apesar de área que não aceitou; plano de mudança finalizado sem a ação executada; cancelamento do desvio e aprovação final do produto fora do histórico. Ponto bom: a data de abertura do desvio é a do servidor. O efeito de um desvio sobre o lote não pôde ser testado (a busca de produto no desvio não devolve nada no ambiente).",
         "docs": [
             ("5.garantia_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
             ("5.garantia_qualidade/ideal/gq-ideal.md", "A Garantia da Qualidade ideal", "ideal", "5.garantia_qualidade/ideal/LabMedSys - Modulo Garantia da Qualidade - O Ideal.docx"),

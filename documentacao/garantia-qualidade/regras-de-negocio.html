@@ -40,7 +40,7 @@
     </header>
     <article class="texto">
 <p><strong>Data:</strong> 09/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>5.garantia_qualidade/app</code>) · <strong>Base:</strong> os cinco fluxos da GQ (<code>fluxos/</code>), o reconhecimento (<code>00-reconhecimento.md</code>) e o mapa de conformidade (<code>04-conformidade-regulatoria.md</code>).</p>
-<p><strong>Situação de todas as regras: Extraída</strong> (lida do código, aguardando o teste nas telas e a validação da área). Caminhos relativos a <code>5.garantia_qualidade/app/</code>.</p>
+<p><strong>Situação:</strong> as regras estão como <strong>Extraída</strong> (lida do código), exceto as 12 conferidas na <strong>rodada 1 de testes de tela (12/10/2026)</strong>, marcadas "Validada no teste" ou "Diferente do código" (resultado em <code>execucao/2026-10-12/resultado.md</code>). Três regras novas vieram do teste (RN-GQ-149 a 151). Caminhos relativos a <code>5.garantia_qualidade/app/</code>.</p>
 <p>As regras das seções 2 a 6 foram <strong>consolidadas por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/consolidar_regras_gq.py</code>). O texto de cada regra é o mesmo do fluxo, para os dois documentos não divergirem. A seção 8 mostra a correspondência entre o número aqui (RN-GQ-nnn) e o número local no fluxo (RN001…). Quando um fluxo mudar, gere de novo as seções 2 a 8.</p>
 <p>Várias "regras" descrevem <strong>falhas</strong>: o que o sistema faz hoje e que não atende à norma. Elas ficam registradas como regra porque são o comportamento atual. A correção vai para os requisitos da nova versão (<code>05-requisitos.md</code>, a fazer).</p>
 <p>O inventário das 67 telas, com a situação de cada uma, está em <code>11-inventario-de-telas.md</code>.</p>
@@ -63,12 +63,12 @@
 <tr>
 <td>RN-GQ-002</td>
 <td>O acesso dentro das telas usa três <strong>níveis de grupo de perfil</strong>, cadastrados na tela Grupo Perfil: nível 1 mexe no que criou; nível 2 também no que é da sua área; nível 3 em tudo, e é o único que aprova, libera e finaliza (<code>HSolutions.GQ.Domain/Entities/GrupoPerfil/GrupoPerfil.cs:24-26</code>; os grupos "Nível 01" a "Nível 03" são criados por <code>Hsolutions.GQ.DB/dml.sql:53-63</code>).</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-112); resultado no documento 03</td>
 </tr>
 <tr>
 <td>RN-GQ-003</td>
 <td>As regras de quem pode editar, cancelar ou excluir em cada situação ficam nos <code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTela*.cs</code> e mostram ou escondem os botões da lista. Na maioria das gravações, <strong>o servidor não confere de novo</strong> (verificado na Avaliação Área, no avanço da auditoria e na edição da programação de auditoria).</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-021, 034, 041, 047); resultado no documento 03</td>
 </tr>
 <tr>
 <td>RN-GQ-004</td>
@@ -100,6 +100,21 @@
 <td>Nenhuma aprovação pede <strong>senha</strong> (assinatura eletrônica), e nenhum fluxo envia <strong>aviso</strong> ou e-mail: nem de prazo, nem de vencimento, nem de pendência.</td>
 <td>Extraída</td>
 </tr>
+<tr>
+<td>RN-GQ-149</td>
+<td>A <strong>área de um usuário</strong> na GQ vem do campo <strong>Divisão</strong> do cadastro dele no Principal (tela Profissional), e não do "Responsável" da Estrutura funcional. Com a Divisão vazia, o usuário não vê nenhuma avaliação de área (desvio ou mudança).</td>
+<td>Validada no teste (12/10/2026; descoberta da rodada 1)</td>
+</tr>
+<tr>
+<td>RN-GQ-150</td>
+<td>O <strong>nível 3 avalia no lugar da área</strong>: a avaliação fica gravada no nome do administrador, e não de alguém da área.</td>
+<td>Validada no teste (12/10/2026; descoberta da rodada 1)</td>
+</tr>
+<tr>
+<td>RN-GQ-151</td>
+<td>A liberação da mudança responde "Inclusão efetuada com sucesso": a mensagem não corresponde ao ato (tema 4 do diagnóstico).</td>
+<td>Validada no teste (12/10/2026; descoberta da rodada 1)</td>
+</tr>
 </tbody>
 </table></div>
 <h3 id="2-desvios-e-capa">2. Desvios e CAPA</h3>
@@ -124,7 +139,7 @@
 <td>RN-GQ-011</td>
 <td>Registro do Relatório de Desvios</td>
 <td>O desvio é ligado a um <strong>item</strong>, de um destes tipos: processo, formulação, regulatórios, produto, projetos, equipamento, metodologia analítica, MP ou ME, sistema computadorizado, mudança de fornecedor, instalações, utilidades, material ou outros (<code>HSolutions.GQ.Domain/Enumeradores/TipoItem.cs</code>). Produtos e lotes são buscados na <strong>Produção</strong>, materiais no "estoque" (na verdade também na API da Produção) e equipamentos no <strong>Principal</strong>.</td>
-<td>Extraída</td>
+<td>Diferente do código (12/10/2026, CT-GQ-003 e 014): neste ambiente a busca de produto e de material não devolve nada; o desvio salva sem item (DV-GQ-010)</td>
 </tr>
 <tr>
 <td>RN-GQ-012</td>
@@ -148,7 +163,7 @@
 <td>RN-GQ-015</td>
 <td>Registro do Relatório de Desvios</td>
 <td>A <strong>data do relatório</strong> gravada é a que vem da tela (<code>RegistroNaoConformidadeController.cs:208</code>, <code>DateTime.Parse(model.DataRD)</code>), e não a hora do servidor no momento de salvar. <em>A confirmar no teste</em> se o campo pode ser alterado.</td>
-<td>Extraída</td>
+<td>Diferente do código (12/10/2026, CT-GQ-003): a data alterada na tela não foi gravada; ficou a data do dia</td>
 </tr>
 <tr>
 <td>RN-GQ-016</td>
@@ -160,7 +175,7 @@
 <td>RN-GQ-017</td>
 <td>Registro do Relatório de Desvios</td>
 <td><strong>Cancelamento</strong>: mesmas condições da edição, com <strong>justificativa obrigatória</strong> (<code>RelatorioNaoConformidadeValidator.cs:49</code>). O sistema guarda quem cancelou, quando e o motivo no próprio desvio, mas <strong>não grava na trilha de auditoria</strong> (<code>RegistroNaoConformidadeController.cs:548</code>, alteração sem histórico). Ver ponto de atenção 4.</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-006): justificativa obrigatória; o cancelamento não aparece no histórico (DV-GQ-001)</td>
 </tr>
 <tr>
 <td>RN-GQ-018</td>
@@ -358,7 +373,7 @@
 <td>RN-GQ-050</td>
 <td>Plano de ação corretiva, execução e monitoramento</td>
 <td>O monitoramento <strong>não exige que todas as ações estejam concluídas</strong>. O validador não olha a situação das ações. <em>A confirmar no teste.</em></td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-021): o plano foi aprovado com ação pendente (DV-GQ-002)</td>
 </tr>
 <tr>
 <td>RN-GQ-051</td>
@@ -474,7 +489,7 @@
 <td>RN-GQ-068</td>
 <td>Solicitação de mudança</td>
 <td><strong>Cancelamento</strong> pela tela, com justificativa e histórico (<code>SolicitacaoMudancaController.cs:383-405</code>). Há um <strong>segundo caminho</strong> no código, "Excluir solicitação", que cancela <strong>sem justificativa, sem histórico e sem conferir a situação</strong> (<code>SolicitacaoMudancaController.cs:750-759</code>). O botão não aparece na lista; a função existe no script da tela (<code>HSolutions.GQ.UI/Areas/RM/Script/SolicitacaoMudancaIndex.js:115</code>). <em>A confirmar no teste</em> se algum botão a usa.</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-047): o segundo caminho cancela sem justificativa e sem histórico (DV-GQ-007)</td>
 </tr>
 <tr>
 <td>RN-GQ-069</td>
@@ -534,7 +549,7 @@
 <td>RN-GQ-078</td>
 <td>Avaliação pelas áreas e liberação</td>
 <td><strong>A liberação não depende dos pareceres.</strong> O sistema permite liberar enquanto a mudança está em Pendente Liberação Avaliação, situação em que ela entra logo que as áreas são escolhidas. Nenhuma regra exige que todas as áreas tenham avaliado, e um "não aceito" de uma área não impede a aprovação. Ponto de atenção 1.</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-034 e 035): liberada sem parecer (DV-GQ-003) e aprovada apesar de área "Não Aceito" (DV-GQ-004)</td>
 </tr>
 <tr>
 <td>RN-GQ-079</td>
@@ -570,7 +585,7 @@
 <td>RN-GQ-084</td>
 <td>Plano de ação, execução e finalização</td>
 <td><strong>Finalização:</strong> só nível 3 (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaLiberacaoPlanoAcao.cs</code>). A <strong>conclusão</strong> é obrigatória (<code>HSolutions.GQ.Domain/Service/LiberacaoPlanoAcaoValidator.cs:24</code>). <strong>Não exige que todas as ações estejam concluídas.</strong> Ponto de atenção 2.</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-041): finalizada com ação não executada (DV-GQ-005)</td>
 </tr>
 <tr>
 <td>RN-GQ-085</td>
@@ -600,13 +615,13 @@
 <td>RN-GQ-089</td>
 <td>Aprovação do produto</td>
 <td>A <strong>justificativa não é obrigatória</strong>: a regra está desligada (<code>HSolutions.GQ.Domain/Service/ControleProdutoMudancaValidator.cs:24</code>, comentada).</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-043): salva sem justificativa (DV-GQ-006)</td>
 </tr>
 <tr>
 <td>RN-GQ-090</td>
 <td>Aprovação do produto</td>
 <td>A mudança termina como <strong>Aceito</strong> (<code>ControleMudancaProdutoController.cs:218</code>), numa gravação <strong>sem histórico</strong> (<code>:227</code>). Ponto de atenção 3.</td>
-<td>Extraída</td>
+<td>Validada no teste (12/10/2026, CT-GQ-043): a aprovação final e o lote não entram no histórico (DV-GQ-006)</td>
 </tr>
 <tr>
 <td>RN-GQ-091</td>
