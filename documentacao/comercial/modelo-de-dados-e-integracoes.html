@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Comercial · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cliente-e-cadastros-de-venda.html">Cliente e cadastros de venda</a></li><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html">Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="fatura-remessa-e-cancelamento.html">Fatura, remessa e cancelamento</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Para quem:</strong> desenvolvedores e DBA.</p>
+<p><strong>Base:</strong>
+- os roteiros do projeto de banco (<code>7.comercial/comercial/Hsolutions.Comercial.DB/Tables</code>, 27 arquivos);
+- o mapeamento das tabelas no código (<code>HSolutions.Comercial.Context</code>);
+- o dicionário de dados (<code>Dicionário-LABMEDSYS.pdf</code>);
+- os três fluxos.</p>
+<p>Comparação feita por script: roteiros × código × dicionário.</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas nos roteiros</td>
+<td>27</td>
+</tr>
+<tr>
+<td>Tabelas mapeadas no código</td>
+<td>26</td>
+</tr>
+<tr>
+<td>Chaves estrangeiras declaradas nos roteiros</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Tabelas com <strong>outro nome</strong> no código e no dicionário (sufixo <code>_COMERCIAL</code>)</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Tabela dos roteiros sem uso no código</td>
+<td>1 (<code>TBL_PRODUTO_REQUISICAO</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrão das tabelas:</strong> chave numérica; <code>ATIVO</code> e <code>LIXEIRA</code> para exclusão lógica; quem criou, alterou e excluiu, com as datas.</p>
+<h3 id="2-venda">2. Venda</h3>
+<p><code>mermaid
+erDiagram
+  TBL_TIPO_FORNECIMENTO ||--o{ TBL_TIPO_FORNECIMENTO_VINCULO : "vínculos"
+  TBL_RESPOSTA_COTACAO ||--o{ TBL_RESPOSTA_COTACAO_ITEM : "itens"
+  TBL_CONVENIO ||--o{ TBL_CONVENIO_PRODUTO : "produtos"
+  TBL_REQUISICAO }o--o| TBL_RESPOSTA_COTACAO : "de uma cotação"
+  TBL_REQUISICAO }o--o| TBL_CONVENIO : "ou de um convênio"
+  TBL_REQUISICAO ||--o{ TBL_REQUISICAO_ITEM : "itens com lote"
+  TBL_REQUISICAO ||--o{ TBL_FATURA : "faturada"
+  TBL_FATURA }o--|| TBL_ENDERECO : "aponta para o endereço"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_RESPOSTA_COTACAO</code>, <code>TBL_RESPOSTA_COTACAO_ITEM</code>, <code>TBL_CONTROLE_CODIGO_COTACAO</code></td>
+<td>Cotação, itens e o contador do código por ano</td>
+<td>Sem lote</td>
+</tr>
+<tr>
+<td><code>TBL_REQUISICAO</code></td>
+<td>Requisição: tipo de fornecimento, cliente, cotação ou convênio, situação e <strong>número da reserva no Estoque</strong> (<code>ID_SOLICITACAO</code>)</td>
+<td>A reserva que falha fica gravada como <strong>-1</strong></td>
+</tr>
+<tr>
+<td><code>TBL_REQUISICAO_ITEM</code></td>
+<td>Produto, quantidade, valor e <strong>lote</strong> (número interno, lote do fabricante, validade e código no Estoque)</td>
+<td>É o registro de <strong>qual lote foi para qual venda</strong></td>
+</tr>
+<tr>
+<td><code>TBL_FATURA</code></td>
+<td>Requisição, cliente, endereço de entrega, cobrança, valor, peso, volume, pagamento previsto, código da remessa, finalizada</td>
+<td><strong>Aponta para o endereço</strong>, sem cópia. Não guarda quem finalizou nem quando</td>
+</tr>
+<tr>
+<td><code>TBL_NOTA_FISCAL_COMERCIAL</code> <em>(roteiros: <code>TBL_NOTA_FISCAL</code>)</em></td>
+<td>Só o número</td>
+<td><em>A confirmar:</em> se é usada</td>
+</tr>
+<tr>
+<td><code>TBL_PRODUTO_REQUISICAO</code></td>
+<td>Produto, número de lote, quantidade e valor por requisição</td>
+<td>Nos roteiros e no dicionário, <strong>sem uso no código</strong>. Parece uma versão antiga de <code>TBL_REQUISICAO_ITEM</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-cliente-e-tabelas-de-apoio">3. Cliente e tabelas de apoio</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_COMPLEMENTO_CLIENTE</code></td>
+<td>Tipo de cliente da pessoa jurídica do Principal</td>
+<td>Único dado próprio do cliente. <strong>Sem licença sanitária, autorização nem responsável técnico</strong></td>
+</tr>
+<tr>
+<td><code>TBL_ENDERECO</code>, <code>TBL_CONTATO</code></td>
+<td>Endereços (entrega, cobrança) e contatos</td>
+<td>Alteração direta, sem versão</td>
+</tr>
+<tr>
+<td><code>TBL_CONVENIO</code>, <code>TBL_CONVENIO_PRODUTO</code></td>
+<td>Convênio e produtos com quantidade e valor</td>
+<td><strong>Sem vigência</strong></td>
+</tr>
+<tr>
+<td><code>TBL_RELACIONAMENTO</code>, <code>TBL_PREGAO</code> (+ situações)</td>
+<td>Atividades e pregões</td>
+<td>Pregão sem ligação com a venda</td>
+</tr>
+<tr>
+<td><code>TBL_TIPO_FORNECIMENTO</code>, <code>TBL_TIPO_FORNECIMENTO_VINCULO</code>, <code>TBL_TIPO_VINCULO</code></td>
+<td>Tipos de fornecimento e vínculos (convênio, cotação, contabilidade, guia de simples remessa)</td>
+<td>Vários vínculos por tipo</td>
+</tr>
+<tr>
+<td><code>TBL_PRECO</code></td>
+<td>Preço por produto e tipo de cliente</td>
+<td><strong>Sem vigência</strong></td>
+</tr>
+<tr>
+<td><code>TBL_ANEXO_COMERCIAL</code> <em>(roteiros: <code>TBL_ANEXO</code>)</em>, <code>TBL_ASSINATURAS</code></td>
+<td>Anexos e assinaturas dos relatórios</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-integracoes">4. Integrações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Origem</th>
+<th>Como chega</th>
+<th>Onde fica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pessoa jurídica (cliente), usuários, funções, menu</td>
+<td>Principal</td>
+<td>API</td>
+<td>Lido a cada tela</td>
+</tr>
+<tr>
+<td>Itens à venda, lotes disponíveis, disponibilidade</td>
+<td>Estoque</td>
+<td>API (<code>RetornaListaItemVenda</code>, <code>RetornaListaLoteVenda</code>, <code>ConsultaDisponibilidade*</code>)</td>
+<td>O lote escolhido fica em <code>TBL_REQUISICAO_ITEM</code></td>
+</tr>
+<tr>
+<td>Reserva</td>
+<td>Comercial → Estoque</td>
+<td>API (<code>CriarReservaComercial</code>, <code>CancelarReservaComercial</code>)</td>
+<td>Solicitação do tipo comercial no Estoque; o número fica em <code>TBL_REQUISICAO.ID_SOLICITACAO</code></td>
+</tr>
+<tr>
+<td>Separação</td>
+<td>Estoque → Comercial</td>
+<td>API (<code>ConsultaSeparacaoSolicitacao</code>, <code>ConsultarLiberarFaturaComercial</code>)</td>
+<td>Consultada na hora da fatura</td>
+</tr>
+<tr>
+<td>Remessa</td>
+<td>Comercial → Estoque</td>
+<td>API (<code>GerarGmmComercial</code>)</td>
+<td>Remessa GMM no Estoque, <strong>com cópia do endereço</strong>; o código fica em <code>TBL_FATURA.CODIGO_REMESSA</code></td>
+</tr>
+<tr>
+<td>Garantia da Qualidade (reclamação, recolhimento), CQ, Produção, Rastreabilidade</td>
+<td>—</td>
+<td><strong>Nenhuma</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-desencontros-entre-o-codigo-os-roteiros-e-o-dicionario">5. Desencontros entre o código, os roteiros e o dicionário</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Desencontro</th>
+<th>Detalhe</th>
+<th>Leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>2 tabelas com outro nome</strong></td>
+<td>O código e o dicionário usam <code>TBL_ANEXO_COMERCIAL</code> e <code>TBL_NOTA_FISCAL_COMERCIAL</code>; os roteiros criam <code>TBL_ANEXO</code> e <code>TBL_NOTA_FISCAL</code></td>
+<td>Mesmo padrão da Produção e do Controle de Documentos: o dicionário confirma o código, e os roteiros estão desatualizados</td>
+</tr>
+<tr>
+<td><strong>Tabela sem uso</strong></td>
+<td><code>TBL_PRODUTO_REQUISICAO</code></td>
+<td>Resto de versão anterior</td>
+</tr>
+<tr>
+<td><strong>Nomes genéricos no modelo único</strong></td>
+<td><code>TBL_ENDERECO</code>, <code>TBL_CONTATO</code>, <code>TBL_PRECO</code> sem sufixo</td>
+<td><em>A confirmar com o DBA:</em> se colidem com tabelas de outros módulos no banco único do dicionário</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-anomalias-de-estrutura-para-a-nova-versao">6. Anomalias de estrutura (para a nova versão)</h3>
+<ol>
+<li><strong>A fatura não guarda o destino da venda:</strong> aponta para o endereço do cadastro, que pode mudar ou ser excluído. O registro de distribuição precisa de uma cópia do endereço na data da venda.</li>
+<li><strong>Venda e saída física em módulos diferentes</strong>, ligadas por números que podem ser inválidos (reserva -1) e sem confirmação dos dois lados.</li>
+<li><strong>Sem vigência</strong> em preço e convênio, e <strong>sem histórico</strong> em nenhuma tabela.</li>
+<li><strong>Sem dados regulatórios do cliente.</strong></li>
+<li><strong>Sem ligação com a GQ</strong> para reclamação e recolhimento.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-venda">2. Venda</a></li><li><a href="#3-cliente-e-tabelas-de-apoio">3. Cliente e tabelas de apoio</a></li><li><a href="#4-integracoes">4. Integrações</a></li><li><a href="#5-desencontros-entre-o-codigo-os-roteiros-e-o-dicionario">5. Desencontros entre o código, os roteiros e o dicionário</a></li><li><a href="#6-anomalias-de-estrutura-para-a-nova-versao">6. Anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

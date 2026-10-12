@@ -200,10 +200,17 @@ MODULOS = [
          ("9.ope/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("9.ope/fluxos/montagem-do-modelo.md", "Montagem do modelo do registro de lote", "fluxos", "9.ope/fluxos/LabMedSys - Modulo OPE - Fluxo Montagem do Modelo do Registro de Lote.docx"),
      ]},
-    {"id": "comercial", "nome": "Comercial", "icone": "◈", "cor": "#0e7490", "situacao": "Fluxos prontos", "nivel": 2,
-     "resumo": "Venda do produto acabado: cliente, cotação, requisição de produto acabado com o lote escolhido no Estoque, reserva, fatura e remessa. Reconhecimento feito: o Comercial vende o lote disponível no Estoque (aprovado pelo CQ), não o certificado pela Pessoa Delegada; a situação do lote não é conferida de novo na fatura; cancelar a fatura não desfaz a remessa; não há consulta de para quem foi cada lote. Fluxos prontos: cliente e cadastros (a fatura aponta para o endereço do cadastro, sem cópia: alterar ou excluir o endereço muda o destino das vendas antigas); cotação, requisição e reserva (a reserva que falha no Estoque volta como -1, sem aviso); fatura, remessa e cancelamento (o relatório de produtos faturados por lote, que serve ao recolhimento, está fora do menu e ignora faturas canceladas, embora o cancelamento não desfaça a remessa).",
+    {"id": "comercial", "nome": "Comercial", "icone": "◈", "cor": "#0e7490", "situacao": "Pronto para testes", "nivel": 2,
+     "resumo": "Venda do produto acabado: cliente, cotação, requisição de produto acabado com o lote escolhido no Estoque, reserva, fatura e remessa. Reconhecimento feito: o Comercial vende o lote disponível no Estoque (aprovado pelo CQ), não o certificado pela Pessoa Delegada; a situação do lote não é conferida de novo na fatura; cancelar a fatura não desfaz a remessa; não há consulta de para quem foi cada lote. Fluxos prontos: cliente e cadastros (a fatura aponta para o endereço do cadastro, sem cópia: alterar ou excluir o endereço muda o destino das vendas antigas); cotação, requisição e reserva (a reserva que falha no Estoque volta como -1, sem aviso); fatura, remessa e cancelamento (o relatório de produtos faturados por lote, que serve ao recolhimento, está fora do menu e ignora faturas canceladas, embora o cancelamento não desfaça a remessa). Análise pelo código concluída: 73 regras, 16 telas, conformidade (9 temas: nenhum atendido, 3 em parte, 6 não atendidos), 17 riscos (10 de prioridade alta) e plano de testes com 52 casos.",
      "docs": [
          ("7.comercial/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+         ("7.comercial/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
+         ("7.comercial/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
+         ("7.comercial/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
+         ("7.comercial/08-plano-de-testes.md", "Plano de testes", "testes", None),
+         ("7.comercial/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
+         ("7.comercial/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
+         ("7.comercial/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("7.comercial/fluxos/cliente-cadastros.md", "Cliente e cadastros de venda", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Cliente e Cadastros de Venda.docx"),
          ("7.comercial/fluxos/cotacao-requisicao-reserva.md", "Cotação, requisição de PA e reserva no Estoque", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Cotacao, Requisicao e Reserva.docx"),
          ("7.comercial/fluxos/fatura-remessa-cancelamento.md", "Fatura, remessa e cancelamento", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Fatura, Remessa e Cancelamento.docx"),
@@ -750,6 +757,7 @@ FONTES_ANVISA = {
     "controle-documentos": [("6.controle_documento/04-conformidade-regulatoria.md", "6.controle_documento/04-conformidade-normas.json", None)],
     "producao": [("2.producao/04-conformidade-regulatoria.md", "2.producao/04-conformidade-normas.json", None)],
     "ope": [("9.ope/04-conformidade-regulatoria.md", "9.ope/04-conformidade-normas.json", None)],
+    "comercial": [("7.comercial/04-conformidade-regulatoria.md", "7.comercial/04-conformidade-normas.json", None)],
 }
 # Detalhe da situação que toca acesso, senha ou login não é publicado: fica só o selo.
 RE_DETALHE_RESTRITO = re.compile(r"permiss|senha|login|acesso|autoriza|perfil|endere[çc]o", re.I)

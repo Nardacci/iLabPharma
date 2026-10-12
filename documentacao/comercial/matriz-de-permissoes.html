@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de permissões · Comercial · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cliente-e-cadastros-de-venda.html">Cliente e cadastros de venda</a></li><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html">Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="fatura-remessa-e-cancelamento.html">Fatura, remessa e cancelamento</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html" aria-current=page>Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Matriz de permissões</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · Extraída do código; nada testado ainda. Caminhos relativos a <code>7.comercial/comercial/</code>.</p>
+<p>Este documento tem três partes:
+1. <strong>Como o acesso funciona no módulo</strong> (extraído do código).
+2. <strong>Matriz por grupo de telas.</strong>
+3. <strong>Testes que esta matriz gera.</strong></p>
+<p><strong>Importante:</strong> <em>quem</em> tem <em>qual</em> perfil e função está cadastrado no banco do Principal, não no código. Para a matriz por pessoa, é preciso o relatório do Principal ou o DBA.</p>
+<hr />
+<h3 id="1-como-o-acesso-funciona">1. Como o acesso funciona</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Onde é cadastrada</th>
+<th>O que controla</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Ver a tela no menu</strong></td>
+<td>Principal: perfil × funções do módulo 4</td>
+<td>12 itens em 4 grupos; Relatórios, Tipo Endereço e Assinaturas comentados</td>
+<td><code>Hsolutions.Comercial.DB/dml.sql:88-134</code></td>
+</tr>
+<tr>
+<td><strong>2. Abrir a tela e agir</strong></td>
+<td>Principal: funções do módulo</td>
+<td>Consultar, incluir, alterar e excluir, conferidos por tela</td>
+<td><code>[AutorizacaoHandler]</code> nos controladores; lógica numa biblioteca compilada</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Telas que dividem a mesma função</strong> (quem pode uma, pode a outra):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Função</th>
+<th>Telas</th>
+<th>Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cotacao/Requisicao</code></td>
+<td>Requisição de PA e Cancelar Requisição de PA</td>
+<td>Quem altera a requisição também a cancela (o cancelamento usa a ação "alterar", <code>HSolutions.Comercial.UI/Areas/Cotacao/Controllers/RequisicaoController.cs:845</code>)</td>
+</tr>
+<tr>
+<td><code>NotaFiscal/Fatura</code></td>
+<td>Fatura e Cancelar Fatura</td>
+<td>Quem fatura também cancela e finaliza (ação "alterar", <code>HSolutions.Comercial.UI/Areas/NotaFiscal/Controllers/FaturaController.cs:320, 566</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-matriz-por-grupo-de-telas">2. Matriz por grupo de telas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Telas</th>
+<th>Quem pode, pelo código</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cliente</td>
+<td>Endereço, Convênio, Relacionamento</td>
+<td>Função de cada tela</td>
+<td>Quem altera o endereço muda o destino das vendas antigas (fluxo 1, RN007)</td>
+</tr>
+<tr>
+<td>Cotação e requisição</td>
+<td>Cotação, Requisição de PA, Cancelar Requisição de PA</td>
+<td>Função de cada tela; cancelar = alterar</td>
+<td>Não há função para <strong>liberar o lote para venda</strong>: quem faz a requisição escolhe o lote</td>
+</tr>
+<tr>
+<td>Faturamento</td>
+<td>Fatura, Cancelar Fatura</td>
+<td>Uma só função para faturar, finalizar e cancelar</td>
+<td>Cancelar não pede outra pessoa nem aprovação</td>
+</tr>
+<tr>
+<td>Tabelas de apoio</td>
+<td>Tipo de Fornecimento, Tipo Pessoa Jurídica, Tipo Cobrança, Preço (e, fora do menu, Tipo Endereço e Assinaturas)</td>
+<td>Função de cada tela</td>
+<td>Mudar o tipo de fornecimento ou o preço afeta vendas em andamento</td>
+</tr>
+<tr>
+<td>Relatórios</td>
+<td>RV05 Clientes, RV07 Produtos Faturados</td>
+<td>Fora do menu</td>
+<td>O RV07 é a consulta de recolhimento: quem fará o recolhimento (GQ) precisa ter acesso a ele</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- Nenhuma decisão do Comercial é separada entre pessoas: quem pede, fatura, finaliza e cancela pode ser a mesma pessoa.
+- A norma não exige separação de funções na venda, mas exige que <strong>só o lote certificado pela Pessoa Delegada</strong> seja comercializado (art. 8º, XV). Essa decisão não existe no Comercial.
+- A Garantia da Qualidade, responsável pelo recolhimento, não tem tela própria no Comercial; depende do RV07, fora do menu.</p>
+<hr />
+<h3 id="3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-049</td>
+<td>Com um perfil sem nenhuma função do Comercial, abrir a Requisição de PA e a Fatura pelo endereço</td>
+<td>Acesso negado</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-050</td>
+<td>Com um perfil que só <strong>consulta</strong> a Fatura, tentar cancelar e finalizar uma fatura <code>TESTE</code></td>
+<td>Recusa</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-051</td>
+<td>Com o perfil que altera a requisição, abrir o Cancelar Requisição de PA</td>
+<td><strong>Registrar que pode cancelar</strong> (mesma função)</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-052</td>
+<td>Com um usuário da GQ, abrir o RV07 Produtos Faturados</td>
+<td><strong>Registrar se a GQ tem acesso</strong> à consulta de recolhimento</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Casos dos fluxos que também conferem esta matriz:</strong> CT-COM-016 (cancelamento sem justificativa), 026 (cancelamento da fatura) e 029 (RV07 fora do menu).</p>
+<h3 id="o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</h3>
+<ol>
+<li>Os perfis reais com as funções do módulo 4 e as pessoas em cada um.</li>
+<li>Quem deve ter acesso ao RV07 num recolhimento.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-como-o-acesso-funciona">1. Como o acesso funciona</a></li><li><a href="#2-matriz-por-grupo-de-telas">2. Matriz por grupo de telas</a></li><li><a href="#3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</a></li><li><a href="#o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

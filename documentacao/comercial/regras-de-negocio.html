@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · Comercial · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cliente-e-cadastros-de-venda.html">Cliente e cadastros de venda</a></li><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html">Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="fatura-remessa-e-cancelamento.html">Fatura, remessa e cancelamento</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>7.comercial/comercial</code>) · <strong>Base:</strong> os três fluxos do módulo (<code>fluxos/</code>) e o reconhecimento (<code>00-reconhecimento.md</code>).</p>
+<p><strong>Situação de todas as regras: Extraída.</strong> Elas foram lidas do código e aguardam o teste nas telas e a validação da área.</p>
+<p><strong>Caminhos:</strong> relativos a <code>7.comercial/comercial/</code>. As abreviações de cada fluxo (<code>Cli/</code>, <code>Tab/</code>, <code>Cot/</code>, <code>NF/</code>, <code>Repo/</code>, <code>Infra/</code>, <code>Est/</code>) se repetem aqui, como definidas no fluxo de origem.</p>
+<p><strong>Como foi montado:</strong>
+- As regras das seções 2 a 4 foram <strong>consolidadas por script</strong> a partir dos fluxos (<code>homologacao/ferramentas/consolidar_regras.py</code>). O texto de cada regra é o mesmo do fluxo.
+- A seção 6 liga cada código ao número da regra no fluxo.</p>
+<p><strong>Total: 73 regras.</strong> São 7 gerais (RN-COM-001 a 007) e 66 dos fluxos (RN-COM-008 a 073).</p>
+<h3 id="1-regras-gerais-do-modulo">1. Regras gerais do módulo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Tema</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-COM-001</td>
+<td>Menu</td>
+<td>O módulo é cadastrado com o número 4 e tem 12 itens ativos em 4 grupos: Cliente, Cotação, Faturamento e Tabelas de apoio. O grupo Relatórios (RV05 Clientes, RV07 Produtos Faturados) e as tabelas Tipo Endereço e Assinaturas estão comentados (<code>Hsolutions.Comercial.DB/dml.sql:88-134</code>)</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-COM-002</td>
+<td>Acesso</td>
+<td>Os controladores marcam a conferência de função ao abrir, incluir, alterar e excluir (<code>[AutorizacaoHandler]</code>). A lógica dessa conferência está numa biblioteca compilada, sem código-fonte (<code>Library_Comercial_old</code>)</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-COM-003</td>
+<td>Cliente</td>
+<td>O cliente é uma pessoa jurídica do Principal, lida pela API. O Comercial só guarda o tipo de cliente, os endereços, os contatos, os convênios e o relacionamento</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-COM-004</td>
+<td>Estoque</td>
+<td>Toda a parte física da venda (lotes, reserva, separação, remessa) fica no Estoque, por 11 serviços da API (<code>HSolutions.Comercial.Services/Estoque/EstoqueServiceApi.cs</code>). O Comercial não tem saldo próprio</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-COM-005</td>
+<td>Situação da requisição</td>
+<td>Em aberto (100), cancelada (200) e faturada (300) (<code>Hsolutions.Comercial.DB/dml.sql:55-61</code>). Não há situação "separada" nem "entregue": a separação é consultada no Estoque</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-COM-006</td>
+<td>Exclusão e autoria</td>
+<td>As tabelas usam exclusão lógica (<code>LIXEIRA</code>) e guardam quem criou, alterou e excluiu, com as datas, pelo servidor</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-COM-007</td>
+<td>Histórico</td>
+<td>O código-base tem um serviço de histórico de alterações, mas nenhuma tela o chama (<code>HSolutions.Comercial.UI/Controllers/ComercialControllerBase.cs:37-38, 154-162</code>; única chamada comentada em <code>Areas/TabelaApoio/Controllers/AssinaturasController.cs:80</code>)</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-cliente-e-cadastros-de-venda">2. Cliente e cadastros de venda</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/cliente-cadastros.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-COM-008</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>O cliente é uma <strong>pessoa jurídica do Principal</strong>, lida pela API. A tela Endereço lista todas, com busca por código e nome (<code>Cli/Controllers/EnderecoController.cs:200-240</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-009</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>Para vender, o cliente precisa de um <strong>tipo de cliente</strong> ("O Tipo Cliente é obrigatório.") (<code>Cli/Controllers/EnderecoController.cs:242-300</code>). É o único dado próprio do cliente no Comercial (<code>TBL_COMPLEMENTO_CLIENTE</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-010</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td><strong>Não há</strong> licença sanitária, autorização de funcionamento, responsável técnico nem situação cadastral do cliente. A venda não confere se o cliente pode receber medicamentos.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-011</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>A requisição só lista clientes com tipo de cliente. <strong>Exceção:</strong> para o tipo de fornecimento de número 3, a lista traz <strong>todas as pessoas jurídicas</strong> do Principal, inclusive fornecedores, sem tipo de cliente (<code>HSolutions.Comercial.UI/Areas/Cotacao/Controllers/RequisicaoController.cs:667-686</code>). O número está fixado no código.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-012</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>Os endereços têm tipo <strong>entrega</strong> ou <strong>cobrança</strong>. Pode haver vários de entrega; um só de cada outro tipo. A conferência existe na alteração, mas está <strong>comentada na inclusão</strong> (<code>Cli/Controllers/EnderecoController.cs:65-140</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-013</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>O CEP preenche o endereço por consulta (<code>Cli/Controllers/EnderecoController.cs:363</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-014</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td><strong>A fatura aponta para o endereço do cadastro, não guarda uma cópia</strong> (<code>TBL_FATURA.ID_ENDERECO</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-015</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>Os contatos têm nome, cargo, telefones e e-mail (<code>Cli/Controllers/ContatoController.cs:81</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-016</td>
+<td>2. Convênio</td>
+<td>O convênio exige <strong>código</strong> (único), <strong>conveniado</strong> e <strong>tipo de fornecimento</strong> (<code>Cli/Controllers/ConvenioController.cs:203-262</code>; <code>Cli/Validation/ConvenioValidation.cs:17-22</code>). O conveniado vem das pessoas jurídicas marcadas como cliente no Principal, com tipo de cliente.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-017</td>
+<td>2. Convênio</td>
+<td>Cada produto do convênio tem <strong>quantidade</strong> e <strong>valor</strong>, sem produto repetido (<code>Cli/Validation/ConvenioValidation.cs:32-64</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-018</td>
+<td>2. Convênio</td>
+<td>O convênio <strong>não tem vigência</strong> (data de início e fim) nem situação. Fica válido enquanto houver produto com saldo.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-019</td>
+<td>2. Convênio</td>
+<td>Não se exclui convênio que já tem requisição (<code>Cli/Controllers/ConvenioController.cs:108-130</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-020</td>
+<td>2. Convênio</td>
+<td>O limite do convênio <strong>não é conferido</strong> na requisição (fluxo 2, RN017).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-021</td>
+<td>3. Relacionamento e pregões</td>
+<td>O relacionamento registra <strong>atividades</strong> com o cliente: descrição, contato, data prevista, data de execução e situação. As datas são <strong>digitadas</strong> (<code>Cli/Controllers/RelacionamentoController.cs:253-300</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-022</td>
+<td>3. Relacionamento e pregões</td>
+<td>A aba de <strong>pregões</strong> registra o código, a data, o vencimento, o produto, a quantidade, o valor e a situação (aberto, realizado, cancelado, prorrogado) (<code>Cli/Controllers/RelacionamentoController.cs:377-449</code>; <code>Hsolutions.Comercial.DB/dml.sql:27-36</code>). O pregão <strong>não se liga</strong> à cotação nem à requisição. <em>Correção do reconhecimento: o pregão tem tela, como aba do Relacionamento.</em></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-023</td>
+<td>4. Tabelas de apoio</td>
+<td><strong>Tipo de fornecimento:</strong> descrição e um ou mais <strong>vínculos</strong> (convênio, cotação, contabilidade, guia de simples remessa) (<code>Tab/Controllers/TipoFornecimentoController.cs:40-60</code>). Os vínculos são usados de dois jeitos:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-024</td>
+<td>4. Tabelas de apoio</td>
+<td>O tipo de fornecimento <strong>pode ser alterado</strong> depois de usado. A mudança vale para as requisições em aberto: a decisão de gerar a remessa é tomada <strong>na hora da fatura</strong>, pelo vínculo atual. Não se exclui tipo que já tem convênio (<code>Tab/Controllers/TipoFornecimentoController.cs:100-115</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-025</td>
+<td>4. Tabelas de apoio</td>
+<td><strong>Preço:</strong> um valor por <strong>produto</strong> e <strong>tipo de cliente</strong>. É o preço sugerido na cotação e na requisição (<code>HSolutions.Comercial.UI/Areas/NotaFiscal/Controllers/PrecoController.cs</code>). <strong>Sem vigência:</strong> alterar o preço muda a sugestão na hora, sem guardar o anterior.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-026</td>
+<td>4. Tabelas de apoio</td>
+<td><strong>Tipo de cliente</strong> e <strong>tipo de cobrança:</strong> descrição; não se exclui o que está em uso (<code>Tab/Controllers/TipoClienteController.cs:96-107</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-027</td>
+<td>4. Tabelas de apoio</td>
+<td><strong>Assinaturas</strong> (fora do menu): os nomes e cargos impressos nos relatórios. O registro de histórico dessa tela está <strong>comentado</strong> (<code>Tab/Controllers/AssinaturasController.cs:80</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-028</td>
+<td>5. Regra geral: histórico</td>
+<td>O código-base do Comercial tem um <strong>serviço de histórico</strong> de alterações (<code>HSolutions.Comercial.UI/Controllers/ComercialControllerBase.cs:37-38, 154-162</code>), mas <strong>nenhuma tela o chama</strong>: a única chamada está comentada (RN020). As gravações usam uma biblioteca compilada, sem código-fonte. <em>A confirmar no teste:</em> se ela grava algum histórico por conta própria.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-cotacao-requisicao-de-pa-e-reserva-no-estoque">3. Cotação, requisição de PA e reserva no Estoque</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/cotacao-requisicao-reserva.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-COM-029</td>
+<td>1. Cotação</td>
+<td>A cotação exige <strong>tipo de fornecimento</strong>, <strong>cliente</strong> e <strong>observações</strong> (<code>Cot/Validation/RespostaCotacaoValidation.cs:18-37</code>). Grava quem criou e quando, pelo servidor (<code>Cot/Controllers/RespostaCotacaoController.cs:128-145</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-030</td>
+<td>1. Cotação</td>
+<td>A cotação nasce <strong>na lixeira</strong> e só sai dela quando recebe o primeiro item. Nesse momento ganha o código <code>NNNN/AAAA</code>, sequencial por ano (<code>Cot/Controllers/RespostaCotacaoController.cs:250-271</code>; <code>HSolutions.Comercial.Infrastructure/Cotacao/RespostaCotacaoRepository.cs:182-185</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-031</td>
+<td>1. Cotação</td>
+<td>Cada item exige <strong>produto</strong>, <strong>quantidade</strong> e <strong>valor</strong>, sem produto repetido (<code>Cot/Validation/RespostaCotacaoValidation.cs:50-76</code>). A previsão de envio, se informada, não pode ser passada.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-032</td>
+<td>1. Cotação</td>
+<td>A tela mostra o <strong>preço sugerido</strong> (tabela de preço por produto e tipo de cliente) e a <strong>disponibilidade</strong> do produto no Estoque. A conferência de que a quantidade cotada cabe na disponível está <strong>comentada</strong> (<code>Cot/Controllers/RespostaCotacaoController.cs:365-404</code>). A cotação pode prometer mais do que existe.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-033</td>
+<td>1. Cotação</td>
+<td>A cotação <strong>não escolhe lote</strong>. Ela é impressa para o cliente (<code>Cot/Controllers/RespostaCotacaoController.cs:84</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-034</td>
+<td>2. Abrir a requisição de PA</td>
+<td>A requisição exige <strong>tipo de fornecimento</strong> e <strong>cliente</strong>. Nasce <strong>em aberto</strong>, com quem criou e a data do servidor (<code>Cot/Controllers/RequisicaoController.cs:276-288</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-035</td>
+<td>2. Abrir a requisição de PA</td>
+<td>O <strong>tipo de fornecimento</strong> decide de onde vêm os produtos (<code>Cot/Controllers/RequisicaoController.cs:605-666</code>; vínculos em <code>Hsolutions.Comercial.DB/dml.sql</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-036</td>
+<td>2. Abrir a requisição de PA</td>
+<td>Com <strong>cotação</strong>, os produtos, as quantidades e os valores da cotação entram na requisição. Com <strong>convênio</strong>, entram os produtos e valores do convênio, com <strong>quantidade zero</strong> (<code>Cot/Controllers/RequisicaoController.cs:302-333</code>; o mesmo ao trocar a cotação ou o convênio, linhas 689-765).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-037</td>
+<td>2. Abrir a requisição de PA</td>
+<td>Os itens que vêm da cotação ou do convênio entram <strong>sem lote</strong> (mesmas linhas).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-038</td>
+<td>3. Itens e lote</td>
+<td>A lista de lotes vem do Estoque. Só aparecem lotes com <strong>saldo disponível</strong>: fora da quarentena, não bloqueados, não em reanálise, de item que permite venda e do almoxarifado comercial. O saldo já reservado em outras requisições é descontado (<code>Est/LaboSys_DAL/dalItemLote.cs:473-550</code>). O lote vencido também sai do saldo disponível (Estoque, fluxo de reprovado e reanálise, RN003).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-039</td>
+<td>3. Itens e lote</td>
+<td><strong>Não há validade mínima</strong> para vender. O serviço do Estoque aceita um número mínimo de dias, mas o Comercial envia sempre zero: o valor está fixado no código (<code>Cot/Controllers/RequisicaoController.cs:36, 830-841</code>). Um lote que vence no dia seguinte pode ser vendido.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-040</td>
+<td>3. Itens e lote</td>
+<td>Cada item exige <strong>produto</strong>, <strong>quantidade</strong> maior que zero e <strong>lote</strong>, sem produto repetido. A quantidade não pode passar da disponível (<code>Cot/Validation/RequisicaoValidation.cs:59-99</code>). A quantidade disponível usada nessa conferência é a que a tela envia.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-041</td>
+<td>3. Itens e lote</td>
+<td>O item guarda o <strong>lote</strong> (número interno, lote do fabricante, validade e código no Estoque) (<code>Cot/Controllers/RequisicaoController.cs:411-426</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-042</td>
+<td>3. Itens e lote</td>
+<td>Os itens ficam <strong>na sessão do usuário</strong> enquanto a requisição é editada (<code>Cot/Controllers/RequisicaoController.cs:54-66</code>). Só vão para o banco ao salvar.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-043</td>
+<td>3. Itens e lote</td>
+<td>Excluir um item o marca como excluído e pede nova reserva (<code>Cot/Controllers/RequisicaoController.cs:538-549</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-044</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td><strong>Antes de salvar</strong>, a tela confere (<code>Cot/Controllers/RequisicaoController.cs:888-922</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-045</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>As conferências da <strong>quantidade da cotação</strong> e do <strong>limite do convênio</strong> <strong>nunca rodam</strong> (<code>Cot/Controllers/RequisicaoController.cs:897-909, 939-997</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-046</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td><strong>A cada gravação com itens alterados</strong>, o sistema <strong>cancela a reserva anterior e cria uma nova</strong> no Estoque, com os lotes e quantidades dos itens (<code>Cot/Controllers/RequisicaoController.cs:340-398</code>). O resultado do cancelamento não é conferido. A <strong>confirmação</strong> da reserva está comentada (linhas 396-397).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-047</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>No Estoque, a reserva confere o <strong>saldo disponível de cada lote</strong>. Se faltar saldo, ou em qualquer erro, o Estoque <strong>devolve -1</strong> em vez de recusar (<code>Est/LaboSys.Estoque.Services/EstoqueServices.cs:1039-1120</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-048</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>O Comercial <strong>guarda esse -1</strong> como número da reserva (<code>Cot/Controllers/RequisicaoController.cs:397</code>). O usuário não é avisado de que a reserva falhou.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-049</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>A reserva é feita no Estoque como uma <strong>solicitação do tipo comercial</strong>, já com as quantidades por lote. O saldo reservado sai da lista de lotes das outras requisições (RN010).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-050</td>
+<td>5. Cancelar a requisição</td>
+<td>Só a requisição <strong>em aberto</strong> pode ser cancelada: "Não é permitido cancelar uma requisição com situação diferente de aberto." (<code>HSolutions.Comercial.Domain/Cotacao/CancelarRequisicaoService.cs:16-21</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-051</td>
+<td>5. Cancelar a requisição</td>
+<td>O cancelamento <strong>cancela a reserva</strong> no Estoque. Se o Estoque falhar, a requisição não é cancelada: "Ocorreu um erro ao cancelar a solicitação no Estoque" (<code>Cot/Controllers/RequisicaoController.cs:846-866</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-052</td>
+<td>5. Cancelar a requisição</td>
+<td>O cancelamento grava quem e quando, pelo servidor. <strong>Não pede justificativa.</strong></td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-fatura-remessa-e-cancelamento">4. Fatura, remessa e cancelamento</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/fatura-remessa-cancelamento.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-COM-053</td>
+<td>1. Gerar a fatura</td>
+<td>A lista de requisições da tela só traz as requisições <strong>em aberto</strong> com reserva válida no Estoque e <strong>já separadas</strong> (<code>NF/Controllers/FaturaController.cs:46-70</code>; <code>Repo:93-96</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-054</td>
+<td>1. Gerar a fatura</td>
+<td>A tela exige <strong>requisição</strong>, <strong>endereço de entrega</strong> e <strong>tipo de cobrança</strong> (<code>NF/Controllers/FaturaController.cs:262-287</code>). Só os endereços do tipo entrega do cliente são oferecidos (linhas 133-160).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-055</td>
+<td>1. Gerar a fatura</td>
+<td>A conferência "requisição atendida pelo Estoque" da tela está <strong>fixada como verdadeira</strong> no código, com o comentário "TODO" (<code>NF/Controllers/FaturaController.cs:271</code>). A conferência real fica na gravação (RN004).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-056</td>
+<td>1. Gerar a fatura</td>
+<td>Na gravação (<code>NF/Controllers/FaturaController.cs:195-260</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-057</td>
+<td>1. Gerar a fatura</td>
+<td><strong>A situação do lote não é conferida de novo.</strong> Entre a requisição e a fatura, o lote pode ter sido bloqueado, posto em reanálise ou recolhido. A fatura só confere a separação.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-058</td>
+<td>2. Remessa no Estoque</td>
+<td>A remessa só é pedida quando o tipo de fornecimento tem o vínculo <strong>guia de simples remessa</strong> (<code>NF/Controllers/FaturaController.cs:226-232</code>). Nos outros tipos, a fatura não gera saída no Estoque. <em>A validar com a área:</em> como o material sai nesses casos.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-059</td>
+<td>2. Remessa no Estoque</td>
+<td>A fatura é gravada <strong>antes</strong> de pedir a remessa. Se a remessa falhar, a fatura fica sem remessa e o usuário <strong>não é avisado</strong>: o erro é ignorado (<code>NF/Controllers/FaturaController.cs:232-248</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-060</td>
+<td>2. Remessa no Estoque</td>
+<td>No Estoque, a remessa é criada <strong>já finalizada</strong>, do tipo GMM, ligada à fatura e à solicitação, com o endereço de entrega, o peso, o volume e as assinaturas configuradas (<code>Est/LaboSys_BLL/bllRemessa.cs:438-535</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-061</td>
+<td>2. Remessa no Estoque</td>
+<td>Os lotes da remessa vêm dos <strong>itens da requisição</strong>, inclusive os marcados como excluídos (<code>HSolutions.Comercial.Services/Estoque/EstoqueServiceApi.cs:970-982</code>, sem filtro de exclusão). O valor total da fatura, ao contrário, desconta os excluídos (<code>HSolutions.Comercial.Infrastructure/Cotacao/RequisicaoRepository.cs:258-262</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-062</td>
+<td>2. Remessa no Estoque</td>
+<td>A remessa <strong>não confere</strong> a situação do lote no Estoque (RN005).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-063</td>
+<td>3. Finalizar e cancelar</td>
+<td><strong>Finalizar</strong> só marca a fatura como finalizada. O botão aparece para a fatura ativa e ainda não finalizada (<code>NF/Models/GridFaturaModel.cs:93-99</code>; <code>Repo:426-431</code>). Não grava quem finalizou nem quando.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-064</td>
+<td>3. Finalizar e cancelar</td>
+<td><strong>Cancelar</strong> pede uma justificativa e <strong>exclui logicamente</strong> a fatura. A justificativa é gravada <strong>no lugar da observação</strong> da fatura, que se perde (<code>Repo:77-82</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-065</td>
+<td>3. Finalizar e cancelar</td>
+<td>O cancelamento <strong>não desfaz nada</strong>:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-066</td>
+<td>3. Finalizar e cancelar</td>
+<td>A lista de cancelamento traz as faturas ativas, <strong>inclusive as finalizadas</strong> (<code>Repo:212-225</code>). <em>A confirmar no teste:</em> se uma fatura finalizada, ou já cancelada, pode ser cancelada.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-067</td>
+<td>3. Finalizar e cancelar</td>
+<td>Na tela de visualização, a data da fatura aparece com o <strong>mês no lugar dos minutos</strong>, em relógio de 12 horas (<code>NF/Controllers/FaturaController.cs:102</code>, formato <code>hh:MM</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-068</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>A fatura impressa e os relatórios de faturamento por produto, por cliente e por fatura saem da tela <strong>Fatura</strong> (<code>NF/Controllers/FaturaController.cs:436-530</code>). O modelo do item do relatório tem o <strong>lote</strong> (<code>HSolutions.Comercial.Reports/Faturamento/FaturamentoItemReportModel.cs:21</code>). <em>A confirmar no teste:</em> se o lote aparece impresso.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-069</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>O <strong>RV07 Produtos Faturados</strong> filtra por período, tipo de fornecimento, cliente, produto e <strong>lote do fabricante</strong>. A versão detalhada lista fatura, data, cliente, lote, quantidade e valor (<code>HSolutions.Comercial.UI/Areas/Relatorio/Controllers/ProdutosFaturadosController.cs</code>; <code>Repo:340-373</code>). É a consulta que um recolhimento precisa.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-070</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>O RV07 e o RV05 Clientes estão <strong>fora do menu</strong>: o grupo Relatórios está comentado no roteiro (<code>Hsolutions.Comercial.DB/dml.sql:112-116</code>). Abrem só pelo endereço (a confirmar no teste).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-071</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>O RV07 <strong>ignora as faturas canceladas</strong> (<code>Repo:248</code>). Como o cancelamento não desfaz a remessa (RN013), <strong>um lote que saiu da empresa numa fatura cancelada some do relatório</strong>.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-072</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>O RV07 percorre todos os itens da requisição, sem descontar os excluídos (<code>Repo:340-373</code>), como a remessa (RN009). Não traz o <strong>endereço de entrega</strong> nem o número da remessa.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-COM-073</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>O RV07 <strong>exige período</strong>. Não há consulta direta "todas as vendas do lote X", em qualquer data.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-pontos-de-atencao-dos-fluxos">5. Pontos de atenção dos fluxos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Ponto de atenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>1. Sem dados para saber se o cliente pode receber medicamentos</td>
+</tr>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>2. Qualquer pessoa jurídica pode virar cliente num tipo de fornecimento</td>
+</tr>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>3. O endereço da venda não fica guardado na fatura</td>
+</tr>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>4. Sem histórico das alterações</td>
+</tr>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>5. Convênio sem vigência e sem limite conferido</td>
+</tr>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>6. Tipo de fornecimento com efeito ambíguo</td>
+</tr>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>7. Preço sem vigência</td>
+</tr>
+<tr>
+<td>Cliente e cadastros de venda</td>
+<td>8. Pregão isolado</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>1. O lote vendido é o "disponível" do Estoque, não o certificado pela Pessoa Delegada</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>2. A reserva que falha vira um número negativo, sem aviso</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>3. A requisição pode ser salva com itens sem lote</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>4. Sem validade mínima para vender</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>5. Conferências que não funcionam:</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>6. A conferência de saldo ao salvar é pelo produto, não pelo lote escolhido</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>7. Reserva desfeita e refeita a cada gravação</td>
+</tr>
+<tr>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>8. Cancelamento sem justificativa</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>1. Lote com problema depois da requisição é faturado e remetido</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>2. O relatório de recolhimento esconde vendas</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>3. O relatório de recolhimento está fora do menu</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>4. Falha na remessa sem aviso</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>5. Cancelamento que não desfaz</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>6. Itens excluídos na remessa e no relatório</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>7. Remessa só para um tipo de fornecimento</td>
+</tr>
+<tr>
+<td>Fatura, remessa e cancelamento</td>
+<td>8. Finalizar sem registro de quem e quando</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-correspondencia-com-os-fluxos">6. Correspondência com os fluxos</h3>
+<p>Cada regra tem o número local (RN001…) que aparece no documento do fluxo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Fluxo</th>
+<th>Etapa</th>
+<th>No fluxo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-COM-008</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-COM-009</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-COM-010</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-COM-011</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-COM-012</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-COM-013</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-COM-014</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-COM-015</td>
+<td>Cliente e cadastros de venda</td>
+<td>1. Cliente: tipo, endereços e contatos</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-COM-016</td>
+<td>Cliente e cadastros de venda</td>
+<td>2. Convênio</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-COM-017</td>
+<td>Cliente e cadastros de venda</td>
+<td>2. Convênio</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-COM-018</td>
+<td>Cliente e cadastros de venda</td>
+<td>2. Convênio</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-COM-019</td>
+<td>Cliente e cadastros de venda</td>
+<td>2. Convênio</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-COM-020</td>
+<td>Cliente e cadastros de venda</td>
+<td>2. Convênio</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-COM-021</td>
+<td>Cliente e cadastros de venda</td>
+<td>3. Relacionamento e pregões</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-COM-022</td>
+<td>Cliente e cadastros de venda</td>
+<td>3. Relacionamento e pregões</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-COM-023</td>
+<td>Cliente e cadastros de venda</td>
+<td>4. Tabelas de apoio</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-COM-024</td>
+<td>Cliente e cadastros de venda</td>
+<td>4. Tabelas de apoio</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-COM-025</td>
+<td>Cliente e cadastros de venda</td>
+<td>4. Tabelas de apoio</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-COM-026</td>
+<td>Cliente e cadastros de venda</td>
+<td>4. Tabelas de apoio</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-COM-027</td>
+<td>Cliente e cadastros de venda</td>
+<td>4. Tabelas de apoio</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-COM-028</td>
+<td>Cliente e cadastros de venda</td>
+<td>5. Regra geral: histórico</td>
+<td>RN021</td>
+</tr>
+<tr>
+<td>RN-COM-029</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>1. Cotação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-COM-030</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>1. Cotação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-COM-031</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>1. Cotação</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-COM-032</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>1. Cotação</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-COM-033</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>1. Cotação</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-COM-034</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>2. Abrir a requisição de PA</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-COM-035</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>2. Abrir a requisição de PA</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-COM-036</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>2. Abrir a requisição de PA</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-COM-037</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>2. Abrir a requisição de PA</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-COM-038</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>3. Itens e lote</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-COM-039</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>3. Itens e lote</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-COM-040</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>3. Itens e lote</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-COM-041</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>3. Itens e lote</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-COM-042</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>3. Itens e lote</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-COM-043</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>3. Itens e lote</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-COM-044</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-COM-045</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-COM-046</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-COM-047</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-COM-048</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-COM-049</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>4. Salvar e reservar no Estoque</td>
+<td>RN021</td>
+</tr>
+<tr>
+<td>RN-COM-050</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>5. Cancelar a requisição</td>
+<td>RN022</td>
+</tr>
+<tr>
+<td>RN-COM-051</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>5. Cancelar a requisição</td>
+<td>RN023</td>
+</tr>
+<tr>
+<td>RN-COM-052</td>
+<td>Cotação, requisição de PA e reserva no Estoque</td>
+<td>5. Cancelar a requisição</td>
+<td>RN024</td>
+</tr>
+<tr>
+<td>RN-COM-053</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>1. Gerar a fatura</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-COM-054</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>1. Gerar a fatura</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-COM-055</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>1. Gerar a fatura</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-COM-056</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>1. Gerar a fatura</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-COM-057</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>1. Gerar a fatura</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-COM-058</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>2. Remessa no Estoque</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-COM-059</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>2. Remessa no Estoque</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-COM-060</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>2. Remessa no Estoque</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-COM-061</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>2. Remessa no Estoque</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-COM-062</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>2. Remessa no Estoque</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-COM-063</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>3. Finalizar e cancelar</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-COM-064</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>3. Finalizar e cancelar</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-COM-065</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>3. Finalizar e cancelar</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-COM-066</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>3. Finalizar e cancelar</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-COM-067</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>3. Finalizar e cancelar</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-COM-068</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-COM-069</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-COM-070</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-COM-071</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-COM-072</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-COM-073</td>
+<td>Fatura, remessa e cancelamento</td>
+<td>4. Para quem foi o lote: relatórios</td>
+<td>RN021</td>
+</tr>
+</tbody>
+</table></div>
+<!-- total: 66 regras -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-regras-gerais-do-modulo">1. Regras gerais do módulo</a></li><li><a href="#2-cliente-e-cadastros-de-venda">2. Cliente e cadastros de venda</a></li><li><a href="#3-cotacao-requisicao-de-pa-e-reserva-no-estoque">3. Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="#4-fatura-remessa-e-cancelamento">4. Fatura, remessa e cancelamento</a></li><li><a href="#5-pontos-de-atencao-dos-fluxos">5. Pontos de atenção dos fluxos</a></li><li><a href="#6-correspondencia-com-os-fluxos">6. Correspondência com os fluxos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
