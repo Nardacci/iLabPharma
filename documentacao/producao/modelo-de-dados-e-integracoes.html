@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="a-producao-ideal.html">A Produção ideal</a></li><li><a href="qualidade-entre-os-modulos-situacao-do-lote-e-travas.html">Qualidade entre os módulos: situação do lote e travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html">Registro de lote</a></li><li><a href="produto-formula-e-ordem-de-producao.html">Produto, fórmula e ordem de produção</a></li><li><a href="preparacao-limpeza-calibracao-qualificacao-manutencao-agua-e-ambiente.html">Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente</a></li><li><a href="terceirizacao-e-validade-da-ope.html">Terceirização e validade da OPE</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Para quem:</strong> desenvolvedores e DBA.</p>
+<p><strong>Base:</strong>
+- os roteiros do projeto de banco (<code>2.producao/app/Hsolutions.Producao.DB/Tables</code>, 137 arquivos; <code>Synonyms</code>, 47);
+- as classes de tabela do código (<code>LaboSys.Core.Repository/ORM</code>, 177 classes);
+- o <strong>relatório de modelagem do banco</strong> enviado pelo responsável (<code>Dicionário-LABMEDSYS.pdf</code>, Enterprise Architect, 741 páginas, 01/05/2026, situação "Proposed");
+- os fluxos do módulo.</p>
+<p>Comparação feita por script: tabelas e colunas do código × roteiros × dicionário.</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas nos roteiros do projeto de banco</td>
+<td>137</td>
+</tr>
+<tr>
+<td>Sinônimos para tabelas do Principal</td>
+<td>47</td>
+</tr>
+<tr>
+<td>Classes de tabela no código</td>
+<td>177 (inclui as dos sinônimos)</td>
+</tr>
+<tr>
+<td>Chaves estrangeiras declaradas nos roteiros</td>
+<td>148, em 87 tabelas</td>
+</tr>
+<tr>
+<td>Tabelas com <strong>outro nome</strong> no código e no dicionário (sufixo <code>_PRODUCAO</code>)</td>
+<td><strong>6</strong></td>
+</tr>
+<tr>
+<td>Tabelas do código fora dos roteiros e dos sinônimos</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Tabelas e colunas no dicionário de dados (todo o sistema)</td>
+<td>735 tabelas, 773 chaves estrangeiras</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrão das tabelas:</strong>
+- chave numérica;
+- <code>ATIVO</code> e <code>LIXEIRA</code> para exclusão lógica;
+- quem criou, alterou e excluiu, com as datas.</p>
+<h3 id="2-producao-e-registro-de-lote">2. Produção e registro de lote</h3>
+<p><code>mermaid
+erDiagram
+  TBL_PRODUTO ||--o{ TBL_LOTES_PADRAO : "tem"
+  TBL_PRODUTO ||--o{ PRD_PRODUTO_FICHA_TECNICA : "tem"
+  PRD_PRODUTO_FICHA_TECNICA ||--o{ PRD_FICHA_TECNICA : "ordens"
+  PRD_FICHA_TECNICA ||--o{ TBL_ETAPA : "etapas do XML"
+  TBL_ETAPA ||--o{ TBL_SUBETAPA : "subetapas"
+  TBL_PRODUCAO_PRODUCAO }o--|| TBL_LOTES_PADRAO : "usa"
+  TBL_PRODUCAO_PRODUCAO ||--o{ TBL_AUTORIZACAO_PRODUCAO_GARANTIA_QUALIDADE : "OPE"
+  TBL_AUTORIZACAO_PRODUCAO_GARANTIA_QUALIDADE }o--|| PRD_FICHA_TECNICA : "segue"
+  TBL_AUTORIZACAO_PRODUCAO_GARANTIA_QUALIDADE ||--o{ PRD_RESPOSTA_XML : "respostas"
+  PRD_RESPOSTA_XML }o--|| TBL_SUBETAPA : "campo de"
+  PRD_RESPOSTA_XML ||--o{ TBL_LOG_ALTERACAO_XML : "histórico"
+  TBL_PRODUCAO_PRODUCAO ||--o| TBL_FINAL_PRODUCAO : "final"
+  TBL_PRODUCAO_PRODUCAO ||--o{ TBL_RECONCILIACAO_PRODUCAO : "reconciliação"
+  TBL_PRODUCAO_PRODUCAO ||--o{ TBL_LIBERACAO_PRODUCAO : "liberação"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_PRODUCAO_PRODUCAO</code> <em>(roteiros: <code>TBL_PRODUCAO</code>)</em></td>
+<td>A produção: produto, lote padrão, previsão, solicitação, liberação, número de lote e de OPE, validade, cancelamento, reprocesso, ligação com o Estoque</td>
+<td>A situação é <strong>calculada</strong> (fluxo 1, RN037), não guardada</td>
+</tr>
+<tr>
+<td>Sete tabelas <code>TBL_AUTORIZACAO_*</code> e <code>TBL_DETALHE_AUTORIZACAO_*</code></td>
+<td>As autorizações das áreas e o detalhe por item (limpeza, calibração etc. com justificativa)</td>
+<td>A da GQ é a raiz do registro de lote</td>
+</tr>
+<tr>
+<td><code>PRD_RESPOSTA_XML</code></td>
+<td>Cada campo preenchido do registro de lote</td>
+<td>Quem criou e quem alterou por último</td>
+</tr>
+<tr>
+<td><code>TBL_LOG_ALTERACAO_XML</code></td>
+<td>Histórico do registro de lote</td>
+<td>Sem motivo; valores de até 255 caracteres</td>
+</tr>
+<tr>
+<td><code>TBL_PRODUCAO_ETAPAS</code>, <code>TBL_SUBETAPA_PRODUCAO</code></td>
+<td>Andamento das etapas; subetapas impeditivas e liberadas</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TBL_FINAL_PRODUCAO</code>, <code>TBL_RECONCILIACAO_PRODUCAO</code>, <code>TBL_LIBERACAO_PRODUCAO</code> (+ anexos)</td>
+<td>Final, reconciliação e liberação</td>
+<td>Com reabertura</td>
+</tr>
+<tr>
+<td><code>TBL_TERCEIRIZACAO_PRODUCAO*</code>, <code>TBL_SOLICITACAO_ALTERACAO_VALIDADE</code></td>
+<td>Terceirização e nova validade</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-produto-formula-e-ordem-de-producao">3. Produto, fórmula e ordem de produção</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_PRODUTO</code></td>
+<td>Produto, registro na ANVISA (número, data, validade), prazo de validade, classe, forma, via, embalagens, IUM</td>
+<td><code>ID_PRODUTO_ORIGEM</code> existe, mas a tela não preenche</td>
+</tr>
+<tr>
+<td><code>TBL_FORMULA_PRODUTO</code>, <code>TBL_ITENS_FORMULA</code></td>
+<td>Fórmula padrão e itens</td>
+<td><strong>Sem versão</strong></td>
+</tr>
+<tr>
+<td><code>TBL_LOTES_PADRAO</code> e as tabelas <code>*_LOTES_PADRAO</code></td>
+<td>Lote padrão: itens, ambientes, equipamentos, instrumentos, utensílios, utilidades, pontos de água; aprovação</td>
+<td>Aprovação com usuário e data</td>
+</tr>
+<tr>
+<td><code>PRD_FICHA_TECNICA</code></td>
+<td>Ordem de produção: versão, revisão, elaborado e aprovado por, datas, <strong>arquivo XML</strong> (<code>ARQUIVO</code>)</td>
+<td>Aprovadores e datas digitados</td>
+</tr>
+<tr>
+<td><code>TBL_INSUMO_PRINCIPAL</code>, <code>TBL_INSUMO_PRODUCAO</code>, <code>TBL_INSUMO_DIVERSOS</code> (+ correlações, especificações, anexos)</td>
+<td>Insumos e controles</td>
+<td>Ligados ao item do Estoque (<code>ID_ITEM_ESTOQUE</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-preparacao">4. Preparação</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_PROGRAMACAO_*</code> (8)</td>
+<td>Programação de limpeza, calibração, qualificação, manutenção, lubrificação, análises e calendário</td>
+<td>Uma data por registro, sem periodicidade</td>
+</tr>
+<tr>
+<td><code>TBL_REGISTRO_*</code> (9) e <code>TBL_EXECUTOR_*</code></td>
+<td>Registros e executores</td>
+<td>Validade digitada; revisão por outra pessoa</td>
+</tr>
+<tr>
+<td><code>TBL_REGISTRO_ANALISE_AMBIENTE</code>, <code>TBL_REGISTRO_ANALISE_PONTO_AGUA</code></td>
+<td>Análises</td>
+<td>Resultado é uma lista livre (<code>TBL_TIPO_RESULTADO_ANALISE</code>), sem valores</td>
+</tr>
+<tr>
+<td><code>TBL_INSUMO_PESAGEM_MEDICAO</code></td>
+<td>Pesagem da tela Pesagem/Medição</td>
+<td>Quantidades como texto; isolada do registro</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-integracoes">5. Integrações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Origem</th>
+<th>Como chega</th>
+<th>Onde fica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuários, perfis, funções, ambientes, equipamentos, instrumentos, pontos de água, utilidades, pessoa jurídica</td>
+<td>Principal</td>
+<td><strong>Sinônimos</strong> (47 tabelas)</td>
+<td>Lido direto das tabelas do Principal</td>
+</tr>
+<tr>
+<td>Saldo e reserva dos insumos; pesagem</td>
+<td>Estoque</td>
+<td>API, serviço (WCF) e <strong>conexão direta</strong> ao banco do Estoque</td>
+<td>Código da requisição na autorização do Estoque; pesagem no registro de lote</td>
+</tr>
+<tr>
+<td>Produto acabado</td>
+<td>Produção → Estoque</td>
+<td>API, na finalização</td>
+<td><code>ID_INTEGRACAO_ESTOQUE</code> na produção</td>
+</tr>
+<tr>
+<td>Análises de granel e semielaborado</td>
+<td>Produção → CQ</td>
+<td>API</td>
+<td>Código da análise na subetapa</td>
+</tr>
+<tr>
+<td>Situação da OPE, produções, terceirização</td>
+<td>Produção → outros (OPE, Comercial: a confirmar)</td>
+<td>API própria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade, Controle de Documentos</td>
+<td>—</td>
+<td><strong>Nenhuma</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Detalhe em <code>00-reconhecimento.md</code>, seção 5, e em <code>transversal/04-mapa-de-integracoes.md</code>.</p>
+<h3 id="6-desencontros-entre-o-codigo-os-roteiros-e-o-dicionario">6. Desencontros entre o código, os roteiros e o dicionário</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Desencontro</th>
+<th>Detalhe</th>
+<th>Leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>6 tabelas com outro nome</strong></td>
+<td>O código e o dicionário usam <code>TBL_PRODUCAO_PRODUCAO</code>, <code>TBL_LOG_ALTERACAO_PRODUCAO</code>, <code>TBL_ANEXO_PRODUCAO</code>, <code>TBL_ESPECIFICACAO_PRODUCAO</code>, <code>TBL_OBJETOS_TELA_PRODUCAO</code> e <code>SIS_CONFIGURACAO_PRODUCAO</code>. Os roteiros criam os nomes <strong>sem o sufixo</strong>, que no modelo único do dicionário colidiriam com tabelas de outros módulos</td>
+<td>O dicionário de dados confirma o <strong>código</strong>: os roteiros de banco da Produção estão desatualizados. Mesmo padrão do Controle de Documentos (<code>_CONTROLE_DOC</code>)</td>
+</tr>
+<tr>
+<td><strong>4 tabelas do código fora dos roteiros</strong></td>
+<td><code>TBL_1_SUBETAPA</code>, <code>TBL_EQUIPAMENTO_PRINCIPAL</code>, <code>TBL_UTENSILIO</code>, <code>SIS_USUARIO_OCUPACAO_OLD</code></td>
+<td><code>TBL_UTENSILIO</code> e <code>TBL_EQUIPAMENTO_PRINCIPAL</code> estão no dicionário; <code>TBL_1_SUBETAPA</code> e a <code>_OLD</code> parecem restos</td>
+</tr>
+<tr>
+<td><strong>Roteiros que apagam dados</strong></td>
+<td><code>ScriptBD/ZERAR_BD/LIMPA_BD.sql</code> apaga 107 tabelas, inclusive o histórico</td>
+<td>Ver o reconhecimento, ponto 5</td>
+</tr>
+<tr>
+<td><strong>Chaves estrangeiras</strong></td>
+<td>148 nos roteiros; o dicionário traz as do banco (por exemplo, a produção ligada a produto, lote padrão, etapa de reprocesso e final)</td>
+<td>Base boa de relacionamentos</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>O dicionário de dados responde a perguntas que antes dependiam do DBA:</strong>
+- o banco usa os nomes do código;
+- o dicionário descreve um <strong>modelo único</strong>, com as 735 tabelas de todos os módulos. Os sufixos evitam colisões de nome. No código, cada módulo ainda se liga ao seu próprio banco (cadeias de conexão separadas no arquivo de configuração).</p>
+<p><em>A confirmar com o DBA:</em> se o dicionário (situação "Proposed") é igual ao banco do ambiente de teste.</p>
+<h3 id="7-resumo-das-anomalias-de-estrutura-para-a-nova-versao">7. Resumo das anomalias de estrutura (para a nova versão)</h3>
+<ol>
+<li>Projeto de banco da Produção <strong>desatualizado</strong> em relação ao código e ao dicionário: 6 nomes diferentes, 4 tabelas faltando.</li>
+<li><strong>Fórmula e ordem de produção sem versão</strong>; o modelo XML guardado como arquivo dentro da ordem e substituível.</li>
+<li><strong>Situação da produção calculada</strong> a partir de vários campos, em vez de guardada com histórico das mudanças.</li>
+<li><strong>Resultados sem valor numérico</strong> (análises, rendimentos e quantidades como texto em parte das tabelas).</li>
+<li><strong>Cadastros repetidos</strong> com outros módulos: insumo × item do Estoque; registro do produto × GQ; água e ambiente × CQ; pesagem × Estoque.</li>
+<li>Leitura direta do banco do Estoque e do Principal (sinônimos), em vez de serviços.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-producao-e-registro-de-lote">2. Produção e registro de lote</a></li><li><a href="#3-produto-formula-e-ordem-de-producao">3. Produto, fórmula e ordem de produção</a></li><li><a href="#4-preparacao">4. Preparação</a></li><li><a href="#5-integracoes">5. Integrações</a></li><li><a href="#6-desencontros-entre-o-codigo-os-roteiros-e-o-dicionario">6. Desencontros entre o código, os roteiros e o dicionário</a></li><li><a href="#7-resumo-das-anomalias-de-estrutura-para-a-nova-versao">7. Resumo das anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

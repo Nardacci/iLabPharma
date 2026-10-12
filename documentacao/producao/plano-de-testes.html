@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="a-producao-ideal.html">A Produção ideal</a></li><li><a href="qualidade-entre-os-modulos-situacao-do-lote-e-travas.html">Qualidade entre os módulos: situação do lote e travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html">Registro de lote</a></li><li><a href="produto-formula-e-ordem-de-producao.html">Produto, fórmula e ordem de produção</a></li><li><a href="preparacao-limpeza-calibracao-qualificacao-manutencao-agua-e-ambiente.html">Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente</a></li><li><a href="terceirizacao-e-validade-da-ope.html">Terceirização e validade da OPE</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Versão a testar:</strong> legado entregue pelo fornecedor · <strong>Executor previsto:</strong> Claude Code no computador da pessoa, pela VPN, com a habilidade <code>executar-testes</code> (passo a passo em <code>homologacao/COMO-EXECUTAR-TESTES.md</code>).</p>
+<p>Os casos das seções 6.1 a 6.5 foram <strong>montados por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/montar_plano_testes.py</code>). Se um fluxo mudar, gere essas seções de novo e mantenha a seção 6.0, escrita à mão.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<p>Confirmar nas telas o que a leitura do código encontrou na Produção:
+- as regras de negócio (<code>01-regras-de-negocio.md</code>);
+- os pontos de atenção dos cinco fluxos;
+- a matriz de permissões (<code>02-matriz-de-permissoes.md</code>);
+- os riscos de prioridade alta (<code>07-analise-de-risco.md</code>);
+- a situação das 89 telas (<code>11-inventario-de-telas.md</code>).</p>
+<h3 id="2-escopo">2. Escopo</h3>
+<ul>
+<li>Os cinco fluxos:</li>
+<li>autorização, início e final;</li>
+<li>registro de lote;</li>
+<li>produto, fórmula e ordem de produção;</li>
+<li>preparação;</li>
+<li>terceirização e validade da OPE.</li>
+<li>O acesso (seção 6.0).</li>
+<li>O Estoque e o CQ só entram onde um caso pede para conferir o efeito lá: reserva, produto acabado, análise em processo.</li>
+</ul>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<h4 id="3-1-antes-de-qualquer-caso-o-modulo-abre">3.1 Antes de qualquer caso: o módulo abre?</h4>
+<p>O acesso vem do Principal: o <strong>menu</strong> e a <strong>função</strong> de cada tela vêm do perfil.
+1. No Principal, criar o perfil <strong><code>TESTEPRO</code></strong> com <strong>todas as telas da aba Produção</strong>, todas as ações e as permissões especiais:
+   - aprovar lote padrão;
+   - autorizar o início;
+   - cancelar a solicitação;
+   - Liberar Controle Qualidade.
+2. Dar o <code>TESTEPRO</code> como perfil adicional a <code>t.admin</code>.
+3. Entrar na Produção com <code>t.admin</code> e conferir se o menu aparece (79 itens). <strong>Se não aparecer, parar e registrar.</strong></p>
+<h4 id="3-2-usuarios-e-funcoes">3.2 Usuários e funções</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário (já existe)</th>
+<th>Perfil ou funções a dar no Principal</th>
+<th>Papel nos testes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t.admin</code></td>
+<td><code>TESTEPRO</code> (tudo)</td>
+<td>Produção: solicita, autoriza, registra, finaliza; elabora o lote padrão</td>
+</tr>
+<tr>
+<td><code>t.cadastro</code></td>
+<td>Autorização Estoque x Produção</td>
+<td>Estoque</td>
+</tr>
+<tr>
+<td><code>t.semadmin</code></td>
+<td>Autorizações do CQ; aprovar lote padrão; revisor da preparação; função profissional dos campos de conferência</td>
+<td>CQ, aprovador e revisor</td>
+</tr>
+<tr>
+<td><code>t.consulta</code></td>
+<td>Autorização GQ x Produção; <strong>sem</strong> a função da Liberação da Produção</td>
+<td>GQ; usuário comum dos casos de acesso</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se algum estiver bloqueado ou com a senha vencida, usar o administrador para gerar senha nova. <strong>Não guardar senhas neste repositório.</strong></p>
+<h4 id="3-3-dados-ja-existentes-no-ambiente-reaproveitar">3.3 Dados já existentes no ambiente (reaproveitar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Onde</th>
+<th>Uso aqui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Item <code>TESTE MATERIA PRIMA</code> e lote <code>TESTELOTE001</code></td>
+<td>Estoque</td>
+<td>Insumo do produto <code>TESTE</code></td>
+</tr>
+<tr>
+<td>Ambientes, equipamentos e pessoa jurídica <code>TESTE</code></td>
+<td>Principal</td>
+<td>Lote padrão, preparação e terceirização</td>
+</tr>
+<tr>
+<td>Um modelo XML real do ambiente (por exemplo, Diazepam)</td>
+<td>Produção</td>
+<td>Ordem de produção <code>TESTE</code></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-4-dados-a-criar-na-propria-producao-durante-os-testes">3.4 Dados a criar na própria Produção (durante os testes)</h4>
+<p>Na ordem:
+1. Produto <code>TESTE</code> com fórmula.
+2. Lote padrão <code>TESTE</code>, aprovado.
+3. Ordem de produção <code>TESTE</code> com o modelo XML.
+4. Registros de preparação (limpeza, calibração, análises) da sala e do equipamento <code>TESTE</code>.
+5. Produção <code>TESTE</code>.</p>
+<p><strong>Rodar o fluxo 3 e o fluxo 4 antes do fluxo 1 e do fluxo 2.</strong></p>
+<h4 id="3-5-dados-que-faltam-pedir-ou-criar">3.5 Dados que faltam (pedir ou criar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Necessário para</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Saldo do insumo <code>TESTE</code> no Estoque</td>
+<td>Solicitação sem bloqueio por saldo</td>
+<td>O endereçamento do Estoque não gravou (DV-EST-016). Sem saldo, depende da configuração de produzir sem saldo</td>
+</tr>
+<tr>
+<td>Uma análise de granel no CQ</td>
+<td>CT-PRO-030 e 031</td>
+<td>Criada pela própria produção; reprovar no CQ</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<p>Como nos outros módulos:
+- captura de cada passo relevante nos casos de prioridade <strong>alta</strong>;
+- captura do resultado nos de prioridade <strong>média</strong>;
+- em <code>homologacao/2.producao/execucao/&lt;AAAA-MM-DD&gt;/evidencias/CT-PRO-xxx-passo-N.png</code>;
+- o <code>resultado.md</code> da rodada, com a lista dos dados <code>TESTE</code> criados.</p>
+<p><strong>Atenção ao registro de lote:</strong> anotar em cada caso quem aparece como executor e conferente no Consultar Log OPE, e comparar com quem estava logado.</p>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<ul>
+<li>O teste <strong>confirma o comportamento atual</strong>. Nos casos "Registrar se…", o resultado esperado pela norma é diferente do que o código indica; o caso <strong>falha</strong> se o sistema fizer o que o código mostra.</li>
+<li>Para a nova versão, todos os casos de prioridade <strong>alta</strong> devem passar (as falhas viram requisitos corrigidos).</li>
+<li><strong>Ordem sugerida:</strong>
+  1. a verificação 3.1;
+  2. a seção 6.0;
+  3. o fluxo 3 (cadastros) e o fluxo 4 (preparação);
+  4. o fluxo 1 (até o número de lote);
+  5. o fluxo 2;
+  6. o restante do fluxo 1 (final);
+  7. o fluxo 5.</li>
+</ul>
+<p>Em cada um, primeiro os casos de prioridade alta.</p>
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p>Prioridade:
+- <strong>Alta</strong> = citado na prioridade por risco do fluxo;
+- <strong>Média</strong> = pede para registrar uma falha prevista pelo código;
+- <strong>Baixa</strong> = regras de preenchimento e caminhos normais.</p>
+<p>"Rastreia" aponta o ponto de atenção do fluxo.</p>
+<h4 id="6-0-acesso-da-matriz-de-permissoes">6.0 Acesso (da matriz de permissões)</h4>
+<p>Seção escrita à mão, a partir de <code>02-matriz-de-permissoes.md</code>. Rodar <strong>antes</strong> dos fluxos.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-083</td>
+<td>Com um perfil sem a função da Autorização Garantia da Qualidade x Produção, abrir a tela pelo menu e pelo endereço</td>
+<td>Acesso negado</td>
+<td>Matriz, camada 2</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-084</td>
+<td>Com um usuário da Produção (sem ser do CQ), autorizar na Autorização Controle de Qualidade x Produção</td>
+<td>Pela norma, só o CQ autoriza. <strong>Registrar se permitir</strong></td>
+<td>Matriz: autorizações das áreas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-085</td>
+<td>Com o perfil que finaliza a produção, abrir a Liberação da Produção</td>
+<td>Pela norma, função separada. <strong>Registrar se abrir</strong></td>
+<td>Matriz: função 484</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-086</td>
+<td>Com um perfil sem a permissão de aprovar lote padrão, tentar aprovar</td>
+<td>Recusa</td>
+<td>Matriz, camada 4</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-087</td>
+<td>No registro de lote, assinar um campo com usuário sem a função profissional exigida</td>
+<td>"NÃO TEM PERMISSÃO."</td>
+<td>Matriz, camada 5</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-088</td>
+<td>Liberar uma subetapa impeditiva com usuário sem a função "Liberar Controle Qualidade"</td>
+<td>"Usuário não tem perfil Liberar Controle Qualidade"</td>
+<td>Matriz, camada 4</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-1-autorizacao-inicio-e-final-da-producao">6.1 Autorização, início e final da produção</h4>
+<p>Fluxo: <code>fluxos/autorizacao-inicio-final.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-001</td>
+<td>Solicitar autorizações para o produto <code>TESTE</code> com um item do lote padrão <strong>inativo</strong></td>
+<td>Recusa, com a lista de críticas (RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-002</td>
+<td>Solicitar autorizações para o produto <code>TESTE</code> com tudo ativo</td>
+<td>Produção cadastrada; as autorizações aparecem conforme o lote padrão (RN003); a reserva é enviada ao Estoque (RN004)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-003</td>
+<td>No Estoque, procurar a reserva dos insumos da produção do CT-PRO-002</td>
+<td>A requisição existe, com o código gravado na autorização do Estoque (RN004)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-004</td>
+<td>Na Autorização Estoque x Produção, confirmar um insumo com <strong>lote vencido</strong> (validade no passado)</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (RN007, ponto 3)</td>
+<td>Ponto 3: O Estoque confirma insumos digitando lote e validade</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-005</td>
+<td>Na Autorização Equipamentos x Produção, autorizar o equipamento com calibração <strong>vencida</strong>, com justificativa</td>
+<td>Pela norma, recusa ou aprovação de outra pessoa. <strong>Registrar se aceitar com a justificativa</strong> (RN009, ponto 4)</td>
+<td>Ponto 4: Equipamento ou sala pendente pode ser liberado com uma justificativa curta</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-006</td>
+<td>Responder <strong>"Não autorizada"</strong> na Autorização Controle de Qualidade x Produção e autorizar todas as outras; tentar Autorizar a produção</td>
+<td>Pela norma, recusa. <strong>Registrar se autorizar</strong> (RN016, ponto 1)</td>
+<td>Ponto 1: A produção pode ser autorizada com uma área que negou</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-007</td>
+<td>Deixar a Autorização Garantia da Qualidade sem resposta e tentar Autorizar a produção</td>
+<td>Recusa: "Existem autorizações pendentes!" (RN015)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-008</td>
+<td>Autorizar a produção com todas as áreas autorizadas; informar a data de início autorizada no <strong>passado</strong></td>
+<td>Autorização gravada. <strong>Registrar se aceita data passada</strong> (RN017, ponto 8)</td>
+<td>Ponto 8: Datas e horas digitadas</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-009</td>
+<td>Cancelar uma produção autorizada, com justificativa; ver a reserva no Estoque</td>
+<td>Cancelada. <strong>Registrar se a reserva continua no Estoque</strong> (RN019, ponto 10)</td>
+<td>Ponto 10: Cancelamento sem estorno da reserva no Estoque</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-010</td>
+<td>Gerar o número de lote com um número fora do formato configurado</td>
+<td>Recusa com a mensagem do formato (RN022)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-011</td>
+<td>Gerar o número de lote com um número <strong>já usado</strong></td>
+<td>"Número de Lote em uso!" (RN023)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-012</td>
+<td>Gerar um lote <strong>reprocessado</strong> sem lote anterior; depois com lote anterior, etapa, justificativa e PDF</td>
+<td>O primeiro é recusado; o segundo é gravado (RN021)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-013</td>
+<td>Conferir a validade calculada do lote gerado</td>
+<td>Validade = data de geração + prazo do produto (RN024)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-014</td>
+<td>Finalizar a produção <code>TESTE</code> com <strong>"Enviar produto acabado para o estoque: Não"</strong></td>
+<td>Pela norma, o produto acabado não pode sumir do controle. <strong>Registrar se finaliza sem entrar no Estoque</strong> (RN030, ponto 6)</td>
+<td>Ponto 6: O produto acabado pode ser finalizado sem entrar no Estoque</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-015</td>
+<td>Finalizar outra produção com envio ao Estoque; ver no Estoque a situação do produto acabado</td>
+<td>Entra em <strong>quarentena</strong> (art. 220). <strong>Registrar a situação em que entra</strong> (RN031)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-016</td>
+<td>Informar quantidade para estabilidade maior que a produzida</td>
+<td>"Quantidade estabilidade incorreta!" (RN029)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-017</td>
+<td>Reconciliar com rendimento muito abaixo do esperado (por exemplo, 50%)</td>
+<td>Pela norma, alerta e investigação. <strong>Registrar se aceita sem alerta</strong> (RN033)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-018</td>
+<td>Com o mesmo usuário que finalizou, reconciliar e liberar a produção</td>
+<td>Pela norma, outra pessoa libera. <strong>Registrar se permitir</strong> (RN035, ponto 7)</td>
+<td>Ponto 7: Quem finaliza também reconcilia e libera</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-019</td>
+<td><strong>Reprovar</strong> na Liberação da Produção um lote já enviado ao Estoque; ver o lote no Estoque</td>
+<td><strong>Registrar se o Estoque fica sabendo</strong> (RN031, ponto 6)</td>
+<td>Ponto 6: O produto acabado pode ser finalizado sem entrar no Estoque</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-020</td>
+<td>Reabrir a liberação e a reconciliação com justificativa; consultar o histórico</td>
+<td>Reabertura gravada com quem e quando. <strong>Registrar se aparece no histórico</strong> (RN033, RN034)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-2-registro-de-lote">6.2 Registro de lote</h4>
+<p>Fluxo: <code>fluxos/registro-de-lote.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-021</td>
+<td>Abrir o Registro da Produção da produção <code>TESTE</code> e conferir os campos automáticos</td>
+<td>Lote, OPE, validade, revisão e versão preenchidos (RN006)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-022</td>
+<td>Na subetapa de pesagem, conferir os dados trazidos do Estoque</td>
+<td>Lote do insumo, pesos e responsáveis iguais aos do Estoque (RN007)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-023</td>
+<td>Salvar completo uma subetapa com campo obrigatório vazio</td>
+<td>"Preencha os campos obrigatórios." (RN008)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-024</td>
+<td>Informar uma data <strong>futura</strong> num campo de data</td>
+<td>"A Data preenchida é maior que a data atual do sistema." (RN009)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-025</td>
+<td>Informar uma data <strong>de ontem</strong> num campo de data e o início e o fim da subetapa no passado</td>
+<td>Pela norma, registro no momento da ação. <strong>Registrar se aceitar</strong> (RN009, RN012, ponto 5)</td>
+<td>Ponto 5: Datas e horas digitadas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-026</td>
+<td>No campo de assinatura, entrar com <code>t.consulta</code> (sem a função profissional)</td>
+<td>"NÃO TEM PERMISSÃO." (RN011)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-027</td>
+<td>Informar o mesmo usuário como executor e conferente, se o modelo tiver os dois campos</td>
+<td>"Os campos não podem ser iguais." (RN010). <strong>Registrar se o modelo não tiver a regra</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-028</td>
+<td>Num controle em processo, informar um resultado <strong>fora da especificação</strong> do produto</td>
+<td>Pela norma, alerta e bloqueio. <strong>Registrar se passa</strong> (RN019, ponto 2)</td>
+<td>Ponto 2: O controle em processo confere só se foi preenchido, não se está dentro do limite</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-029</td>
+<td>Avançar para a próxima etapa sem preencher o controle em processo</td>
+<td>"<controle> Incompleto." (RN019)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-030</td>
+<td>Solicitar a análise do CQ numa subetapa; tentar seguir para a subetapa seguinte</td>
+<td>Subetapas seguintes pendentes (RN021)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-031</td>
+<td>No CQ, <strong>reprovar</strong> a análise; na Produção, liberar a subetapa com o usuário de liberação, senha e justificativa</td>
+<td>Pela norma, recusa e desvio. <strong>Registrar se libera</strong> (RN022, ponto 3)</td>
+<td>Ponto 3: A análise do CQ reprovada pode ser liberada com senha e justificativa</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-032</td>
+<td>Numa subetapa que pede análise, <strong>não solicitar</strong> a análise e seguir</td>
+<td><strong>Registrar se segue sem a análise</strong> (RN023, ponto 4)</td>
+<td>Ponto 4: Subetapa sem solicitação de análise não trava</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-033</td>
+<td>Salvar parcial uma subetapa com campo inválido, confirmando; tentar avançar e imprimir</td>
+<td><strong>Registrar se o rascunho avança e como aparece na impressão</strong> (RN014, ponto 7)</td>
+<td>Ponto 7: Salvar parcial grava campos inválidos</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-034</td>
+<td>Alterar um campo já salvo e assinado; abrir o Consultar Log OPE</td>
+<td>Histórico com valor anterior, novo, usuário e data. <strong>Registrar se pede motivo e se a assinatura é refeita</strong> (RN016, RN017, ponto 6)</td>
+<td>Ponto 6: Alterações sem motivo, cortadas em 255 caracteres e sem aprovação</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-035</td>
+<td>Gravar num campo de texto um valor com mais de 255 caracteres e depois alterá-lo; ver o histórico</td>
+<td><strong>Registrar se o histórico corta o valor</strong> (RN016)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-036</td>
+<td>Depois da finalização (fluxo 1), tentar alterar um campo</td>
+<td>Campos bloqueados (RN030)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-037</td>
+<td>Registrar uma pesagem na Pesagem/Medição de Matéria-Prima com o mesmo responsável e conferente; procurar essa pesagem no registro de lote</td>
+<td><strong>Registrar se aceita a mesma pessoa</strong> e confirmar que <strong>não aparece no registro</strong> (RN024, RN025, ponto 8)</td>
+<td>Ponto 8: Duas pesagens que não conversam</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-038</td>
+<td>Incluir horas na Manipulação de Horas com período no passado; excluir</td>
+<td>Gravado e excluído. <strong>Registrar se a exclusão fica no histórico</strong> (RN026)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-039</td>
+<td>Fazer uma Solicitação Avulsa de insumo; procurar a reserva no Estoque</td>
+<td>Reserva adicional no Estoque (RN027)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-040</td>
+<td>Imprimir a OPE da produção <code>TESTE</code></td>
+<td>Todas as etapas preenchidas, com os responsáveis (RN031)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-3-produto-formula-e-ordem-de-producao">6.3 Produto, fórmula e ordem de produção</h4>
+<p>Fluxo: <code>fluxos/produto-formula-ordem.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-041</td>
+<td>Cadastrar o produto <code>TESTE</code> sem item de fórmula</td>
+<td>Recusa: fórmula padrão obrigatória (RN006)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-042</td>
+<td>Cadastrar o produto <code>TESTE</code> com fórmula e validade do registro <strong>de dois anos atrás</strong></td>
+<td>Pela norma, alerta de registro vencido. <strong>Registrar se aceitar</strong> (RN007, ponto 4)</td>
+<td>Ponto 4: Registro na ANVISA vencido é aceito e não impede a produção</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-043</td>
+<td>Alterar um item da fórmula do produto <code>TESTE</code></td>
+<td>Pede justificativa; o histórico mostra a alteração (RN009)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-044</td>
+<td>Criar e aprovar um lote padrão para o produto <code>TESTE</code>; tentar alterar a fórmula do produto</td>
+<td>Produto travado (RN010)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-045</td>
+<td>Duplicar o produto <code>TESTE</code>; conferir o novo produto</td>
+<td>Produto novo com a mesma fórmula. <strong>Registrar se guarda o produto de origem</strong> (RN012)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-046</td>
+<td>Cadastrar o lote padrão <code>TESTE</code> com <code>t.admin</code> e tentar aprovar com <code>t.admin</code></td>
+<td>Recusa: quem elaborou não aprova (RN017)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-047</td>
+<td>Aprovar o lote padrão <code>TESTE</code> com <code>t.semadmin</code>; tentar editar um item</td>
+<td>Aprovado com usuário e data; itens bloqueados (RN017, RN018)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-048</td>
+<td>Na Solicitação de Autorizações, procurar um lote padrão <strong>não aprovado</strong></td>
+<td>Não aparece (RN019)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-049</td>
+<td>Adicionar o mesmo equipamento duas vezes ao lote padrão</td>
+<td>"O equipamento já está adicionado!" (RN016)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-050</td>
+<td>Cadastrar a ordem de produção <code>TESTE</code> escolhendo como "aprovado por" outra pessoa e datas passadas</td>
+<td>Pela norma, aprovação com assinatura de quem aprova. <strong>Registrar se grava sem a pessoa assinar</strong> (RN021, RN022, ponto 1)</td>
+<td>Ponto 1: A ordem de produção não tem aprovação de verdade</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-051</td>
+<td>Alterar a ordem de produção <code>TESTE</code></td>
+<td>Pede justificativa (RN023)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-052</td>
+<td>Com uma produção <code>TESTE</code> iniciada, <strong>substituir</strong> o modelo XML da ordem; abrir o registro dessa produção</td>
+<td><strong>Registrar se o registro em andamento mudou ou deu erro</strong> (RN025, ponto 2)</td>
+<td>Ponto 2: O modelo do registro de lote pode ser trocado com produção em andamento</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-053</td>
+<td>Tentar excluir a ordem de produção com produção iniciada</td>
+<td>"Já existem produções iniciadas para a OPE. Exclusão não permitida!" (RN025)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-054</td>
+<td>Mudar a configuração de controle de lote ou validade do insumo <code>TESTE</code> na Produção e comparar com o item no Estoque</td>
+<td><strong>Registrar qual cadastro vale</strong> (RN004, ponto 5)</td>
+<td>Ponto 5: Controles do insumo em dois cadastros</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-055</td>
+<td>Pedir produção do produto <code>TESTE</code> com registro vencido (CT-PRO-042)</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (RN014, ponto 4)</td>
+<td>Ponto 4: Registro na ANVISA vencido é aceito e não impede a produção</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-056</td>
+<td>Cadastrar o HH Padrão de uma etapa <code>TESTE</code></td>
+<td>Gravado (RN026)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-4-preparacao">6.4 Preparação</h4>
+<p>Fluxo: <code>fluxos/preparacao.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-057</td>
+<td>Programar uma limpeza da sala <code>TESTE</code></td>
+<td>Programação gravada (RN001)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-058</td>
+<td>Registrar a limpeza com início <strong>amanhã</strong></td>
+<td>"A Data Hora Início não pode ser maior que a data atual!" (RN005)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-059</td>
+<td>Registrar a limpeza com validade <strong>ontem</strong></td>
+<td>"A Validade não pode ser menor que a data atual!" (RN005)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-060</td>
+<td>Revisar o registro de limpeza com o mesmo usuário que registrou</td>
+<td>"O Responsável pela Revisão não pode ser igual ao Responsável pelo Registro ou Executor!" (RN011)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-061</td>
+<td>Registrar a limpeza <strong>sem revisão</strong>; abrir a Autorização Ambientes da produção <code>TESTE</code></td>
+<td>Limpeza <strong>PENDENTE</strong> (RN012)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-062</td>
+<td>Revisar a limpeza com <code>t.semadmin</code>; abrir de novo a autorização</td>
+<td>Limpeza <strong>LIBERADO</strong> (RN012)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-063</td>
+<td>Registrar e revisar uma análise de ambiente com o resultado <code>TESTE REPROVADO</code>; abrir a autorização</td>
+<td>Pela norma, sala bloqueada. <strong>Registrar se aparece LIBERADO</strong> (RN015, ponto 1)</td>
+<td>Ponto 1: O resultado da análise de água e de ambiente não é conferido</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-064</td>
+<td>Fazer o mesmo com uma análise de ponto de água</td>
+<td><strong>Registrar se o ponto aparece LIBERADO</strong> (RN013, RN015)</td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-065</td>
+<td>Registrar uma calibração do instrumento <code>TESTE</code> <strong>sem revisão</strong>; abrir a Autorização Instrumentos</td>
+<td><strong>Registrar se aparece LIBERADO sem revisão</strong> (RN014, ponto 7)</td>
+<td>Ponto 7: Calibração e qualificação podem liberar sem revisão</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-066</td>
+<td>Registrar a calibração com validade anterior à data do certificado</td>
+<td>"A Data da Validade não pode ser menor que a Data do Certificado!" (RN007)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-067</td>
+<td>Procurar como registrar uma calibração <strong>reprovada</strong></td>
+<td><strong>Registrar se não há como</strong> (RN007, ponto 3)</td>
+<td>Ponto 3: Calibração e qualificação sem resultado</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-068</td>
+<td>Deixar uma programação de limpeza passar da data sem registro; procurar aviso</td>
+<td><strong>Registrar se não há aviso</strong> (RN003, ponto 5)</td>
+<td>Ponto 5: Sem avisos de atraso</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-069</td>
+<td>Registrar uma limpeza avulsa revisada da sala <code>TESTE</code></td>
+<td>Conta para liberar a sala (RN006)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-070</td>
+<td>Registrar uma manutenção corretiva do equipamento <code>TESTE</code></td>
+<td>Gravada, sem validade (RN008)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-071</td>
+<td>Imprimir a etiqueta da limpeza e o LogBook do equipamento <code>TESTE</code></td>
+<td>Etiqueta e livro com os registros (RN017, RN018)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-072</td>
+<td>Comparar a análise de ambiente da sala <code>TESTE</code> na Produção com a do CQ</td>
+<td><strong>Registrar se são independentes</strong> (ponto 2)</td>
+<td>Ponto 2: Monitoramento de água e ambiente em dois módulos</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-5-terceirizacao-e-validade-da-ope">6.5 Terceirização e validade da OPE</h4>
+<p>Fluxo: <code>fluxos/terceirizacao-validade.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-073</td>
+<td>Terceirizar uma subetapa da produção <code>TESTE</code> para o fornecedor <code>TESTE</code> e confirmar</td>
+<td>Terceirização confirmada, com quem e quando (RN001, RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-074</td>
+<td>Abrir a subetapa terceirizada no Registro da Produção</td>
+<td>Sem o botão de salvar (RN004). <strong>Registrar onde ficam os dados do terceiro</strong> (ponto 2)</td>
+<td>Ponto 2: O que o terceiro fez não entra no registro</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-075</td>
+<td>Procurar no cadastro da terceirização o contrato e a qualificação do fornecedor</td>
+<td><strong>Registrar a ausência</strong> (RN005, ponto 1)</td>
+<td>Ponto 1: Terceirização sem contrato e sem fornecedor qualificado</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-076</td>
+<td>Anexar um arquivo de mais de 4 MB</td>
+<td>Recusa pelo tamanho (RN003)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-077</td>
+<td>Abrir a Validade da OPE pelo endereço da tela</td>
+<td><strong>Registrar se abre fora do menu</strong> (RN012)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-078</td>
+<td>Pedir nova validade para a produção <code>TESTE</code>; confirmar e aprovar com o <strong>mesmo usuário</strong> que pediu</td>
+<td><strong>Registrar se permitir</strong> (RN009, ponto 3)</td>
+<td>Ponto 3: A validade do lote pode ser estendida com decisões em datas digitadas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-079</td>
+<td>Pedir nova validade; <strong>reprovar</strong> na confirmação; aprovar no final</td>
+<td>Pela norma, a validade não muda. <strong>Registrar se mudar</strong> (RN010, ponto 3)</td>
+<td>Ponto 3: A validade do lote pode ser estendida com decisões em datas digitadas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-080</td>
+<td>Informar datas de decisão no passado</td>
+<td><strong>Registrar se aceitar</strong> (RN008)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-081</td>
+<td>Pedir nova validade depois da finalização</td>
+<td>"A data de validade não pode ser alterada, pois a OPE já foi finalizada." (RN007)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-PRO-082</td>
+<td>Cancelar uma terceirização confirmada</td>
+<td>Cancelada, com quem e quando (RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Seção</th>
+<th>Casos</th>
+<th>Alta</th>
+<th>Média</th>
+<th>Baixa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.0 Acesso</td>
+<td>6</td>
+<td>2</td>
+<td>4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>6.1 Autorização, início e final da produção</td>
+<td>20</td>
+<td>6</td>
+<td>5</td>
+<td>9</td>
+</tr>
+<tr>
+<td>6.2 Registro de lote</td>
+<td>20</td>
+<td>5</td>
+<td>5</td>
+<td>10</td>
+</tr>
+<tr>
+<td>6.3 Produto, fórmula e ordem de produção</td>
+<td>16</td>
+<td>4</td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td>6.4 Preparação</td>
+<td>16</td>
+<td>4</td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td>6.5 Terceirização e validade da OPE</td>
+<td>10</td>
+<td>3</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>88</strong></td>
+<td><strong>24</strong></td>
+<td><strong>21</strong></td>
+<td><strong>43</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Cobertura dos riscos de prioridade alta</strong> (<code>07-analise-de-risco.md</code>):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Risco</th>
+<th>Casos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-PRO-01 Autorizada com área que negou</td>
+<td>CT-PRO-006</td>
+</tr>
+<tr>
+<td>R-PRO-02 Insumo não aprovado ou vencido</td>
+<td>CT-PRO-004</td>
+</tr>
+<tr>
+<td>R-PRO-03 CQ e GQ sem consultar os módulos</td>
+<td>CT-PRO-084</td>
+</tr>
+<tr>
+<td>R-PRO-04 Equipamento ou sala vencidos</td>
+<td>CT-PRO-005</td>
+</tr>
+<tr>
+<td>R-PRO-05 Autorização obrigatória não criada</td>
+<td>CT-PRO-002</td>
+</tr>
+<tr>
+<td>R-PRO-07 Resultado fora da especificação</td>
+<td>CT-PRO-028</td>
+</tr>
+<tr>
+<td>R-PRO-08 Análise reprovada ou não pedida</td>
+<td>CT-PRO-031, 032</td>
+</tr>
+<tr>
+<td>R-PRO-09 Registro fora do momento</td>
+<td>CT-PRO-025</td>
+</tr>
+<tr>
+<td>R-PRO-10 Alteração sem motivo</td>
+<td>CT-PRO-034, 035</td>
+</tr>
+<tr>
+<td>R-PRO-11 Assinatura de quem não executou</td>
+<td>CT-PRO-026, 087</td>
+</tr>
+<tr>
+<td>R-PRO-12 Pesagem sem verificação</td>
+<td>CT-PRO-037</td>
+</tr>
+<tr>
+<td>R-PRO-13 Ordem de produção sem aprovação</td>
+<td>CT-PRO-050</td>
+</tr>
+<tr>
+<td>R-PRO-14 Modelo trocado em andamento</td>
+<td>CT-PRO-052</td>
+</tr>
+<tr>
+<td>R-PRO-15 Fórmula sem mudança aprovada</td>
+<td>CT-PRO-044, 045</td>
+</tr>
+<tr>
+<td>R-PRO-17 Produto acabado fora do Estoque</td>
+<td>CT-PRO-014, 015</td>
+</tr>
+<tr>
+<td>R-PRO-18 Reprovação não chega ao Estoque</td>
+<td>CT-PRO-019</td>
+</tr>
+<tr>
+<td>R-PRO-19 Mesma pessoa produz e libera</td>
+<td>CT-PRO-018, 085</td>
+</tr>
+<tr>
+<td>R-PRO-20 Rendimento sem investigação</td>
+<td>CT-PRO-017</td>
+</tr>
+<tr>
+<td>R-PRO-22 Água e ambiente com resultado ruim</td>
+<td>CT-PRO-063, 064</td>
+</tr>
+<tr>
+<td>R-PRO-23 Calibração reprovada em uso</td>
+<td>CT-PRO-065, 067</td>
+</tr>
+<tr>
+<td>R-PRO-26 Registro alterado por quem não é da Produção</td>
+<td>CT-PRO-083 (acesso); o restante, com a TI</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</h3>
+<ol>
+<li>Confirmar que pode criar no Principal o perfil <code>TESTEPRO</code> e dar as funções da tabela 3.2 aos quatro usuários de teste.</li>
+<li>Indicar um modelo XML de produto que exista no ambiente de teste.</li>
+<li>Perguntar ao DBA se o dicionário de dados é igual ao banco de teste (<code>06-modelo-de-dados.md</code>, seção 6).</li>
+<li>No seu computador, pela VPN, pedir ao Claude Code: "executar os testes da produção, rodada 1 (prioridade alta)".</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

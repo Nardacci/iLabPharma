@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produto, fórmula e ordem de produção · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="a-producao-ideal.html">A Produção ideal</a></li><li><a href="qualidade-entre-os-modulos-situacao-do-lote-e-travas.html">Qualidade entre os módulos: situação do lote e travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html">Registro de lote</a></li><li><a href="produto-formula-e-ordem-de-producao.html" aria-current=page>Produto, fórmula e ordem de produção</a></li><li><a href="preparacao-limpeza-calibracao-qualificacao-manutencao-agua-e-ambiente.html">Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente</a></li><li><a href="terceirizacao-e-validade-da-ope.html">Terceirização e validade da OPE</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Produto, fórmula e ordem de produção</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/producao/LabMedSys - Modulo Producao - Fluxo Produto, Formula e Ordem de Producao.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve os <strong>cadastros que definem o que se fabrica</strong> na Produção do LabMedSys:
+- os insumos;
+- o <strong>produto</strong>, com a <strong>fórmula padrão</strong> e o registro na ANVISA;
+- o <strong>lote padrão</strong> (o que cada lote usa: itens, salas, equipamentos, instrumentos, utensílios e pontos de água);
+- a <strong>ordem de produção</strong> (OPE), que liga o produto ao <strong>modelo XML</strong> do registro de lote.</p>
+<p>Pela norma, a fórmula de fabricação e as instruções de processo precisam ser aprovadas, por escrito e com versão, para cada produto e tamanho de lote (RDC 658/2022, arts. 133 a 135). Uma mudança só entra depois de aprovada (arts. 176 e 177; art. 8º, XII).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Cadastro de Insumos, Configurações Insumos Produção, Configurações Insumos Diversos, Classificação Insumos, Cadastro de Soluções.</li>
+<li>Cadastro do Produto, com a fórmula, o revestimento, as correlações e o registro na ANVISA.</li>
+<li>Cadastro de Lote Padrão e a aprovação.</li>
+<li>Cadastro Ordem de Produção, com o envio do modelo XML, e Cadastro de Etapa.</li>
+<li>Cadastro de HH Padrão e Cadastro de Demandas.</li>
+</ul>
+<p><strong>Fora do escopo:</strong>
+- As tabelas de apoio (classe terapêutica, forma física, embalagens etc.): são listas simples.
+- O uso desses cadastros na autorização e no registro de lote (fluxos 1 e 2).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código são relativos a <code>2.producao/app/</code>. Para encurtar: <code>Adm/</code> = <code>LaboSys_UI/administrativas/</code>; <code>BLL/</code> = <code>LaboSys_BLL/</code>; <code>Tab/</code> = <code>Hsolutions.Producao.DB/Tables/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/producao/produto-formula-ordem-fluxograma.png" target="_blank" rel="noopener"><img src="../img/producao/produto-formula-ordem-fluxograma.png" alt="Workflow dos cadastros de produto, fórmula e ordem de produção" loading="lazy"></a><figcaption>Workflow dos cadastros de produto, fórmula e ordem de produção · clique para ampliar</figcaption></figure>
+
+<ol>
+<li><strong>Insumos:</strong> são cadastrados e ligados ao item do Estoque. Recebem configurações de controle: lote, validade, quarentena, substância controlada.</li>
+<li><strong>Produto:</strong>
+   - é cadastrado com o número e a validade do <strong>registro na ANVISA</strong>, o prazo de validade do produto e a <strong>fórmula padrão</strong> (insumos, concentrações e percentuais);
+   - pode ser ligado ao item do Estoque, para receber o produto acabado.</li>
+<li><strong>Lote padrão:</strong>
+   - define, para um tamanho de lote, os itens, salas, equipamentos, instrumentos, utensílios e pontos de água, e quais autorizações são obrigatórias;
+   - depois de <strong>aprovado</strong> por outra pessoa, não muda e passa a valer para pedir produção.</li>
+<li><strong>Ordem de produção:</strong>
+   - recebe número, versão, revisão, quem elaborou, quem aprovou, a análise crítica e a GQ, com as datas;
+   - recebe o <strong>arquivo XML</strong> com as etapas, subetapas e campos do registro de lote.</li>
+<li>Com produto, lote padrão aprovado e ordem de produção, é possível <strong>solicitar a produção</strong> (fluxo 1).</li>
+</ol>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="insumos">Insumos</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O <strong>Cadastro de Insumos</strong> guarda:</li>
+<li>nome;</li>
+<li>DCB (denominação comum brasileira);</li>
+<li>classificação e unidade;</li>
+<li>se é importado;</li>
+<li>a <strong>ligação com o item do Estoque</strong> (<code>Tab/TBL_INSUMO_PRINCIPAL.sql</code>).</li>
+<li>RN002 – As <strong>Configurações Insumos Produção</strong> acrescentam ao insumo:</li>
+<li>substância ativa ou excipiente;</li>
+<li>controle de <strong>lote</strong>, <strong>validade</strong>, <strong>quarentena</strong>, destruição e Polícia Federal;</li>
+<li>substância controlada;</li>
+<li>exige fornecedor ou fabricante;</li>
+<li>produto intermediário ou granel (<code>Tab/TBL_INSUMO_PRODUCAO.sql</code>).</li>
+<li>RN003 – As <strong>Configurações Insumos Diversos</strong> fazem o mesmo para materiais de limpeza e consumo geral (<code>Tab/TBL_INSUMO_DIVERSOS.sql</code>).</li>
+<li>RN004 – Os controles de lote, validade e quarentena também existem no cadastro de item do Estoque. <em>A confirmar:</em> qual dos dois vale quando divergem.</li>
+<li>RN005 – O <strong>Cadastro de Soluções</strong> guarda as soluções de limpeza, com exigência de validade e de lote (<code>Tab/TBL_SOLUCOES.sql</code>). Elas são usadas nos registros de limpeza (fluxo 4).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Cadastro de Insumos</td>
+<td>Insumo e ligação com o item do Estoque</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Configurações Insumos Produção</td>
+<td>Controles do insumo de fabricação</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Configurações Insumos Diversos</td>
+<td>Controles dos materiais de limpeza e consumo</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Classificação Insumos</td>
+<td>Classes de insumo</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Cadastro de Soluções</td>
+<td>Soluções de limpeza</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="produto-e-formula">Produto e fórmula</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN006 – O <strong>Cadastro do Produto</strong> exige (<code>Adm/produto_ed.aspx</code>, validações):</li>
+<li>descrição, categoria, classe terapêutica, forma física, via de administração, restrição de uso, cuidados de conservação, acondicionamento e embalagem;</li>
+<li><strong>tempo de validade</strong>: dias de 1 a 29, meses de 1 a 99, anos de 1 a 9;</li>
+<li>a <strong>fórmula padrão</strong>: pelo menos um item.</li>
+<li>RN007 – <strong>Registro na ANVISA:</strong></li>
+<li>número, data do registro (não anterior a 1980 nem futura) e <strong>validade do registro</strong>;</li>
+<li>a validade aceita datas <strong>até 5 anos no passado</strong> ("A Validade do Registro não pode ser anterior a 5 anos passados!"), ou seja, um <strong>registro vencido</strong> pode ser cadastrado;</li>
+<li>sem número de registro, o sistema pede confirmação antes de gravar (<code>Adm/produto_ed.aspx.cs:2533-2540</code>).</li>
+<li>RN008 – A <strong>fórmula</strong> tem itens com:</li>
+<li>tipo e insumo;</li>
+<li>concentração, unidade e percentual;</li>
+<li>tipo de excipiente (<code>Tab/TBL_ITENS_FORMULA.sql</code>).</li>
+</ul>
+<p>A fórmula <strong>não tem versão</strong> nem aprovação própria (<code>Tab/TBL_FORMULA_PRODUTO.sql</code> só liga a fórmula ao produto).
+- RN009 – Alterar o produto ou um item da fórmula exige <strong>justificativa</strong> (<code>Adm/produto_ed.aspx.cs:347-358, 526, 1121</code>). O produto tem histórico de alterações, consultado pela própria tela (<code>Adm/produto_ed.aspx.cs:2651-2658</code>).
+- RN010 – <strong>Produto com lote padrão não pode ser alterado</strong> (<code>BLL/bllProduto.cs:287-297</code>; <code>Adm/produto_ed.aspx.cs:398-412</code>).
+  - A tela trava os campos e esconde os botões da fórmula.
+  - Continuam liberados só os campos do identificador único (IUM) e a justificativa.
+- RN011 – A trava da RN010 <strong>deixa de valer</strong> quando a configuração do sistema está <strong>"em migração"</strong> (<code>EM_MIGRACAO</code>, <code>BLL/bllProduto.cs:291</code>).
+- RN012 – Para mudar um produto travado, o caminho é <strong>Duplicar</strong>, que cria um produto novo a partir do atual (<code>Adm/produto_ed.aspx.cs:1939-1942, 2530</code>).
+  - A tabela tem a coluna do produto de origem (<code>ID_PRODUTO_ORIGEM</code>), mas a tela não a preenche. <em>A confirmar no teste.</em>
+- RN013 – O produto pode ser ligado ao <strong>item do Estoque</strong> que recebe o produto acabado (<code>Adm/produto_ed.aspx.cs:2470-2495</code>).
+- RN014 – A <strong>validade do registro</strong> aparece como campo informativo no registro de lote (<code>LaboSys_UI/producao/XML/Class_Producao/BLL/CalculoGenerico.cs:884</code>). <strong>Não impede</strong> pedir nem autorizar a produção (fluxo 1).</p>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Cadastro do Produto</td>
+<td>Produto, registro na ANVISA, fórmula, revestimento, correlações, duplicar, histórico</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="lote-padrao">Lote padrão</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN015 – O <strong>Cadastro de Lote Padrão</strong> define, para um produto e uma quantidade (<code>Adm/lote_padrao_ed.aspx.cs:2180-2188</code>):</li>
+<li>itens (insumos e quantidades);</li>
+<li>ambientes, equipamentos, instrumentos, utensílios, utilidades e pontos de água;</li>
+<li>se é lote de <strong>fabricação</strong> ou de <strong>embalagem</strong>;</li>
+<li><strong>quais autorizações são obrigatórias</strong> (fluxo 1, RN003).</li>
+<li>RN016 – Não se repete item, ambiente, equipamento, instrumento, utensílio ou ponto de água: "O item já está adicionado!" e equivalentes (<code>Adm/lote_padrao_ed.aspx.cs:808, 1090, 1288, 1485, 1682, 1880, 2078</code>).</li>
+<li>RN017 – <strong>Aprovação</strong> (<code>Adm/lote_padrao_ed.aspx.cs:2265-2291</code>):</li>
+<li>exige a <strong>permissão de aprovar lote padrão</strong>;</li>
+<li>grava quem aprovou e a data, pelo servidor;</li>
+<li><strong>quem elaborou não aprova</strong>. A comparação é feita <strong>pelo nome</strong> do responsável pela elaboração, não pelo usuário.</li>
+<li>RN018 – Depois da aprovação, os itens do lote padrão <strong>não podem ser editados</strong> (<code>Adm/lote_padrao_ed.aspx.cs:668-676</code> e trechos equivalentes por tipo de item).</li>
+<li>RN019 – A Solicitação de Autorizações só oferece lote padrão <strong>ativo e aprovado</strong> (<code>LaboSys_UI/webservice/wsAutoComplete.asmx.cs:562-571</code>).</li>
+<li>RN020 – A aprovação automática ao salvar, por quem tivesse a permissão, existia e está <strong>comentada</strong> (<code>Adm/lote_padrao_ed.aspx.cs:2218-2226</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Cadastro de Lote Padrão</td>
+<td>Itens, salas, equipamentos e autorizações de cada tamanho de lote; aprovar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="ordem-de-producao-e-modelo-do-registro">Ordem de produção e modelo do registro</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN021 – O <strong>Cadastro Ordem de Produção</strong> liga um produto a uma ordem com (<code>Adm/ficha_tecnica_ed.aspx.cs:296-320</code>):</li>
+<li>número, <strong>versão</strong> e <strong>revisão</strong>, <strong>digitados</strong>;</li>
+<li><strong>data de elaboração</strong> e <strong>validade</strong>, digitadas;</li>
+<li><strong>elaborado por</strong> e <strong>aprovado por</strong>, escolhidos numa lista;</li>
+<li>responsáveis pela <strong>análise crítica</strong> e pela <strong>GQ</strong>, com as datas, digitadas;</li>
+<li>situação (ativa ou inativa).</li>
+<li>RN022 – <strong>Ninguém assina:</strong> quem cadastra escolhe os nomes de quem elaborou e aprovou e digita as datas, sem senha nem conferência de função.</li>
+<li>RN023 – Alterar a ordem de produção exige <strong>justificativa</strong> (<code>Adm/ficha_tecnica_ed.aspx.cs:630-637</code>).</li>
+<li>RN024 – <strong>Envio do modelo XML</strong> (<code>Adm/ficha_tecnica_ed.aspx.cs:640-656, 922-1000</code>):</li>
+<li>o arquivo é gravado na própria ordem;</li>
+<li>as etapas e subetapas são criadas a partir dele;</li>
+<li>a opção que <strong>substitui</strong> o modelo apaga as etapas e subetapas e as recria.</li>
+<li>RN025 – A troca do modelo XML <strong>não confere se há produção em andamento</strong> com aquela ordem. Só a <strong>exclusão</strong> confere: "Já existem produções iniciadas para a OPE. Exclusão não permitida!" (<code>Adm/ficha_tecnica_ed.aspx.cs:800-826</code>).</li>
+<li>O registro de lote lê o modelo <strong>atual</strong> a cada abertura (<code>LaboSys_UI/producao/XML/Class_Producao/MontaXML.cs:498</code>).</li>
+<li><em>Inferência, a confirmar no teste:</em> trocar o modelo durante uma produção muda o registro que está sendo preenchido.</li>
+<li>RN026 – O <strong>Cadastro de Etapa</strong> e o <strong>Cadastro de HH Padrão</strong> guardam as etapas e as horas-padrão por etapa, usadas no controle de horas (<code>Tab/TBL_HH_PADRAO.sql</code>).</li>
+<li>RN027 – O modelo XML e a classe de programa de cada produto vêm do fornecedor. Não há tela para montar ou alterar o modelo: ele é <strong>feito fora do sistema</strong> e enviado como arquivo (reconhecimento, ponto 1).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Cadastro Ordem de Produção</td>
+<td>Ordem de produção, versão, aprovadores, envio e download do XML</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Cadastro de Etapa</td>
+<td>Etapas da produção</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Cadastro de HH Padrão</td>
+<td>Horas-padrão por etapa</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="demandas">Demandas</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN028 – O <strong>Cadastro de Demandas</strong> guarda (<code>Tab/TBL_DEMANDA.sql</code>):</li>
+<li>demandas de clientes: tipo, cliente, contrato, matrícula SIAFI, valor e vigência;</li>
+<li>os itens de cada demanda.</li>
+</ul>
+<p><em>A validar com a área:</em> se ainda é usado; ligação com o Comercial.</p>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Cadastro de Demandas</td>
+<td>Demandas e contratos de clientes</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. A ordem de produção não tem aprovação de verdade</strong> (RN021, RN022).
+- Versão, revisão, "aprovado por" e datas são preenchidos por quem cadastra, sem assinatura.
+- É o mesmo padrão do documento legado do Controle de Documentos.
+- A norma pede instruções aprovadas por escrito (arts. 133 e 119).</p>
+<p><strong>2. O modelo do registro de lote pode ser trocado com produção em andamento</strong> (RN025). Não há versão do modelo guardada por lote. <em>A confirmar no teste.</em></p>
+<p><strong>3. A fórmula não tem versão</strong> (RN008). A mudança é controlada pela trava do produto (RN010) e pela duplicação (RN012), mas:
+- a trava cai com a configuração "em migração" (RN011);
+- o produto novo não guarda de onde veio;
+- nada liga a mudança a uma mudança aprovada na GQ (arts. 176 e 177).</p>
+<p><strong>4. Registro na ANVISA vencido é aceito e não impede a produção</strong> (RN007, RN014). Ele está cadastrado em dois lugares que não conversam: a Produção (produto) e a GQ (Controle de Produtos Enviados para Registro, <code>5.garantia_qualidade</code>, RN-GQ-145).</p>
+<p><strong>5. Controles do insumo em dois cadastros</strong> (RN002, RN004): lote, validade e quarentena no insumo da Produção e no item do Estoque.</p>
+<p><strong>6. A separação entre quem elabora e quem aprova o lote padrão é feita pelo nome</strong> (RN017). Dois usuários com o mesmo nome, ou um nome digitado diferente, quebram a regra.</p>
+<p><strong>7. Bom controle a manter:</strong> o lote padrão aprovado não muda e é o único oferecido para produzir (RN017 a RN019).</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Insumo <code>TESTE MATERIA PRIMA</code>, já ligado ao item do Estoque (rodada do Estoque).
+- Usuários: <code>t.admin</code> (elabora) e <code>t.semadmin</code> (com a permissão de aprovar lote padrão).
+- O modelo XML de um produto do ambiente, para baixar e reenviar.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-041</td>
+<td>Cadastrar o produto <code>TESTE</code> sem item de fórmula</td>
+<td>Recusa: fórmula padrão obrigatória (RN006)</td>
+</tr>
+<tr>
+<td>CT-PRO-042</td>
+<td>Cadastrar o produto <code>TESTE</code> com fórmula e validade do registro <strong>de dois anos atrás</strong></td>
+<td>Pela norma, alerta de registro vencido. <strong>Registrar se aceitar</strong> (RN007, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-PRO-043</td>
+<td>Alterar um item da fórmula do produto <code>TESTE</code></td>
+<td>Pede justificativa; o histórico mostra a alteração (RN009)</td>
+</tr>
+<tr>
+<td>CT-PRO-044</td>
+<td>Criar e aprovar um lote padrão para o produto <code>TESTE</code>; tentar alterar a fórmula do produto</td>
+<td>Produto travado (RN010)</td>
+</tr>
+<tr>
+<td>CT-PRO-045</td>
+<td>Duplicar o produto <code>TESTE</code>; conferir o novo produto</td>
+<td>Produto novo com a mesma fórmula. <strong>Registrar se guarda o produto de origem</strong> (RN012)</td>
+</tr>
+<tr>
+<td>CT-PRO-046</td>
+<td>Cadastrar o lote padrão <code>TESTE</code> com <code>t.admin</code> e tentar aprovar com <code>t.admin</code></td>
+<td>Recusa: quem elaborou não aprova (RN017)</td>
+</tr>
+<tr>
+<td>CT-PRO-047</td>
+<td>Aprovar o lote padrão <code>TESTE</code> com <code>t.semadmin</code>; tentar editar um item</td>
+<td>Aprovado com usuário e data; itens bloqueados (RN017, RN018)</td>
+</tr>
+<tr>
+<td>CT-PRO-048</td>
+<td>Na Solicitação de Autorizações, procurar um lote padrão <strong>não aprovado</strong></td>
+<td>Não aparece (RN019)</td>
+</tr>
+<tr>
+<td>CT-PRO-049</td>
+<td>Adicionar o mesmo equipamento duas vezes ao lote padrão</td>
+<td>"O equipamento já está adicionado!" (RN016)</td>
+</tr>
+<tr>
+<td>CT-PRO-050</td>
+<td>Cadastrar a ordem de produção <code>TESTE</code> escolhendo como "aprovado por" outra pessoa e datas passadas</td>
+<td>Pela norma, aprovação com assinatura de quem aprova. <strong>Registrar se grava sem a pessoa assinar</strong> (RN021, RN022, ponto 1)</td>
+</tr>
+<tr>
+<td>CT-PRO-051</td>
+<td>Alterar a ordem de produção <code>TESTE</code></td>
+<td>Pede justificativa (RN023)</td>
+</tr>
+<tr>
+<td>CT-PRO-052</td>
+<td>Com uma produção <code>TESTE</code> iniciada, <strong>substituir</strong> o modelo XML da ordem; abrir o registro dessa produção</td>
+<td><strong>Registrar se o registro em andamento mudou ou deu erro</strong> (RN025, ponto 2)</td>
+</tr>
+<tr>
+<td>CT-PRO-053</td>
+<td>Tentar excluir a ordem de produção com produção iniciada</td>
+<td>"Já existem produções iniciadas para a OPE. Exclusão não permitida!" (RN025)</td>
+</tr>
+<tr>
+<td>CT-PRO-054</td>
+<td>Mudar a configuração de controle de lote ou validade do insumo <code>TESTE</code> na Produção e comparar com o item no Estoque</td>
+<td><strong>Registrar qual cadastro vale</strong> (RN004, ponto 5)</td>
+</tr>
+<tr>
+<td>CT-PRO-055</td>
+<td>Pedir produção do produto <code>TESTE</code> com registro vencido (CT-PRO-042)</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (RN014, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-PRO-056</td>
+<td>Cadastrar o HH Padrão de uma etapa <code>TESTE</code></td>
+<td>Gravado (RN026)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-PRO-052, 050, 055 e 042 primeiro. Eles tocam:
+- a troca do modelo durante a produção;
+- a ordem de produção sem aprovação real;
+- a produção de um produto com registro vencido.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#insumos">Insumos</a></li><li class="sub"><a href="#produto-e-formula">Produto e fórmula</a></li><li class="sub"><a href="#lote-padrao">Lote padrão</a></li><li class="sub"><a href="#ordem-de-producao-e-modelo-do-registro">Ordem de produção e modelo do registro</a></li><li class="sub"><a href="#demandas">Demandas</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
