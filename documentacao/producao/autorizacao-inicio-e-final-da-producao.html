@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autorização, início e final da produção · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html" aria-current=page>Autorização, início e final da produção</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Autorização, início e final da produção</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/producao/LabMedSys - Modulo Producao - Fluxo Autorizacao, Inicio e Final.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o fluxo principal da <strong>Produção</strong> no LabMedSys: da <strong>solicitação de autorizações</strong> ao <strong>final da produção</strong>.
+1. A produção pede as autorizações para fabricar um produto.
+2. Cada área autoriza: Estoque, ambientes, equipamentos, instrumentos, pontos de água, Garantia da Qualidade e Controle da Qualidade.
+3. A produção é autorizada e recebe o número de lote.
+4. O lote é fabricado.
+5. Por fim, é finalizado, reconciliado e liberado, e o produto acabado vai para o Estoque.</p>
+<p>É a corrente que liga o Estoque, o CQ e a GQ à fabricação (RDC 658/2022, arts. 137, 160, 189, 195 e 220).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Solicitação de Autorizações.</li>
+<li>As sete autorizações das áreas: Autorização Estoque, Ambientes, Equipamentos, Instrumentos e Pontos de Água x Produção; Autorização Garantia da Qualidade x Produção; Autorização Controle da Qualidade x Produção.</li>
+<li>Autorizar/Cancelar Produção.</li>
+<li>Gerar Número de Lote.</li>
+<li>Início da Produção, só a entrada. O registro das etapas tem fluxo próprio: fluxo 2, registro de lote.</li>
+<li>Final da Produção, Reconciliação da Produção e Liberação da Produção.</li>
+<li>Boletim de envio do produto acabado à quarentena.</li>
+</ul>
+<p><strong>Fora do escopo:</strong>
+- Registro das etapas, pesagem e controle em processo (fluxo 2).
+- Cadastro do produto, da fórmula, do lote padrão e da ordem de produção (fluxo 3).
+- Limpeza, calibração e qualificação, que alimentam as autorizações (fluxo 4).
+- Terceirização (fluxo 5).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código ficam só nas regras e são relativos a <code>2.producao/app/</code>. Para encurtar:
+- <code>UI/</code> = <code>LaboSys_UI/</code>;
+- <code>BLL/</code> = <code>LaboSys_BLL/</code>;
+- <code>Aut/</code> = <code>LaboSys_UI/autorizacoes/</code>;
+- <code>Prod/</code> = <code>LaboSys_UI/producao/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/producao/autorizacao-inicio-final-fluxograma.png" target="_blank" rel="noopener"><img src="../img/producao/autorizacao-inicio-final-fluxograma.png" alt="Workflow de autorização, início e final da produção" loading="lazy"></a><figcaption>Workflow de autorização, início e final da produção · clique para ampliar</figcaption></figure>
+
+<ol>
+<li><strong>Solicitação:</strong> a Produção escolhe o produto, o <strong>lote padrão</strong> e a data prevista de início.
+   - O sistema confere se os itens, ambientes, equipamentos, instrumentos e pontos de água do lote padrão estão ativos.
+   - Com o Estoque ligado, envia a <strong>reserva dos insumos</strong>.
+   - Abre as autorizações de cada área.</li>
+<li><strong>Autorizações:</strong> cada área registra a sua.
+   - O Estoque confirma os insumos separados.
+   - Ambientes e equipamentos mostram a situação de limpeza, calibração, qualificação e manutenção.
+   - A GQ e o CQ marcam a sua autorização.</li>
+<li><strong>Autorizar a produção:</strong> com todas as áreas respondidas, a produção é autorizada, com a data de início autorizada. Ela também pode ser <strong>cancelada</strong>, com justificativa.</li>
+<li><strong>Número de lote:</strong> o responsável <strong>digita o número de lote</strong>, conferido contra o formato configurado e contra os números já usados. O sistema calcula a validade do produto.</li>
+<li><strong>Fabricação:</strong> a produção é iniciada e as etapas são registradas (fluxo 2).</li>
+<li><strong>Final da produção:</strong> informa a data final, a quantidade produzida e a quantidade para estabilidade, e <strong>envia o produto acabado ao Estoque</strong>.</li>
+<li><strong>Reconciliação e liberação:</strong> a <strong>reconciliação</strong> registra os rendimentos. A <strong>liberação</strong> aprova ou reprova a produção.</li>
+</ol>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="solicitacao-de-autorizacoes">Solicitação de autorizações</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – A solicitação exige <strong>produto</strong>, <strong>lote padrão</strong> e <strong>data e hora previstas de início</strong> (<code>Prod/start_producao_ed.aspx.cs:214-272</code>). Grava quem solicitou e a data da solicitação pelo servidor (linhas 278-282).</li>
+<li>RN002 – Antes de gravar, o sistema confere o lote padrão. Se o lote padrão exige itens, ambientes, pontos de água, equipamentos ou instrumentos, cada um precisa estar <strong>ativo</strong>. Os inativos aparecem numa lista de críticas, e a solicitação não é feita (<code>Prod/start_producao_ed.aspx.cs:324-400</code>).</li>
+<li>RN003 – As autorizações são criadas <strong>conforme o lote padrão</strong> (<code>BLL/bllStartProducao.cs:44-140</code>):</li>
+<li><strong>GQ e CQ sempre</strong>;</li>
+<li>Estoque, ambientes, equipamentos, instrumentos e pontos de água <strong>só se o lote padrão marcar a área como obrigatória</strong> (<code>IND_OBRIGATORIO_*</code>).</li>
+<li>RN004 – Com o Estoque ligado, a solicitação envia ao Estoque a <strong>reserva dos insumos</strong> do lote padrão e guarda o código da requisição na autorização do Estoque (<code>BLL/bllStartProducao.cs:170-200</code>).</li>
+<li>RN005 – Insumo sem saldo no Estoque impede a solicitação, <strong>a menos que</strong> a configuração <code>AUTORIZAR_PRODUCAO_INSUMO_SEM_SALDO</code> permita (<code>Prod/start_producao_ed.aspx.cs:493-546</code>).</li>
+<li>RN006 – A solicitação gera um aviso pela central de notificações (<code>Prod/start_producao_ed.aspx.cs:299-303</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Solicitação de Autorizações</td>
+<td>Pedir as autorizações e acompanhar a situação de cada uma</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="autorizacoes-das-areas">Autorizações das áreas</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN007 – <strong>Estoque:</strong></li>
+<li>o autorizador confirma, insumo por insumo, a <strong>quantidade</strong>, o <strong>lote de fabricação</strong>, a <strong>validade</strong> e o código da requisição;</li>
+<li><strong>tudo é digitado</strong> (<code>Aut/autorizacao_estoque_producao_ed.aspx.cs:395-420</code>);</li>
+<li>a tela não confere a situação do lote no Estoque ou no CQ nem se a validade já passou;</li>
+<li>a data e a hora da autorização são digitadas (linha 500).</li>
+<li>RN008 – <strong>Ambientes:</strong> a tela confere a validade da <strong>limpeza</strong> e da <strong>análise de ambiente</strong> de cada sala (<code>Aut/autorizacao_ambiente_producao_ed.aspx.cs:120-164</code>).</li>
+<li>RN009 – <strong>Equipamentos e instrumentos:</strong></li>
+<li>cada item aparece como <strong>LIBERADO</strong> ou <strong>PENDENTE</strong>, conforme a validade da qualificação, da calibração, da limpeza, da manutenção preventiva e da lubrificação (<code>Aut/autorizacao_equipamentos_producao_ed.aspx.cs:888-919</code>);</li>
+<li><strong>um item pendente pode ser autorizado com justificativa</strong> de até 100 caracteres (<code>TBL_DETALHE_AUTORIZACAO_EQUIPAMENTO</code>, colunas <code>JUSTIFICATIVA_*</code>).</li>
+<li>RN010 – <strong>Pontos de água:</strong> autorização por ponto (<code>Aut/autorizacao_ponto_agua_producao_ed.aspx.cs</code>). <em>A confirmar no teste:</em> se confere o laudo da água.</li>
+<li>RN011 – <strong>Controle da Qualidade:</strong></li>
+<li>o autorizador marca uma lista de itens, como reagentes e equipamentos do CQ (<code>TBL_TIPO_AUTORIZACAO_CONTROLE_QUALIDADE</code>, roteiro <code>Hsolutions.Producao.DB/dml.sql</code>);</li>
+<li>grava o usuário logado e a data e a hora digitadas (<code>Aut/autorizacao_controle_qualidade_producao_ed.aspx.cs:184-227</code>);</li>
+<li><strong>não consulta o módulo do CQ</strong>.</li>
+<li>RN012 – <strong>Garantia da Qualidade:</strong></li>
+<li>autorização com o usuário logado e a data e a hora digitadas (<code>Aut/autorizacao_ficha_tecnica_producao_ed.aspx.cs:183-187</code>);</li>
+<li><strong>não consulta o módulo da GQ</strong>: treinamento, mudança, registro do produto;</li>
+<li>é a esse registro que se liga o registro de lote (<code>PRD_RESPOSTA_XML</code>).</li>
+<li>RN013 – Cada autorização pode ser <strong>"Autorizada"</strong> ou <strong>"Não autorizada"</strong> (<code>IND_AUTORIZADO</code>).</li>
+<li>RN014 – As autorizações são telas da Produção, abertas pela função de cada tela no perfil. <em>A validar com a área:</em> se quem autoriza é da área dona (Estoque, CQ, GQ) ou da Produção.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Autorização Estoque x Produção</td>
+<td>Confirmar os insumos separados</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Autorização Ambientes x Produção</td>
+<td>Liberar as salas</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Autorização Equipamentos x Produção</td>
+<td>Liberar os equipamentos</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Autorização Instrumentos x Produção</td>
+<td>Liberar os instrumentos</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Autorização dos Pontos de Água x Produção</td>
+<td>Liberar os pontos de água</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Autorização Garantia da Qualidade x Produção</td>
+<td>Autorização da GQ</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Autorização Controle de Qualidade x Produção</td>
+<td>Autorização do CQ</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="autorizar-ou-cancelar-a-producao">Autorizar ou cancelar a produção</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN015 – Só se autoriza a produção sem <strong>autorização pendente</strong>: "Não é possível Autorizar! Existem autorizações pendentes!" (<code>Prod/autorizacao_producao_ed.aspx.cs:380-430</code>).</li>
+<li>RN016 – <strong>Pendente é a autorização sem resposta.</strong></li>
+<li>Uma área que respondeu <strong>"Não autorizada"</strong> <strong>não conta como pendente</strong> (<code>Prod/autorizacao_producao_ed.aspx.cs:58-80</code>, igual nas sete áreas).</li>
+<li><em>Inferência, a confirmar no teste:</em> a produção pode ser autorizada mesmo com uma área que negou.</li>
+<li>RN017 – A autorização grava:</li>
+<li>o responsável;</li>
+<li>a data da liberação, pelo servidor;</li>
+<li>a <strong>data e a hora autorizadas para o início</strong>, digitadas;</li>
+<li>uma justificativa (<code>Prod/autorizacao_producao_ed.aspx.cs:474-482</code>).</li>
+<li>RN018 – O código preenche como autorizada, com o nome de quem autoriza a produção, qualquer área que ainda esteja sem resposta (<code>Prod/autorizacao_producao_ed.aspx.cs:483-518</code>). Hoje isso não acontece, porque a trava de pendências (RN015) vem antes. O caminho que permitia autorizar por cima, área por área, está <strong>comentado</strong> (linhas 412-425).</li>
+<li>RN019 – <strong>Cancelamento:</strong></li>
+<li>com justificativa obrigatória;</li>
+<li>grava quem cancelou e a data (<code>Prod/autorizacao_producao_ed.aspx.cs:545-560</code>);</li>
+<li><strong>não se encontrou o estorno da reserva dos insumos no Estoque</strong>. <em>A confirmar no teste.</em></li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Autorizar/Cancelar Produção</td>
+<td>Ver a situação das sete autorizações; autorizar ou cancelar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="numero-de-lote">Número de lote</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN020 – O número de lote é gerado para a produção autorizada e sem número (<code>Prod/geracao_lote_lst.aspx.cs:124</code>).</li>
+<li>RN021 – <strong>Tipos de lote:</strong></li>
+<li>convencional;</li>
+<li>piloto;</li>
+<li><strong>reprocessado</strong>: exige o lote anterior, a etapa de reprocesso, a justificativa e um PDF;</li>
+<li><strong>ordem de serviço</strong>: cliente, descrição e contrato (<code>LaboSys.Core.Repository/Extensions/Enums.cs:41</code>; <code>Prod/geracao_lote_ed.aspx.cs:366-390</code>).</li>
+<li>RN022 – O <strong>número de lote é digitado</strong>.</li>
+<li>É conferido contra o formato configurado (<code>FORMATO_NUMERO_LOTE_PADRAO</code>).</li>
+<li>O código traz dois formatos fixos, <strong>"Padrão Exército"</strong> e <strong>"Padrão Marinha"</strong>, com o ano e o mês atuais no início e números de procedimentos dos clientes anteriores (<code>Prod/geracao_lote_ed.aspx.cs:404-470</code>).</li>
+<li>RN023 – Número de lote ou de OPE repetido é recusado: "Número de Lote em uso!" e "Número de OPE em uso!" (<code>Prod/geracao_lote_ed.aspx.cs:494, 503</code>).</li>
+<li>RN024 – Ficam gravados quem gerou o número e a data e a hora, pelo servidor. A <strong>validade do produto</strong> é calculada a partir da <strong>data de geração do número</strong>, pelo prazo de validade do produto (<code>Prod/geracao_lote_ed.aspx.cs:379-386</code>). <em>A validar com a área:</em> se a validade deve contar da data de fabricação.</li>
+<li>RN025 – O lote pode ser <strong>cancelado</strong>, com justificativa (<code>Prod/geracao_lote_can.aspx</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Gerar Número de Lote</td>
+<td>Gerar, consultar e cancelar o número de lote e da OPE</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="inicio-e-registro-da-producao">Início e registro da produção</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN026 – O <strong>Início da Produção</strong> lista as produções com número de lote. Dali se abrem:</li>
+<li>o <strong>Registro da Produção</strong> (etapas);</li>
+<li>o apontamento de horas;</li>
+<li>a solicitação avulsa;</li>
+<li>o <strong>Log OPE</strong> (<code>Prod/registro_producao_lst.aspx.cs:66-82</code>).</li>
+<li>RN027 – Só se registra em produção <strong>iniciada</strong> ou <strong>pendente de finalização</strong>. Nas outras situações, a tela abre só para ver (<code>Prod/registro_producao_lst.aspx.cs:120-121</code>).</li>
+<li>RN028 – O registro das etapas segue o modelo XML do produto. Detalhes no fluxo 2.</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Início da Produção</td>
+<td>Abrir o registro, as horas, a solicitação avulsa e o histórico</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Registro da Produção</td>
+<td>Registrar as etapas (fluxo 2)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="final-reconciliacao-e-liberacao">Final, reconciliação e liberação</h3>
+<h4 id="regras-de-negocio_5">Regras de negócio</h4>
+<ul>
+<li>RN029 – O <strong>Final da Produção</strong> registra:</li>
+<li>a <strong>data e a hora finais</strong>, digitadas;</li>
+<li>a quantidade final produzida;</li>
+<li>se há <strong>estabilidade</strong>, com a quantidade, que não pode passar da produzida ("Quantidade estabilidade incorreta!") (<code>Prod/final_producao_ed.aspx.cs:224-316</code>).</li>
+<li>RN030 – <strong>Envio ao Estoque:</strong> a pergunta "Enviar produto acabado para o estoque" vem marcada <strong>Sim</strong>.</li>
+<li>Com Sim, o produto acabado entra no Estoque pela API, já na finalização (<code>Prod/final_producao_ed.aspx.cs:439-466</code>). Se a integração falhar, a finalização não acontece: "Não foi possível finalizar a produção - Erro na integração com estoque."</li>
+<li><strong>Com Não, a produção é finalizada sem o produto entrar no Estoque</strong> (a função devolve "certo", linha 476).</li>
+<li>RN031 – O produto acabado vai ao Estoque <strong>na finalização, antes da reconciliação e da liberação</strong>. <em>A confirmar no teste:</em> em que situação ele entra no Estoque (quarentena) e se a reprovação na liberação chega até lá. Nenhuma ligação com o Estoque foi encontrada nas telas de reconciliação e liberação.</li>
+<li>RN032 – O boletim de envio à quarentena pode ser impresso depois de finalizar (<code>Prod/final_producao_ed.aspx.cs:69, 200-205</code>).</li>
+<li>RN033 – A <strong>Reconciliação da Produção</strong> registra:</li>
+<li>os <strong>rendimentos obtido e comercial, digitados</strong>, sem faixa esperada;</li>
+<li>a aprovação, a justificativa e a observação;</li>
+<li>a data, tirada da data final da produção;</li>
+<li>pode ser <strong>reaberta</strong>, com justificativa (<code>Prod/reconciliacao_producao_ed.aspx.cs:346-443, 467-468</code>).</li>
+<li>RN034 – A <strong>Liberação da Produção</strong> <strong>aprova ou reprova</strong> a produção, com justificativa e data e hora digitadas. Também pode ser <strong>reaberta</strong> (<code>Prod/liberacao_producao_ed.aspx.cs:280-323</code>).</li>
+<li>RN035 – Final, reconciliação e liberação usam <strong>o mesmo código de tela</strong> no perfil (<code>IdTela = "484"</code>, <code>Prod/final_producao_lst.aspx.cs:50</code>, <code>reconciliacao_producao_ed.aspx.cs:46</code>, <code>liberacao_producao_ed.aspx.cs:49</code>). Quem pode finalizar pode também reconciliar e liberar.</li>
+<li>RN036 – A finalização também pode ser <strong>reaberta</strong> (<code>Prod/final_producao_ed.aspx.cs:361-368</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_5">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Final da Produção</td>
+<td>Finalizar, enviar ao Estoque, imprimir o boletim</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Reconciliação da Produção</td>
+<td>Registrar rendimentos e aprovar a reconciliação</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Liberação da Produção</td>
+<td>Aprovar ou reprovar a produção</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Impressão Bol. Quar. PA (relatório)</td>
+<td>Boletim de envio à quarentena</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="situacoes-da-producao">Situações da produção</h3>
+<h4 id="regras-de-negocio_6">Regras de negócio</h4>
+<ul>
+<li>RN037 – A situação da produção é <strong>calculada</strong> a partir do que foi registrado (<code>LaboSys.Core.Repository/Parcials/TBL_PRODUCAO.cs:44-110</code>):</li>
+</ul>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Quando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção cadastrada</td>
+<td>Solicitada, sem autorização</td>
+</tr>
+<tr>
+<td>Número de lote pendente</td>
+<td>Autorizada, sem número de lote</td>
+</tr>
+<tr>
+<td>Produção iniciada</td>
+<td>Com número de lote, sem final</td>
+</tr>
+<tr>
+<td>Pendente de finalização</td>
+<td>Etapas concluídas, final não confirmado</td>
+</tr>
+<tr>
+<td>Pendente de reconciliação</td>
+<td>Final confirmado, sem reconciliação</td>
+</tr>
+<tr>
+<td>Pendente de liberação</td>
+<td>Reconciliada, sem liberação</td>
+</tr>
+<tr>
+<td>Produção liberada / reprovada</td>
+<td>Liberação aprovada / reprovada</td>
+</tr>
+<tr>
+<td>Produção cancelada</td>
+<td>Cancelada em qualquer momento</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="telas-do-sistema_6">Telas do sistema</h4>
+<p>As situações aparecem como filtro e coluna nas listas de Gerar Número de Lote, Início da Produção e Final da Produção.</p>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. A produção pode ser autorizada com uma área que negou</strong> (RN016). Pendente é só a área sem resposta; "Não autorizada" passa. <em>A confirmar no teste.</em></p>
+<p><strong>2. As autorizações do CQ e da GQ não consultam esses módulos</strong> (RN011, RN012). São marcações na Produção: não conferem o laudo dos insumos, o treinamento das pessoas, a mudança aprovada nem o registro do produto (<code>04-conformidade-regulatoria.md</code>, temas 7 e 15).</p>
+<p><strong>3. O Estoque confirma insumos digitando lote e validade</strong> (RN007), sem conferir se o lote está aprovado e dentro da validade (RDC 658/2022, art. 189).</p>
+<p><strong>4. Equipamento ou sala pendente pode ser liberado com uma justificativa curta</strong> (RN009), sem aprovação de outra pessoa e sem virar desvio (art. 167).</p>
+<p><strong>5. Áreas podem ficar sem autorização</strong> (RN003): se o lote padrão não marcar equipamentos, ambientes ou o Estoque como obrigatórios, essas autorizações nem são criadas.</p>
+<p><strong>6. O produto acabado pode ser finalizado sem entrar no Estoque</strong> (RN030). E, quando entra, entra <strong>antes</strong> da reconciliação e da liberação (RN031). A reprovação depois não chega ao Estoque (art. 220).</p>
+<p><strong>7. Quem finaliza também reconcilia e libera</strong> (RN035). Não há separação entre quem produz e quem aprova o registro; a liberação pela Pessoa Delegada não foi encontrada (art. 8º, XV).</p>
+<p><strong>8. Datas e horas digitadas</strong> em quase todas as decisões (RN007, RN011, RN012, RN017, RN029, RN034) (art. 124).</p>
+<p><strong>9. Número de lote digitado, com formatos de clientes anteriores no código</strong> (RN022). Validade contada da geração do número, não da fabricação (RN024).</p>
+<p><strong>10. Cancelamento sem estorno da reserva no Estoque</strong> (RN019). <em>A confirmar no teste.</em></p>
+<p><strong>11. Reaberturas</strong> de final, reconciliação e liberação (RN033, RN034, RN036), só com justificativa, sem aprovação da GQ.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Um produto <code>TESTE</code> com um <strong>lote padrão <code>TESTE</code></strong> que marque como obrigatórios itens, ambientes, equipamentos e pontos de água. Use um insumo, uma sala e um equipamento <code>TESTE</code> do Principal.
+- Um equipamento <code>TESTE</code> com a calibração <strong>vencida</strong> (fluxo 4) e outro em dia.
+- Usuários de teste: <code>t.admin</code> (Produção), <code>t.cadastro</code> (como Estoque), <code>t.semadmin</code> (como CQ) e <code>t.consulta</code> (como GQ).
+- Um arquivo PDF de teste (reprocesso).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-001</td>
+<td>Solicitar autorizações para o produto <code>TESTE</code> com um item do lote padrão <strong>inativo</strong></td>
+<td>Recusa, com a lista de críticas (RN002)</td>
+</tr>
+<tr>
+<td>CT-PRO-002</td>
+<td>Solicitar autorizações para o produto <code>TESTE</code> com tudo ativo</td>
+<td>Produção cadastrada; as autorizações aparecem conforme o lote padrão (RN003); a reserva é enviada ao Estoque (RN004)</td>
+</tr>
+<tr>
+<td>CT-PRO-003</td>
+<td>No Estoque, procurar a reserva dos insumos da produção do CT-PRO-002</td>
+<td>A requisição existe, com o código gravado na autorização do Estoque (RN004)</td>
+</tr>
+<tr>
+<td>CT-PRO-004</td>
+<td>Na Autorização Estoque x Produção, confirmar um insumo com <strong>lote vencido</strong> (validade no passado)</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (RN007, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-PRO-005</td>
+<td>Na Autorização Equipamentos x Produção, autorizar o equipamento com calibração <strong>vencida</strong>, com justificativa</td>
+<td>Pela norma, recusa ou aprovação de outra pessoa. <strong>Registrar se aceitar com a justificativa</strong> (RN009, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-PRO-006</td>
+<td>Responder <strong>"Não autorizada"</strong> na Autorização Controle de Qualidade x Produção e autorizar todas as outras; tentar Autorizar a produção</td>
+<td>Pela norma, recusa. <strong>Registrar se autorizar</strong> (RN016, ponto 1)</td>
+</tr>
+<tr>
+<td>CT-PRO-007</td>
+<td>Deixar a Autorização Garantia da Qualidade sem resposta e tentar Autorizar a produção</td>
+<td>Recusa: "Existem autorizações pendentes!" (RN015)</td>
+</tr>
+<tr>
+<td>CT-PRO-008</td>
+<td>Autorizar a produção com todas as áreas autorizadas; informar a data de início autorizada no <strong>passado</strong></td>
+<td>Autorização gravada. <strong>Registrar se aceita data passada</strong> (RN017, ponto 8)</td>
+</tr>
+<tr>
+<td>CT-PRO-009</td>
+<td>Cancelar uma produção autorizada, com justificativa; ver a reserva no Estoque</td>
+<td>Cancelada. <strong>Registrar se a reserva continua no Estoque</strong> (RN019, ponto 10)</td>
+</tr>
+<tr>
+<td>CT-PRO-010</td>
+<td>Gerar o número de lote com um número fora do formato configurado</td>
+<td>Recusa com a mensagem do formato (RN022)</td>
+</tr>
+<tr>
+<td>CT-PRO-011</td>
+<td>Gerar o número de lote com um número <strong>já usado</strong></td>
+<td>"Número de Lote em uso!" (RN023)</td>
+</tr>
+<tr>
+<td>CT-PRO-012</td>
+<td>Gerar um lote <strong>reprocessado</strong> sem lote anterior; depois com lote anterior, etapa, justificativa e PDF</td>
+<td>O primeiro é recusado; o segundo é gravado (RN021)</td>
+</tr>
+<tr>
+<td>CT-PRO-013</td>
+<td>Conferir a validade calculada do lote gerado</td>
+<td>Validade = data de geração + prazo do produto (RN024)</td>
+</tr>
+<tr>
+<td>CT-PRO-014</td>
+<td>Finalizar a produção <code>TESTE</code> com <strong>"Enviar produto acabado para o estoque: Não"</strong></td>
+<td>Pela norma, o produto acabado não pode sumir do controle. <strong>Registrar se finaliza sem entrar no Estoque</strong> (RN030, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-PRO-015</td>
+<td>Finalizar outra produção com envio ao Estoque; ver no Estoque a situação do produto acabado</td>
+<td>Entra em <strong>quarentena</strong> (art. 220). <strong>Registrar a situação em que entra</strong> (RN031)</td>
+</tr>
+<tr>
+<td>CT-PRO-016</td>
+<td>Informar quantidade para estabilidade maior que a produzida</td>
+<td>"Quantidade estabilidade incorreta!" (RN029)</td>
+</tr>
+<tr>
+<td>CT-PRO-017</td>
+<td>Reconciliar com rendimento muito abaixo do esperado (por exemplo, 50%)</td>
+<td>Pela norma, alerta e investigação. <strong>Registrar se aceita sem alerta</strong> (RN033)</td>
+</tr>
+<tr>
+<td>CT-PRO-018</td>
+<td>Com o mesmo usuário que finalizou, reconciliar e liberar a produção</td>
+<td>Pela norma, outra pessoa libera. <strong>Registrar se permitir</strong> (RN035, ponto 7)</td>
+</tr>
+<tr>
+<td>CT-PRO-019</td>
+<td><strong>Reprovar</strong> na Liberação da Produção um lote já enviado ao Estoque; ver o lote no Estoque</td>
+<td><strong>Registrar se o Estoque fica sabendo</strong> (RN031, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-PRO-020</td>
+<td>Reabrir a liberação e a reconciliação com justificativa; consultar o histórico</td>
+<td>Reabertura gravada com quem e quando. <strong>Registrar se aparece no histórico</strong> (RN033, RN034)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-PRO-006, 004, 014, 019, 018 e 005 primeiro. Eles tocam:
+- a autorização apesar de uma área negar;
+- o insumo vencido;
+- o produto acabado fora do controle do Estoque;
+- a reprovação que não chega ao Estoque;
+- a mesma pessoa que produz e libera;
+- o equipamento vencido liberado por justificativa.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#solicitacao-de-autorizacoes">Solicitação de autorizações</a></li><li class="sub"><a href="#autorizacoes-das-areas">Autorizações das áreas</a></li><li class="sub"><a href="#autorizar-ou-cancelar-a-producao">Autorizar ou cancelar a produção</a></li><li class="sub"><a href="#numero-de-lote">Número de lote</a></li><li class="sub"><a href="#inicio-e-registro-da-producao">Início e registro da produção</a></li><li class="sub"><a href="#final-reconciliacao-e-liberacao">Final, reconciliação e liberação</a></li><li class="sub"><a href="#situacoes-da-producao">Situações da produção</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
