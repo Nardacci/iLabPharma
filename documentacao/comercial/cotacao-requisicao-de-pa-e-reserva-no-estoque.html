@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotação, requisição de PA e reserva no Estoque · Comercial · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html" aria-current=page>Cotação, requisição de PA e reserva no Estoque</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Cotação, requisição de PA e reserva no Estoque</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/comercial/LabMedSys - Modulo Comercial - Fluxo Cotacao, Requisicao e Reserva.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve como o produto acabado é <strong>cotado e pedido</strong> no Comercial do LabMedSys e como o pedido <strong>reserva o lote</strong> no Estoque. Para cada produto da requisição, o usuário escolhe o lote que será vendido. Por isso este é o fluxo em que a empresa decide <strong>qual lote sai para qual cliente</strong>.</p>
+<p>Pela norma, nenhum lote pode ser comercializado antes de a <strong>Pessoa Delegada</strong> certificar que ele foi produzido e controlado conforme o registro (RDC 658/2022, art. 8º, XV). Os registros de distribuição precisam dizer <strong>para quem foi cada lote</strong> (arts. 346 e 347).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Cotação: inclusão, itens, preço sugerido, impressão.</li>
+<li>Requisição de PA: tipo de fornecimento, cliente, cotação ou convênio, itens com lote.</li>
+<li>Reserva no Estoque: criação, refazer a cada gravação, cancelamento.</li>
+<li>Cancelar Requisição de PA.</li>
+</ul>
+<p><strong>Fora do escopo:</strong>
+- os cadastros do cliente e do convênio (fluxo 1);
+- a separação no Estoque (fluxo de solicitação do Estoque);
+- a fatura e a remessa (fluxo 3).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu. Os caminhos de código são relativos a <code>7.comercial/comercial/</code>. Para encurtar: <code>Cot/</code> = <code>HSolutions.Comercial.UI/Areas/Cotacao/</code>, <code>NF/</code> = <code>HSolutions.Comercial.UI/Areas/NotaFiscal/</code>, <code>Est/</code> = <code>3.estoque/app/</code> (código do Estoque).</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/comercial/cotacao-requisicao-reserva-fluxograma.png" target="_blank" rel="noopener"><img src="../img/comercial/cotacao-requisicao-reserva-fluxograma.png" alt="Workflow da cotação, da requisição de PA e da reserva no Estoque" loading="lazy"></a><figcaption>Workflow da cotação, da requisição de PA e da reserva no Estoque · clique para ampliar</figcaption></figure>
+
+<ol>
+<li><strong>Cotação</strong> (opcional): produtos, quantidades e preços oferecidos ao cliente.</li>
+<li><strong>Requisição de PA:</strong> o usuário escolhe o tipo de fornecimento, o cliente e, conforme o tipo, uma cotação ou um convênio. Os produtos da cotação ou do convênio entram na requisição.</li>
+<li><strong>Lote:</strong> para cada produto, o usuário escolhe o lote numa lista do Estoque.</li>
+<li><strong>Salvar:</strong> o sistema confere as condições e cria a <strong>reserva</strong> no Estoque.</li>
+<li><strong>Separação:</strong> o Estoque separa a reserva. Depois vem a fatura (fluxo 3).</li>
+<li><strong>Cancelar:</strong> a requisição em aberto pode ser cancelada, e a reserva é cancelada no Estoque.</li>
+</ol>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="1-cotacao">1. Cotação</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – A cotação exige <strong>tipo de fornecimento</strong>, <strong>cliente</strong> e <strong>observações</strong> (<code>Cot/Validation/RespostaCotacaoValidation.cs:18-37</code>). Grava quem criou e quando, pelo servidor (<code>Cot/Controllers/RespostaCotacaoController.cs:128-145</code>).</li>
+<li>RN002 – A cotação nasce <strong>na lixeira</strong> e só sai dela quando recebe o primeiro item. Nesse momento ganha o código <code>NNNN/AAAA</code>, sequencial por ano (<code>Cot/Controllers/RespostaCotacaoController.cs:250-271</code>; <code>HSolutions.Comercial.Infrastructure/Cotacao/RespostaCotacaoRepository.cs:182-185</code>).</li>
+<li>RN003 – Cada item exige <strong>produto</strong>, <strong>quantidade</strong> e <strong>valor</strong>, sem produto repetido (<code>Cot/Validation/RespostaCotacaoValidation.cs:50-76</code>). A previsão de envio, se informada, não pode ser passada.</li>
+<li>RN004 – A tela mostra o <strong>preço sugerido</strong> (tabela de preço por produto e tipo de cliente) e a <strong>disponibilidade</strong> do produto no Estoque. A conferência de que a quantidade cotada cabe na disponível está <strong>comentada</strong> (<code>Cot/Controllers/RespostaCotacaoController.cs:365-404</code>). A cotação pode prometer mais do que existe.</li>
+<li>RN005 – A cotação <strong>não escolhe lote</strong>. Ela é impressa para o cliente (<code>Cot/Controllers/RespostaCotacaoController.cs:84</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Cotação</td>
+<td>Incluir, alterar e imprimir a cotação</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-abrir-a-requisicao-de-pa">2. Abrir a requisição de PA</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN006 – A requisição exige <strong>tipo de fornecimento</strong> e <strong>cliente</strong>. Nasce <strong>em aberto</strong>, com quem criou e a data do servidor (<code>Cot/Controllers/RequisicaoController.cs:276-288</code>).</li>
+<li>RN007 – O <strong>tipo de fornecimento</strong> decide de onde vêm os produtos (<code>Cot/Controllers/RequisicaoController.cs:605-666</code>; vínculos em <code>Hsolutions.Comercial.DB/dml.sql</code>):</li>
+<li><strong>convênio</strong>: a lista mostra os convênios do tipo com produto ainda com saldo;</li>
+<li><strong>cotação</strong>: a lista mostra as cotações do tipo que ainda não viraram requisição, ou cuja requisição foi cancelada;</li>
+<li><strong>guia de simples remessa</strong>: marca que a fatura vai gerar a remessa no Estoque (fluxo 3).</li>
+<li>RN008 – Com <strong>cotação</strong>, os produtos, as quantidades e os valores da cotação entram na requisição. Com <strong>convênio</strong>, entram os produtos e valores do convênio, com <strong>quantidade zero</strong> (<code>Cot/Controllers/RequisicaoController.cs:302-333</code>; o mesmo ao trocar a cotação ou o convênio, linhas 689-765).</li>
+<li>RN009 – Os itens que vêm da cotação ou do convênio entram <strong>sem lote</strong> (mesmas linhas).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Requisição de PA</td>
+<td>Abrir a requisição; escolher cliente, tipo, cotação ou convênio</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-itens-e-lote">3. Itens e lote</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN010 – A lista de lotes vem do Estoque. Só aparecem lotes com <strong>saldo disponível</strong>: fora da quarentena, não bloqueados, não em reanálise, de item que permite venda e do almoxarifado comercial. O saldo já reservado em outras requisições é descontado (<code>Est/LaboSys_DAL/dalItemLote.cs:473-550</code>). O lote vencido também sai do saldo disponível (Estoque, fluxo de reprovado e reanálise, RN003).</li>
+<li>RN011 – <strong>Não há validade mínima</strong> para vender. O serviço do Estoque aceita um número mínimo de dias, mas o Comercial envia sempre zero: o valor está fixado no código (<code>Cot/Controllers/RequisicaoController.cs:36, 830-841</code>). Um lote que vence no dia seguinte pode ser vendido.</li>
+<li>RN012 – Cada item exige <strong>produto</strong>, <strong>quantidade</strong> maior que zero e <strong>lote</strong>, sem produto repetido. A quantidade não pode passar da disponível (<code>Cot/Validation/RequisicaoValidation.cs:59-99</code>). A quantidade disponível usada nessa conferência é a que a tela envia.</li>
+<li>RN013 – O item guarda o <strong>lote</strong> (número interno, lote do fabricante, validade e código no Estoque) (<code>Cot/Controllers/RequisicaoController.cs:411-426</code>).</li>
+<li>RN014 – Os itens ficam <strong>na sessão do usuário</strong> enquanto a requisição é editada (<code>Cot/Controllers/RequisicaoController.cs:54-66</code>). Só vão para o banco ao salvar.</li>
+<li>RN015 – Excluir um item o marca como excluído e pede nova reserva (<code>Cot/Controllers/RequisicaoController.cs:538-549</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Requisição de PA, grade de itens</td>
+<td>Incluir, alterar e excluir itens com o lote</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-salvar-e-reservar-no-estoque">4. Salvar e reservar no Estoque</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN016 – <strong>Antes de salvar</strong>, a tela confere (<code>Cot/Controllers/RequisicaoController.cs:888-922</code>):</li>
+<li>se há <strong>saldo disponível</strong> do produto no Estoque para a quantidade de cada item (pelo produto, somando todos os lotes, e não pelo lote escolhido) (linhas 999-1020);</li>
+<li>a conferência "todos os produtos precisam ter lote" está <strong>comentada</strong> (linha 896).</li>
+<li>RN017 – As conferências da <strong>quantidade da cotação</strong> e do <strong>limite do convênio</strong> <strong>nunca rodam</strong> (<code>Cot/Controllers/RequisicaoController.cs:897-909, 939-997</code>):</li>
+<li>a da cotação só é chamada quando a requisição tem convênio, mas só age quando tem cotação; uma requisição tem uma ou outra;</li>
+<li>a do convênio só age quando a requisição tem cotação.</li>
+<li>RN018 – <strong>A cada gravação com itens alterados</strong>, o sistema <strong>cancela a reserva anterior e cria uma nova</strong> no Estoque, com os lotes e quantidades dos itens (<code>Cot/Controllers/RequisicaoController.cs:340-398</code>). O resultado do cancelamento não é conferido. A <strong>confirmação</strong> da reserva está comentada (linhas 396-397).</li>
+<li>RN019 – No Estoque, a reserva confere o <strong>saldo disponível de cada lote</strong>. Se faltar saldo, ou em qualquer erro, o Estoque <strong>devolve -1</strong> em vez de recusar (<code>Est/LaboSys.Estoque.Services/EstoqueServices.cs:1039-1120</code>).</li>
+<li>RN020 – O Comercial <strong>guarda esse -1</strong> como número da reserva (<code>Cot/Controllers/RequisicaoController.cs:397</code>). Na fatura, a conferência da separação só é feita quando o número é <strong>maior que zero</strong> (<code>NF/Controllers/FaturaController.cs:216</code>).</li>
+<li><em>Inferência, a confirmar no teste:</em> uma requisição cuja reserva falhou pode ser faturada <strong>sem separação</strong> no Estoque.</li>
+<li>RN021 – A reserva é feita no Estoque como uma <strong>solicitação do tipo comercial</strong>, já com as quantidades por lote. O saldo reservado sai da lista de lotes das outras requisições (RN010).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Requisição de PA</td>
+<td>Salvar e reservar</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Separação de Material (fluxo do Estoque)</td>
+<td>Separar a reserva</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-cancelar-a-requisicao">5. Cancelar a requisição</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN022 – Só a requisição <strong>em aberto</strong> pode ser cancelada: "Não é permitido cancelar uma requisição com situação diferente de aberto." (<code>HSolutions.Comercial.Domain/Cotacao/CancelarRequisicaoService.cs:16-21</code>).</li>
+<li>RN023 – O cancelamento <strong>cancela a reserva</strong> no Estoque. Se o Estoque falhar, a requisição não é cancelada: "Ocorreu um erro ao cancelar a solicitação no Estoque" (<code>Cot/Controllers/RequisicaoController.cs:846-866</code>).</li>
+<li>RN024 – O cancelamento grava quem e quando, pelo servidor. <strong>Não pede justificativa.</strong></li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Cancelar Requisição de PA</td>
+<td>Cancelar a requisição em aberto</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. O lote vendido é o "disponível" do Estoque, não o certificado pela Pessoa Delegada</strong> (RN010) (art. 8º, XV). O lote sai da quarentena quando o CQ aprova a análise. Não há, em nenhum módulo, a certificação do lote pela Pessoa Delegada antes da venda (Produção, fluxo 1; Estoque, fluxo de recebimento). <em>A validar com a GQ:</em> onde essa certificação acontece hoje.</p>
+<p><strong>2. A reserva que falha vira um número negativo, e a fatura deixa de conferir a separação</strong> (RN019, RN020). É uma corrente de três falhas em dois módulos.</p>
+<p><strong>3. A requisição pode ser salva com itens sem lote.</strong> Os itens da cotação ou do convênio entram sem lote (RN009), e a conferência geral de lote está comentada (RN016). Só a inclusão e a alteração de cada item exigem lote. <em>A confirmar no teste:</em> o que o Estoque faz com um item sem lote na reserva (pelo código, a reserva falha e cai no ponto 2).</p>
+<p><strong>4. Sem validade mínima para vender</strong> (RN011). Um lote que vence em poucos dias pode ser vendido. <em>A validar com a área:</em> a validade mínima exigida pelos clientes (é comum em compras públicas).</p>
+<p><strong>5. Conferências que não funcionam:</strong> a quantidade da cotação e o limite do convênio (RN017), a quantidade da cotação contra a disponível (RN004).</p>
+<p><strong>6. A conferência de saldo ao salvar é pelo produto, não pelo lote escolhido</strong> (RN016). O Estoque confere pelo lote na reserva, mas o erro volta como -1 (ponto 2).</p>
+<p><strong>7. Reserva desfeita e refeita a cada gravação</strong> (RN018), sem conferir o cancelamento. Uma falha no meio deixa a requisição sem reserva, ou duas reservas no Estoque. <em>A confirmar no teste.</em></p>
+<p><strong>8. Cancelamento sem justificativa</strong> (RN024).</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Um produto acabado <code>TESTE PRODUTO ACABADO</code> com dois lotes no almoxarifado comercial, ambos aprovados pelo CQ (<code>TESTEPA001</code> e <code>TESTEPA002</code>), e um terceiro <strong>em quarentena</strong> (<code>TESTEPA003</code>).
+- Uma pessoa jurídica <code>TESTE</code> como cliente, com tipo de cliente e endereço de entrega (fluxo 1).
+- Tipos de fornecimento <code>TESTE COTACAO</code>, <code>TESTE CONVENIO</code> e <code>TESTE REMESSA</code> (guia de simples remessa).
+- Usuários <code>t.admin</code> e <code>t.semadmin</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-001</td>
+<td>Criar uma cotação <code>TESTE</code> sem observações</td>
+<td>Recusa pela observação (RN001)</td>
+</tr>
+<tr>
+<td>CT-COM-002</td>
+<td>Criar a cotação com observações e incluir um item</td>
+<td>Código <code>NNNN/AAAA</code> gerado no primeiro item (RN002)</td>
+</tr>
+<tr>
+<td>CT-COM-003</td>
+<td>Na cotação, incluir quantidade maior que a disponível no Estoque</td>
+<td><strong>Registrar se aceitar</strong> (RN004, ponto 5)</td>
+</tr>
+<tr>
+<td>CT-COM-004</td>
+<td>Abrir uma requisição do tipo cotação a partir da cotação <code>TESTE</code></td>
+<td>Itens da cotação, <strong>sem lote</strong> (RN008, RN009)</td>
+</tr>
+<tr>
+<td>CT-COM-005</td>
+<td>Na lista de lotes do <code>TESTE PRODUTO ACABADO</code>, procurar o <code>TESTEPA003</code> (em quarentena)</td>
+<td>Não aparece (RN010)</td>
+</tr>
+<tr>
+<td>CT-COM-006</td>
+<td>No Estoque, bloquear o <code>TESTEPA002</code>; ver a lista de lotes na requisição</td>
+<td>Não aparece (RN010)</td>
+</tr>
+<tr>
+<td>CT-COM-007</td>
+<td>Escolher um lote que vence em menos de 30 dias</td>
+<td>Pela prática do mercado, alerta. <strong>Registrar se aceitar sem aviso</strong> (RN011, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-COM-008</td>
+<td>Salvar a requisição da cotação <strong>sem escolher os lotes</strong> dos itens</td>
+<td>Pela norma, recusa. <strong>Registrar se salvar</strong> e qual número de reserva ficou gravado (RN016, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-COM-009</td>
+<td>Incluir um item com quantidade maior que a disponível</td>
+<td>"Quantidade não pode ser maior que a QTDE Disponível." (RN012)</td>
+</tr>
+<tr>
+<td>CT-COM-010</td>
+<td>Incluir um item com o lote <code>TESTEPA001</code> e salvar</td>
+<td>Requisição salva; reserva criada no Estoque com o lote (RN018, RN021)</td>
+</tr>
+<tr>
+<td>CT-COM-011</td>
+<td>Na requisição do caso anterior, alterar a quantidade e salvar de novo; ver as solicitações no Estoque</td>
+<td>Uma reserva cancelada e uma nova (RN018). <strong>Registrar se ficarem duas ativas</strong> (ponto 7)</td>
+</tr>
+<tr>
+<td>CT-COM-012</td>
+<td>Numa requisição do tipo convênio, pedir mais do que o convênio permite</td>
+<td>Pela regra, recusa. <strong>Registrar se aceitar</strong> (RN017)</td>
+</tr>
+<tr>
+<td>CT-COM-013</td>
+<td>Numa requisição da cotação, pedir menos do que a cotação</td>
+<td>Pela regra, aviso "abaixo da cotação". <strong>Registrar se aceitar</strong> (RN017)</td>
+</tr>
+<tr>
+<td>CT-COM-014</td>
+<td>Forçar falta de saldo no lote (consumir o saldo do <code>TESTEPA001</code> em outra requisição) e salvar a requisição</td>
+<td>Pela norma, recusa clara. <strong>Registrar o número de reserva gravado</strong> (RN019, RN020, ponto 2)</td>
+</tr>
+<tr>
+<td>CT-COM-015</td>
+<td>Com a requisição do caso anterior, tentar gerar a fatura (fluxo 3)</td>
+<td>Pela norma, recusa por falta de separação. <strong>Registrar se faturar</strong> (RN020, ponto 2)</td>
+</tr>
+<tr>
+<td>CT-COM-016</td>
+<td>Cancelar a requisição em aberto</td>
+<td>Cancelada; reserva cancelada no Estoque; <strong>registrar que não pede justificativa</strong> (RN022 a RN024)</td>
+</tr>
+<tr>
+<td>CT-COM-017</td>
+<td>Tentar cancelar uma requisição faturada</td>
+<td>"Não é permitido cancelar uma requisição com situação diferente de aberto." (RN022)</td>
+</tr>
+<tr>
+<td>CT-COM-018</td>
+<td>Procurar, na requisição ou na fatura, a confirmação de que o lote foi <strong>certificado pela Pessoa Delegada</strong></td>
+<td><strong>Registrar a ausência</strong> (ponto 1)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-COM-018, 014, 015, 008 e 006 primeiro. Eles tocam:
+- a venda de lote sem certificação da Pessoa Delegada;
+- a reserva que falha e a fatura que deixa de conferir a separação;
+- a requisição salva sem lote;
+- o lote bloqueado oferecido à venda.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#1-cotacao">1. Cotação</a></li><li class="sub"><a href="#2-abrir-a-requisicao-de-pa">2. Abrir a requisição de PA</a></li><li class="sub"><a href="#3-itens-e-lote">3. Itens e lote</a></li><li class="sub"><a href="#4-salvar-e-reservar-no-estoque">4. Salvar e reservar no Estoque</a></li><li class="sub"><a href="#5-cancelar-a-requisicao">5. Cancelar a requisição</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
