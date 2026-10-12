@@ -185,10 +185,17 @@ MODULOS = [
          ("6.controle_documento/fluxos/externo-legado.md", "Documento externo e documento legado", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Documento Externo e Legado.docx"),
          ("6.controle_documento/fluxos/tipo-arquivos-modelos.md", "Tipo de documento, arquivos e modelos", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Tipo de Documento, Arquivos e Modelos.docx"),
      ]},
-    {"id": "ope", "nome": "OPE (Gerador de OPE)", "icone": "⚒", "cor": "#7c3aed", "situacao": "Em análise", "nivel": 2,
-     "resumo": "Ferramenta que monta o modelo do registro de lote de cada produto: etapas, subetapas, campos, cálculos, validações e quem assina cada campo. A Produção usa esse modelo em cada lote. Reconhecimento feito: o modelo não tem versão, aprovação nem histórico; cada ajuste regrava o modelo vigente na hora, e ele chega à ordem de produção por arquivo baixado e reenviado. Fluxo pronto: montagem do modelo, com a análise de por que a ferramenta confunde o usuário (o campo é criado digitando um código no texto, nomes técnicos, apagar texto apaga campos).",
+    {"id": "ope", "nome": "OPE (Gerador de OPE)", "icone": "⚒", "cor": "#7c3aed", "situacao": "Pronto para testes", "nivel": 2,
+     "resumo": "Ferramenta que monta o modelo do registro de lote de cada produto: etapas, subetapas, campos, cálculos, validações e quem assina cada campo. A Produção usa esse modelo em cada lote. O modelo não tem versão, aprovação nem histórico; cada ajuste regrava o modelo em uso, e ele chega à ordem de produção por arquivo baixado e reenviado. Fluxo pronto, com a análise de por que a ferramenta confunde o usuário. Análise pelo código concluída: 36 regras, 16 telas, conformidade (9 temas: nenhum atendido, 3 em parte, 5 não atendidos), 17 riscos (12 de prioridade alta) e plano de testes com 24 casos.",
      "docs": [
          ("9.ope/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+         ("9.ope/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
+         ("9.ope/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
+         ("9.ope/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
+         ("9.ope/08-plano-de-testes.md", "Plano de testes", "testes", None),
+         ("9.ope/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
+         ("9.ope/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
+         ("9.ope/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("9.ope/fluxos/montagem-do-modelo.md", "Montagem do modelo do registro de lote", "fluxos", "9.ope/fluxos/LabMedSys - Modulo OPE - Fluxo Montagem do Modelo do Registro de Lote.docx"),
      ]},
     {"id": "comercial", "nome": "Comercial", "icone": "◈", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
@@ -734,6 +741,7 @@ FONTES_ANVISA = {
     "controle-qualidade": [("4.controle_qualidade/04-conformidade-regulatoria.md", "4.controle_qualidade/04-conformidade-normas.json", None)],
     "controle-documentos": [("6.controle_documento/04-conformidade-regulatoria.md", "6.controle_documento/04-conformidade-normas.json", None)],
     "producao": [("2.producao/04-conformidade-regulatoria.md", "2.producao/04-conformidade-normas.json", None)],
+    "ope": [("9.ope/04-conformidade-regulatoria.md", "9.ope/04-conformidade-normas.json", None)],
 }
 # Detalhe da situação que toca acesso, senha ou login não é publicado: fica só o selo.
 RE_DETALHE_RESTRITO = re.compile(r"permiss|senha|login|acesso|autoriza|perfil|endere[çc]o", re.I)

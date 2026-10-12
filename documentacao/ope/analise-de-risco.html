@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise de risco · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html">Montagem do modelo do registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html" aria-current=page>Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>Qualidade e ANVISA</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Análise de risco</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> Garantia da Qualidade e equipe de homologação.</p>
+<p><strong>Método:</strong> Guia nº 33/2020 da ANVISA, item 6 (gerenciamento do risco à qualidade, com base no ICH Q9 e no GAMP 5), com as mesmas escalas dos outros módulos.</p>
+<p><strong>Data:</strong> 12/10/2026 · <strong>Situação:</strong> rascunho para revisão pela Garantia da Qualidade.</p>
+<p><strong>Base:</strong> as notas são uma proposta inicial, tiradas de:
+- o código;
+- as regras (<code>01-regras-de-negocio.md</code>);
+- a conformidade (<code>04-conformidade-regulatoria.md</code>);
+- o fluxo;
+- a matriz de permissões (<code>02-matriz-de-permissoes.md</code>);
+- o modelo de dados (<code>06-modelo-de-dados.md</code>).</p>
+<p>A classe e a prioridade foram calculadas por script, pela escala abaixo.</p>
+<h3 id="para-que-serve">Para que serve</h3>
+<p>Define <strong>o que testar primeiro e com que profundidade</strong> e a ordem das correções na nova versão.</p>
+<hr />
+<h3 id="etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Resposta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O sistema é regulado pelas Boas Práticas de Fabricação?</td>
+<td><strong>Sim.</strong> O módulo monta a instrução de fabricação que o registro de lote segue (RDC 658/2022, arts. 133 a 137).</td>
+</tr>
+<tr>
+<td>Categoria GAMP 5</td>
+<td><strong>5</strong>: aplicação customizada. O Gerador é, ele mesmo, a ferramenta de configuração do registro de lote.</td>
+</tr>
+<tr>
+<td>Impacto do módulo</td>
+<td><strong>Alto e indireto, mas amplo:</strong> um erro no modelo se repete em <strong>todos os lotes</strong> do produto.</td>
+</tr>
+<tr>
+<td>Particularidade</td>
+<td>O módulo é pequeno, mas tudo o que a Produção exige do operador (campos, assinaturas, controles) é decidido aqui.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conclusão:</strong> é necessária a avaliação funcional detalhada (etapas 2 e 3).</p>
+<h3 id="escalas-usadas">Escalas usadas</h3>
+<p>Iguais às do Principal (<code>1.principal/07-analise-de-risco.md</code>):
+- <strong>Severidade (S)</strong> e <strong>Probabilidade (P):</strong> Alta, Média ou Baixa.
+- <strong>Detecção (D):</strong> Baixa quando ninguém nota, Alta quando se percebe na hora.</p>
+<p><strong>Classe</strong> = S × P:
+- <strong>Classe 1:</strong> Alta × Alta, Alta × Média ou Média × Alta.
+- <strong>Classe 2:</strong> Alta × Baixa, Média × Média ou Baixa × Alta.
+- <strong>Classe 3:</strong> as demais combinações.</p>
+<p><strong>Prioridade</strong> = Classe × D:
+- <strong>Classe 1:</strong> Alta; passa a Média se D for Alta.
+- <strong>Classe 2:</strong> Alta, Média ou Baixa, conforme D seja Baixa, Média ou Alta.
+- <strong>Classe 3:</strong> Média só com D Baixa; nos outros casos, Baixa.</p>
+<hr />
+<h3 id="etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</h3>
+<h4 id="modelo-e-aprovacao">Modelo e aprovação</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-OPE-01</td>
+<td>Aprovação do modelo</td>
+<td>Registro de lote feito por instrução nunca aprovada</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum: o modelo não tem aprovação</td>
+<td>Elaboração, conferência e aprovação por pessoas designadas, com assinatura eletrônica, antes do uso</td>
+<td>Fluxo, ponto 1; <code>04</code>, tema 1</td>
+</tr>
+<tr>
+<td>R-OPE-02</td>
+<td>Mudança do modelo</td>
+<td>Ajuste muda o modelo em uso, inclusive para lotes em andamento</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum: gravação imediata</td>
+<td>Mudança só por nova versão aprovada, ligada ao controle de mudanças da GQ; lote em andamento fica na versão em que começou</td>
+<td>Fluxo, ponto 1; <code>04</code>, tema 2; CT-OPE-018</td>
+</tr>
+<tr>
+<td>R-OPE-03</td>
+<td>Histórico</td>
+<td>Não se sabe quem mudou um campo, uma assinatura ou um controle, nem quando</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Trilha de auditoria de cada alteração, com motivo</td>
+<td><code>04</code>, tema 4; RN-OPE-003</td>
+</tr>
+<tr>
+<td>R-OPE-04</td>
+<td>Versão</td>
+<td>Não se sabe qual versão do modelo foi usada num lote</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Revisão fixa em 1; modelo regravado por cima</td>
+<td>Versão com vigência; o lote guarda a versão usada</td>
+<td><code>04</code>, tema 3</td>
+</tr>
+<tr>
+<td>R-OPE-05</td>
+<td>Separação de funções</td>
+<td>Quem monta o modelo também o põe em uso, sem conferência</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Não há decisão de aprovar</td>
+<td>Funções separadas de elaborar e aprovar</td>
+<td><code>02</code>, leitura</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="edicao">Edição</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-OPE-06</td>
+<td>Texto e campos</td>
+<td>Ajuste de texto apaga campos configurados (assinatura, validação) sem aviso</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum aviso</td>
+<td>Campos como objetos próprios; exclusão só com confirmação e mostrando o que depende do campo</td>
+<td>Fluxo, RN012, ponto 2; CT-OPE-006</td>
+</tr>
+<tr>
+<td>R-OPE-07</td>
+<td>Envio de arquivo</td>
+<td>Arquivo de outro produto ou versão errada substitui o modelo</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Nenhuma conferência</td>
+<td>Conferir o produto e a estrutura; guardar a versão anterior; envio como nova versão em aprovação</td>
+<td>Fluxo, RN030; CT-OPE-013, 014</td>
+</tr>
+<tr>
+<td>R-OPE-08</td>
+<td>Subetapa-padrão</td>
+<td>Aplicar um padrão apaga o conteúdo da subetapa ou deixa de copiar as validações</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Nenhum aviso</td>
+<td>Confirmação mostrando o que será substituído; cópia completa</td>
+<td>Fluxo, RN027; CT-OPE-012</td>
+</tr>
+<tr>
+<td>R-OPE-09</td>
+<td>Sessão</td>
+<td>Alteração gravada no modelo de outro produto (duas abas abertas)</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Cada tela leva o número do modelo; conferência na gravação</td>
+<td>RN-OPE-004; CT-OPE-015</td>
+</tr>
+<tr>
+<td>R-OPE-10</td>
+<td>Uso da ferramenta</td>
+<td>Erro de configuração por dificuldade de uso (U1 a U13)</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Ajuda parcial em 10 telas</td>
+<td>Editor visual de campos, nomes amigáveis, assistente e validação do modelo antes da aprovação</td>
+<td><code>01</code>, seção 4; CT-OPE-020</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="conteudo-de-bpf">Conteúdo de BPF</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-OPE-11</td>
+<td>Assinaturas</td>
+<td>Campo crítico sem assinatura ou sem conferente</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Assinatura configurável, não obrigatória</td>
+<td>Assinaturas mínimas obrigatórias por tipo de etapa; conferente diferente do executor</td>
+<td><code>04</code>, tema 7; CT-OPE-024</td>
+</tr>
+<tr>
+<td>R-OPE-12</td>
+<td>Limites</td>
+<td>Resultado fora da especificação aceito porque o modelo não tem limite</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Comparação só entre campos</td>
+<td>Limites de especificação por campo; fora do limite bloqueia e abre investigação (mesmo risco R-PRO-07)</td>
+<td><code>04</code>, tema 6; CT-OPE-008</td>
+</tr>
+<tr>
+<td>R-OPE-13</td>
+<td>Controle em processo</td>
+<td>Etapa avança sem o controle certo (só completude; etapa excluída sem conferir uso)</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Indica a subetapa que precisa estar completa</td>
+<td>Controle com critério de resultado; exclusão bloqueada se em uso</td>
+<td>Fluxo, RN007 e RN024</td>
+</tr>
+<tr>
+<td>R-OPE-14</td>
+<td>Modelo incompleto</td>
+<td>Modelo sem o mínimo do registro de lote vai para a Produção</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhuma conferência</td>
+<td>Lista de verificação do mínimo do art. 137 antes da aprovação</td>
+<td><code>04</code>, tema 5</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="estrutura">Estrutura</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-OPE-15</td>
+<td>Código programado</td>
+<td>Produto novo sem o comportamento específico; dependência de programador e de bibliotecas sem fonte</td>
+<td>Média</td>
+<td>Média</td>
+<td>Alta</td>
+<td>2</td>
+<td><strong>Baixa</strong></td>
+<td>Três classes programadas</td>
+<td>Comportamento configurável no modelo, sem código por produto</td>
+<td>Fluxo, RN018; RN-OPE-005</td>
+</tr>
+<tr>
+<td>R-OPE-16</td>
+<td>Duas cópias do modelo</td>
+<td>Modelo do Gerador e da ordem de produção divergem</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Envio manual</td>
+<td>Uma só fonte: a ordem aponta para a versão aprovada do modelo</td>
+<td><code>06</code>, anomalia 3</td>
+</tr>
+<tr>
+<td>R-OPE-17</td>
+<td>Modelo duplicado</td>
+<td>Dois modelos para o mesmo produto, sem saber qual vale</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>Média</td>
+<td>3</td>
+<td><strong>Baixa</strong></td>
+<td>Nenhum</td>
+<td>Um modelo por produto, com versões</td>
+<td>Fluxo, RN003; CT-OPE-002</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resumo">Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Riscos</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alta</strong></td>
+<td>R-OPE-01, 02, 03, 04, 05, 06, 09, 10, 11, 12, 13, 14</td>
+<td>12</td>
+</tr>
+<tr>
+<td><strong>Média</strong></td>
+<td>R-OPE-07, 08, 16</td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>Baixa</strong></td>
+<td>R-OPE-15, 17</td>
+<td>2</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- <strong>O primeiro bloco é o controle do documento:</strong> o modelo é a instrução de fabricação e não tem aprovação, versão nem histórico (R-OPE-01 a 05).
+- <strong>O segundo é a perda silenciosa de configuração:</strong> ao editar texto, ao aplicar um padrão, ao enviar arquivo, com duas abas abertas (R-OPE-06 a 09).
+- <strong>O terceiro é o conteúdo de BPF que depende de quem configura:</strong> assinaturas, limites, controle em processo (R-OPE-11 a 14).
+- A dificuldade de uso (R-OPE-10) aumenta a probabilidade de todos os outros.</p>
+<hr />
+<h3 id="etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</h3>
+<p>Cada controle exigido vira um <strong>requisito corrigido</strong> da nova versão (documento 05, depois dos testes) e um ou mais <strong>casos de teste</strong> (documento 08):
+- fluxo: CT-OPE-001 a 020;
+- acesso: CT-OPE-021 a 024.</p>
+<h3 id="etapa-5-revisao">Etapa 5: revisão</h3>
+<p>Revisar depois dos testes de tela e quando a área responder quem monta e quem aprova os modelos.</p>
+<h3 id="pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</h3>
+<ol>
+<li>Existe documento mestre aprovado para cada modelo, fora do sistema? Isso reduz a probabilidade de R-OPE-01 e 02.</li>
+<li>Quais assinaturas são obrigatórias em todo registro de lote (R-OPE-11).</li>
+<li>Onde estão os limites de especificação de cada produto (R-OPE-12).</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#para-que-serve">Para que serve</a></li><li><a href="#etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</a></li><li><a href="#escalas-usadas">Escalas usadas</a></li><li><a href="#etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</a></li><li><a href="#etapa-5-revisao">Etapa 5: revisão</a></li><li><a href="#pontos-para-a-garantia-da-qualidade">Pontos para a Garantia da Qualidade</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

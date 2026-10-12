@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html">Montagem do modelo do registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>9.ope/app</code>) · <strong>Base:</strong> o fluxo do módulo (<code>fluxos/montagem-do-modelo.md</code>) e o reconhecimento (<code>00-reconhecimento.md</code>).</p>
+<p><strong>Situação de todas as regras: Extraída.</strong> Elas foram lidas do código e aguardam o teste nas telas e a validação da área.</p>
+<p><strong>Caminhos:</strong> relativos a <code>9.ope/app/</code>. As abreviações do fluxo (<code>Repo/</code>, <code>Views/</code>, <code>Prod/</code>) se repetem aqui.</p>
+<p><strong>Como foi montado:</strong>
+- As regras da seção 2 foram <strong>consolidadas por script</strong> a partir do fluxo (<code>homologacao/ferramentas/consolidar_regras.py</code>). O texto de cada regra é o mesmo do fluxo.
+- A seção 5 liga cada código ao número da regra no fluxo.</p>
+<p><strong>Total: 36 regras.</strong> São 5 gerais (RN-OPE-001 a 005) e 31 do fluxo (RN-OPE-006 a 036).</p>
+<h3 id="1-regras-gerais-do-modulo">1. Regras gerais do módulo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Tema</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-OPE-001</td>
+<td>Finalidade e menu</td>
+<td>O módulo é o <strong>Gerador de OPE</strong>: monta o modelo do registro de lote de cada produto. Não tem banco próprio (documento do fornecedor). O menu próprio está comentado; só há "Módulos", e a tela inicial abre direto o Gerador (<code>HSolutions.GeradorXML.UI/Views/Shared/_Menu.cshtml:3</code>; <code>Views/Principal/Inicio.cshtml</code>). O roteiro que cadastraria as funções no Principal está todo comentado (<code>HSolutions.GeradorXML.DB/dml.sql:42-49</code>)</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-OPE-002</td>
+<td>Acesso</td>
+<td>Os controladores do Gerador de OPE, de Etapa, de Subetapa, de Campos, de Modelo e de Finalizar Produção marcam a conferência de função ao abrir e ao incluir ou alterar (<code>[AutorizacaoHandler]</code>, por exemplo <code>HSolutions.GeradorXML.UI/Controllers/GerarXMLController.cs:24-43</code>). A lógica dessa conferência está numa biblioteca compilada, sem código-fonte (<code>Library_Ope_old/HSolutions.UI.MVC.dll</code>). Quem não tem acesso vai para "O usuário não tem permissão para esta página." (<code>Views/Erro/AcessoPermissao.cshtml:34</code>)</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-OPE-003</td>
+<td>Gravação e histórico</td>
+<td>Cada ajuste regrava o modelo inteiro na hora (23 chamadas de <code>SalvarGerador</code> nos repositórios). As rotinas usadas <strong>não gravam histórico</strong> (<code>HSolutions.GeradorXML.ORM/Infra/Repository.cs:54-82</code>). A tabela do modelo não tem quem criou, quem alterou, datas nem exclusão lógica (<code>Scripts/TBL_GERADORXML_PRODUTO.sql:1-6</code>)</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-OPE-004</td>
+<td>Sessão</td>
+<td>O modelo em edição fica na <strong>sessão do usuário</strong>, um por vez, e a subetapa-padrão (tela Modelos) também (<code>HSolutions.GeradorXML.Base/BaseController.cs:20-50</code>). As gravações usam o número do modelo guardado na sessão</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-OPE-005</td>
+<td>Dependência da Produção</td>
+<td>O Gerador usa as mesmas classes de leitura e gravação do modelo que a Produção, a partir de uma cópia compilada da tela da Produção (<code>Library/LaboSys_UI.dll</code>; 28 arquivos com <code>using LaboSys_UI.producao.XML.Class_Producao</code>). As listas de validações, máscaras e dados de pesagem vêm dessas classes (<code>2.producao/app/LaboSys_UI/producao/XML/Class_Producao/Enum.cs</code>)</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-montagem-do-modelo-do-registro-de-lote">2. Montagem do modelo do registro de lote</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/montagem-do-modelo.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-OPE-006</td>
+<td>1. Criar o modelo do produto</td>
+<td>O modelo exige <strong>produto</strong> e <strong>descrição</strong> (<code>HSolutions.GeradorXML.ORM/Validation/GeradorXMLValidation.cs:18-29</code>). O produto vem do cadastro da Produção, só os ativos (<code>Repo/GeradorXMLRepository.cs:211-222</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-007</td>
+<td>1. Criar o modelo do produto</td>
+<td>O modelo nasce vazio, com <strong>revisão "1"</strong> (<code>Repo/GeradorXMLRepository.cs:224-239</code>). A revisão <strong>nunca muda</strong> depois: não há outro ponto do código que a altere.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-008</td>
+<td>1. Criar o modelo do produto</td>
+<td><strong>Nada impede dois modelos para o mesmo produto.</strong> A tabela não tem restrição de produto único (<code>Scripts/TBL_GERADORXML_PRODUTO.sql</code>), e a validação só confere o preenchimento. <em>A confirmar no teste.</em></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-009</td>
+<td>1. Criar o modelo do produto</td>
+<td>A lista busca por número, descrição do modelo ou nome do produto (<code>Repo/GeradorXMLRepository.cs:111-138</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-010</td>
+<td>1. Criar o modelo do produto</td>
+<td><strong>Não há exclusão</strong> do modelo: a tela não tem esse botão, e a tabela não tem exclusão lógica.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-011</td>
+<td>2. Montar etapas e subetapas</td>
+<td>A etapa tem número, nome e ordem. A ordem muda pelas setas, que trocam a etapa de lugar com a vizinha (<code>Repo/EtapaRepository.cs:41-62</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-012</td>
+<td>2. Montar etapas e subetapas</td>
+<td>A <strong>exclusão de uma etapa</strong> apaga a etapa e todas as subetapas e campos dela, depois de uma pergunta de confirmação (<code>Views/GerarXML/Edit.cshtml:177-187</code>; <code>Repo/EtapaRepository.cs:123-141</code>). Não confere se a etapa é usada no controle em processo de outra.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-013</td>
+<td>2. Montar etapas e subetapas</td>
+<td>Etapa e subetapa têm marcações que mudam o Registro da Produção:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-014</td>
+<td>2. Montar etapas e subetapas</td>
+<td>As abas de texto, validações, cálculos e ambientes <strong>só aparecem depois de salvar</strong> a subetapa pela primeira vez (<code>Views/SubEtapa/Edit.cshtml:25-31</code>, <code>display:none</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-015</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td>O texto da instrução é escrito num <strong>editor de texto com formatação</strong> (aba "Gerador Html"), com opção de impressão em paisagem (<code>Views/SubEtapa/_GeradorHTMLPartial.cshtml</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-016</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td><strong>Cada campo é criado digitando <code>{0}</code> no texto.</strong> Ao salvar, o sistema troca cada <code>{0}</code> por um nome técnico, como <code>{E1S2_CAMPO3}</code> (etapa 1, subetapa 2, campo 3), e cria o campo como caixa de texto de 100 pixels (<code>HSolutions.GeradorXML.Model/TelaXML.cs:171-199</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-017</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td><strong>Apagar o código de um campo do texto apaga o campo e toda a configuração dele</strong>, sem aviso (<code>Repo/SubEtapaRepository.cs:475-494</code>). O que dependia do campo (validações, cálculos, controle em processo, final da produção) não é conferido. <em>A confirmar no teste:</em> o que acontece com essas ligações.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-018</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td>O botão que mostra o <strong>código-fonte</strong> do texto só aparece para quem tem a função própria (<code>BTNCODIGOFONTE</code>) (<code>HSolutions.GeradorXML.Model/GeradorHTMLPartialPartil.cs:20-37</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-019</td>
+<td>4. Configurar cada campo</td>
+<td>Cada campo tem (<code>HSolutions.GeradorXML.Model/ConfigCamposModel.cs:28-81</code>; <code>Views/Campos/Edit.cshtml</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-020</td>
+<td>4. Configurar cada campo</td>
+<td><strong>Quem preenche e quem assina.</strong> Duas configurações escolhem na mesma lista de funções profissionais do Principal (<code>Repo/PermissaoRepository.cs:15-40</code>; <code>Repo/CampoRepository.cs:105, 132</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-021</td>
+<td>4. Configurar cada campo</td>
+<td><strong>Preenchimento automático:</strong> o campo pode trazer dados de outros cadastros. Por exemplo, número da OPE, lote, versão, revisão, validade, usuário que gerou o lote, responsável da GQ, registro na ANVISA, descrição do produto, listas de usuários, equipamentos, produtos e ambientes (<code>HSolutions.GeradorXML.Helpers/DropEnum.cs:57-108</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-022</td>
+<td>4. Configurar cada campo</td>
+<td><strong>Integração com o Estoque:</strong> o campo pode ser ligado a um <strong>insumo</strong> e a um dado da <strong>pesagem</strong> (lacre, tara, lote, responsável, peso líquido) (<code>Prod/Enum.cs:82-95</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-023</td>
+<td>4. Configurar cada campo</td>
+<td><strong>Classe do Produto:</strong> a lista oferece só três classes programadas: <code>DIAZEPAM</code>, <code>Glibenclamida_OP</code> e <code>Glibenclamida_OPE</code> (<code>HSolutions.GeradorXML.Helpers/ClassEnum.cs:12-17</code>). Um produto novo <strong>não tem classe própria</strong>. O comportamento programado (cálculos e validações especiais) só existe para esses produtos.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-024</td>
+<td>4. Configurar cada campo</td>
+<td>Ao salvar um campo, só as configurações <strong>alteradas</strong> são gravadas (<code>Repo/CampoRepository.cs:186-313</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-025</td>
+<td>5. Validações e cálculos</td>
+<td><strong>Funções de validação</strong> (aba própria) (<code>Prod/Enum.cs:37-79</code>; <code>Prod/ValidarSalvar.cs</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-026</td>
+<td>5. Validações e cálculos</td>
+<td><strong>Não há validação contra um valor fixo</strong> (mínimo e máximo da especificação). Para conferir um limite, seria preciso um segundo campo com o valor do limite (RN020). <em>Ponto para validar:</em> se a área faz assim.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-027</td>
+<td>5. Validações e cálculos</td>
+<td><strong>Fórmulas de cálculo:</strong> o resultado de uma fórmula entre campos vai para um campo de retorno, com opção de média. A fórmula é conferida antes de salvar (<code>Controllers/SubEtapaController.cs:207-247</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-028</td>
+<td>5. Validações e cálculos</td>
+<td><strong>Parâmetros de entrada:</strong> um campo pode receber o valor de um campo de outra etapa ou subetapa (<code>Controllers/CamposController.cs:40-43</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-029</td>
+<td>6. Controle em processo e final da produção</td>
+<td>O <strong>controle em processo</strong> de uma etapa indica <strong>qual subetapa precisa estar completa</strong> para avançar (<code>Repo/ControleProcessoRepository.cs:59-88</code>). Não há outro critério: é o que a Produção confere (fluxo 2 da Produção, RN019). Um controle usado por uma etapa não pode ser excluído (<code>HSolutions.GeradorXML.ORM/Validation/ControleProcessoValidation.cs:17-23</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-030</td>
+<td>6. Controle em processo e final da produção</td>
+<td>A tela <strong>Finalizar Produção</strong> define quais campos dão a <strong>data final</strong>, a <strong>quantidade produzida</strong> e a unidade, além do valor da amostra e do volume (<code>Repo/FinalizarProducaoRepository.cs:20-60</code>). Esses dados alimentam o Final da Produção e o envio ao Estoque.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-031</td>
+<td>7. Subetapas-padrão (Modelos)</td>
+<td>A tela <strong>Modelos</strong> guarda subetapas-padrão, com o mesmo editor (<code>Repo/ModeloRepository.cs</code>; tabela <code>PRD_MODELO_XML</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-032</td>
+<td>7. Subetapas-padrão (Modelos)</td>
+<td>Ao <strong>aplicar um modelo</strong> a uma subetapa, o sistema <strong>substitui o texto e os campos</strong> da subetapa pelos do modelo e renomeia os campos (<code>Repo/SubEtapaRepository.cs:353-391</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-033</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td><strong>Visualizar</strong> mostra a subetapa como o operador vai vê-la. <strong>Imprimir</strong> gera o modelo inteiro, uma etapa ou uma subetapa (<code>Controllers/GerarXMLController.cs:110-142</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-034</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td><strong>Baixar</strong> entrega o arquivo XML com o nome do produto (<code>Controllers/GerarXMLController.cs:70-74</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-035</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td><strong>Enviar arquivo</strong> (tela Upload) <strong>substitui o modelo inteiro</strong> pelo arquivo, sem conferir se é do mesmo produto e sem guardar o anterior (<code>Repo/GeradorXMLRepository.cs:273-284</code>). Se der erro, a resposta é só "Error" (<code>Controllers/GerarXMLController.cs:76-97</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-OPE-036</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td><strong>Não há envio direto à Produção.</strong> O arquivo baixado é enviado na tela Cadastro Ordem de Produção (fluxo 3 da Produção, RN024). Daí em diante, o Registro da Produção lê o modelo da ordem a cada abertura (RN025 daquele fluxo).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-pontos-de-atencao-dos-fluxos">3. Pontos de atenção dos fluxos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Ponto de atenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Montagem do modelo do registro de lote</td>
+<td>1. As instruções de fabricação mudam sem aprovação</td>
+</tr>
+<tr>
+<td>Montagem do modelo do registro de lote</td>
+<td>2. Um ajuste de texto pode apagar campos do registro de lote</td>
+</tr>
+<tr>
+<td>Montagem do modelo do registro de lote</td>
+<td>3. As regras de BPF do registro estão no modelo</td>
+</tr>
+<tr>
+<td>Montagem do modelo do registro de lote</td>
+<td>4. Limite de especificação só por comparação entre campos</td>
+</tr>
+<tr>
+<td>Montagem do modelo do registro de lote</td>
+<td>5. Produtos novos sem o comportamento programado</td>
+</tr>
+<tr>
+<td>Montagem do modelo do registro de lote</td>
+<td>6. Difícil de usar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-dificuldades-de-uso">4. Dificuldades de uso</h3>
+<p>O responsável apontou que o módulo é confuso para o usuário. O código confirma. A tabela vem do fluxo (seção "Por que o módulo confunde o usuário"); os números U1 a U13 são citados na análise de risco e no plano de testes.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que o usuário encontra</th>
+<th>Por que confunde</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>U1</td>
+<td><strong>O campo é criado digitando <code>{0}</code> no texto</strong></td>
+<td>Não há botão "inserir campo". Quem não sabe do código não cria campos. Depois de salvar, o <code>{0}</code> vira <code>{E1S2_CAMPO3}</code>, um nome técnico</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>U2</td>
+<td><strong>Apagar um trecho do texto apaga campos</strong></td>
+<td>Um ajuste de redação pode apagar campos já configurados, sem aviso</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>U3</td>
+<td><strong>Os campos são chamados por nomes técnicos</strong></td>
+<td>Validações, cálculos, controle em processo e final da produção pedem para escolher <code>E1S2_CAMPO3</code>, não "Peso médio". O nome amigável existe, mas o rótulo dele na tela aparece como <code>NomeAmigavel</code>, sem tradução</td>
+<td><code>Views/Campos/Edit.cshtml:63</code> (rótulo sem nome de exibição em <code>ConfigCamposModel.cs:32</code>)</td>
+</tr>
+<tr>
+<td>U4</td>
+<td><strong>"Classe do Produto" lista nomes de programas</strong></td>
+<td><code>DIAZEPAM</code>, <code>Glibenclamida_OP</code>, <code>Glibenclamida_OPE</code>. Para outro produto, nenhuma opção serve</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>U5</td>
+<td><strong>Duas configurações parecidas para "quem pode"</strong></td>
+<td>"Permissão para Acessar o campo" e "Função Profissional" escolhem na mesma lista, com efeitos diferentes que a tela não explica</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>U6</td>
+<td><strong>Campos que aparecem e somem</strong></td>
+<td>A tela de campo mostra ou esconde partes conforme o tipo escolhido. As abas da subetapa só aparecem depois de salvar. O usuário não sabe o que ainda falta configurar</td>
+<td>RN009; <code>Views/Campos/Edit.cshtml</code> (mais de 15 blocos com <code>display:none</code>)</td>
+</tr>
+<tr>
+<td>U7</td>
+<td><strong>Termos técnicos</strong></td>
+<td>"Gerador Html", "Parâmetro Entrada", "Método Pré-definido", "Tamanho do Campo" em pixels ("Exemplo: 100px"), "Definir Grupo"</td>
+<td><code>ConfigCamposModel.cs:33-79</code>; <code>Views/Campos/Edit.cshtml</code></td>
+</tr>
+<tr>
+<td>U8</td>
+<td><strong>"OPE" quer dizer duas coisas</strong></td>
+<td>No Gerador, "OPE" é o <strong>modelo</strong> ("Tela de inclusão/edição da OPE", "Descrição OPE"). Na Produção, OPE é a <strong>ordem de produção</strong> de um lote</td>
+<td><code>Views/GerarXML/Edit.cshtml:229</code>; Produção, fluxo 1</td>
+</tr>
+<tr>
+<td>U9</td>
+<td><strong>Dois editores iguais</strong></td>
+<td>Gerador de OPE e Modelos usam as mesmas telas. O que está sendo editado depende do que foi aberto por último, guardado na sessão</td>
+<td><code>HSolutions.GeradorXML.Base/BaseController.cs:20-50</code></td>
+</tr>
+<tr>
+<td>U10</td>
+<td><strong>Sem menu próprio</strong></td>
+<td>O menu do módulo está comentado; só há "Módulos". A tela inicial pula direto para o Gerador</td>
+<td><code>Views/Shared/_Menu.cshtml:3</code></td>
+</tr>
+<tr>
+<td>U11</td>
+<td><strong>Gravação sem "salvar" final</strong></td>
+<td>Cada ajuste já altera o modelo em uso. Não há como experimentar e desistir</td>
+<td>Reconhecimento, seção 3</td>
+</tr>
+<tr>
+<td>U12</td>
+<td><strong>Mensagens pouco claras</strong></td>
+<td>Erros com o título em inglês "Error." e envio de arquivo que responde só "Error"</td>
+<td><code>Views/SubEtapa/_GeradorHTMLPartial.cshtml:114</code>; RN030</td>
+</tr>
+<tr>
+<td>U13</td>
+<td><strong>Ajuda parcial</strong></td>
+<td>Há texto de ajuda em 10 telas (9 do editor e a lista de módulos), mas ele lista botões, sem explicar o processo. As abas da subetapa (validações, cálculos, texto) não têm ajuda</td>
+<td>Busca por <code>Detalhamento(</code> nas telas</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-correspondencia-com-os-fluxos">5. Correspondência com os fluxos</h3>
+<p>Cada regra tem o número local (RN001…) que aparece no documento do fluxo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Fluxo</th>
+<th>Etapa</th>
+<th>No fluxo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-OPE-006</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>1. Criar o modelo do produto</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-OPE-007</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>1. Criar o modelo do produto</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-OPE-008</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>1. Criar o modelo do produto</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-OPE-009</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>1. Criar o modelo do produto</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-OPE-010</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>1. Criar o modelo do produto</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-OPE-011</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>2. Montar etapas e subetapas</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-OPE-012</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>2. Montar etapas e subetapas</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-OPE-013</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>2. Montar etapas e subetapas</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-OPE-014</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>2. Montar etapas e subetapas</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-OPE-015</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-OPE-016</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-OPE-017</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-OPE-018</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>3. Escrever a instrução e criar os campos</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-OPE-019</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>4. Configurar cada campo</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-OPE-020</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>4. Configurar cada campo</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-OPE-021</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>4. Configurar cada campo</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-OPE-022</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>4. Configurar cada campo</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-OPE-023</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>4. Configurar cada campo</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-OPE-024</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>4. Configurar cada campo</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-OPE-025</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>5. Validações e cálculos</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-OPE-026</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>5. Validações e cálculos</td>
+<td>RN021</td>
+</tr>
+<tr>
+<td>RN-OPE-027</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>5. Validações e cálculos</td>
+<td>RN022</td>
+</tr>
+<tr>
+<td>RN-OPE-028</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>5. Validações e cálculos</td>
+<td>RN023</td>
+</tr>
+<tr>
+<td>RN-OPE-029</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>6. Controle em processo e final da produção</td>
+<td>RN024</td>
+</tr>
+<tr>
+<td>RN-OPE-030</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>6. Controle em processo e final da produção</td>
+<td>RN025</td>
+</tr>
+<tr>
+<td>RN-OPE-031</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>7. Subetapas-padrão (Modelos)</td>
+<td>RN026</td>
+</tr>
+<tr>
+<td>RN-OPE-032</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>7. Subetapas-padrão (Modelos)</td>
+<td>RN027</td>
+</tr>
+<tr>
+<td>RN-OPE-033</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td>RN028</td>
+</tr>
+<tr>
+<td>RN-OPE-034</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td>RN029</td>
+</tr>
+<tr>
+<td>RN-OPE-035</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td>RN030</td>
+</tr>
+<tr>
+<td>RN-OPE-036</td>
+<td>Montagem do modelo do registro de lote</td>
+<td>8. Conferir e levar o modelo à Produção</td>
+<td>RN031</td>
+</tr>
+</tbody>
+</table></div>
+<!-- total: 31 regras -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-regras-gerais-do-modulo">1. Regras gerais do módulo</a></li><li><a href="#2-montagem-do-modelo-do-registro-de-lote">2. Montagem do modelo do registro de lote</a></li><li><a href="#3-pontos-de-atencao-dos-fluxos">3. Pontos de atenção dos fluxos</a></li><li><a href="#4-dificuldades-de-uso">4. Dificuldades de uso</a></li><li><a href="#5-correspondencia-com-os-fluxos">5. Correspondência com os fluxos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

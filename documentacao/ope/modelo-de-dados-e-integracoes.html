@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html">Montagem do modelo do registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Para quem:</strong> desenvolvedores e DBA.</p>
+<p><strong>Base:</strong>
+- o roteiro da tabela do módulo (<code>9.ope/app/Scripts/TBL_GERADORXML_PRODUTO.sql</code>);
+- as classes de tabela do código (<code>9.ope/app/HSolutions.GeradorXML.ORM</code>);
+- o dicionário de dados (<code>Dicionário-LABMEDSYS.pdf</code>, item 1.4.244);
+- o fluxo do módulo.</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<p>O OPE <strong>não tem banco próprio</strong> (documento do fornecedor). Usa o mesmo banco da Produção e do Principal (todas as conexões do arquivo de configuração apontam para o mesmo banco, <code>LABMEDSYSD</code>).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas próprias</td>
+<td>2 (<code>TBL_GERADORXML_PRODUTO</code>, <code>PRD_MODELO_XML</code>)</td>
+</tr>
+<tr>
+<td>Tabelas lidas de outros módulos</td>
+<td>Produção (produto, insumos, ambientes, equipamentos, etapas); Principal (usuários, funções profissionais, módulos)</td>
+</tr>
+<tr>
+<td>Projeto de banco</td>
+<td>Sem tabelas: o roteiro <code>HSolutions.GeradorXML.DB/dml.sql</code> só tem o menu, todo comentado</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-tabelas">2. Tabelas</h3>
+<p><code>mermaid
+erDiagram
+  TBL_PRODUTO ||--o{ TBL_GERADORXML_PRODUTO : "modelo do registro"
+  TBL_GERADORXML_PRODUTO ||..o{ PRD_FICHA_TECNICA : "arquivo baixado e reenviado (manual)"
+  PRD_MODELO_XML ||..o{ TBL_GERADORXML_PRODUTO : "subetapa copiada"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_GERADORXML_PRODUTO</code></td>
+<td>Número, descrição, produto e o <strong>arquivo XML inteiro</strong> do modelo</td>
+<td>Só 4 colunas. Sem versão, situação, quem criou ou alterou, datas e exclusão lógica. Sem restrição de um modelo por produto</td>
+<td><code>Scripts/TBL_GERADORXML_PRODUTO.sql:1-6</code>; dicionário 1.4.244</td>
+</tr>
+<tr>
+<td><code>PRD_MODELO_XML</code></td>
+<td>Subetapas-padrão (tela Modelos), também como arquivo XML inteiro</td>
+<td>Tabela do banco da Produção</td>
+<td><code>HSolutions.GeradorXML.ORM/Repository/ModeloRepository.cs:23</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>O conteúdo do modelo não está em tabelas.</strong> Etapas, subetapas, campos, validações, cálculos, assinaturas e controle em processo ficam <strong>dentro do arquivo XML</strong>, numa só coluna. O banco não permite consultar, por exemplo, "quais modelos exigem a assinatura do farmacêutico" sem abrir cada arquivo.</p>
+<h3 id="3-o-que-vai-dentro-do-arquivo-do-modelo">3. O que vai dentro do arquivo do modelo</h3>
+<p>Lido do código que grava o arquivo (<code>HSolutions.GeradorXML.Model/GravarXML.cs</code>):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>O que guarda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produto</td>
+<td>Código, revisão (sempre "1"), classe programada, cabeçalho de impressão</td>
+</tr>
+<tr>
+<td>Etapa</td>
+<td>Número, nome, ordem, controle em processo, permissão para entrar</td>
+</tr>
+<tr>
+<td>Subetapa</td>
+<td>Número, nome, ordem, pré-requisitos, pedido de análise ao CQ, salvar parcial, envio de arquivo, marcações de finalização, reconciliação e liberação, campos de início e fim</td>
+</tr>
+<tr>
+<td>Texto (tela)</td>
+<td>O texto da instrução, com os códigos dos campos (<code>{E1S2_CAMPO3}</code>)</td>
+</tr>
+<tr>
+<td>Campo</td>
+<td>Nome técnico e amigável, tipo, máscara, tamanho, obrigatório, permissão, função profissional, preenchimento automático, integração com o Estoque, parâmetros de entrada</td>
+</tr>
+<tr>
+<td>Funções de validação</td>
+<td>Função, tipo de comparação, campos comparados, mensagem</td>
+</tr>
+<tr>
+<td>Fórmulas</td>
+<td>Fórmula, parâmetros, campo de retorno, média</td>
+</tr>
+<tr>
+<td>Final da produção</td>
+<td>Campos da data final, quantidade, unidade, valor da amostra e volume</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-integracoes">4. Integrações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Origem</th>
+<th>Como chega</th>
+<th>Onde fica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produto, insumos, ambientes, equipamentos</td>
+<td>Produção</td>
+<td>Leitura direta das tabelas</td>
+<td>Listas do editor</td>
+</tr>
+<tr>
+<td>Usuários, funções profissionais, módulos e acesso</td>
+<td>Principal</td>
+<td>Leitura direta e serviço de permissões</td>
+<td>Listas e acesso</td>
+</tr>
+<tr>
+<td>O modelo pronto</td>
+<td>OPE → Produção</td>
+<td><strong>Manual:</strong> baixar no Gerador e enviar no Cadastro Ordem de Produção</td>
+<td><code>PRD_FICHA_TECNICA</code> (arquivo da ordem)</td>
+</tr>
+<tr>
+<td>Leitura e gravação do modelo</td>
+<td>Produção → OPE</td>
+<td>Cópia compilada das classes da Produção (<code>Library/LaboSys_UI.dll</code>)</td>
+<td>Código</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade, Controle de Documentos, CQ</td>
+<td>—</td>
+<td><strong>Nenhuma</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>A Produção usa <code>TBL_GERADORXML_PRODUTO</code> só para impedir a exclusão de um produto com modelo (<code>2.producao/app/LaboSys_DAL/dalProduto.cs:603, 638</code>).</p>
+<h3 id="5-anomalias-de-estrutura-para-a-nova-versao">5. Anomalias de estrutura (para a nova versão)</h3>
+<ol>
+<li><strong>O modelo é um arquivo numa coluna</strong>, sem estrutura consultável nem integridade (um campo apagado do texto some sem que o banco perceba).</li>
+<li><strong>Sem versão nem histórico:</strong> cada gravação substitui a anterior.</li>
+<li><strong>Duas cópias do mesmo modelo</strong> (no Gerador e na ordem de produção), sem ligação. Podem divergir.</li>
+<li><strong>Subetapas-padrão copiadas</strong>, não referenciadas: mudanças no padrão não chegam aos produtos.</li>
+<li><strong>Comportamento por produto em código</strong> (três classes programadas), fora do modelo.</li>
+</ol>
+<p><em>A confirmar com o DBA:</em> se <code>PRD_MODELO_XML</code> e <code>TBL_GERADORXML_PRODUTO</code> têm registros no ambiente de teste, e quantos modelos existem por produto.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-tabelas">2. Tabelas</a></li><li><a href="#3-o-que-vai-dentro-do-arquivo-do-modelo">3. O que vai dentro do arquivo do modelo</a></li><li><a href="#4-integracoes">4. Integrações</a></li><li><a href="#5-anomalias-de-estrutura-para-a-nova-versao">5. Anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
