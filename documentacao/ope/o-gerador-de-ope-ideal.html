@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Gerador de OPE ideal · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="o-gerador-de-ope-ideal.html" aria-current=page>O Gerador de OPE ideal</a></li><li><a href="o-gerador-de-ope-entre-os-modulos-as-travas.html">O Gerador de OPE entre os módulos: as travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html">Montagem do modelo do registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>O ideal</span></nav>
+    <header class="doc-cabecalho">
+      <h1>O Gerador de OPE ideal</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/ope/LabMedSys - Modulo OPE - O Ideal.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>O ideal.</strong> Como o Gerador de OPE deve trabalhar para atender à RDC 658/2022 e ao Guia 33/2020. Este documento não descreve o legado. Usa o que foi levantado no código só para mostrar <strong>o que manter, o que corrigir e o que construir</strong>. Complementa <code>modelo-ideal/01-qualidade-entre-modulos.md</code>, que define as travas entre os módulos. Versão 0.1, de 12/10/2026, para validação com a Produção e a Garantia da Qualidade.</p>
+<h2 id="1-o-papel-do-gerador-de-ope-no-erp">1. O papel do Gerador de OPE no ERP</h2>
+<p>O Gerador <strong>monta a instrução de fabricação eletrônica de cada produto</strong>: o registro de lote que o operador preenche na Produção. Por isso, o modelo é um <strong>documento controlado</strong> (RDC 658/2022, arts. 133 a 135) e, ao mesmo tempo, um <strong>item de configuração</strong> do sistema (Guia 33/2020, 11.7).</p>
+<p>No modelo ideal, o modelo do registro de lote <strong>só chega à Produção aprovado</strong>. Ele nasce de uma mudança aprovada, passa por revisão e aprovação com assinatura e vira uma <strong>versão vigente</strong>. A Produção usa sempre essa versão, e cada lote guarda a versão que usou.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>O Gerador faz</th>
+<th>O Gerador não faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monta e mantém o modelo de cada produto, em rascunho</td>
+<td>Pôr em uso um modelo sem aprovação</td>
+</tr>
+<tr>
+<td>Confere sozinho se o modelo tem o mínimo do registro de lote</td>
+<td>Alterar a versão vigente (toda mudança é uma nova versão)</td>
+</tr>
+<tr>
+<td>Leva o modelo aprovado à Produção, sem arquivo intermediário</td>
+<td>Decidir se uma mudança é necessária (é da GQ, trava 8)</td>
+</tr>
+<tr>
+<td>Guarda o histórico de cada versão e de cada alteração</td>
+<td>Executar o lote (é da Produção)</td>
+</tr>
+<tr>
+<td>Define limites, assinaturas e controles de cada etapa</td>
+<td>Exigir programação para um produto novo</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-como-o-trabalho-anda">2. Como o trabalho anda</h2>
+<figure><a href="../img/ope/ope-ideal-fluxograma.png" target="_blank" rel="noopener"><img src="../img/ope/ope-ideal-fluxograma.png" alt="Gerador de OPE ideal: da mudança aprovada à versão vigente na Produção" loading="lazy"></a><figcaption>Gerador de OPE ideal: da mudança aprovada à versão vigente na Produção · clique para ampliar</figcaption></figure>
+
+<p><strong>O modelo passa por estas situações, nesta ordem, e cada mudança fica no histórico:</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação do modelo</th>
+<th>Quem leva a ela</th>
+<th>O que o sistema confere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rascunho</td>
+<td>Elaborador, a partir de uma mudança aprovada na GQ (ou do primeiro modelo do produto)</td>
+<td>Produto com registro válido; um modelo por produto, com versões</td>
+</tr>
+<tr>
+<td>Em revisão</td>
+<td>Elaborador, ao concluir</td>
+<td>Conteúdo mínimo do registro de lote (seção 4); simulação do preenchimento sem erro</td>
+</tr>
+<tr>
+<td>Aprovado e vigente</td>
+<td>Aprovador (GQ), diferente do elaborador e do revisor, com assinatura eletrônica</td>
+<td>Revisão feita por outra pessoa; treinamento na nova versão planejado (trava 6)</td>
+</tr>
+<tr>
+<td>Substituído</td>
+<td>Sistema, quando a versão seguinte é aprovada</td>
+<td>Lotes já iniciados terminam na versão em que começaram</td>
+</tr>
+<tr>
+<td>Obsoleto</td>
+<td>Aprovador</td>
+<td>Produto descontinuado; sem lote em andamento</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="3-as-funcoes-do-gerador-ideal">3. As funções do Gerador ideal</h2>
+<p><strong>Ação:</strong> <strong>Manter</strong> = o legado já faz como deve; <strong>Corrigir</strong> = existe, mas não atende; <strong>Construir</strong> = não existe.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Função</th>
+<th>Referência</th>
+<th>Ação</th>
+<th>Como deve funcionar</th>
+<th>No legado hoje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Instrução de fabricação aprovada, por produto</td>
+<td><a href="#tema-1-instrucao-de-fabricacao-aprovada-por-produto">Arts. 133 a 135</a></td>
+<td>Construir</td>
+<td>Elaborador, revisor e aprovador registrados, pessoas diferentes, com assinatura eletrônica e data do servidor. Só o aprovado vai para a Produção</td>
+<td>Não existe aprovação</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mudança só por nova versão aprovada</td>
+<td><a href="#tema-2-mudanca-so-por-nova-versao-aprovada">Arts. 176 e 177; art. 8º, XII</a></td>
+<td>Construir</td>
+<td>O rascunho da nova versão nasce de uma mudança aprovada na GQ e fica ligado a ela. A versão vigente nunca é editada</td>
+<td>Cada ajuste altera o modelo em uso</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Versão vigente única, com vigência</td>
+<td><a href="#tema-3-versao-vigente-unica-com-vigencia">Arts. 119 e 121</a></td>
+<td>Construir</td>
+<td>Número de versão automático, data de vigência, uma só vigente por produto. A ordem de produção <strong>aponta</strong> para a versão vigente; o lote guarda a versão usada</td>
+<td>Revisão fixa em "1"; arquivo baixado e reenviado na ordem</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Histórico de cada alteração</td>
+<td><a href="#tema-4-historico-de-cada-alteracao">Art. 125</a></td>
+<td>Construir</td>
+<td>Valor anterior, novo, quem, quando e motivo, em cada parte do modelo (texto, campo, assinatura, limite)</td>
+<td>Sem histórico</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Conteúdo mínimo do registro de lote</td>
+<td><a href="#tema-5-conteudo-minimo-do-registro-de-lote">Art. 137</a></td>
+<td>Construir</td>
+<td>Antes de ir à revisão, o sistema confere o mínimo: identificação do produto e do lote, início e fim de cada etapa, insumos com lote e quantidade, equipamentos, controles em processo, rendimento, assinaturas</td>
+<td>Nenhuma conferência</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Limites de especificação por campo</td>
+<td><a href="#tema-6-limites-de-especificacao-por-campo">Art. 198</a></td>
+<td>Construir</td>
+<td>Mínimo e máximo como dado do campo, vindos da especificação aprovada. Fora do limite, a Produção bloqueia e abre investigação (trava 10)</td>
+<td>Só comparação entre dois campos</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Assinatura de quem executa e de quem confere</td>
+<td><a href="#tema-7-assinatura-de-quem-executa-e-de-quem-confere">Guia 33, 9.3.2.3</a></td>
+<td>Corrigir</td>
+<td>Etapas críticas exigem executor e conferente, pessoas diferentes, com senha. O modelo não pode retirar essas assinaturas</td>
+<td>Assinatura opcional, escolhida campo a campo</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Gestão das mudanças e da configuração</td>
+<td><a href="#tema-8-gestao-das-mudancas-e-da-configuracao">Guia 33, 11.7.1</a></td>
+<td>Corrigir</td>
+<td>O modelo é um item de configuração: só muda por mudança aprovada, com versão e histórico. O comportamento de cada produto fica no modelo, não em programas</td>
+<td>Gravação direta; três classes programadas por produto</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Especificação da configuração aprovada pela empresa</td>
+<td><a href="#tema-9-especificacao-da-configuracao-aprovada-pela-empresa">Guia 33, 9.6.2.1</a></td>
+<td>Corrigir</td>
+<td>A versão aprovada <strong>é</strong> a especificação da configuração. A impressão do modelo vira o documento mestre no Controle de Documentos, com a mesma versão</td>
+<td>Impressão existe; sem aprovação nem ligação com o Controle de Documentos</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="4-como-o-editor-deve-ser">4. Como o editor deve ser</h2>
+<p>A dificuldade de uso não é um tema da norma, mas aumenta o erro de configuração (R-OPE-10). O editor ideal corrige os 13 pontos levantados no legado (<code>01-regras-de-negocio.md</code>, seção 4):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Hoje (legado)</th>
+<th>Como deve ser</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Campo criado digitando <code>{0}</code> no texto (U1)</td>
+<td>Botão "Inserir campo", com o tipo escolhido na hora</td>
+</tr>
+<tr>
+<td>Apagar texto apaga campos sem aviso (U2)</td>
+<td>Campo é um objeto próprio; excluir pede confirmação e mostra o que depende dele</td>
+</tr>
+<tr>
+<td>Nomes técnicos (<code>E1S2_CAMPO3</code>) e o rótulo <code>NomeAmigavel</code> (U3)</td>
+<td>Nome amigável obrigatório, usado em todas as listas, validações e fórmulas</td>
+</tr>
+<tr>
+<td>"Classe do Produto" com nomes de programas (U4)</td>
+<td>Sem classe: o comportamento é configurado no modelo</td>
+</tr>
+<tr>
+<td>Duas configurações parecidas para "quem pode" (U5)</td>
+<td>Uma só: "quem preenche" e "quem assina", com texto de ajuda</td>
+</tr>
+<tr>
+<td>Partes que aparecem e somem; abas só depois de salvar (U6)</td>
+<td>Assistente em passos, com o que falta configurar sempre visível</td>
+</tr>
+<tr>
+<td>Termos técnicos (U7)</td>
+<td>Vocabulário da área: "instrução", "campo", "limite", "assinatura"</td>
+</tr>
+<tr>
+<td>"OPE" com dois sentidos (U8)</td>
+<td>"Modelo do registro de lote" no Gerador; "OPE" só para a ordem do lote</td>
+</tr>
+<tr>
+<td>Dois editores iguais na mesma sessão (U9)</td>
+<td>Subetapas-padrão como biblioteca, com o modelo aberto sempre indicado na tela</td>
+</tr>
+<tr>
+<td>Sem menu próprio (U10)</td>
+<td>Menu do módulo, pelas funções do Principal</td>
+</tr>
+<tr>
+<td>Gravação imediata no modelo em uso (U11)</td>
+<td>Rascunho, com "visualizar como o operador verá" e "descartar alterações"</td>
+</tr>
+<tr>
+<td>Mensagens "Error" (U12)</td>
+<td>Mensagens em português, dizendo o que corrigir</td>
+</tr>
+<tr>
+<td>Ajuda que lista botões (U13)</td>
+<td>Ajuda por passo, com exemplo de um modelo completo</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="5-integracoes-com-os-outros-modulos">5. Integrações com os outros módulos</h2>
+<p>Todas as integrações seguem o requisito 16 do documento 01: <strong>quando falham, avisam e não deixam a operação pela metade.</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Com</th>
+<th>O Gerador recebe</th>
+<th>O Gerador envia</th>
+<th>Quando</th>
+<th>Trava</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Garantia da Qualidade</strong></td>
+<td>Mudança aprovada que autoriza a nova versão</td>
+<td>Aviso de versão aprovada, para o treinamento e para encerrar a ação da mudança</td>
+<td>Ao abrir o rascunho; ao aprovar</td>
+<td>6, 8</td>
+</tr>
+<tr>
+<td><strong>Controle de Documentos</strong></td>
+<td>—</td>
+<td>Impressão da versão aprovada como documento mestre, com a mesma versão</td>
+<td>Ao aprovar</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Produção</strong></td>
+<td>Lotes em andamento por versão (para não trocar a versão no meio do lote)</td>
+<td>Versão vigente do modelo, ligada à ordem de produção</td>
+<td>Ao aprovar; ao planejar cada lote</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Controle da Qualidade</strong></td>
+<td>Limites de especificação aprovados do produto e do processo</td>
+<td>Quais etapas pedem análise</td>
+<td>Ao montar o modelo</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>Estoque</strong></td>
+<td>Insumos do produto e dados da pesagem</td>
+<td>—</td>
+<td>Ao montar o modelo</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>Principal</strong></td>
+<td>Usuários, funções, funções profissionais e assinatura eletrônica</td>
+<td>—</td>
+<td>Em cada gravação</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="6-quem-faz-o-que-no-gerador">6. Quem faz o quê no Gerador</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Função</th>
+<th>Pode</th>
+<th>Não pode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elaborador (Produção ou engenharia de processo)</td>
+<td>Criar e editar rascunhos; enviar para revisão</td>
+<td>Aprovar; editar a versão vigente</td>
+</tr>
+<tr>
+<td>Revisor (Produção ou CQ, outra pessoa)</td>
+<td>Conferir o rascunho e devolver com comentários</td>
+<td>Revisar o que elaborou</td>
+</tr>
+<tr>
+<td>Aprovador (Garantia da Qualidade)</td>
+<td>Aprovar ou recusar a versão, com assinatura</td>
+<td>Aprovar o que elaborou ou revisou</td>
+</tr>
+<tr>
+<td>Administrador do sistema</td>
+<td>Dar acesso e manter as subetapas-padrão técnicas</td>
+<td>Alterar o conteúdo de um modelo de produto</td>
+</tr>
+</tbody>
+</table></div>
+<p>A função é <strong>conferida no servidor, em toda gravação</strong>, e não só na tela (documento 01, requisito 15). Toda decisão pede assinatura eletrônica (requisito 14).</p>
+<h2 id="7-o-que-manter-do-legado">7. O que manter do legado</h2>
+<p>O que o código mostra que já funciona como deve e vale a pena levar para a nova versão <em>(a confirmar nos testes)</em>:</p>
+<ul>
+<li>A <strong>estrutura</strong> de etapa, subetapa e campo, com ordem e marcações (finalização, reconciliação, liberação, pedido de análise ao CQ).</li>
+<li>Os <strong>tipos de campo e as máscaras</strong> (data, hora, decimais), que evitam digitação fora do formato.</li>
+<li>As <strong>funções de validação</strong> entre campos e com a data do sistema, acrescentando o limite fixo.</li>
+<li>As <strong>fórmulas de cálculo</strong> com conferência antes de salvar.</li>
+<li>O <strong>preenchimento automático</strong> de dados de outros cadastros (lote, validade, registro do produto) e a ligação com a <strong>pesagem</strong> do Estoque.</li>
+<li>A <strong>assinatura por função profissional</strong> em cada campo, tornando-a obrigatória nas etapas críticas.</li>
+<li>As <strong>subetapas-padrão</strong>, como biblioteca reaproveitável.</li>
+<li><strong>Visualizar</strong> como o operador verá e <strong>imprimir</strong> o modelo.</li>
+</ul>
+<h2 id="8-pontos-para-validar-com-a-producao-e-a-gq">8. Pontos para validar com a Produção e a GQ</h2>
+<ol>
+<li>Quem elabora, quem revisa e quem aprova os modelos de registro de lote hoje.</li>
+<li>Qual é o conteúdo mínimo que a empresa exige em todo registro de lote (além do art. 137).</li>
+<li>Onde estão hoje os limites de especificação de cada produto e etapa.</li>
+<li>Quais etapas são críticas e exigem executor e conferente.</li>
+<li>Se a impressão do modelo deve ser o documento mestre no Controle de Documentos ou se o documento mestre continua à parte.</li>
+</ol>
+<!-- NORMAS:INICIO -->
+<h2 id="o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</h2>
+<p>Texto literal das normas citadas em cada tema, extraído dos arquivos da pasta <code>Documentação/</code> (RDC nº 658/2022 em português e Guia nº 33/2020) por <code>homologacao/ferramentas/citar_normas_diagnostico.py</code>. "(...)" marca trechos omitidos. No portal, clique na referência de cada tema para ver o texto.</p>
+<h3 id="tema-1-instrucao-de-fabricacao-aprovada-por-produto">Tema 1 · Instrução de fabricação aprovada, por produto</h3>
+<p><strong>RDC 658/2022, art. 133</strong></p>
+<blockquote>
+<p>Art. 133. Devem existir fórmulas de fabricação e instruções de processo aprovadas e por escrito para cada produto e tamanho de lote a ser fabricado.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 134</strong></p>
+<blockquote>
+<p>Art. 134. A fórmula de fabricação deve incluir:</p>
+<p>I - nome e código de referência do produto relacionado à sua especificação;</p>
+<p>II - descrição da forma farmacêutica, concentração do produto e tamanho do lote;</p>
+<p>III - lista de todas as matérias-primas a serem utilizadas, com a quantidade descrita de cada uma, com a menção a qualquer substância que possa desaparecer durante o processo; e</p>
+<p>IV - declaração do rendimento final esperado com os limites aceitáveis e dos rendimentos intermediários relevantes, quando aplicável.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 135</strong></p>
+<blockquote>
+<p>Art. 135. As instruções de processo devem incluir:</p>
+<p>I - declaração do local de processo e do equipamento principal a ser utilizado;</p>
+<p>II - os métodos, ou referência aos métodos, a serem utilizados para preparar os equipamentos críticos (por exemplo, limpeza, montagem, calibração, esterilização);</p>
+<p>III - verificações para confirmar que o equipamento e a estação de trabalho estão livres de produtos anteriores, documentos ou materiais não necessários para o processo planejado, e que o equipamento esteja limpo e adequado para uso;</p>
+<p>IV - instruções de processo detalhadas por etapa [por exemplo verificações de materiais, pré- tratamentos, sequência de adição de materiais e parâmetros críticos do processo (tempo, temperatura etc.);</p>
+<p>V - as instruções para qualquer controle em processo e seus limites;</p>
+<p>VI - quando necessário, os requisitos para o armazenamento dos produtos a granel; incluindo o recipiente, a rotulagem e as condições especiais de armazenamento, quando aplicável; e</p>
+<p>VII - quaisquer precauções especiais a serem observadas.</p>
+</blockquote>
+<h3 id="tema-2-mudanca-so-por-nova-versao-aprovada">Tema 2 · Mudança só por nova versão aprovada</h3>
+<p><strong>RDC 658/2022, art. 176</strong></p>
+<blockquote>
+<p>Art. 176. Quando qualquer nova fórmula de fabricação ou método de preparação for adotado, devem ser tomadas medidas para demonstrar sua adequação ao processo da rotina.</p>
+<p>Parágrafo único. O processo definido de que trata o caput deste artigo, que usa os materiais e equipamentos estabelecidos, deve demonstrar que produz o produto de acordo com a qualidade exigida de forma consistente.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 177</strong></p>
+<blockquote>
+<p>Art. 177. Alterações significativas no processo de fabricação, incluindo qualquer mudança no equipamento ou materiais, que possam afetar a qualidade do produto e/ou a reprodutibilidade do processo, devem ser validadas.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 8º</strong></p>
+<blockquote>
+<p>Art. 8º Um Sistema da Qualidade Farmacêutica adequado à fabricação de medicamentos deve garantir que:</p>
+<p>(...)</p>
+<p>XII - estejam implementados procedimentos para a avaliação prospectiva de mudanças planejadas e sua aprovação antes da implementação, levando-se em consideração as notificações e aprovações regulatórias, quando necessário;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-3-versao-vigente-unica-com-vigencia">Tema 3 · Versão vigente única, com vigência</h3>
+<p><strong>RDC 658/2022, art. 119</strong></p>
+<blockquote>
+<p>Art. 119. Os documentos contendo instruções devem ser aprovados, assinados e datados por pessoas apropriadas e autorizadas.</p>
+<p>§ 1º Os documentos devem ter conteúdo não ambíguo e identificação única.</p>
+<p>§ 2º A data de efetividade dos documentos deve ser definida.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 121</strong></p>
+<blockquote>
+<p>Art. 121. Os documentos relacionados ao Sistema de Gestão da Qualidade Farmacêutica devem ser revisados regularmente e mantidos atualizados.</p>
+<p>Parágrafo único. Quando um documento for revisado, os sistemas devem operar de forma a impedir o uso inadvertido de documentos obsoletos.</p>
+</blockquote>
+<h3 id="tema-4-historico-de-cada-alteracao">Tema 4 · Histórico de cada alteração</h3>
+<p><strong>RDC 658/2022, art. 125</strong></p>
+<blockquote>
+<p>Art. 125. Toda a alteração feita no registro de um documento deve ser assinada e datada, devendo permitir a leitura da informação original.</p>
+<p>Parágrafo único. Quando apropriado, o motivo da alteração deve ser registrado.</p>
+</blockquote>
+<h3 id="tema-5-conteudo-minimo-do-registro-de-lote">Tema 5 · Conteúdo mínimo do registro de lote</h3>
+<p><strong>RDC 658/2022, art. 137</strong></p>
+<blockquote>
+<p>Art. 137. Um registro de processamento de lote deve ser mantido para cada lote processado.</p>
+<p>§ 1º Este registro deve ser baseado nas partes relevantes da Fórmula de Fabricação e nas Instruções de Processo atualmente aprovadas, e deve conter as seguintes informações:</p>
+<p>I - nome e o número do lote do produto;</p>
+<p>II - datas e horários de início de fases intermediárias significativas e de conclusão da produção;</p>
+<p>III - identificação (iniciais ou rubricas) do(s) operador(es) que realizou(aram) cada etapa significativa do processo e, quando apropriado, o nome de qualquer pessoa que verificou essas operações;</p>
+<p>IV - número do lote e/ou número do controle analítico, bem como as quantidades de cada matéria-prima efetivamente pesada, incluindo o número do lote e a quantidade de qualquer material recuperado ou reprocessado adicionado;</p>
+<p>V - qualquer operação de fabricação ou evento relevante e equipamento principal usado;</p>
+<p>VI - registro dos controles em processo e as iniciais da(s) pessoa(s) que os executaram e os resultados obtidos;</p>
+<p>VII - rendimento obtido do produto em diferentes e relevantes etapas de fabricação;</p>
+<p>VIII - observações sobre quaisquer problemas incluindo os detalhes, com autorização assinada para qualquer desvio da Fórmula de Fabricação e Instruções de Processo; e</p>
+<p>IX - aprovação das operações de fabricação pela pessoa responsável.</p>
+<p>§ 2º Nos casos de processos validados, continuamente controlados e monitorados, os relatórios gerados automaticamente podem ser limitados a resumos de conformidade e relatórios de dados de exceção/resultados fora de especificações.</p>
+</blockquote>
+<h3 id="tema-6-limites-de-especificacao-por-campo">Tema 6 · Limites de especificação por campo</h3>
+<p><strong>RDC 658/2022, art. 198</strong></p>
+<blockquote>
+<p>Art. 198. Quaisquer controles necessários em processo e controles ambientais devem ser realizados e registrados.</p>
+</blockquote>
+<h3 id="tema-7-assinatura-de-quem-executa-e-de-quem-confere">Tema 7 · Assinatura de quem executa e de quem confere</h3>
+<p><strong>Guia nº 33/2020, item 9.3.2.3 (Requisitos Operacionais)</strong></p>
+<blockquote>
+<p>Funções – são os requisitos funcionais que habilitam o sistema a executar o processo de negócio que está sendo automatizado, tais como:
+- (...)
+- Utilização de assinaturas eletrônicas;
+- (...)</p>
+</blockquote>
+<h3 id="tema-8-gestao-das-mudancas-e-da-configuracao">Tema 8 · Gestão das mudanças e da configuração</h3>
+<p><strong>Guia nº 33/2020, item 11.7.1 (Introdução)</strong></p>
+<blockquote>
+<p>(...) Todas as mudanças propostas durante a fase operacional do sistema, sejam elas relacionadas a software, hardware, infraestrutura ou utilização do sistema, devem ser sujeitas a um processo formal de controle de mudanças. (...)</p>
+<p>Um item de configuração é um componente do sistema que não é alterado como resultado de uma operação normal do sistema. Itens de configuração só podem ser alterados por meio de um processo de gerenciamento de mudanças. Devem existir procedimentos formais para identificar, definir e estabelecer os itens da configuração inicial e para controlar e registrar as modificações e liberações de itens de configuração, incluindo atualizações e pacotes.</p>
+</blockquote>
+<h3 id="tema-9-especificacao-da-configuracao-aprovada-pela-empresa">Tema 9 · Especificação da configuração aprovada pela empresa</h3>
+<p><strong>Guia nº 33/2020, item 9.6.2.1 (Configuração)</strong></p>
+<blockquote>
+<p>Para produtos configuráveis devem ser preparadas especificações de configuração que compõem o sistema para que este atenda aos requisitos do usuário. Isto inclui a definição de todas as configurações e parâmetros.</p>
+<p>Estas especificações de configuração são produzidas pelo fornecedor do sistema e revisadas e aprovadas pela empresa regulada.</p>
+<p>É possível manter este conjunto de especificações de configuração em sistemas que possuem gerenciamento de configuração robusto (audit trails detalhados e completos). Tal abordagem deve ser bem documentada.</p>
+</blockquote>
+<!-- NORMAS:FIM -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-o-papel-do-gerador-de-ope-no-erp">1. O papel do Gerador de OPE no ERP</a></li><li><a href="#2-como-o-trabalho-anda">2. Como o trabalho anda</a></li><li><a href="#3-as-funcoes-do-gerador-ideal">3. As funções do Gerador ideal</a></li><li><a href="#4-como-o-editor-deve-ser">4. Como o editor deve ser</a></li><li><a href="#5-integracoes-com-os-outros-modulos">5. Integrações com os outros módulos</a></li><li><a href="#6-quem-faz-o-que-no-gerador">6. Quem faz o quê no Gerador</a></li><li><a href="#7-o-que-manter-do-legado">7. O que manter do legado</a></li><li><a href="#8-pontos-para-validar-com-a-producao-e-a-gq">8. Pontos para validar com a Produção e a GQ</a></li><li><a href="#o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</a></li><li class="sub"><a href="#tema-1-instrucao-de-fabricacao-aprovada-por-produto">Tema 1 · Instrução de fabricação aprovada, por produto</a></li><li class="sub"><a href="#tema-2-mudanca-so-por-nova-versao-aprovada">Tema 2 · Mudança só por nova versão aprovada</a></li><li class="sub"><a href="#tema-3-versao-vigente-unica-com-vigencia">Tema 3 · Versão vigente única, com vigência</a></li><li class="sub"><a href="#tema-4-historico-de-cada-alteracao">Tema 4 · Histórico de cada alteração</a></li><li class="sub"><a href="#tema-5-conteudo-minimo-do-registro-de-lote">Tema 5 · Conteúdo mínimo do registro de lote</a></li><li class="sub"><a href="#tema-6-limites-de-especificacao-por-campo">Tema 6 · Limites de especificação por campo</a></li><li class="sub"><a href="#tema-7-assinatura-de-quem-executa-e-de-quem-confere">Tema 7 · Assinatura de quem executa e de quem confere</a></li><li class="sub"><a href="#tema-8-gestao-das-mudancas-e-da-configuracao">Tema 8 · Gestão das mudanças e da configuração</a></li><li class="sub"><a href="#tema-9-especificacao-da-configuracao-aprovada-pela-empresa">Tema 9 · Especificação da configuração aprovada pela empresa</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

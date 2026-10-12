@@ -186,9 +186,11 @@ MODULOS = [
          ("6.controle_documento/fluxos/tipo-arquivos-modelos.md", "Tipo de documento, arquivos e modelos", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Tipo de Documento, Arquivos e Modelos.docx"),
      ]},
     {"id": "ope", "nome": "OPE (Gerador de OPE)", "icone": "⚒", "cor": "#7c3aed", "situacao": "Pronto para testes", "nivel": 2,
-     "resumo": "Ferramenta que monta o modelo do registro de lote de cada produto: etapas, subetapas, campos, cálculos, validações e quem assina cada campo. A Produção usa esse modelo em cada lote. O modelo não tem versão, aprovação nem histórico; cada ajuste regrava o modelo em uso, e ele chega à ordem de produção por arquivo baixado e reenviado. Fluxo pronto, com a análise de por que a ferramenta confunde o usuário. Análise pelo código concluída: 36 regras, 16 telas, conformidade (9 temas: nenhum atendido, 3 em parte, 5 não atendidos), 17 riscos (12 de prioridade alta) e plano de testes com 24 casos.",
+     "resumo": "Ferramenta que monta o modelo do registro de lote de cada produto: etapas, subetapas, campos, cálculos, validações e quem assina cada campo. A Produção usa esse modelo em cada lote. O modelo não tem versão, aprovação nem histórico; cada ajuste regrava o modelo em uso, e ele chega à ordem de produção por arquivo baixado e reenviado. Fluxo pronto, com a análise de por que a ferramenta confunde o usuário. Análise pelo código concluída: 36 regras, 16 telas, conformidade (9 temas: nenhum atendido, 3 em parte, 5 não atendidos), 17 riscos (12 de prioridade alta) e plano de testes com 24 casos. O ideal: o modelo só chega à Produção aprovado, como versão vigente, a partir de uma mudança aprovada na GQ.",
      "docs": [
          ("9.ope/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+         ("9.ope/ideal/ope-ideal.md", "O Gerador de OPE ideal", "ideal", "9.ope/ideal/LabMedSys - Modulo OPE - O Ideal.docx"),
+         ("9.ope/ideal/ope-entre-modulos.md", "O Gerador de OPE entre os módulos: as travas", "ideal", "9.ope/ideal/LabMedSys - Modulo OPE - Entre os Modulos.docx"),
          ("9.ope/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
          ("9.ope/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("9.ope/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
