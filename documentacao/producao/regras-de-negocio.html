@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regras de negócio · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html">Registro de lote</a></li><li><a href="produto-formula-e-ordem-de-producao.html">Produto, fórmula e ordem de produção</a></li><li><a href="preparacao-limpeza-calibracao-qualificacao-manutencao-agua-e-ambiente.html">Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente</a></li><li><a href="terceirizacao-e-validade-da-ope.html">Terceirização e validade da OPE</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html" aria-current=page>Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Regras de negócio</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>2.producao/app</code>) · <strong>Base:</strong> os cinco fluxos do módulo (<code>fluxos/</code>), o reconhecimento (<code>00-reconhecimento.md</code>) e a conformidade (<code>04-conformidade-regulatoria.md</code>).</p>
+<p><strong>Situação de todas as regras: Extraída.</strong> Elas foram lidas do código e aguardam o teste nas telas e a validação da área.</p>
+<p><strong>Caminhos:</strong> relativos a <code>2.producao/app/</code>. As abreviações de cada fluxo (<code>UI/</code>, <code>Prod/</code>, <code>Aut/</code>, <code>Adm/</code>, <code>Prep/</code>, <code>XML/</code>, <code>BLL/</code>, <code>DAL/</code>, <code>Tab/</code>, <code>Sub</code>, <code>Pg</code>) se repetem aqui, como definidas no fluxo de origem.</p>
+<p><strong>Como foi montado:</strong>
+- As regras das seções 2 a 6 foram <strong>consolidadas por script</strong> a partir dos documentos de fluxo (<code>homologacao/ferramentas/consolidar_regras.py</code>).
+- O texto de cada regra é o mesmo do fluxo.
+- A seção 8 liga cada código ao número da regra no fluxo.</p>
+<p><strong>Total: 135 regras.</strong> São 9 gerais (RN-PRO-001 a 009) e 126 dos fluxos (RN-PRO-010 a 135).</p>
+<h3 id="1-regras-gerais-do-modulo">1. Regras gerais do módulo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Tema</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRO-001</td>
+<td>Menu</td>
+<td>O menu tem 79 itens em 7 grupos: Administração, Cadastros, Tabelas de apoio, Preparação, Autorizações, Produção e Relatórios (<code>Hsolutions.Producao.DB/dml.sql:34721-34923</code>). Composição de Embalagens, Destinação do Produto, Formas Farmacêuticas e Validade da OPE estão <strong>comentadas</strong> no roteiro, mas as telas existem.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-002</td>
+<td>Acesso</td>
+<td>Cada tela confere, ao abrir, se o perfil tem a <strong>função da tela</strong> (<code>IdTela</code>). Se não tem, vai para "acesso negado" (<code>LaboSys_Util/BaseController.cs:39-41</code>). As ações dentro da tela (incluir, alterar, excluir, imprimir, consultar histórico, enviar e baixar arquivo, XML, apontar horas, confirmar, cancelar) seguem as funções filhas da tela (<code>LaboSys_Util/ClassePaiLst.cs:59-70</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-003</td>
+<td>Situação da produção</td>
+<td>A produção passa por: cadastrada → número de lote pendente → iniciada → pendente de finalização → pendente de reconciliação → pendente de liberação → liberada ou reprovada; ou cancelada (<code>LaboSys.Core.Repository/Parcials/TBL_PRODUCAO.cs:44-110</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-004</td>
+<td>Registro de lote</td>
+<td>O registro de lote de cada produto é montado a partir de um <strong>modelo XML</strong> e de uma <strong>classe de programa</strong> própria do produto (Diazepam, Glibenclamida, Captopril) (<code>LaboSys_UI/producao/XML/</code>; <code>2.producao/app/XML/</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-005</td>
+<td>Exclusão</td>
+<td>Os cadastros usam <strong>exclusão lógica</strong> (<code>LIXEIRA</code>), com quem excluiu e quando.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-006</td>
+<td>Histórico</td>
+<td>O repositório comum grava histórico (<code>TBL_LOG_ALTERACAO</code>) nas inclusões, alterações e exclusões lógicas, com justificativa opcional. Os métodos <code>Salvar</code>, <code>Alterar</code> e <code>Delete</code> (exclusão física) <strong>não gravam</strong> (<code>LaboSys.Core.Repository/Repository/Repository.cs:59-87, 268-300</code>). O registro de lote tem histórico próprio (<code>TBL_LOG_ALTERACAO_XML</code>).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-007</td>
+<td>Integrações</td>
+<td>A Produção: lê o Principal por <strong>sinônimos</strong> (47 tabelas); envia reservas e produto acabado ao <strong>Estoque</strong> por API e serviço, e também tem <strong>conexão direta ao banco do Estoque</strong>; abre análises no <strong>CQ</strong> por API. Não chama a GQ nem o Controle de Documentos (<code>00-reconhecimento.md</code>, seção 5).</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-008</td>
+<td>Configuração do sistema</td>
+<td>A tabela <code>SIS_CONFIGURACAO</code> muda o comportamento do módulo. São configurações dela: Estoque ligado ou não; produzir com insumo sem saldo (<code>AUTORIZAR_PRODUCAO_INSUMO_SEM_SALDO</code>); formato e edição do número de lote; envio automático do produto acabado; <strong>"em migração"</strong> (<code>EM_MIGRACAO</code>, que desliga a trava de alteração do produto); sobrepor a descrição do insumo. <em>A validar com a área:</em> os valores atuais no ambiente.</td>
+<td>Extraída</td>
+</tr>
+<tr>
+<td>RN-PRO-009</td>
+<td>Avisos</td>
+<td>A solicitação de autorizações gera aviso na central de notificações do Principal (<code>LaboSys_UI/producao/start_producao_ed.aspx.cs:299-303</code>). Não foram encontrados avisos de validade, de calibração ou de programação atrasada.</td>
+<td>Extraída</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-autorizacao-inicio-e-final-da-producao">2. Autorização, início e final da produção</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/autorizacao-inicio-final.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRO-010</td>
+<td>Solicitação de autorizações</td>
+<td>A solicitação exige <strong>produto</strong>, <strong>lote padrão</strong> e <strong>data e hora previstas de início</strong> (<code>Prod/start_producao_ed.aspx.cs:214-272</code>). Grava quem solicitou e a data da solicitação pelo servidor (linhas 278-282).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-011</td>
+<td>Solicitação de autorizações</td>
+<td>Antes de gravar, o sistema confere o lote padrão. Se o lote padrão exige itens, ambientes, pontos de água, equipamentos ou instrumentos, cada um precisa estar <strong>ativo</strong>. Os inativos aparecem numa lista de críticas, e a solicitação não é feita (<code>Prod/start_producao_ed.aspx.cs:324-400</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-012</td>
+<td>Solicitação de autorizações</td>
+<td>As autorizações são criadas <strong>conforme o lote padrão</strong> (<code>BLL/bllStartProducao.cs:44-140</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-013</td>
+<td>Solicitação de autorizações</td>
+<td>Com o Estoque ligado, a solicitação envia ao Estoque a <strong>reserva dos insumos</strong> do lote padrão e guarda o código da requisição na autorização do Estoque (<code>BLL/bllStartProducao.cs:170-200</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-014</td>
+<td>Solicitação de autorizações</td>
+<td>Insumo sem saldo no Estoque impede a solicitação, <strong>a menos que</strong> a configuração <code>AUTORIZAR_PRODUCAO_INSUMO_SEM_SALDO</code> permita (<code>Prod/start_producao_ed.aspx.cs:493-546</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-015</td>
+<td>Solicitação de autorizações</td>
+<td>A solicitação gera um aviso pela central de notificações (<code>Prod/start_producao_ed.aspx.cs:299-303</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-016</td>
+<td>Autorizações das áreas</td>
+<td><strong>Estoque:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-017</td>
+<td>Autorizações das áreas</td>
+<td><strong>Ambientes:</strong> a tela confere a validade da <strong>limpeza</strong> e da <strong>análise de ambiente</strong> de cada sala (<code>Aut/autorizacao_ambiente_producao_ed.aspx.cs:120-164</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-018</td>
+<td>Autorizações das áreas</td>
+<td><strong>Equipamentos e instrumentos:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-019</td>
+<td>Autorizações das áreas</td>
+<td><strong>Pontos de água:</strong> autorização por ponto (<code>Aut/autorizacao_ponto_agua_producao_ed.aspx.cs</code>). <em>A confirmar no teste:</em> se confere o laudo da água.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-020</td>
+<td>Autorizações das áreas</td>
+<td><strong>Controle da Qualidade:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-021</td>
+<td>Autorizações das áreas</td>
+<td><strong>Garantia da Qualidade:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-022</td>
+<td>Autorizações das áreas</td>
+<td>Cada autorização pode ser <strong>"Autorizada"</strong> ou <strong>"Não autorizada"</strong> (<code>IND_AUTORIZADO</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-023</td>
+<td>Autorizações das áreas</td>
+<td>As autorizações são telas da Produção, abertas pela função de cada tela no perfil. <em>A validar com a área:</em> se quem autoriza é da área dona (Estoque, CQ, GQ) ou da Produção.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-024</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>Só se autoriza a produção sem <strong>autorização pendente</strong>: "Não é possível Autorizar! Existem autorizações pendentes!" (<code>Prod/autorizacao_producao_ed.aspx.cs:380-430</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-025</td>
+<td>Autorizar ou cancelar a produção</td>
+<td><strong>Pendente é a autorização sem resposta.</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-026</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>A autorização grava:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-027</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>O código preenche como autorizada, com o nome de quem autoriza a produção, qualquer área que ainda esteja sem resposta (<code>Prod/autorizacao_producao_ed.aspx.cs:483-518</code>). Hoje isso não acontece, porque a trava de pendências (RN015) vem antes. O caminho que permitia autorizar por cima, área por área, está <strong>comentado</strong> (linhas 412-425).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-028</td>
+<td>Autorizar ou cancelar a produção</td>
+<td><strong>Cancelamento:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-029</td>
+<td>Número de lote</td>
+<td>O número de lote é gerado para a produção autorizada e sem número (<code>Prod/geracao_lote_lst.aspx.cs:124</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-030</td>
+<td>Número de lote</td>
+<td><strong>Tipos de lote:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-031</td>
+<td>Número de lote</td>
+<td>O <strong>número de lote é digitado</strong>.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-032</td>
+<td>Número de lote</td>
+<td>Número de lote ou de OPE repetido é recusado: "Número de Lote em uso!" e "Número de OPE em uso!" (<code>Prod/geracao_lote_ed.aspx.cs:494, 503</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-033</td>
+<td>Número de lote</td>
+<td>Ficam gravados quem gerou o número e a data e a hora, pelo servidor. A <strong>validade do produto</strong> é calculada a partir da <strong>data de geração do número</strong>, pelo prazo de validade do produto (<code>Prod/geracao_lote_ed.aspx.cs:379-386</code>). <em>A validar com a área:</em> se a validade deve contar da data de fabricação.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-034</td>
+<td>Número de lote</td>
+<td>O lote pode ser <strong>cancelado</strong>, com justificativa (<code>Prod/geracao_lote_can.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-035</td>
+<td>Início e registro da produção</td>
+<td>O <strong>Início da Produção</strong> lista as produções com número de lote. Dali se abrem:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-036</td>
+<td>Início e registro da produção</td>
+<td>Só se registra em produção <strong>iniciada</strong> ou <strong>pendente de finalização</strong>. Nas outras situações, a tela abre só para ver (<code>Prod/registro_producao_lst.aspx.cs:120-121</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-037</td>
+<td>Início e registro da produção</td>
+<td>O registro das etapas segue o modelo XML do produto. Detalhes no fluxo 2.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-038</td>
+<td>Final, reconciliação e liberação</td>
+<td>O <strong>Final da Produção</strong> registra:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-039</td>
+<td>Final, reconciliação e liberação</td>
+<td><strong>Envio ao Estoque:</strong> a pergunta "Enviar produto acabado para o estoque" vem marcada <strong>Sim</strong>.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-040</td>
+<td>Final, reconciliação e liberação</td>
+<td>O produto acabado vai ao Estoque <strong>na finalização, antes da reconciliação e da liberação</strong>. <em>A confirmar no teste:</em> em que situação ele entra no Estoque (quarentena) e se a reprovação na liberação chega até lá. Nenhuma ligação com o Estoque foi encontrada nas telas de reconciliação e liberação.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-041</td>
+<td>Final, reconciliação e liberação</td>
+<td>O boletim de envio à quarentena pode ser impresso depois de finalizar (<code>Prod/final_producao_ed.aspx.cs:69, 200-205</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-042</td>
+<td>Final, reconciliação e liberação</td>
+<td>A <strong>Reconciliação da Produção</strong> registra:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-043</td>
+<td>Final, reconciliação e liberação</td>
+<td>A <strong>Liberação da Produção</strong> <strong>aprova ou reprova</strong> a produção, com justificativa e data e hora digitadas. Também pode ser <strong>reaberta</strong> (<code>Prod/liberacao_producao_ed.aspx.cs:280-323</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-044</td>
+<td>Final, reconciliação e liberação</td>
+<td>Final, reconciliação e liberação usam <strong>o mesmo código de tela</strong> no perfil (<code>IdTela = "484"</code>, <code>Prod/final_producao_lst.aspx.cs:50</code>, <code>reconciliacao_producao_ed.aspx.cs:46</code>, <code>liberacao_producao_ed.aspx.cs:49</code>). Quem pode finalizar pode também reconciliar e liberar.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-045</td>
+<td>Final, reconciliação e liberação</td>
+<td>A finalização também pode ser <strong>reaberta</strong> (<code>Prod/final_producao_ed.aspx.cs:361-368</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-046</td>
+<td>Situações da produção</td>
+<td>A situação da produção é <strong>calculada</strong> a partir do que foi registrado (<code>LaboSys.Core.Repository/Parcials/TBL_PRODUCAO.cs:44-110</code>):</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-registro-de-lote">3. Registro de lote</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/registro-de-lote.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRO-047</td>
+<td>O modelo do registro</td>
+<td>O registro de cada produto vem de um <strong>modelo XML</strong> ligado à ordem de produção.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-048</td>
+<td>O modelo do registro</td>
+<td>Cada campo pode ter (<code>XML/MontaXML.cs</code>, classe <code>TagCampos</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-049</td>
+<td>O modelo do registro</td>
+<td>O modelo <strong>não tem limite de especificação</strong> (mínimo e máximo) por campo.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-050</td>
+<td>O modelo do registro</td>
+<td>A passagem de uma etapa para a outra é validada assim (<code>XML/EtapaProducao.cs:19-48, 122-165</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-051</td>
+<td>Preencher a subetapa</td>
+<td>O Registro da Produção abre só em produção <strong>iniciada</strong> ou <strong>pendente de finalização</strong>. Nas outras situações, e depois da finalização, a tela é só para ver (<code>Prod/registro_producao_lst.aspx.cs:120-121</code>; <code>XML/RetornaCamposXML.cs:235</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-052</td>
+<td>Preencher a subetapa</td>
+<td><strong>Campos automáticos</strong> (<code>XML/BLL/CalculoGenerico.cs:318-480</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-053</td>
+<td>Preencher a subetapa</td>
+<td><strong>Pesagem do Estoque:</strong> campos de integração trazem a pesagem feita no Estoque para a requisição da produção (<code>XML/BLL/PesagemEstoque.cs:107-171</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-054</td>
+<td>Preencher a subetapa</td>
+<td><strong>Campos obrigatórios:</strong> "Preencha os campos obrigatórios." (<code>XML/ProducaoValidarCom.cs:587, 601</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-055</td>
+<td>Preencher a subetapa</td>
+<td><strong>Datas digitadas:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-056</td>
+<td>Preencher a subetapa</td>
+<td><strong>Campos que não podem ser iguais</strong>, quando o modelo pede (por exemplo, executor e conferente): "Os campos não podem ser iguais." (<code>XML/ProducaoValidarCom.cs:554</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-057</td>
+<td>Preencher a subetapa</td>
+<td><strong>Campos de assinatura</strong> (ícone de login): pedem usuário e senha. O sistema confere se a pessoa tem a <strong>função profissional</strong> exigida pelo campo ("NÃO TEM PERMISSÃO.") e preenche o campo com ela (<code>XML/Autenticacao.cs:14-44</code>; <code>XML/RetornaCamposXML.cs:151</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-058</td>
+<td>Preencher a subetapa</td>
+<td><strong>Início e fim da subetapa:</strong> a data e a hora são <strong>informadas pela tela</strong> (<code>Pg:170</code>, <code>GravarDataInicioFimSubEtapa</code>; <code>Sub:681</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-059</td>
+<td>Salvar e alterar</td>
+<td><strong>Salvar completo:</strong> grava só se a validação passar (<code>Sub:385-426</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-060</td>
+<td>Salvar e alterar</td>
+<td><strong>Salvar parcial:</strong> quando o modelo permite (<code>HabilitarSalvarParcial</code>), a subetapa pode ser <strong>gravada mesmo com campos inválidos</strong>, depois de uma confirmação. É um rascunho (<code>Sub:413</code>; <code>UI/scripts/producao.js:47-60</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-061</td>
+<td>Salvar e alterar</td>
+<td>Cada resposta grava quem criou e quem alterou, com a <strong>data do servidor</strong> (<code>Sub:487-498</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-062</td>
+<td>Salvar e alterar</td>
+<td><strong>Histórico:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-063</td>
+<td>Salvar e alterar</td>
+<td>Enquanto a produção não é finalizada, campos já salvos podem ser <strong>alterados</strong>, sem aprovação de outra pessoa. <em>A confirmar no teste:</em> se uma subetapa já assinada pode ser alterada.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-064</td>
+<td>Salvar e alterar</td>
+<td>A tela <strong>Consultar Log OPE</strong> mostra o histórico do registro (<code>Prod/log_ope_lst.aspx</code>; <code>Prod/log_ope_rel.aspx.cs:20-24</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-065</td>
+<td>Controle em processo e análise do CQ</td>
+<td>O <strong>controle em processo</strong> de uma etapa confere só se os <strong>campos obrigatórios</strong> da subetapa de controle foram preenchidos. Se não, mostra "<controle> Incompleto." (<code>XML/BLL/CalculoGenerico.cs:773-818</code>). <strong>Não compara o resultado com um limite</strong> (RN003).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-066</td>
+<td>Controle em processo e análise do CQ</td>
+<td>Uma subetapa pode <strong>solicitar análise ao CQ</strong>, para granel ou semielaborado (<code>Pg:580</code>, <code>SolicitarAnalise</code>; <code>LaboSys.Producao.Services/CQ/CqService.cs:16-69</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-067</td>
+<td>Controle em processo e análise do CQ</td>
+<td>A subetapa com análise é <strong>impeditiva</strong>: enquanto a análise do CQ <strong>não está aprovada</strong>, as subetapas seguintes ficam pendentes (<code>Sub:869-890</code>, <code>EhImpeditivo</code>; <code>Sub:966-968</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-068</td>
+<td>Controle em processo e análise do CQ</td>
+<td><strong>Liberação da análise:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-069</td>
+<td>Controle em processo e análise do CQ</td>
+<td>Se a subetapa não tem solicitação registrada, ela <strong>não é impeditiva</strong> (<code>Sub:869-880</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-070</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td>A <strong>Pesagem/Medição de Matéria-Prima</strong> é uma tela à parte. Ela registra:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-071</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td><strong>O registro de lote não usa essa pesagem.</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-072</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td><strong>Manipulação de Horas:</strong> o período trabalhado é informado com data e hora digitadas e pode ser alterado e excluído (<code>Prod/apontamento_horas_ed.aspx.cs:590-673</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-073</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td><strong>Solicitação Avulsa:</strong> pede ao Estoque uma reserva adicional de insumos para a produção (<code>Prod/solicitacao_avulsa_ed.aspx.cs:444-446</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-074</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td>A subetapa pode receber <strong>anexos</strong> (<code>Pg:308</code>, <code>SalvarAnexo</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-075</td>
+<td>Fim do registro e impressão</td>
+<td>A subetapa marcada no modelo como final (<code>OPE_FINALIZADA</code>) encerra o registro e leva a produção a <strong>pendente de finalização</strong> (fluxo 1, RN037; <code>Sub:643</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-076</td>
+<td>Fim do registro e impressão</td>
+<td>Depois disso, os campos ficam bloqueados (<code>XML/RetornaCamposXML.cs:235</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-077</td>
+<td>Fim do registro e impressão</td>
+<td>A OPE pode ser <strong>impressa</strong> a partir das respostas gravadas (<code>Prod/impressao.aspx.cs</code>).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-produto-formula-e-ordem-de-producao">4. Produto, fórmula e ordem de produção</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/produto-formula-ordem.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRO-078</td>
+<td>Insumos</td>
+<td>O <strong>Cadastro de Insumos</strong> guarda:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-079</td>
+<td>Insumos</td>
+<td>As <strong>Configurações Insumos Produção</strong> acrescentam ao insumo:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-080</td>
+<td>Insumos</td>
+<td>As <strong>Configurações Insumos Diversos</strong> fazem o mesmo para materiais de limpeza e consumo geral (<code>Tab/TBL_INSUMO_DIVERSOS.sql</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-081</td>
+<td>Insumos</td>
+<td>Os controles de lote, validade e quarentena também existem no cadastro de item do Estoque. <em>A confirmar:</em> qual dos dois vale quando divergem.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-082</td>
+<td>Insumos</td>
+<td>O <strong>Cadastro de Soluções</strong> guarda as soluções de limpeza, com exigência de validade e de lote (<code>Tab/TBL_SOLUCOES.sql</code>). Elas são usadas nos registros de limpeza (fluxo 4).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-083</td>
+<td>Produto e fórmula</td>
+<td>O <strong>Cadastro do Produto</strong> exige (<code>Adm/produto_ed.aspx</code>, validações):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-084</td>
+<td>Produto e fórmula</td>
+<td><strong>Registro na ANVISA:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-085</td>
+<td>Produto e fórmula</td>
+<td>A <strong>fórmula</strong> tem itens com:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-086</td>
+<td>Produto e fórmula</td>
+<td>Alterar o produto ou um item da fórmula exige <strong>justificativa</strong> (<code>Adm/produto_ed.aspx.cs:347-358, 526, 1121</code>). O produto tem histórico de alterações, consultado pela própria tela (<code>Adm/produto_ed.aspx.cs:2651-2658</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-087</td>
+<td>Produto e fórmula</td>
+<td><strong>Produto com lote padrão não pode ser alterado</strong> (<code>BLL/bllProduto.cs:287-297</code>; <code>Adm/produto_ed.aspx.cs:398-412</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-088</td>
+<td>Produto e fórmula</td>
+<td>A trava da RN010 <strong>deixa de valer</strong> quando a configuração do sistema está <strong>"em migração"</strong> (<code>EM_MIGRACAO</code>, <code>BLL/bllProduto.cs:291</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-089</td>
+<td>Produto e fórmula</td>
+<td>Para mudar um produto travado, o caminho é <strong>Duplicar</strong>, que cria um produto novo a partir do atual (<code>Adm/produto_ed.aspx.cs:1939-1942, 2530</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-090</td>
+<td>Produto e fórmula</td>
+<td>O produto pode ser ligado ao <strong>item do Estoque</strong> que recebe o produto acabado (<code>Adm/produto_ed.aspx.cs:2470-2495</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-091</td>
+<td>Produto e fórmula</td>
+<td>A <strong>validade do registro</strong> aparece como campo informativo no registro de lote (<code>LaboSys_UI/producao/XML/Class_Producao/BLL/CalculoGenerico.cs:884</code>). <strong>Não impede</strong> pedir nem autorizar a produção (fluxo 1).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-092</td>
+<td>Lote padrão</td>
+<td>O <strong>Cadastro de Lote Padrão</strong> define, para um produto e uma quantidade (<code>Adm/lote_padrao_ed.aspx.cs:2180-2188</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-093</td>
+<td>Lote padrão</td>
+<td>Não se repete item, ambiente, equipamento, instrumento, utensílio ou ponto de água: "O item já está adicionado!" e equivalentes (<code>Adm/lote_padrao_ed.aspx.cs:808, 1090, 1288, 1485, 1682, 1880, 2078</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-094</td>
+<td>Lote padrão</td>
+<td><strong>Aprovação</strong> (<code>Adm/lote_padrao_ed.aspx.cs:2265-2291</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-095</td>
+<td>Lote padrão</td>
+<td>Depois da aprovação, os itens do lote padrão <strong>não podem ser editados</strong> (<code>Adm/lote_padrao_ed.aspx.cs:668-676</code> e trechos equivalentes por tipo de item).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-096</td>
+<td>Lote padrão</td>
+<td>A Solicitação de Autorizações só oferece lote padrão <strong>ativo e aprovado</strong> (<code>LaboSys_UI/webservice/wsAutoComplete.asmx.cs:562-571</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-097</td>
+<td>Lote padrão</td>
+<td>A aprovação automática ao salvar, por quem tivesse a permissão, existia e está <strong>comentada</strong> (<code>Adm/lote_padrao_ed.aspx.cs:2218-2226</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-098</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>O <strong>Cadastro Ordem de Produção</strong> liga um produto a uma ordem com (<code>Adm/ficha_tecnica_ed.aspx.cs:296-320</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-099</td>
+<td>Ordem de produção e modelo do registro</td>
+<td><strong>Ninguém assina:</strong> quem cadastra escolhe os nomes de quem elaborou e aprovou e digita as datas, sem senha nem conferência de função.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-100</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>Alterar a ordem de produção exige <strong>justificativa</strong> (<code>Adm/ficha_tecnica_ed.aspx.cs:630-637</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-101</td>
+<td>Ordem de produção e modelo do registro</td>
+<td><strong>Envio do modelo XML</strong> (<code>Adm/ficha_tecnica_ed.aspx.cs:640-656, 922-1000</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-102</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>A troca do modelo XML <strong>não confere se há produção em andamento</strong> com aquela ordem. Só a <strong>exclusão</strong> confere: "Já existem produções iniciadas para a OPE. Exclusão não permitida!" (<code>Adm/ficha_tecnica_ed.aspx.cs:800-826</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-103</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>O <strong>Cadastro de Etapa</strong> e o <strong>Cadastro de HH Padrão</strong> guardam as etapas e as horas-padrão por etapa, usadas no controle de horas (<code>Tab/TBL_HH_PADRAO.sql</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-104</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>O modelo XML e a classe de programa de cada produto vêm do fornecedor. Não há tela para montar ou alterar o modelo: ele é <strong>feito fora do sistema</strong> e enviado como arquivo (reconhecimento, ponto 1).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-105</td>
+<td>Demandas</td>
+<td>O <strong>Cadastro de Demandas</strong> guarda (<code>Tab/TBL_DEMANDA.sql</code>):</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-preparacao">5. Preparação</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/preparacao.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRO-106</td>
+<td>Programação</td>
+<td>Cada tipo tem uma <strong>programação</strong> com data programada, tempo previsto e responsável (<code>Tab/TBL_PROGRAMACAO_*.sql</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-107</td>
+<td>Programação</td>
+<td>A programação <strong>não tem periodicidade</strong>: cada data é lançada uma a uma.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-108</td>
+<td>Programação</td>
+<td><strong>Não foram encontrados avisos</strong> de programação atrasada nem de validade perto do fim no código da preparação. <em>A confirmar no teste.</em></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-109</td>
+<td>Programação</td>
+<td>A <strong>Programação de Calendário de Pessoal</strong> registra ausências do profissional, com início, fim e motivo (<code>Tab/TBL_PROGRAMACAO_CALENDARIO_PESSOAL.sql</code>). <em>A validar:</em> onde é usada.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-110</td>
+<td>Registro e revisão</td>
+<td><strong>Limpeza</strong> (<code>Prep/registro_limpeza_ed.aspx.cs:688-702</code>). O registro guarda:</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-111</td>
+<td>Registro e revisão</td>
+<td><strong>Limpeza Avulso:</strong> a mesma limpeza, sem programação (<code>Tab/TBL_REGISTRO_LIMPEZA_AVULSO.sql</code>). Ela também conta para liberar a sala (<code>BLL/bllAutorizacaoAmbienteProducao.cs:183-191</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-112</td>
+<td>Registro e revisão</td>
+<td><strong>Calibração e qualificação:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-113</td>
+<td>Registro e revisão</td>
+<td><strong>Manutenção preventiva e corretiva:</strong> início, fim, ordem de serviço, empresa e observações. A preventiva tem validade; a corretiva não (<code>Tab/TBL_REGISTRO_MANUTENCAO_*.sql</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-114</td>
+<td>Registro e revisão</td>
+<td><strong>Análise de ambiente e de ponto de água:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-115</td>
+<td>Registro e revisão</td>
+<td><strong>Datas:</strong> início e fim são <strong>digitados</strong>, com início não posterior a hoje. A <strong>validade é digitada</strong> por quem registra, não calculada por uma regra.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-116</td>
+<td>Registro e revisão</td>
+<td><strong>Revisão:</strong></td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-117</td>
+<td>Liberação para produzir</td>
+<td><strong>Sala liberada:</strong> tem limpeza (programada ou avulsa) <strong>revisada e com validade em dia</strong> e análise de ambiente <strong>revisada e com validade em dia</strong> (<code>DAL/dalRegistroLimpeza.cs:166-174</code>; <code>BLL/bllAutorizacaoAmbienteProducao.cs:200-208</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-118</td>
+<td>Liberação para produzir</td>
+<td><strong>Ponto de água liberado:</strong> tem a última análise com validade em dia (<code>BLL/bllRegistroAnalisePontosAgua.cs:79-84</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-119</td>
+<td>Liberação para produzir</td>
+<td><strong>Equipamento e instrumento liberados:</strong> cada tipo de registro (qualificação, calibração, limpeza, manutenção preventiva, lubrificação) com validade em dia (fluxo 1, RN009).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-120</td>
+<td>Liberação para produzir</td>
+<td><strong>O resultado da análise não conta.</strong> Nenhuma regra usa o tipo de resultado (RN009). Uma análise de ambiente ou de água com resultado ruim, mas revisada e na validade, <strong>libera</strong> a sala ou o ponto.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-121</td>
+<td>Liberação para produzir</td>
+<td>Um item <strong>pendente</strong> ainda pode ser autorizado na produção com justificativa (fluxo 1, RN009).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-122</td>
+<td>Consultas e etiquetas</td>
+<td>A <strong>etiqueta de limpeza</strong> imprime o registro de limpeza, para identificar o equipamento ou a sala (<code>Prep/registro_limpeza_etiqueta.aspx.cs</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-123</td>
+<td>Consultas e etiquetas</td>
+<td>O <strong>LogBook</strong> e o <strong>RP14</strong> listam, por equipamento e período, os registros de manutenção e limpeza (<code>LaboSys_UI/relatorios/LogBook.aspx.cs</code>; <code>rp14_equipamento_manutencao_limpeza_lst.aspx</code>).</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-terceirizacao-e-validade-da-ope">6. Terceirização e validade da OPE</h3>
+<p>Fluxo completo, com fluxograma e casos de teste: <code>fluxos/terceirizacao-validade.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Etapa</th>
+<th>Regra (com a fonte no código)</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRO-124</td>
+<td>Terceirização</td>
+<td>A terceirização registra, para a produção (<code>Prod/terceirizacao_op_ed.aspx.cs:751-786</code>):</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-125</td>
+<td>Terceirização</td>
+<td>Cada item de terceirização pode ser <strong>confirmado</strong> ou <strong>cancelado</strong>. Grava quem decidiu e a data, pelo servidor (<code>Prod/terceirizacao_op_ed.aspx.cs:875-876</code>; <code>TBL_TERCEIRIZACAO_PRODUCAO_DETALHE</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-126</td>
+<td>Terceirização</td>
+<td>Aceita <strong>anexos</strong> de até 4 MB (<code>Prod/terceirizacao_op_ed.aspx.cs:560-601</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-127</td>
+<td>Terceirização</td>
+<td>No registro de lote, a subetapa com terceirização <strong>confirmada</strong> não mostra o botão de salvar (<code>LaboSys_UI/producao/XML/Class_Producao/SubEtapaProducao.cs:261-275</code>). <em>A confirmar no teste:</em> como entram no registro os dados do que o terceiro fez.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-128</td>
+<td>Terceirização</td>
+<td><strong>Não há</strong> campos de contrato, acordo técnico, responsabilidades nem qualificação do fornecedor (<code>TBL_TERCEIRIZACAO_PRODUCAO*</code>). O fornecedor é escolhido entre as pessoas jurídicas do Principal, <strong>sem conferir se está qualificado</strong> na GQ.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-129</td>
+<td>Validade da OPE</td>
+<td>O pedido informa a <strong>validade atual</strong> e a <strong>nova validade</strong>, com observação e justificativa (<code>Prod/solicitacao_alteracao_validade_ed.aspx.cs:250-258</code>). A nova data não pode ser anterior a hoje.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-130</td>
+<td>Validade da OPE</td>
+<td>A validade só pode ser alterada <strong>antes da finalização da produção</strong>: "A data de validade não pode ser alterada, pois a OPE já foi finalizada."</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-131</td>
+<td>Validade da OPE</td>
+<td><strong>Confirmação</strong> e <strong>aprovação final</strong>: cada uma aprova ou reprova, com observação. A reprovação exige justificativa. A <strong>data da decisão é digitada</strong>, e grava-se o usuário logado (<code>Prod/solicitacao_alteracao_validade_ed.aspx.cs:292-302, 336-348, 388-399, 438-444</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-132</td>
+<td>Validade da OPE</td>
+<td>Não há conferência de que quem confirma, quem aprova e quem pediu sejam pessoas diferentes.</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-133</td>
+<td>Validade da OPE</td>
+<td>A nova validade é gravada no lote depois da aprovação final (<code>LaboSys_BLL/bllProducao.cs:415-433</code>).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-134</td>
+<td>Validade da OPE</td>
+<td>A nova validade <strong>não é enviada ao Estoque</strong> (nenhuma ligação na tela). Isso só importa se o produto já estiver lá, o que não deveria acontecer antes da finalização (RN007).</td>
+<td>Não testada</td>
+</tr>
+<tr>
+<td>RN-PRO-135</td>
+<td>Validade da OPE</td>
+<td>A tela <strong>está fora do menu</strong> (item comentado no roteiro <code>Hsolutions.Producao.DB/dml.sql</code>), mas existe e tem permissão própria (<code>IdTela = "PRD_VALIDADE_OPE"</code>). <em>A validar:</em> se ainda é usada.</td>
+<td>Não testada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-pontos-de-atencao-dos-fluxos">7. Pontos de atenção dos fluxos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Fluxo</th>
+<th>Ponto de atenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>1. A produção pode ser autorizada com uma área que negou</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>2. As autorizações do CQ e da GQ não consultam esses módulos</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>3. O Estoque confirma insumos digitando lote e validade</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>4. Equipamento ou sala pendente pode ser liberado com uma justificativa curta</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>5. Áreas podem ficar sem autorização</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>6. O produto acabado pode ser finalizado sem entrar no Estoque</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>7. Quem finaliza também reconcilia e libera</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>8. Datas e horas digitadas</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>9. Número de lote digitado, com formatos de clientes anteriores no código</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>10. Cancelamento sem estorno da reserva no Estoque</td>
+</tr>
+<tr>
+<td>Autorização, início e final da produção</td>
+<td>11. Reaberturas</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>1. O registro de cada produto depende de programação</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>2. O controle em processo confere só se foi preenchido, não se está dentro do limite</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>3. A análise do CQ reprovada pode ser liberada com senha e justificativa</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>4. Subetapa sem solicitação de análise não trava</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>5. Datas e horas digitadas</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>6. Alterações sem motivo, cortadas em 255 caracteres e sem aprovação</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>7. Salvar parcial grava campos inválidos</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>8. Duas pesagens que não conversam</td>
+</tr>
+<tr>
+<td>Produto, fórmula e ordem de produção</td>
+<td>1. A ordem de produção não tem aprovação de verdade</td>
+</tr>
+<tr>
+<td>Produto, fórmula e ordem de produção</td>
+<td>2. O modelo do registro de lote pode ser trocado com produção em andamento</td>
+</tr>
+<tr>
+<td>Produto, fórmula e ordem de produção</td>
+<td>3. A fórmula não tem versão</td>
+</tr>
+<tr>
+<td>Produto, fórmula e ordem de produção</td>
+<td>4. Registro na ANVISA vencido é aceito e não impede a produção</td>
+</tr>
+<tr>
+<td>Produto, fórmula e ordem de produção</td>
+<td>5. Controles do insumo em dois cadastros</td>
+</tr>
+<tr>
+<td>Produto, fórmula e ordem de produção</td>
+<td>6. A separação entre quem elabora e quem aprova o lote padrão é feita pelo nome</td>
+</tr>
+<tr>
+<td>Produto, fórmula e ordem de produção</td>
+<td>7. Bom controle a manter:</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>1. O resultado da análise de água e de ambiente não é conferido</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>2. Monitoramento de água e ambiente em dois módulos</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>3. Calibração e qualificação sem resultado</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>4. Validade digitada</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>5. Sem avisos de atraso</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>6. Revisão sem senha</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>7. Calibração e qualificação podem liberar sem revisão</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>8. Bom controle a manter:</td>
+</tr>
+<tr>
+<td>Terceirização e validade da OPE</td>
+<td>1. Terceirização sem contrato e sem fornecedor qualificado</td>
+</tr>
+<tr>
+<td>Terceirização e validade da OPE</td>
+<td>2. O que o terceiro fez não entra no registro</td>
+</tr>
+<tr>
+<td>Terceirização e validade da OPE</td>
+<td>3. A validade do lote pode ser estendida com decisões em datas digitadas</td>
+</tr>
+<tr>
+<td>Terceirização e validade da OPE</td>
+<td>4. A validade do produto deve vir dos estudos de estabilidade e do registro</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-correspondencia-com-os-fluxos">8. Correspondência com os fluxos</h3>
+<p>Cada regra tem o número local (RN001…) que aparece no documento do fluxo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Fluxo</th>
+<th>Etapa</th>
+<th>No fluxo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-PRO-010</td>
+<td>Autorização, início e final da produção</td>
+<td>Solicitação de autorizações</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-PRO-011</td>
+<td>Autorização, início e final da produção</td>
+<td>Solicitação de autorizações</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-PRO-012</td>
+<td>Autorização, início e final da produção</td>
+<td>Solicitação de autorizações</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-PRO-013</td>
+<td>Autorização, início e final da produção</td>
+<td>Solicitação de autorizações</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-PRO-014</td>
+<td>Autorização, início e final da produção</td>
+<td>Solicitação de autorizações</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-PRO-015</td>
+<td>Autorização, início e final da produção</td>
+<td>Solicitação de autorizações</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-PRO-016</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-PRO-017</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-PRO-018</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-PRO-019</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-PRO-020</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-PRO-021</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-PRO-022</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-PRO-023</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizações das áreas</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-PRO-024</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-PRO-025</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-PRO-026</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-PRO-027</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-PRO-028</td>
+<td>Autorização, início e final da produção</td>
+<td>Autorizar ou cancelar a produção</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-PRO-029</td>
+<td>Autorização, início e final da produção</td>
+<td>Número de lote</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-PRO-030</td>
+<td>Autorização, início e final da produção</td>
+<td>Número de lote</td>
+<td>RN021</td>
+</tr>
+<tr>
+<td>RN-PRO-031</td>
+<td>Autorização, início e final da produção</td>
+<td>Número de lote</td>
+<td>RN022</td>
+</tr>
+<tr>
+<td>RN-PRO-032</td>
+<td>Autorização, início e final da produção</td>
+<td>Número de lote</td>
+<td>RN023</td>
+</tr>
+<tr>
+<td>RN-PRO-033</td>
+<td>Autorização, início e final da produção</td>
+<td>Número de lote</td>
+<td>RN024</td>
+</tr>
+<tr>
+<td>RN-PRO-034</td>
+<td>Autorização, início e final da produção</td>
+<td>Número de lote</td>
+<td>RN025</td>
+</tr>
+<tr>
+<td>RN-PRO-035</td>
+<td>Autorização, início e final da produção</td>
+<td>Início e registro da produção</td>
+<td>RN026</td>
+</tr>
+<tr>
+<td>RN-PRO-036</td>
+<td>Autorização, início e final da produção</td>
+<td>Início e registro da produção</td>
+<td>RN027</td>
+</tr>
+<tr>
+<td>RN-PRO-037</td>
+<td>Autorização, início e final da produção</td>
+<td>Início e registro da produção</td>
+<td>RN028</td>
+</tr>
+<tr>
+<td>RN-PRO-038</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN029</td>
+</tr>
+<tr>
+<td>RN-PRO-039</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN030</td>
+</tr>
+<tr>
+<td>RN-PRO-040</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN031</td>
+</tr>
+<tr>
+<td>RN-PRO-041</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN032</td>
+</tr>
+<tr>
+<td>RN-PRO-042</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN033</td>
+</tr>
+<tr>
+<td>RN-PRO-043</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN034</td>
+</tr>
+<tr>
+<td>RN-PRO-044</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN035</td>
+</tr>
+<tr>
+<td>RN-PRO-045</td>
+<td>Autorização, início e final da produção</td>
+<td>Final, reconciliação e liberação</td>
+<td>RN036</td>
+</tr>
+<tr>
+<td>RN-PRO-046</td>
+<td>Autorização, início e final da produção</td>
+<td>Situações da produção</td>
+<td>RN037</td>
+</tr>
+<tr>
+<td>RN-PRO-047</td>
+<td>Registro de lote</td>
+<td>O modelo do registro</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-PRO-048</td>
+<td>Registro de lote</td>
+<td>O modelo do registro</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-PRO-049</td>
+<td>Registro de lote</td>
+<td>O modelo do registro</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-PRO-050</td>
+<td>Registro de lote</td>
+<td>O modelo do registro</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-PRO-051</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-PRO-052</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-PRO-053</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-PRO-054</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-PRO-055</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-PRO-056</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-PRO-057</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-PRO-058</td>
+<td>Registro de lote</td>
+<td>Preencher a subetapa</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-PRO-059</td>
+<td>Registro de lote</td>
+<td>Salvar e alterar</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-PRO-060</td>
+<td>Registro de lote</td>
+<td>Salvar e alterar</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-PRO-061</td>
+<td>Registro de lote</td>
+<td>Salvar e alterar</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-PRO-062</td>
+<td>Registro de lote</td>
+<td>Salvar e alterar</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-PRO-063</td>
+<td>Registro de lote</td>
+<td>Salvar e alterar</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-PRO-064</td>
+<td>Registro de lote</td>
+<td>Salvar e alterar</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-PRO-065</td>
+<td>Registro de lote</td>
+<td>Controle em processo e análise do CQ</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-PRO-066</td>
+<td>Registro de lote</td>
+<td>Controle em processo e análise do CQ</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-PRO-067</td>
+<td>Registro de lote</td>
+<td>Controle em processo e análise do CQ</td>
+<td>RN021</td>
+</tr>
+<tr>
+<td>RN-PRO-068</td>
+<td>Registro de lote</td>
+<td>Controle em processo e análise do CQ</td>
+<td>RN022</td>
+</tr>
+<tr>
+<td>RN-PRO-069</td>
+<td>Registro de lote</td>
+<td>Controle em processo e análise do CQ</td>
+<td>RN023</td>
+</tr>
+<tr>
+<td>RN-PRO-070</td>
+<td>Registro de lote</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td>RN024</td>
+</tr>
+<tr>
+<td>RN-PRO-071</td>
+<td>Registro de lote</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td>RN025</td>
+</tr>
+<tr>
+<td>RN-PRO-072</td>
+<td>Registro de lote</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td>RN026</td>
+</tr>
+<tr>
+<td>RN-PRO-073</td>
+<td>Registro de lote</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td>RN027</td>
+</tr>
+<tr>
+<td>RN-PRO-074</td>
+<td>Registro de lote</td>
+<td>Pesagem, horas e insumos avulsos</td>
+<td>RN028</td>
+</tr>
+<tr>
+<td>RN-PRO-075</td>
+<td>Registro de lote</td>
+<td>Fim do registro e impressão</td>
+<td>RN029</td>
+</tr>
+<tr>
+<td>RN-PRO-076</td>
+<td>Registro de lote</td>
+<td>Fim do registro e impressão</td>
+<td>RN030</td>
+</tr>
+<tr>
+<td>RN-PRO-077</td>
+<td>Registro de lote</td>
+<td>Fim do registro e impressão</td>
+<td>RN031</td>
+</tr>
+<tr>
+<td>RN-PRO-078</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Insumos</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-PRO-079</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Insumos</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-PRO-080</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Insumos</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-PRO-081</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Insumos</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-PRO-082</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Insumos</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-PRO-083</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-PRO-084</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-PRO-085</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-PRO-086</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-PRO-087</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-PRO-088</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-PRO-089</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-PRO-090</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-PRO-091</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Produto e fórmula</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-PRO-092</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Lote padrão</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-PRO-093</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Lote padrão</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-PRO-094</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Lote padrão</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-PRO-095</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Lote padrão</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-PRO-096</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Lote padrão</td>
+<td>RN019</td>
+</tr>
+<tr>
+<td>RN-PRO-097</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Lote padrão</td>
+<td>RN020</td>
+</tr>
+<tr>
+<td>RN-PRO-098</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>RN021</td>
+</tr>
+<tr>
+<td>RN-PRO-099</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>RN022</td>
+</tr>
+<tr>
+<td>RN-PRO-100</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>RN023</td>
+</tr>
+<tr>
+<td>RN-PRO-101</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>RN024</td>
+</tr>
+<tr>
+<td>RN-PRO-102</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>RN025</td>
+</tr>
+<tr>
+<td>RN-PRO-103</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>RN026</td>
+</tr>
+<tr>
+<td>RN-PRO-104</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Ordem de produção e modelo do registro</td>
+<td>RN027</td>
+</tr>
+<tr>
+<td>RN-PRO-105</td>
+<td>Produto, fórmula e ordem de produção</td>
+<td>Demandas</td>
+<td>RN028</td>
+</tr>
+<tr>
+<td>RN-PRO-106</td>
+<td>Preparação</td>
+<td>Programação</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-PRO-107</td>
+<td>Preparação</td>
+<td>Programação</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-PRO-108</td>
+<td>Preparação</td>
+<td>Programação</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-PRO-109</td>
+<td>Preparação</td>
+<td>Programação</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-PRO-110</td>
+<td>Preparação</td>
+<td>Registro e revisão</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-PRO-111</td>
+<td>Preparação</td>
+<td>Registro e revisão</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-PRO-112</td>
+<td>Preparação</td>
+<td>Registro e revisão</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-PRO-113</td>
+<td>Preparação</td>
+<td>Registro e revisão</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-PRO-114</td>
+<td>Preparação</td>
+<td>Registro e revisão</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-PRO-115</td>
+<td>Preparação</td>
+<td>Registro e revisão</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-PRO-116</td>
+<td>Preparação</td>
+<td>Registro e revisão</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-PRO-117</td>
+<td>Preparação</td>
+<td>Liberação para produzir</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>RN-PRO-118</td>
+<td>Preparação</td>
+<td>Liberação para produzir</td>
+<td>RN013</td>
+</tr>
+<tr>
+<td>RN-PRO-119</td>
+<td>Preparação</td>
+<td>Liberação para produzir</td>
+<td>RN014</td>
+</tr>
+<tr>
+<td>RN-PRO-120</td>
+<td>Preparação</td>
+<td>Liberação para produzir</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>RN-PRO-121</td>
+<td>Preparação</td>
+<td>Liberação para produzir</td>
+<td>RN016</td>
+</tr>
+<tr>
+<td>RN-PRO-122</td>
+<td>Preparação</td>
+<td>Consultas e etiquetas</td>
+<td>RN017</td>
+</tr>
+<tr>
+<td>RN-PRO-123</td>
+<td>Preparação</td>
+<td>Consultas e etiquetas</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>RN-PRO-124</td>
+<td>Terceirização e validade da OPE</td>
+<td>Terceirização</td>
+<td>RN001</td>
+</tr>
+<tr>
+<td>RN-PRO-125</td>
+<td>Terceirização e validade da OPE</td>
+<td>Terceirização</td>
+<td>RN002</td>
+</tr>
+<tr>
+<td>RN-PRO-126</td>
+<td>Terceirização e validade da OPE</td>
+<td>Terceirização</td>
+<td>RN003</td>
+</tr>
+<tr>
+<td>RN-PRO-127</td>
+<td>Terceirização e validade da OPE</td>
+<td>Terceirização</td>
+<td>RN004</td>
+</tr>
+<tr>
+<td>RN-PRO-128</td>
+<td>Terceirização e validade da OPE</td>
+<td>Terceirização</td>
+<td>RN005</td>
+</tr>
+<tr>
+<td>RN-PRO-129</td>
+<td>Terceirização e validade da OPE</td>
+<td>Validade da OPE</td>
+<td>RN006</td>
+</tr>
+<tr>
+<td>RN-PRO-130</td>
+<td>Terceirização e validade da OPE</td>
+<td>Validade da OPE</td>
+<td>RN007</td>
+</tr>
+<tr>
+<td>RN-PRO-131</td>
+<td>Terceirização e validade da OPE</td>
+<td>Validade da OPE</td>
+<td>RN008</td>
+</tr>
+<tr>
+<td>RN-PRO-132</td>
+<td>Terceirização e validade da OPE</td>
+<td>Validade da OPE</td>
+<td>RN009</td>
+</tr>
+<tr>
+<td>RN-PRO-133</td>
+<td>Terceirização e validade da OPE</td>
+<td>Validade da OPE</td>
+<td>RN010</td>
+</tr>
+<tr>
+<td>RN-PRO-134</td>
+<td>Terceirização e validade da OPE</td>
+<td>Validade da OPE</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>RN-PRO-135</td>
+<td>Terceirização e validade da OPE</td>
+<td>Validade da OPE</td>
+<td>RN012</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-regras-gerais-do-modulo">1. Regras gerais do módulo</a></li><li><a href="#2-autorizacao-inicio-e-final-da-producao">2. Autorização, início e final da produção</a></li><li><a href="#3-registro-de-lote">3. Registro de lote</a></li><li><a href="#4-produto-formula-e-ordem-de-producao">4. Produto, fórmula e ordem de produção</a></li><li><a href="#5-preparacao">5. Preparação</a></li><li><a href="#6-terceirizacao-e-validade-da-ope">6. Terceirização e validade da OPE</a></li><li><a href="#7-pontos-de-atencao-dos-fluxos">7. Pontos de atenção dos fluxos</a></li><li><a href="#8-correspondencia-com-os-fluxos">8. Correspondência com os fluxos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

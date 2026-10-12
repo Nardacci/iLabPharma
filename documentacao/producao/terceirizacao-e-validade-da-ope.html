@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terceirização e validade da OPE · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html">Registro de lote</a></li><li><a href="produto-formula-e-ordem-de-producao.html">Produto, fórmula e ordem de produção</a></li><li><a href="preparacao-limpeza-calibracao-qualificacao-manutencao-agua-e-ambiente.html">Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente</a></li><li><a href="terceirizacao-e-validade-da-ope.html" aria-current=page>Terceirização e validade da OPE</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Terceirização e validade da OPE</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/producao/LabMedSys - Modulo Producao - Fluxo Terceirizacao e Validade da OPE.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve dois processos menores da Produção no LabMedSys:
+- a <strong>terceirização</strong> de etapas da ordem de produção para um fornecedor;
+- a <strong>alteração da validade da OPE</strong> (a validade do lote calculada na geração do número, fluxo 1).</p>
+<p>Pela norma, a atividade terceirizada exige contrato escrito, responsabilidades definidas e os registros do terceiro (RDC 658/2022, arts. 299 e 316). Qualquer mudança no que foi definido para o lote precisa de aprovação (art. 167).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Terceirização da Ordem de Produção: inclusão, confirmação, cancelamento e anexos.</li>
+<li>Validade da OPE: pedido, confirmação e aprovação final da nova validade. <strong>A tela está fora do menu</strong>: o item foi comentado no roteiro do fornecedor.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o cadastro do fornecedor (pessoa jurídica, no Principal) e a qualificação de fornecedores (GQ).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código são relativos a <code>2.producao/app/</code>. Para encurtar: <code>Prod/</code> = <code>LaboSys_UI/producao/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/producao/terceirizacao-validade-fluxograma.png" target="_blank" rel="noopener"><img src="../img/producao/terceirizacao-validade-fluxograma.png" alt="Workflow da terceirização e da alteração de validade da OPE" loading="lazy"></a><figcaption>Workflow da terceirização e da alteração de validade da OPE · clique para ampliar</figcaption></figure>
+
+<p><strong>Terceirização:</strong>
+1. Para uma produção, a Produção indica qual etapa vai para um fornecedor. Pode indicar também a subetapa, ou marcar que a etapa inteira é terceirizada.
+2. A terceirização é <strong>confirmada</strong> ou <strong>cancelada</strong>.
+3. A subetapa terceirizada confirmada <strong>não mostra o botão de salvar</strong> no registro de lote.</p>
+<p><strong>Validade da OPE:</strong>
+1. Antes de a produção ser finalizada, alguém pede uma <strong>nova data de validade</strong>.
+2. A primeira decisão é a <strong>confirmação</strong>, que aprova ou reprova.
+3. A segunda é a <strong>aprovação final</strong>.
+4. Com as duas decisões, a nova validade substitui a do lote.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="terceirizacao">Terceirização</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – A terceirização registra, para a produção (<code>Prod/terceirizacao_op_ed.aspx.cs:751-786</code>):</li>
+<li>o número da OPE;</li>
+<li>a <strong>etapa</strong> e, se for o caso, a <strong>subetapa</strong>;</li>
+<li>se a terceirização é <strong>completa</strong>;</li>
+<li>o <strong>fornecedor</strong> e uma observação.</li>
+</ul>
+<p>Grava quem incluiu e a data, pelo servidor. A terceirização nasce na situação 1 (<code>ID_SITUACAO_TERCEIRIZACAO</code>).
+- RN002 – Cada item de terceirização pode ser <strong>confirmado</strong> ou <strong>cancelado</strong>. Grava quem decidiu e a data, pelo servidor (<code>Prod/terceirizacao_op_ed.aspx.cs:875-876</code>; <code>TBL_TERCEIRIZACAO_PRODUCAO_DETALHE</code>).
+- RN003 – Aceita <strong>anexos</strong> de até 4 MB (<code>Prod/terceirizacao_op_ed.aspx.cs:560-601</code>).
+- RN004 – No registro de lote, a subetapa com terceirização <strong>confirmada</strong> não mostra o botão de salvar (<code>LaboSys_UI/producao/XML/Class_Producao/SubEtapaProducao.cs:261-275</code>). <em>A confirmar no teste:</em> como entram no registro os dados do que o terceiro fez.
+- RN005 – <strong>Não há</strong> campos de contrato, acordo técnico, responsabilidades nem qualificação do fornecedor (<code>TBL_TERCEIRIZACAO_PRODUCAO*</code>). O fornecedor é escolhido entre as pessoas jurídicas do Principal, <strong>sem conferir se está qualificado</strong> na GQ.</p>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Terceirização da Ordem de Produção</td>
+<td>Indicar etapas terceirizadas, confirmar, cancelar, anexar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="validade-da-ope">Validade da OPE</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN006 – O pedido informa a <strong>validade atual</strong> e a <strong>nova validade</strong>, com observação e justificativa (<code>Prod/solicitacao_alteracao_validade_ed.aspx.cs:250-258</code>). A nova data não pode ser anterior a hoje.</li>
+<li>RN007 – A validade só pode ser alterada <strong>antes da finalização da produção</strong>: "A data de validade não pode ser alterada, pois a OPE já foi finalizada."</li>
+<li>RN008 – <strong>Confirmação</strong> e <strong>aprovação final</strong>: cada uma aprova ou reprova, com observação. A reprovação exige justificativa. A <strong>data da decisão é digitada</strong>, e grava-se o usuário logado (<code>Prod/solicitacao_alteracao_validade_ed.aspx.cs:292-302, 336-348, 388-399, 438-444</code>).</li>
+<li>RN009 – Não há conferência de que quem confirma, quem aprova e quem pediu sejam pessoas diferentes.</li>
+<li>RN010 – A nova validade é gravada no lote depois da aprovação final (<code>LaboSys_BLL/bllProducao.cs:415-433</code>).</li>
+<li>A regra confere se <strong>todas as decisões foram dadas</strong>, mas <strong>não se foram favoráveis</strong>.</li>
+<li><em>Inferência, a confirmar no teste:</em> um pedido reprovado na confirmação e depois aprovado no final muda a validade.</li>
+<li>RN011 – A nova validade <strong>não é enviada ao Estoque</strong> (nenhuma ligação na tela). Isso só importa se o produto já estiver lá, o que não deveria acontecer antes da finalização (RN007).</li>
+<li>RN012 – A tela <strong>está fora do menu</strong> (item comentado no roteiro <code>Hsolutions.Producao.DB/dml.sql</code>), mas existe e tem permissão própria (<code>IdTela = "PRD_VALIDADE_OPE"</code>). <em>A validar:</em> se ainda é usada.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Validade da OPE (fora do menu)</td>
+<td>Pedir, confirmar e aprovar a nova validade</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Terceirização sem contrato e sem fornecedor qualificado</strong> (RN005) (arts. 299 e 316; art. 8º, VI).</p>
+<p><strong>2. O que o terceiro fez não entra no registro</strong> (RN004). A subetapa terceirizada fica sem o botão de salvar. <em>A confirmar:</em> onde ficam os registros do terceiro (anexos?).</p>
+<p><strong>3. A validade do lote pode ser estendida com decisões em datas digitadas</strong> (RN008), sem separação entre quem pede, confirma e aprova (RN009). E, pela regra do código, mesmo com uma das decisões <strong>reprovada</strong> (RN010).</p>
+<p><strong>4. A validade do produto deve vir dos estudos de estabilidade e do registro.</strong> Uma mudança caso a caso, sem ligação com a GQ (mudança ou desvio), não atende ao art. 167. A tela está fora do menu, mas existe.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- A produção <code>TESTE</code> iniciada (fluxo 1).
+- Uma pessoa jurídica <code>TESTE</code> como fornecedor.
+- Usuários <code>t.admin</code> e <code>t.semadmin</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-073</td>
+<td>Terceirizar uma subetapa da produção <code>TESTE</code> para o fornecedor <code>TESTE</code> e confirmar</td>
+<td>Terceirização confirmada, com quem e quando (RN001, RN002)</td>
+</tr>
+<tr>
+<td>CT-PRO-074</td>
+<td>Abrir a subetapa terceirizada no Registro da Produção</td>
+<td>Sem o botão de salvar (RN004). <strong>Registrar onde ficam os dados do terceiro</strong> (ponto 2)</td>
+</tr>
+<tr>
+<td>CT-PRO-075</td>
+<td>Procurar no cadastro da terceirização o contrato e a qualificação do fornecedor</td>
+<td><strong>Registrar a ausência</strong> (RN005, ponto 1)</td>
+</tr>
+<tr>
+<td>CT-PRO-076</td>
+<td>Anexar um arquivo de mais de 4 MB</td>
+<td>Recusa pelo tamanho (RN003)</td>
+</tr>
+<tr>
+<td>CT-PRO-077</td>
+<td>Abrir a Validade da OPE pelo endereço da tela</td>
+<td><strong>Registrar se abre fora do menu</strong> (RN012)</td>
+</tr>
+<tr>
+<td>CT-PRO-078</td>
+<td>Pedir nova validade para a produção <code>TESTE</code>; confirmar e aprovar com o <strong>mesmo usuário</strong> que pediu</td>
+<td><strong>Registrar se permitir</strong> (RN009, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-PRO-079</td>
+<td>Pedir nova validade; <strong>reprovar</strong> na confirmação; aprovar no final</td>
+<td>Pela norma, a validade não muda. <strong>Registrar se mudar</strong> (RN010, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-PRO-080</td>
+<td>Informar datas de decisão no passado</td>
+<td><strong>Registrar se aceitar</strong> (RN008)</td>
+</tr>
+<tr>
+<td>CT-PRO-081</td>
+<td>Pedir nova validade depois da finalização</td>
+<td>"A data de validade não pode ser alterada, pois a OPE já foi finalizada." (RN007)</td>
+</tr>
+<tr>
+<td>CT-PRO-082</td>
+<td>Cancelar uma terceirização confirmada</td>
+<td>Cancelada, com quem e quando (RN002)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-PRO-079, 078 e 075 primeiro. Eles tocam:
+- a validade do lote alterada com uma reprovação;
+- a mesma pessoa que pede e aprova;
+- o terceiro sem contrato nem qualificação.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#terceirizacao">Terceirização</a></li><li class="sub"><a href="#validade-da-ope">Validade da OPE</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
