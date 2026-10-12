@@ -59,7 +59,7 @@ MODULOS = [
             ("transversal/04-mapa-de-integracoes.md", "Mapa de integrações entre os módulos", "inicio", "transversal/LabMedSys - Mapa de Integracoes entre Modulos.docx"),
             ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
             ("transversal/02-mapa-do-processo-fabril.md", "Mapa do processo fabril", "inicio", "transversal/LabMedSys - Mapa do Processo Fabril.docx"),
-            ("transversal/01-telas-repetidas.md", "Telas repetidas entre módulos", "tecnico", None),
+            ("transversal/01-telas-repetidas.md", "Telas, tabelas e código repetidos entre os módulos", "tecnico", "transversal/LabMedSys - Telas Tabelas e Codigo Repetidos.docx"),
             ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "ideal", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
         ],
     },
@@ -239,7 +239,7 @@ PUBLICOS = [
     ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("visao-geral", "mapa-de-integracoes-entre-os-modulos"), ("principal", "resumo-executivo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
     ("Usuários das áreas", "Como cada processo funciona nas telas.", [("principal", "manual-do-usuario"), ("estoque", "recebimento-e-quarentena-conferencia"), ("garantia-qualidade", "desvios-e-capa")]),
     ("Garantia da Qualidade", "Conformidade, riscos e rastreabilidade.", [("garantia-qualidade", "conformidade-com-a-rdc-658-2022"), ("principal", "conformidade-regulatoria"), ("principal", "dossie-de-homologacao")]),
-    ("Desenvolvimento", "Requisitos e dados para a nova versão.", [("principal", "analise-de-requisitos"), ("principal", "modelo-de-dados-e-integracoes"), ("visao-geral", "telas-repetidas-entre-modulos")]),
+    ("Desenvolvimento", "Requisitos e dados para a nova versão.", [("principal", "analise-de-requisitos"), ("principal", "modelo-de-dados-e-integracoes"), ("visao-geral", "telas-tabelas-e-codigo-repetidos-entre-os-modulos")]),
 ]
 
 # ---------------------------------------------------------------------------------------------

@@ -29,7 +29,7 @@
 <div class="doc-layout">
   <aside class="lateral" aria-label="Documentos do módulo">
     <a class="lat-modulo" href="index.html" style="--cor:#2563eb"><span class="icone">◎</span>Visão entre módulos</a>
-    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="mapa-de-integracoes-entre-os-modulos.html" aria-current=page>Mapa de integrações entre os módulos</a></li><li><a href="diagnostico-de-conformidade-com-a-anvisa.html">Diagnóstico de conformidade com a ANVISA</a></li><li><a href="mapa-do-processo-fabril.html">Mapa do processo fabril</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="qualidade-entre-os-modulos-situacao-do-lote-e-travas.html">Qualidade entre os módulos: situação do lote e travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="telas-repetidas-entre-modulos.html">Telas repetidas entre módulos</a></li></ul></div>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="mapa-de-integracoes-entre-os-modulos.html" aria-current=page>Mapa de integrações entre os módulos</a></li><li><a href="diagnostico-de-conformidade-com-a-anvisa.html">Diagnóstico de conformidade com a ANVISA</a></li><li><a href="mapa-do-processo-fabril.html">Mapa do processo fabril</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="qualidade-entre-os-modulos-situacao-do-lote-e-travas.html">Qualidade entre os módulos: situação do lote e travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="telas-tabelas-e-codigo-repetidos-entre-os-modulos.html">Telas, tabelas e código repetidos entre os módulos</a></li></ul></div>
   </aside>
   <main class="doc" id="conteudo">
     <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Visão entre módulos</a> › <span>Comece por aqui</span></nav>
@@ -39,7 +39,7 @@
       
     </header>
     <article class="texto">
-<p><strong>Uso interno.</strong> Mapa das integrações entre os nove módulos do LabMedSys, na versão entregue pelo fornecedor: o que cada módulo envia para outro ou busca em outro, e por qual meio. Levantado no código em 09/10/2026, por scripts e pela leitura dirigida das classes de integração. <strong>Nada aqui foi testado nas telas</strong>, exceto o pedido de análise do Estoque ao Controle da Qualidade (CQ), que falhou no teste do endereçamento (DV-EST-016).</p>
+<p><strong>Uso interno.</strong> Mapa das integrações entre os nove módulos do LabMedSys, na versão entregue pelo fornecedor: o que cada módulo envia para outro ou busca em outro, e por qual meio. Levantado no código em 09/10/2026, por scripts e pela leitura dirigida das classes de integração; <strong>revisto em 12/10/2026</strong> com a análise detalhada de cada módulo (setas 6, 7, 8 e 10 corrigidas; setas 17 a 21 acrescentadas). <strong>Nada aqui foi testado nas telas</strong>, exceto o pedido de análise do Estoque ao Controle da Qualidade (CQ), que falhou no teste do endereçamento (DV-EST-016).</p>
 <h2 id="o-mapa">O mapa</h2>
 <figure><a href="../img/visao-geral/04-mapa-de-integracoes.png" target="_blank" rel="noopener"><img src="../img/visao-geral/04-mapa-de-integracoes.png" alt="Mapa das integrações entre os módulos do LabMedSys" loading="lazy"></a><figcaption>Mapa das integrações entre os módulos do LabMedSys · clique para ampliar</figcaption></figure>
 
@@ -50,10 +50,11 @@
 <li><strong>Compra e recebimento.</strong> A compra e o recebimento da nota fiscal ficam <strong>no próprio Estoque</strong> (fluxos de compras e de recebimento); não há integração com outro módulo nesta etapa. <em>O Comercial (seta 6) trata da venda, não da compra: ver o passo 6.</em></li>
 <li><strong>Quarentena e análise.</strong> Ao endereçar o lote recebido, o Estoque <strong>abre a solicitação de análise no CQ</strong> (seta 1), desde que o CQ esteja habilitado na configuração de módulos. O CQ pede ao Estoque a separação da amostra e <strong>não deixa seguir a análise</strong> enquanto ela não for separada ("Solicitação referente a amostra aguardando pesagem/separação.", seta 2).</li>
 <li><strong>Liberação.</strong> Ao emitir o laudo, o CQ grava o resultado só no próprio banco. O lote sai da quarentena quando alguém <strong>atualiza a análise na tela do Estoque</strong>, que então busca o resultado no CQ (seta 1). Não encontramos rotina automática que faça isso; <em>a confirmar no teste.</em> A seta 16 marca o aviso que falta.</li>
-<li><strong>Produção.</strong> Ao iniciar a produção, a Produção consulta o saldo dos insumos; reserva os insumos e, na pesagem, lê o que o Estoque separou (seta 3). Nas etapas de processo, abre análises de granel e semielaborado no CQ (seta 5). O modelo do registro de lote vem do OPE (seta 10).</li>
+<li><strong>Produção.</strong> Ao iniciar a produção, a Produção consulta o saldo dos insumos; reserva os insumos e, na pesagem, lê o que o Estoque separou (seta 3). Nas etapas de processo, abre análises de granel e semielaborado no CQ (seta 5). O modelo do registro de lote é montado no OPE e levado à Produção <strong>à mão</strong>: baixa-se o arquivo no OPE e envia-se na ordem de produção (seta 10). Nada garante que o modelo usado é o aprovado (seta 21).</li>
 <li><strong>Produto acabado.</strong> No fim da produção, a Produção envia o produto acabado ao Estoque (seta 3). Na entrada do produto acabado, o Estoque abre a análise no CQ (seta 1; <code>3.estoque/app/LaboSys_BLL/bllEntradaProducao.cs:161</code>); o estudo de estabilidade é aberto numa tela do almoxarifado do CQ, dentro do Estoque. Antes de movimentar o produto acabado em quarentena, o Estoque pergunta à Produção se a ordem foi liberada (seta 4).</li>
-<li><strong>Venda e rastreabilidade.</strong> O Comercial consulta os lotes disponíveis para venda, reserva o saldo do pedido e, ao faturar, gera a remessa no Estoque (seta 6). O Estoque envia os eventos de entrega e recebimento à Rastreabilidade (seta 7), que gera os códigos únicos (IUM) a partir dos produtos da Produção (seta 8) e os transmite à ANVISA (seta 9).</li>
+<li><strong>Venda e rastreabilidade.</strong> O Comercial consulta os lotes disponíveis para venda, reserva o saldo do pedido e, ao faturar, gera a remessa no Estoque (seta 6). A Rastreabilidade gera os códigos únicos (IUM) a partir das produções liberadas na Produção (seta 8). O Estoque envia os eventos de entrega e recebimento à Rastreabilidade (seta 7), que deveria transmiti-los à ANVISA (seta 9; o envio é simulado). <strong>A venda não chega à Rastreabilidade</strong> (seta 17), e a situação do lote não acompanha os IUM (seta 20).</li>
 <li><strong>Qualidade.</strong> A Garantia da Qualidade (GQ) só <strong>consulta</strong>: produtos e lotes na Produção (seta 11) e documentos no Controle de Documentos (seta 12). O Controle de Documentos consulta na GQ quem foi treinado em cada documento (seta 13). <strong>Nenhuma decisão da GQ chega ao Estoque ou à Produção</strong> (setas 14 e 15).</li>
+<li><strong>Recolhimento.</strong> Num recolhimento, a GQ precisaria saber para quem foi cada lote e cada embalagem. <strong>Nenhum módulo entrega essa lista à GQ</strong>: nem o Comercial (seta 19) nem a Rastreabilidade (seta 18).</li>
 </ol>
 <h2 id="as-integracoes-uma-a-uma">As integrações, uma a uma</h2>
 <p>Caminhos relativos à raiz do repositório.</p>
@@ -106,23 +107,23 @@
 <tr>
 <td>6</td>
 <td>Comercial → Estoque</td>
-<td>Consulta itens, <strong>lotes disponíveis para venda</strong> e disponibilidade (a validade mínima existe no serviço, mas o Comercial envia sempre 0 dias); cria e cancela a <strong>reserva</strong> do pedido (a confirmação está comentada no Comercial; <em>corrigido em 12/10/2026, reconhecimento do Comercial</em>); confere a separação e a liberação da fatura; ao faturar, gera a <strong>remessa</strong> (GMM)</td>
+<td>Consulta itens, <strong>lotes disponíveis para venda</strong> e disponibilidade (a validade mínima existe no serviço, mas o Comercial envia sempre 0 dias); cria e cancela a <strong>reserva</strong> do pedido (a confirmação está comentada no Comercial; <em>corrigido em 12/10/2026, reconhecimento do Comercial</em>); confere a separação e a liberação da fatura; ao faturar, gera a <strong>remessa</strong> (GMM). <strong>Falhas sem aviso:</strong> a reserva que falha é guardada como -1 (RN-COM-048); a remessa que falha é ignorada, e a fatura fica sem remessa (RN-COM-059); cancelar a fatura não desfaz a remessa (RN-COM-065)</td>
 <td>API</td>
 <td><code>7.comercial/comercial/HSolutions.Comercial.Services/Estoque/EstoqueServiceApi.cs:320</code>, <code>:516</code>, <code>:864</code>; <code>3.estoque/app/LaboSys_UI/Api/EstoqueController.cs:571-601</code></td>
 </tr>
 <tr>
 <td>7</td>
 <td>Estoque → Rastreabilidade</td>
-<td>Envia os <strong>eventos de entrega e de recebimento</strong> (por IUM ou por agregação) para declarar à ANVISA; confere se os IUM existem</td>
+<td>Envia os <strong>eventos de entrega e de recebimento</strong> (por IUM ou por agregação) para declarar à ANVISA; confere se os IUM existem. <strong>Não lê a resposta</strong> do serviço (RN-RAS-038). O Estoque tem tela e tabelas próprias de evento ANVISA, repetidas com as da Rastreabilidade (RN-RAS-037)</td>
 <td>Microsserviço</td>
 <td><code>3.estoque/app/LaboSys_BLL/bllEventoAnvisa.cs:156</code>, <code>:227</code>, <code>:291</code>, <code>:354</code>, <code>:411</code></td>
 </tr>
 <tr>
 <td>8</td>
 <td>Rastreabilidade → Produção</td>
-<td>Busca <strong>produtos</strong> (registro e descrição) para gerar os IUM</td>
+<td>Busca as <strong>produções liberadas</strong>, com lote, validade, registro, GTIN e quantidade, para gerar os IUM (RN-RAS-007). Na gravação, esses dados voltam do navegador em vez de serem relidos da Produção (RN-RAS-009). A liberação da Produção <strong>não é</strong> a certificação da Pessoa Delegada (RN-RAS-008) (<em>corrigido em 12/10/2026</em>)</td>
 <td>API</td>
-<td><code>8.rastreabilidade/app/HSolutions.Rastreabilidade.Services/Producao/ProdutoService.cs:26</code></td>
+<td><code>8.rastreabilidade/app/HSolutions.Rastreabilidade.Services/Producao/ProdutoService.cs:23-29</code>; <code>2.producao/app/LaboSys_UI/Api/ConsultarProdutoController.cs:66-90</code></td>
 </tr>
 <tr>
 <td>9</td>
@@ -134,9 +135,9 @@
 <tr>
 <td>10</td>
 <td>OPE → Produção</td>
-<td>O OPE grava, por produto, o <strong>modelo do registro eletrônico de lote</strong> (XML); a Produção o lê para montar a ordem</td>
-<td><strong>Banco compartilhado</strong> (mesma tabela)</td>
-<td><code>9.ope/app/HSolutions.GeradorXML.ORM/Repository/GeradorXMLRepository.cs:21-32</code>; <code>2.producao/app/LaboSys_DAL/dalProduto.cs:603</code></td>
+<td>O OPE monta, por produto, o <strong>modelo do registro eletrônico de lote</strong> (XML) e o grava na própria tabela. <strong>A passagem à Produção é manual:</strong> baixar o arquivo no OPE e enviá-lo na tela Cadastro Ordem de Produção (RN-PRO-098). A Produção só usa a tabela do OPE para impedir a exclusão de um produto com modelo. O OPE <strong>lê direto</strong> as tabelas da Produção (produto, insumos, ambientes, equipamentos) e usa uma cópia compilada das classes da Produção (<em>corrigido em 12/10/2026, análise do OPE</em>)</td>
+<td>Arquivo levado à mão; <strong>leitura direta do banco</strong></td>
+<td><code>9.ope/app/HSolutions.GeradorXML.UI/Controllers/GerarXMLController.cs:70-74</code>; <code>9.ope/app/HSolutions.GeradorXML.ORM/Repository/GeradorXMLRepository.cs:21-32</code>; <code>2.producao/app/LaboSys_DAL/dalProduto.cs:603, 638</code></td>
 </tr>
 <tr>
 <td>11</td>
@@ -179,6 +180,41 @@
 <td><strong>Falta:</strong> ao aprovar ou reprovar o laudo, o CQ deveria <strong>avisar o Estoque</strong>, que liberaria ou bloquearia o lote na hora. Hoje depende de alguém atualizar a análise na tela do Estoque</td>
 <td>—</td>
 <td><code>4.controle_qualidade/app/HSolutions.CQ.UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:463</code> (só grava no CQ); art. 8º, XV</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Comercial → Rastreabilidade</td>
+<td><strong>Falta:</strong> a remessa da venda deveria gerar o evento de expedição, ligado à fatura e ao cliente. Hoje a remessa do Comercial não gera evento, e o destinatário do evento é escolhido livremente (RN-RAS-027, RN-RAS-039)</td>
+<td>—</td>
+<td>RDC 658/2022, arts. 346 e 347; <code>8.rastreabilidade/04-conformidade-regulatoria.md</code>, tema 6</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Rastreabilidade → GQ</td>
+<td><strong>Falta:</strong> num recolhimento, a GQ deveria receber, por lote, as embalagens (IUM), as caixas e o destinatário de cada uma</td>
+<td>—</td>
+<td>RDC 658/2022, arts. 319, 343 e 346</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Comercial → GQ</td>
+<td><strong>Falta:</strong> num recolhimento, a GQ deveria receber, por lote, os clientes que o compraram, com o endereço da data da venda. Hoje há só um relatório fora do menu, que ignora as faturas canceladas (RN-COM-071)</td>
+<td>—</td>
+<td>RDC 658/2022, arts. 346 e 347; <code>7.comercial/04-conformidade-regulatoria.md</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td>Estoque → Rastreabilidade</td>
+<td><strong>Falta:</strong> lote retido, reprovado ou em recolhimento deveria bloquear os seus IUM e os eventos de expedição. Hoje o IUM não acompanha a situação do lote (RN-RAS-028)</td>
+<td>—</td>
+<td>RDC 658/2022, art. 8º, XV</td>
+</tr>
+<tr>
+<td>21</td>
+<td>OPE → Produção</td>
+<td><strong>Falta:</strong> só o modelo <strong>aprovado e com versão</strong> deveria chegar à Produção, sem passar pela mão de ninguém. Hoje o modelo não tem versão nem aprovação, e o arquivo é levado à mão (RN-PRO-098; <code>9.ope/fluxos/montagem-do-modelo.md</code>)</td>
+<td>—</td>
+<td>RDC 658/2022, art. 8º, XII; <code>9.ope/04-conformidade-regulatoria.md</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -246,18 +282,33 @@
 </tr>
 <tr>
 <td>4</td>
-<td><strong>Há atalhos que passam por fora das APIs:</strong> a Produção grava direto no banco do Estoque com uma cópia das regras dele, e o Estoque grava direto no banco da Produção</td>
+<td><strong>Há atalhos que passam por fora das APIs:</strong> a Produção grava direto no banco do Estoque com uma cópia das regras dele, o Estoque grava direto no banco da Produção, e o OPE lê direto as tabelas da Produção com uma cópia compilada das classes dela</td>
 <td>Duas versões da mesma regra; uma correção numa não chega à outra; gravações sem a trilha do módulo dono do dado</td>
 </tr>
 <tr>
 <td>5</td>
-<td><strong>Seis meios diferentes de integração:</strong> API, microsserviço, serviço SOAP, sinônimos de banco, banco compartilhado e fila de mensagens</td>
+<td><strong>Seis meios diferentes de integração:</strong> API, microsserviço, serviço SOAP, sinônimos de banco, leitura direta do banco de outro módulo e fila de mensagens, além de um arquivo levado à mão (OPE → Produção)</td>
 <td>Mais pontos de falha e de manutenção; a nova versão deveria padronizar</td>
 </tr>
 <tr>
 <td>6</td>
 <td><strong>Integrações abandonadas no código:</strong> Estoque → Comercial (endereço do cliente, rota que não existe), CQ → GQ (endereço configurado e nunca usado), Rastreabilidade → Estoque (método nunca chamado)</td>
 <td>Código morto, que confunde a manutenção</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Falhas de integração caladas:</strong> a reserva que falha vira -1, a remessa que falha é ignorada, os eventos não leem a resposta, e o envio à ANVISA é simulado mas aparece como "efetuado com sucesso" (setas 6, 7 e 9)</td>
+<td>O usuário acredita que a operação foi feita; o registro não é verdadeiro (RDC 658/2022, art. 124)</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Venda, rastreabilidade e recolhimento desligados:</strong> o Comercial não fala com a Rastreabilidade nem com a GQ, e a Rastreabilidade não fala com a GQ (setas 17, 18 e 19)</td>
+<td>Num recolhimento, a lista de clientes e de embalagens tem de ser montada à mão, juntando dois módulos</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>O registro de lote passa de mão em mão:</strong> o modelo sai do OPE como arquivo e é enviado à Produção por uma pessoa (setas 10 e 21)</td>
+<td>Nada garante que a ordem usa o modelo aprovado e vigente</td>
 </tr>
 </tbody>
 </table></div>
@@ -267,6 +318,9 @@
 <li><strong>Decisões da qualidade viram travas:</strong> lote com desvio, produto sem registro válido e operador sem treinamento válido bloqueiam a etapa seguinte.</li>
 <li><strong>Um só caminho por dado:</strong> cada módulo grava só no próprio banco; os outros usam a API dele.</li>
 <li><strong>Um só meio de integração</strong> (API) e uma biblioteca comum para chamá-la.</li>
+<li><strong>A falha avisa e não deixa a operação pela metade:</strong> quem pede confere a resposta; uma reserva, uma remessa ou um evento que falham ficam à vista e são refeitos.</li>
+<li><strong>Um só lugar para os eventos do SNCM:</strong> os eventos nascem no Estoque, na Produção e no Comercial e são registrados e declarados só pela Rastreabilidade, que só marca "enviado" com o protocolo da ANVISA.</li>
+<li><strong>O recolhimento tem a sua lista pronta:</strong> por lote, os clientes (Comercial) e as embalagens (Rastreabilidade), entregues à GQ na hora.</li>
 </ul>
 <h2 id="pontos-para-validar">Pontos para validar</h2>
 <ol>
@@ -274,6 +328,8 @@
 <li>No ambiente de teste, os módulos usam bancos separados ou um banco só? (Os arquivos de configuração do Estoque e do OPE apontam todos para o mesmo nome de banco.)</li>
 <li>A rotina noturna do Principal consegue ler a situação dos documentos? A rota no Controle de Documentos está comentada.</li>
 <li>O CQ está habilitado na configuração de módulos? Sem isso, o Estoque <strong>não abre</strong> a análise do lote recebido (seta 1). Pode explicar parte do DV-EST-016.</li>
+<li>A remessa da venda chega a passar pela tela de evento ANVISA do Estoque, ou o evento de entrega é registrado à parte? (seta 17)</li>
+<li>Como o modelo do registro de lote chega hoje à ordem de produção, e quem confere que é o vigente? (setas 10 e 21)</li>
 </ol>
 <p><strong>Atualização:</strong> o desenho é gerado por <code>homologacao/ferramentas/gerar_mapa_integracoes.py</code> a partir de <code>transversal/04-mapa-de-integracoes.json</code>. Ao analisar cada módulo, acrescentar ou corrigir as ligações no arquivo de dados e gerar de novo.</p>
     </article>
