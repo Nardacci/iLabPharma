@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Produção ideal · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="a-producao-ideal.html" aria-current=page>A Produção ideal</a></li><li><a href="qualidade-entre-os-modulos-situacao-do-lote-e-travas.html">Qualidade entre os módulos: situação do lote e travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html">Registro de lote</a></li><li><a href="produto-formula-e-ordem-de-producao.html">Produto, fórmula e ordem de produção</a></li><li><a href="preparacao-limpeza-calibracao-qualificacao-manutencao-agua-e-ambiente.html">Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente</a></li><li><a href="terceirizacao-e-validade-da-ope.html">Terceirização e validade da OPE</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>O ideal</span></nav>
+    <header class="doc-cabecalho">
+      <h1>A Produção ideal</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/producao/LabMedSys - Modulo Producao - O Ideal.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>O ideal.</strong> Como a Produção deve trabalhar para atender à RDC 658/2022 e ao Guia 33/2020. Este documento não descreve o legado. Usa o que foi levantado no código só para mostrar <strong>o que manter, o que corrigir e o que construir</strong>. Complementa <code>modelo-ideal/01-qualidade-entre-modulos.md</code>, que define a situação única do lote e as travas: na Produção valem as travas 1, 2, 6, 7, 8 e 9. Versão 0.1, de 12/10/2026, para validação com a Produção e a Garantia da Qualidade.</p>
+<h2 id="1-o-papel-da-producao-no-erp">1. O papel da Produção no ERP</h2>
+<p>A Produção <strong>fabrica cada lote seguindo a instrução aprovada e prova, no registro de lote, como ele foi feito</strong> (RDC 658/2022, arts. 133 a 137).</p>
+<p>No modelo ideal, a Produção <strong>não decide sozinha se pode produzir</strong>. Ela consulta, no momento de cada etapa, a situação real nos módulos donos:
+- o lote do insumo no Estoque e no CQ;
+- o treinamento do operador, a mudança aprovada e o registro do produto na GQ;
+- a instrução vigente no Controle de Documentos;
+- o laudo da sala e da água no CQ.</p>
+<p>O que estiver fora <strong>trava</strong> a etapa, sem depender de alguém marcar uma autorização.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>A Produção faz</th>
+<th>A Produção não faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Executa e registra cada etapa do lote, no momento da ação</td>
+<td>Aprovar a instrução de fabricação (é do Controle de Documentos, com a GQ)</td>
+</tr>
+<tr>
+<td>Pesa, confere e reconcilia as quantidades</td>
+<td>Liberar o insumo (é do CQ)</td>
+</tr>
+<tr>
+<td>Registra os controles em processo e compara com os limites</td>
+<td>Liberar o lote para venda (é da Pessoa Delegada, trava 4)</td>
+</tr>
+<tr>
+<td>Programa e registra limpeza, manutenção e uso dos equipamentos e salas</td>
+<td>Encerrar um desvio (é da GQ)</td>
+</tr>
+<tr>
+<td>Envia o produto acabado ao Estoque, em quarentena</td>
+<td>Mudar a fórmula ou o processo sem mudança aprovada (trava 8)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-como-o-trabalho-anda">2. Como o trabalho anda</h2>
+<figure><a href="../img/producao/pro-ideal-fluxograma.png" target="_blank" rel="noopener"><img src="../img/producao/pro-ideal-fluxograma.png" alt="Produção ideal: da ordem aprovada ao produto acabado em quarentena" loading="lazy"></a><figcaption>Produção ideal: da ordem aprovada ao produto acabado em quarentena · clique para ampliar</figcaption></figure>
+
+<p><strong>A produção passa por estas situações, nesta ordem, e cada mudança fica no histórico:</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação da produção</th>
+<th>Quem leva a ela</th>
+<th>O que o sistema confere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Planejada</td>
+<td>Planejamento</td>
+<td>Produto com registro válido; ordem de produção vigente</td>
+</tr>
+<tr>
+<td>Liberada para iniciar</td>
+<td>Sistema, quando todas as condições estão em dia</td>
+<td>Insumos aprovados e na validade; sala e equipamentos limpos, calibrados e qualificados; água e ambiente dentro dos limites; operadores treinados</td>
+</tr>
+<tr>
+<td>Em produção</td>
+<td>Operador</td>
+<td>Cada etapa na ordem; assinatura de quem executa e de quem confere</td>
+</tr>
+<tr>
+<td>Retida</td>
+<td>Sistema, por resultado fora ou desvio</td>
+<td>Investigação na GQ (trava 3)</td>
+</tr>
+<tr>
+<td>Concluída</td>
+<td>Operador, na última etapa</td>
+<td>Reconciliação dentro da faixa</td>
+</tr>
+<tr>
+<td>Registro revisado</td>
+<td>Revisor da Produção, diferente de quem executou</td>
+<td>Registro completo e sem pendências</td>
+</tr>
+<tr>
+<td>Enviada ao Estoque</td>
+<td>Sistema</td>
+<td>Produto acabado em <strong>quarentena</strong></td>
+</tr>
+<tr>
+<td>Liberada ou reprovada</td>
+<td>CQ (laudo) e Pessoa Delegada (certificação)</td>
+<td>Fora da Produção (travas 2 e 4)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="3-as-funcoes-da-producao-ideal">3. As funções da Produção ideal</h2>
+<p><strong>Ação:</strong> <strong>Manter</strong> = o legado já faz como deve; <strong>Corrigir</strong> = existe, mas não atende; <strong>Construir</strong> = não existe.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Função</th>
+<th>Referência</th>
+<th>Ação</th>
+<th>Como deve funcionar</th>
+<th>No legado hoje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Fórmula de fabricação e instruções de processo aprovadas, por produto e tamanho de lote</td>
+<td><a href="#tema-1-formula-de-fabricacao-e-instrucoes-de-processo-aprovadas-por-produto-e-tamanho-de-lote">Arts. 133 a 135</a></td>
+<td>Corrigir</td>
+<td>A ordem de produção mestra é um <strong>documento controlado</strong>: elaborado, revisado e aprovado com assinatura no Controle de Documentos, com versão e vigência. O registro de lote é gerado dela, sem programação por produto</td>
+<td>Aprovadores e datas digitados; modelo XML e classe de programa por produto</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mudança na fórmula ou no processo só depois de aprovada e demonstrada</td>
+<td><a href="#tema-2-mudanca-na-formula-ou-no-processo-so-depois-de-aprovada-e-demonstrada">Arts. 176 e 177; art. 8º, XII</a></td>
+<td>Construir</td>
+<td>Nova versão da fórmula e da ordem só nasce de uma mudança aprovada na GQ (trava 8). Cada lote guarda a versão usada</td>
+<td>Trava do produto que cai "em migração"; duplicação sem origem; XML trocável em andamento</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Registro de processamento de lote completo</td>
+<td><a href="#tema-3-registro-de-processamento-de-lote-completo">Art. 137</a></td>
+<td>Corrigir</td>
+<td>O registro tem tudo o que o art. 137 pede, para qualquer produto, sem depender de programação. Inclui a aprovação final pelo responsável</td>
+<td>Depende do modelo XML de cada produto</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Registro feito no momento da ação</td>
+<td><a href="#tema-4-registro-feito-no-momento-da-acao">Art. 124</a></td>
+<td>Corrigir</td>
+<td>Data e hora do servidor em cada registro. Registro tardio só com justificativa, marcado como tal</td>
+<td>Datas e horas digitadas em quase todas as telas</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Histórico de alterações, com motivo</td>
+<td><a href="#tema-5-historico-de-alteracoes-com-motivo">Art. 125</a></td>
+<td>Corrigir</td>
+<td>Toda alteração guarda valor anterior, novo, quem, quando e <strong>motivo</strong>, sem cortar o texto. Alteração de campo assinado exige nova assinatura</td>
+<td>Sem motivo; 255 caracteres; parte das gravações sem histórico</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Identificação única do lote</td>
+<td><a href="#tema-6-identificacao-unica-do-lote">Art. 164</a></td>
+<td>Manter</td>
+<td>Número gerado pelo sistema, único, no formato da empresa</td>
+<td>Número digitado e conferido; formatos de clientes anteriores no código</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Uso só de material liberado pelo CQ e dentro do reteste</td>
+<td><a href="#tema-7-uso-so-de-material-liberado-pelo-cq-e-dentro-do-reteste">Art. 189</a></td>
+<td>Corrigir</td>
+<td>A separação e a pesagem só aceitam lote aprovado e na validade, consultando a situação única do lote (travas 1 e 2)</td>
+<td>Lote e validade digitados na autorização do Estoque</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Pesagem por pessoa designada, com conferência</td>
+<td><a href="#tema-8-pesagem-por-pessoa-designada-com-conferencia">Arts. 192 a 194</a></td>
+<td>Corrigir</td>
+<td>Pesagem com balança calibrada (lida da calibração), quem pesou e quem conferiu, pessoas diferentes, com assinatura. Uma única pesagem, que alimenta o registro</td>
+<td>Duas pesagens que não conversam; responsáveis escolhidos em lista</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Área e equipamento limpos e liberados antes de começar</td>
+<td><a href="#tema-9-area-e-equipamento-limpos-e-liberados-antes-de-comecar">Arts. 195 e 105</a></td>
+<td>Corrigir</td>
+<td>Etapa só inicia com sala e equipamento em dia. Pendência <strong>bloqueia</strong>; exceção só com desvio aprovado pela GQ</td>
+<td>Pendência passa com justificativa de 100 caracteres</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Calibração dos equipamentos de pesagem e medição</td>
+<td><a href="#tema-10-calibracao-dos-equipamentos-de-pesagem-e-medicao">Art. 110</a></td>
+<td>Corrigir</td>
+<td>Registro com <strong>resultado</strong> (aprovado ou reprovado) e prazo por equipamento. Reprovado ou vencido bloqueia o uso</td>
+<td>Sem campo de resultado; validade digitada</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Controles em processo e ambientais registrados</td>
+<td><a href="#tema-11-controles-em-processo-e-ambientais-registrados">Art. 198</a></td>
+<td>Corrigir</td>
+<td>Limites de especificação por controle, vindos da ordem aprovada. Fora do limite bloqueia e abre investigação. Água e ambiente: valores e limites de alerta e de ação, com o laudo do CQ (trava 9)</td>
+<td>Só confere preenchimento; resultado de água e ambiente não conta</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Rendimento e reconciliação; desvio de rendimento investigado</td>
+<td><a href="#tema-12-rendimento-e-reconciliacao-desvio-de-rendimento-investigado">Arts. 160 e 199</a></td>
+<td>Corrigir</td>
+<td>Rendimento <strong>calculado</strong> das quantidades, comparado com a faixa esperada do produto. Fora da faixa abre desvio</td>
+<td>Rendimento digitado, sem faixa</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Desvio das instruções aprovado formalmente</td>
+<td><a href="#tema-13-desvio-das-instrucoes-aprovado-formalmente">Art. 167</a></td>
+<td>Construir</td>
+<td>Toda exceção (pendência, liberação de análise, reabertura, mudança de validade) abre um <strong>desvio na GQ</strong>, que precisa ser aprovado antes de seguir</td>
+<td>Justificativas soltas; a palavra "desvio" não existe no módulo</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Produto acabado em quarentena até a liberação pela Pessoa Delegada</td>
+<td><a href="#tema-14-produto-acabado-em-quarentena-ate-a-liberacao-pela-pessoa-delegada">Art. 220; art. 8º, XV</a></td>
+<td>Corrigir</td>
+<td>Envio obrigatório ao Estoque, em quarentena, ao concluir. A reprovação atualiza o lote na hora</td>
+<td>Envio opcional; reprovação não chega ao Estoque</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Assinatura eletrônica nas decisões</td>
+<td><a href="#tema-15-assinatura-eletronica-nas-decisoes">Guia 33, 9.3.2.3</a></td>
+<td>Corrigir</td>
+<td>Toda assinatura (executar, conferir, revisar, autorizar) é do usuário logado, com senha, significado e hora do servidor</td>
+<td>Senha em campos do registro; autorizações sem senha</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Equipamentos qualificados e processos críticos validados</td>
+<td><a href="#tema-16-equipamentos-qualificados-e-processos-criticos-validados">Art. 148, I; art. 197</a></td>
+<td>Corrigir</td>
+<td>Qualificação com resultado e prazo. Processo e limpeza validados registrados por produto</td>
+<td>Qualificação sem resultado; nada sobre validação</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Terceirização com contrato e registros</td>
+<td><a href="#tema-17-terceirizacao-com-contrato-e-registros">Arts. 299 e 316</a></td>
+<td>Construir</td>
+<td>Etapa terceirizada só com contrato e fornecedor qualificado na GQ. Os registros do terceiro entram no registro do lote</td>
+<td>Fornecedor sem qualificação; sem contrato</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Retenção da documentação de lote</td>
+<td><a href="#tema-18-retencao-da-documentacao-de-lote">Art. 127</a></td>
+<td>Construir</td>
+<td>Prazo de guarda do registro de lote (1 ano após a validade e no mínimo 5 anos após a certificação). Nada é apagado antes</td>
+<td>Sem prazo; scripts que apagam o banco</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="4-integracoes-com-os-outros-modulos">4. Integrações com os outros módulos</h2>
+<p>Todas as integrações seguem o requisito 16 do documento 01: <strong>quando falham, avisam e não deixam a operação pela metade.</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Com</th>
+<th>A Produção recebe</th>
+<th>A Produção envia</th>
+<th>Quando</th>
+<th>Trava</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Estoque</strong></td>
+<td>Situação e validade do lote do insumo; saldo; pesagem</td>
+<td>Reserva e consumo dos insumos; produto acabado em quarentena</td>
+<td>Na separação, na pesagem e na conclusão</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>Controle da Qualidade</strong></td>
+<td>Laudo do insumo; laudo de água e ambiente; resultado das análises em processo</td>
+<td>Pedido de análise de granel, semielaborado e produto acabado</td>
+<td>A cada etapa com análise</td>
+<td>2, 9</td>
+</tr>
+<tr>
+<td><strong>Garantia da Qualidade</strong></td>
+<td>Treinamento válido dos operadores; mudança aprovada; registro do produto; fornecedor qualificado</td>
+<td>Desvios (resultado fora, rendimento, exceções); dados para a revisão do produto</td>
+<td>No início de cada etapa; nas exceções</td>
+<td>3, 5, 6, 7, 8</td>
+</tr>
+<tr>
+<td><strong>Controle de Documentos</strong></td>
+<td>Ordem de produção (instrução) e fórmula vigentes, com versão</td>
+<td>—</td>
+<td>Ao planejar o lote</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Principal</strong></td>
+<td>Usuários, funções, equipamentos, salas, pontos de água e assinatura eletrônica</td>
+<td>—</td>
+<td>Em cada gravação</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="5-quem-faz-o-que-na-producao">5. Quem faz o quê na Produção</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Função</th>
+<th>Pode</th>
+<th>Não pode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Planejamento</td>
+<td>Planejar o lote e pedir a reserva dos insumos</td>
+<td>Iniciar sem as condições em dia</td>
+</tr>
+<tr>
+<td>Operador</td>
+<td>Executar e registrar as etapas para as quais tem treinamento válido</td>
+<td>Conferir o próprio trabalho; alterar a instrução</td>
+</tr>
+<tr>
+<td>Conferente</td>
+<td>Conferir pesagens e etapas de outra pessoa</td>
+<td>Conferir o que ele mesmo executou</td>
+</tr>
+<tr>
+<td>Responsável pela preparação</td>
+<td>Programar e registrar limpeza, manutenção e calibração</td>
+<td>Revisar o próprio registro</td>
+</tr>
+<tr>
+<td>Revisor do registro de lote</td>
+<td>Revisar o registro completo e encaminhar ao Estoque</td>
+<td>Revisar lote em que executou etapas; liberar para venda</td>
+</tr>
+</tbody>
+</table></div>
+<p>A função é <strong>conferida no servidor, em toda gravação</strong>, e não só na tela (documento 01, requisito 15). Toda decisão pede assinatura eletrônica (requisito 14).</p>
+<h2 id="6-o-que-manter-do-legado">6. O que manter do legado</h2>
+<p>O que o código mostra que já funciona como deve e vale a pena levar para a nova versão <em>(a confirmar nos testes)</em>:</p>
+<ul>
+<li>O <strong>lote padrão aprovado</strong>:</li>
+<li>com permissão própria e quem elaborou sem poder aprovar (pelo usuário, não pelo nome);</li>
+<li>travado depois da aprovação;</li>
+<li>o único oferecido para produzir.</li>
+<li>A ideia das <strong>autorizações por área</strong> antes de produzir, desde que cada uma <strong>consulte</strong> a situação real e <strong>bloqueie</strong> quando negada.</li>
+<li>O ciclo de <strong>programação, registro e revisão por outra pessoa</strong> na preparação, ligado à liberação da sala e do equipamento.</li>
+<li>A <strong>análise do CQ que trava as etapas seguintes</strong> (subetapa impeditiva), sem a liberação por cima.</li>
+<li>A <strong>pesagem trazida do Estoque</strong> para o registro, com lote do insumo e responsáveis.</li>
+<li>O <strong>histórico campo a campo</strong> do registro de lote. Acrescentar o motivo.</li>
+<li>O número de lote e de OPE <strong>únicos</strong>.</li>
+</ul>
+<h2 id="7-pontos-para-validar-com-a-producao-e-a-gq">7. Pontos para validar com a Produção e a GQ</h2>
+<ol>
+<li>Quais produtos e tamanhos de lote existem hoje e quem aprova cada ordem de produção.</li>
+<li>Os limites de especificação dos controles em processo e a faixa de rendimento de cada produto.</li>
+<li>Os prazos de validade de limpeza, calibração e qualificação por tipo de equipamento e de sala.</li>
+<li>Se a Produção mantém um monitoramento próprio de água e ambiente ou passa a usar só o laudo do CQ.</li>
+<li>Quem revisa o registro de lote antes do envio ao Estoque.</li>
+<li>Quais etapas são terceirizadas hoje e com que contratos.</li>
+</ol>
+<!-- NORMAS:INICIO -->
+<h2 id="o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</h2>
+<p>Texto literal das normas citadas em cada tema, extraído dos arquivos da pasta <code>Documentação/</code> (RDC nº 658/2022 em português e Guia nº 33/2020) por <code>homologacao/ferramentas/citar_normas_diagnostico.py</code>. "(...)" marca trechos omitidos. No portal, clique na referência de cada tema para ver o texto.</p>
+<h3 id="tema-1-formula-de-fabricacao-e-instrucoes-de-processo-aprovadas-por-produto-e-tamanho-de-lote">Tema 1 · Fórmula de fabricação e instruções de processo aprovadas, por produto e tamanho de lote</h3>
+<p><strong>RDC 658/2022, art. 133</strong></p>
+<blockquote>
+<p>Art. 133. Devem existir fórmulas de fabricação e instruções de processo aprovadas e por escrito para cada produto e tamanho de lote a ser fabricado.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 134</strong></p>
+<blockquote>
+<p>Art. 134. A fórmula de fabricação deve incluir:</p>
+<p>I - nome e código de referência do produto relacionado à sua especificação;</p>
+<p>II - descrição da forma farmacêutica, concentração do produto e tamanho do lote;</p>
+<p>III - lista de todas as matérias-primas a serem utilizadas, com a quantidade descrita de cada uma, com a menção a qualquer substância que possa desaparecer durante o processo; e</p>
+<p>IV - declaração do rendimento final esperado com os limites aceitáveis e dos rendimentos intermediários relevantes, quando aplicável.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 135</strong></p>
+<blockquote>
+<p>Art. 135. As instruções de processo devem incluir:</p>
+<p>I - declaração do local de processo e do equipamento principal a ser utilizado;</p>
+<p>II - os métodos, ou referência aos métodos, a serem utilizados para preparar os equipamentos críticos (por exemplo, limpeza, montagem, calibração, esterilização);</p>
+<p>III - verificações para confirmar que o equipamento e a estação de trabalho estão livres de produtos anteriores, documentos ou materiais não necessários para o processo planejado, e que o equipamento esteja limpo e adequado para uso;</p>
+<p>IV - instruções de processo detalhadas por etapa [por exemplo verificações de materiais, pré- tratamentos, sequência de adição de materiais e parâmetros críticos do processo (tempo, temperatura etc.);</p>
+<p>V - as instruções para qualquer controle em processo e seus limites;</p>
+<p>VI - quando necessário, os requisitos para o armazenamento dos produtos a granel; incluindo o recipiente, a rotulagem e as condições especiais de armazenamento, quando aplicável; e</p>
+<p>VII - quaisquer precauções especiais a serem observadas.</p>
+</blockquote>
+<h3 id="tema-2-mudanca-na-formula-ou-no-processo-so-depois-de-aprovada-e-demonstrada">Tema 2 · Mudança na fórmula ou no processo só depois de aprovada e demonstrada</h3>
+<p><strong>RDC 658/2022, art. 176</strong></p>
+<blockquote>
+<p>Art. 176. Quando qualquer nova fórmula de fabricação ou método de preparação for adotado, devem ser tomadas medidas para demonstrar sua adequação ao processo da rotina.</p>
+<p>Parágrafo único. O processo definido de que trata o caput deste artigo, que usa os materiais e equipamentos estabelecidos, deve demonstrar que produz o produto de acordo com a qualidade exigida de forma consistente.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 177</strong></p>
+<blockquote>
+<p>Art. 177. Alterações significativas no processo de fabricação, incluindo qualquer mudança no equipamento ou materiais, que possam afetar a qualidade do produto e/ou a reprodutibilidade do processo, devem ser validadas.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 8º</strong></p>
+<blockquote>
+<p>Art. 8º Um Sistema da Qualidade Farmacêutica adequado à fabricação de medicamentos deve garantir que:</p>
+<p>(...)</p>
+<p>XII - estejam implementados procedimentos para a avaliação prospectiva de mudanças planejadas e sua aprovação antes da implementação, levando-se em consideração as notificações e aprovações regulatórias, quando necessário;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-3-registro-de-processamento-de-lote-completo">Tema 3 · Registro de processamento de lote completo</h3>
+<p><strong>RDC 658/2022, art. 137</strong></p>
+<blockquote>
+<p>Art. 137. Um registro de processamento de lote deve ser mantido para cada lote processado.</p>
+<p>§ 1º Este registro deve ser baseado nas partes relevantes da Fórmula de Fabricação e nas Instruções de Processo atualmente aprovadas, e deve conter as seguintes informações:</p>
+<p>I - nome e o número do lote do produto;</p>
+<p>II - datas e horários de início de fases intermediárias significativas e de conclusão da produção;</p>
+<p>III - identificação (iniciais ou rubricas) do(s) operador(es) que realizou(aram) cada etapa significativa do processo e, quando apropriado, o nome de qualquer pessoa que verificou essas operações;</p>
+<p>IV - número do lote e/ou número do controle analítico, bem como as quantidades de cada matéria-prima efetivamente pesada, incluindo o número do lote e a quantidade de qualquer material recuperado ou reprocessado adicionado;</p>
+<p>V - qualquer operação de fabricação ou evento relevante e equipamento principal usado;</p>
+<p>VI - registro dos controles em processo e as iniciais da(s) pessoa(s) que os executaram e os resultados obtidos;</p>
+<p>VII - rendimento obtido do produto em diferentes e relevantes etapas de fabricação;</p>
+<p>VIII - observações sobre quaisquer problemas incluindo os detalhes, com autorização assinada para qualquer desvio da Fórmula de Fabricação e Instruções de Processo; e</p>
+<p>IX - aprovação das operações de fabricação pela pessoa responsável.</p>
+<p>§ 2º Nos casos de processos validados, continuamente controlados e monitorados, os relatórios gerados automaticamente podem ser limitados a resumos de conformidade e relatórios de dados de exceção/resultados fora de especificações.</p>
+</blockquote>
+<h3 id="tema-4-registro-feito-no-momento-da-acao">Tema 4 · Registro feito no momento da ação</h3>
+<p><strong>RDC 658/2022, art. 124</strong></p>
+<blockquote>
+<p>Art. 124. Os registros devem ser realizados ou completados sempre que uma ação for realizada e de modo a permitir que todas as atividades significativas relativas à fabricação de medicamentos sejam rastreáveis.</p>
+</blockquote>
+<h3 id="tema-5-historico-de-alteracoes-com-motivo">Tema 5 · Histórico de alterações, com motivo</h3>
+<p><strong>RDC 658/2022, art. 125</strong></p>
+<blockquote>
+<p>Art. 125. Toda a alteração feita no registro de um documento deve ser assinada e datada, devendo permitir a leitura da informação original.</p>
+<p>Parágrafo único. Quando apropriado, o motivo da alteração deve ser registrado.</p>
+</blockquote>
+<h3 id="tema-6-identificacao-unica-do-lote">Tema 6 · Identificação única do lote</h3>
+<p><strong>RDC 658/2022, art. 164</strong></p>
+<blockquote>
+<p>Art. 164. Em todos os momentos durante o processo, todos os materiais, recipientes de granel, itens principais de equipamentos e, quando necessário, as salas utilizadas devem ser rotuladas e identificadas com uma indicação do produto ou material que está sendo processado, sua concentração, quando aplicável, e número do lote.</p>
+<p>Parágrafo único. Quando for o caso, a indicação de que trata o caput deste artigo também deve mencionar o estágio de produção.</p>
+</blockquote>
+<h3 id="tema-7-uso-so-de-material-liberado-pelo-cq-e-dentro-do-reteste">Tema 7 · Uso só de material liberado pelo CQ e dentro do reteste</h3>
+<p><strong>RDC 658/2022, art. 189</strong></p>
+<blockquote>
+<p>Art. 189. Somente matérias-primas que tiverem sido liberadas pelo departamento de Controle de Qualidade e que estiverem dentro de sua data de reteste devem ser utilizadas.</p>
+</blockquote>
+<h3 id="tema-8-pesagem-por-pessoa-designada-com-conferencia">Tema 8 · Pesagem por pessoa designada, com conferência</h3>
+<p><strong>RDC 658/2022, art. 192</strong></p>
+<blockquote>
+<p>Art. 192. As matérias-primas somente podem ser pesadas por pessoas designadas, seguindo um procedimento escrito, para assegurar que os materiais corretos sejam precisamente pesados ou medidos em recipientes limpos e adequadamente etiquetados.</p>
+<p>Art. 193. Cada material pesado e seu peso ou volume devem ser verificados independentemente, sendo a verificação registrada.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 194</strong></p>
+<blockquote>
+<p>Art. 194. Os materiais pesados para cada lote devem ser mantidos juntos e visivelmente etiquetados como tal.</p>
+</blockquote>
+<h3 id="tema-9-area-e-equipamento-limpos-e-liberados-antes-de-comecar">Tema 9 · Área e equipamento limpos e liberados antes de começar</h3>
+<p><strong>RDC 658/2022, art. 195</strong></p>
+<blockquote>
+<p>Art. 195. Antes que qualquer operação de processo seja iniciada, devem ser tomadas medidas para assegurar que a área de trabalho e o equipamento estejam limpos e livres de quaisquer matérias- primas, produtos, resíduos de produtos ou documentos não necessários para a operação atual.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 105</strong></p>
+<blockquote>
+<p>Art. 105. Os equipamentos de fabricação devem ser projetados de modo a permitir a limpeza fácil e completa.</p>
+<p>Parágrafo único. Devem ser limpos, em conformidade com procedimentos detalhados por escrito, e somente devem ser armazenados se estiverem limpos e secos.</p>
+</blockquote>
+<h3 id="tema-10-calibracao-dos-equipamentos-de-pesagem-e-medicao">Tema 10 · Calibração dos equipamentos de pesagem e medição</h3>
+<p><strong>RDC 658/2022, art. 110</strong></p>
+<blockquote>
+<p>Art. 110. Os equipamentos de medição, pesagem, registro e controle devem ser calibrados e verificados em intervalos definidos e por métodos apropriados.</p>
+<p>Parágrafo único. Registros adequados da calibração de que trata o caput deste artigo devem ser mantidos.</p>
+</blockquote>
+<h3 id="tema-11-controles-em-processo-e-ambientais-registrados">Tema 11 · Controles em processo e ambientais registrados</h3>
+<p><strong>RDC 658/2022, art. 198</strong></p>
+<blockquote>
+<p>Art. 198. Quaisquer controles necessários em processo e controles ambientais devem ser realizados e registrados.</p>
+</blockquote>
+<h3 id="tema-12-rendimento-e-reconciliacao-desvio-de-rendimento-investigado">Tema 12 · Rendimento e reconciliação; desvio de rendimento investigado</h3>
+<p><strong>RDC 658/2022, art. 160</strong></p>
+<blockquote>
+<p>Art. 160. As verificações do rendimento e a reconciliação das quantidades devem ser realizadas sempre que necessário para garantir que não haja discrepâncias fora dos limites aceitáveis.</p>
+<p>Art. 161. Operações que envolvam produtos diferentes não devem ser realizadas simultaneamente ou consecutivamente na mesma sala, a menos que não haja risco de mistura ou de contaminação cruzada.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 199</strong></p>
+<blockquote>
+<p>Art. 199. Qualquer desvio significativo do rendimento esperado deve ser registrado e investigado.</p>
+</blockquote>
+<h3 id="tema-13-desvio-das-instrucoes-aprovado-formalmente">Tema 13 · Desvio das instruções aprovado formalmente</h3>
+<p><strong>RDC 658/2022, art. 167</strong></p>
+<blockquote>
+<p>Art. 167. Qualquer desvio de instruções ou procedimentos deve ser evitado.</p>
+<p>Parágrafo único. Caso ocorra um desvio, ele deve ser aprovado formalmente por uma pessoa competente, com o envolvimento da Unidade da Qualidade, quando apropriado.</p>
+</blockquote>
+<h3 id="tema-14-produto-acabado-em-quarentena-ate-a-liberacao-pela-pessoa-delegada">Tema 14 · Produto acabado em quarentena até a liberação pela Pessoa Delegada</h3>
+<p><strong>RDC 658/2022, art. 220</strong></p>
+<blockquote>
+<p>Art. 220. Os produtos acabados devem ser mantidos em quarentena até a sua liberação final, sob as condições estabelecidas pelo fabricante.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 8º</strong></p>
+<blockquote>
+<p>Art. 8º Um Sistema da Qualidade Farmacêutica adequado à fabricação de medicamentos deve garantir que:</p>
+<p>(...)</p>
+<p>XV - os medicamentos não sejam comercializados ou distribuídos antes da Pessoa Delegada pelo Sistema de Gestão da Qualidade Farmacêutica ter certificado que cada lote do produto foi produzido e controlado de acordo com os requerimentos de registro e quaisquer outras normas relevantes à produção, ao controle e à liberação de medicamentos;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-15-assinatura-eletronica-nas-decisoes">Tema 15 · Assinatura eletrônica nas decisões</h3>
+<p><strong>Guia nº 33/2020, item 9.3.2.3 (Requisitos Operacionais)</strong></p>
+<blockquote>
+<p>Funções – são os requisitos funcionais que habilitam o sistema a executar o processo de negócio que está sendo automatizado, tais como:
+- (...)
+- Utilização de assinaturas eletrônicas;
+- (...)</p>
+</blockquote>
+<h3 id="tema-16-equipamentos-qualificados-e-processos-criticos-validados">Tema 16 · Equipamentos qualificados e processos críticos validados</h3>
+<p><strong>RDC 658/2022, art. 148</strong></p>
+<blockquote>
+<p>Art. 148. Deve haver políticas, procedimentos, protocolos, relatórios e registros de ações tomadas ou conclusões alcançadas, quando apropriado, para os seguintes exemplos:</p>
+<p>I - validação e qualificação de processos, equipamentos e sistemas;</p>
+<p>(...)</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 197</strong></p>
+<blockquote>
+<p>Art. 197. Processos críticos devem ser validados.</p>
+</blockquote>
+<h3 id="tema-17-terceirizacao-com-contrato-e-registros">Tema 17 · Terceirização com contrato e registros</h3>
+<p><strong>RDC 658/2022, art. 299</strong></p>
+<blockquote>
+<p>Art. 299. Deve haver um contrato escrito entre o Contratante e o Contratado, que estabeleça claramente as funções e responsabilidades de cada parte.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 316</strong></p>
+<blockquote>
+<p>Art. 316. Todos os registros relacionados às atividades terceirizadas, tais como a fabricação, os registros analíticos e de distribuição, bem como as amostras de referência, devem ser mantidos ou estar disponíveis para o Contratante.</p>
+</blockquote>
+<h3 id="tema-18-retencao-da-documentacao-de-lote">Tema 18 · Retenção da documentação de lote</h3>
+<p><strong>RDC 658/2022, art. 127</strong></p>
+<blockquote>
+<p>Art. 127. A documentação de lote deve ser mantida por um ano após a expiração do lote a que se refere ou por pelo menos, cinco anos, após a certificação do lote por Pessoa Delegada pelo Sistema de Gestão da Qualidade Farmacêutica, o que for mais longo.</p>
+<p>§ 1º No caso de medicamentos experimentais, a documentação de lote deve ser mantida por, pelo menos, cinco anos após a conclusão ou descontinuação formal do último estudo clínico em que o lote tiver sido utilizado.</p>
+<p>§ 2º Outros requisitos para a retenção de documentação podem estar descritos na legislação em relação a tipos específicos de produto (por exemplo, Medicamentos de Terapia Avançada) e podem especificar sobre a necessidade de períodos de retenção mais longos a determinados documentos.</p>
+</blockquote>
+<!-- NORMAS:FIM -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-o-papel-da-producao-no-erp">1. O papel da Produção no ERP</a></li><li><a href="#2-como-o-trabalho-anda">2. Como o trabalho anda</a></li><li><a href="#3-as-funcoes-da-producao-ideal">3. As funções da Produção ideal</a></li><li><a href="#4-integracoes-com-os-outros-modulos">4. Integrações com os outros módulos</a></li><li><a href="#5-quem-faz-o-que-na-producao">5. Quem faz o quê na Produção</a></li><li><a href="#6-o-que-manter-do-legado">6. O que manter do legado</a></li><li><a href="#7-pontos-para-validar-com-a-producao-e-a-gq">7. Pontos para validar com a Produção e a GQ</a></li><li><a href="#o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</a></li><li class="sub"><a href="#tema-1-formula-de-fabricacao-e-instrucoes-de-processo-aprovadas-por-produto-e-tamanho-de-lote">Tema 1 · Fórmula de fabricação e instruções de processo aprovadas, por produto e tamanho de lote</a></li><li class="sub"><a href="#tema-2-mudanca-na-formula-ou-no-processo-so-depois-de-aprovada-e-demonstrada">Tema 2 · Mudança na fórmula ou no processo só depois de aprovada e demonstrada</a></li><li class="sub"><a href="#tema-3-registro-de-processamento-de-lote-completo">Tema 3 · Registro de processamento de lote completo</a></li><li class="sub"><a href="#tema-4-registro-feito-no-momento-da-acao">Tema 4 · Registro feito no momento da ação</a></li><li class="sub"><a href="#tema-5-historico-de-alteracoes-com-motivo">Tema 5 · Histórico de alterações, com motivo</a></li><li class="sub"><a href="#tema-6-identificacao-unica-do-lote">Tema 6 · Identificação única do lote</a></li><li class="sub"><a href="#tema-7-uso-so-de-material-liberado-pelo-cq-e-dentro-do-reteste">Tema 7 · Uso só de material liberado pelo CQ e dentro do reteste</a></li><li class="sub"><a href="#tema-8-pesagem-por-pessoa-designada-com-conferencia">Tema 8 · Pesagem por pessoa designada, com conferência</a></li><li class="sub"><a href="#tema-9-area-e-equipamento-limpos-e-liberados-antes-de-comecar">Tema 9 · Área e equipamento limpos e liberados antes de começar</a></li><li class="sub"><a href="#tema-10-calibracao-dos-equipamentos-de-pesagem-e-medicao">Tema 10 · Calibração dos equipamentos de pesagem e medição</a></li><li class="sub"><a href="#tema-11-controles-em-processo-e-ambientais-registrados">Tema 11 · Controles em processo e ambientais registrados</a></li><li class="sub"><a href="#tema-12-rendimento-e-reconciliacao-desvio-de-rendimento-investigado">Tema 12 · Rendimento e reconciliação; desvio de rendimento investigado</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
