@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de permissões · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html">Montagem do modelo do registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html" aria-current=page>Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Matriz de permissões</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · Extraída do código; nada testado ainda. Caminhos relativos a <code>9.ope/app/</code>.</p>
+<p>Este documento tem três partes:
+1. <strong>Como o acesso funciona no módulo</strong> (extraído do código).
+2. <strong>Matriz por grupo de telas.</strong>
+3. <strong>Testes que esta matriz gera.</strong></p>
+<p>O OPE tem uma particularidade: além das permissões das próprias telas, ele <strong>define permissões que valem na Produção</strong>. É no modelo que se decide quem preenche e quem assina cada campo do registro de lote.</p>
+<p><strong>Importante:</strong> <em>quem</em> tem <em>qual</em> perfil e função está cadastrado no banco do Principal, não no código. Para a matriz por pessoa, é preciso o relatório do Principal ou o DBA.</p>
+<hr />
+<h3 id="1-como-o-acesso-funciona">1. Como o acesso funciona</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Onde é cadastrada</th>
+<th>O que controla</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Ver a tela no menu</strong></td>
+<td>Principal: perfil × funções</td>
+<td><strong>Desligada:</strong> o menu do módulo está comentado. O roteiro que cadastraria as funções (Gerador OPE, Gerar XML, Etapa, Subetapa, Campos, Finalizar Produção, Modelo, Botão Código Fonte) também</td>
+<td><code>HSolutions.GeradorXML.UI/Views/Shared/_Menu.cshtml:3</code>; <code>HSolutions.GeradorXML.DB/dml.sql:42-49</code></td>
+</tr>
+<tr>
+<td><strong>2. Abrir a tela e incluir ou alterar</strong></td>
+<td>Principal: funções do módulo</td>
+<td>Conferência ao consultar, incluir e alterar nas telas do Gerador, Etapa, Subetapa, Campos, Modelo e Finalizar Produção</td>
+<td><code>[AutorizacaoHandler]</code> nos controladores, por exemplo <code>Controllers/GerarXMLController.cs:24-43</code>. A lógica está numa biblioteca compilada, sem código-fonte</td>
+</tr>
+<tr>
+<td><strong>3. Função especial</strong></td>
+<td>Principal: função <code>BTNCODIGOFONTE</code></td>
+<td>Mostra o botão de código-fonte no editor de texto da instrução</td>
+<td><code>HSolutions.GeradorXML.Model/GeradorHTMLPartialPartil.cs:20-37</code></td>
+</tr>
+<tr>
+<td><strong>4. Permissões que o modelo define para a Produção</strong></td>
+<td>No próprio modelo, escolhendo funções profissionais do Principal</td>
+<td>Quem entra em cada etapa ("Permissão Para Entrar na Etapa"), quem acessa cada campo ("Permissão para Acessar o campo"), quem assina com senha ("Função Profissional" com o ícone de autenticação)</td>
+<td><code>HSolutions.GeradorXML.Model/ConfigEtapa.cs:31</code>; <code>ConfigCamposModel.cs:56-59, 80</code>; na Produção, <code>LaboSys_UI/producao/XML/Class_Producao/Autenticacao.cs:14-44</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>O que o código não mostra:</strong>
+- o número do módulo e das funções no banco do Principal (o roteiro está comentado e traz o comentário "Módulo Controle de qualidade", copiado de outro módulo, em <code>dml.sql:15</code>);
+- o que a conferência da camada 2 faz por dentro (biblioteca sem código-fonte).</p>
+<h3 id="2-matriz-por-grupo-de-telas">2. Matriz por grupo de telas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Telas</th>
+<th>Quem pode, pelo código</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modelo do produto</td>
+<td>Gerador de OPE (lista e cadastro), Upload, Imprimir</td>
+<td>Função da tela (consultar, incluir, alterar)</td>
+<td><strong>Não há</strong> função de aprovar nem de revisar o modelo</td>
+</tr>
+<tr>
+<td>Estrutura</td>
+<td>Configurar Etapa, Configurar <em>(subetapa)</em></td>
+<td>Função de cada tela</td>
+<td>Quem altera a estrutura altera o registro de lote de todas as produções do produto</td>
+</tr>
+<tr>
+<td>Campos</td>
+<td>Configurar Campos, Selecionar Insumos, Selecionar Permissões, Parâmetros Entrada</td>
+<td>Função de Campos</td>
+<td>É aqui que se define quem assina na Produção (camada 4)</td>
+</tr>
+<tr>
+<td>Validações</td>
+<td>Funções de validação, fórmulas, controle em processo</td>
+<td>Função da subetapa</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Final da produção</td>
+<td>Finalizar Produção</td>
+<td>Função própria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Subetapas-padrão</td>
+<td>Modelos e Modelo</td>
+<td>Função própria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Texto da instrução</td>
+<td>Aba Gerador Html</td>
+<td>Função da subetapa; o código-fonte pede <code>BTNCODIGOFONTE</code></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- O módulo <strong>não separa quem elabora de quem aprova</strong> o modelo: não existe a decisão de aprovar. Pela norma, a instrução de fabricação é elaborada, conferida e aprovada por pessoas designadas (RDC 658/2022, arts. 133 a 135; art. 8º, XII).
+- Quem tem a função de Campos decide <strong>quem assina cada etapa do lote na Produção</strong>. Uma pessoa pode, sozinha, tirar a assinatura obrigatória de um campo crítico.
+- Com o menu e o roteiro de funções comentados, não se sabe pelo código <strong>quem acessa</strong> o Gerador hoje.</p>
+<hr />
+<h3 id="3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-OPE-021</td>
+<td>Com um perfil sem nenhuma função do OPE, abrir o Gerador de OPE e a Configurar Campos pelo endereço</td>
+<td>"O usuário não tem permissão para esta página."</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-022</td>
+<td>Com um perfil que só consulta, tentar incluir uma etapa e alterar um campo</td>
+<td>Recusa</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-OPE-023</td>
+<td>Com um usuário sem a função <code>BTNCODIGOFONTE</code>, abrir o editor de texto da subetapa</td>
+<td>Sem o botão de código-fonte</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-024</td>
+<td>No modelo <code>TESTE</code>, retirar a "Função Profissional" de um campo de assinatura; baixar, enviar na ordem <code>TESTE</code> e abrir o Registro da Produção</td>
+<td>Pela norma, a mudança precisa de aprovação. <strong>Registrar que o campo passou a aceitar qualquer usuário</strong></td>
+<td>Alta</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Casos do fluxo que também conferem esta matriz:</strong> CT-OPE-005 (configurar quem assina), 016 (sem aprovador) e 019 (abrir sem acesso).</p>
+<h3 id="o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</h3>
+<ol>
+<li>O número do módulo OPE e as funções dele no banco do Principal, com os perfis e as pessoas que as têm.</li>
+<li>Quem tem a função <code>BTNCODIGOFONTE</code>.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-como-o-acesso-funciona">1. Como o acesso funciona</a></li><li><a href="#2-matriz-por-grupo-de-telas">2. Matriz por grupo de telas</a></li><li><a href="#3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</a></li><li><a href="#o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

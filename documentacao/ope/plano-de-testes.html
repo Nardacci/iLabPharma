@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html">Montagem do modelo do registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Versão a testar:</strong> legado entregue pelo fornecedor · <strong>Executor previsto:</strong> Claude Code no computador da pessoa, pela VPN, com a habilidade <code>executar-testes</code> (passo a passo em <code>homologacao/COMO-EXECUTAR-TESTES.md</code>).</p>
+<p>Os casos da seção 6.1 foram <strong>montados por script</strong> a partir do fluxo (<code>homologacao/ferramentas/montar_plano_testes.py</code>). Se o fluxo mudar, gere essa seção de novo e mantenha a seção 6.0, que vem da matriz de permissões.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<p>Confirmar nas telas o que a leitura do código encontrou no OPE:
+- as regras de negócio (<code>01-regras-de-negocio.md</code>), inclusive as dificuldades de uso (seção 4);
+- os pontos de atenção do fluxo;
+- a matriz de permissões (<code>02-matriz-de-permissoes.md</code>);
+- os riscos de prioridade alta (<code>07-analise-de-risco.md</code>);
+- a situação das 16 telas (<code>11-inventario-de-telas.md</code>).</p>
+<h3 id="2-escopo">2. Escopo</h3>
+<ul>
+<li>O fluxo de montagem do modelo do registro de lote.</li>
+<li>O acesso (seção 6.0).</li>
+<li>A Produção só entra onde um caso pede para conferir o efeito lá: o modelo enviado na ordem de produção e aberto no Registro da Produção (CT-OPE-017, 018 e 024).</li>
+</ul>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<h4 id="3-1-antes-de-qualquer-caso-o-modulo-abre">3.1 Antes de qualquer caso: o módulo abre?</h4>
+<p>O menu do OPE está desligado no código. Antes de tudo:
+1. Descobrir com a TI <strong>o endereço do Gerador de OPE</strong> no ambiente de teste e se o módulo aparece na lista "Módulos" do Principal.
+2. Ver no Principal se existem funções do módulo OPE para dar a um perfil.
+3. Criar o perfil <strong><code>TESTEOPE</code></strong> com todas as funções do OPE que existirem, inclusive <code>BTNCODIGOFONTE</code>, e dá-lo a <code>t.admin</code>.
+4. Entrar com <code>t.admin</code> e abrir o Gerador de OPE. <strong>Se não abrir, parar e registrar.</strong></p>
+<h4 id="3-2-usuarios-e-funcoes">3.2 Usuários e funções</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário (já existe)</th>
+<th>Perfil ou funções a dar no Principal</th>
+<th>Papel nos testes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t.admin</code></td>
+<td><code>TESTEOPE</code> (tudo) e <code>TESTEPRO</code> (Produção)</td>
+<td>Monta o modelo; envia na ordem de produção</td>
+</tr>
+<tr>
+<td><code>t.consulta</code></td>
+<td>Só a consulta do Gerador de OPE</td>
+<td>Casos de acesso (CT-OPE-022)</td>
+</tr>
+<tr>
+<td><code>t.semadmin</code></td>
+<td>Nenhuma função do OPE; uma função profissional usada nos campos de assinatura</td>
+<td>Casos de acesso e de assinatura na Produção</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se algum estiver bloqueado ou com a senha vencida, usar o administrador para gerar senha nova. <strong>Não guardar senhas neste repositório.</strong></p>
+<h4 id="3-3-dados-ja-existentes-no-ambiente-reaproveitar">3.3 Dados já existentes no ambiente (reaproveitar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Onde</th>
+<th>Uso aqui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produto <code>TESTE</code> e ordem de produção <code>TESTE</code></td>
+<td>Produção (plano da Produção, seção 3.4)</td>
+<td>Modelo <code>TESTE</code> e envio na ordem</td>
+</tr>
+<tr>
+<td>Produção <code>TESTE</code> iniciada</td>
+<td>Produção</td>
+<td>CT-OPE-018</td>
+</tr>
+<tr>
+<td>Um modelo real do ambiente (por exemplo, Diazepam)</td>
+<td>Gerador de OPE</td>
+<td>Comparar com o modelo <code>TESTE</code>; <strong>não alterar</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-4-dados-a-criar-no-ope-durante-os-testes">3.4 Dados a criar no OPE (durante os testes)</h4>
+<ol>
+<li>Modelo <code>TESTE</code> do produto <code>TESTE</code> (CT-OPE-001).</li>
+<li>Uma etapa com duas subetapas e campos (CT-OPE-003 a 005).</li>
+<li>Uma subetapa-padrão <code>TESTE</code> na tela Modelos (CT-OPE-012).</li>
+</ol>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<p>Como nos outros módulos:
+- captura de cada passo relevante nos casos de prioridade <strong>alta</strong>;
+- captura do resultado nos de prioridade <strong>média</strong>;
+- em <code>homologacao/9.ope/execucao/&lt;AAAA-MM-DD&gt;/evidencias/CT-OPE-xxx-passo-N.png</code>;
+- o <code>resultado.md</code> da rodada, com a lista dos dados <code>TESTE</code> criados.</p>
+<p><strong>Antes e depois:</strong> nos casos que alteram o modelo (006, 012, 013, 015), <strong>baixar o arquivo do modelo antes e depois</strong> e guardar os dois na pasta de evidências. É a única forma de provar o que mudou, já que o sistema não guarda histórico.</p>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<ul>
+<li>O teste <strong>confirma o comportamento atual</strong>. Nos casos "Registrar se…", o resultado esperado pela norma é diferente do que o código indica; o caso <strong>falha</strong> se o sistema fizer o que o código mostra.</li>
+<li>Para a nova versão, todos os casos de prioridade <strong>alta</strong> devem passar (as falhas viram requisitos corrigidos).</li>
+<li><strong>Ordem sugerida:</strong>
+  1. a verificação 3.1;
+  2. a seção 6.0;
+  3. a seção 6.1, na ordem dos casos (o modelo <code>TESTE</code> é montado ao longo deles), começando pelos de prioridade alta assim que o modelo tiver o necessário.</li>
+<li>O CT-OPE-020 (teste de uso) é feito com uma pessoa da área, à parte, e não exige o Claude Code.</li>
+</ul>
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p><strong>Prioridade:</strong> Alta, Média ou Baixa, pela análise de risco e pela linha de prioridade do fluxo.</p>
+<h4 id="6-0-acesso-da-matriz-de-permissoes">6.0 Acesso (da matriz de permissões)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-OPE-021</td>
+<td>Com um perfil sem nenhuma função do OPE, abrir o Gerador de OPE e a Configurar Campos pelo endereço</td>
+<td>"O usuário não tem permissão para esta página."</td>
+<td><code>02</code>, camada 2</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-022</td>
+<td>Com um perfil que só consulta, tentar incluir uma etapa e alterar um campo</td>
+<td>Recusa</td>
+<td><code>02</code>, camada 2</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-OPE-023</td>
+<td>Com um usuário sem a função <code>BTNCODIGOFONTE</code>, abrir o editor de texto da subetapa</td>
+<td>Sem o botão de código-fonte</td>
+<td><code>02</code>, camada 3</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-024</td>
+<td>No modelo <code>TESTE</code>, retirar a "Função Profissional" de um campo de assinatura; baixar, enviar na ordem <code>TESTE</code> e abrir o Registro da Produção</td>
+<td>Pela norma, a mudança precisa de aprovação. <strong>Registrar que o campo passou a aceitar qualquer usuário</strong></td>
+<td><code>02</code>, camada 4; R-OPE-11</td>
+<td>Alta</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-1-montagem-do-modelo-do-registro-de-lote">6.1 Montagem do modelo do registro de lote</h4>
+<p>Fluxo: <code>fluxos/montagem-do-modelo.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-OPE-001</td>
+<td>Criar o modelo <code>TESTE</code> para o produto <code>TESTE</code></td>
+<td>Modelo criado, sem etapas; revisão 1 (RN001, RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-002</td>
+<td>Criar um segundo modelo para o mesmo produto <code>TESTE</code></td>
+<td><strong>Registrar se permitir</strong> (RN003)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-OPE-003</td>
+<td>Criar uma etapa com duas subetapas; trocar a ordem das etapas</td>
+<td>Ordem trocada (RN006)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-004</td>
+<td>Numa subetapa, escrever um texto com dois <code>{0}</code> e salvar</td>
+<td>Dois campos criados com nomes técnicos (RN011, U1)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-005</td>
+<td>Configurar um campo como obrigatório, decimal com 2 casas e com a assinatura de uma função profissional</td>
+<td>Configuração gravada (RN014, RN015)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-006</td>
+<td>Apagar do texto o código de um campo já configurado e salvar</td>
+<td>Pela boa prática, aviso antes de apagar. <strong>Registrar se apagar o campo sem aviso</strong> (RN012, ponto 2)</td>
+<td>Ponto 2: Um ajuste de texto pode apagar campos do registro de lote</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-007</td>
+<td>Criar uma validação "comparar números" entre dois campos</td>
+<td>Gravada com a mensagem (RN020)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-008</td>
+<td>Procurar uma forma de validar um campo contra um valor fixo (por exemplo, mínimo 95)</td>
+<td><strong>Registrar se não existir</strong> (RN021, ponto 4)</td>
+<td>Ponto 4: Limite de especificação só por comparação entre campos</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-009</td>
+<td>Criar uma fórmula com uma expressão inválida</td>
+<td>Recusa na conferência da fórmula (RN022)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-010</td>
+<td>Definir o controle em processo de uma etapa e tentar excluir esse controle</td>
+<td>"Esta validação não pode ser excluída pois está em uso na etapa." (RN024)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-011</td>
+<td>Definir na tela Finalizar Produção os campos de data final e quantidade</td>
+<td>Gravado (RN025)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-012</td>
+<td>Criar um modelo de subetapa e aplicá-lo a uma subetapa que já tem texto e campos</td>
+<td><strong>Registrar se o conteúdo anterior foi substituído sem aviso</strong> e se as validações vieram junto (RN027)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-OPE-013</td>
+<td>Baixar o arquivo do modelo <code>TESTE</code>; alterar a descrição de um campo no arquivo; enviar de volta</td>
+<td>Modelo substituído. <strong>Registrar se houve erro</strong> ("Error") e se o anterior foi guardado (RN029, RN030)</td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-014</td>
+<td>Enviar o arquivo do modelo de <strong>outro</strong> produto no modelo <code>TESTE</code></td>
+<td>Pela boa prática, recusa. <strong>Registrar se aceitar</strong> (RN030)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-OPE-015</td>
+<td>Abrir o modelo <code>TESTE</code> numa aba e outro modelo em outra aba; alterar um campo na primeira aba</td>
+<td><strong>Registrar em qual modelo a alteração foi gravada</strong> (U9; reconhecimento, ponto 4)</td>
+<td>Ponto 4: Limite de especificação só por comparação entre campos</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-016</td>
+<td>Procurar a revisão, o aprovador e o histórico do modelo <code>TESTE</code> depois das alterações</td>
+<td><strong>Registrar a ausência</strong> (RN002, ponto 1)</td>
+<td>Ponto 1: As instruções de fabricação mudam sem aprovação</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-017</td>
+<td>Enviar o arquivo do modelo <code>TESTE</code> numa ordem de produção <code>TESTE</code> (Produção) e abrir o Registro da Produção</td>
+<td>O registro mostra o modelo montado (RN031)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-OPE-018</td>
+<td>Com uma produção <code>TESTE</code> iniciada, mudar um campo de obrigatório para não obrigatório no Gerador, baixar e reenviar na ordem</td>
+<td><strong>Registrar se a produção em andamento mudou</strong> (ponto 1; fluxo 3 da Produção, CT-PRO-052)</td>
+<td>Ponto 1: As instruções de fabricação mudam sem aprovação</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-OPE-019</td>
+<td>Com <code>t.semadmin</code>, abrir o Gerador de OPE pelo endereço</td>
+<td>Acesso negado. <strong>Registrar se abrir</strong></td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-OPE-020</td>
+<td>Pedir a um usuário da área, sem explicação prévia, que crie um campo de data obrigatório numa subetapa</td>
+<td><strong>Registrar quanto tempo levou e onde travou</strong> (seção "Por que o módulo confunde")</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Seção</th>
+<th>Casos</th>
+<th>Alta</th>
+<th>Média</th>
+<th>Baixa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.0 Acesso</td>
+<td>4</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>6.1 Montagem do modelo do registro de lote</td>
+<td>20</td>
+<td>6</td>
+<td>5</td>
+<td>9</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>24</strong></td>
+<td><strong>8</strong></td>
+<td><strong>6</strong></td>
+<td><strong>10</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Cobertura dos riscos de prioridade alta</strong> (<code>07-analise-de-risco.md</code>):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Risco</th>
+<th>Casos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-OPE-01 Modelo sem aprovação</td>
+<td>CT-OPE-016</td>
+</tr>
+<tr>
+<td>R-OPE-02 Mudança no modelo em uso</td>
+<td>CT-OPE-018</td>
+</tr>
+<tr>
+<td>R-OPE-03 Sem histórico</td>
+<td>CT-OPE-016</td>
+</tr>
+<tr>
+<td>R-OPE-04 Sem versão</td>
+<td>CT-OPE-016, 017</td>
+</tr>
+<tr>
+<td>R-OPE-05 Quem monta também põe em uso</td>
+<td>CT-OPE-016 (sem decisão de aprovar)</td>
+</tr>
+<tr>
+<td>R-OPE-06 Texto apaga campos</td>
+<td>CT-OPE-006</td>
+</tr>
+<tr>
+<td>R-OPE-09 Gravação no modelo errado</td>
+<td>CT-OPE-015</td>
+</tr>
+<tr>
+<td>R-OPE-10 Erro por dificuldade de uso</td>
+<td>CT-OPE-020</td>
+</tr>
+<tr>
+<td>R-OPE-11 Campo crítico sem assinatura</td>
+<td>CT-OPE-005, 024</td>
+</tr>
+<tr>
+<td>R-OPE-12 Sem limite de especificação</td>
+<td>CT-OPE-008</td>
+</tr>
+<tr>
+<td>R-OPE-13 Controle em processo</td>
+<td>CT-OPE-010</td>
+</tr>
+<tr>
+<td>R-OPE-14 Modelo incompleto</td>
+<td>Sem caso de tela próprio: o sistema não tem conferência para testar. CT-OPE-017 mostra o modelo na Produção</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</h3>
+<ol>
+<li>Pedir à TI o endereço do Gerador de OPE no ambiente de teste e confirmar que o módulo está instalado.</li>
+<li>Confirmar que pode criar no Principal o perfil <code>TESTEOPE</code> (se houver funções do OPE cadastradas).</li>
+<li>Os casos 017, 018 e 024 dependem do produto, da ordem e da produção <code>TESTE</code> da Produção. Rodar depois da preparação do plano da Produção.</li>
+<li>No seu computador, pela VPN, pedir ao Claude Code: "executar os testes do OPE, rodada 1 (prioridade alta)".</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
