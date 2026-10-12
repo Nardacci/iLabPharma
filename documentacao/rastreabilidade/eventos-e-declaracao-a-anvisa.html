@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventos e declaração à ANVISA · Rastreabilidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#475569"><span class="icone">⟲</span>Rastreabilidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="eventos-e-declaracao-a-anvisa.html" aria-current=page>Eventos e declaração à ANVISA</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Rastreabilidade</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Eventos e declaração à ANVISA</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/rastreabilidade/LabMedSys - Modulo Rastreabilidade - Fluxo Eventos e Declaracao a ANVISA.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve como os <strong>eventos</strong> de cada embalagem são registrados na Rastreabilidade do LabMedSys e como deveriam ser <strong>declarados à ANVISA</strong> pelo Sistema Nacional de Controle de Medicamentos (SNCM).</p>
+<p>Cada embalagem tem um IUM (Identificador Único de Medicamento). A vida dela é contada por eventos:
+- <strong>produção:</strong> o IUM "nasce";
+- <strong>embalagem e transporte:</strong> caixas com vários IUM;
+- <strong>entrega</strong> e <strong>recebimento:</strong> a embalagem muda de mãos;
+- <strong>finalização:</strong> a embalagem deixa a cadeia (dispensação, baixa, perda, descarte).</p>
+<p>Pelo documento da equipe (<code>Documentação/processo de transmissão do IUM.txt</code>):
+- cada evento vai à ANVISA em XML assinado com certificado digital;
+- a ANVISA devolve um protocolo, ou recusa o evento, por exemplo, uma expedição de IUM não ativado.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>As telas de evento: lista de eventos, produção, embalagem e transporte, entrega, recebimento, finalização e retificação.</li>
+<li>O envio ao microsserviço da Rastreabilidade e dele à ANVISA.</li>
+<li>Os eventos de entrega e recebimento enviados pelo <strong>Estoque</strong>.</li>
+<li>A linha do tempo de cada IUM.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> a geração do IUM e a agregação (fluxo 1).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu. Os caminhos de código são relativos a <code>8.rastreabilidade/app/</code>. Para encurtar: <code>Ev</code> = <code>HSolutions.Rastreabilidade.UI/Controllers/EventoController.cs</code>, <code>Svc/</code> = <code>HSolutions.Rastreabilidade.Domain.Services/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/rastreabilidade/eventos-declaracao-anvisa-fluxograma.png" target="_blank" rel="noopener"><img src="../img/rastreabilidade/eventos-declaracao-anvisa-fluxograma.png" alt="Workflow dos eventos e da declaração à ANVISA" loading="lazy"></a><figcaption>Workflow dos eventos e da declaração à ANVISA · clique para ampliar</figcaption></figure>
+
+<ol>
+<li>O usuário abre a tela do evento e lê ou digita os IUM (ou os códigos das agregações).</li>
+<li>Informa os dados do evento: tipo, remetente, destinatário, transportadora, conforme o evento.</li>
+<li>Ao salvar, o sistema marca os IUM com a nova situação, grava o evento e chama o microsserviço.</li>
+<li>O microsserviço monta o XML e tenta enviar à ANVISA. <strong>O envio é simulado</strong> e cai numa fila que nada lê.</li>
+<li>A tela mostra "envio efetuado com sucesso".</li>
+<li>Um evento enviado pode ser <strong>retificado</strong>: invalidado ou substituído, com motivo.</li>
+</ol>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="1-registrar-o-evento">1. Registrar o evento</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – Os eventos e os IUM que cada um aceita (<code>Ev</code>):</li>
+<li><strong>produção</strong>: IUM que não foi finalizado nem está agregado (linhas 165-190);</li>
+<li><strong>embalagem e transporte</strong>: agregações pelo código, conferidas pelo validador de agregação (linhas 376-430);</li>
+<li><strong>entrega</strong> e <strong>recebimento</strong>: IUM fora de agregação, ou agregações; o mesmo IUM não entra duas vezes no mesmo tipo de evento: "Evento já efetuado para esse código." (linhas 966-1016, 1400-1448);</li>
+<li><strong>finalização</strong>: qualquer IUM ainda não finalizado (linhas 1665-1712).</li>
+<li>RN002 – <strong>A ordem dos eventos não é conferida.</strong> A entrega não exige que a produção tenha sido declarada; a finalização não exige entrega. <em>A confirmar no teste.</em> Pelo documento da equipe, a ANVISA recusa a expedição de IUM não ativado.</li>
+<li>RN003 – <strong>Na finalização, digitar um código de IUM que não existe cria um IUM novo</strong> ("IUM externo"), sem conferência, só pela consulta (<code>Ev</code>:1672-1687). Logo depois, a tela lê o GTIN do produto desse IUM, que não existe (linha 1702). <em>Inferência, a confirmar no teste:</em> erro na tela.</li>
+<li>RN004 – Tipos de cada evento (<code>HSolutions.Rastreabilidade.Domain/Enumeradores</code>):</li>
+<li>entrega: venda, transferência, doação, devolução, <strong>recolhimento</strong>, amostra grátis;</li>
+<li>recebimento: compra, transferência, doação, devolução, <strong>recolhimento</strong>, amostra grátis;</li>
+<li>finalização: dispensação, baixa, extravio, perda, descarte.</li>
+<li>RN005 – Entrega e recebimento exigem remetente, destinatário e transportadora com CNPJ, razão social, endereço, município, estado e país (<code>Svc/Validators/EventoEntregaValidator.cs</code>, <code>EventoRecebimentoValidator.cs</code>). Os dados vêm das pessoas jurídicas do Principal (<code>Ev</code>:1449-1476).</li>
+<li>RN006 – <strong>Nada liga a entrega à venda.</strong> O destinatário é escolhido livremente; não se confere se há uma fatura do Comercial para aquele cliente e aquele lote.</li>
+<li>RN007 – <strong>O IUM não acompanha a situação do lote.</strong> Um lote bloqueado, reprovado ou em recolhimento não impede os eventos.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rastreabilidade</td>
+<td>Evento Produção, Evento Embalagem Transporte, Evento Entrega, Evento Recebimento, Evento Finalização</td>
+<td>Registrar cada evento</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-enviar-a-anvisa">2. Enviar à ANVISA</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN008 – Ao salvar, a tela <strong>marca os IUM com a nova situação antes de enviar</strong> (por exemplo, "Enviado evento produção") e grava a linha do tempo de cada um (<code>Ev</code>:230-250).</li>
+<li>RN009 – A tela chama o microsserviço da Rastreabilidade (<code>Ev</code>:257-259; o mesmo nas linhas 502, 697, 1181, 1588 e 1795). Se a chamada não der erro, marca o evento como <strong>"Enviado"</strong> e mostra "envio efetuado com sucesso" (linhas 261-262). <strong>A resposta do microsserviço não é lida.</strong></li>
+<li>RN010 – No microsserviço, o evento vira XML (<code>Svc/AnvisaService.cs</code>), e a rotina de envio <strong>sempre devolve "erro de conexão"</strong>, com o comentário "Simulando problema de Conexão com a Anvisa" (<code>Svc/AnvisaHelper.cs:48-60</code>).</li>
+<li>RN011 – Com o erro, o XML vai para uma <strong>fila de mensagens</strong> e a resposta é "na fila" (<code>Svc/AnvisaHelper.cs:64-78</code>). O serviço do Windows que deveria ler a fila e enviar é um <strong>esqueleto</strong>, com só um controlador de teste (<code>HSolutions.Rastreabilidade.AnvisaWindowsService/Controllers/TesteController.cs</code>).</li>
+<li>RN012 – Não há no código certificado digital, assinatura do XML, endereço do serviço da ANVISA nem leitura de protocolo de retorno.</li>
+<li>RN013 – Se a chamada ao microsserviço der erro, o evento fica como "Falha no envio" (<code>Ev</code>:265-269), mas os IUM <strong>continuam</strong> com a situação de enviados (RN008). <em>A confirmar no teste.</em></li>
+<li>RN014 – O microsserviço grava cada tentativa na tabela de registro dos envios, com o XML (<code>TBL_REGISTRO_ENVIO</code>; <code>Svc/AnvisaService.cs:79</code> e seguintes). A rotina recebe a situação do envio, mas <strong>não a grava</strong>: a coluna da situação fica vazia (<code>Svc/AnvisaHelper.cs:80-92</code>).</li>
+<li>RN015 – Na entrega e no recebimento, <strong>o microsserviço também grava o evento</strong> (<code>Svc/AnvisaService.cs:71, 120, 175, 226</code>), e a tela grava de novo depois (<code>Ev</code>:718, 1202). <em>Inferência, a confirmar no teste:</em> cada entrega e cada recebimento ficam gravados duas vezes.</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rastreabilidade</td>
+<td>Eventos (lista)</td>
+<td>Consultar os eventos e a situação de cada um</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-eventos-enviados-pelo-estoque">3. Eventos enviados pelo Estoque</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN016 – O Estoque tem a sua própria <strong>tela de evento ANVISA</strong>, aberta a partir da remessa, com entrega e recebimento por IUM ou por agregação (<code>3.estoque/app/LaboSys_UI/estoque/remessa_ed.aspx.cs:1153</code>; <code>3.estoque/app/LaboSys_BLL/bllEventoAnvisa.cs:156-354</code>).</li>
+<li>RN017 – O Estoque chama o mesmo microsserviço e também <strong>não lê a resposta</strong> (<code>3.estoque/app/LaboSys_BLL/bllEventoAnvisa.cs:421-428</code>). O envio cai na mesma simulação (RN010).</li>
+<li>RN018 – A remessa gerada pela fatura do Comercial <strong>não gera</strong> evento de entrega (fluxo 3 do Comercial). <em>A confirmar no teste.</em></li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Evento ANVISA (a partir da Remessa de Material)</td>
+<td>Entrega e recebimento pelo Estoque</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-retificar-e-consultar">4. Retificar e consultar</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN019 – Um evento pode ser <strong>retificado</strong> por <strong>declaração de invalidade</strong> ou por <strong>substituição</strong>, com motivo. O evento original fica guardado, ligado ao que o substituiu (<code>Ev</code>:1746-1830; <code>TBL_EVENTO_RETIFICACAO</code>). Não há validação de que o motivo foi preenchido.</li>
+<li>RN020 – A retificação passa pelo mesmo envio simulado (RN009 a RN011).</li>
+<li>RN021 – A <strong>linha do tempo</strong> de cada IUM mostra as situações por que ele passou, com data e usuário (<code>TBL_IUM_EVENT_TIMELINE</code>; <code>HSolutions.Rastreabilidade.UI/Controllers/TimeLineController.cs</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rastreabilidade</td>
+<td>Retificação (pela lista de eventos)</td>
+<td>Invalidar ou substituir um evento</td>
+</tr>
+<tr>
+<td>Rastreabilidade</td>
+<td>Linha do tempo (pela pesquisa de IUM)</td>
+<td>Histórico de cada IUM</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Nenhum evento chega à ANVISA</strong> (RN010 a RN012). O envio é simulado, a fila não é lida, e não há certificado. Se a empresa for obrigada a declarar ao SNCM, está <strong>descumprindo</strong> a obrigação sem saber. <em>A validar com Assuntos Regulatórios:</em> a norma e os prazos do SNCM que valem para a empresa.</p>
+<p><strong>2. A tela afirma o que não aconteceu</strong> (RN009). "Envio efetuado com sucesso" e a situação "Enviado" são registros falsos. Isso fere a integridade dos dados (RDC 658/2022, art. 124; Guia 33/2020, 9.3.2.3). O Estoque faz o mesmo (RN017).</p>
+<p><strong>3. A situação dos IUM muda antes do envio</strong> (RN008, RN013). Mesmo quando o envio falha, os IUM aparecem como enviados.</p>
+<p><strong>4. Ordem dos eventos sem conferência</strong> (RN002). Entregar ou finalizar sem declarar a produção seria recusado pela ANVISA, mas o sistema aceita.</p>
+<p><strong>5. Consulta que cria registro</strong> (RN003). Digitar um código na finalização cria um IUM "externo", sem conferência.</p>
+<p><strong>6. Evento sem ligação com a venda nem com a situação do lote</strong> (RN006, RN007). Um lote recolhido pode ter eventos de entrega; uma entrega pode não corresponder a nenhuma venda.</p>
+<p><strong>7. Duas telas de evento</strong> (RN016). Rastreabilidade e Estoque registram entregas e recebimentos por caminhos diferentes.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Um lote <code>TESTE</code> com IUM gerados (fluxo 1), uma agregação <code>TESTE</code> e um IUM <code>TESTE</code> fora de agregação.
+- Pessoas jurídicas <code>TESTE</code> como remetente, destinatário e transportadora.
+- Usuários <code>t.admin</code> e <code>t.semadmin</code>.
+- Acesso da TI à fila de mensagens e à tabela <code>TBL_REGISTRO_ENVIO</code> (ou um relatório delas).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-RAS-001</td>
+<td>Registrar o evento de produção de um IUM <code>TESTE</code></td>
+<td>Evento gravado. <strong>Registrar a mensagem e a situação mostradas</strong> (RN009)</td>
+</tr>
+<tr>
+<td>CT-RAS-002</td>
+<td>Pedir à TI para conferir se o evento do CT-RAS-001 chegou à ANVISA (protocolo) e se está na fila</td>
+<td>Pela norma, protocolo da ANVISA. <strong>Registrar que não há protocolo</strong> e onde o XML ficou (RN010 a RN012, ponto 1)</td>
+</tr>
+<tr>
+<td>CT-RAS-003</td>
+<td>Com o microsserviço da Rastreabilidade parado (pedir à TI), registrar um evento</td>
+<td>"Falha no envio". <strong>Registrar a situação dos IUM</strong> (RN013, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-RAS-004</td>
+<td>Registrar a <strong>entrega</strong> de um IUM que não teve evento de produção</td>
+<td>Pela regra da ANVISA, recusa. <strong>Registrar se aceitar</strong> (RN002, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-RAS-005</td>
+<td>Registrar a entrega do mesmo IUM duas vezes</td>
+<td>"Evento já efetuado para esse código." (RN001)</td>
+</tr>
+<tr>
+<td>CT-RAS-006</td>
+<td>Registrar a entrega sem o CNPJ do destinatário</td>
+<td>"Cnpj do Receptor é obrigatório." (RN005)</td>
+</tr>
+<tr>
+<td>CT-RAS-007</td>
+<td>Na finalização, digitar um código de IUM inexistente</td>
+<td>Pela boa prática, "IUM não encontrado". <strong>Registrar se o sistema criou um IUM</strong> e se a tela deu erro (RN003, ponto 5)</td>
+</tr>
+<tr>
+<td>CT-RAS-008</td>
+<td>No Estoque, bloquear o lote <code>TESTE</code>; registrar a entrega de um IUM desse lote</td>
+<td>Pela norma, recusa. <strong>Registrar se aceitar</strong> (RN007, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-RAS-009</td>
+<td>Registrar uma entrega do tipo venda para um destinatário sem fatura no Comercial</td>
+<td><strong>Registrar se aceitar</strong> (RN006, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-RAS-010</td>
+<td>Retificar o evento do CT-RAS-001 por invalidade, sem motivo</td>
+<td>Pela boa prática, motivo obrigatório. <strong>Registrar se aceitar</strong> (RN019)</td>
+</tr>
+<tr>
+<td>CT-RAS-011</td>
+<td>Substituir um evento de entrega; ver o evento original</td>
+<td>Original guardado, ligado ao substituto (RN019)</td>
+</tr>
+<tr>
+<td>CT-RAS-012</td>
+<td>Abrir a linha do tempo de um IUM com eventos</td>
+<td>Situações com data e usuário (RN021)</td>
+</tr>
+<tr>
+<td>CT-RAS-013</td>
+<td>No Estoque, a partir de uma remessa, enviar um evento de entrega pela tela de evento ANVISA</td>
+<td><strong>Registrar a mensagem mostrada</strong> e se o evento aparece na Rastreabilidade (RN016, RN017)</td>
+</tr>
+<tr>
+<td>CT-RAS-014</td>
+<td>Faturar uma venda com remessa no Comercial (fluxo 3 do Comercial); procurar o evento de entrega</td>
+<td><strong>Registrar se nenhum evento foi gerado</strong> (RN018)</td>
+</tr>
+<tr>
+<td>CT-RAS-015</td>
+<td>Pedir à TI uma consulta à <code>TBL_REGISTRO_ENVIO</code> depois dos casos acima</td>
+<td>Registros com o XML. <strong>Registrar se a situação do envio está vazia</strong> (RN014)</td>
+</tr>
+<tr>
+<td>CT-RAS-016</td>
+<td>Registrar uma entrega; na lista de eventos, contar quantas entregas aparecem</td>
+<td>Uma. <strong>Registrar se aparecerem duas</strong> (RN015)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-RAS-002, 001, 003, 004 e 008 primeiro. Eles tocam:
+- a declaração à ANVISA que não acontece;
+- o registro falso de "enviado";
+- a ordem dos eventos;
+- o lote bloqueado com eventos de entrega.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#1-registrar-o-evento">1. Registrar o evento</a></li><li class="sub"><a href="#2-enviar-a-anvisa">2. Enviar à ANVISA</a></li><li class="sub"><a href="#3-eventos-enviados-pelo-estoque">3. Eventos enviados pelo Estoque</a></li><li class="sub"><a href="#4-retificar-e-consultar">4. Retificar e consultar</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
