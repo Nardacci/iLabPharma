@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de lote · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html" aria-current=page>Registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Registro de lote</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/producao/LabMedSys - Modulo Producao - Fluxo Registro de Lote.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve o <strong>registro de lote</strong> da Produção no LabMedSys: como cada etapa da fabricação é registrada na ordem de produção (OPE) do lote.
+- Os campos.
+- A pesagem que vem do Estoque.
+- Os controles em processo.
+- As análises pedidas ao Controle da Qualidade.
+- O histórico de alterações.</p>
+<p>Pela norma, é o documento que prova como o lote foi fabricado (RDC 658/2022, arts. 124, 125 e 137).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área ou do modelo de cada produto está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Registro da Produção: etapas e subetapas da OPE.</li>
+<li>O modelo do registro (XML do produto) e a classe de programa do produto, só no que define o comportamento.</li>
+<li>Pesagem trazida do Estoque.</li>
+<li>Controle em processo e análise do CQ em processo, com a liberação da análise.</li>
+<li>Manipulação de horas (apontamento), Solicitação Avulsa de insumos, anexos.</li>
+<li>Consultar Log OPE (histórico) e impressão da OPE.</li>
+<li>Pesagem/Medição de Matéria-Prima, para mostrar a relação com o registro.</li>
+</ul>
+<p><strong>Fora do escopo:</strong>
+- Autorização, número de lote e final da produção (fluxo 1).
+- Cadastro do produto, da ordem de produção e do modelo XML (fluxo 3).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu ou no alto de cada tela. Os caminhos de código são relativos a <code>2.producao/app/</code>. Para encurtar:
+- <code>UI/</code> = <code>LaboSys_UI/</code>;
+- <code>Prod/</code> = <code>LaboSys_UI/producao/</code>;
+- <code>XML/</code> = <code>LaboSys_UI/producao/XML/Class_Producao/</code>;
+- <code>Sub</code> = <code>XML/SubEtapaProducao.cs</code>;
+- <code>Pg</code> = <code>Prod/producao.aspx.cs</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/producao/registro-de-lote-fluxograma.png" target="_blank" rel="noopener"><img src="../img/producao/registro-de-lote-fluxograma.png" alt="Workflow do registro de lote na Produção" loading="lazy"></a><figcaption>Workflow do registro de lote na Produção · clique para ampliar</figcaption></figure>
+
+<ol>
+<li>Com a produção iniciada (fluxo 1), o operador abre o <strong>Registro da Produção</strong>.
+   - A ordem de produção mostra as <strong>etapas</strong> do produto. Cada etapa tem <strong>subetapas</strong>, e cada subetapa tem <strong>campos</strong>.
+   - Tudo vem do <strong>modelo XML</strong> do produto.</li>
+<li>Alguns campos se preenchem sozinhos:
+   - número do lote e da OPE;
+   - validade;
+   - revisão e versão da ordem;
+   - quem gerou o lote;
+   - os <strong>dados da pesagem feita no Estoque</strong>: lote do insumo, peso, tara, responsáveis.</li>
+<li>Os outros são digitados.</li>
+<li>Campos de responsabilidade pedem <strong>usuário e senha</strong> de quem tem a função profissional exigida.</li>
+<li>A subetapa pode ser <strong>salva em parte</strong> (rascunho) ou <strong>salva completa</strong>. Cada alteração posterior fica no histórico.</li>
+<li>Em pontos definidos no modelo:
+   - há <strong>controles em processo</strong>;
+   - há subetapas que <strong>pedem análise ao CQ</strong> (granel, semielaborado). Enquanto a análise não é aprovada, as subetapas seguintes ficam travadas, a menos que alguém com a função de liberação libere a trava com senha e justificativa.</li>
+<li>A última subetapa marcada como final leva a produção a <strong>pendente de finalização</strong>, e o fluxo continua no Final da Produção (fluxo 1).</li>
+</ol>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="o-modelo-do-registro">O modelo do registro</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O registro de cada produto vem de um <strong>modelo XML</strong> ligado à ordem de produção.</li>
+<li>Um produto tem várias etapas; cada etapa, várias subetapas; cada subetapa, vários campos.</li>
+<li>É o que diz o documento do fornecedor (<code>XML/XML.docx</code>) e mostra o leitor do modelo (<code>XML/MontaXML.cs</code>).</li>
+<li>RN002 – Cada campo pode ter (<code>XML/MontaXML.cs</code>, classe <code>TagCampos</code>):</li>
+<li>tipo e máscara;</li>
+<li><strong>obrigatório</strong>;</li>
+<li><strong>função profissional</strong> exigida e <strong>ícone de login</strong> (campo de assinatura);</li>
+<li>fórmula;</li>
+<li>preenchimento automático e integração com o Estoque;</li>
+<li>comparações (com a data do sistema, entre datas, entre campos).</li>
+<li>RN003 – O modelo <strong>não tem limite de especificação</strong> (mínimo e máximo) por campo.</li>
+<li>A conferência de um resultado contra o limite só existe se for <strong>programada</strong> na classe do produto.</li>
+<li>Exemplos: <code>XML/BLL/Glibenclamida_OP.cs</code>, <code>DIAZEPAM.cs</code>. Nenhuma ocorrência de mínimo ou máximo no código do registro.</li>
+<li>RN004 – A passagem de uma etapa para a outra é validada assim (<code>XML/EtapaProducao.cs:19-48, 122-165</code>):</li>
+<li>para os produtos de classe <strong>Glibenclamida</strong>, por regras próprias, com o <strong>nome do produto escrito no código geral</strong> (linha 127);</li>
+<li>para os demais, só pelos <strong>controles em processo</strong> declarados no modelo.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<p>O modelo não tem tela própria de edição: o arquivo XML é ligado à ordem de produção no cadastro (fluxo 3).</p>
+<h3 id="preencher-a-subetapa">Preencher a subetapa</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN005 – O Registro da Produção abre só em produção <strong>iniciada</strong> ou <strong>pendente de finalização</strong>. Nas outras situações, e depois da finalização, a tela é só para ver (<code>Prod/registro_producao_lst.aspx.cs:120-121</code>; <code>XML/RetornaCamposXML.cs:235</code>).</li>
+<li>RN006 – <strong>Campos automáticos</strong> (<code>XML/BLL/CalculoGenerico.cs:318-480</code>):</li>
+<li>número do lote, OPE e validade do lote;</li>
+<li>quem criou a produção e quem gerou o lote;</li>
+<li>data de geração;</li>
+<li><strong>revisão, versão, data de elaboração e data de aprovação</strong> da ordem de produção.</li>
+<li>RN007 – <strong>Pesagem do Estoque:</strong> campos de integração trazem a pesagem feita no Estoque para a requisição da produção (<code>XML/BLL/PesagemEstoque.cs:107-171</code>):</li>
+<li>item;</li>
+<li><strong>lote do insumo</strong>;</li>
+<li>peso líquido e tara;</li>
+<li>quantidade separada;</li>
+<li><strong>responsável pela pesagem</strong> e <strong>pela separação</strong>.</li>
+<li>RN008 – <strong>Campos obrigatórios:</strong> "Preencha os campos obrigatórios." (<code>XML/ProducaoValidarCom.cs:587, 601</code>).</li>
+<li>RN009 – <strong>Datas digitadas:</strong></li>
+<li><strong>não podem ser futuras</strong>: "A Data preenchida é maior que a data atual do sistema." (<code>XML/ProducaoValidarCom.cs:503</code>);</li>
+<li>podem ser comparadas entre si e com a data de geração do lote;</li>
+<li><strong>podem ser passadas</strong>: o sistema não confere se a data é a do momento do registro.</li>
+<li>RN010 – <strong>Campos que não podem ser iguais</strong>, quando o modelo pede (por exemplo, executor e conferente): "Os campos não podem ser iguais." (<code>XML/ProducaoValidarCom.cs:554</code>).</li>
+<li>RN011 – <strong>Campos de assinatura</strong> (ícone de login): pedem usuário e senha. O sistema confere se a pessoa tem a <strong>função profissional</strong> exigida pelo campo ("NÃO TEM PERMISSÃO.") e preenche o campo com ela (<code>XML/Autenticacao.cs:14-44</code>; <code>XML/RetornaCamposXML.cs:151</code>).</li>
+<li>RN012 – <strong>Início e fim da subetapa:</strong> a data e a hora são <strong>informadas pela tela</strong> (<code>Pg:170</code>, <code>GravarDataInicioFimSubEtapa</code>; <code>Sub:681</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Registro da Produção</td>
+<td>Etapas e subetapas da OPE; preencher, assinar e salvar</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="salvar-e-alterar">Salvar e alterar</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN013 – <strong>Salvar completo:</strong> grava só se a validação passar (<code>Sub:385-426</code>).</li>
+<li>RN014 – <strong>Salvar parcial:</strong> quando o modelo permite (<code>HabilitarSalvarParcial</code>), a subetapa pode ser <strong>gravada mesmo com campos inválidos</strong>, depois de uma confirmação. É um rascunho (<code>Sub:413</code>; <code>UI/scripts/producao.js:47-60</code>).</li>
+<li>RN015 – Cada resposta grava quem criou e quem alterou, com a <strong>data do servidor</strong> (<code>Sub:487-498</code>).</li>
+<li>RN016 – <strong>Histórico:</strong></li>
+<li>cada alteração de campo grava o valor anterior, o novo, o usuário e a data (<code>TBL_LOG_ALTERACAO_XML</code>; <code>LaboSys_DAL/dalRespostaXML.cs:69-77</code>);</li>
+<li><strong>sem motivo</strong> da alteração;</li>
+<li>com o valor <strong>cortado em 255 caracteres</strong>.</li>
+<li>RN017 – Enquanto a produção não é finalizada, campos já salvos podem ser <strong>alterados</strong>, sem aprovação de outra pessoa. <em>A confirmar no teste:</em> se uma subetapa já assinada pode ser alterada.</li>
+<li>RN018 – A tela <strong>Consultar Log OPE</strong> mostra o histórico do registro (<code>Prod/log_ope_lst.aspx</code>; <code>Prod/log_ope_rel.aspx.cs:20-24</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Registro da Produção</td>
+<td>Salvar parcial ou completo; alterar</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Consultar Log OPE</td>
+<td>Histórico das alterações do registro</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="controle-em-processo-e-analise-do-cq">Controle em processo e análise do CQ</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN019 – O <strong>controle em processo</strong> de uma etapa confere só se os <strong>campos obrigatórios</strong> da subetapa de controle foram preenchidos. Se não, mostra "<controle> Incompleto." (<code>XML/BLL/CalculoGenerico.cs:773-818</code>). <strong>Não compara o resultado com um limite</strong> (RN003).</li>
+<li>RN020 – Uma subetapa pode <strong>solicitar análise ao CQ</strong>, para granel ou semielaborado (<code>Pg:580</code>, <code>SolicitarAnalise</code>; <code>LaboSys.Producao.Services/CQ/CqService.cs:16-69</code>).</li>
+<li>RN021 – A subetapa com análise é <strong>impeditiva</strong>: enquanto a análise do CQ <strong>não está aprovada</strong>, as subetapas seguintes ficam pendentes (<code>Sub:869-890</code>, <code>EhImpeditivo</code>; <code>Sub:966-968</code>).</li>
+<li>RN022 – <strong>Liberação da análise:</strong></li>
+<li>quem tem a função <strong>"Liberar Controle Qualidade"</strong> pode liberar a subetapa impeditiva com <strong>usuário, senha e justificativa</strong> (<code>XML/Autenticacao.cs:47-100</code>; <code>Sub:944</code>);</li>
+<li>a liberação vale <strong>qualquer que seja a situação da análise</strong>: pendente ou <strong>reprovada</strong>.</li>
+<li>RN023 – Se a subetapa não tem solicitação registrada, ela <strong>não é impeditiva</strong> (<code>Sub:869-880</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Registro da Produção</td>
+<td>Controle em processo; solicitar e acompanhar a análise do CQ; liberar a subetapa</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="pesagem-horas-e-insumos-avulsos">Pesagem, horas e insumos avulsos</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN024 – A <strong>Pesagem/Medição de Matéria-Prima</strong> é uma tela à parte. Ela registra:</li>
+<li>insumo, lote do insumo, produto e lote do produto (texto);</li>
+<li>balança e ambiente;</li>
+<li>quantidades bruta, tara e líquida;</li>
+<li>responsáveis pela pesagem e pela conferência.</li>
+<li>RN025 – <strong>O registro de lote não usa essa pesagem.</strong></li>
+<li>Ele usa a pesagem do Estoque (RN007).</li>
+<li>A tabela <code>TBL_INSUMO_PESAGEM_MEDICAO</code> só é usada pela própria tela (<code>LaboSys_BLL/bllInsumoPesagemMedicao.cs</code>).</li>
+<li>Os responsáveis são escolhidos numa lista, sem senha, e podem ser a mesma pessoa. A pesagem pode ser excluída.</li>
+<li>RN026 – <strong>Manipulação de Horas:</strong> o período trabalhado é informado com data e hora digitadas e pode ser alterado e excluído (<code>Prod/apontamento_horas_ed.aspx.cs:590-673</code>).</li>
+<li>RN027 – <strong>Solicitação Avulsa:</strong> pede ao Estoque uma reserva adicional de insumos para a produção (<code>Prod/solicitacao_avulsa_ed.aspx.cs:444-446</code>).</li>
+<li>RN028 – A subetapa pode receber <strong>anexos</strong> (<code>Pg:308</code>, <code>SalvarAnexo</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Pesagem/Medição de Matéria-Prima</td>
+<td>Pesagem avulsa, fora do registro</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Manipulação de Horas</td>
+<td>Horas trabalhadas na produção</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Solicitação Avulsa</td>
+<td>Insumos adicionais</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="fim-do-registro-e-impressao">Fim do registro e impressão</h3>
+<h4 id="regras-de-negocio_5">Regras de negócio</h4>
+<ul>
+<li>RN029 – A subetapa marcada no modelo como final (<code>OPE_FINALIZADA</code>) encerra o registro e leva a produção a <strong>pendente de finalização</strong> (fluxo 1, RN037; <code>Sub:643</code>).</li>
+<li>RN030 – Depois disso, os campos ficam bloqueados (<code>XML/RetornaCamposXML.cs:235</code>).</li>
+<li>RN031 – A OPE pode ser <strong>impressa</strong> a partir das respostas gravadas (<code>Prod/impressao.aspx.cs</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_5">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Registro da Produção (impressão)</td>
+<td>Imprimir a OPE preenchida</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. O registro de cada produto depende de programação</strong> (RN001 a RN004). Os limites de especificação e as validações de etapa são escritos na classe do produto. Um produto novo ou uma mudança no processo exige programador. O nome "Glibenclamida" está fixo no código geral.</p>
+<p><strong>2. O controle em processo confere só se foi preenchido, não se está dentro do limite</strong> (RN019). Um resultado fora da especificação passa sem alerta, a menos que a classe do produto trate o caso (art. 198).</p>
+<p><strong>3. A análise do CQ reprovada pode ser liberada com senha e justificativa</strong> (RN022). A trava é contornada por uma pessoa, sem investigação nem desvio aberto (arts. 167 e 245).</p>
+<p><strong>4. Subetapa sem solicitação de análise não trava</strong> (RN023). Se o operador não pedir a análise, a produção segue.</p>
+<p><strong>5. Datas e horas digitadas</strong> (RN009, RN012, RN026). Datas passadas são aceitas (art. 124).</p>
+<p><strong>6. Alterações sem motivo, cortadas em 255 caracteres e sem aprovação</strong> (RN016, RN017) (art. 125).</p>
+<p><strong>7. Salvar parcial grava campos inválidos</strong> (RN014). <em>A confirmar:</em> se o rascunho fica marcado como incompleto na impressão e no avanço da etapa.</p>
+<p><strong>8. Duas pesagens que não conversam</strong> (RN024, RN025). A tela de pesagem da Produção é isolada e os responsáveis não assinam. A pesagem que vale no registro é a do Estoque. A verificação independente de cada pesagem (art. 193) depende do que o Estoque grava.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Uma produção <code>TESTE</code> <strong>iniciada</strong> (fluxo 1, CT-PRO-002 a 013), com um modelo XML real do ambiente (por exemplo, Diazepam) ligado à ordem de produção <code>TESTE</code>.
+- A pesagem do insumo <code>TESTE</code> feita no Estoque para a requisição dessa produção.
+- Usuários: <code>t.admin</code> (operador), <code>t.semadmin</code> (conferente, com a função profissional do campo), <code>t.consulta</code> (sem a função), e um usuário com a função "Liberar Controle Qualidade".</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-021</td>
+<td>Abrir o Registro da Produção da produção <code>TESTE</code> e conferir os campos automáticos</td>
+<td>Lote, OPE, validade, revisão e versão preenchidos (RN006)</td>
+</tr>
+<tr>
+<td>CT-PRO-022</td>
+<td>Na subetapa de pesagem, conferir os dados trazidos do Estoque</td>
+<td>Lote do insumo, pesos e responsáveis iguais aos do Estoque (RN007)</td>
+</tr>
+<tr>
+<td>CT-PRO-023</td>
+<td>Salvar completo uma subetapa com campo obrigatório vazio</td>
+<td>"Preencha os campos obrigatórios." (RN008)</td>
+</tr>
+<tr>
+<td>CT-PRO-024</td>
+<td>Informar uma data <strong>futura</strong> num campo de data</td>
+<td>"A Data preenchida é maior que a data atual do sistema." (RN009)</td>
+</tr>
+<tr>
+<td>CT-PRO-025</td>
+<td>Informar uma data <strong>de ontem</strong> num campo de data e o início e o fim da subetapa no passado</td>
+<td>Pela norma, registro no momento da ação. <strong>Registrar se aceitar</strong> (RN009, RN012, ponto 5)</td>
+</tr>
+<tr>
+<td>CT-PRO-026</td>
+<td>No campo de assinatura, entrar com <code>t.consulta</code> (sem a função profissional)</td>
+<td>"NÃO TEM PERMISSÃO." (RN011)</td>
+</tr>
+<tr>
+<td>CT-PRO-027</td>
+<td>Informar o mesmo usuário como executor e conferente, se o modelo tiver os dois campos</td>
+<td>"Os campos não podem ser iguais." (RN010). <strong>Registrar se o modelo não tiver a regra</strong></td>
+</tr>
+<tr>
+<td>CT-PRO-028</td>
+<td>Num controle em processo, informar um resultado <strong>fora da especificação</strong> do produto</td>
+<td>Pela norma, alerta e bloqueio. <strong>Registrar se passa</strong> (RN019, ponto 2)</td>
+</tr>
+<tr>
+<td>CT-PRO-029</td>
+<td>Avançar para a próxima etapa sem preencher o controle em processo</td>
+<td>"<controle> Incompleto." (RN019)</td>
+</tr>
+<tr>
+<td>CT-PRO-030</td>
+<td>Solicitar a análise do CQ numa subetapa; tentar seguir para a subetapa seguinte</td>
+<td>Subetapas seguintes pendentes (RN021)</td>
+</tr>
+<tr>
+<td>CT-PRO-031</td>
+<td>No CQ, <strong>reprovar</strong> a análise; na Produção, liberar a subetapa com o usuário de liberação, senha e justificativa</td>
+<td>Pela norma, recusa e desvio. <strong>Registrar se libera</strong> (RN022, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-PRO-032</td>
+<td>Numa subetapa que pede análise, <strong>não solicitar</strong> a análise e seguir</td>
+<td><strong>Registrar se segue sem a análise</strong> (RN023, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-PRO-033</td>
+<td>Salvar parcial uma subetapa com campo inválido, confirmando; tentar avançar e imprimir</td>
+<td><strong>Registrar se o rascunho avança e como aparece na impressão</strong> (RN014, ponto 7)</td>
+</tr>
+<tr>
+<td>CT-PRO-034</td>
+<td>Alterar um campo já salvo e assinado; abrir o Consultar Log OPE</td>
+<td>Histórico com valor anterior, novo, usuário e data. <strong>Registrar se pede motivo e se a assinatura é refeita</strong> (RN016, RN017, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-PRO-035</td>
+<td>Gravar num campo de texto um valor com mais de 255 caracteres e depois alterá-lo; ver o histórico</td>
+<td><strong>Registrar se o histórico corta o valor</strong> (RN016)</td>
+</tr>
+<tr>
+<td>CT-PRO-036</td>
+<td>Depois da finalização (fluxo 1), tentar alterar um campo</td>
+<td>Campos bloqueados (RN030)</td>
+</tr>
+<tr>
+<td>CT-PRO-037</td>
+<td>Registrar uma pesagem na Pesagem/Medição de Matéria-Prima com o mesmo responsável e conferente; procurar essa pesagem no registro de lote</td>
+<td><strong>Registrar se aceita a mesma pessoa</strong> e confirmar que <strong>não aparece no registro</strong> (RN024, RN025, ponto 8)</td>
+</tr>
+<tr>
+<td>CT-PRO-038</td>
+<td>Incluir horas na Manipulação de Horas com período no passado; excluir</td>
+<td>Gravado e excluído. <strong>Registrar se a exclusão fica no histórico</strong> (RN026)</td>
+</tr>
+<tr>
+<td>CT-PRO-039</td>
+<td>Fazer uma Solicitação Avulsa de insumo; procurar a reserva no Estoque</td>
+<td>Reserva adicional no Estoque (RN027)</td>
+</tr>
+<tr>
+<td>CT-PRO-040</td>
+<td>Imprimir a OPE da produção <code>TESTE</code></td>
+<td>Todas as etapas preenchidas, com os responsáveis (RN031)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-PRO-031, 028, 032, 025 e 034 primeiro. Eles tocam:
+- a análise reprovada liberada por uma pessoa;
+- o resultado fora da especificação sem alerta;
+- a etapa sem a análise exigida;
+- as datas fora do momento da ação;
+- a alteração do registro sem motivo.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#o-modelo-do-registro">O modelo do registro</a></li><li class="sub"><a href="#preencher-a-subetapa">Preencher a subetapa</a></li><li class="sub"><a href="#salvar-e-alterar">Salvar e alterar</a></li><li class="sub"><a href="#controle-em-processo-e-analise-do-cq">Controle em processo e análise do CQ</a></li><li class="sub"><a href="#pesagem-horas-e-insumos-avulsos">Pesagem, horas e insumos avulsos</a></li><li class="sub"><a href="#fim-do-registro-e-impressao">Fim do registro e impressão</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
