@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reconhecimento do módulo · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html" aria-current=page>Reconhecimento do módulo</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>Comece por aqui</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Reconhecimento do módulo</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Base:</strong> só o código (<code>9.ope/app</code>), o documento do fornecedor (<code>LabMedSys_Documentacao.pdf</code>) e o dicionário de dados. Nada foi testado nas telas. Caminhos relativos a <code>9.ope/app/</code>.</p>
+<p><strong>Em uma frase:</strong> o módulo OPE é o <strong>Gerador de OPE</strong>, a ferramenta que <strong>monta o modelo do registro de lote</strong> de cada produto (etapas, subetapas, campos, cálculos, validações e quem assina cada campo). A Produção usa esse modelo para registrar cada lote.</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Finalidade</td>
+<td>"O módulo OPE não possui um banco de dados próprio por ser somente um gerador de XML para o processo de produção"</td>
+<td>Documento do fornecedor, seção de estrutura</td>
+</tr>
+<tr>
+<td>Tecnologia</td>
+<td>ASP.NET MVC (telas <code>.cshtml</code>), Entity Framework, componentes Kendo e o editor de texto CKEditor</td>
+<td><code>HSolutions.GeradorXML.UI</code></td>
+</tr>
+<tr>
+<td>Tamanho</td>
+<td>Cerca de 10 mil linhas de código próprio: 13 controladores, 44 arquivos de tela (telas e partes de tela), 11 classes de regras</td>
+<td>Contagem por script</td>
+</tr>
+<tr>
+<td>Banco</td>
+<td>Usa o mesmo banco (<code>LABMEDSYSD</code>) para todas as conexões</td>
+<td><code>HSolutions.GeradorXML.UI/Web.config</code> (nomes das conexões; nenhum valor copiado)</td>
+</tr>
+<tr>
+<td>Dependência da Produção</td>
+<td>O Gerador usa as <strong>mesmas classes</strong> que a Produção usa para ler e gravar o modelo, a partir de uma cópia compilada da tela da Produção (<code>Library/LaboSys_UI.dll</code>)</td>
+<td>28 arquivos com <code>using LaboSys_UI.producao.XML.Class_Producao</code></td>
+</tr>
+<tr>
+<td>Código sem fonte</td>
+<td>Parte do funcionamento vem de bibliotecas do fornecedor só compiladas, sem o código-fonte (<code>Library_Ope_old</code>, 61 arquivos <code>.dll</code>)</td>
+<td><code>Library_Ope_old</code></td>
+</tr>
+<tr>
+<td>Testes automáticos</td>
+<td>4 testes, só de fórmulas</td>
+<td><code>HSolutions.GeradorXML.Test</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Ponto para validar:</strong> o projeto aponta para bibliotecas numa pasta de outra versão do fornecedor (<code>..\..\..\Projetos_RC-3.7.2\HSolutions.Principal\Library</code>), que não veio no código entregue. Pode ser que o módulo <strong>não compile</strong> só com o que foi entregue (<code>HSolutions.GeradorXML.UI.csproj</code>).</p>
+<h3 id="2-telas">2. Telas</h3>
+<p>Os títulos são os que aparecem no alto de cada tela.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>O que faz</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Gerador de OPE</strong> (lista)</td>
+<td>Lista os modelos por produto; busca por número, descrição ou produto</td>
+<td><code>Views/GerarXML/Index.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Gerador de OPE</strong> (cadastro)</td>
+<td>Cria o modelo de um produto (produto e descrição); lista as etapas; baixa, envia e imprime o modelo</td>
+<td><code>Views/GerarXML/Edit.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Upload</strong></td>
+<td>Envia um arquivo XML que <strong>substitui</strong> o modelo inteiro</td>
+<td><code>Views/GerarXML/Upload.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Imprimir</strong></td>
+<td>Imprime o modelo inteiro, uma etapa ou uma subetapa</td>
+<td><code>Views/GerarXML/Imprimir.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Configurar Etapa</strong></td>
+<td>Nome, ordem e subetapas da etapa</td>
+<td><code>Views/Etapa/Edit.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Configurar</strong> <em>(nome da subetapa)</em></td>
+<td>O centro do editor. Partes da tela: texto da instrução (editor de texto), campos, cálculos, funções de validação, parâmetros de entrada, anexos, ambientes, visualização</td>
+<td><code>Views/SubEtapa/Edit.cshtml</code> e 12 partes</td>
+</tr>
+<tr>
+<td><strong>Configurar Campos</strong></td>
+<td>Tipo, máscara, obrigatoriedade, tamanho, preenchimento automático e ligação com dados de outros cadastros</td>
+<td><code>Views/Campos/Edit.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Selecionar Insumos</strong></td>
+<td>Liga um campo a um insumo do produto</td>
+<td><code>Views/Campos/_Insumo.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Selecionar Permissões</strong></td>
+<td>Define <strong>qual função profissional assina</strong> cada campo</td>
+<td><code>Views/Shared/_Permissao.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Configurar Validações de mudança de Etapa/Subetapa</strong></td>
+<td>O controle em processo: o que precisa estar completo para avançar</td>
+<td><code>Views/Shared/_ControleProcesso.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Finalizar Produção</strong></td>
+<td>Quais campos dão a data final, a quantidade produzida e a unidade; marcações de OPE finalizada, reconciliada e liberada</td>
+<td><code>Views/FinalizarProducao/Edit.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Modelos</strong> e <strong>Modelo</strong></td>
+<td>Subetapas-padrão, reaproveitadas em vários produtos</td>
+<td><code>Views/Modelo/Index.cshtml</code>, <code>Edit.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Visualizar XML</strong></td>
+<td>Mostra a subetapa como o operador vai vê-la</td>
+<td><code>Views/VisualizarXML/Index.cshtml</code></td>
+</tr>
+<tr>
+<td><strong>Configurar Funções de Validação</strong></td>
+<td>Tela sem controlador: <strong>não abre</strong> (resto de versão anterior)</td>
+<td><code>Views/FuncoesValidacao/Edit.cshtml</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Menu:</strong> o menu próprio do módulo está <strong>comentado</strong>. A única entrada é "Módulos", que leva aos outros módulos (<code>Views/Shared/_Menu.cshtml:3</code>). O roteiro que cadastraria as funções e o menu no Principal também está todo comentado (<code>HSolutions.GeradorXML.DB/dml.sql:42-49</code>). A tela inicial redireciona direto para o Gerador de OPE (<code>Views/Principal/Inicio.cshtml</code>).</p>
+<p><em>Ponto para validar com a TI:</em> como o Gerador é aberto hoje e quais funções de acesso existem no banco do Principal.</p>
+<h3 id="3-o-caminho-do-modelo-do-gerador-a-producao">3. O caminho do modelo: do Gerador à Produção</h3>
+<ol>
+<li><strong>Criar:</strong> no Gerador de OPE, escolhe-se o produto e uma descrição. O modelo nasce com <strong>revisão "1"</strong> (<code>HSolutions.GeradorXML.ORM/Repository/GeradorXMLRepository.cs:224-239</code>).</li>
+<li><strong>Montar:</strong> etapas, subetapas, campos, cálculos, validações, assinaturas e o controle em processo, nas telas da seção 2.</li>
+<li><strong>Cada ajuste é gravado na hora</strong> e regrava o modelo inteiro no banco. Há 23 pontos no código que chamam essa gravação, um para cada tipo de ajuste (<code>SalvarGerador</code>, por exemplo em <code>Repository/EtapaRepository.cs:59</code> e <code>Repository/SubEtapaRepository.cs:340</code>). Não há rascunho, revisão nem aprovação.</li>
+<li><strong>Levar à Produção:</strong> o Gerador <strong>não envia</strong> o modelo à Produção. Pelo que o código mostra, o caminho é manual: baixar o arquivo no Gerador (<code>Controllers/GerarXMLController.cs:70-74</code>) e enviá-lo na tela <strong>Cadastro Ordem de Produção</strong> da Produção, que o guarda na ordem (fluxo 3 da Produção, RN024).</li>
+<li><strong>Usar:</strong> o Registro da Produção lê o modelo da ordem a cada abertura (fluxo 3 da Produção, RN025).</li>
+</ol>
+<p><strong>Correção num documento da Produção:</strong> a regra RN-PRO-104 (e RN027 do fluxo 3) diz que "não há tela para montar ou alterar o modelo". O Gerador de OPE é essa tela. A regra deve ser corrigida na próxima revisão dos documentos da Produção. Continua valendo que <strong>parte do comportamento</strong> de cada produto está programada em classes próprias (Glibenclamida, Diazepam), fora do modelo.</p>
+<h3 id="4-banco-de-dados">4. Banco de dados</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_GERADORXML_PRODUTO</code></td>
+<td>O modelo de cada produto: número, descrição, produto e o <strong>arquivo XML inteiro</strong></td>
+<td>Só 4 colunas. <strong>Sem versão, sem situação, sem quem criou ou alterou, sem datas, sem exclusão lógica</strong></td>
+<td><code>Scripts/TBL_GERADORXML_PRODUTO.sql:1-6</code>; dicionário, item 1.4.244</td>
+</tr>
+<tr>
+<td><code>PRD_MODELO_XML</code></td>
+<td>As subetapas-padrão (tela Modelos)</td>
+<td>Também guarda o XML inteiro</td>
+<td><code>Repository/ModeloRepository.cs:23</code></td>
+</tr>
+<tr>
+<td><code>TBL_PRODUTO</code>, <code>TBL_INSUMO_*</code>, <code>TBL_FUNCAO_PROFISSIONAL</code>, <code>TBL_AMBIENTE</code>, <code>TBL_EQUIPAMENTO</code>, <code>SIS_USUARIO</code></td>
+<td>Lidas para montar listas (produtos, insumos, quem assina, ambientes)</td>
+<td>Tabelas da Produção e do Principal</td>
+<td><code>HSolutions.GeradorXML.ORM/ORM/CodFirstContext.cs</code></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Sem histórico:</strong> as gravações do modelo usam as rotinas simples de incluir e alterar, que <strong>não gravam histórico</strong> (<code>HSolutions.GeradorXML.ORM/Infra/Repository.cs:54-82</code>). As rotinas com histórico existem no mesmo arquivo, mas o Gerador não as chama.</li>
+<li>O dicionário de dados confirma a estrutura de <code>TBL_GERADORXML_PRODUTO</code>, com a ligação ao produto. O mesmo roteiro está na Produção (<code>2.producao/app/ScriptBD/PROXIMA_VERSAO/SCRIPT_VERSAO_3_3_producao.sql</code>).</li>
+<li>A Produção usa a tabela para <strong>impedir a exclusão</strong> de um produto que tem modelo (<code>2.producao/app/LaboSys_DAL/dalProduto.cs:603, 638</code>).</li>
+</ul>
+<h3 id="5-integracoes-vistas-no-codigo">5. Integrações vistas no código</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Com</th>
+<th>O quê</th>
+<th>Como</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>O modelo do registro de lote</td>
+<td><strong>Manual</strong> (baixar no Gerador, enviar na ordem de produção). Mesmas classes de leitura e gravação, por cópia compilada</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Produtos, insumos, ambientes, equipamentos</td>
+<td>Leitura direta das tabelas</td>
+</tr>
+<tr>
+<td>Principal</td>
+<td>Usuários, funções profissionais, módulos e acesso</td>
+<td>Leitura direta das tabelas e serviço de permissões (<code>Service References/LMSPrincipalServicePermissao</code>)</td>
+</tr>
+<tr>
+<td>CQ</td>
+<td>Nenhuma ligação direta. O modelo só marca se a subetapa <strong>pede análise</strong> ao CQ (<code>PossuiSolicitacaoAnalise</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Garantia da Qualidade, Controle de Documentos</td>
+<td><strong>Nenhuma</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-primeiros-pontos-de-atencao">6. Primeiros pontos de atenção</h3>
+<p><strong>1. O modelo do registro de lote não tem versão nem aprovação.</strong>
+- A revisão é sempre "1", na criação, e nunca muda (<code>GeradorXMLRepository.cs:230</code>).
+- Cada ajuste regrava o modelo vigente na hora (seção 3, passo 3).
+- Não há elaborador, revisor, aprovador nem data de vigência.
+- Pela norma, a fórmula e as instruções de fabricação são documentos aprovados e controlados (RDC 658/2022, arts. 133 a 135), e a mudança só vale depois de aprovada (arts. 176 e 177; art. 8º, XII).</p>
+<p><strong>2. Nenhum histórico das alterações do modelo</strong> (seção 4). Não se sabe quem mudou um campo, um limite ou quem assina, nem quando (art. 125; Guia 33/2020, 11.7, gestão de mudanças e da configuração).</p>
+<p><strong>3. Envio de arquivo substitui o modelo inteiro.</strong> A tela Upload aceita um XML e regrava tudo, sem conferir se é do mesmo produto e sem guardar o anterior (<code>GeradorXMLRepository.cs:273-284</code>).
+- <em>Inferência, a confirmar no teste:</em> a leitura do arquivo enviado cria um espaço de um byte a mais (<code>Controllers/GerarXMLController.cs:81</code>). Isso pode fazer o envio falhar com a mensagem "Error".</p>
+<p><strong>4. O modelo em edição fica na sessão do usuário.</strong>
+- O Gerador guarda <strong>um</strong> modelo aberto por usuário (<code>HSolutions.GeradorXML.Base/BaseController.cs:20-31</code>), e cada gravação usa o número desse modelo.
+- <em>Inferência, a confirmar no teste:</em> com dois produtos abertos em duas abas, um ajuste feito na primeira aba pode ser gravado no modelo da segunda.
+- Duas pessoas editando o mesmo modelo: vale a última gravação, sem aviso.</p>
+<p><strong>5. O que o modelo decide pesa na norma.</strong> É no Gerador que se define:
+- quais campos são obrigatórios;
+- quem assina cada campo (função profissional);
+- o que o controle em processo exige para avançar;
+- que subetapas pedem análise ao CQ;
+- de onde vêm a data final e a quantidade produzida.</p>
+<p>Uma mudança aqui muda o registro de lote de <strong>todas</strong> as produções do produto, inclusive as que estão em andamento (fluxo 3 da Produção, RN025).</p>
+<p><strong>6. Limites de especificação.</strong> As funções de validação comparam <strong>dois campos</strong> entre si (números ou datas) ou uma data com a data do sistema (<code>2.producao/app/LaboSys_UI/producao/XML/Class_Producao/Enum.cs:37-79</code>; <code>ValidarSalvar.cs:1146</code>).
+- Não há campo próprio para o mínimo e o máximo da especificação.
+- <em>Ponto para validar:</em> se a área usa um campo fixo do modelo como limite. Isso refina a regra RN003 do fluxo 2 da Produção ("o modelo não tem limite de especificação por campo").</p>
+<h3 id="7-o-que-a-anvisa-cobra-do-gerador-para-as-proximas-etapas">7. O que a ANVISA cobra do Gerador (para as próximas etapas)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tema</th>
+<th>Referência</th>
+<th>Situação inicial pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fórmula e instruções aprovadas, por produto</td>
+<td>RDC 658/2022, arts. 133 a 135</td>
+<td>Não atende: sem aprovação</td>
+</tr>
+<tr>
+<td>Mudança só depois de aprovada</td>
+<td>Arts. 176 e 177; art. 8º, XII</td>
+<td>Não atende: alteração direta no vigente</td>
+</tr>
+<tr>
+<td>Documento com versão e revisão</td>
+<td>Arts. 119 e 121</td>
+<td>Não atende: revisão fixa em "1"</td>
+</tr>
+<tr>
+<td>Histórico das alterações</td>
+<td>Art. 125</td>
+<td>Não atende: sem histórico</td>
+</tr>
+<tr>
+<td>Gestão da configuração e das mudanças do sistema</td>
+<td>Guia 33/2020, 11.7</td>
+<td>Não atende: o modelo é configuração do sistema, sem controle</td>
+</tr>
+<tr>
+<td>Validação da configuração</td>
+<td>Guia 33/2020, 9.6</td>
+<td>A verificar: depende de procedimento fora do sistema</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-proximas-etapas-propostas">8. Próximas etapas propostas</h3>
+<p>O módulo é pequeno. Proposta: <strong>um fluxo só</strong>, "Montagem e manutenção do modelo do registro de lote", seguido do pacote de documentos (regras, permissões, segurança, conformidade, modelo de dados, risco, plano de testes, inventário).</p>
+<h3 id="perguntas-para-a-area">Perguntas para a área</h3>
+<ol>
+<li>O Gerador de OPE é usado hoje? Quem monta e quem altera os modelos?</li>
+<li>Existe um documento mestre aprovado (em papel ou no Controle de Documentos) para cada modelo de registro de lote?</li>
+<li>Como o modelo chega à ordem de produção: alguém baixa no Gerador e envia na Produção?</li>
+<li>Os limites de especificação (por exemplo, peso médio, dureza) são campos do modelo ou ficam na classe do produto?</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-telas">2. Telas</a></li><li><a href="#3-o-caminho-do-modelo-do-gerador-a-producao">3. O caminho do modelo: do Gerador à Produção</a></li><li><a href="#4-banco-de-dados">4. Banco de dados</a></li><li><a href="#5-integracoes-vistas-no-codigo">5. Integrações vistas no código</a></li><li><a href="#6-primeiros-pontos-de-atencao">6. Primeiros pontos de atenção</a></li><li><a href="#7-o-que-a-anvisa-cobra-do-gerador-para-as-proximas-etapas">7. O que a ANVISA cobra do Gerador (para as próximas etapas)</a></li><li><a href="#8-proximas-etapas-propostas">8. Próximas etapas propostas</a></li><li><a href="#perguntas-para-a-area">Perguntas para a área</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
