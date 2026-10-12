@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de permissões · Produção · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#b45309"><span class="icone">⚙</span>Produção</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="autorizacao-inicio-e-final-da-producao.html">Autorização, início e final da produção</a></li><li><a href="registro-de-lote.html">Registro de lote</a></li><li><a href="produto-formula-e-ordem-de-producao.html">Produto, fórmula e ordem de produção</a></li><li><a href="preparacao-limpeza-calibracao-qualificacao-manutencao-agua-e-ambiente.html">Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente</a></li><li><a href="terceirizacao-e-validade-da-ope.html">Terceirização e validade da OPE</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html" aria-current=page>Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Produção</a> › <span>Regras e uso</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Matriz de permissões</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · Extraída do código; nada testado ainda. Caminhos relativos a <code>2.producao/app/</code>.</p>
+<p>Este documento tem três partes:
+1. <strong>Como o acesso funciona no módulo</strong> (extraído do código).
+2. <strong>Matriz por grupo de telas:</strong> quem pode fazer o quê e o que a tela confere.
+3. <strong>Testes que esta matriz gera.</strong></p>
+<p><strong>Importante:</strong> <em>quem</em> tem <em>qual</em> perfil e <em>qual</em> função está cadastrado no banco do Principal, não no código. Para a matriz por pessoa, é preciso o relatório do Principal ou o DBA.</p>
+<hr />
+<h3 id="1-como-o-acesso-funciona">1. Como o acesso funciona</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Onde é cadastrada</th>
+<th>O que controla</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Ver a tela no menu</strong></td>
+<td>Principal: perfil × funções do sistema</td>
+<td>Quais telas aparecem no menu (roteiro do fornecedor)</td>
+<td><code>Hsolutions.Producao.DB/dml.sql:34721-34923</code></td>
+</tr>
+<tr>
+<td><strong>2. Abrir a tela</strong></td>
+<td>Principal: função da tela (<code>IdTela</code>)</td>
+<td>Quem não tem a função vai para "acesso negado"</td>
+<td><code>LaboSys_Util/BaseController.cs:39-41</code></td>
+</tr>
+<tr>
+<td><strong>3. Ações dentro da tela</strong></td>
+<td>Principal: funções filhas da tela</td>
+<td>Incluir, alterar, excluir, consultar, imprimir, consultar histórico, enviar e baixar arquivo, XML, apontar horas, confirmar, cancelar</td>
+<td><code>LaboSys_Util/ClassePaiLst.cs:59-70</code></td>
+</tr>
+<tr>
+<td><strong>4. Permissões especiais</strong></td>
+<td>Principal: permissões numeradas e funções próprias</td>
+<td>Aprovar lote padrão (19), autorizar o início da produção (28), cancelar a solicitação (29), liberar a análise do CQ no registro de lote (<code>LIBERAR_CONTROLE_QUALIDADECONFIRMAR</code>)</td>
+<td><code>LaboSys_DAL/dalUsuario.cs:1911-1922</code>; <code>LaboSys_UI/producao/XML/Class_Producao/Autenticacao.cs:76</code></td>
+</tr>
+<tr>
+<td><strong>5. Campos de assinatura do registro de lote</strong></td>
+<td>Principal: função profissional do usuário</td>
+<td>Quem pode assinar cada campo do modelo XML</td>
+<td><code>LaboSys_UI/producao/XML/Class_Producao/Autenticacao.cs:14-44</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Telas que dividem a mesma função</strong> (quem pode uma, pode as outras):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Função (<code>IdTela</code>)</th>
+<th>Telas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>484</td>
+<td>Final da Produção, Reconciliação da Produção, Liberação da Produção</td>
+</tr>
+<tr>
+<td>134</td>
+<td>Início da Produção, Consultar Log OPE, Manipulação de Horas, apontamento de horas, Solicitação Avulsa</td>
+</tr>
+<tr>
+<td>480</td>
+<td>Gerar Número de Lote, inclusive o cancelamento</td>
+</tr>
+<tr>
+<td>466</td>
+<td>Autorizar/Cancelar Produção</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-matriz-por-grupo-de-telas">2. Matriz por grupo de telas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Telas</th>
+<th>Quem pode, pelo código</th>
+<th>Outras condições</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Solicitação e autorização</td>
+<td>Solicitação de Autorizações; Autorizar/Cancelar Produção</td>
+<td>Função da tela; autorizar o início e cancelar a solicitação têm permissões próprias (28 e 29)</td>
+<td>Sem pendência para autorizar (fluxo 1, RN015)</td>
+</tr>
+<tr>
+<td>Autorizações das áreas</td>
+<td>7 telas de Autorização x Produção</td>
+<td>Função de cada tela</td>
+<td><strong>Não exige que quem autoriza seja da área</strong> (Estoque, CQ, GQ)</td>
+</tr>
+<tr>
+<td>Número de lote</td>
+<td>Gerar Número de Lote</td>
+<td>Função 480</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Registro de lote</td>
+<td>Início da Produção; Registro da Produção</td>
+<td>Função 134 para o Início; campos de assinatura pela função profissional</td>
+<td>Liberar a análise do CQ pede a função própria</td>
+</tr>
+<tr>
+<td>Final, reconciliação e liberação</td>
+<td>Final, Reconciliação, Liberação da Produção</td>
+<td><strong>Mesma função (484)</strong></td>
+<td>Quem finaliza também libera (fluxo 1, ponto 7)</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Produto, Lote Padrão, Ordem de Produção, Insumos e outros</td>
+<td>Função de cada tela</td>
+<td>Aprovar lote padrão: permissão 19 e não ser o elaborador (pelo nome)</td>
+</tr>
+<tr>
+<td>Preparação</td>
+<td>Programações e registros</td>
+<td>Função de cada tela</td>
+<td>Revisor diferente de quem registrou e executou</td>
+</tr>
+<tr>
+<td>Terceirização e validade</td>
+<td>Terceirização; Validade da OPE</td>
+<td>Funções próprias (<code>PRD_TERCEIRIZACAO_OP</code>, <code>PRD_VALIDADE_OPE</code>)</td>
+<td>Validade da OPE fora do menu</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- O módulo confere a função ao abrir cada tela, o que é o desenho certo.
+- Faltam funções separadas para decisões que a norma separa: quem produz, quem reconcilia, quem libera e quem autoriza por cada área.
+- Também falta exigir que a autorização de uma área seja dada por alguém dessa área.</p>
+<hr />
+<h3 id="3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRO-083</td>
+<td>Com um perfil sem a função da Autorização Garantia da Qualidade x Produção, abrir a tela pelo menu e pelo endereço</td>
+<td>Acesso negado</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-084</td>
+<td>Com um usuário da Produção (sem ser do CQ), autorizar na Autorização Controle de Qualidade x Produção</td>
+<td>Pela norma, só o CQ autoriza. <strong>Registrar se permitir</strong></td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-085</td>
+<td>Com o perfil que finaliza a produção, abrir a Liberação da Produção</td>
+<td>Pela norma, função separada. <strong>Registrar se abrir</strong></td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-PRO-086</td>
+<td>Com um perfil sem a permissão de aprovar lote padrão, tentar aprovar</td>
+<td>Recusa</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-087</td>
+<td>No registro de lote, assinar um campo com usuário sem a função profissional exigida</td>
+<td>"NÃO TEM PERMISSÃO."</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-PRO-088</td>
+<td>Liberar uma subetapa impeditiva com usuário sem a função "Liberar Controle Qualidade"</td>
+<td>"Usuário não tem perfil Liberar Controle Qualidade"</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Casos dos fluxos que também conferem esta matriz:</strong> CT-PRO-018 (quem finaliza libera), 026 (assinatura sem a função), 046 (elaborador aprova o lote padrão) e 078 (mesma pessoa pede e aprova a validade).</p>
+<h3 id="o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</h3>
+<ol>
+<li>A lista dos perfis reais com as funções da Produção e das pessoas em cada um, em especial as funções 466, 474, 480, 484 e as permissões 19, 28 e 29 (relatório do Principal ou consulta do DBA).</li>
+<li>Quem tem a função "Liberar Controle Qualidade".</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-como-o-acesso-funciona">1. Como o acesso funciona</a></li><li><a href="#2-matriz-por-grupo-de-telas">2. Matriz por grupo de telas</a></li><li><a href="#3-testes-que-esta-matriz-gera">3. Testes que esta matriz gera</a></li><li><a href="#o-que-falta-precisa-de-voce-ou-do-dba">O que falta (precisa de você ou do DBA)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

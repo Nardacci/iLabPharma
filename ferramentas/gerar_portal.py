@@ -135,6 +135,7 @@ MODULOS = [
          ("2.producao/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("2.producao/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
          ("2.producao/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
+         ("2.producao/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("2.producao/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("2.producao/fluxos/autorizacao-inicio-final.md", "Autorização, início e final da produção", "fluxos", "2.producao/fluxos/LabMedSys - Modulo Producao - Fluxo Autorizacao, Inicio e Final.docx"),
          ("2.producao/fluxos/registro-de-lote.md", "Registro de lote", "fluxos", "2.producao/fluxos/LabMedSys - Modulo Producao - Fluxo Registro de Lote.docx"),
