@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reconhecimento do módulo · Rastreabilidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#475569"><span class="icone">⟲</span>Rastreabilidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html" aria-current=page>Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="geracao-de-ium-e-agregacao.html">Geração de IUM e agregação</a></li><li><a href="eventos-e-declaracao-a-anvisa.html">Eventos e declaração à ANVISA</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Rastreabilidade</a> › <span>Comece por aqui</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Reconhecimento do módulo</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Base:</strong>
+- só o código (<code>8.rastreabilidade/app</code>);
+- o documento da equipe sobre a transmissão do IUM (<code>Documentação/processo de transmissão do IUM.txt</code> e <code>.jpg</code>);
+- os documentos já feitos da Produção, do Estoque e do Comercial.</p>
+<p>Nada foi testado nas telas. Caminhos relativos a <code>8.rastreabilidade/app/</code>.</p>
+<p><strong>Em uma frase:</strong> a Rastreabilidade gera o <strong>IUM</strong> (Identificador Único de Medicamento) de cada embalagem de um lote liberado, monta as <strong>agregações</strong> (caixas com várias embalagens) e registra os <strong>eventos</strong> de cada embalagem (produção, embalagem e transporte, entrega, recebimento, finalização, retificação) para declarar ao <strong>Sistema Nacional de Controle de Medicamentos (SNCM)</strong> da ANVISA.</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>O que o código mostra</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tecnologia</td>
+<td>ASP.NET MVC (telas <code>.cshtml</code>), Entity Framework, um microsserviço e um serviço do Windows</td>
+<td><code>HSolutions.Rastreabilidade.UI</code>, <code>.Microservice</code>, <code>.AnvisaWindowsService</code></td>
+</tr>
+<tr>
+<td>Tamanho</td>
+<td>Cerca de 14 mil linhas de código próprio, mais 770 de testes; 50 arquivos de tela</td>
+<td>Contagem por script</td>
+</tr>
+<tr>
+<td>Banco</td>
+<td>Banco próprio, 20 tabelas no projeto de banco</td>
+<td><code>Hsolutions.Rastreabilidade.DB/dbo/Tables</code></td>
+</tr>
+<tr>
+<td>Módulo no Principal</td>
+<td>Número 14</td>
+<td><code>Hsolutions.Rastreabilidade.DB/dml.sql:6</code></td>
+</tr>
+<tr>
+<td>Código sem fonte</td>
+<td>Bibliotecas do fornecedor só compiladas (<code>Library_Rastreabilidade_old</code>, 84 arquivos), entre elas o controlador-base das telas</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-telas-por-grupo-do-menu">2. Telas por grupo do menu</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Itens</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cadastros</td>
+<td>Geração de IUM, Pesquisa de IUM, Agregação</td>
+<td><code>Hsolutions.Rastreabilidade.DB/dml.sql:34-37</code></td>
+</tr>
+<tr>
+<td>Eventos</td>
+<td>Eventos (lista), Evento Produção, Evento Embalagem Transporte, Evento Entrega, Evento Recebimento, Evento Finalização</td>
+<td>linhas 39-45</td>
+</tr>
+<tr>
+<td>Configuração e Tabelas de apoio</td>
+<td>Grupos <strong>vazios</strong>: o único item (Grupo Perfil) está comentado</td>
+<td>linhas 33, 48-49</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>9 itens ativos.</strong> Fora do menu: a retificação de eventos (aberta pela lista de eventos), a linha do tempo de cada IUM e as impressões (etiqueta do IUM, agregação).</p>
+<h3 id="3-o-caminho-do-ium-pelo-codigo">3. O caminho do IUM (pelo código)</h3>
+<ol>
+<li><strong>Gerar o IUM.</strong> O usuário busca o produto e escolhe uma <strong>produção liberada</strong>: a lista vem da Produção e só traz produções na situação "liberada" (<code>2.producao/app/LaboSys_UI/Api/ConsultarProdutoController.cs:66-90</code>). Lote, validade, registro e GTIN vêm dessa produção. O usuário informa a <strong>quantidade</strong> de IUM (<code>HSolutions.Rastreabilidade.UI/Controllers/IUMController.cs:160-209</code>).</li>
+<li>Cada IUM recebe um <strong>número de série sorteado</strong> de 13 dígitos (<code>HSolutions.Rastreabilidade.Domain.Services/IUMService.cs:137-160</code>) e nasce "aguardando uso". A etiqueta é impressa.</li>
+<li><strong>Agregação:</strong> os IUM são agrupados em caixas, e caixas em caixas maiores. Um IUM ou uma caixa não pode estar em duas agregações (<code>HSolutions.Rastreabilidade.UI/Controllers/AgregacaoController.cs:185-233</code>).</li>
+<li><strong>Eventos:</strong> produção, embalagem e transporte, entrega, recebimento e finalização, por IUM ou por agregação. A <strong>retificação</strong> corrige um evento já enviado.</li>
+<li><strong>Envio à ANVISA:</strong> cada evento é montado em XML e enviado ao microsserviço da Rastreabilidade, que deveria transmiti-lo ao SNCM.</li>
+<li>O <strong>Estoque</strong> também envia eventos de entrega e recebimento pela sua tela de evento ANVISA, a partir da remessa (<code>3.estoque/app/LaboSys_BLL/bllEventoAnvisa.cs:156-354</code>).</li>
+</ol>
+<h3 id="4-banco-de-dados">4. Banco de dados</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Tabelas</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IUM</td>
+<td><code>TBL_DETALHE_IUM</code> (o pedido de geração: produto, produção, lote, validade, registro, GTIN, quantidade), <code>TBL_IUM</code> (cada IUM, com o número de série)</td>
+<td>O número de série <strong>não tem índice único</strong> (<code>Hsolutions.Rastreabilidade.DB/dbo/Tables/TBL_IUM.sql</code>)</td>
+</tr>
+<tr>
+<td>Agregação</td>
+<td><code>TBL_AGREGACAO</code> e as ligações com os eventos</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Eventos</td>
+<td><code>TBL_EVENTO_PRODUCAO</code>, <code>_EMBALAGEM_TRANSPORTE</code>, <code>_ENTREGA</code>, <code>_RECEBIMENTO</code>, <code>_FINALIZACAO</code>, <code>_RETIFICACAO</code>, e as ligações por IUM e por agregação</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Histórico</td>
+<td><code>TBL_EVENT_TIMELINE</code>, <code>TBL_IUM_EVENT_TIMELINE</code></td>
+<td>Linha do tempo de cada IUM</td>
+</tr>
+<tr>
+<td>Envio</td>
+<td><code>TBL_REGISTRO_ENVIO</code> (XML enviado e situação do envio)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Outras</td>
+<td><code>TBL_EQUIPAMENTO</code></td>
+<td><em>A confirmar:</em> uso</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-integracoes-vistas-no-codigo">5. Integrações vistas no código</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Com</th>
+<th>O quê</th>
+<th>Como</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produção</td>
+<td>Produções <strong>liberadas</strong>, com lote, validade, registro e GTIN, para gerar o IUM</td>
+<td>API (<code>HSolutions.Rastreabilidade.Services/Producao/ProdutoService.cs:23-29</code>)</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Eventos de entrega e recebimento a partir da remessa; conferência de que os IUM existem</td>
+<td>Microsserviço da Rastreabilidade, chamado pelo Estoque</td>
+</tr>
+<tr>
+<td>Principal</td>
+<td>Usuários, pessoas jurídicas (remetente, destinatário, transportadora)</td>
+<td>API</td>
+</tr>
+<tr>
+<td><strong>ANVISA (SNCM)</strong></td>
+<td>Declaração dos eventos</td>
+<td><strong>Simulada</strong> (ponto 1)</td>
+</tr>
+<tr>
+<td>Comercial, GQ, CQ</td>
+<td><strong>Nenhuma</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-primeiros-pontos-de-atencao">6. Primeiros pontos de atenção</h3>
+<p><strong>1. Nada é enviado à ANVISA: o envio é uma simulação.</strong>
+- A rotina que deveria transmitir ao SNCM <strong>sempre devolve "erro de conexão"</strong>, com o comentário "Simulando problema de Conexão com a Anvisa" (<code>HSolutions.Rastreabilidade.Domain.Services/AnvisaHelper.cs:48-60</code>).
+- Em seguida, o XML vai para uma <strong>fila de mensagens</strong> (linhas 64-78). O serviço do Windows que deveria ler a fila e enviar é um <strong>esqueleto</strong>, com um único controlador de teste (<code>HSolutions.Rastreabilidade.AnvisaWindowsService/Controllers/TesteController.cs</code>).
+- Não há certificado digital, assinatura do XML nem endereço do serviço da ANVISA no código. O documento da equipe lembra que a transmissão exige XML assinado com certificado digital (e-CNPJ) e devolve um protocolo.</p>
+<p><strong>2. A tela diz "envio efetuado com sucesso" mesmo sem enviar.</strong>
+- Nos seis tipos de evento, a tela marca o evento como <strong>"Enviado"</strong> e mostra "envio efetuado com sucesso" sempre que a chamada ao microsserviço não dá erro. <strong>A resposta não é lida</strong> (<code>HSolutions.Rastreabilidade.UI/Controllers/EventoController.cs:257-262</code>, e o mesmo nas linhas 502, 697, 1181, 1588 e 1795).
+- O Estoque faz o mesmo nos eventos que envia (<code>3.estoque/app/LaboSys_BLL/bllEventoAnvisa.cs:156, 421-428</code>).
+- Os IUM são marcados como "enviado evento…" <strong>antes</strong> da tentativa de envio (por exemplo, <code>EventoController.cs:230-246</code>). Se o envio falhar, o IUM continua marcado como enviado. <em>A confirmar no teste.</em></p>
+<p><strong>3. O número de série pode se repetir.</strong> É sorteado, e a conferência de repetição vale só dentro da mesma geração (<code>IUMService.cs:153-156</code>). Não há conferência contra os IUM já gravados nem índice único no banco.</p>
+<p><strong>4. Pode-se gerar mais IUM do que o lote produziu.</strong> A quantidade é digitada; a validação só exige que seja maior que zero (<code>HSolutions.Rastreabilidade.Domain.Services/Validators/IUMValidator.cs:25-28</code>). A Produção envia a quantidade do lote, mas ela não é usada como limite.</p>
+<p><strong>5. O IUM não acompanha a situação do lote.</strong> A geração exige produção "liberada" na Produção, mas essa liberação pode ser feita por quem finalizou a produção e não chega ao Estoque (Produção, fluxo 1). Depois de gerado, um bloqueio, desvio ou recolhimento do lote <strong>não muda</strong> o IUM nem impede os eventos.</p>
+<p><strong>6. Dados do lote passam pelo navegador.</strong> Lote, validade, registro e GTIN vêm da Produção, mas são devolvidos pela tela na gravação, em vez de relidos da Produção (<code>IUMController.cs:168-173</code>).</p>
+<p><strong>7. Duas telas de evento.</strong> O Estoque tem a sua tela de evento ANVISA, com entrega e recebimento, e a Rastreabilidade tem as suas. <em>Para a visão entre módulos: funções repetidas.</em></p>
+<h3 id="7-o-que-a-norma-cobra-da-rastreabilidade-para-as-proximas-etapas">7. O que a norma cobra da Rastreabilidade (para as próximas etapas)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tema</th>
+<th>Referência</th>
+<th>Situação inicial pelo código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Declarar os eventos do IUM ao SNCM</td>
+<td>Lei 11.903/2009 e regulamentação do SNCM (o documento da equipe cita a RDC 886/2024)</td>
+<td>Não atende: envio simulado</td>
+</tr>
+<tr>
+<td>Identificação única de cada embalagem</td>
+<td>Idem</td>
+<td>Parcial: série sorteada sem garantia de unicidade</td>
+</tr>
+<tr>
+<td>Integridade dos registros (histórico, assinatura, situação real)</td>
+<td>RDC 658/2022, arts. 124 e 125; Guia 33/2020, 9.3.2.3</td>
+<td>Não atende: "enviado" sem envio</td>
+</tr>
+<tr>
+<td>Recolhimento pelo IUM</td>
+<td>RDC 658/2022, arts. 345 a 347</td>
+<td>A verificar: depende dos eventos de entrega</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>A validar com Assuntos Regulatórios:</em> qual é a norma do SNCM em vigor e os prazos que valem para a empresa. Esta análise não confirma a RDC 886/2024; apenas registra que o documento da equipe a cita.</p>
+<h3 id="8-fluxos-propostos-para-as-proximas-etapas">8. Fluxos propostos para as próximas etapas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Fluxo</th>
+<th>Telas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Geração de IUM e agregação</strong></td>
+<td>Geração de IUM, Pesquisa de IUM, Agregação, etiquetas</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Eventos e declaração à ANVISA</strong> (inclui a retificação e os eventos do Estoque)</td>
+<td>Eventos, Evento Produção, Embalagem Transporte, Entrega, Recebimento, Finalização, retificação, linha do tempo</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="perguntas-para-a-area">Perguntas para a área</h3>
+<ol>
+<li>A Rastreabilidade é usada hoje? A empresa já serializa os medicamentos?</li>
+<li>A empresa tem o certificado digital e o acesso ao serviço do SNCM?</li>
+<li>Quem confere se um evento foi aceito pela ANVISA e onde fica o protocolo?</li>
+<li>Quem gera os IUM e como se garante que a quantidade bate com o lote embalado?</li>
+<li>Os eventos de entrega são feitos na Rastreabilidade ou no Estoque?</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-telas-por-grupo-do-menu">2. Telas por grupo do menu</a></li><li><a href="#3-o-caminho-do-ium-pelo-codigo">3. O caminho do IUM (pelo código)</a></li><li><a href="#4-banco-de-dados">4. Banco de dados</a></li><li><a href="#5-integracoes-vistas-no-codigo">5. Integrações vistas no código</a></li><li><a href="#6-primeiros-pontos-de-atencao">6. Primeiros pontos de atenção</a></li><li><a href="#7-o-que-a-norma-cobra-da-rastreabilidade-para-as-proximas-etapas">7. O que a norma cobra da Rastreabilidade (para as próximas etapas)</a></li><li><a href="#8-fluxos-propostos-para-as-proximas-etapas">8. Fluxos propostos para as próximas etapas</a></li><li><a href="#perguntas-para-a-area">Perguntas para a área</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
