@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Rastreabilidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#475569"><span class="icone">⟲</span>Rastreabilidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="a-rastreabilidade-ideal.html">A Rastreabilidade ideal</a></li><li><a href="a-rastreabilidade-entre-os-modulos-as-travas.html">A Rastreabilidade entre os módulos: as travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="geracao-de-ium-e-agregacao.html">Geração de IUM e agregação</a></li><li><a href="eventos-e-declaracao-a-anvisa.html">Eventos e declaração à ANVISA</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria-sncm-e-rdc-658-2022.html">Conformidade regulatória (SNCM e RDC 658/2022)</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Rastreabilidade</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Para quem:</strong> desenvolvedores e DBA.</p>
+<p><strong>Base:</strong>
+- os roteiros do projeto de banco (<code>8.rastreabilidade/app/Hsolutions.Rastreabilidade.DB/dbo/Tables</code>, 20 arquivos);
+- o mapeamento das tabelas no código (<code>HSolutions.Rastreabilidade.Context</code>);
+- o dicionário de dados (<code>Dicionário-LABMEDSYS.pdf</code>);
+- os dois fluxos.</p>
+<p>Comparação feita por script: roteiros × código × dicionário.</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas nos roteiros</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Tabelas mapeadas no código</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Chaves estrangeiras declaradas nos roteiros</td>
+<td>19</td>
+</tr>
+<tr>
+<td>Tabelas com <strong>outro nome</strong> no código e no dicionário</td>
+<td>1 (<code>TBL_EQUIPAMENTO</code> → <code>TBL_EQUIPAMENTO_RASTREA</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrão das tabelas:</strong> chave numérica; <code>ATIVO</code> e <code>LIXEIRA</code>; quem criou, alterou e excluiu, com as datas.</p>
+<h3 id="2-ium-e-agregacao">2. IUM e agregação</h3>
+<p><code>mermaid
+erDiagram
+  TBL_DETALHE_IUM ||--o{ TBL_IUM : "gera"
+  TBL_AGREGACAO ||--o{ TBL_IUM : "contém"
+  TBL_AGREGACAO ||--o{ TBL_AGREGACAO : "caixa dentro de caixa"
+  TBL_IUM ||--o{ TBL_IUM_EVENT_TIMELINE : "linha do tempo"
+  TBL_EVENT_TIMELINE ||--o{ TBL_IUM_EVENT_TIMELINE : "situação"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_DETALHE_IUM</code></td>
+<td>Cada geração: produto, <strong>produção</strong>, lote, validade, registro, GTIN, quantidade e os textos da etiqueta</td>
+<td>Os dados do lote vêm do navegador, não são relidos da Produção</td>
+</tr>
+<tr>
+<td><code>TBL_IUM</code></td>
+<td>Cada embalagem: número do IUM, <strong>número de série</strong>, situação, agregação</td>
+<td>Número de série <strong>sem índice único</strong> (<code>TBL_IUM.sql</code>)</td>
+</tr>
+<tr>
+<td><code>TBL_AGREGACAO</code></td>
+<td>Caixa: código, número de série da caixa, situação, caixa-mãe</td>
+<td>Código com prefixo GS1 de exemplo</td>
+</tr>
+<tr>
+<td><code>TBL_EVENT_TIMELINE</code>, <code>TBL_IUM_EVENT_TIMELINE</code></td>
+<td>Linha do tempo de cada IUM</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-eventos">3. Eventos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_EVENTO_PRODUCAO</code>, <code>_EMBALAGEM_TRANSPORTE</code>, <code>_ENTREGA</code>, <code>_RECEBIMENTO</code>, <code>_FINALIZACAO</code></td>
+<td>Cada evento: tipo, situação, remetente, destinatário, transportadora (com os dados copiados)</td>
+<td>A situação "Enviado" é gravada sem envio real</td>
+</tr>
+<tr>
+<td><code>TBL_IUM_EVENTO_*</code>, <code>TBL_AGREGACAO_EVENTO_*</code></td>
+<td>Que IUM e que caixas estão em cada evento</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TBL_EVENTO_RETIFICACAO</code></td>
+<td>Tipo (invalidade ou substituição), motivo, evento substituído e o que o substituiu</td>
+<td>Motivo não obrigatório</td>
+</tr>
+<tr>
+<td><code>TBL_REGISTRO_ENVIO</code></td>
+<td>O XML de cada tentativa e a situação do envio</td>
+<td>A situação <strong>não é gravada</strong></td>
+</tr>
+<tr>
+<td><code>TBL_EQUIPAMENTO_RASTREA</code> <em>(roteiros: <code>TBL_EQUIPAMENTO</code>)</em></td>
+<td>Equipamentos</td>
+<td><em>A confirmar:</em> uso</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-integracoes">4. Integrações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Origem</th>
+<th>Como chega</th>
+<th>Onde fica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Produções liberadas, com lote, validade, registro, GTIN e quantidade</td>
+<td>Produção</td>
+<td>API (<code>GetProdutosPorDescricaoParaGeracaoIUM</code>)</td>
+<td><code>TBL_DETALHE_IUM</code></td>
+</tr>
+<tr>
+<td>Eventos de entrega e recebimento</td>
+<td>Estoque</td>
+<td>Microsserviço da Rastreabilidade</td>
+<td>Tabelas de evento</td>
+</tr>
+<tr>
+<td>Pessoas jurídicas (remetente, destinatário, transportadora)</td>
+<td>Principal</td>
+<td>API</td>
+<td>Copiadas no evento</td>
+</tr>
+<tr>
+<td>Declaração dos eventos</td>
+<td>Rastreabilidade → ANVISA</td>
+<td><strong>Simulada</strong>; fila de mensagens sem leitor</td>
+<td><code>TBL_REGISTRO_ENVIO</code></td>
+</tr>
+<tr>
+<td>Venda (Comercial), situação do lote (Estoque), recolhimento (GQ)</td>
+<td>—</td>
+<td><strong>Nenhuma</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-desencontros-entre-o-codigo-os-roteiros-e-o-dicionario">5. Desencontros entre o código, os roteiros e o dicionário</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Desencontro</th>
+<th>Detalhe</th>
+<th>Leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 tabela com outro nome</strong></td>
+<td>O código e o dicionário usam <code>TBL_EQUIPAMENTO_RASTREA</code>; os roteiros criam <code>TBL_EQUIPAMENTO</code></td>
+<td>Mesmo padrão dos outros módulos: os roteiros estão desatualizados</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-anomalias-de-estrutura-para-a-nova-versao">6. Anomalias de estrutura (para a nova versão)</h3>
+<ol>
+<li><strong>Número de série sem garantia de unicidade</strong> no banco.</li>
+<li><strong>IUM sem ligação forte com o lote:</strong> os dados do lote são copiados como texto, sem ligação com a situação do lote no Estoque.</li>
+<li><strong>Situação de envio sem prova:</strong> não há protocolo da ANVISA nem situação gravada no registro de envios.</li>
+<li><strong>Evento sem ligação com a venda:</strong> o destinatário é copiado do Principal, sem ligação com a fatura do Comercial.</li>
+<li><strong>Eventos repetidos com o Estoque:</strong> o Estoque tem a sua própria tela e as suas tabelas de evento ANVISA.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-ium-e-agregacao">2. IUM e agregação</a></li><li><a href="#3-eventos">3. Eventos</a></li><li><a href="#4-integracoes">4. Integrações</a></li><li><a href="#5-desencontros-entre-o-codigo-os-roteiros-e-o-dicionario">5. Desencontros entre o código, os roteiros e o dicionário</a></li><li><a href="#6-anomalias-de-estrutura-para-a-nova-versao">6. Anomalias de estrutura (para a nova versão)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

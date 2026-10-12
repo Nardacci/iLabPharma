@@ -217,10 +217,19 @@ MODULOS = [
          ("7.comercial/fluxos/cotacao-requisicao-reserva.md", "Cotação, requisição de PA e reserva no Estoque", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Cotacao, Requisicao e Reserva.docx"),
          ("7.comercial/fluxos/fatura-remessa-cancelamento.md", "Fatura, remessa e cancelamento", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Fatura, Remessa e Cancelamento.docx"),
      ]},
-    {"id": "rastreabilidade", "nome": "Rastreabilidade", "icone": "⟲", "cor": "#475569", "situacao": "Fluxos prontos", "nivel": 2,
-     "resumo": "Gera o IUM (Identificador Único de Medicamento) de cada embalagem de um lote liberado, monta as agregações e registra os eventos para o Sistema Nacional de Controle de Medicamentos (SNCM) da ANVISA. Reconhecimento feito: o envio à ANVISA é simulado no código, e a tela diz que o envio foi feito com sucesso sem ler a resposta; o número de série pode se repetir; a quantidade de IUM não é limitada ao lote. Fluxos prontos: geração de IUM e agregação (a etiqueta traz dados de outra empresa fixados no código, e o código das caixas usa um prefixo de exemplo); eventos e declaração à ANVISA (a ordem dos eventos não é conferida, e nenhum evento se liga à venda nem à situação do lote).",
+    {"id": "rastreabilidade", "nome": "Rastreabilidade", "icone": "⟲", "cor": "#475569", "situacao": "Pronto para testes", "nivel": 2,
+     "resumo": "Gera o IUM (Identificador Único de Medicamento) de cada embalagem de um lote liberado, monta as agregações e registra os eventos para o Sistema Nacional de Controle de Medicamentos (SNCM) da ANVISA. Reconhecimento feito: o envio à ANVISA é simulado no código, e a tela diz que o envio foi feito com sucesso sem ler a resposta; o número de série pode se repetir; a quantidade de IUM não é limitada ao lote. Fluxos prontos: geração de IUM e agregação (a etiqueta traz dados de outra empresa fixados no código, e o código das caixas usa um prefixo de exemplo); eventos e declaração à ANVISA (a ordem dos eventos não é conferida, e nenhum evento se liga à venda nem à situação do lote). Análise pelo código concluída: 42 regras, 15 telas, conformidade (8 temas: nenhum atendido, 3 em parte, 5 não atendidos), 16 riscos (12 de prioridade alta) e plano de testes com 33 casos. O ideal: IUM só para lote certificado pela Pessoa Delegada, e um evento só vale como enviado com o protocolo da ANVISA.",
      "docs": [
          ("8.rastreabilidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+         ("8.rastreabilidade/ideal/ras-ideal.md", "A Rastreabilidade ideal", "ideal", "8.rastreabilidade/ideal/LabMedSys - Modulo Rastreabilidade - O Ideal.docx"),
+         ("8.rastreabilidade/ideal/ras-entre-modulos.md", "A Rastreabilidade entre os módulos: as travas", "ideal", "8.rastreabilidade/ideal/LabMedSys - Modulo Rastreabilidade - Entre os Modulos.docx"),
+         ("8.rastreabilidade/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
+         ("8.rastreabilidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
+         ("8.rastreabilidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
+         ("8.rastreabilidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
+         ("8.rastreabilidade/04-conformidade-regulatoria.md", "Conformidade regulatória (SNCM e RDC 658/2022)", "qualidade", None),
+         ("8.rastreabilidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
+         ("8.rastreabilidade/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("8.rastreabilidade/fluxos/geracao-ium-agregacao.md", "Geração de IUM e agregação", "fluxos", "8.rastreabilidade/fluxos/LabMedSys - Modulo Rastreabilidade - Fluxo Geracao de IUM e Agregacao.docx"),
          ("8.rastreabilidade/fluxos/eventos-declaracao-anvisa.md", "Eventos e declaração à ANVISA", "fluxos", "8.rastreabilidade/fluxos/LabMedSys - Modulo Rastreabilidade - Fluxo Eventos e Declaracao a ANVISA.docx"),
      ]},
@@ -765,6 +774,7 @@ FONTES_ANVISA = {
     "producao": [("2.producao/04-conformidade-regulatoria.md", "2.producao/04-conformidade-normas.json", None)],
     "ope": [("9.ope/04-conformidade-regulatoria.md", "9.ope/04-conformidade-normas.json", None)],
     "comercial": [("7.comercial/04-conformidade-regulatoria.md", "7.comercial/04-conformidade-normas.json", None)],
+    "rastreabilidade": [("8.rastreabilidade/04-conformidade-regulatoria.md", "8.rastreabilidade/04-conformidade-normas.json", None)],
 }
 # Detalhe da situação que toca acesso, senha ou login não é publicado: fica só o selo.
 RE_DETALHE_RESTRITO = re.compile(r"permiss|senha|login|acesso|autoriza|perfil|endere[çc]o", re.I)

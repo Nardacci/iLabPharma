@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise de risco · Rastreabilidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#475569"><span class="icone">⟲</span>Rastreabilidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="a-rastreabilidade-ideal.html">A Rastreabilidade ideal</a></li><li><a href="a-rastreabilidade-entre-os-modulos-as-travas.html">A Rastreabilidade entre os módulos: as travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="geracao-de-ium-e-agregacao.html">Geração de IUM e agregação</a></li><li><a href="eventos-e-declaracao-a-anvisa.html">Eventos e declaração à ANVISA</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-regulatoria-sncm-e-rdc-658-2022.html">Conformidade regulatória (SNCM e RDC 658/2022)</a></li><li><a href="analise-de-risco.html" aria-current=page>Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Rastreabilidade</a> › <span>Qualidade e ANVISA</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Análise de risco</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Para quem:</strong> Garantia da Qualidade, Assuntos Regulatórios e equipe de homologação.</p>
+<p><strong>Método:</strong> Guia nº 33/2020 da ANVISA, item 6 (gerenciamento do risco à qualidade, com base no ICH Q9 e no GAMP 5), com as mesmas escalas dos outros módulos.</p>
+<p><strong>Data:</strong> 12/10/2026 · <strong>Situação:</strong> rascunho para revisão pela Garantia da Qualidade.</p>
+<p><strong>Base:</strong> as notas são uma proposta inicial, tiradas de:
+- o código;
+- as regras (<code>01-regras-de-negocio.md</code>);
+- a conformidade (<code>04-conformidade-regulatoria.md</code>);
+- os dois fluxos;
+- a matriz de permissões (<code>02-matriz-de-permissoes.md</code>).</p>
+<p>A classe e a prioridade foram calculadas por script, pela escala abaixo.</p>
+<h3 id="para-que-serve">Para que serve</h3>
+<p>Define <strong>o que testar primeiro e com que profundidade</strong> e a ordem das correções na nova versão.</p>
+<hr />
+<h3 id="etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Resposta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O sistema é regulado pelas Boas Práticas de Fabricação?</td>
+<td><strong>Sim, e também pela regulamentação do SNCM.</strong> O módulo identifica cada embalagem e declara a movimentação dela à ANVISA.</td>
+</tr>
+<tr>
+<td>Categoria GAMP 5</td>
+<td><strong>5</strong>: aplicação customizada.</td>
+</tr>
+<tr>
+<td>Impacto do módulo</td>
+<td><strong>Alto:</strong> sem a declaração, a empresa descumpre a obrigação do SNCM; sem o IUM correto, o recolhimento por embalagem não funciona.</td>
+</tr>
+<tr>
+<td>Particularidade</td>
+<td>A função principal (declarar à ANVISA) <strong>não está construída</strong>, mas as telas dizem que está.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conclusão:</strong> é necessária a avaliação funcional detalhada (etapas 2 e 3).</p>
+<h3 id="escalas-usadas">Escalas usadas</h3>
+<p>Iguais às do Principal (<code>1.principal/07-analise-de-risco.md</code>):
+- <strong>Severidade (S)</strong> e <strong>Probabilidade (P):</strong> Alta, Média ou Baixa.
+- <strong>Detecção (D):</strong> Baixa quando ninguém nota, Alta quando se percebe na hora.</p>
+<p><strong>Classe</strong> = S × P:
+- <strong>Classe 1:</strong> Alta × Alta, Alta × Média ou Média × Alta.
+- <strong>Classe 2:</strong> Alta × Baixa, Média × Média ou Baixa × Alta.
+- <strong>Classe 3:</strong> as demais combinações.</p>
+<p><strong>Prioridade</strong> = Classe × D:
+- <strong>Classe 1:</strong> Alta; passa a Média se D for Alta.
+- <strong>Classe 2:</strong> Alta, Média ou Baixa, conforme D seja Baixa, Média ou Alta.
+- <strong>Classe 3:</strong> Média só com D Baixa; nos outros casos, Baixa.</p>
+<hr />
+<h3 id="etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</h3>
+<h4 id="declaracao-a-anvisa">Declaração à ANVISA</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-RAS-01</td>
+<td>Declaração ao SNCM</td>
+<td>Nenhum evento chega à ANVISA; a empresa descumpre a obrigação sem saber</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Envio simulado</td>
+<td>Envio real, assinado com certificado digital, com o protocolo da ANVISA guardado</td>
+<td>Fluxo 2, ponto 1; <code>04</code>, tema 1</td>
+</tr>
+<tr>
+<td>R-RAS-02</td>
+<td>Integridade do registro</td>
+<td>Evento e IUM marcados como enviados sem envio</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Resposta não lida</td>
+<td>Situação gravada só com o protocolo; falha visível e reenvio controlado</td>
+<td>Fluxo 2, pontos 2 e 3; <code>04</code>, tema 4</td>
+</tr>
+<tr>
+<td>R-RAS-03</td>
+<td>Ordem dos eventos</td>
+<td>Entrega ou finalização de IUM sem produção declarada</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Conferir a sequência de eventos antes de gravar</td>
+<td>Fluxo 2, ponto 4</td>
+</tr>
+<tr>
+<td>R-RAS-04</td>
+<td>Registro de envios</td>
+<td>Não se sabe quais envios falharam</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Situação não gravada</td>
+<td>Registro com situação, protocolo e reenvio</td>
+<td>Fluxo 2, RN014</td>
+</tr>
+<tr>
+<td>R-RAS-05</td>
+<td>Gravação dupla</td>
+<td>Entregas e recebimentos gravados duas vezes</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Nenhum</td>
+<td>Uma só gravação, no serviço</td>
+<td>Fluxo 2, RN015</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="ium-e-agregacao">IUM e agregação</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-RAS-06</td>
+<td>Número de série</td>
+<td>Dois IUM com o mesmo número</td>
+<td>Alta</td>
+<td>Baixa</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Conferência só dentro da geração</td>
+<td>Série única garantida pelo banco</td>
+<td>Fluxo 1, ponto 1</td>
+</tr>
+<tr>
+<td>R-RAS-07</td>
+<td>Quantidade</td>
+<td>Mais IUM do que embalagens; geração repetida para o mesmo lote</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Quantidade limitada ao lote embalado; aviso de geração anterior</td>
+<td>Fluxo 1, ponto 2</td>
+</tr>
+<tr>
+<td>R-RAS-08</td>
+<td>Lote certificado</td>
+<td>IUM e eventos de lote não certificado, bloqueado ou recolhido</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Exige produção liberada na Produção</td>
+<td>Situação única do lote consultada na geração e em cada evento</td>
+<td>Fluxo 1, ponto 3; fluxo 2, ponto 6</td>
+</tr>
+<tr>
+<td>R-RAS-09</td>
+<td>Etiqueta</td>
+<td>Embalagem com endereço, CNPJ, farmacêutico e SAC de outra empresa</td>
+<td>Alta</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Dados fixados no código</td>
+<td>Dados do cadastro da empresa e do responsável técnico</td>
+<td>Fluxo 1, ponto 4; <code>04</code>, tema 8</td>
+</tr>
+<tr>
+<td>R-RAS-10</td>
+<td>Código da caixa</td>
+<td>Códigos de caixa com prefixo de exemplo</td>
+<td>Média</td>
+<td>Alta</td>
+<td>Média</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Prefixo fixado no código</td>
+<td>Prefixo GS1 da empresa, configurável</td>
+<td>Fluxo 1, ponto 5</td>
+</tr>
+<tr>
+<td>R-RAS-11</td>
+<td>Formato do IUM</td>
+<td>Formato do número fora do padrão do SNCM</td>
+<td>Média</td>
+<td>Média</td>
+<td>Alta</td>
+<td>2</td>
+<td><strong>Baixa</strong></td>
+<td>Junção sem separadores</td>
+<td>Formato validado com Assuntos Regulatórios</td>
+<td>Fluxo 1, ponto 7</td>
+</tr>
+<tr>
+<td>R-RAS-12</td>
+<td>Agregação</td>
+<td>Caixa já expedida desmontada; registro deixa de bater com o que saiu</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Nenhum</td>
+<td>Desfazer bloqueado depois de evento; motivo obrigatório</td>
+<td>Fluxo 1, ponto 6</td>
+</tr>
+<tr>
+<td>R-RAS-13</td>
+<td>IUM externo</td>
+<td>Consulta cria IUM falso na finalização</td>
+<td>Média</td>
+<td>Média</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Nenhum</td>
+<td>Consulta não grava; IUM externo por função própria</td>
+<td>Fluxo 2, ponto 5</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="distribuicao-e-correcao">Distribuição e correção</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Função</th>
+<th>Perigo</th>
+<th>S</th>
+<th>P</th>
+<th>D</th>
+<th>Classe</th>
+<th>Prioridade</th>
+<th>Controle atual</th>
+<th>Controle exigido (nova versão)</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-RAS-14</td>
+<td>Ligação com a venda e o recolhimento</td>
+<td>Entrega sem venda; venda sem entrega declarada; recolhimento sem lista de embalagens</td>
+<td>Alta</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>1</td>
+<td><strong>Alta</strong></td>
+<td>Nenhuma ligação com o Comercial e a GQ</td>
+<td>Evento de entrega gerado pela expedição da venda; recolhimento consulta os IUM entregues</td>
+<td>Fluxo 2, ponto 6; <code>04</code>, tema 6</td>
+</tr>
+<tr>
+<td>R-RAS-15</td>
+<td>Retificação</td>
+<td>Declaração corrigida sem motivo, pela mesma pessoa</td>
+<td>Média</td>
+<td>Média</td>
+<td>Baixa</td>
+<td>2</td>
+<td><strong>Alta</strong></td>
+<td>Motivo opcional</td>
+<td>Motivo obrigatório, outra pessoa, assinatura eletrônica</td>
+<td>Fluxo 2, RN019; <code>02</code></td>
+</tr>
+<tr>
+<td>R-RAS-16</td>
+<td>Telas repetidas</td>
+<td>Eventos registrados no Estoque e na Rastreabilidade por caminhos diferentes</td>
+<td>Baixa</td>
+<td>Alta</td>
+<td>Média</td>
+<td>2</td>
+<td><strong>Média</strong></td>
+<td>Nenhum</td>
+<td>Um só lugar para os eventos</td>
+<td>Fluxo 2, ponto 7</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resumo">Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Riscos</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alta</strong></td>
+<td>R-RAS-01, 02, 03, 04, 06, 07, 08, 09, 10, 12, 14, 15</td>
+<td>12</td>
+</tr>
+<tr>
+<td><strong>Média</strong></td>
+<td>R-RAS-05, 13, 16</td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>Baixa</strong></td>
+<td>R-RAS-11</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong>
+- <strong>O primeiro bloco é a declaração que não acontece</strong> e o registro que diz que aconteceu (R-RAS-01 a 04).
+- <strong>O segundo é o IUM sem amarras:</strong> série que pode repetir, quantidade livre, lote não certificado, etiqueta errada, caixa com código de exemplo (R-RAS-06 a 10, 12).
+- <strong>O terceiro é a falta de ligação</strong> com a venda e o recolhimento (R-RAS-14) e a correção sem motivo (R-RAS-15).</p>
+<hr />
+<h3 id="etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</h3>
+<p>Cada controle exigido vira um <strong>requisito corrigido</strong> da nova versão (documento 05, depois dos testes) e um ou mais <strong>casos de teste</strong> (documento 08):
+- fluxo 2 (eventos e declaração): CT-RAS-001 a 016;
+- fluxo 1 (geração de IUM e agregação): CT-RAS-017 a 029;
+- acesso: CT-RAS-030 a 033.</p>
+<h3 id="etapa-5-revisao">Etapa 5: revisão</h3>
+<p>Revisar depois dos testes de tela e quando Assuntos Regulatórios confirmar a norma do SNCM e os prazos em vigor (R-RAS-01, 11).</p>
+<h3 id="pontos-para-a-garantia-da-qualidade-e-assuntos-regulatorios">Pontos para a Garantia da Qualidade e Assuntos Regulatórios</h3>
+<ol>
+<li>A empresa já é obrigada a declarar ao SNCM? Desde quando (R-RAS-01)?</li>
+<li>Quais dados a etiqueta precisa trazer e de onde vêm (R-RAS-09)?</li>
+<li>Quem responde pelas declarações e pela correção delas (R-RAS-15)?</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#para-que-serve">Para que serve</a></li><li><a href="#etapa-1-avaliacao-inicial">Etapa 1: avaliação inicial</a></li><li><a href="#escalas-usadas">Escalas usadas</a></li><li><a href="#etapas-2-e-3-funcoes-e-avaliacao">Etapas 2 e 3: funções e avaliação</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#etapa-4-implantacao-e-verificacao-dos-controles">Etapa 4: implantação e verificação dos controles</a></li><li><a href="#etapa-5-revisao">Etapa 5: revisão</a></li><li><a href="#pontos-para-a-garantia-da-qualidade-e-assuntos-regulatorios">Pontos para a Garantia da Qualidade e Assuntos Regulatórios</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
