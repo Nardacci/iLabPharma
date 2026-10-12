@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Montagem do modelo do registro de lote · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html" aria-current=page>Montagem do modelo do registro de lote</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Montagem do modelo do registro de lote</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/ope/LabMedSys - Modulo OPE - Fluxo Montagem do Modelo do Registro de Lote.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve como o <strong>modelo do registro de lote</strong> de um produto é montado e mantido no <strong>Gerador de OPE</strong>. Esse modelo define tudo o que o operador vê e preenche no Registro da Produção:
+- as etapas e subetapas;
+- o texto das instruções;
+- os campos, com o que é obrigatório e quem assina;
+- as validações e os cálculos;
+- o controle em processo;
+- de onde vêm a data final e a quantidade produzida.</p>
+<p>Pela norma, a fórmula e as instruções de fabricação de cada produto são documentos <strong>aprovados</strong> (RDC 658/2022, arts. 133 a 135), e qualquer mudança só vale depois de aprovada (arts. 176 e 177). O modelo do registro de lote é, na prática, as instruções de fabricação dentro do sistema.</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. A seção "Por que o módulo confunde o usuário" reúne as dificuldades de uso com evidência das telas. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Criação do modelo de um produto, etapas e subetapas.</li>
+<li>Texto da instrução e criação dos campos.</li>
+<li>Configuração de cada campo, validações e cálculos.</li>
+<li>Controle em processo e dados do final da produção.</li>
+<li>Subetapas-padrão (tela Modelos).</li>
+<li>Impressão, baixa e envio do arquivo e a ida do modelo à Produção.</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o uso do modelo no Registro da Produção (fluxo 2 da Produção) e o cadastro da ordem de produção (fluxo 3 da Produção).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no alto de cada tela. Os caminhos de código são relativos a <code>9.ope/app/</code>. Para encurtar: <code>Repo/</code> = <code>HSolutions.GeradorXML.ORM/Repository/</code>, <code>Views/</code> = <code>HSolutions.GeradorXML.UI/Views/</code>, <code>Prod/</code> = <code>2.producao/app/LaboSys_UI/producao/XML/Class_Producao/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/ope/montagem-do-modelo-fluxograma.png" target="_blank" rel="noopener"><img src="../img/ope/montagem-do-modelo-fluxograma.png" alt="Workflow da montagem do modelo do registro de lote" loading="lazy"></a><figcaption>Workflow da montagem do modelo do registro de lote · clique para ampliar</figcaption></figure>
+
+<ol>
+<li>No <strong>Gerador de OPE</strong>, cria-se o modelo do produto.</li>
+<li>Cadastram-se as <strong>etapas</strong> e, em cada uma, as <strong>subetapas</strong>.</li>
+<li>Em cada subetapa, escreve-se o <strong>texto da instrução</strong>. Cada campo a preencher é criado digitando o código <code>{0}</code> no ponto do texto.</li>
+<li>Cada campo é <strong>configurado</strong>: tipo, máscara, obrigatório, quem preenche, quem assina, preenchimento automático.</li>
+<li>Acrescentam-se <strong>validações</strong> e <strong>cálculos</strong> entre campos.</li>
+<li>Definem-se o <strong>controle em processo</strong> de cada etapa e os campos do <strong>final da produção</strong>.</li>
+<li>O modelo é conferido (visualizar, imprimir) e o arquivo é <strong>baixado</strong> e <strong>enviado</strong> na ordem de produção da Produção.</li>
+</ol>
+<p><strong>Cada ajuste é gravado na hora no modelo vigente.</strong> Não há rascunho, revisão nem aprovação em nenhum passo.</p>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="1-criar-o-modelo-do-produto">1. Criar o modelo do produto</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O modelo exige <strong>produto</strong> e <strong>descrição</strong> (<code>HSolutions.GeradorXML.ORM/Validation/GeradorXMLValidation.cs:18-29</code>). O produto vem do cadastro da Produção, só os ativos (<code>Repo/GeradorXMLRepository.cs:211-222</code>).</li>
+<li>RN002 – O modelo nasce vazio, com <strong>revisão "1"</strong> (<code>Repo/GeradorXMLRepository.cs:224-239</code>). A revisão <strong>nunca muda</strong> depois: não há outro ponto do código que a altere.</li>
+<li>RN003 – <strong>Nada impede dois modelos para o mesmo produto.</strong> A tabela não tem restrição de produto único (<code>Scripts/TBL_GERADORXML_PRODUTO.sql</code>), e a validação só confere o preenchimento. <em>A confirmar no teste.</em></li>
+<li>RN004 – A lista busca por número, descrição do modelo ou nome do produto (<code>Repo/GeradorXMLRepository.cs:111-138</code>).</li>
+<li>RN005 – <strong>Não há exclusão</strong> do modelo: a tela não tem esse botão, e a tabela não tem exclusão lógica.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Gerador de OPE (lista)</td>
+<td>Procurar os modelos</td>
+</tr>
+<tr>
+<td>OPE</td>
+<td>Gerador de OPE (cadastro)</td>
+<td>Criar o modelo; ver as etapas; baixar, enviar e imprimir</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-montar-etapas-e-subetapas">2. Montar etapas e subetapas</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN006 – A etapa tem número, nome e ordem. A ordem muda pelas setas, que trocam a etapa de lugar com a vizinha (<code>Repo/EtapaRepository.cs:41-62</code>).</li>
+<li>RN007 – A <strong>exclusão de uma etapa</strong> apaga a etapa e todas as subetapas e campos dela, depois de uma pergunta de confirmação (<code>Views/GerarXML/Edit.cshtml:177-187</code>; <code>Repo/EtapaRepository.cs:123-141</code>). Não confere se a etapa é usada no controle em processo de outra.</li>
+<li>RN008 – Etapa e subetapa têm marcações que mudam o Registro da Produção:</li>
+<li>na <strong>etapa</strong>: se possui controle de processo, se é um controle de processo e a "Permissão Para Entrar na Etapa" (<code>HSolutions.GeradorXML.Model/ConfigEtapa.cs:25-32</code>);</li>
+<li>na <strong>subetapa</strong> (<code>HSolutions.GeradorXML.Model/ConfigSubEtapaModel.cs:34-63</code>):<ul>
+<li>a permissão;</li>
+<li>os "Pré-requisitos à validar";</li>
+<li>se <strong>pede análise</strong> ao CQ;</li>
+<li>se habilita o botão <strong>salvar parcial</strong> e o <strong>envio de arquivo</strong>;</li>
+<li>se é a subetapa de <strong>finalização</strong>, de <strong>reconciliação</strong> ou de <strong>liberação</strong>;</li>
+<li>os campos de data e hora de início e de fim.</li>
+</ul>
+</li>
+<li>RN009 – As abas de texto, validações, cálculos e ambientes <strong>só aparecem depois de salvar</strong> a subetapa pela primeira vez (<code>Views/SubEtapa/Edit.cshtml:25-31</code>, <code>display:none</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Configurar Etapa</td>
+<td>Nome, ordem e subetapas da etapa</td>
+</tr>
+<tr>
+<td>OPE</td>
+<td>Configurar <em>(nome da subetapa)</em></td>
+<td>Dados e marcações da subetapa; abas de texto, validações, cálculos e ambientes</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-escrever-a-instrucao-e-criar-os-campos">3. Escrever a instrução e criar os campos</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN010 – O texto da instrução é escrito num <strong>editor de texto com formatação</strong> (aba "Gerador Html"), com opção de impressão em paisagem (<code>Views/SubEtapa/_GeradorHTMLPartial.cshtml</code>).</li>
+<li>RN011 – <strong>Cada campo é criado digitando <code>{0}</code> no texto.</strong> Ao salvar, o sistema troca cada <code>{0}</code> por um nome técnico, como <code>{E1S2_CAMPO3}</code> (etapa 1, subetapa 2, campo 3), e cria o campo como caixa de texto de 100 pixels (<code>HSolutions.GeradorXML.Model/TelaXML.cs:171-199</code>).</li>
+<li>RN012 – <strong>Apagar o código de um campo do texto apaga o campo e toda a configuração dele</strong>, sem aviso (<code>Repo/SubEtapaRepository.cs:475-494</code>). O que dependia do campo (validações, cálculos, controle em processo, final da produção) não é conferido. <em>A confirmar no teste:</em> o que acontece com essas ligações.</li>
+<li>RN013 – O botão que mostra o <strong>código-fonte</strong> do texto só aparece para quem tem a função própria (<code>BTNCODIGOFONTE</code>) (<code>HSolutions.GeradorXML.Model/GeradorHTMLPartialPartil.cs:20-37</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Configurar <em>(subetapa)</em>, aba Gerador Html</td>
+<td>Texto da instrução e criação dos campos</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-configurar-cada-campo">4. Configurar cada campo</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN014 – Cada campo tem (<code>HSolutions.GeradorXML.Model/ConfigCamposModel.cs:28-81</code>; <code>Views/Campos/Edit.cshtml</code>):</li>
+<li><strong>tipo</strong> (caixa de texto, lista, marcação, opção);</li>
+<li><strong>máscara</strong> (data, hora, data e hora, inteiro, decimal de 1 a 6 casas, percentual, telefone, registro);</li>
+<li><strong>obrigatório</strong> e <strong>desabilitado</strong>;</li>
+<li><strong>tamanho</strong> em pixels.</li>
+<li>RN015 – <strong>Quem preenche e quem assina.</strong> Duas configurações escolhem na mesma lista de funções profissionais do Principal (<code>Repo/PermissaoRepository.cs:15-40</code>; <code>Repo/CampoRepository.cs:105, 132</code>):</li>
+<li>"Permissão para Acessar o campo";</li>
+<li>"Função Profissional", junto com "Habilitar Icone de Autenticação", que pede a senha no campo.</li>
+</ul>
+<p>No Registro da Produção, quem não tem a função recebe "NÃO TEM PERMISSÃO." (<code>Prod/Autenticacao.cs:14-44</code>). <em>Ponto para validar:</em> a diferença exata entre as duas configurações. A tela não explica.
+- RN016 – <strong>Preenchimento automático:</strong> o campo pode trazer dados de outros cadastros. Por exemplo, número da OPE, lote, versão, revisão, validade, usuário que gerou o lote, responsável da GQ, registro na ANVISA, descrição do produto, listas de usuários, equipamentos, produtos e ambientes (<code>HSolutions.GeradorXML.Helpers/DropEnum.cs:57-108</code>).
+- RN017 – <strong>Integração com o Estoque:</strong> o campo pode ser ligado a um <strong>insumo</strong> e a um dado da <strong>pesagem</strong> (lacre, tara, lote, responsável, peso líquido) (<code>Prod/Enum.cs:82-95</code>).
+- RN018 – <strong>Classe do Produto:</strong> a lista oferece só três classes programadas: <code>DIAZEPAM</code>, <code>Glibenclamida_OP</code> e <code>Glibenclamida_OPE</code> (<code>HSolutions.GeradorXML.Helpers/ClassEnum.cs:12-17</code>). Um produto novo <strong>não tem classe própria</strong>. O comportamento programado (cálculos e validações especiais) só existe para esses produtos.
+- RN019 – Ao salvar um campo, só as configurações <strong>alteradas</strong> são gravadas (<code>Repo/CampoRepository.cs:186-313</code>).</p>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Configurar Campos</td>
+<td>Tipo, máscara, obrigatoriedade, quem preenche e assina, preenchimento automático</td>
+</tr>
+<tr>
+<td>OPE</td>
+<td>Selecionar Insumos</td>
+<td>Ligar o campo a um insumo</td>
+</tr>
+<tr>
+<td>OPE</td>
+<td>Selecionar Permissões</td>
+<td>Escolher as funções profissionais</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-validacoes-e-calculos">5. Validações e cálculos</h3>
+<h4 id="regras-de-negocio_4">Regras de negócio</h4>
+<ul>
+<li>RN020 – <strong>Funções de validação</strong> (aba própria) (<code>Prod/Enum.cs:37-79</code>; <code>Prod/ValidarSalvar.cs</code>):</li>
+<li>data ou data e hora <strong>maior ou menor que a do sistema</strong>;</li>
+<li><strong>comparar dois campos</strong> de data, de data e hora ou de número (maior, maior ou igual, menor, menor ou igual);</li>
+<li>campos <strong>iguais</strong>;</li>
+<li>preenchimento <strong>obrigatório só se outro campo</strong> estiver preenchido;</li>
+<li>data posterior à <strong>geração do lote</strong>.</li>
+</ul>
+<p>Cada função tem a <strong>mensagem</strong> que o operador verá.
+- RN021 – <strong>Não há validação contra um valor fixo</strong> (mínimo e máximo da especificação). Para conferir um limite, seria preciso um segundo campo com o valor do limite (RN020). <em>Ponto para validar:</em> se a área faz assim.
+- RN022 – <strong>Fórmulas de cálculo:</strong> o resultado de uma fórmula entre campos vai para um campo de retorno, com opção de média. A fórmula é conferida antes de salvar (<code>Controllers/SubEtapaController.cs:207-247</code>).
+- RN023 – <strong>Parâmetros de entrada:</strong> um campo pode receber o valor de um campo de outra etapa ou subetapa (<code>Controllers/CamposController.cs:40-43</code>).</p>
+<h4 id="telas-do-sistema_4">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Configurar <em>(subetapa)</em>, abas Funções de Validação e Fórmulas de Cálculo</td>
+<td>Validações e cálculos entre campos</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-controle-em-processo-e-final-da-producao">6. Controle em processo e final da produção</h3>
+<h4 id="regras-de-negocio_5">Regras de negócio</h4>
+<ul>
+<li>RN024 – O <strong>controle em processo</strong> de uma etapa indica <strong>qual subetapa precisa estar completa</strong> para avançar (<code>Repo/ControleProcessoRepository.cs:59-88</code>). Não há outro critério: é o que a Produção confere (fluxo 2 da Produção, RN019). Um controle usado por uma etapa não pode ser excluído (<code>HSolutions.GeradorXML.ORM/Validation/ControleProcessoValidation.cs:17-23</code>).</li>
+<li>RN025 – A tela <strong>Finalizar Produção</strong> define quais campos dão a <strong>data final</strong>, a <strong>quantidade produzida</strong> e a unidade, além do valor da amostra e do volume (<code>Repo/FinalizarProducaoRepository.cs:20-60</code>). Esses dados alimentam o Final da Produção e o envio ao Estoque.</li>
+</ul>
+<h4 id="telas-do-sistema_5">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Configurar Validações de mudança de Etapa/Subetapa</td>
+<td>Controle em processo</td>
+</tr>
+<tr>
+<td>OPE</td>
+<td>Finalizar Produção</td>
+<td>Campos do final da produção</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-subetapas-padrao-modelos">7. Subetapas-padrão (Modelos)</h3>
+<h4 id="regras-de-negocio_6">Regras de negócio</h4>
+<ul>
+<li>RN026 – A tela <strong>Modelos</strong> guarda subetapas-padrão, com o mesmo editor (<code>Repo/ModeloRepository.cs</code>; tabela <code>PRD_MODELO_XML</code>).</li>
+<li>RN027 – Ao <strong>aplicar um modelo</strong> a uma subetapa, o sistema <strong>substitui o texto e os campos</strong> da subetapa pelos do modelo e renomeia os campos (<code>Repo/SubEtapaRepository.cs:353-391</code>).</li>
+<li>O que a subetapa tinha é perdido, sem aviso.</li>
+<li>É uma <strong>cópia</strong>: mudanças posteriores no modelo não chegam aos produtos.</li>
+<li><em>A confirmar no teste:</em> se as validações e os cálculos do modelo vêm junto (o código copia só o texto e os campos, linhas 366-367).</li>
+</ul>
+<h4 id="telas-do-sistema_6">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Modelos e Modelo</td>
+<td>Criar e editar subetapas-padrão</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-conferir-e-levar-o-modelo-a-producao">8. Conferir e levar o modelo à Produção</h3>
+<h4 id="regras-de-negocio_7">Regras de negócio</h4>
+<ul>
+<li>RN028 – <strong>Visualizar</strong> mostra a subetapa como o operador vai vê-la. <strong>Imprimir</strong> gera o modelo inteiro, uma etapa ou uma subetapa (<code>Controllers/GerarXMLController.cs:110-142</code>).</li>
+<li>RN029 – <strong>Baixar</strong> entrega o arquivo XML com o nome do produto (<code>Controllers/GerarXMLController.cs:70-74</code>).</li>
+<li>RN030 – <strong>Enviar arquivo</strong> (tela Upload) <strong>substitui o modelo inteiro</strong> pelo arquivo, sem conferir se é do mesmo produto e sem guardar o anterior (<code>Repo/GeradorXMLRepository.cs:273-284</code>). Se der erro, a resposta é só "Error" (<code>Controllers/GerarXMLController.cs:76-97</code>).</li>
+<li>RN031 – <strong>Não há envio direto à Produção.</strong> O arquivo baixado é enviado na tela Cadastro Ordem de Produção (fluxo 3 da Produção, RN024). Daí em diante, o Registro da Produção lê o modelo da ordem a cada abertura (RN025 daquele fluxo).</li>
+</ul>
+<h4 id="telas-do-sistema_7">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OPE</td>
+<td>Visualizar XML; Imprimir; Upload</td>
+<td>Conferir, imprimir, enviar arquivo</td>
+</tr>
+<tr>
+<td>Produção</td>
+<td>Cadastro Ordem de Produção</td>
+<td>Receber o arquivo na ordem</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="por-que-o-modulo-confunde-o-usuario">Por que o módulo confunde o usuário</h2>
+<p>A pessoa que monta o modelo é da Produção ou da Garantia da Qualidade, não programadora. O código mostra várias escolhas que só fazem sentido para quem programou o sistema.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que o usuário encontra</th>
+<th>Por que confunde</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>U1</td>
+<td><strong>O campo é criado digitando <code>{0}</code> no texto</strong></td>
+<td>Não há botão "inserir campo". Quem não sabe do código não cria campos. Depois de salvar, o <code>{0}</code> vira <code>{E1S2_CAMPO3}</code>, um nome técnico</td>
+<td>RN011</td>
+</tr>
+<tr>
+<td>U2</td>
+<td><strong>Apagar um trecho do texto apaga campos</strong></td>
+<td>Um ajuste de redação pode apagar campos já configurados, sem aviso</td>
+<td>RN012</td>
+</tr>
+<tr>
+<td>U3</td>
+<td><strong>Os campos são chamados por nomes técnicos</strong></td>
+<td>Validações, cálculos, controle em processo e final da produção pedem para escolher <code>E1S2_CAMPO3</code>, não "Peso médio". O nome amigável existe, mas o rótulo dele na tela aparece como <code>NomeAmigavel</code>, sem tradução</td>
+<td><code>Views/Campos/Edit.cshtml:63</code> (rótulo sem nome de exibição em <code>ConfigCamposModel.cs:32</code>)</td>
+</tr>
+<tr>
+<td>U4</td>
+<td><strong>"Classe do Produto" lista nomes de programas</strong></td>
+<td><code>DIAZEPAM</code>, <code>Glibenclamida_OP</code>, <code>Glibenclamida_OPE</code>. Para outro produto, nenhuma opção serve</td>
+<td>RN018</td>
+</tr>
+<tr>
+<td>U5</td>
+<td><strong>Duas configurações parecidas para "quem pode"</strong></td>
+<td>"Permissão para Acessar o campo" e "Função Profissional" escolhem na mesma lista, com efeitos diferentes que a tela não explica</td>
+<td>RN015</td>
+</tr>
+<tr>
+<td>U6</td>
+<td><strong>Campos que aparecem e somem</strong></td>
+<td>A tela de campo mostra ou esconde partes conforme o tipo escolhido. As abas da subetapa só aparecem depois de salvar. O usuário não sabe o que ainda falta configurar</td>
+<td>RN009; <code>Views/Campos/Edit.cshtml</code> (mais de 15 blocos com <code>display:none</code>)</td>
+</tr>
+<tr>
+<td>U7</td>
+<td><strong>Termos técnicos</strong></td>
+<td>"Gerador Html", "Parâmetro Entrada", "Método Pré-definido", "Tamanho do Campo" em pixels ("Exemplo: 100px"), "Definir Grupo"</td>
+<td><code>ConfigCamposModel.cs:33-79</code>; <code>Views/Campos/Edit.cshtml</code></td>
+</tr>
+<tr>
+<td>U8</td>
+<td><strong>"OPE" quer dizer duas coisas</strong></td>
+<td>No Gerador, "OPE" é o <strong>modelo</strong> ("Tela de inclusão/edição da OPE", "Descrição OPE"). Na Produção, OPE é a <strong>ordem de produção</strong> de um lote</td>
+<td><code>Views/GerarXML/Edit.cshtml:229</code>; Produção, fluxo 1</td>
+</tr>
+<tr>
+<td>U9</td>
+<td><strong>Dois editores iguais</strong></td>
+<td>Gerador de OPE e Modelos usam as mesmas telas. O que está sendo editado depende do que foi aberto por último, guardado na sessão</td>
+<td><code>HSolutions.GeradorXML.Base/BaseController.cs:20-50</code></td>
+</tr>
+<tr>
+<td>U10</td>
+<td><strong>Sem menu próprio</strong></td>
+<td>O menu do módulo está comentado; só há "Módulos". A tela inicial pula direto para o Gerador</td>
+<td><code>Views/Shared/_Menu.cshtml:3</code></td>
+</tr>
+<tr>
+<td>U11</td>
+<td><strong>Gravação sem "salvar" final</strong></td>
+<td>Cada ajuste já altera o modelo em uso. Não há como experimentar e desistir</td>
+<td>Reconhecimento, seção 3</td>
+</tr>
+<tr>
+<td>U12</td>
+<td><strong>Mensagens pouco claras</strong></td>
+<td>Erros com o título em inglês "Error." e envio de arquivo que responde só "Error"</td>
+<td><code>Views/SubEtapa/_GeradorHTMLPartial.cshtml:114</code>; RN030</td>
+</tr>
+<tr>
+<td>U13</td>
+<td><strong>Ajuda parcial</strong></td>
+<td>Há texto de ajuda em 10 telas (9 do editor e a lista de módulos), mas ele lista botões, sem explicar o processo. As abas da subetapa (validações, cálculos, texto) não têm ajuda</td>
+<td>Busca por <code>Detalhamento(</code> nas telas</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Leitura:</strong> a ferramenta foi feita para a equipe do fornecedor montar os modelos, não para a área. Pelo código, um usuário da empresa precisa de treinamento técnico para montar um modelo sem erro. <em>Ponto para validar com a área:</em> quem montou os modelos existentes (o fornecedor ou a empresa).</p>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. As instruções de fabricação mudam sem aprovação</strong> (RN002, reconhecimento, seção 3). Cada ajuste altera o modelo vigente, sem rascunho, revisão, aprovação nem histórico (arts. 133 a 135, 176 e 177).</p>
+<p><strong>2. Um ajuste de texto pode apagar campos do registro de lote</strong> (RN012), e o envio de arquivo substitui tudo (RN030). Nos dois casos, sem aviso e sem cópia do anterior.</p>
+<p><strong>3. As regras de BPF do registro estão no modelo</strong>, sem conferência de quem decide: o que é obrigatório, quem assina, o que trava a etapa (RN014, RN015, RN024). Um erro de configuração vira um registro de lote sem a assinatura ou o controle que a norma pede.</p>
+<p><strong>4. Limite de especificação só por comparação entre campos</strong> (RN021). O mínimo e o máximo do produto não são um dado próprio do modelo (art. 198).</p>
+<p><strong>5. Produtos novos sem o comportamento programado</strong> (RN018). O que for específico do produto precisa de programador.</p>
+<p><strong>6. Difícil de usar</strong> (seção anterior). Isso aumenta o risco de erro de configuração (ponto 3) e a dependência de quem conhece o código.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Um produto <code>TESTE</code> ativo na Produção.
+- Usuários <code>t.admin</code> e <code>t.semadmin</code>.
+- Um modelo <code>TESTE</code> criado no caso CT-OPE-001 e reaproveitado nos demais.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-OPE-001</td>
+<td>Criar o modelo <code>TESTE</code> para o produto <code>TESTE</code></td>
+<td>Modelo criado, sem etapas; revisão 1 (RN001, RN002)</td>
+</tr>
+<tr>
+<td>CT-OPE-002</td>
+<td>Criar um segundo modelo para o mesmo produto <code>TESTE</code></td>
+<td><strong>Registrar se permitir</strong> (RN003)</td>
+</tr>
+<tr>
+<td>CT-OPE-003</td>
+<td>Criar uma etapa com duas subetapas; trocar a ordem das etapas</td>
+<td>Ordem trocada (RN006)</td>
+</tr>
+<tr>
+<td>CT-OPE-004</td>
+<td>Numa subetapa, escrever um texto com dois <code>{0}</code> e salvar</td>
+<td>Dois campos criados com nomes técnicos (RN011, U1)</td>
+</tr>
+<tr>
+<td>CT-OPE-005</td>
+<td>Configurar um campo como obrigatório, decimal com 2 casas e com a assinatura de uma função profissional</td>
+<td>Configuração gravada (RN014, RN015)</td>
+</tr>
+<tr>
+<td>CT-OPE-006</td>
+<td>Apagar do texto o código de um campo já configurado e salvar</td>
+<td>Pela boa prática, aviso antes de apagar. <strong>Registrar se apagar o campo sem aviso</strong> (RN012, ponto 2)</td>
+</tr>
+<tr>
+<td>CT-OPE-007</td>
+<td>Criar uma validação "comparar números" entre dois campos</td>
+<td>Gravada com a mensagem (RN020)</td>
+</tr>
+<tr>
+<td>CT-OPE-008</td>
+<td>Procurar uma forma de validar um campo contra um valor fixo (por exemplo, mínimo 95)</td>
+<td><strong>Registrar se não existir</strong> (RN021, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-OPE-009</td>
+<td>Criar uma fórmula com uma expressão inválida</td>
+<td>Recusa na conferência da fórmula (RN022)</td>
+</tr>
+<tr>
+<td>CT-OPE-010</td>
+<td>Definir o controle em processo de uma etapa e tentar excluir esse controle</td>
+<td>"Esta validação não pode ser excluída pois está em uso na etapa." (RN024)</td>
+</tr>
+<tr>
+<td>CT-OPE-011</td>
+<td>Definir na tela Finalizar Produção os campos de data final e quantidade</td>
+<td>Gravado (RN025)</td>
+</tr>
+<tr>
+<td>CT-OPE-012</td>
+<td>Criar um modelo de subetapa e aplicá-lo a uma subetapa que já tem texto e campos</td>
+<td><strong>Registrar se o conteúdo anterior foi substituído sem aviso</strong> e se as validações vieram junto (RN027)</td>
+</tr>
+<tr>
+<td>CT-OPE-013</td>
+<td>Baixar o arquivo do modelo <code>TESTE</code>; alterar a descrição de um campo no arquivo; enviar de volta</td>
+<td>Modelo substituído. <strong>Registrar se houve erro</strong> ("Error") e se o anterior foi guardado (RN029, RN030)</td>
+</tr>
+<tr>
+<td>CT-OPE-014</td>
+<td>Enviar o arquivo do modelo de <strong>outro</strong> produto no modelo <code>TESTE</code></td>
+<td>Pela boa prática, recusa. <strong>Registrar se aceitar</strong> (RN030)</td>
+</tr>
+<tr>
+<td>CT-OPE-015</td>
+<td>Abrir o modelo <code>TESTE</code> numa aba e outro modelo em outra aba; alterar um campo na primeira aba</td>
+<td><strong>Registrar em qual modelo a alteração foi gravada</strong> (U9; reconhecimento, ponto 4)</td>
+</tr>
+<tr>
+<td>CT-OPE-016</td>
+<td>Procurar a revisão, o aprovador e o histórico do modelo <code>TESTE</code> depois das alterações</td>
+<td><strong>Registrar a ausência</strong> (RN002, ponto 1)</td>
+</tr>
+<tr>
+<td>CT-OPE-017</td>
+<td>Enviar o arquivo do modelo <code>TESTE</code> numa ordem de produção <code>TESTE</code> (Produção) e abrir o Registro da Produção</td>
+<td>O registro mostra o modelo montado (RN031)</td>
+</tr>
+<tr>
+<td>CT-OPE-018</td>
+<td>Com uma produção <code>TESTE</code> iniciada, mudar um campo de obrigatório para não obrigatório no Gerador, baixar e reenviar na ordem</td>
+<td><strong>Registrar se a produção em andamento mudou</strong> (ponto 1; fluxo 3 da Produção, CT-PRO-052)</td>
+</tr>
+<tr>
+<td>CT-OPE-019</td>
+<td>Com <code>t.semadmin</code>, abrir o Gerador de OPE pelo endereço</td>
+<td>Acesso negado. <strong>Registrar se abrir</strong></td>
+</tr>
+<tr>
+<td>CT-OPE-020</td>
+<td>Pedir a um usuário da área, sem explicação prévia, que crie um campo de data obrigatório numa subetapa</td>
+<td><strong>Registrar quanto tempo levou e onde travou</strong> (seção "Por que o módulo confunde")</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-OPE-016, 018, 006 e 013 primeiro. Eles tocam:
+- as instruções de fabricação alteradas sem aprovação nem histórico;
+- a mudança que atinge produção em andamento;
+- a perda de configuração sem aviso.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#1-criar-o-modelo-do-produto">1. Criar o modelo do produto</a></li><li class="sub"><a href="#2-montar-etapas-e-subetapas">2. Montar etapas e subetapas</a></li><li class="sub"><a href="#3-escrever-a-instrucao-e-criar-os-campos">3. Escrever a instrução e criar os campos</a></li><li class="sub"><a href="#4-configurar-cada-campo">4. Configurar cada campo</a></li><li class="sub"><a href="#5-validacoes-e-calculos">5. Validações e cálculos</a></li><li class="sub"><a href="#6-controle-em-processo-e-final-da-producao">6. Controle em processo e final da produção</a></li><li class="sub"><a href="#7-subetapas-padrao-modelos">7. Subetapas-padrão (Modelos)</a></li><li class="sub"><a href="#8-conferir-e-levar-o-modelo-a-producao">8. Conferir e levar o modelo à Produção</a></li><li><a href="#por-que-o-modulo-confunde-o-usuario">Por que o módulo confunde o usuário</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

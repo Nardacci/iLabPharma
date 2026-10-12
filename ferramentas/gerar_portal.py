@@ -185,10 +185,11 @@ MODULOS = [
          ("6.controle_documento/fluxos/externo-legado.md", "Documento externo e documento legado", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Documento Externo e Legado.docx"),
          ("6.controle_documento/fluxos/tipo-arquivos-modelos.md", "Tipo de documento, arquivos e modelos", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Tipo de Documento, Arquivos e Modelos.docx"),
      ]},
-    {"id": "ope", "nome": "OPE (Gerador de OPE)", "icone": "⚒", "cor": "#7c3aed", "situacao": "Em análise", "nivel": 1,
-     "resumo": "Ferramenta que monta o modelo do registro de lote de cada produto: etapas, subetapas, campos, cálculos, validações e quem assina cada campo. A Produção usa esse modelo em cada lote. Reconhecimento feito: o modelo não tem versão, aprovação nem histórico; cada ajuste regrava o modelo vigente na hora, e ele chega à ordem de produção por arquivo baixado e reenviado.",
+    {"id": "ope", "nome": "OPE (Gerador de OPE)", "icone": "⚒", "cor": "#7c3aed", "situacao": "Em análise", "nivel": 2,
+     "resumo": "Ferramenta que monta o modelo do registro de lote de cada produto: etapas, subetapas, campos, cálculos, validações e quem assina cada campo. A Produção usa esse modelo em cada lote. Reconhecimento feito: o modelo não tem versão, aprovação nem histórico; cada ajuste regrava o modelo vigente na hora, e ele chega à ordem de produção por arquivo baixado e reenviado. Fluxo pronto: montagem do modelo, com a análise de por que a ferramenta confunde o usuário (o campo é criado digitando um código no texto, nomes técnicos, apagar texto apaga campos).",
      "docs": [
          ("9.ope/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+         ("9.ope/fluxos/montagem-do-modelo.md", "Montagem do modelo do registro de lote", "fluxos", "9.ope/fluxos/LabMedSys - Modulo OPE - Fluxo Montagem do Modelo do Registro de Lote.docx"),
      ]},
     {"id": "comercial", "nome": "Comercial", "icone": "◈", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
      "resumo": "Pedidos, faturamento e distribuição.", "docs": []},
