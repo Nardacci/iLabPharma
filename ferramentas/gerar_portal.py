@@ -201,10 +201,11 @@ MODULOS = [
          ("9.ope/fluxos/montagem-do-modelo.md", "Montagem do modelo do registro de lote", "fluxos", "9.ope/fluxos/LabMedSys - Modulo OPE - Fluxo Montagem do Modelo do Registro de Lote.docx"),
      ]},
     {"id": "comercial", "nome": "Comercial", "icone": "◈", "cor": "#0e7490", "situacao": "Em análise", "nivel": 1,
-     "resumo": "Venda do produto acabado: cliente, cotação, requisição de produto acabado com o lote escolhido no Estoque, reserva, fatura e remessa. Reconhecimento feito: o Comercial vende o lote disponível no Estoque (aprovado pelo CQ), não o certificado pela Pessoa Delegada; a situação do lote não é conferida de novo na fatura; cancelar a fatura não desfaz a remessa; não há consulta de para quem foi cada lote. Fluxo pronto: cotação, requisição e reserva, com uma corrente de falhas entre o Comercial e o Estoque (a reserva que falha volta como -1 e a fatura deixa de conferir a separação).",
+     "resumo": "Venda do produto acabado: cliente, cotação, requisição de produto acabado com o lote escolhido no Estoque, reserva, fatura e remessa. Reconhecimento feito: o Comercial vende o lote disponível no Estoque (aprovado pelo CQ), não o certificado pela Pessoa Delegada; a situação do lote não é conferida de novo na fatura; cancelar a fatura não desfaz a remessa; não há consulta de para quem foi cada lote. Fluxos prontos: cotação, requisição e reserva (a reserva que falha no Estoque volta como -1, sem aviso); fatura, remessa e cancelamento (o relatório de produtos faturados por lote, que serve ao recolhimento, está fora do menu e ignora faturas canceladas, embora o cancelamento não desfaça a remessa).",
      "docs": [
          ("7.comercial/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("7.comercial/fluxos/cotacao-requisicao-reserva.md", "Cotação, requisição de PA e reserva no Estoque", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Cotacao, Requisicao e Reserva.docx"),
+         ("7.comercial/fluxos/fatura-remessa-cancelamento.md", "Fatura, remessa e cancelamento", "fluxos", "7.comercial/fluxos/LabMedSys - Modulo Comercial - Fluxo Fatura, Remessa e Cancelamento.docx"),
      ]},
     {"id": "rastreabilidade", "nome": "Rastreabilidade", "icone": "⟲", "cor": "#667085", "situacao": "Não iniciado", "nivel": 0,
      "resumo": "Serialização e rastreio dos lotes no mercado.", "docs": []},

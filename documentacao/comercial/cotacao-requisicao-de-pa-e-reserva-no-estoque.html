@@ -29,7 +29,7 @@
 <div class="doc-layout">
   <aside class="lateral" aria-label="Documentos do módulo">
     <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
-    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html" aria-current=page>Cotação, requisição de PA e reserva no Estoque</a></li></ul></div>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html" aria-current=page>Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="fatura-remessa-e-cancelamento.html">Fatura, remessa e cancelamento</a></li></ul></div>
   </aside>
   <main class="doc" id="conteudo">
     <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Fluxos do processo</span></nav>
@@ -159,8 +159,10 @@
 <li>a do convênio só age quando a requisição tem cotação.</li>
 <li>RN018 – <strong>A cada gravação com itens alterados</strong>, o sistema <strong>cancela a reserva anterior e cria uma nova</strong> no Estoque, com os lotes e quantidades dos itens (<code>Cot/Controllers/RequisicaoController.cs:340-398</code>). O resultado do cancelamento não é conferido. A <strong>confirmação</strong> da reserva está comentada (linhas 396-397).</li>
 <li>RN019 – No Estoque, a reserva confere o <strong>saldo disponível de cada lote</strong>. Se faltar saldo, ou em qualquer erro, o Estoque <strong>devolve -1</strong> em vez de recusar (<code>Est/LaboSys.Estoque.Services/EstoqueServices.cs:1039-1120</code>).</li>
-<li>RN020 – O Comercial <strong>guarda esse -1</strong> como número da reserva (<code>Cot/Controllers/RequisicaoController.cs:397</code>). Na fatura, a conferência da separação só é feita quando o número é <strong>maior que zero</strong> (<code>NF/Controllers/FaturaController.cs:216</code>).</li>
-<li><em>Inferência, a confirmar no teste:</em> uma requisição cuja reserva falhou pode ser faturada <strong>sem separação</strong> no Estoque.</li>
+<li>RN020 – O Comercial <strong>guarda esse -1</strong> como número da reserva (<code>Cot/Controllers/RequisicaoController.cs:397</code>). O usuário não é avisado de que a reserva falhou.</li>
+<li><strong>Na tela da fatura</strong>, a lista de requisições só traz as que têm reserva válida e já separada (<code>NF/Controllers/FaturaController.cs:46-70</code>). A requisição com -1 <strong>não aparece</strong> e fica parada em aberto, sem reserva.</li>
+<li><strong>Na gravação da fatura</strong>, a conferência da separação só é feita quando o número é maior que zero (<code>NF/Controllers/FaturaController.cs:216</code>). Pela tela, isso não chega a acontecer, porque a requisição com -1 não aparece na lista.</li>
+<li><em>Corrigido em 12/10/2026, na análise do fluxo 3: a versão anterior dizia que a requisição com -1 podia ser faturada pela tela.</em></li>
 <li>RN021 – A reserva é feita no Estoque como uma <strong>solicitação do tipo comercial</strong>, já com as quantidades por lote. O saldo reservado sai da lista de lotes das outras requisições (RN010).</li>
 </ul>
 <h4 id="telas-do-sistema_3">Telas do sistema</h4>
@@ -212,7 +214,7 @@
 <div class="callout">
 <p class="callout-titulo">Pontos de atenção</p>
 <p><strong>1. O lote vendido é o "disponível" do Estoque, não o certificado pela Pessoa Delegada</strong> (RN010) (art. 8º, XV). O lote sai da quarentena quando o CQ aprova a análise. Não há, em nenhum módulo, a certificação do lote pela Pessoa Delegada antes da venda (Produção, fluxo 1; Estoque, fluxo de recebimento). <em>A validar com a GQ:</em> onde essa certificação acontece hoje.</p>
-<p><strong>2. A reserva que falha vira um número negativo, e a fatura deixa de conferir a separação</strong> (RN019, RN020). É uma corrente de três falhas em dois módulos.</p>
+<p><strong>2. A reserva que falha vira um número negativo, sem aviso</strong> (RN019, RN020). A requisição fica em aberto, sem reserva, e não aparece para faturar. O usuário não sabe por quê. A gravação da fatura também não confere a separação nesse caso, mas pela tela a requisição não chega lá.</p>
 <p><strong>3. A requisição pode ser salva com itens sem lote.</strong> Os itens da cotação ou do convênio entram sem lote (RN009), e a conferência geral de lote está comentada (RN016). Só a inclusão e a alteração de cada item exigem lote. <em>A confirmar no teste:</em> o que o Estoque faz com um item sem lote na reserva (pelo código, a reserva falha e cai no ponto 2).</p>
 <p><strong>4. Sem validade mínima para vender</strong> (RN011). Um lote que vence em poucos dias pode ser vendido. <em>A validar com a área:</em> a validade mínima exigida pelos clientes (é comum em compras públicas).</p>
 <p><strong>5. Conferências que não funcionam:</strong> a quantidade da cotação e o limite do convênio (RN017), a quantidade da cotação contra a disponível (RN004).</p>
@@ -307,8 +309,8 @@
 </tr>
 <tr>
 <td>CT-COM-015</td>
-<td>Com a requisição do caso anterior, tentar gerar a fatura (fluxo 3)</td>
-<td>Pela norma, recusa por falta de separação. <strong>Registrar se faturar</strong> (RN020, ponto 2)</td>
+<td>Com a requisição do caso anterior, abrir a tela da fatura (fluxo 3)</td>
+<td>A requisição <strong>não aparece</strong> na lista. <strong>Registrar se o usuário recebe algum aviso</strong> de que a reserva falhou (RN020, ponto 2)</td>
 </tr>
 <tr>
 <td>CT-COM-016</td>
@@ -329,7 +331,7 @@
 </table></div>
 <p><strong>Prioridade (testes por risco):</strong> CT-COM-018, 014, 015, 008 e 006 primeiro. Eles tocam:
 - a venda de lote sem certificação da Pessoa Delegada;
-- a reserva que falha e a fatura que deixa de conferir a separação;
+- a reserva que falha sem aviso;
 - a requisição salva sem lote;
 - o lote bloqueado oferecido à venda.</p>
     </article>

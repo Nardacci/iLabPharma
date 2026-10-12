@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatura, remessa e cancelamento · Comercial · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html">Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="fatura-remessa-e-cancelamento.html" aria-current=page>Fatura, remessa e cancelamento</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Fatura, remessa e cancelamento</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/comercial/LabMedSys - Modulo Comercial - Fluxo Fatura, Remessa e Cancelamento.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve como a venda é <strong>faturada</strong> no Comercial do LabMedSys, como a fatura gera a <strong>remessa</strong> (a saída do material) no Estoque e como a fatura é <strong>finalizada</strong> ou <strong>cancelada</strong>. Também mostra como o sistema responde à pergunta de um recolhimento: <strong>para quem foi o lote X?</strong></p>
+<p>Pela norma, os registros de distribuição precisam estar <strong>prontamente disponíveis</strong> para quem faz o recolhimento e conter informações suficientes sobre os clientes abastecidos (RDC 658/2022, arts. 345 a 347).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Fatura: escolha da requisição, endereço de entrega, cobrança, peso e volume.</li>
+<li>Remessa no Estoque (guia de simples remessa).</li>
+<li>Finalizar e cancelar a fatura.</li>
+<li>Impressão da fatura e relatórios de faturamento, incluindo o relatório por lote (RV07).</li>
+</ul>
+<p><strong>Fora do escopo:</strong>
+- a requisição e a reserva (fluxo 2);
+- a separação e a remessa manual no Estoque (fluxos de solicitação e de remessa do Estoque).</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu. Os caminhos de código são relativos a <code>7.comercial/comercial/</code>. Para encurtar: <code>NF/</code> = <code>HSolutions.Comercial.UI/Areas/NotaFiscal/</code>, <code>Repo/</code> = <code>HSolutions.Comercial.Infrastructure/NotaFiscal/NotaFiscalRepository.cs</code>, <code>Est/</code> = <code>3.estoque/app/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/comercial/fatura-remessa-cancelamento-fluxograma.png" target="_blank" rel="noopener"><img src="../img/comercial/fatura-remessa-cancelamento-fluxograma.png" alt="Workflow da fatura, da remessa e do cancelamento" loading="lazy"></a><figcaption>Workflow da fatura, da remessa e do cancelamento · clique para ampliar</figcaption></figure>
+
+<ol>
+<li>Na tela <strong>Fatura</strong>, o usuário escolhe uma requisição em aberto <strong>já separada</strong> pelo Estoque.</li>
+<li>Informa o endereço de entrega, o tipo de cobrança, o peso e o volume.</li>
+<li>Ao gerar, o sistema confere de novo a separação, grava a fatura e marca a requisição como <strong>faturada</strong>.</li>
+<li>Se o tipo de fornecimento é "guia de simples remessa", pede ao Estoque a <strong>remessa</strong>, com os lotes da requisição.</li>
+<li>A fatura pode ser <strong>finalizada</strong> ou <strong>cancelada</strong>, com justificativa.</li>
+<li>Para um recolhimento, o relatório <strong>RV07 Produtos Faturados</strong> lista as faturas por produto e lote. Ele está <strong>fora do menu</strong>.</li>
+</ol>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="1-gerar-a-fatura">1. Gerar a fatura</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – A lista de requisições da tela só traz as requisições <strong>em aberto</strong> com reserva válida no Estoque e <strong>já separadas</strong> (<code>NF/Controllers/FaturaController.cs:46-70</code>; <code>Repo:93-96</code>).</li>
+<li>RN002 – A tela exige <strong>requisição</strong>, <strong>endereço de entrega</strong> e <strong>tipo de cobrança</strong> (<code>NF/Controllers/FaturaController.cs:262-287</code>). Só os endereços do tipo entrega do cliente são oferecidos (linhas 133-160).</li>
+<li>RN003 – A conferência "requisição atendida pelo Estoque" da tela está <strong>fixada como verdadeira</strong> no código, com o comentário "TODO" (<code>NF/Controllers/FaturaController.cs:271</code>). A conferência real fica na gravação (RN004).</li>
+<li>RN004 – Na gravação (<code>NF/Controllers/FaturaController.cs:195-260</code>):</li>
+<li>o sistema confere no Estoque se a reserva foi <strong>separada</strong>, desde que o número da reserva seja maior que zero (linhas 216-220; fluxo 2, RN020);</li>
+<li>grava a fatura com quem criou e a data do servidor, o valor total dos itens não excluídos e o <strong>pagamento previsto para 30 dias</strong> depois da data da tela;</li>
+<li>marca a requisição como <strong>faturada</strong> (<code>Repo:58-65</code>).</li>
+<li>RN005 – <strong>A situação do lote não é conferida de novo.</strong> Entre a requisição e a fatura, o lote pode ter sido bloqueado, posto em reanálise ou recolhido. A fatura só confere a separação.</li>
+<li><em>Inferência, a confirmar no teste:</em> um lote bloqueado depois da separação é faturado e remetido.</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Fatura</td>
+<td>Gerar a fatura da requisição separada</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-remessa-no-estoque">2. Remessa no Estoque</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN006 – A remessa só é pedida quando o tipo de fornecimento tem o vínculo <strong>guia de simples remessa</strong> (<code>NF/Controllers/FaturaController.cs:226-232</code>). Nos outros tipos, a fatura não gera saída no Estoque. <em>A validar com a área:</em> como o material sai nesses casos.</li>
+<li>RN007 – A fatura é gravada <strong>antes</strong> de pedir a remessa. Se a remessa falhar, a fatura fica sem remessa e o usuário <strong>não é avisado</strong>: o erro é ignorado (<code>NF/Controllers/FaturaController.cs:232-248</code>).</li>
+<li>RN008 – No Estoque, a remessa é criada <strong>já finalizada</strong>, do tipo GMM, ligada à fatura e à solicitação, com o endereço de entrega, o peso, o volume e as assinaturas configuradas (<code>Est/LaboSys_BLL/bllRemessa.cs:438-535</code>).</li>
+<li>RN009 – Os lotes da remessa vêm dos <strong>itens da requisição</strong>, inclusive os marcados como excluídos (<code>HSolutions.Comercial.Services/Estoque/EstoqueServiceApi.cs:970-982</code>, sem filtro de exclusão). O valor total da fatura, ao contrário, desconta os excluídos (<code>HSolutions.Comercial.Infrastructure/Cotacao/RequisicaoRepository.cs:258-262</code>).</li>
+<li><em>Inferência, a confirmar no teste:</em> um item excluído da requisição entra na remessa.</li>
+<li>RN010 – A remessa <strong>não confere</strong> a situação do lote no Estoque (RN005).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estoque</td>
+<td>Remessa de Material (fluxo do Estoque)</td>
+<td>Consultar a remessa gerada pela fatura</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-finalizar-e-cancelar">3. Finalizar e cancelar</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN011 – <strong>Finalizar</strong> só marca a fatura como finalizada. O botão aparece para a fatura ativa e ainda não finalizada (<code>NF/Models/GridFaturaModel.cs:93-99</code>; <code>Repo:426-431</code>). Não grava quem finalizou nem quando.</li>
+<li>RN012 – <strong>Cancelar</strong> pede uma justificativa e <strong>exclui logicamente</strong> a fatura. A justificativa é gravada <strong>no lugar da observação</strong> da fatura, que se perde (<code>Repo:77-82</code>).</li>
+<li>RN013 – O cancelamento <strong>não desfaz nada</strong>:</li>
+<li>a requisição continua <strong>faturada</strong> e não pode ser faturada de novo nem cancelada (fluxo 2, RN022);</li>
+<li>a <strong>remessa</strong> no Estoque não é revertida.</li>
+<li>RN014 – A lista de cancelamento traz as faturas ativas, <strong>inclusive as finalizadas</strong> (<code>Repo:212-225</code>). <em>A confirmar no teste:</em> se uma fatura finalizada, ou já cancelada, pode ser cancelada.</li>
+<li>RN015 – Na tela de visualização, a data da fatura aparece com o <strong>mês no lugar dos minutos</strong>, em relógio de 12 horas (<code>NF/Controllers/FaturaController.cs:102</code>, formato <code>hh:MM</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Fatura (lista)</td>
+<td>Consultar, imprimir e finalizar</td>
+</tr>
+<tr>
+<td>Comercial</td>
+<td>Cancelar Fatura</td>
+<td>Cancelar com justificativa</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-para-quem-foi-o-lote-relatorios">4. Para quem foi o lote: relatórios</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN016 – A fatura impressa e os relatórios de faturamento por produto, por cliente e por fatura saem da tela <strong>Fatura</strong> (<code>NF/Controllers/FaturaController.cs:436-530</code>). O modelo do item do relatório tem o <strong>lote</strong> (<code>HSolutions.Comercial.Reports/Faturamento/FaturamentoItemReportModel.cs:21</code>). <em>A confirmar no teste:</em> se o lote aparece impresso.</li>
+<li>RN017 – O <strong>RV07 Produtos Faturados</strong> filtra por período, tipo de fornecimento, cliente, produto e <strong>lote do fabricante</strong>. A versão detalhada lista fatura, data, cliente, lote, quantidade e valor (<code>HSolutions.Comercial.UI/Areas/Relatorio/Controllers/ProdutosFaturadosController.cs</code>; <code>Repo:340-373</code>). É a consulta que um recolhimento precisa.</li>
+<li>RN018 – O RV07 e o RV05 Clientes estão <strong>fora do menu</strong>: o grupo Relatórios está comentado no roteiro (<code>Hsolutions.Comercial.DB/dml.sql:112-116</code>). Abrem só pelo endereço (a confirmar no teste).</li>
+<li>RN019 – O RV07 <strong>ignora as faturas canceladas</strong> (<code>Repo:248</code>). Como o cancelamento não desfaz a remessa (RN013), <strong>um lote que saiu da empresa numa fatura cancelada some do relatório</strong>.</li>
+<li>RN020 – O RV07 percorre todos os itens da requisição, sem descontar os excluídos (<code>Repo:340-373</code>), como a remessa (RN009). Não traz o <strong>endereço de entrega</strong> nem o número da remessa.</li>
+<li>RN021 – O RV07 <strong>exige período</strong>. Não há consulta direta "todas as vendas do lote X", em qualquer data.</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Fatura (impressões)</td>
+<td>Fatura e faturamento agrupado</td>
+</tr>
+<tr>
+<td>Comercial</td>
+<td>RV07 Produtos Faturados (fora do menu)</td>
+<td>Faturas por produto e lote</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Lote com problema depois da requisição é faturado e remetido</strong> (RN005, RN010). Nem a fatura nem a remessa conferem a situação do lote (art. 8º, XV; trava 1 do modelo ideal).</p>
+<p><strong>2. O relatório de recolhimento esconde vendas</strong> (RN019). Fatura cancelada some do RV07, mas o material pode ter saído. Num recolhimento, a empresa não encontraria esse cliente (arts. 346 e 347).</p>
+<p><strong>3. O relatório de recolhimento está fora do menu</strong> (RN018) e exige período (RN021). Não traz o endereço de entrega (RN020). Os registros não estão "prontamente disponíveis" (art. 346).</p>
+<p><strong>4. Falha na remessa sem aviso</strong> (RN007). A fatura fica gravada sem a saída do material, e ninguém é avisado.</p>
+<p><strong>5. Cancelamento que não desfaz</strong> (RN013): a requisição continua faturada, a remessa continua no Estoque, e a observação original da fatura é apagada pela justificativa (RN012).</p>
+<p><strong>6. Itens excluídos na remessa e no relatório</strong> (RN009, RN020), mas não no valor da fatura. <em>A confirmar no teste.</em></p>
+<p><strong>7. Remessa só para um tipo de fornecimento</strong> (RN006). Nos outros, o caminho da saída do material não está no Comercial. <em>A validar com a área.</em></p>
+<p><strong>8. Finalizar sem registro de quem e quando</strong> (RN011).</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- A requisição <code>TESTE</code> do fluxo 2 (tipo <code>TESTE REMESSA</code>, guia de simples remessa), com o lote <code>TESTEPA001</code>, <strong>separada</strong> no Estoque.
+- Uma segunda requisição <code>TESTE</code> do tipo <code>TESTE COTACAO</code>, separada.
+- O cliente <code>TESTE</code> com endereço de entrega (fluxo 1).
+- Usuários <code>t.admin</code> e <code>t.semadmin</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-019</td>
+<td>Abrir a tela Fatura e ver a lista de requisições</td>
+<td>Só as em aberto e separadas (RN001)</td>
+</tr>
+<tr>
+<td>CT-COM-020</td>
+<td>Gerar a fatura sem endereço de entrega</td>
+<td>"O endereço entrega é obrigatório!" (RN002)</td>
+</tr>
+<tr>
+<td>CT-COM-021</td>
+<td>Gerar a fatura da requisição <code>TESTE REMESSA</code></td>
+<td>Fatura gravada; requisição faturada; remessa GMM no Estoque com o lote <code>TESTEPA001</code> (RN004, RN008)</td>
+</tr>
+<tr>
+<td>CT-COM-022</td>
+<td>Gerar a fatura da requisição <code>TESTE COTACAO</code>; procurar a saída no Estoque</td>
+<td><strong>Registrar se há remessa</strong> e como o material sai (RN006, ponto 7)</td>
+</tr>
+<tr>
+<td>CT-COM-023</td>
+<td>Separar uma requisição; <strong>bloquear o lote</strong> no Estoque; gerar a fatura</td>
+<td>Pela norma, recusa. <strong>Registrar se faturar e remeter</strong> (RN005, ponto 1)</td>
+</tr>
+<tr>
+<td>CT-COM-024</td>
+<td>Excluir um item da requisição antes de faturar; gerar a fatura; ver a remessa</td>
+<td>Item fora da remessa. <strong>Registrar se entrar</strong> (RN009, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-COM-025</td>
+<td>Finalizar a fatura</td>
+<td>Finalizada. <strong>Registrar se aparece quem finalizou e quando</strong> (RN011)</td>
+</tr>
+<tr>
+<td>CT-COM-026</td>
+<td>Cancelar a fatura do CT-COM-021 com justificativa; ver a requisição e a remessa no Estoque</td>
+<td>Pela norma, a remessa é revertida ou o cancelamento é recusado. <strong>Registrar que a requisição continua faturada e a remessa continua ativa</strong> (RN013, ponto 5)</td>
+</tr>
+<tr>
+<td>CT-COM-027</td>
+<td>Ver a observação da fatura cancelada</td>
+<td><strong>Registrar se a observação original foi substituída</strong> pela justificativa (RN012)</td>
+</tr>
+<tr>
+<td>CT-COM-028</td>
+<td>Tentar cancelar uma fatura finalizada e uma já cancelada</td>
+<td><strong>Registrar se permitir</strong> (RN014)</td>
+</tr>
+<tr>
+<td>CT-COM-029</td>
+<td>Abrir o RV07 Produtos Faturados pelo endereço</td>
+<td><strong>Registrar se abre fora do menu</strong> (RN018, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-COM-030</td>
+<td>No RV07, filtrar pelo lote <code>TESTEPA001</code></td>
+<td>Lista as faturas do lote, com cliente, quantidade e data (RN017)</td>
+</tr>
+<tr>
+<td>CT-COM-031</td>
+<td>Depois do CT-COM-026, filtrar o RV07 pelo lote <code>TESTEPA001</code></td>
+<td>Pela norma, a venda aparece, porque o material saiu. <strong>Registrar se sumir</strong> (RN019, ponto 2)</td>
+</tr>
+<tr>
+<td>CT-COM-032</td>
+<td>Visualizar uma fatura e conferir a hora</td>
+<td><strong>Registrar se a hora mostra o mês no lugar dos minutos</strong> (RN015)</td>
+</tr>
+<tr>
+<td>CT-COM-033</td>
+<td>Imprimir a fatura</td>
+<td><strong>Registrar se o lote aparece</strong> (RN016)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-COM-031, 023, 026, 029 e 030 primeiro. Eles tocam:
+- a venda que some do relatório de recolhimento;
+- o lote com problema faturado e remetido;
+- o cancelamento que não desfaz a remessa;
+- a consulta de recolhimento fora do menu.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#1-gerar-a-fatura">1. Gerar a fatura</a></li><li class="sub"><a href="#2-remessa-no-estoque">2. Remessa no Estoque</a></li><li class="sub"><a href="#3-finalizar-e-cancelar">3. Finalizar e cancelar</a></li><li class="sub"><a href="#4-para-quem-foi-o-lote-relatorios">4. Para quem foi o lote: relatórios</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
