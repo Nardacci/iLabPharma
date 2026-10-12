@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · Comercial · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cliente-e-cadastros-de-venda.html">Cliente e cadastros de venda</a></li><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html">Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="fatura-remessa-e-cancelamento.html">Fatura, remessa e cancelamento</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 12/10/2026 · <strong>Versão a testar:</strong> legado entregue pelo fornecedor · <strong>Executor previsto:</strong> Claude Code no computador da pessoa, pela VPN, com a habilidade <code>executar-testes</code> (passo a passo em <code>homologacao/COMO-EXECUTAR-TESTES.md</code>).</p>
+<p>Os casos das seções 6.1 a 6.3 foram <strong>montados por script</strong> a partir dos fluxos (<code>homologacao/ferramentas/montar_plano_testes.py</code>). Se um fluxo mudar, gere essas seções de novo e mantenha a seção 6.0, que vem da matriz de permissões.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<p>Confirmar nas telas o que a leitura do código encontrou no Comercial:
+- as regras de negócio (<code>01-regras-de-negocio.md</code>);
+- os pontos de atenção dos três fluxos;
+- a matriz de permissões (<code>02-matriz-de-permissoes.md</code>);
+- os riscos de prioridade alta (<code>07-analise-de-risco.md</code>);
+- a situação das 16 telas (<code>11-inventario-de-telas.md</code>).</p>
+<h3 id="2-escopo">2. Escopo</h3>
+<ul>
+<li>Os três fluxos: cotação, requisição e reserva; fatura, remessa e cancelamento; cliente e cadastros.</li>
+<li>O acesso (seção 6.0).</li>
+<li>O Estoque entra onde um caso pede para conferir o efeito lá: lista de lotes, reserva, separação, bloqueio do lote e remessa.</li>
+</ul>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<h4 id="3-1-antes-de-qualquer-caso-o-modulo-abre">3.1 Antes de qualquer caso: o módulo abre?</h4>
+<ol>
+<li>No Principal, criar o perfil <strong><code>TESTECOM</code></strong> com todas as telas do Comercial (módulo 4) e todas as ações, e dá-lo a <code>t.admin</code>.</li>
+<li>Entrar no Comercial com <code>t.admin</code> e conferir se o menu aparece (12 itens em 4 grupos). <strong>Se não aparecer, parar e registrar.</strong></li>
+<li>Conferir com a TI o endereço dos relatórios RV05 e RV07, que estão fora do menu.</li>
+</ol>
+<h4 id="3-2-usuarios-e-funcoes">3.2 Usuários e funções</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário (já existe)</th>
+<th>Perfil ou funções a dar no Principal</th>
+<th>Papel nos testes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>t.admin</code></td>
+<td><code>TESTECOM</code> (tudo) e as funções do Estoque para separar e bloquear</td>
+<td>Vende, fatura e cancela; separa e bloqueia no Estoque</td>
+</tr>
+<tr>
+<td><code>t.consulta</code></td>
+<td>Só a consulta da Fatura</td>
+<td>Casos de acesso (CT-COM-050)</td>
+</tr>
+<tr>
+<td><code>t.semadmin</code></td>
+<td>Nenhuma função do Comercial; usuário da GQ</td>
+<td>Casos de acesso (CT-COM-049, 052)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Se algum estiver bloqueado ou com a senha vencida, usar o administrador para gerar senha nova. <strong>Não guardar senhas neste repositório.</strong></p>
+<h4 id="3-3-dados-ja-existentes-no-ambiente-reaproveitar">3.3 Dados já existentes no ambiente (reaproveitar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Onde</th>
+<th>Uso aqui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pessoas jurídicas <code>TESTE</code></td>
+<td>Principal</td>
+<td>Cliente <code>TESTE</code>; criar <code>TESTE FORNECEDOR</code> se não houver</td>
+</tr>
+<tr>
+<td>Item <code>TESTE PRODUTO ACABADO</code> e lote <code>TESTEPA001</code></td>
+<td>Estoque (plano do Estoque, CT-EST-096)</td>
+<td>Produto e lote vendidos</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-4-dados-a-criar-durante-os-testes">3.4 Dados a criar (durante os testes)</h4>
+<p>Na ordem:
+1. No Estoque: deixar <code>TESTEPA001</code> e <code>TESTEPA002</code> <strong>aprovados</strong> e no almoxarifado comercial; <code>TESTEPA003</code> <strong>em quarentena</strong>; o item com venda permitida.
+2. No Comercial: tipo de cliente do <code>TESTE</code>; endereços de entrega e cobrança; tipos de fornecimento <code>TESTE COTACAO</code>, <code>TESTE CONVENIO</code> e <code>TESTE REMESSA</code>; preço do produto.
+3. Cotação <code>TESTE</code>, convênio <code>TESTE</code>, requisições <code>TESTE</code>.</p>
+<p><strong>Rodar o fluxo 1 (cadastros) antes dos fluxos 2 e 3.</strong></p>
+<h4 id="3-5-dados-que-faltam-pedir-ou-criar">3.5 Dados que faltam (pedir ou criar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Necessário para</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Saldo do <code>TESTE PRODUTO ACABADO</code> no Estoque</td>
+<td>Toda a venda</td>
+<td>O endereçamento do Estoque não gravou (DV-EST-016). Sem saldo, a lista de lotes fica vazia: <strong>depende do Estoque</strong></td>
+</tr>
+<tr>
+<td>O tipo de fornecimento de número 3</td>
+<td>CT-COM-038</td>
+<td>Ver com a TI qual é</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<p>Como nos outros módulos:
+- captura de cada passo relevante nos casos de prioridade <strong>alta</strong>;
+- captura do resultado nos de prioridade <strong>média</strong>;
+- em <code>homologacao/7.comercial/execucao/&lt;AAAA-MM-DD&gt;/evidencias/CT-COM-xxx-passo-N.png</code>;
+- o <code>resultado.md</code> da rodada, com a lista dos dados <code>TESTE</code> criados.</p>
+<p><strong>Atenção ao Estoque:</strong> nos casos de reserva, separação e remessa, capturar também a tela do Estoque (solicitação e remessa) com o número que o Comercial gravou.</p>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<ul>
+<li>O teste <strong>confirma o comportamento atual</strong>. Nos casos "Registrar se…", o resultado esperado pela norma é diferente do que o código indica; o caso <strong>falha</strong> se o sistema fizer o que o código mostra.</li>
+<li>Para a nova versão, todos os casos de prioridade <strong>alta</strong> devem passar (as falhas viram requisitos corrigidos).</li>
+<li><strong>Ordem sugerida:</strong>
+  1. a verificação 3.1;
+  2. a seção 6.0;
+  3. o fluxo 1 (cadastros, seção 6.3);
+  4. o fluxo 2 (seção 6.1);
+  5. o fluxo 3 (seção 6.2), deixando os cancelamentos (CT-COM-026 a 028) e o RV07 depois do cancelamento (CT-COM-031) para o fim.</li>
+</ul>
+<p>Em cada um, primeiro os casos de prioridade alta.</p>
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p><strong>Prioridade:</strong> Alta, Média ou Baixa, pela análise de risco e pela linha de prioridade de cada fluxo.</p>
+<h4 id="6-0-acesso-da-matriz-de-permissoes">6.0 Acesso (da matriz de permissões)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-049</td>
+<td>Com um perfil sem nenhuma função do Comercial, abrir a Requisição de PA e a Fatura pelo endereço</td>
+<td>Acesso negado</td>
+<td><code>02</code>, camada 2</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-050</td>
+<td>Com um perfil que só <strong>consulta</strong> a Fatura, tentar cancelar e finalizar uma fatura <code>TESTE</code></td>
+<td>Recusa</td>
+<td><code>02</code>, camada 2</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-051</td>
+<td>Com o perfil que altera a requisição, abrir o Cancelar Requisição de PA</td>
+<td><strong>Registrar que pode cancelar</strong> (mesma função)</td>
+<td><code>02</code>, funções divididas</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-052</td>
+<td>Com um usuário da GQ, abrir o RV07 Produtos Faturados</td>
+<td><strong>Registrar se a GQ tem acesso</strong> à consulta de recolhimento</td>
+<td><code>02</code>, matriz</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-1-cotacao-requisicao-de-pa-e-reserva-no-estoque">6.1 Cotação, requisição de PA e reserva no Estoque</h4>
+<p>Fluxo: <code>fluxos/cotacao-requisicao-reserva.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-001</td>
+<td>Criar uma cotação <code>TESTE</code> sem observações</td>
+<td>Recusa pela observação (RN001)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-002</td>
+<td>Criar a cotação com observações e incluir um item</td>
+<td>Código <code>NNNN/AAAA</code> gerado no primeiro item (RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-003</td>
+<td>Na cotação, incluir quantidade maior que a disponível no Estoque</td>
+<td><strong>Registrar se aceitar</strong> (RN004, ponto 5)</td>
+<td>Ponto 5: Conferências que não funcionam:</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-004</td>
+<td>Abrir uma requisição do tipo cotação a partir da cotação <code>TESTE</code></td>
+<td>Itens da cotação, <strong>sem lote</strong> (RN008, RN009)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-005</td>
+<td>Na lista de lotes do <code>TESTE PRODUTO ACABADO</code>, procurar o <code>TESTEPA003</code> (em quarentena)</td>
+<td>Não aparece (RN010)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-006</td>
+<td>No Estoque, bloquear o <code>TESTEPA002</code>; ver a lista de lotes na requisição</td>
+<td>Não aparece (RN010)</td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-007</td>
+<td>Escolher um lote que vence em menos de 30 dias</td>
+<td>Pela prática do mercado, alerta. <strong>Registrar se aceitar sem aviso</strong> (RN011, ponto 4)</td>
+<td>Ponto 4: Sem validade mínima para vender</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-008</td>
+<td>Salvar a requisição da cotação <strong>sem escolher os lotes</strong> dos itens</td>
+<td>Pela norma, recusa. <strong>Registrar se salvar</strong> e qual número de reserva ficou gravado (RN016, ponto 3)</td>
+<td>Ponto 3: A requisição pode ser salva com itens sem lote</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-009</td>
+<td>Incluir um item com quantidade maior que a disponível</td>
+<td>"Quantidade não pode ser maior que a QTDE Disponível." (RN012)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-010</td>
+<td>Incluir um item com o lote <code>TESTEPA001</code> e salvar</td>
+<td>Requisição salva; reserva criada no Estoque com o lote (RN018, RN021)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-011</td>
+<td>Na requisição do caso anterior, alterar a quantidade e salvar de novo; ver as solicitações no Estoque</td>
+<td>Uma reserva cancelada e uma nova (RN018). <strong>Registrar se ficarem duas ativas</strong> (ponto 7)</td>
+<td>Ponto 7: Reserva desfeita e refeita a cada gravação</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-012</td>
+<td>Numa requisição do tipo convênio, pedir mais do que o convênio permite</td>
+<td>Pela regra, recusa. <strong>Registrar se aceitar</strong> (RN017)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-013</td>
+<td>Numa requisição da cotação, pedir menos do que a cotação</td>
+<td>Pela regra, aviso "abaixo da cotação". <strong>Registrar se aceitar</strong> (RN017)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-014</td>
+<td>Forçar falta de saldo no lote (consumir o saldo do <code>TESTEPA001</code> em outra requisição) e salvar a requisição</td>
+<td>Pela norma, recusa clara. <strong>Registrar o número de reserva gravado</strong> (RN019, RN020, ponto 2)</td>
+<td>Ponto 2: A reserva que falha vira um número negativo, sem aviso</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-015</td>
+<td>Com a requisição do caso anterior, abrir a tela da fatura (fluxo 3)</td>
+<td>A requisição <strong>não aparece</strong> na lista. <strong>Registrar se o usuário recebe algum aviso</strong> de que a reserva falhou (RN020, ponto 2)</td>
+<td>Ponto 2: A reserva que falha vira um número negativo, sem aviso</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-016</td>
+<td>Cancelar a requisição em aberto</td>
+<td>Cancelada; reserva cancelada no Estoque; <strong>registrar que não pede justificativa</strong> (RN022 a RN024)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-017</td>
+<td>Tentar cancelar uma requisição faturada</td>
+<td>"Não é permitido cancelar uma requisição com situação diferente de aberto." (RN022)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-018</td>
+<td>Procurar, na requisição ou na fatura, a confirmação de que o lote foi <strong>certificado pela Pessoa Delegada</strong></td>
+<td><strong>Registrar a ausência</strong> (ponto 1)</td>
+<td>Ponto 1: O lote vendido é o "disponível" do Estoque, não o certificado pela Pessoa Delegada</td>
+<td>Alta</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-2-fatura-remessa-e-cancelamento">6.2 Fatura, remessa e cancelamento</h4>
+<p>Fluxo: <code>fluxos/fatura-remessa-cancelamento.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-019</td>
+<td>Abrir a tela Fatura e ver a lista de requisições</td>
+<td>Só as em aberto e separadas (RN001)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-020</td>
+<td>Gerar a fatura sem endereço de entrega</td>
+<td>"O endereço entrega é obrigatório!" (RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-021</td>
+<td>Gerar a fatura da requisição <code>TESTE REMESSA</code></td>
+<td>Fatura gravada; requisição faturada; remessa GMM no Estoque com o lote <code>TESTEPA001</code> (RN004, RN008)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-022</td>
+<td>Gerar a fatura da requisição <code>TESTE COTACAO</code>; procurar a saída no Estoque</td>
+<td><strong>Registrar se há remessa</strong> e como o material sai (RN006, ponto 7)</td>
+<td>Ponto 7: Remessa só para um tipo de fornecimento</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-023</td>
+<td>Separar uma requisição; <strong>bloquear o lote</strong> no Estoque; gerar a fatura</td>
+<td>Pela norma, recusa. <strong>Registrar se faturar e remeter</strong> (RN005, ponto 1)</td>
+<td>Ponto 1: Lote com problema depois da requisição é faturado e remetido</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-024</td>
+<td>Excluir um item da requisição antes de faturar; gerar a fatura; ver a remessa</td>
+<td>Item fora da remessa. <strong>Registrar se entrar</strong> (RN009, ponto 6)</td>
+<td>Ponto 6: Itens excluídos na remessa e no relatório</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-025</td>
+<td>Finalizar a fatura</td>
+<td>Finalizada. <strong>Registrar se aparece quem finalizou e quando</strong> (RN011)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-026</td>
+<td>Cancelar a fatura do CT-COM-021 com justificativa; ver a requisição e a remessa no Estoque</td>
+<td>Pela norma, a remessa é revertida ou o cancelamento é recusado. <strong>Registrar que a requisição continua faturada e a remessa continua ativa</strong> (RN013, ponto 5)</td>
+<td>Ponto 5: Cancelamento que não desfaz</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-027</td>
+<td>Ver a observação da fatura cancelada</td>
+<td><strong>Registrar se a observação original foi substituída</strong> pela justificativa (RN012)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-028</td>
+<td>Tentar cancelar uma fatura finalizada e uma já cancelada</td>
+<td><strong>Registrar se permitir</strong> (RN014)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-029</td>
+<td>Abrir o RV07 Produtos Faturados pelo endereço</td>
+<td><strong>Registrar se abre fora do menu</strong> (RN018, ponto 3)</td>
+<td>Ponto 3: O relatório de recolhimento está fora do menu</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-030</td>
+<td>No RV07, filtrar pelo lote <code>TESTEPA001</code></td>
+<td>Lista as faturas do lote, com cliente, quantidade e data (RN017)</td>
+<td>—</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-031</td>
+<td>Depois do CT-COM-026, filtrar o RV07 pelo lote <code>TESTEPA001</code></td>
+<td>Pela norma, a venda aparece, porque o material saiu. <strong>Registrar se sumir</strong> (RN019, ponto 2)</td>
+<td>Ponto 2: O relatório de recolhimento esconde vendas</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-032</td>
+<td>Visualizar uma fatura e conferir a hora</td>
+<td><strong>Registrar se a hora mostra o mês no lugar dos minutos</strong> (RN015)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-033</td>
+<td>Imprimir a fatura</td>
+<td><strong>Registrar se o lote aparece</strong> (RN016)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-3-cliente-e-cadastros-de-venda">6.3 Cliente e cadastros de venda</h4>
+<p>Fluxo: <code>fluxos/cliente-cadastros.md</code>. </p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Rastreia</th>
+<th>Prior.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-034</td>
+<td>Na tela Endereço, abrir a pessoa jurídica <code>TESTE</code> e salvar sem tipo de cliente</td>
+<td>"O Tipo Cliente é obrigatório." (RN002)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-035</td>
+<td>Dar o tipo de cliente; cadastrar um endereço de entrega e um de cobrança</td>
+<td>Gravados (RN005)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-036</td>
+<td>Cadastrar um segundo endereço de cobrança</td>
+<td>Pela regra, "Esse tipo endereço já está cadastrado." <strong>Registrar se aceitar</strong> na inclusão (RN005)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-037</td>
+<td>Procurar no cadastro do cliente a licença sanitária, a autorização de funcionamento e o responsável técnico</td>
+<td><strong>Registrar a ausência</strong> (RN003, ponto 1)</td>
+<td>Ponto 1: Sem dados para saber se o cliente pode receber medicamentos</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-038</td>
+<td>Numa requisição com o tipo de fornecimento número 3, procurar a <code>TESTE FORNECEDOR</code> na lista de clientes</td>
+<td>Pela regra, não aparece. <strong>Registrar se aparecer</strong> (RN004, ponto 2)</td>
+<td>Ponto 2: Qualquer pessoa jurídica pode virar cliente num tipo de fornecimento</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-039</td>
+<td>Depois de faturar para o cliente <code>TESTE</code> (fluxo 3), <strong>alterar</strong> o endereço de entrega e visualizar a fatura antiga</td>
+<td>Pela norma, a fatura mostra o endereço da época. <strong>Registrar se mostrar o novo</strong> (RN007, ponto 3)</td>
+<td>Ponto 3: O endereço da venda não fica guardado na fatura</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-040</td>
+<td><strong>Excluir</strong> o endereço de entrega usado na fatura e visualizar a fatura</td>
+<td><strong>Registrar se o endereço ficar em branco</strong> (RN007, ponto 3)</td>
+<td>Ponto 3: O endereço da venda não fica guardado na fatura</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>CT-COM-041</td>
+<td>Criar o convênio <code>TESTE</code> com o código de um convênio existente</td>
+<td>Recusa pelo código repetido (RN009)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-042</td>
+<td>Incluir produtos no convênio <code>TESTE</code>; procurar a vigência</td>
+<td>Produtos gravados. <strong>Registrar a ausência de vigência</strong> (RN010, RN011)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-043</td>
+<td>Excluir um convênio que já tem requisição</td>
+<td>"Não pode excluir convênio que já possui uma requisição!" (RN012)</td>
+<td>—</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-COM-044</td>
+<td>Registrar uma atividade de relacionamento e um pregão <code>TESTE</code></td>
+<td>Gravados; <strong>registrar que o pregão não aparece na cotação nem na requisição</strong> (RN014, RN015)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-045</td>
+<td>Criar o tipo de fornecimento <code>TESTE MISTO</code> com os vínculos cotação e guia de simples remessa; usar numa requisição e faturar</td>
+<td><strong>Registrar qual vínculo valeu</strong> na requisição e se a remessa foi gerada (RN016, ponto 6)</td>
+<td>Ponto 6: Tipo de fornecimento com efeito ambíguo</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-046</td>
+<td>Com uma requisição em aberto, tirar o vínculo guia de simples remessa do tipo dela; faturar</td>
+<td><strong>Registrar se a remessa deixou de ser gerada</strong> (RN017, ponto 6)</td>
+<td>Ponto 6: Tipo de fornecimento com efeito ambíguo</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-047</td>
+<td>Alterar o preço do <code>TESTE PRODUTO ACABADO</code> e procurar o preço anterior</td>
+<td><strong>Registrar a ausência</strong> de histórico e de vigência (RN018, RN021)</td>
+<td>—</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-COM-048</td>
+<td>Alterar um endereço e um preço; pedir à TI ou ao DBA o histórico dessas alterações</td>
+<td><strong>Registrar se existe</strong> (RN021, ponto 4)</td>
+<td>Ponto 4: Sem histórico das alterações</td>
+<td>Alta</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Seção</th>
+<th>Casos</th>
+<th>Alta</th>
+<th>Média</th>
+<th>Baixa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.0 Acesso</td>
+<td>4</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>6.1 Cotação, requisição de PA e reserva no Estoque</td>
+<td>18</td>
+<td>6</td>
+<td>5</td>
+<td>7</td>
+</tr>
+<tr>
+<td>6.2 Fatura, remessa e cancelamento</td>
+<td>15</td>
+<td>5</td>
+<td>7</td>
+<td>3</td>
+</tr>
+<tr>
+<td>6.3 Cliente e cadastros de venda</td>
+<td>15</td>
+<td>5</td>
+<td>6</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>52</strong></td>
+<td><strong>17</strong></td>
+<td><strong>20</strong></td>
+<td><strong>15</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Cobertura dos riscos de prioridade alta</strong> (<code>07-analise-de-risco.md</code>):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Risco</th>
+<th>Casos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-COM-01 Lote sem certificação da Pessoa Delegada</td>
+<td>CT-COM-018</td>
+</tr>
+<tr>
+<td>R-COM-02 Lote com problema depois da requisição</td>
+<td>CT-COM-006, 023</td>
+</tr>
+<tr>
+<td>R-COM-03 Lote perto do vencimento</td>
+<td>CT-COM-007</td>
+</tr>
+<tr>
+<td>R-COM-06 Venda some do relatório de recolhimento</td>
+<td>CT-COM-031</td>
+</tr>
+<tr>
+<td>R-COM-07 Endereço alterado ou excluído</td>
+<td>CT-COM-039, 040</td>
+</tr>
+<tr>
+<td>R-COM-08 Consulta de recolhimento fora do menu</td>
+<td>CT-COM-029, 030, 052</td>
+</tr>
+<tr>
+<td>R-COM-09 Sem ligação com a GQ</td>
+<td>Sem caso de tela próprio: a ligação não existe. Validar com a GQ (<code>04</code>, seção 3)</td>
+</tr>
+<tr>
+<td>R-COM-10 Cancelamento que não desfaz</td>
+<td>CT-COM-026</td>
+</tr>
+<tr>
+<td>R-COM-12 Cliente sem autorização conferida</td>
+<td>CT-COM-037</td>
+</tr>
+<tr>
+<td>R-COM-14 Sem histórico</td>
+<td>CT-COM-048</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</h3>
+<ol>
+<li>Confirmar que pode criar no Principal o perfil <code>TESTECOM</code> e dar as funções da tabela 3.2.</li>
+<li><strong>O Estoque precisa ter saldo</strong> do produto acabado <code>TESTE</code> no almoxarifado comercial. Hoje isso está bloqueado pelo endereçamento (DV-EST-016). Sem isso, os fluxos 2 e 3 não rodam.</li>
+<li>Pedir à TI os endereços do RV05 e do RV07 e o número do tipo de fornecimento 3.</li>
+<li>No seu computador, pela VPN, pedir ao Claude Code: "executar os testes do comercial, rodada 1 (prioridade alta)".</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-antes-de-executar-precisa-de-voce">8. Antes de executar (precisa de você)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

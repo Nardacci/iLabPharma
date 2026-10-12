@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cliente e cadastros de venda · Comercial · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#0e7490"><span class="icone">◈</span>Comercial</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="cliente-e-cadastros-de-venda.html" aria-current=page>Cliente e cadastros de venda</a></li><li><a href="cotacao-requisicao-de-pa-e-reserva-no-estoque.html">Cotação, requisição de PA e reserva no Estoque</a></li><li><a href="fatura-remessa-e-cancelamento.html">Fatura, remessa e cancelamento</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Comercial</a> › <span>Fluxos do processo</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Cliente e cadastros de venda</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/comercial/LabMedSys - Modulo Comercial - Fluxo Cliente e Cadastros de Venda.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<h2 id="objetivo">Objetivo</h2>
+<p>Este documento descreve os <strong>cadastros de venda</strong> do Comercial do LabMedSys:
+- o cliente e os dados dele (tipo, endereços, contatos);
+- os convênios, com os produtos e as quantidades contratadas;
+- o relacionamento com o cliente e os pregões;
+- as tabelas de apoio: tipo de fornecimento, tipo de cliente, tipo de cobrança, preço e assinaturas.</p>
+<p>Eles definem <strong>a quem a empresa vende e para onde o lote vai</strong>. Pela norma, os registros de distribuição precisam ter informações suficientes sobre os clientes abastecidos para permitir o recolhimento (RDC 658/2022, arts. 346 e 347).</p>
+<p>Foi montado <strong>a partir do código do sistema legado</strong>. O que depende da prática da área está marcado como <strong>a validar</strong>. Os casos de teste estão no fim.</p>
+<h2 id="escopo">Escopo</h2>
+<ul>
+<li>Telas do grupo Cliente: Endereço (que é a tela do cliente), Convênio e Relacionamento (com a aba de pregões).</li>
+<li>Tabelas de apoio: Tipo de Fornecimento, Tipo Pessoa Jurídica, Tipo Cobrança, Preço e Assinaturas (fora do menu).</li>
+</ul>
+<p><strong>Fora do escopo:</strong> o cadastro da pessoa jurídica, que fica no Principal.</p>
+<p><strong>Nomes das telas:</strong> como aparecem no menu. Os caminhos de código são relativos a <code>7.comercial/comercial/</code>. Para encurtar: <code>Cli/</code> = <code>HSolutions.Comercial.UI/Areas/Cliente/</code>, <code>Tab/</code> = <code>HSolutions.Comercial.UI/Areas/TabelaApoio/</code>, <code>Infra/</code> = <code>HSolutions.Comercial.Infrastructure/</code>.</p>
+<h2 id="visao-geral-do-processo">Visão geral do processo</h2>
+<figure><a href="../img/comercial/cliente-cadastros-fluxograma.png" target="_blank" rel="noopener"><img src="../img/comercial/cliente-cadastros-fluxograma.png" alt="Workflow dos cadastros de cliente e de venda" loading="lazy"></a><figcaption>Workflow dos cadastros de cliente e de venda · clique para ampliar</figcaption></figure>
+
+<ol>
+<li>A pessoa jurídica é cadastrada no <strong>Principal</strong>.</li>
+<li>No Comercial, a tela <strong>Endereço</strong> lista as pessoas jurídicas. Para vender a uma delas, define-se o <strong>tipo de cliente</strong> e cadastram-se os endereços (entrega e cobrança) e os contatos.</li>
+<li>As <strong>tabelas de apoio</strong> dizem como cada venda funciona: o tipo de fornecimento (convênio, cotação, guia de simples remessa) e o preço por tipo de cliente.</li>
+<li>Quando há contrato, o <strong>convênio</strong> registra os produtos, as quantidades e os valores.</li>
+<li>O <strong>relacionamento</strong> registra atividades com o cliente e os pregões de que ele participa.</li>
+</ol>
+<h2 id="descricao-funcional-das-etapas">Descrição funcional das etapas</h2>
+<h3 id="1-cliente-tipo-enderecos-e-contatos">1. Cliente: tipo, endereços e contatos</h3>
+<h4 id="regras-de-negocio">Regras de negócio</h4>
+<ul>
+<li>RN001 – O cliente é uma <strong>pessoa jurídica do Principal</strong>, lida pela API. A tela Endereço lista todas, com busca por código e nome (<code>Cli/Controllers/EnderecoController.cs:200-240</code>).</li>
+<li>RN002 – Para vender, o cliente precisa de um <strong>tipo de cliente</strong> ("O Tipo Cliente é obrigatório.") (<code>Cli/Controllers/EnderecoController.cs:242-300</code>). É o único dado próprio do cliente no Comercial (<code>TBL_COMPLEMENTO_CLIENTE</code>).</li>
+<li>RN003 – <strong>Não há</strong> licença sanitária, autorização de funcionamento, responsável técnico nem situação cadastral do cliente. A venda não confere se o cliente pode receber medicamentos.</li>
+<li>RN004 – A requisição só lista clientes com tipo de cliente. <strong>Exceção:</strong> para o tipo de fornecimento de número 3, a lista traz <strong>todas as pessoas jurídicas</strong> do Principal, inclusive fornecedores, sem tipo de cliente (<code>HSolutions.Comercial.UI/Areas/Cotacao/Controllers/RequisicaoController.cs:667-686</code>). O número está fixado no código.</li>
+<li>RN005 – Os endereços têm tipo <strong>entrega</strong> ou <strong>cobrança</strong>. Pode haver vários de entrega; um só de cada outro tipo. A conferência existe na alteração, mas está <strong>comentada na inclusão</strong> (<code>Cli/Controllers/EnderecoController.cs:65-140</code>).</li>
+<li>RN006 – O CEP preenche o endereço por consulta (<code>Cli/Controllers/EnderecoController.cs:363</code>).</li>
+<li>RN007 – <strong>A fatura aponta para o endereço do cadastro, não guarda uma cópia</strong> (<code>TBL_FATURA.ID_ENDERECO</code>).</li>
+<li>Alterar o endereço muda o que as faturas antigas mostram.</li>
+<li>Excluir o endereço (exclusão lógica) deixa o endereço de entrega <strong>em branco</strong> na visualização da fatura, porque a busca ignora os excluídos (<code>HSolutions.Comercial.UI/Areas/NotaFiscal/Controllers/FaturaController.cs:114</code>, com <code>Infra/Cliente/ClienteRepository.cs:149</code>).</li>
+<li>O Estoque guarda uma cópia do endereço na remessa (<code>3.estoque/app/LaboSys_BLL/bllRemessa.cs</code>, <code>EnderecoDestino</code>). O Comercial, não.</li>
+<li>RN008 – Os contatos têm nome, cargo, telefones e e-mail (<code>Cli/Controllers/ContatoController.cs:81</code>).</li>
+</ul>
+<h4 id="telas-do-sistema">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Principal</td>
+<td>Pessoa Jurídica</td>
+<td>Cadastro da empresa cliente</td>
+</tr>
+<tr>
+<td>Comercial</td>
+<td>Endereço</td>
+<td>Tipo de cliente, endereços e contatos</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-convenio">2. Convênio</h3>
+<h4 id="regras-de-negocio_1">Regras de negócio</h4>
+<ul>
+<li>RN009 – O convênio exige <strong>código</strong> (único), <strong>conveniado</strong> e <strong>tipo de fornecimento</strong> (<code>Cli/Controllers/ConvenioController.cs:203-262</code>; <code>Cli/Validation/ConvenioValidation.cs:17-22</code>). O conveniado vem das pessoas jurídicas marcadas como cliente no Principal, com tipo de cliente.</li>
+<li>RN010 – Cada produto do convênio tem <strong>quantidade</strong> e <strong>valor</strong>, sem produto repetido (<code>Cli/Validation/ConvenioValidation.cs:32-64</code>).</li>
+<li>RN011 – O convênio <strong>não tem vigência</strong> (data de início e fim) nem situação. Fica válido enquanto houver produto com saldo.</li>
+<li>RN012 – Não se exclui convênio que já tem requisição (<code>Cli/Controllers/ConvenioController.cs:108-130</code>).</li>
+<li>RN013 – O limite do convênio <strong>não é conferido</strong> na requisição (fluxo 2, RN017).</li>
+</ul>
+<h4 id="telas-do-sistema_1">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Convênio</td>
+<td>Código, conveniado, tipo e produtos</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-relacionamento-e-pregoes">3. Relacionamento e pregões</h3>
+<h4 id="regras-de-negocio_2">Regras de negócio</h4>
+<ul>
+<li>RN014 – O relacionamento registra <strong>atividades</strong> com o cliente: descrição, contato, data prevista, data de execução e situação. As datas são <strong>digitadas</strong> (<code>Cli/Controllers/RelacionamentoController.cs:253-300</code>).</li>
+<li>RN015 – A aba de <strong>pregões</strong> registra o código, a data, o vencimento, o produto, a quantidade, o valor e a situação (aberto, realizado, cancelado, prorrogado) (<code>Cli/Controllers/RelacionamentoController.cs:377-449</code>; <code>Hsolutions.Comercial.DB/dml.sql:27-36</code>). O pregão <strong>não se liga</strong> à cotação nem à requisição. <em>Correção do reconhecimento: o pregão tem tela, como aba do Relacionamento.</em></li>
+</ul>
+<h4 id="telas-do-sistema_2">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Relacionamento</td>
+<td>Atividades e pregões do cliente</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-tabelas-de-apoio">4. Tabelas de apoio</h3>
+<h4 id="regras-de-negocio_3">Regras de negócio</h4>
+<ul>
+<li>RN016 – <strong>Tipo de fornecimento:</strong> descrição e um ou mais <strong>vínculos</strong> (convênio, cotação, contabilidade, guia de simples remessa) (<code>Tab/Controllers/TipoFornecimentoController.cs:40-60</code>). Os vínculos são usados de dois jeitos:</li>
+<li>na requisição, vale <strong>só o primeiro</strong> vínculo da lista (fluxo 2, RN007);</li>
+<li>na fatura, vale ter o vínculo <strong>guia de simples remessa</strong> em qualquer posição (fluxo 3, RN006).</li>
+<li>RN017 – O tipo de fornecimento <strong>pode ser alterado</strong> depois de usado. A mudança vale para as requisições em aberto: a decisão de gerar a remessa é tomada <strong>na hora da fatura</strong>, pelo vínculo atual. Não se exclui tipo que já tem convênio (<code>Tab/Controllers/TipoFornecimentoController.cs:100-115</code>).</li>
+<li>RN018 – <strong>Preço:</strong> um valor por <strong>produto</strong> e <strong>tipo de cliente</strong>. É o preço sugerido na cotação e na requisição (<code>HSolutions.Comercial.UI/Areas/NotaFiscal/Controllers/PrecoController.cs</code>). <strong>Sem vigência:</strong> alterar o preço muda a sugestão na hora, sem guardar o anterior.</li>
+<li>RN019 – <strong>Tipo de cliente</strong> e <strong>tipo de cobrança:</strong> descrição; não se exclui o que está em uso (<code>Tab/Controllers/TipoClienteController.cs:96-107</code>).</li>
+<li>RN020 – <strong>Assinaturas</strong> (fora do menu): os nomes e cargos impressos nos relatórios. O registro de histórico dessa tela está <strong>comentado</strong> (<code>Tab/Controllers/AssinaturasController.cs:80</code>).</li>
+</ul>
+<h4 id="telas-do-sistema_3">Telas do sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th>Tela</th>
+<th>Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Comercial</td>
+<td>Tipo de Fornecimento, Tipo Pessoa Jurídica, Tipo Cobrança, Preço</td>
+<td>Regras de cada venda</td>
+</tr>
+<tr>
+<td>Comercial</td>
+<td>Assinaturas (fora do menu)</td>
+<td>Assinaturas dos relatórios</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-regra-geral-historico">5. Regra geral: histórico</h3>
+<ul>
+<li>RN021 – O código-base do Comercial tem um <strong>serviço de histórico</strong> de alterações (<code>HSolutions.Comercial.UI/Controllers/ComercialControllerBase.cs:37-38, 154-162</code>), mas <strong>nenhuma tela o chama</strong>: a única chamada está comentada (RN020). As gravações usam uma biblioteca compilada, sem código-fonte. <em>A confirmar no teste:</em> se ela grava algum histórico por conta própria.</li>
+</ul>
+<div class="callout">
+<p class="callout-titulo">Pontos de atenção</p>
+<p><strong>1. Sem dados para saber se o cliente pode receber medicamentos</strong> (RN003). Não há licença sanitária, autorização de funcionamento nem responsável técnico. Isso é exigido pelas Boas Práticas de Distribuição (RDC 430/2020), fora da RDC 658, mas a empresa responde pelo destino do lote. <em>A validar com a GQ:</em> onde isso é conferido hoje.</p>
+<p><strong>2. Qualquer pessoa jurídica pode virar cliente num tipo de fornecimento</strong> (RN004). O número 3 está fixado no código e abre a lista inteira do Principal, inclusive fornecedores.</p>
+<p><strong>3. O endereço da venda não fica guardado na fatura</strong> (RN007). Alterar ou excluir um endereço muda ou apaga o destino das vendas antigas no Comercial. Num recolhimento, o endereço de entrega pode estar errado ou em branco (arts. 346 e 347). Só a remessa do Estoque guarda a cópia.</p>
+<p><strong>4. Sem histórico das alterações</strong> (RN021). Não se sabe quem mudou um preço, um endereço ou um convênio, nem quando (art. 125).</p>
+<p><strong>5. Convênio sem vigência e sem limite conferido</strong> (RN011, RN013).</p>
+<p><strong>6. Tipo de fornecimento com efeito ambíguo</strong> (RN016, RN017). O primeiro vínculo decide a requisição; qualquer vínculo decide a remessa; e uma alteração muda requisições já abertas.</p>
+<p><strong>7. Preço sem vigência</strong> (RN018). Não se sabe qual era o preço sugerido numa data.</p>
+<p><strong>8. Pregão isolado</strong> (RN015). Não se liga à cotação nem à venda.</p>
+</div>
+<h2 id="casos-de-teste">Casos de teste</h2>
+<p><strong>Dados:</strong>
+- Uma pessoa jurídica <code>TESTE</code> no Principal, marcada como cliente.
+- Uma pessoa jurídica <code>TESTE FORNECEDOR</code>, marcada só como fornecedor.
+- O produto <code>TESTE PRODUTO ACABADO</code> (fluxo 2).
+- Usuários <code>t.admin</code> e <code>t.semadmin</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-COM-034</td>
+<td>Na tela Endereço, abrir a pessoa jurídica <code>TESTE</code> e salvar sem tipo de cliente</td>
+<td>"O Tipo Cliente é obrigatório." (RN002)</td>
+</tr>
+<tr>
+<td>CT-COM-035</td>
+<td>Dar o tipo de cliente; cadastrar um endereço de entrega e um de cobrança</td>
+<td>Gravados (RN005)</td>
+</tr>
+<tr>
+<td>CT-COM-036</td>
+<td>Cadastrar um segundo endereço de cobrança</td>
+<td>Pela regra, "Esse tipo endereço já está cadastrado." <strong>Registrar se aceitar</strong> na inclusão (RN005)</td>
+</tr>
+<tr>
+<td>CT-COM-037</td>
+<td>Procurar no cadastro do cliente a licença sanitária, a autorização de funcionamento e o responsável técnico</td>
+<td><strong>Registrar a ausência</strong> (RN003, ponto 1)</td>
+</tr>
+<tr>
+<td>CT-COM-038</td>
+<td>Numa requisição com o tipo de fornecimento número 3, procurar a <code>TESTE FORNECEDOR</code> na lista de clientes</td>
+<td>Pela regra, não aparece. <strong>Registrar se aparecer</strong> (RN004, ponto 2)</td>
+</tr>
+<tr>
+<td>CT-COM-039</td>
+<td>Depois de faturar para o cliente <code>TESTE</code> (fluxo 3), <strong>alterar</strong> o endereço de entrega e visualizar a fatura antiga</td>
+<td>Pela norma, a fatura mostra o endereço da época. <strong>Registrar se mostrar o novo</strong> (RN007, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-COM-040</td>
+<td><strong>Excluir</strong> o endereço de entrega usado na fatura e visualizar a fatura</td>
+<td><strong>Registrar se o endereço ficar em branco</strong> (RN007, ponto 3)</td>
+</tr>
+<tr>
+<td>CT-COM-041</td>
+<td>Criar o convênio <code>TESTE</code> com o código de um convênio existente</td>
+<td>Recusa pelo código repetido (RN009)</td>
+</tr>
+<tr>
+<td>CT-COM-042</td>
+<td>Incluir produtos no convênio <code>TESTE</code>; procurar a vigência</td>
+<td>Produtos gravados. <strong>Registrar a ausência de vigência</strong> (RN010, RN011)</td>
+</tr>
+<tr>
+<td>CT-COM-043</td>
+<td>Excluir um convênio que já tem requisição</td>
+<td>"Não pode excluir convênio que já possui uma requisição!" (RN012)</td>
+</tr>
+<tr>
+<td>CT-COM-044</td>
+<td>Registrar uma atividade de relacionamento e um pregão <code>TESTE</code></td>
+<td>Gravados; <strong>registrar que o pregão não aparece na cotação nem na requisição</strong> (RN014, RN015)</td>
+</tr>
+<tr>
+<td>CT-COM-045</td>
+<td>Criar o tipo de fornecimento <code>TESTE MISTO</code> com os vínculos cotação e guia de simples remessa; usar numa requisição e faturar</td>
+<td><strong>Registrar qual vínculo valeu</strong> na requisição e se a remessa foi gerada (RN016, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-COM-046</td>
+<td>Com uma requisição em aberto, tirar o vínculo guia de simples remessa do tipo dela; faturar</td>
+<td><strong>Registrar se a remessa deixou de ser gerada</strong> (RN017, ponto 6)</td>
+</tr>
+<tr>
+<td>CT-COM-047</td>
+<td>Alterar o preço do <code>TESTE PRODUTO ACABADO</code> e procurar o preço anterior</td>
+<td><strong>Registrar a ausência</strong> de histórico e de vigência (RN018, RN021)</td>
+</tr>
+<tr>
+<td>CT-COM-048</td>
+<td>Alterar um endereço e um preço; pedir à TI ou ao DBA o histórico dessas alterações</td>
+<td><strong>Registrar se existe</strong> (RN021, ponto 4)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prioridade (testes por risco):</strong> CT-COM-039, 040, 037, 038 e 048 primeiro. Eles tocam:
+- o destino da venda que muda ou some depois da fatura;
+- o cliente sem autorização conferida;
+- a pessoa jurídica qualquer como cliente;
+- a falta de histórico.</p>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo">Objetivo</a></li><li><a href="#escopo">Escopo</a></li><li><a href="#visao-geral-do-processo">Visão geral do processo</a></li><li><a href="#descricao-funcional-das-etapas">Descrição funcional das etapas</a></li><li class="sub"><a href="#1-cliente-tipo-enderecos-e-contatos">1. Cliente: tipo, endereços e contatos</a></li><li class="sub"><a href="#2-convenio">2. Convênio</a></li><li class="sub"><a href="#3-relacionamento-e-pregoes">3. Relacionamento e pregões</a></li><li class="sub"><a href="#4-tabelas-de-apoio">4. Tabelas de apoio</a></li><li class="sub"><a href="#5-regra-geral-historico">5. Regra geral: histórico</a></li><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
