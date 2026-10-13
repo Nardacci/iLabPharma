@@ -41,7 +41,7 @@
     <article class="texto">
 <p><strong>Para a equipe de desenvolvimento.</strong> Defeitos do módulo Estoque encontrados nos testes de tela, com o passo a passo para reproduzir, as capturas, o trecho do código onde o problema está e uma sugestão de correção. Cada defeito traz também como confirmar a correção (o caso de teste a repetir). Atualizado em 13/10/2026.</p>
 <h2 id="resumo">Resumo</h2>
-<p><strong>34 defeitos registrados, 34 em aberto.</strong> Pendentes por gravidade: 7 alta · 19 média · 8 baixa.</p>
+<p><strong>35 defeitos registrados, 35 em aberto.</strong> Pendentes por gravidade: 8 alta · 19 média · 8 baixa.</p>
 <p><strong>Gravidade:</strong> <strong>Alta</strong> = afeta a qualidade do produto, a conformidade com a ANVISA ou impede uma tarefa; <strong>Média</strong> = atrapalha, mas há como contornar; <strong>Baixa</strong> = incômodo ou texto.</p>
 <p><strong>Situação:</strong> <strong>Aberto:</strong> ainda não corrigido · <strong>Em correção:</strong> um desenvolvedor assumiu · <strong>Corrigido:</strong> o desenvolvedor entregou, falta o reteste · <strong>Validado:</strong> o reteste passou.</p>
 <div class="tabela"><table>
@@ -111,6 +111,14 @@
 <td>Aberto</td>
 <td>CQ › Emissão Laudo Final (reprovar)</td>
 <td>CT-EST-211, 12/10/2026</td>
+</tr>
+<tr>
+<td><a href="#dv-est-043">DV-EST-043</a></td>
+<td>O cadastro de Item não mostra o campo da classificação de reanálise</td>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Cadastros › Item</td>
+<td>CT-EST-055 e 058 (preparação), 13/10/2026</td>
 </tr>
 <tr>
 <td><a href="#dv-est-001">DV-EST-001</a></td>
@@ -866,6 +874,92 @@
 </ul>
 <h3 id="observacoes_4">Observações</h3>
 <p>No código do CQ, a reprovação grava "não aprovado" e a observação, sem quem decidiu (<code>4.controle_qualidade/app/HSolutions.CQ.UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:489-506</code>). As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-211). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
+<h2 id="dv-est-043">DV-EST-043</h2>
+<p><strong>O cadastro de Item não mostra o campo da classificação de reanálise</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Gravidade</th>
+<th>Situação</th>
+<th>Tela</th>
+<th>Caso de teste</th>
+<th>Encontrado em</th>
+<th>Norma afetada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alta</td>
+<td>Aberto</td>
+<td>Cadastros › Item</td>
+<td>CT-EST-055 e 058 (preparação)</td>
+<td>13/10/2026 (rodada 5 de 13/10/2026 (reanálise concluída no CQ; trava da quarentena))</td>
+<td>RDC 658/2022, art. 189 (uso só de matéria-prima dentro da data de reteste)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-acontece_7">O que acontece</h3>
+<p>O campo <strong>Classificação RNLS</strong> (classificação de reanálise), que define o prazo da primeira reanálise do item, <strong>não aparece na tela de Item</strong> em nenhuma combinação testada (Controle de Lote, Validade, Quarentena e análise marcados). O painel existe no código, mas nasce oculto e nenhuma rotina o mostra; o resto do código preenche, grava e trava esse campo como se ele estivesse visível. Confirmado na tela real: o elemento não está na página carregada (não é só CSS). Sem esse vínculo, a <strong>Agenda de Reanálise nunca aplica um prazo a item novo</strong>; o controle de reteste depende de um cadastro que a tela não deixa fazer.</p>
+<h3 id="como-reproduzir_7">Como reproduzir</h3>
+<ol>
+<li>Abrir <strong>Cadastros › Item</strong> e clicar em Incluir (ou abrir um item existente).</li>
+<li>Marcar Controle de Lote, Controle de Validade, Controle de Quarentena e Análise físico-química.</li>
+<li>Procurar o campo da classificação de reanálise ("Classificação RNLS"), entre "Condição de Armazenagem" e "SJB".</li>
+</ol>
+<p><strong>Dados de teste usados:</strong> Classificação de reanálise <code>T - TESTE REANALISE CURTA</code> (primeira reanálise a 50% da validade), criada na rodada 5. Nenhum item novo foi gravado.</p>
+<h3 id="esperado-e-obtido_7">Esperado e obtido</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Esperado</th>
+<th>Obtido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Campo visível para escolher a classificação de reanálise cadastrada (por exemplo <code>T - TESTE REANALISE CURTA</code>).</td>
+<td>O campo não existe na tela; só o campo genérico "Classificação" aparece.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="evidencias_3">Evidências</h3>
+<figure><a href="../img/estoque/dv-est-043-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-043-1.png" alt="Item novo com Lote, Validade, Quarentena e análise marcados: não há campo de classificação de reanálise entre &quot;Condição de Armazenagem&quot; e &quot;SJB&quot;" loading="lazy"></a><figcaption>Item novo com Lote, Validade, Quarentena e análise marcados: não há campo de classificação de reanálise entre &quot;Condição de Armazenagem&quot; e &quot;SJB&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: Item novo com Lote, Validade, Quarentena e análise marcados: não há campo de classificação de reanálise entre "Condição de Armazenagem" e "SJB"</em></p>
+<h3 id="onde-esta-no-codigo_3">Onde está no código</h3>
+<p><strong>Causa (alta):</strong> O painel <code>pnlReanalise</code> é declarado com <code>Visible="false"</code> e nenhum trecho do código da tela o torna visível. O código por trás da tela carrega a lista de classificações, grava a escolhida e só a desabilita depois da primeira movimentação, tudo dentro de um painel que o usuário nunca vê.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaboSys_UI/administracao/tabelas_apoio/item_ed.aspx</code></td>
+<td>255</td>
+<td>O painel <code>pnlReanalise</code>, que contém o campo "Classificação RNLS", é declarado com <code>Visible="false"</code>. Nenhum trecho do código da tela o torna visível.</td>
+</tr>
+<tr>
+<td><code>LaboSys_UI/administracao/tabelas_apoio/item_ed.aspx.cs</code></td>
+<td>138-142, 495, 825</td>
+<td>Carrega a lista de classificações, grava a escolhida e a desabilita depois da primeira movimentação, tudo dentro do painel que o usuário nunca vê.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
+<h3 id="sugestao-de-correcao_4">Sugestão de correção</h3>
+<ul>
+<li>Mostrar o campo quando o item tiver Controle de Validade (ou sempre que houver classificações ativas).</li>
+<li>Exigir a classificação para item com controle de validade e análise do CQ, para que a Agenda de Reanálise funcione.</li>
+<li>Permitir alterar a classificação com justificativa e histórico (ver DV-EST-041).</li>
+</ul>
+<h3 id="como-confirmar-a-correcao_3">Como confirmar a correção</h3>
+<p>CT-EST-055 e CT-EST-058: criar um item novo com a classificação <code>T - TESTE REANALISE CURTA</code> e conferir que o lote entra na Agenda de Reanálise.</p>
+<h3 id="observacoes_5">Observações</h3>
+<p>Bloqueia CT-EST-055, 058 e 061. <strong>Ponto para validar com a área:</strong> como o item <code>TST0001</code> (que está em reanálise) recebeu a classificação, se por carga inicial ou script; isso também muda a leitura do DV-EST-041.</p>
 <h2 id="dv-est-001">DV-EST-001</h2>
 <p><strong>Código do lote perde os hífens: "TESTE-LOTE-001" vira "TESTELOTE001"</strong></p>
 <div class="tabela"><table>
@@ -890,9 +984,9 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_7">O que acontece</h3>
+<h3 id="o-que-acontece_8">O que acontece</h3>
 <p>No campo <strong>Código do Lote</strong>, o hífen digitado é descartado sem aviso: <code>TESTE-LOTE-001</code> foi gravado como <code>TESTELOTE001</code> e <code>TESTE-LOTE-002</code> como <code>TESTELOTE002</code>. O campo só aceita letras, números e espaço. O registro de entrada deixa de trazer o lote do fabricante como ele é, o que atrapalha a rastreabilidade (busca, comparação com o laudo do fabricante, recolhimento).</p>
-<h3 id="como-reproduzir_7">Como reproduzir</h3>
+<h3 id="como-reproduzir_8">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Recebimento de Material</strong>, um recebimento em aberto, a nota fiscal e o item.</li>
 <li>Clicar em <strong>INCLUIR LOTE</strong>.</li>
@@ -900,7 +994,7 @@
 <li>Preencher os demais campos e clicar em <strong>SALVAR</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Recebimento <code>00013</code> (NF 9001, lote gravado como <code>TESTELOTE001</code>) e recebimento <code>00014</code> (NF 9002, lote gravado como <code>TESTELOTE002</code>); item <code>TST0001 - TESTE MATERIA PRIMA</code>.</p>
-<h3 id="esperado-e-obtido_7">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_8">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -915,14 +1009,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="evidencias_3">Evidências</h3>
+<h3 id="evidencias_4">Evidências</h3>
 <figure><a href="../img/estoque/dv-est-001-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-001-1.png" alt="Digitado TESTE-LOTE-002: o campo Código do Lote mostra TESTELOTE002" loading="lazy"></a><figcaption>Digitado TESTE-LOTE-002: o campo Código do Lote mostra TESTELOTE002 · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: Digitado TESTE-LOTE-002: o campo Código do Lote mostra TESTELOTE002</em></p>
 <figure><a href="../img/estoque/dv-est-001-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-001-2.png" alt="Grade de lotes do item: lote gravado como TESTELOTE002" loading="lazy"></a><figcaption>Grade de lotes do item: lote gravado como TESTELOTE002 · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 2: Grade de lotes do item: lote gravado como TESTELOTE002</em></p>
-<h3 id="onde-esta-no-codigo_3">Onde está no código</h3>
+<h3 id="onde-esta-no-codigo_4">Onde está no código</h3>
 <p><strong>Causa (confirmada):</strong> o campo tem um filtro de caracteres (<code>FilteredTextBoxExtender</code>) que só deixa passar letras sem acento, números e espaço. Achado extra no mesmo filtro: a lista de maiúsculas não tem a letra <strong>W</strong> ("...UVXYZ"), então um lote com W maiúsculo também seria alterado.</p>
 <div class="tabela"><table>
 <thead>
@@ -946,15 +1040,15 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_4">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_5">Sugestão de correção</h3>
 <ul>
 <li>Retirar o filtro de caracteres do código do lote, ou ampliá-lo para os caracteres que os fabricantes usam (hífen, barra, ponto, sublinhado), incluindo a letra W.</li>
 <li>Se algum caractere tiver de ser recusado, avisar o usuário em vez de descartá-lo em silêncio.</li>
 <li>Verificar se o mesmo filtro existe em outras telas que recebem o lote (por exemplo, importação de XML e telas de lote do Principal, DV-PRI-001).</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_3">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_4">Como confirmar a correção</h3>
 <p>Repetir o <strong>CT-EST-187</strong> com <code>TESTE-LOTE-010</code> e com um código com W maiúsculo: o lote deve ser gravado e mostrado exatamente como digitado.</p>
-<h3 id="observacoes_5">Observações</h3>
+<h3 id="observacoes_6">Observações</h3>
 <p>Mesma família do DV-PRI-001 do módulo Principal (o "_" é removido em alguns campos).</p>
 <h2 id="dv-est-002">DV-EST-002</h2>
 <p><strong>Quantidade do lote: digitar 100 grava 0,100</strong></p>
@@ -980,9 +1074,9 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_8">O que acontece</h3>
+<h3 id="o-que-acontece_9">O que acontece</h3>
 <p>O campo <strong>Quantidade</strong> do lote tem uma máscara que trata os últimos 3 dígitos como casas decimais: digitar <code>100</code> vira <code>0,100</code>. O erro só aparece no fim, ao finalizar o recebimento, como "Item com divergência na quantidade do lote!". Para gravar 100 é preciso digitar <code>100000</code> ou <code>100,000</code>. Há risco de registrar a quantidade errada.</p>
-<h3 id="como-reproduzir_8">Como reproduzir</h3>
+<h3 id="como-reproduzir_9">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Recebimento de Material</strong>, um recebimento em aberto, a nota fiscal e o item (quantidade 100).</li>
 <li>Clicar em <strong>INCLUIR LOTE</strong>.</li>
@@ -990,7 +1084,7 @@
 <li>Observar o campo e o campo <strong>Qtde. Recebida</strong>; clicar em <strong>SALVAR</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Recebimento <code>00013</code>, NF <code>9001</code>, item <code>TST0001 - TESTE MATERIA PRIMA</code> (100 TST), lote <code>TESTELOTE001</code>.</p>
-<h3 id="esperado-e-obtido_8">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_9">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1005,14 +1099,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="evidencias_4">Evidências</h3>
+<h3 id="evidencias_5">Evidências</h3>
 <figure><a href="../img/estoque/dv-est-002-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-002-1.png" alt="Digitado 100: o campo Quantidade mostra 0,100 e a Qtde. Recebida 0,100" loading="lazy"></a><figcaption>Digitado 100: o campo Quantidade mostra 0,100 e a Qtde. Recebida 0,100 · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: Digitado 100: o campo Quantidade mostra 0,100 e a Qtde. Recebida 0,100</em></p>
 <figure><a href="../img/estoque/dv-est-002-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-002-2.png" alt="Correção manual para 100,000: &quot;Alteração realizada!&quot;" loading="lazy"></a><figcaption>Correção manual para 100,000: &quot;Alteração realizada!&quot; · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 2: Correção manual para 100,000: "Alteração realizada!"</em></p>
-<h3 id="onde-esta-no-codigo_4">Onde está no código</h3>
+<h3 id="onde-esta-no-codigo_5">Onde está no código</h3>
 <p><strong>Causa (confirmada):</strong> a função de máscara <code>fmCampoVal(campo, evt, 3)</code> remove tudo que não é número e sempre coloca a vírgula antes dos 3 últimos dígitos (1 dígito vira 0,00X; 3 dígitos viram 0,XXX). No servidor, o valor é lido tirando os pontos, sem outra conferência.</p>
 <div class="tabela"><table>
 <thead>
@@ -1041,15 +1135,15 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_5">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_6">Sugestão de correção</h3>
 <ul>
 <li>Usar uma máscara numérica em que o número digitado é inteiro até o usuário digitar a vírgula.</li>
 <li>Ao salvar o lote, avisar na hora quando a quantidade do lote não bate com a do item (hoje só aparece ao finalizar).</li>
 <li>Revisar as outras telas que usam a mesma função (<code>fmCampoVal</code> aparece copiada em várias páginas).</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_4">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_5">Como confirmar a correção</h3>
 <p>Repetir o <strong>CT-EST-187</strong> digitando <code>100</code> sem vírgula: o lote deve gravar 100,000. Testar também <code>1,5</code> (deve gravar 1,500).</p>
-<h3 id="observacoes_6">Observações</h3>
+<h3 id="observacoes_7">Observações</h3>
 <p>A mesma máscara com 2 casas é usada nos valores da nota fiscal; não foi vista falha lá, mas vale conferir.</p>
 <h2 id="dv-est-004">DV-EST-004</h2>
 <p><strong>Checklist de inspeção veicular não mostra as opções de resposta e salva "Aprovado" sem nenhuma resposta</strong></p>
@@ -1075,9 +1169,9 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_9">O que acontece</h3>
+<h3 id="o-que-acontece_10">O que acontece</h3>
 <p>No Checklist, a coluna <strong>Avaliação</strong> das 15 perguntas aparece <strong>vazia</strong>: não há opção para responder. Mesmo assim, o registro é salvo com Parecer <strong>Aprovado</strong> ("Registro cadastrado com sucesso!"). A inspeção pode ser "aprovada" sem ter sido feita, e não há como provar o que foi verificado.</p>
-<h3 id="como-reproduzir_9">Como reproduzir</h3>
+<h3 id="como-reproduzir_10">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Checklist de Inspeção Veicular</strong> e clicar em <strong>Incluir</strong>.</li>
 <li>Preencher Placa <code>TST2222</code>, Condutor <code>TESTE CONDUTOR</code>, Tipo de Documento CPF, Nº Documento, Tipo Movimento <strong>DESCARGA</strong>, Cliente/Fornecedor, Transportadora e Nota Fiscal.</li>
@@ -1085,7 +1179,7 @@
 <li>Em <strong>Parecer</strong>, marcar <strong>Aprovado</strong> e clicar em <strong>SALVAR REGISTRO</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Checklists <code>00003</code> (placa TST-1234, 07/10) e <code>00004</code> (placa TST2222, 08/10), condutor <code>TESTE CONDUTOR</code>, fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>, transportadora <code>TRANSLOG TRANSPORTES</code>.</p>
-<h3 id="esperado-e-obtido_9">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_10">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1100,14 +1194,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="evidencias_5">Evidências</h3>
+<h3 id="evidencias_6">Evidências</h3>
 <figure><a href="../img/estoque/dv-est-004-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-004-1.png" alt="Formulário com Parecer Aprovado; a coluna Avaliação está vazia em todas as perguntas" loading="lazy"></a><figcaption>Formulário com Parecer Aprovado; a coluna Avaliação está vazia em todas as perguntas · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: Formulário com Parecer Aprovado; a coluna Avaliação está vazia em todas as perguntas</em></p>
 <figure><a href="../img/estoque/dv-est-004-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-004-2.png" alt="Depois de SALVAR REGISTRO: &quot;Registro cadastrado com sucesso!&quot;" loading="lazy"></a><figcaption>Depois de SALVAR REGISTRO: &quot;Registro cadastrado com sucesso!&quot; · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 2: Depois de SALVAR REGISTRO: "Registro cadastrado com sucesso!"</em></p>
-<h3 id="onde-esta-no-codigo_5">Onde está no código</h3>
+<h3 id="onde-esta-no-codigo_6">Onde está no código</h3>
 <p><strong>Causa (provável):</strong> <strong>Confirmado no código:</strong> ao salvar, a tela lê a resposta de cada pergunta e, se estiver vazia, simplesmente segue em frente; o Parecer é gravado sem relação com as respostas. <strong>Provável (a investigar):</strong> a coluna vazia vem de perguntas sem respostas cadastradas no banco, porque a lista de opções de cada linha é montada a partir de <code>Respostas</code> da pergunta. Conferir com o DBA o cadastro de respostas das perguntas do checklist.</p>
 <div class="tabela"><table>
 <thead>
@@ -1136,16 +1230,16 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_6">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_7">Sugestão de correção</h3>
 <ul>
 <li>Garantir que cada pergunta do checklist tenha as opções de resposta (cadastro ou carga inicial) e que elas apareçam na coluna Avaliação.</li>
 <li>Recusar o salvamento se alguma pergunta não for respondida, dizendo qual.</li>
 <li>Impedir Parecer "Aprovado" quando alguma resposta indicar problema, ou exigir justificativa nesse caso.</li>
 <li>Fazer a validação no servidor, não só na tela.</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_5">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_6">Como confirmar a correção</h3>
 <p>Repetir o <strong>CT-EST-181</strong>: com nenhuma resposta, o sistema deve recusar; com todas respondidas, deve gravar e mostrar as respostas ao reabrir o checklist.</p>
-<h3 id="observacoes_7">Observações</h3>
+<h3 id="observacoes_8">Observações</h3>
 <p>A placa e o número do documento têm máscara. O mesmo comportamento foi visto em 07/10 (checklist 00003) e em 08/10 (00004 e 00005).</p>
 <h2 id="dv-est-010">DV-EST-010</h2>
 <p><strong>"Confirmar recebimento" falha com erro genérico quando o item não tem almoxarifado de identificação</strong></p>
@@ -1171,9 +1265,9 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_10">O que acontece</h3>
+<h3 id="o-que-acontece_11">O que acontece</h3>
 <p>Depois de autorizado, o recebimento precisa do botão <strong>CONFIRMAR RECEBIMENTO</strong>. Para o item <code>TESTE MATERIA PRIMA</code>, que foi salvo <strong>sem "Almoxarifado de Identificação"</strong>, o botão falhou quatro vezes com <strong>"Erro ao Finalizar Recebimento!"</strong>, depois de 23 a 26 s. Com o item <code>TST0002</code>, que tem esse campo preenchido, o mesmo botão funcionou em 4,5 s. O cadastro do item <strong>deixa salvar sem esse campo</strong> (que não tem asterisco), o campo fica <strong>travado</strong> depois que o item tem movimento, e o recebimento não diz o que falta.</p>
-<h3 id="como-reproduzir_10">Como reproduzir</h3>
+<h3 id="como-reproduzir_11">Como reproduzir</h3>
 <ol>
 <li>Em <strong>Cadastros › Item</strong>, ter um item com <strong>Almoxarifado de Identificação</strong> = SELECIONE (no teste, <code>TST0001 - TESTE MATERIA PRIMA</code>).</li>
 <li>Em <strong>Estoque › Recebimento de Material</strong>, criar o recebimento com NF, item e lote, clicar em <strong>FINALIZAR</strong> e autorizar com outro usuário.</li>
@@ -1181,7 +1275,7 @@
 <li>Repetir com um item que tem <strong>Almoxarifado de Identificação</strong> = <code>TESTE ALMOX</code> (no teste, <code>TST0002</code>, recebimento 00016).</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Itens <code>TST0001 - TESTE MATERIA PRIMA</code> (sem almoxarifado de identificação) e <code>TST0002 - TESTE MATERIA PRIMA 2</code> (com <code>TESTE ALMOX</code>); recebimentos <code>00013</code> (NF 9001) e <code>00014</code> (NF 9002) com erro; <code>00016</code> (NF 9006) que passou; almoxarifado <code>TESTE ALMOX</code> (00017) com lote identificado, sigla <code>TA</code>.</p>
-<h3 id="esperado-e-obtido_10">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_11">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1196,7 +1290,7 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="evidencias_6">Evidências</h3>
+<h3 id="evidencias_7">Evidências</h3>
 <figure><a href="../img/estoque/dv-est-010-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-010-1.png" alt="Item TST0001: &quot;Almoxarifado de Identificação&quot; = SELECIONE e travado; TESTE ALMOX só aparece em &quot;Almoxarifados (Movimentação)&quot;" loading="lazy"></a><figcaption>Item TST0001: &quot;Almoxarifado de Identificação&quot; = SELECIONE e travado; TESTE ALMOX só aparece em &quot;Almoxarifados (Movimentação)&quot; · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: Item TST0001: "Almoxarifado de Identificação" = SELECIONE e travado; TESTE ALMOX só aparece em "Almoxarifados (Movimentação)"</em></p>
@@ -1206,7 +1300,7 @@
 <figure><a href="../img/estoque/dv-est-010-3.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-010-3.png" alt="Recebimento 00016 (item com almoxarifado de identificação): &quot;Recebimento finalizado!&quot;" loading="lazy"></a><figcaption>Recebimento 00016 (item com almoxarifado de identificação): &quot;Recebimento finalizado!&quot; · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 3: Recebimento 00016 (item com almoxarifado de identificação): "Recebimento finalizado!"</em></p>
-<h3 id="onde-esta-no-codigo_6">Onde está no código</h3>
+<h3 id="onde-esta-no-codigo_7">Onde está no código</h3>
 <p><strong>Causa (confirmada):</strong> na confirmação, a sigla usada para gerar o item de entrada vem do almoxarifado padrão do item (<code>LEFT JOIN</code> em <code>ID_ALMOXARIFADO_PADRAO</code>). Sem ele, a sigla é nula, o item de entrada fica nulo e o código do volume também. O banco recusa, porque <code>COD_VOLUME</code> é obrigatório em <code>TBL_NF_ITEM_LOTE_VOLUME</code>. A camada de regra troca o erro por uma mensagem genérica. O texto exato da exceção do banco não foi visto (sem acesso ao banco), mas a comparação 00014 × 00016 e o código fecham a causa.</p>
 <div class="tabela"><table>
 <thead>
@@ -1245,7 +1339,7 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_7">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_8">Sugestão de correção</h3>
 <ul>
 <li>No cadastro do item, tornar o <strong>Almoxarifado de Identificação</strong> obrigatório para itens com controle de lote (ou sempre, se a área confirmar).</li>
 <li>Antes de confirmar o recebimento, conferir os dados de cada item e mostrar mensagem clara, com o item e o campo que falta.</li>
@@ -1253,9 +1347,9 @@
 <li>Permitir corrigir o campo em item com movimento, com justificativa e trilha de auditoria (hoje ele fica travado e o item não pode mais ser recebido).</li>
 <li>Rever o tempo de 23 a 26 s até o erro.</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_6">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_7">Como confirmar a correção</h3>
 <p>Confirmar o recebimento de um item sem almoxarifado de identificação: o cadastro do item não deve deixar salvar assim, ou o recebimento deve mostrar a mensagem com o campo que falta. Confirmar com item completo (como o 00016) e conferir que continua funcionando.</p>
-<h3 id="observacoes_8">Observações</h3>
+<h3 id="observacoes_9">Observações</h3>
 <p>Era Alta; baixada para Média porque há contorno (preencher o campo no item). Continua importante se itens reais forem cadastrados sem ele. O nome na tela ("Almoxarifado de Identificação") é diferente do usado no código (AlmoxarifadoPadrao), e o item também tem a lista "Almoxarifados (Movimentação)": o usuário pode achar que já preencheu.</p>
 <h2 id="dv-est-011">DV-EST-011</h2>
 <p><strong>Checklist com parecer "Reprovado" aparece na lista de veículos para usar no recebimento</strong></p>
@@ -1281,16 +1375,16 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_11">O que acontece</h3>
+<h3 id="o-que-acontece_12">O que acontece</h3>
 <p>Um checklist salvo com Parecer <strong>Reprovado</strong> (00005, placa TST9999) aparece na lista <strong>Veículo (Checklist)</strong> do Recebimento, junto com os aprovados ("00005 - TST9999"). Nada impede usar um veículo reprovado na inspeção para receber material.</p>
-<h3 id="como-reproduzir_11">Como reproduzir</h3>
+<h3 id="como-reproduzir_12">Como reproduzir</h3>
 <ol>
 <li>Em <strong>Estoque › Checklist de Inspeção Veicular</strong>, incluir um checklist com placa <code>TST9999</code>, Parecer <strong>Reprovado</strong>, e clicar em <strong>SALVAR REGISTRO</strong>.</li>
 <li>Abrir <strong>Estoque › Recebimento de Material</strong> e incluir um novo recebimento.</li>
 <li>Abrir a lista <strong>Veículo (Checklist)</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Checklist <code>00005</code> (placa TST9999, Reprovado); checklists aprovados <code>00003</code> e <code>00004</code>.</p>
-<h3 id="esperado-e-obtido_11">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_12">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1305,7 +1399,7 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="evidencias_7">Evidências</h3>
+<h3 id="evidencias_8">Evidências</h3>
 <figure><a href="../img/estoque/dv-est-011-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-011-1.png" alt="Checklist TST9999 com Parecer Reprovado, antes de salvar" loading="lazy"></a><figcaption>Checklist TST9999 com Parecer Reprovado, antes de salvar · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: Checklist TST9999 com Parecer Reprovado, antes de salvar</em></p>
@@ -1315,7 +1409,7 @@
 <figure><a href="../img/estoque/dv-est-011-3.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-011-3.png" alt="Recebimento novo com o campo Veículo (Checklist); o conteúdo da lista foi lido pelo roteiro do teste" loading="lazy"></a><figcaption>Recebimento novo com o campo Veículo (Checklist); o conteúdo da lista foi lido pelo roteiro do teste · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 3: Recebimento novo com o campo Veículo (Checklist); o conteúdo da lista foi lido pelo roteiro do teste</em></p>
-<h3 id="onde-esta-no-codigo_7">Onde está no código</h3>
+<h3 id="onde-esta-no-codigo_8">Onde está no código</h3>
 <p><strong>Causa (confirmada):</strong> as duas consultas que alimentam a lista de checklists filtram só por excluído (LIXEIRA), empresa e, na versão "pendente", por saída e uso em outro recebimento. Nenhuma filtra o parecer (aprovado).</p>
 <div class="tabela"><table>
 <thead>
@@ -1344,16 +1438,16 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_8">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_9">Sugestão de correção</h3>
 <ul>
 <li>Mostrar na lista só checklists <strong>aprovados</strong>, sem saída e ainda não usados em outro recebimento.</li>
 <li>Recusar no servidor um recebimento ligado a checklist reprovado, com mensagem clara.</li>
 <li>Comportamento esperado pela norma: veículo reprovado gera registro do problema (desvio) e o material não é recebido sem decisão da Qualidade. <em>Ponto para validar com a Garantia da Qualidade.</em></li>
 <li>Rever a condição da linha 152: parece invertida (o recebimento novo deveria usar a lista de pendentes). <em>Ponto para validar.</em></li>
 </ul>
-<h3 id="como-confirmar-a-correcao_7">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_8">Como confirmar a correção</h3>
 <p>Repetir o <strong>CT-EST-182</strong>: o checklist 00005 (Reprovado) não deve aparecer em Veículo (Checklist); tentar forçar o uso e conferir a recusa.</p>
-<h3 id="observacoes_9">Observações</h3>
+<h3 id="observacoes_10">Observações</h3>
 <p>Ligado ao DV-EST-004 (checklist sem respostas) e ao DV-EST-012 (checklist opcional).</p>
 <h2 id="dv-est-012">DV-EST-012</h2>
 <p><strong>Recebimento é salvo sem checklist de inspeção, sem placa e sem motorista</strong></p>
@@ -1379,16 +1473,16 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_12">O que acontece</h3>
+<h3 id="o-que-acontece_13">O que acontece</h3>
 <p>Na tela <strong>Recebimento de Materiais</strong>, só a Data do Recebimento e a Transportadora são exigidas. Com <strong>Veículo (Checklist)</strong> = SELECIONE, <strong>Placa do Veículo</strong> e <strong>Motorista/Entregador</strong> em branco, o sistema grava ("Recebimento gerado!", nº 00014). A inspeção veicular deixa de ser obrigatória.</p>
-<h3 id="como-reproduzir_12">Como reproduzir</h3>
+<h3 id="como-reproduzir_13">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Recebimento de Material</strong> e incluir um recebimento.</li>
 <li>Preencher só <strong>Data do Recebimento</strong> e <strong>Transportadora</strong> (<code>TRANSLOG TRANSPORTES</code>); deixar Veículo (Checklist), Placa do Veículo e Motorista/Entregador vazios.</li>
 <li>Clicar em <strong>SALVAR</strong> e confirmar com <strong>SIM</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Recebimento <code>00014</code> (sem checklist, sem placa, sem motorista), transportadora <code>TRANSLOG TRANSPORTES</code>.</p>
-<h3 id="esperado-e-obtido_12">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_13">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1403,14 +1497,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="evidencias_8">Evidências</h3>
+<h3 id="evidencias_9">Evidências</h3>
 <figure><a href="../img/estoque/dv-est-012-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-012-1.png" alt="SALVAR sem checklist, placa e motorista: &quot;Recebimento gerado!&quot;" loading="lazy"></a><figcaption>SALVAR sem checklist, placa e motorista: &quot;Recebimento gerado!&quot; · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: SALVAR sem checklist, placa e motorista: "Recebimento gerado!"</em></p>
 <figure><a href="../img/estoque/dv-est-012-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-012-2.png" alt="Recebimento 00014 gravado com Veículo (Checklist) = SELECIONE e placa e motorista vazios" loading="lazy"></a><figcaption>Recebimento 00014 gravado com Veículo (Checklist) = SELECIONE e placa e motorista vazios · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 2: Recebimento 00014 gravado com Veículo (Checklist) = SELECIONE e placa e motorista vazios</em></p>
-<h3 id="onde-esta-no-codigo_8">Onde está no código</h3>
+<h3 id="onde-esta-no-codigo_9">Onde está no código</h3>
 <p><strong>Causa (confirmada):</strong> os campos Veículo (Checklist), Placa do Veículo e Motorista/Entregador não têm validação na tela, e o método de salvar grava o que vier, inclusive checklist 0.</p>
 <div class="tabela"><table>
 <thead>
@@ -1434,15 +1528,15 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_9">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_10">Sugestão de correção</h3>
 <ul>
 <li>Tornar o checklist de inspeção obrigatório no recebimento e conferir no servidor que ele está aprovado e não foi usado em outro recebimento.</li>
 <li>Preencher placa e motorista a partir do checklist e não deixar editá-los à mão (hoje podem divergir do checklist).</li>
 <li>Se houver exceções aceitas pela Qualidade, exigir justificativa e registrar quem decidiu.</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_8">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_9">Como confirmar a correção</h3>
 <p>Repetir o <strong>CT-EST-183</strong>: sem checklist, o recebimento deve ser recusado com mensagem. Com checklist aprovado, deve gravar com placa e motorista do checklist.</p>
-<h3 id="observacoes_10">Observações</h3>
+<h3 id="observacoes_11">Observações</h3>
 <p>Ver também DV-EST-011 (checklist reprovado na lista).</p>
 <h2 id="dv-est-018">DV-EST-018</h2>
 <p><strong>Exclusão de endereço não pede justificativa</strong></p>
@@ -1468,16 +1562,16 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_13">O que acontece</h3>
+<h3 id="o-que-acontece_14">O que acontece</h3>
 <p>A exclusão de um endereço pede só "Confirma a exclusão do item?" (SIM/NÃO). A inclusão tem campo de justificativa; a exclusão não. A recusa para endereço <strong>com saldo</strong> ainda não foi testada.</p>
-<h3 id="como-reproduzir_13">Como reproduzir</h3>
+<h3 id="como-reproduzir_14">Como reproduzir</h3>
 <ol>
 <li>Criar um endereço vazio <code>L901-R901-C905-A901</code>.</li>
 <li>Na lista, escolher <strong>Excluir</strong> para esse endereço.</li>
 <li>Confirmar com <strong>SIM</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Endereço <code>L901-R901-C905-A901</code>, criado e excluído no teste.</p>
-<h3 id="esperado-e-obtido_13">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_14">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1500,7 +1594,7 @@
 <li>Exigir justificativa na exclusão, como na inclusão.</li>
 <li>Gravar quem, quando e por quê no histórico.</li>
 </ul>
-<h3 id="observacoes_11">Observações</h3>
+<h3 id="observacoes_12">Observações</h3>
 <p>Reteste: excluir também um endereço <strong>com saldo</strong>, que deve ser recusado (CT-EST-032, segunda parte).</p>
 <h2 id="dv-est-020">DV-EST-020</h2>
 <p><strong>Análise do Estoque aceita 13 meses: a trava de 12 meses está comentada no código</strong></p>
@@ -1526,15 +1620,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_14">O que acontece</h3>
+<h3 id="o-que-acontece_15">O que acontece</h3>
 <p>O fluxo prevê o limite de 12 meses para o período de análise e para o período da necessidade. O código tem a validação <strong>comentada</strong>. A tela aceitou 13 meses nos dois campos.</p>
-<h3 id="como-reproduzir_14">Como reproduzir</h3>
+<h3 id="como-reproduzir_15">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Análise de Estoque</strong> e escolher <strong>INCLUIR</strong>.</li>
 <li>Informar um período de análise de 13 meses e uma necessidade de 13 meses.</li>
 <li>Gerar a análise.</li>
 </ol>
-<h3 id="esperado-e-obtido_14">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_15">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1571,7 +1665,7 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_10">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_11">Sugestão de correção</h3>
 <ul>
 <li>Religar a trava de 12 meses (ou decidir o limite com a área e aplicá-lo).</li>
 </ul>
@@ -1599,15 +1693,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_15">O que acontece</h3>
+<h3 id="o-que-acontece_16">O que acontece</h3>
 <p>(a) Um pedido aberto não pode ser reaberto pela lista (só "Excluir"), então só se monta na tela em que o cabeçalho foi criado. (b) A quantidade "100" é gravada como 0,100 pela máscara de três casas decimais, sem aviso. (c) "Gerar pedido" sem fornecedor não mostra mensagem. (d) Depois de gerar pelo atalho da análise, aparece "Sem itens pendentes!".</p>
-<h3 id="como-reproduzir_15">Como reproduzir</h3>
+<h3 id="como-reproduzir_16">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Análise de Estoque</strong> e gerar um pedido a partir da necessidade.</li>
 <li>Em <strong>Pedido de Compra</strong>, incluir um item com quantidade <code>100</code>.</li>
 <li>Tentar reabrir o pedido pela lista.</li>
 </ol>
-<h3 id="esperado-e-obtido_15">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_16">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1631,7 +1725,7 @@
 <li>Permitir reabrir o pedido aberto.</li>
 <li>Mensagem quando falta o fornecedor.</li>
 </ul>
-<h3 id="observacoes_12">Observações</h3>
+<h3 id="observacoes_13">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-162 e CT-EST-163). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-023">DV-EST-023</h2>
 <p><strong>A avaliação do fornecedor não pode ser alterada e não tem histórico</strong></p>
@@ -1657,14 +1751,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_16">O que acontece</h3>
+<h3 id="o-que-acontece_17">O que acontece</h3>
 <p>Depois de gravada, a avaliação só oferece "Imprimir": não há Editar nem histórico. O fluxo previa alteração com justificativa e histórico com valor antigo e novo.</p>
-<h3 id="como-reproduzir_16">Como reproduzir</h3>
+<h3 id="como-reproduzir_17">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Avaliação do Fornecedor</strong> e pesquisar a avaliação gravada.</li>
 <li>Procurar as opções da linha.</li>
 </ol>
-<h3 id="esperado-e-obtido_16">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_17">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1687,7 +1781,7 @@
 <li>Permitir alterar com justificativa.</li>
 <li>Gravar o histórico com valor anterior, novo, quem e quando.</li>
 </ul>
-<h3 id="observacoes_13">Observações</h3>
+<h3 id="observacoes_14">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-167). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-026">DV-EST-026</h2>
 <p><strong>A análise do produto acabado abre como tipo NORMAL</strong></p>
@@ -1713,14 +1807,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_17">O que acontece</h3>
+<h3 id="o-que-acontece_18">O que acontece</h3>
 <p>O código prevê abrir uma análise do tipo "produto acabado" ao dar entrada. A solicitação nasceu como tipo NORMAL, e a etiqueta não foi verificada.</p>
-<h3 id="como-reproduzir_17">Como reproduzir</h3>
+<h3 id="como-reproduzir_18">Como reproduzir</h3>
 <ol>
 <li>Dar entrada em <code>TESTEPA001</code> pela <strong>Entrada de Material - Produção</strong>.</li>
 <li>No CQ, abrir <strong>Solicitação de Análise</strong> e ver o tipo.</li>
 </ol>
-<h3 id="esperado-e-obtido_17">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_18">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1756,7 +1850,7 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="observacoes_14">Observações</h3>
+<h3 id="observacoes_15">Observações</h3>
 <p>A confirmar com a Garantia da Qualidade se o tipo NORMAL serve para produto acabado. As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-097). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-029">DV-EST-029</h2>
 <p><strong>O Estoque só fica sabendo do laudo quando alguém clica em "Atualizar resultado"</strong></p>
@@ -1782,15 +1876,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_18">O que acontece</h3>
+<h3 id="o-que-acontece_19">O que acontece</h3>
 <p>Depois do laudo, o lote reprovado continua "Solicitado" no Estoque até alguém clicar em "Atualizar resultado". Depois de atualizado, o saldo mostra o mesmo material em <strong>Quarentena 90 e Bloqueado 90</strong> ao mesmo tempo.</p>
-<h3 id="como-reproduzir_18">Como reproduzir</h3>
+<h3 id="como-reproduzir_19">Como reproduzir</h3>
 <ol>
 <li>Reprovar o laudo do <code>TESTEPA998</code> no CQ.</li>
 <li>No Estoque, abrir <strong>Controle da Qualidade</strong> e ver a situação do lote.</li>
 <li>Clicar em <strong>Atualizar resultado</strong> e abrir a <strong>Disponibilidade do Lote</strong>.</li>
 </ol>
-<h3 id="esperado-e-obtido_18">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_19">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1813,8 +1907,8 @@
 <li>O CQ avisa o Estoque ao emitir o laudo (trava 2).</li>
 <li>Uma só situação por lote, sem somar quarentena e bloqueado.</li>
 </ul>
-<h3 id="observacoes_15">Observações</h3>
-<p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-211). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
+<h3 id="observacoes_16">Observações</h3>
+<p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-211). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito. <strong>Confirmado na rodada 5 (13/10/2026, CT-EST-060):</strong> o laudo 009/26 (reanálise do <code>TESTELOTE003</code>) foi aprovado e emitido no CQ e o saldo continuou 80 em "Reanálise"; só depois de "Atualizar resultado", no Estoque, passou a 80 disponíveis. A tela do CQ não avisa nem leva a esse passo.</p>
 <h2 id="dv-est-030">DV-EST-030</h2>
 <p><strong>O "Responsável" do laudo mostra quem vê a tela, e não quem aprovou</strong></p>
 <div class="tabela"><table>
@@ -1839,15 +1933,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_19">O que acontece</h3>
+<h3 id="o-que-acontece_20">O que acontece</h3>
 <p>O campo "Responsável" do laudo mostra o usuário que está com a tela aberta. Quem aprovou só aparece no Estoque ("Aprovado por"), depois da atualização. O "número do laudo" no Estoque é o número da solicitação (005/26).</p>
-<h3 id="como-reproduzir_19">Como reproduzir</h3>
+<h3 id="como-reproduzir_20">Como reproduzir</h3>
 <ol>
 <li>Aprovar e emitir o laudo do <code>TESTEPA001</code> com um usuário.</li>
 <li>Abrir o laudo com outro usuário e ver o campo Responsável.</li>
 <li>No Estoque, atualizar o resultado e ver "Aprovado por".</li>
 </ol>
-<h3 id="esperado-e-obtido_19">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_20">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1870,7 +1964,7 @@
 <li>Gravar quem aprovou e a data no laudo.</li>
 <li>Dar ao laudo um número próprio.</li>
 </ul>
-<h3 id="observacoes_16">Observações</h3>
+<h3 id="observacoes_17">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-206). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-032">DV-EST-032</h2>
 <p><strong>A amostra do CQ sai do estoque sem registro na Central de Pesagem</strong></p>
@@ -1896,15 +1990,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_20">O que acontece</h3>
+<h3 id="o-que-acontece_21">O que acontece</h3>
 <p>A amostra sai do estoque (100 para 90) sem passar pela Central de Pesagem. A solicitação nasce já "atendida", e basta confirmar a separação. O "Volume" do lote continua com a quantidade antiga (100).</p>
-<h3 id="como-reproduzir_20">Como reproduzir</h3>
+<h3 id="como-reproduzir_21">Como reproduzir</h3>
 <ol>
 <li>No CQ, programar a amostragem do <code>TESTEPA001</code>.</li>
 <li>No Estoque, confirmar a separação da amostra.</li>
 <li>Abrir a <strong>Central de Pesagem</strong> e a <strong>Disponibilidade do Lote</strong>.</li>
 </ol>
-<h3 id="esperado-e-obtido_20">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_21">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1927,7 +2021,7 @@
 <li>Exigir a pesagem na saída da amostra.</li>
 <li>Atualizar o volume do lote.</li>
 </ul>
-<h3 id="observacoes_17">Observações</h3>
+<h3 id="observacoes_18">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-201). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-034">DV-EST-034</h2>
 <p><strong>O Histórico do Lote não mostra usuário, hora, análise, laudo nem a reprovação</strong></p>
@@ -1953,14 +2047,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_21">O que acontece</h3>
+<h3 id="o-que-acontece_22">O que acontece</h3>
 <p>O histórico mostra só as movimentações e o saldo por endereço: sem coluna de usuário nem de hora, sem a análise, sem o laudo, sem o aprovador e, no lote reprovado, sem a reprovação.</p>
-<h3 id="como-reproduzir_21">Como reproduzir</h3>
+<h3 id="como-reproduzir_22">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Histórico do Lote</strong>.</li>
 <li>Pesquisar o <code>TESTEPA001</code> e, depois, o <code>TESTEPA998</code>.</li>
 </ol>
-<h3 id="esperado-e-obtido_21">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_22">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1982,7 +2076,7 @@
 <ul>
 <li>Incluir no histórico o usuário, a hora, a análise, o laudo, o aprovador e as mudanças de situação.</li>
 </ul>
-<h3 id="observacoes_18">Observações</h3>
+<h3 id="observacoes_19">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-209). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-038">DV-EST-038</h2>
 <p><strong>O resultado de conformidade vem pré-selecionado em CONFORME</strong></p>
@@ -2008,15 +2102,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_22">O que acontece</h3>
+<h3 id="o-que-acontece_23">O que acontece</h3>
 <p>Na digitação dos resultados da análise, o campo de conformidade já vem em "CONFORME". Quem salva sem mexer registra "conforme" sem ter avaliado.</p>
-<h3 id="como-reproduzir_22">Como reproduzir</h3>
+<h3 id="como-reproduzir_23">Como reproduzir</h3>
 <ol>
 <li>No CQ, abrir <strong>Consultar Análise Programada</strong> e escolher a análise.</li>
 <li>Digitar o teor e deixar a conformidade como veio.</li>
 <li>Salvar.</li>
 </ol>
-<h3 id="esperado-e-obtido_22">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_23">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2038,7 +2132,7 @@
 <ul>
 <li>Campo de conformidade em branco, obrigatório.</li>
 </ul>
-<h3 id="observacoes_19">Observações</h3>
+<h3 id="observacoes_20">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-202). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-039">DV-EST-039</h2>
 <p><strong>Reanálise avulsa não pede justificativa e usa a mesma mensagem para recusas diferentes</strong></p>
@@ -2064,16 +2158,16 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_23">O que acontece</h3>
+<h3 id="o-que-acontece_24">O que acontece</h3>
 <p>A tela não tem campo de justificativa, que o fluxo exige. As duas recusas (lote já em reanálise e lote reprovado) mostram a mesma mensagem "Lote não possui saldo para ser analisado!", em vez de dizer a causa, e numa faixa vermelha, e não no alerta.</p>
-<h3 id="como-reproduzir_23">Como reproduzir</h3>
+<h3 id="como-reproduzir_24">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Reanálise Avulsa</strong> e pesquisar o <code>TESTELOTE003</code>; gerar a reanálise ("Deseja gerar a Reanálise?").</li>
 <li>Pesquisar de novo o mesmo lote.</li>
 <li>Pesquisar um lote reprovado (<code>TESTEPA998</code>).</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Lotes <code>TESTELOTE003</code> (reanálise <code>0001/26</code>) e <code>TESTEPA998</code> (<code>TA0004/26</code>).</p>
-<h3 id="esperado-e-obtido_23">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_24">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2120,15 +2214,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_24">O que acontece</h3>
+<h3 id="o-que-acontece_25">O que acontece</h3>
 <p>O <code>TESTELOTE003</code> (reanálise em 12/10/2028) não aparece na agenda de 2026 a 2030. Pelo código, a lista usa a classificação de reanálise do item, e esse campo <strong>trava depois da primeira movimentação</strong>: os itens já movimentados nunca entram na agenda. A reanálise avulsa funciona sem a classificação.</p>
-<h3 id="como-reproduzir_24">Como reproduzir</h3>
+<h3 id="como-reproduzir_25">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Agenda de Reanálise</strong>.</li>
 <li>Pesquisar o período de 2026 a 2030.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Item <code>TST0001</code>, lote <code>TESTELOTE003</code>.</p>
-<h3 id="esperado-e-obtido_24">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_25">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2151,8 +2245,8 @@
 <li>A data de reanálise do lote entra na agenda mesmo que o item já tenha movimentação.</li>
 <li>Permitir alterar a classificação de reanálise com justificativa e histórico.</li>
 </ul>
-<h3 id="observacoes_20">Observações</h3>
-<p><strong>A confirmar:</strong> a causa vem da leitura do código; o teste só mostrou a lista vazia.</p>
+<h3 id="observacoes_21">Observações</h3>
+<p><strong>A confirmar:</strong> a causa vem da leitura do código; o teste só mostrou a lista vazia. <strong>Rodada 5 (13/10/2026):</strong> a leitura mudou. O campo da classificação de reanálise <strong>nunca aparece</strong> no cadastro do Item (DV-EST-043); por isso o <code>TST0001</code> só pode ter recebido a classificação por outro caminho (carga inicial ou script). Enquanto não se souber como o vínculo foi feito, não dá para afirmar que o problema é o travamento depois da primeira movimentação.</p>
 <h2 id="dv-est-042">DV-EST-042</h2>
 <p><strong>Item refrigerado fica sem nenhum destino na Movimentação de Material (a confirmar)</strong></p>
 <div class="tabela"><table>
@@ -2177,16 +2271,16 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_25">O que acontece</h3>
+<h3 id="o-que-acontece_26">O que acontece</h3>
 <p>Com o item marcado como refrigerado, a lista de locais de destino fica <strong>vazia</strong>, apesar de existir o local refrigerado <code>904</code> ativo, com endereço, no mesmo almoxarifado. Com o item não refrigerado, a lista traz 901, 903 e 905.</p>
-<h3 id="como-reproduzir_25">Como reproduzir</h3>
+<h3 id="como-reproduzir_26">Como reproduzir</h3>
 <ol>
 <li>Marcar o <code>TST0003</code> como refrigerado (Cadastros › Item).</li>
 <li>Abrir <strong>Movimentação de Material</strong> e escolher o item.</li>
 <li>Abrir a lista de locais de destino.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Item <code>TST0003</code>, local <code>904 - TESTE LOCAL REFRIGERADO</code>. O item foi devolvido ao valor original.</p>
-<h3 id="esperado-e-obtido_25">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_26">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2209,7 +2303,7 @@
 <li>Listar os locais refrigerados com endereço livre para o item.</li>
 <li>Dizer o motivo quando não houver destino.</li>
 </ul>
-<h3 id="observacoes_21">Observações</h3>
+<h3 id="observacoes_22">Observações</h3>
 <p><strong>A confirmar:</strong> a causa não foi investigada (pode ser a capacidade pequena do endereço do 904, 10 kg).</p>
 <h2 id="dv-est-003">DV-EST-003</h2>
 <p><strong>Sem a Data do Recebimento, o botão SIM não faz nada e não mostra mensagem</strong></p>
@@ -2235,16 +2329,16 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_26">O que acontece</h3>
+<h3 id="o-que-acontece_27">O que acontece</h3>
 <p>A <strong>Data do Recebimento</strong> é obrigatória, mas a tela não avisa. Ao salvar sem ela, a confirmação aparece e o botão <strong>SIM</strong> não faz nada: não grava e não mostra mensagem.</p>
-<h3 id="como-reproduzir_26">Como reproduzir</h3>
+<h3 id="como-reproduzir_27">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Recebimento de Material</strong> e incluir um recebimento.</li>
 <li>Escolher a <strong>Transportadora</strong> e deixar a <strong>Data do Recebimento</strong> em branco.</li>
 <li>Clicar em <strong>SALVAR</strong> e depois em <strong>SIM</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Transportadora <code>TRANSLOG TRANSPORTES</code> (o recebimento 00013 foi criado depois, já com a data).</p>
-<h3 id="esperado-e-obtido_26">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_27">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2286,16 +2380,16 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_11">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_12">Sugestão de correção</h3>
 <ul>
 <li>Ligar o validador ao campo certo (<code>txtDtRec</code>), com mensagem sobre a data do recebimento, no grupo que o salvar usa.</li>
 <li>No servidor, conferir se a data foi informada antes de converter e mostrar mensagem clara.</li>
 <li>Capturar e registrar qualquer erro inesperado, mostrando ao usuário uma mensagem em vez de não fazer nada.</li>
 <li>Marcar o campo com asterisco de obrigatório.</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_9">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_10">Como confirmar a correção</h3>
 <p>Incluir um recebimento sem a data e clicar em SALVAR: deve aparecer a mensagem e nada ser gravado. Com a data, deve gravar normalmente.</p>
-<h3 id="observacoes_22">Observações</h3>
+<h3 id="observacoes_23">Observações</h3>
 <p>Sem captura da tela neste ponto; o comportamento foi registrado no resultado de 07/10/2026 (seção 4, observação 5).</p>
 <h2 id="dv-est-006">DV-EST-006</h2>
 <p><strong>Na tela do Item, alguns botões e marcações recarregam a tela e apagam os números digitados</strong></p>
@@ -2321,9 +2415,9 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_27">O que acontece</h3>
+<h3 id="o-que-acontece_28">O que acontece</h3>
 <p>Ao incluir um item, o botão <strong>INCLUIR</strong> de "Almoxarifados (Movimentação)" e as marcações de controle (lote, validade, quarentena) recarregam parte da tela e <strong>apagam os números já digitados</strong> (estoque mínimo e máximo, peso, medidas). A ordem de preenchimento passa a importar. Também aparece o erro de script "<code>$(...).nanoScroller is not a function</code>" em várias telas do Estoque.</p>
-<h3 id="como-reproduzir_27">Como reproduzir</h3>
+<h3 id="como-reproduzir_28">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Cadastros › Item</strong> e clicar em incluir.</li>
 <li>Preencher os números de <strong>Parâmetros de Armazenagem</strong> (Est. Mínimo, Est. Máximo, Peso, Altura, Largura, Profundidade, Emp. Máximo).</li>
@@ -2331,7 +2425,7 @@
 <li>Conferir os números digitados no passo 2.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Item <code>TST0001 - TESTE MATERIA PRIMA</code> (grupo <code>TESTE GRUPO</code>, subgrupo <code>TESTE SUBGRUPO</code>, unidade <code>TST</code>, almoxarifado <code>TESTE ALMOX</code>).</p>
-<h3 id="esperado-e-obtido_27">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_28">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2373,15 +2467,15 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_12">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_13">Sugestão de correção</h3>
 <ul>
 <li>Manter os valores digitados nas idas ao servidor (rever os painéis atualizados e o ViewState dos campos), ou fazer essas ações sem recarregar.</li>
 <li>Carregar o script do <code>nanoScroller</code> onde ele é chamado, ou retirar a chamada.</li>
 <li>Testar a tela do Item preenchendo os campos em ordens diferentes.</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_10">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_11">Como confirmar a correção</h3>
 <p>Incluir um item, preencher os números, marcar CONTROLE DE QUARENTENA e incluir um almoxarifado: os números devem continuar preenchidos; o console não deve mostrar erro de script.</p>
-<h3 id="observacoes_23">Observações</h3>
+<h3 id="observacoes_24">Observações</h3>
 <p>Sem captura do momento em que os números somem; registrado no resultado de 07/10/2026 (seção 4, observações 4 e 8).</p>
 <h2 id="dv-est-013">DV-EST-013</h2>
 <p><strong>Nota fiscal sem a série não grava e não avisa; mensagens apontam o campo errado</strong></p>
@@ -2407,9 +2501,9 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_28">O que acontece</h3>
+<h3 id="o-que-acontece_29">O que acontece</h3>
 <p>Na tela <strong>Recebimento de Materiais - Nota Fiscal</strong>, com a <strong>Série</strong> em branco, o sistema pergunta "Deseja salvar a Nota Fiscal?", repete a pergunta depois do SIM e <strong>não grava, sem nenhuma mensagem</strong>. Outras mensagens apontam o campo errado: sem o Nº da NF aparece também "Campo Série é obrigatório!" (com a série preenchida); sem a Data de Entrada aparece "Data da Nota Fiscal não informada"; sem o Total Produto aparece também "Valor do Frete da Nota Fiscal não foi informado!" (com o frete preenchido). "Tipo de Movimentacao" está sem acento.</p>
-<h3 id="como-reproduzir_28">Como reproduzir</h3>
+<h3 id="como-reproduzir_29">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Recebimento de Material</strong>, um recebimento em aberto, e clicar em <strong>INCLUIR NOTA FISCAL</strong>.</li>
 <li>Preencher todos os campos obrigatórios, menos a <strong>Série</strong>.</li>
@@ -2417,7 +2511,7 @@
 <li>Repetir deixando em branco, um de cada vez, o <strong>Nº da NF</strong>, a <strong>Data de Entrada</strong> e o <strong>Total Produto</strong>, e ler as mensagens no rodapé.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Recebimento <code>00015</code>, fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>, NF de teste <code>9004</code> (não gravada).</p>
-<h3 id="esperado-e-obtido_28">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_29">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2432,14 +2526,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="evidencias_9">Evidências</h3>
+<h3 id="evidencias_10">Evidências</h3>
 <figure><a href="../img/estoque/dv-est-013-1.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-013-1.png" alt="Série em branco: depois do SIM, a pergunta &quot;Deseja salvar a Nota Fiscal?&quot; aparece de novo" loading="lazy"></a><figcaption>Série em branco: depois do SIM, a pergunta &quot;Deseja salvar a Nota Fiscal?&quot; aparece de novo · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: Série em branco: depois do SIM, a pergunta "Deseja salvar a Nota Fiscal?" aparece de novo</em></p>
 <figure><a href="../img/estoque/dv-est-013-2.png" target="_blank" rel="noopener"><img src="../img/estoque/dv-est-013-2.png" alt="Sem o Total Produto: aparece também a mensagem do frete, que está preenchido" loading="lazy"></a><figcaption>Sem o Total Produto: aparece também a mensagem do frete, que está preenchido · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 2: Sem o Total Produto: aparece também a mensagem do frete, que está preenchido</em></p>
-<h3 id="onde-esta-no-codigo_9">Onde está no código</h3>
+<h3 id="onde-esta-no-codigo_10">Onde está no código</h3>
 <p><strong>Causa (confirmada):</strong> os validadores estão ligados aos campos errados: o da Série valida o Nº da NF, o do Frete valida o Total Produto, e o da Data de Entrada usa o texto da Data da Nota. Sem validador real na série, o código converte a série vazia com <code>Convert.ToInt32</code> ao verificar nota repetida; esse erro de formato não é capturado (o <code>catch</code> só pega <code>ArgumentException</code>), o que explica a falta de mensagem (esta última parte é <strong>provável</strong>).</p>
 <div class="tabela"><table>
 <thead>
@@ -2473,16 +2567,16 @@
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (3.estoque/app).</em></p>
-<h3 id="sugestao-de-correcao_13">Sugestão de correção</h3>
+<h3 id="sugestao-de-correcao_14">Sugestão de correção</h3>
 <ul>
 <li>Ligar cada validador ao seu campo: Série → <code>txtSerie</code>, Frete → <code>txtValFrete</code>; corrigir o texto da Data de Entrada.</li>
 <li>No servidor, conferir os campos obrigatórios antes de converter e mostrar a mensagem do campo que falta.</li>
 <li>Capturar e registrar erros inesperados em vez de deixar a tela sem resposta.</li>
 <li>Corrigir os textos sem acento ("Tipo de Movimentacao", "Data de Emissao").</li>
 </ul>
-<h3 id="como-confirmar-a-correcao_11">Como confirmar a correção</h3>
+<h3 id="como-confirmar-a-correcao_12">Como confirmar a correção</h3>
 <p>Repetir o <strong>CT-EST-184</strong> campo a campo: cada falta deve gerar só a mensagem do próprio campo; sem a série, a mensagem deve aparecer e nada ser gravado.</p>
-<h3 id="observacoes_24">Observações</h3>
+<h3 id="observacoes_25">Observações</h3>
 <p>No mesmo caso, o item repetido na nota foi recusado só pela soma dos valores; a recusa por item repetido não foi isolada (<em>ponto para validar</em> num novo teste com nota de valor maior).</p>
 <h2 id="dv-est-017">DV-EST-017</h2>
 <p><strong>Endereço repetido é recusado com erro de grafia e sem dizer qual campo repetiu</strong></p>
@@ -2508,16 +2602,16 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_29">O que acontece</h3>
+<h3 id="o-que-acontece_30">O que acontece</h3>
 <p>Ao incluir um endereço igual a outro já cadastrado, a mensagem diz "Não foi possível inlcuir o endereço. Verifique se o mesmo já existe": tem erro de grafia e não mostra qual combinação de local, rua, coluna e andar repetiu.</p>
-<h3 id="como-reproduzir_29">Como reproduzir</h3>
+<h3 id="como-reproduzir_30">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Endereço do Estoque</strong> e escolher <strong>INCLUIR</strong>.</li>
 <li>Informar o mesmo local, rua, coluna e andar de um endereço que já existe.</li>
 <li>Confirmar a inclusão.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Local <code>901</code>, rua <code>TESTE RUA</code>, coluna 901, andar 901.</p>
-<h3 id="esperado-e-obtido_29">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_30">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2540,7 +2634,7 @@
 <li>Corrigir a grafia da mensagem.</li>
 <li>Dizer qual combinação (local, rua, coluna e andar) já existe.</li>
 </ul>
-<h3 id="observacoes_25">Observações</h3>
+<h3 id="observacoes_26">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-031). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-019">DV-EST-019</h2>
 <p><strong>Curva ABC aceita período no futuro e gera curva sem dados</strong></p>
@@ -2566,15 +2660,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_30">O que acontece</h3>
+<h3 id="o-que-acontece_31">O que acontece</h3>
 <p>A Curva ABC recusa campos vazios e período invertido, mas aceita um período <strong>no futuro</strong> (01/2030 a 12/2030) e gera a curva 000002 sem nenhum dado.</p>
-<h3 id="como-reproduzir_30">Como reproduzir</h3>
+<h3 id="como-reproduzir_31">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Curva ABC</strong>.</li>
 <li>Informar mês inicial 01/2030 e mês final 12/2030.</li>
 <li>Clicar em gerar.</li>
 </ol>
-<h3 id="esperado-e-obtido_30">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_31">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2620,14 +2714,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_31">O que acontece</h3>
+<h3 id="o-que-acontece_32">O que acontece</h3>
 <p>A lista de lotes oferece lotes <strong>em quarentena</strong> (<code>TESTEPA001</code> e <code>TESTEPA999</code>, aguardando análise); só o lote bloqueado some.</p>
-<h3 id="como-reproduzir_31">Como reproduzir</h3>
+<h3 id="como-reproduzir_32">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Movimentação de Material</strong>.</li>
 <li>Abrir a lista de lotes do item <code>TST0003</code>.</li>
 </ol>
-<h3 id="esperado-e-obtido_31">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_32">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2646,7 +2740,7 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>Rodada 4 (13/10/2026):</strong> a tela só oferece <strong>locais de quarentena</strong> como destino, e os lotes aguardando análise não têm botão para abrir na Movimentação de Quarentena (CT-EST-039 e 050). Por isso não se confirmou que dê para levar o lote a um local comum <strong>pela tela</strong>. Falta testar se o servidor aceita a operação enviada sem a tela (RN-EST-059: a trava do servidor foi desligada no código). <strong>A validar com a Garantia da Qualidade e o Estoque</strong> se mostrar o lote na lista é aceitável.</p>
+<p><strong>Rodada 4 (13/10/2026):</strong> a tela só oferece <strong>locais de quarentena</strong> como destino, e os lotes aguardando análise não têm botão para abrir na Movimentação de Quarentena (CT-EST-039 e 050). Por isso não se confirmou que dê para levar o lote a um local comum <strong>pela tela</strong>. Falta testar se o servidor aceita a operação enviada sem a tela (RN-EST-059: a trava do servidor foi desligada no código). <strong>A validar com a Garantia da Qualidade e o Estoque</strong> se mostrar o lote na lista é aceitável. <strong>Rodada 5 (13/10/2026):</strong> repetida a verificação pela tela com o <code>TESTEPA999</code>: só o local <code>902 - TESTE LOCAL QUARENTENA</code> é oferecido. A trava do servidor (que o código mostra desligada) não foi testada diretamente, por decisão do responsável; fica em aberto para um teste de segurança conduzido fora do agente.</p>
 <h2 id="dv-est-037">DV-EST-037</h2>
 <p><strong>Mensagens do CQ que não dizem o que falta</strong></p>
 <div class="tabela"><table>
@@ -2671,14 +2765,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_32">O que acontece</h3>
+<h3 id="o-que-acontece_33">O que acontece</h3>
 <p>Programação de Análise com a data em branco mostra "Data início Análise anterior a data atual". Regra de Amostragem em branco mostra só "Ocorreu um erro inesperado.".</p>
-<h3 id="como-reproduzir_32">Como reproduzir</h3>
+<h3 id="como-reproduzir_33">Como reproduzir</h3>
 <ol>
 <li>Em <strong>Programação de Análise</strong>, deixar a data em branco e confirmar.</li>
 <li>Em <strong>Regra de Amostragem</strong>, deixar a regra em branco e confirmar.</li>
 </ol>
-<h3 id="esperado-e-obtido_32">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_33">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2700,7 +2794,7 @@
 <ul>
 <li>Uma mensagem por campo obrigatório.</li>
 </ul>
-<h3 id="observacoes_26">Observações</h3>
+<h3 id="observacoes_27">Observações</h3>
 <p>As capturas de tela ficam em <code>execucao/2026-10-12/evidencias/</code>, com o nome do caso (CT-EST-201). Não foram anexadas aqui porque ainda não foram conferidas uma a uma contra este defeito.</p>
 <h2 id="dv-est-040">DV-EST-040</h2>
 <p><strong>Lista sem resultado mostra uma linha fantasma com zeros e o botão Editar</strong></p>
@@ -2726,15 +2820,15 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="o-que-acontece_33">O que acontece</h3>
+<h3 id="o-que-acontece_34">O que acontece</h3>
 <p>Quando a lista não encontra nada, aparece uma linha com "0 / 0 / 0 / 0 / data de hoje / 0,000" e o botão <strong>Editar</strong>, como se fosse um registro.</p>
-<h3 id="como-reproduzir_33">Como reproduzir</h3>
+<h3 id="como-reproduzir_34">Como reproduzir</h3>
 <ol>
 <li>Abrir <strong>Estoque › Revalidação de Lote</strong>.</li>
 <li>Pesquisar um lote que não esteja vencido (<code>TESTELOTE003</code>).</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> Lotes <code>TESTELOTE003</code>, <code>TESTEPA001</code> e <code>TESTEPA998</code>.</p>
-<h3 id="esperado-e-obtido_33">Esperado e obtido</h3>
+<h3 id="esperado-e-obtido_34">Esperado e obtido</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2758,7 +2852,7 @@
 </ul>
     </article>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#dv-est-014">DV-EST-014</a></li><li class="sub"><a href="#o-que-acontece">O que acontece</a></li><li class="sub"><a href="#como-reproduzir">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido">Esperado e obtido</a></li><li class="sub"><a href="#evidencias">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes">Observações</a></li><li><a href="#dv-est-015">DV-EST-015</a></li><li class="sub"><a href="#o-que-acontece_1">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_1">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_1">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_1">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_1">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_1">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_1">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_1">Observações</a></li><li><a href="#dv-est-016">DV-EST-016</a></li><li class="sub"><a href="#o-que-acontece_2">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_2">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_2">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_2">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_2">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_2">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_2">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_2">Observações</a></li><li><a href="#dv-est-022">DV-EST-022</a></li><li class="sub"><a href="#o-que-acontece_3">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_3">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_3">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_3">Sugestão de correção</a></li><li class="sub"><a href="#observacoes_3">Observações</a></li><li><a href="#dv-est-024">DV-EST-024</a></li><li class="sub"><a href="#o-que-acontece_4">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_4">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_4">Esperado e obtido</a></li><li><a href="#dv-est-025">DV-EST-025</a></li><li class="sub"><a href="#o-que-acontece_5">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_5">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_5">Esperado e obtido</a></li><li><a href="#dv-est-027">DV-EST-027</a></li><li class="sub"><a href="#o-que-acontece_6">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_6">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_6">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_4">Observações</a></li><li><a href="#dv-est-001">DV-EST-001</a></li><li class="sub"><a href="#o-que-acontece_7">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_7">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_7">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_3">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_3">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_4">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_3">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_5">Observações</a></li><li><a href="#dv-est-002">DV-EST-002</a></li><li class="sub"><a href="#o-que-acontece_8">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_8">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_8">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_4">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_4">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_5">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_4">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_6">Observações</a></li><li><a href="#dv-est-004">DV-EST-004</a></li><li class="sub"><a href="#o-que-acontece_9">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_9">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_9">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_5">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_5">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_6">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_5">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_7">Observações</a></li><li><a href="#dv-est-010">DV-EST-010</a></li><li class="sub"><a href="#o-que-acontece_10">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_10">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_10">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_6">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_6">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_7">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_6">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_8">Observações</a></li><li><a href="#dv-est-011">DV-EST-011</a></li><li class="sub"><a href="#o-que-acontece_11">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_11">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_11">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_7">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_7">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_8">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_7">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_9">Observações</a></li><li><a href="#dv-est-012">DV-EST-012</a></li><li class="sub"><a href="#o-que-acontece_12">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_12">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_12">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_8">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_8">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_9">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_8">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_10">Observações</a></li><li><a href="#dv-est-018">DV-EST-018</a></li><li class="sub"><a href="#o-que-acontece_13">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_13">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_13">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_11">Observações</a></li><li><a href="#dv-est-020">DV-EST-020</a></li><li class="sub"><a href="#o-que-acontece_14">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_14">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_14">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_10">Sugestão de correção</a></li><li><a href="#dv-est-021">DV-EST-021</a></li><li class="sub"><a href="#o-que-acontece_15">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_15">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_15">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_12">Observações</a></li><li><a href="#dv-est-023">DV-EST-023</a></li><li class="sub"><a href="#o-que-acontece_16">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_16">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_16">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_13">Observações</a></li><li><a href="#dv-est-026">DV-EST-026</a></li><li class="sub"><a href="#o-que-acontece_17">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_17">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_17">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_14">Observações</a></li><li><a href="#dv-est-029">DV-EST-029</a></li><li class="sub"><a href="#o-que-acontece_18">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_18">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_18">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_15">Observações</a></li><li><a href="#dv-est-030">DV-EST-030</a></li><li class="sub"><a href="#o-que-acontece_19">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_19">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_19">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_16">Observações</a></li><li><a href="#dv-est-032">DV-EST-032</a></li><li class="sub"><a href="#o-que-acontece_20">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_20">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_20">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_17">Observações</a></li><li><a href="#dv-est-034">DV-EST-034</a></li><li class="sub"><a href="#o-que-acontece_21">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_21">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_21">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_18">Observações</a></li><li><a href="#dv-est-038">DV-EST-038</a></li><li class="sub"><a href="#o-que-acontece_22">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_22">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_22">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_19">Observações</a></li><li><a href="#dv-est-039">DV-EST-039</a></li><li class="sub"><a href="#o-que-acontece_23">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_23">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_23">Esperado e obtido</a></li><li><a href="#dv-est-041">DV-EST-041</a></li><li class="sub"><a href="#o-que-acontece_24">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_24">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_24">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_20">Observações</a></li><li><a href="#dv-est-042">DV-EST-042</a></li><li class="sub"><a href="#o-que-acontece_25">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_25">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_25">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_21">Observações</a></li><li><a href="#dv-est-003">DV-EST-003</a></li><li class="sub"><a href="#o-que-acontece_26">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_26">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_26">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_11">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_9">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_22">Observações</a></li><li><a href="#dv-est-006">DV-EST-006</a></li><li class="sub"><a href="#o-que-acontece_27">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_27">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_27">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_12">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_10">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_23">Observações</a></li><li><a href="#dv-est-013">DV-EST-013</a></li><li class="sub"><a href="#o-que-acontece_28">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_28">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_28">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_9">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_9">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_13">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_11">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_24">Observações</a></li><li><a href="#dv-est-017">DV-EST-017</a></li><li class="sub"><a href="#o-que-acontece_29">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_29">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_29">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_25">Observações</a></li><li><a href="#dv-est-019">DV-EST-019</a></li><li class="sub"><a href="#o-que-acontece_30">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_30">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_30">Esperado e obtido</a></li><li><a href="#dv-est-033">DV-EST-033</a></li><li class="sub"><a href="#o-que-acontece_31">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_31">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_31">Esperado e obtido</a></li><li><a href="#dv-est-037">DV-EST-037</a></li><li class="sub"><a href="#o-que-acontece_32">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_32">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_32">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_26">Observações</a></li><li><a href="#dv-est-040">DV-EST-040</a></li><li class="sub"><a href="#o-que-acontece_33">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_33">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_33">Esperado e obtido</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#dv-est-014">DV-EST-014</a></li><li class="sub"><a href="#o-que-acontece">O que acontece</a></li><li class="sub"><a href="#como-reproduzir">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido">Esperado e obtido</a></li><li class="sub"><a href="#evidencias">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes">Observações</a></li><li><a href="#dv-est-015">DV-EST-015</a></li><li class="sub"><a href="#o-que-acontece_1">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_1">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_1">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_1">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_1">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_1">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_1">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_1">Observações</a></li><li><a href="#dv-est-016">DV-EST-016</a></li><li class="sub"><a href="#o-que-acontece_2">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_2">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_2">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_2">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_2">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_2">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_2">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_2">Observações</a></li><li><a href="#dv-est-022">DV-EST-022</a></li><li class="sub"><a href="#o-que-acontece_3">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_3">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_3">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_3">Sugestão de correção</a></li><li class="sub"><a href="#observacoes_3">Observações</a></li><li><a href="#dv-est-024">DV-EST-024</a></li><li class="sub"><a href="#o-que-acontece_4">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_4">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_4">Esperado e obtido</a></li><li><a href="#dv-est-025">DV-EST-025</a></li><li class="sub"><a href="#o-que-acontece_5">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_5">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_5">Esperado e obtido</a></li><li><a href="#dv-est-027">DV-EST-027</a></li><li class="sub"><a href="#o-que-acontece_6">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_6">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_6">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_4">Observações</a></li><li><a href="#dv-est-043">DV-EST-043</a></li><li class="sub"><a href="#o-que-acontece_7">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_7">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_7">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_3">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_3">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_4">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_3">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_5">Observações</a></li><li><a href="#dv-est-001">DV-EST-001</a></li><li class="sub"><a href="#o-que-acontece_8">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_8">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_8">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_4">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_4">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_5">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_4">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_6">Observações</a></li><li><a href="#dv-est-002">DV-EST-002</a></li><li class="sub"><a href="#o-que-acontece_9">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_9">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_9">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_5">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_5">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_6">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_5">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_7">Observações</a></li><li><a href="#dv-est-004">DV-EST-004</a></li><li class="sub"><a href="#o-que-acontece_10">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_10">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_10">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_6">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_6">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_7">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_6">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_8">Observações</a></li><li><a href="#dv-est-010">DV-EST-010</a></li><li class="sub"><a href="#o-que-acontece_11">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_11">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_11">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_7">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_7">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_8">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_7">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_9">Observações</a></li><li><a href="#dv-est-011">DV-EST-011</a></li><li class="sub"><a href="#o-que-acontece_12">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_12">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_12">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_8">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_8">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_9">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_8">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_10">Observações</a></li><li><a href="#dv-est-012">DV-EST-012</a></li><li class="sub"><a href="#o-que-acontece_13">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_13">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_13">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_9">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_9">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_10">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_9">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_11">Observações</a></li><li><a href="#dv-est-018">DV-EST-018</a></li><li class="sub"><a href="#o-que-acontece_14">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_14">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_14">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_12">Observações</a></li><li><a href="#dv-est-020">DV-EST-020</a></li><li class="sub"><a href="#o-que-acontece_15">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_15">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_15">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_11">Sugestão de correção</a></li><li><a href="#dv-est-021">DV-EST-021</a></li><li class="sub"><a href="#o-que-acontece_16">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_16">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_16">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_13">Observações</a></li><li><a href="#dv-est-023">DV-EST-023</a></li><li class="sub"><a href="#o-que-acontece_17">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_17">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_17">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_14">Observações</a></li><li><a href="#dv-est-026">DV-EST-026</a></li><li class="sub"><a href="#o-que-acontece_18">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_18">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_18">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_15">Observações</a></li><li><a href="#dv-est-029">DV-EST-029</a></li><li class="sub"><a href="#o-que-acontece_19">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_19">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_19">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_16">Observações</a></li><li><a href="#dv-est-030">DV-EST-030</a></li><li class="sub"><a href="#o-que-acontece_20">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_20">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_20">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_17">Observações</a></li><li><a href="#dv-est-032">DV-EST-032</a></li><li class="sub"><a href="#o-que-acontece_21">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_21">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_21">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_18">Observações</a></li><li><a href="#dv-est-034">DV-EST-034</a></li><li class="sub"><a href="#o-que-acontece_22">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_22">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_22">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_19">Observações</a></li><li><a href="#dv-est-038">DV-EST-038</a></li><li class="sub"><a href="#o-que-acontece_23">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_23">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_23">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_20">Observações</a></li><li><a href="#dv-est-039">DV-EST-039</a></li><li class="sub"><a href="#o-que-acontece_24">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_24">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_24">Esperado e obtido</a></li><li><a href="#dv-est-041">DV-EST-041</a></li><li class="sub"><a href="#o-que-acontece_25">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_25">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_25">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_21">Observações</a></li><li><a href="#dv-est-042">DV-EST-042</a></li><li class="sub"><a href="#o-que-acontece_26">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_26">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_26">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_22">Observações</a></li><li><a href="#dv-est-003">DV-EST-003</a></li><li class="sub"><a href="#o-que-acontece_27">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_27">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_27">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_12">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_10">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_23">Observações</a></li><li><a href="#dv-est-006">DV-EST-006</a></li><li class="sub"><a href="#o-que-acontece_28">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_28">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_28">Esperado e obtido</a></li><li class="sub"><a href="#sugestao-de-correcao_13">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_11">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_24">Observações</a></li><li><a href="#dv-est-013">DV-EST-013</a></li><li class="sub"><a href="#o-que-acontece_29">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_29">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_29">Esperado e obtido</a></li><li class="sub"><a href="#evidencias_10">Evidências</a></li><li class="sub"><a href="#onde-esta-no-codigo_10">Onde está no código</a></li><li class="sub"><a href="#sugestao-de-correcao_14">Sugestão de correção</a></li><li class="sub"><a href="#como-confirmar-a-correcao_12">Como confirmar a correção</a></li><li class="sub"><a href="#observacoes_25">Observações</a></li><li><a href="#dv-est-017">DV-EST-017</a></li><li class="sub"><a href="#o-que-acontece_30">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_30">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_30">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_26">Observações</a></li><li><a href="#dv-est-019">DV-EST-019</a></li><li class="sub"><a href="#o-que-acontece_31">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_31">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_31">Esperado e obtido</a></li><li><a href="#dv-est-033">DV-EST-033</a></li><li class="sub"><a href="#o-que-acontece_32">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_32">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_32">Esperado e obtido</a></li><li><a href="#dv-est-037">DV-EST-037</a></li><li class="sub"><a href="#o-que-acontece_33">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_33">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_33">Esperado e obtido</a></li><li class="sub"><a href="#observacoes_27">Observações</a></li><li><a href="#dv-est-040">DV-EST-040</a></li><li class="sub"><a href="#o-que-acontece_34">O que acontece</a></li><li class="sub"><a href="#como-reproduzir_34">Como reproduzir</a></li><li class="sub"><a href="#esperado-e-obtido_34">Esperado e obtido</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>

@@ -449,6 +449,51 @@
 </tbody>
 </table></div>
 <p>Detalhes e capturas: <code>execucao/2026-10-13/resultado.md</code>.</p>
+<h3 id="reanalise-concluida-no-cq-e-trava-da-quarentena-rodada-5-13-10-2026">Reanálise concluída no CQ e trava da quarentena (rodada 5, 13/10/2026)</h3>
+<p>Rodada curta, de fechamento: o caso que faltava do ciclo de reanálise, a preparação de um item com prazo de reanálise curto e a repetição da verificação da quarentena. <strong>1 caso passou, 1 em parte e 3 continuam bloqueados.</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que foi testado</th>
+<th>Resultado</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-060</td>
+<td>Concluir a reanálise do <code>TESTELOTE003</code> (solicitação 009/26): coleta, amostragem, separação 00041, análise, laudo aprovado e emitido, "Atualizar resultado"</td>
+<td><strong>Passou</strong></td>
+<td>O lote voltou ao disponível (80 unidades). O laudo saiu com "Reanálise prevista = Sim" e validade do laudo 13/04/2027; a tela não tem um campo próprio de data de reanálise</td>
+</tr>
+<tr>
+<td>CT-EST-060 (observação)</td>
+<td>Saldo depois de emitir o laudo, antes de "Atualizar resultado"</td>
+<td><strong>Confirma DV-EST-029</strong></td>
+<td>Emitir o laudo não move o saldo: o lote ficou 80 em "Reanálise" até o clique manual no Estoque, sem aviso nem link na tela do CQ</td>
+</tr>
+<tr>
+<td>CT-EST-018</td>
+<td>Cadastrar a classificação de reanálise <code>T - TESTE REANALISE CURTA</code> (50% da validade)</td>
+<td><strong>Em parte</strong></td>
+<td>A inclusão gravou. A recusa sem a primeira reanálise não foi testada</td>
+</tr>
+<tr>
+<td>CT-EST-055, 058, 061</td>
+<td>Criar um item novo com a classificação de prazo curto</td>
+<td><strong>Bloqueados</strong></td>
+<td><strong>O cadastro de Item não mostra o campo da classificação de reanálise</strong> (DV-EST-043, Alta): o painel nasce oculto no código e nada o reativa; confirmado na página carregada. Sem o vínculo, não há como agendar nem vencer uma reanálise de item novo</td>
+</tr>
+<tr>
+<td>CT-EST-039 (repetição)</td>
+<td>Destinos oferecidos ao <code>TESTEPA999</code> (quarentena) na Movimentação de Material</td>
+<td><strong>Passou pela tela</strong></td>
+<td>Só <code>902 - TESTE LOCAL QUARENTENA</code>. A trava do servidor, que o código mostra desligada, <strong>não foi testada diretamente</strong> (decisão do responsável: só pela tela); fica em aberto para um teste de segurança fora do agente</td>
+</tr>
+</tbody>
+</table></div>
+<p>A parte C da proposta (CT-EST-033, 041, 042, 054, 062 a 064 e a conferência das capturas dos DV-EST-017 a 042) não foi executada. Detalhes e capturas: <code>execucao/2026-10-13-rodada-5/resultado.md</code>.</p>
 <h3 id="permissoes-e-acesso">Permissões e acesso</h3>
 <div class="tabela"><table>
 <thead>
@@ -481,6 +526,13 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>DV-EST-043</td>
+<td><strong>Alta</strong></td>
+<td>Cadastros: Item</td>
+<td>O campo da <strong>classificação de reanálise não aparece na tela</strong>, em nenhuma combinação de controles. O painel nasce oculto no código e nada o mostra; o item <code>TST0001</code>, que está em reanálise, só pode ter recebido a classificação por outro caminho</td>
+<td>O prazo de reteste (RDC 658/2022, art. 189) não pode ser definido pela tela para item novo; a Agenda de Reanálise fica sem o que agendar</td>
+</tr>
 <tr>
 <td>DV-EST-027</td>
 <td><strong>Alta</strong></td>
@@ -541,7 +593,7 @@
 <td>DV-EST-029</td>
 <td>Média</td>
 <td>Estoque × CQ</td>
-<td>O Estoque só sabe do laudo quando alguém clica em "Atualizar resultado"; antes disso o lote reprovado segue "Solicitado". Depois, o saldo mostra o mesmo material em quarentena e bloqueado</td>
+<td>O Estoque só sabe do laudo quando alguém clica em "Atualizar resultado"; antes disso o lote reprovado segue "Solicitado". Depois, o saldo mostra o mesmo material em quarentena e bloqueado. <em>Confirmado na rodada 5 com a reanálise aprovada: o lote ficou preso em "Reanálise" até o clique</em></td>
 <td>O status do lote precisa ser o da decisão da Qualidade, sem depender de um clique</td>
 </tr>
 <tr>
@@ -562,7 +614,7 @@
 <td>DV-EST-033</td>
 <td>Média</td>
 <td>Estoque: Movimentação de Material</td>
-<td>A lista de lotes oferece lotes em quarentena; só o bloqueado some. <em>A validar com a área: pela tela, o lote em quarentena só vai para local de quarentena (rodada 4)</em></td>
+<td>A lista de lotes oferece lotes em quarentena; só o bloqueado some. <em>A validar com a área: pela tela, o lote em quarentena só vai para local de quarentena (rodadas 4 e 5); a trava do servidor não foi testada diretamente</em></td>
 <td>Material em quarentena não deve ser movimentado como disponível</td>
 </tr>
 <tr>
@@ -583,7 +635,7 @@
 <td>DV-EST-041</td>
 <td>Média (a confirmar)</td>
 <td>Agenda de Reanálise</td>
-<td>Não lista lote de item que já teve movimentação (a classificação de reanálise trava depois da primeira movimentação)</td>
+<td>Não lista lote de item que já teve movimentação (a classificação de reanálise trava depois da primeira movimentação). <em>Rodada 5: a leitura mudou com o DV-EST-043; falta saber como o <code>TST0001</code> recebeu a classificação</em></td>
 <td>O controle da reanálise por prazo depende da agenda</td>
 </tr>
 <tr>
@@ -902,14 +954,15 @@
 | Rodada 4: reanálise | Reanálise do <code>TESTELOTE003</code> aberta no CQ (aguardando) | O lote está fora do disponível até concluir |</p>
 <h2 id="proximos-passos">Próximos passos</h2>
 <ul>
-<li><strong>Rodada 4 feita (13/10/2026).</strong> Faltam: concluir a reanálise do <code>TESTELOTE003</code> no CQ (CT-EST-060), criar um item com classificação de reanálise de prazo curto para os casos 055, 058 e 061, a Endereçamento (033, aguardando o DBA) e os fluxos de solicitação, separação e remessa.</li>
+<li><strong>Rodadas 4 e 5 feitas (13/10/2026).</strong> A reanálise do <code>TESTELOTE003</code> foi concluída (CT-EST-060). Os casos do prazo de reanálise (055, 058 e 061) ficam <strong>bloqueados até a correção do DV-EST-043</strong> ou até a área mostrar outro caminho para ligar item e classificação. Faltam o Endereçamento (033, aguardando o DBA) e as rodadas 6 (atendimento e remessa) e 7 (devolução, inventário e amostras de retenção), com os últimos casos de prioridade alta.</li>
+<li><strong>Pergunta à área:</strong> como o item <code>TST0001</code> recebeu a classificação de reanálise, se por carga inicial ou script. A resposta decide a leitura dos DV-EST-041 e 043.</li>
 <li><strong>Decisão para a Garantia da Qualidade:</strong> a Qualidade precisa definir <strong>quem pode aprovar, reprovar e emitir o laudo</strong>; hoje a função de chefe só limita Emitir e Reprovar. Confirmar também se a movimentação comum pode mostrar lotes em quarentena.</li>
 <li><strong>Perguntas ao DBA</strong> (quatro, seção 6 da rodada de 08/10/2026): executar a rotina do endereçamento para a nota 9006 e informar o erro. Já não bloqueiam os testes, mas o defeito do Endereçamento segue sem causa.</li>
 <li><strong>Testes por risco:</strong> daqui em diante, primeiro os casos que tocam a norma (lote, validade, quarentena, aprovação do CQ, autorização e acesso). Os demais, à medida que houver crédito.</li>
 </ul>
     </article>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-de-material">Recebimento de Material</a></li><li class="sub"><a href="#quarentena-e-controle-da-qualidade-rodada-3-12-10-2026">Quarentena e Controle da Qualidade (rodada 3, 12/10/2026)</a></li><li class="sub"><a href="#movimentacao-interna-reprovado-e-reanalise-rodada-4-13-10-2026">Movimentação interna, reprovado e reanálise (rodada 4, 13/10/2026)</a></li><li class="sub"><a href="#permissoes-e-acesso">Permissões e acesso</a></li><li><a href="#desvios-encontrados">Desvios encontrados</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-de-material">Recebimento de Material</a></li><li class="sub"><a href="#quarentena-e-controle-da-qualidade-rodada-3-12-10-2026">Quarentena e Controle da Qualidade (rodada 3, 12/10/2026)</a></li><li class="sub"><a href="#movimentacao-interna-reprovado-e-reanalise-rodada-4-13-10-2026">Movimentação interna, reprovado e reanálise (rodada 4, 13/10/2026)</a></li><li class="sub"><a href="#reanalise-concluida-no-cq-e-trava-da-quarentena-rodada-5-13-10-2026">Reanálise concluída no CQ e trava da quarentena (rodada 5, 13/10/2026)</a></li><li class="sub"><a href="#permissoes-e-acesso">Permissões e acesso</a></li><li><a href="#desvios-encontrados">Desvios encontrados</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
