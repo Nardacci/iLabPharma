@@ -292,6 +292,8 @@
 </tbody>
 </table></div>
 <p><strong>R-EST-08, testado em 13/10/2026 (rodada 5):</strong> pela tela (Movimentação de Material e de Quarentena), o lote em quarentena só pode ir a um local de quarentena; nenhum destino comum aparece na lista. Isso confirma que a <strong>tela</strong> tem controle. A <strong>trava do servidor</strong>, que o código mostra desligada, continua sem confirmação direta: o teste que tentaria contornar a tela para checar o servidor não foi concluído nesta rodada. A probabilidade segue "Média" até essa confirmação.</p>
+<p><strong>R-EST-08, achado novo na rodada 6 (13/10/2026):</strong> movendo um lote <strong>já aprovado</strong> (<code>TESTEPA003</code>) da quarentena para um local comum pela tela normal (sem forçar nada), a movimentação gravou a saída do endereço de origem mas <strong>não criou o endereço de destino</strong> — as 80 unidades do lote somem do saldo total (confirmado em três lugares: disponibilidade por lote, consulta de endereço e histórico do lote, que mostra "SAÍDA" sem a "ENTRADA" correspondente e "Nenhum endereço encontrado"). Isso é um problema <strong>mais grave que a falta de trava</strong>: mesmo um lote liberado corretamente pode ter o saldo apagado por uma falha da própria tela de movimentação (DV-EST-044, novo). Ver <code>3.estoque/execucao/2026-10-13-rodada-6/resultado.md</code>. <strong>Revisão na nuvem (13/10/2026):</strong> nas capturas, o destino foi confirmado <strong>sem rua, coluna e andar</strong> (<code>L905-R000-C000-A000</code>); na rodada 3 a mesma tela, com endereço completo, funcionou. O defeito certo é a tela aceitar destino incompleto e perder o saldo (DV-EST-044); se a perda acontece também com endereço completo, fica a confirmar.</p>
+<p><strong>R-EST-12, tentado na rodada 6 (13/10/2026):</strong> o plano previa comparar a ordem de dois lotes do mesmo item com validades diferentes no Atendimento. O segundo lote criado para o teste (<code>TESTEPA003</code>) teve o saldo apagado pelo DV-EST-044 antes de chegar ao Atendimento — por isso, CT-EST-073 e 074 ficam <strong>bloqueados</strong> nesta rodada, não confirmados nem descartados.</p>
 <h4 id="produto-acabado">Produto acabado</h4>
 <div class="tabela"><table>
 <thead>
@@ -365,9 +367,9 @@
 <td>Baixa</td>
 <td>1</td>
 <td><strong>Alta</strong></td>
-<td>Nenhum (C)</td>
+<td>Nenhum (C); testado em 13/10/2026 (rodada 6), inconclusivo: o Finalizar foi feito sem a justificativa obrigatória (DV-EST-046); a remessa nem chega a ser confirmada — "Finalizar" termina em erro (DV-EST-046) antes de existir qualquer evento para a Rastreabilidade conferir (T)</td>
 <td>A remessa informa a Rastreabilidade; um só registro de evento (trava 11)</td>
-<td>RN-RAS-037 e 039; <code>04</code>, tema 11</td>
+<td>RN-RAS-037 e 039; <code>04</code>, tema 11; DV-EST-046</td>
 </tr>
 <tr>
 <td>R-EST-16</td>
@@ -375,12 +377,12 @@
 <td>Remessa de lote em quarentena, bloqueado ou em reanálise</td>
 <td>Alta</td>
 <td>Baixa</td>
-<td>Média</td>
-<td>2</td>
+<td>Baixa</td>
+<td>1</td>
 <td><strong>Média</strong></td>
-<td>A lista exclui esses lotes (C)</td>
+<td>A lista exclui esses lotes, confirmado na tela em 13/10/2026 (rodada 6): <code>TESTEPA998</code> (reprovado/vencido) e <code>TESTEPA999</code> (quarentena) não aparecem na Remessa (T)</td>
 <td>Conferir a situação única do lote também na gravação</td>
-<td>RN-EST-125; a confirmar no teste</td>
+<td>RN-EST-125; CT-EST-114</td>
 </tr>
 <tr>
 <td>R-EST-17</td>
