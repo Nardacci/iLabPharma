@@ -39,13 +39,37 @@ HOJE = datetime.date.today().strftime("%d/%m/%Y")
 CATEGORIAS = {
     "inicio": ("Comece por aqui", "Visão geral e resumos para quem quer entender rápido."),
     "ideal": ("O ideal", "Como o módulo deve trabalhar para atender à ANVISA: funções, comportamento, integrações com os outros módulos e papéis. Não descreve o legado; mostra o que manter, corrigir e construir."),
-    "fluxos": ("Fluxos do processo", "Como o trabalho anda no sistema, etapa por etapa, com fluxograma."),
+    "fluxos": ("Fluxos do processo", "Como o trabalho anda no sistema, etapa por etapa, com fluxograma. Onde há roteiro, cada tela leva ao passo a passo para quem vai testar."),
     "negocio": ("Regras e uso", "Regras de negócio, telas e manual para quem usa o sistema."),
     "qualidade": ("Qualidade e ANVISA", "Conformidade com a RDC 658/2022, riscos e rastreabilidade."),
     "tecnico": ("Requisitos e dados", "Para a equipe de desenvolvimento da nova versão."),
     "defeitos": ("Defeitos para correção", "Para a equipe de desenvolvimento: cada defeito encontrado nos testes, com o passo a passo para reproduzir, as capturas, o trecho do código e uma sugestão de correção."),
     "testes": ("Testes", "Plano de testes, resultados e evidências."),
 }
+
+# Roteiro de execução (passo a passo para quem testa) -> fluxo a que pertence. Na página do módulo, cada
+# fluxo lista as telas do seu roteiro; o roteiro em si fica na categoria "fluxos", abaixo do fluxo.
+ROTEIROS = {
+    "5.garantia_qualidade/roteiros/desvios-capa.md": "5.garantia_qualidade/fluxos/desvios-capa.md",
+    "5.garantia_qualidade/roteiros/autoinspecao-auditoria.md": "5.garantia_qualidade/fluxos/autoinspecao-auditoria.md",
+    "5.garantia_qualidade/roteiros/controle-mudancas.md": "5.garantia_qualidade/fluxos/controle-mudancas.md",
+    "5.garantia_qualidade/roteiros/treinamento.md": "5.garantia_qualidade/fluxos/treinamento.md",
+    "5.garantia_qualidade/roteiros/assuntos-regulatorios.md": "5.garantia_qualidade/fluxos/assuntos-regulatorios.md",
+}
+RE_TELA = re.compile(r"^(?:Telas?\s+[\d, e]+|Fora da \w+|Fechamento)\s*·\s*(.+)$")
+
+
+def telas_do_roteiro(pagina):
+    """Lista (nome da tela, âncora) a partir dos títulos 'Tela N · Nome' do roteiro, em qualquer nível."""
+    itens = []
+    for t in pagina["toc"]:
+        for x in [t] + t["children"]:
+            nome = html.unescape(x["name"])
+            m = RE_TELA.match(nome)
+            if m:
+                itens.append((re.sub(r"\s*\(.*?\)\s*$", "", m.group(1)).strip(), x["id"]))
+    return itens
+
 
 # Áreas que não são módulos do sistema: ficam fora dos cartões e das contagens de módulos.
 ESPECIAIS = {"visao-geral"}
@@ -128,11 +152,11 @@ MODULOS = [
             ("5.garantia_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
-            ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
-            ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
-            ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
-            ("5.garantia_qualidade/roteiros/desvios-capa.md", "Roteiro de execução: Desvios e CAPA (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Desvios e CAPA.docx"),
-            ("5.garantia_qualidade/roteiros/autoinspecao-auditoria.md", "Roteiro de execução: Autoinspeção e auditoria (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Autoinspecao e Auditoria.docx"),
+            ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
+            ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
+            ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
+            ("5.garantia_qualidade/roteiros/desvios-capa.md", "Roteiro de execução: Desvios e CAPA (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Desvios e CAPA.docx"),
+            ("5.garantia_qualidade/roteiros/autoinspecao-auditoria.md", "Roteiro de execução: Autoinspeção e auditoria (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Autoinspecao e Auditoria.docx"),
             ("5.garantia_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
             ("5.garantia_qualidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
             ("5.garantia_qualidade/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
@@ -571,7 +595,8 @@ def gerar(origem, destino, relatorio):
             corpo, toc = conv.converter(limpo, mod["id"], tirar_h1=True)
             s = slug(titulo)
             pagina = {"titulo": titulo, "slug": s, "cat": cat, "arq": arq, "toc": toc, "corpo": corpo,
-                      "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo}
+                      "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo,
+                      "roteiro_de": ROTEIROS.get(arq)}
             m = re.search(r'<img src="(\.\./img/[^"]+fluxograma[^"]*)"', corpo)
             if m:
                 pagina["fluxograma"] = m.group(1)
@@ -643,7 +668,16 @@ def nav_lateral(mod, atual):
         itens = [p for p in mod["paginas"] if p["cat"] == cat]
         if not itens:
             continue
-        li = "".join(f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a></li>' for p in itens)
+        roteiros = {p["roteiro_de"]: p for p in itens if p.get("roteiro_de")}
+        li = ""
+        for p in itens:
+            if p.get("roteiro_de"):
+                continue
+            li += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a>'
+            r = roteiros.get(p["arq"])
+            if r:
+                li += f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo para testar</a></li></ul>'
+            li += "</li>"
         grupos.append(f'<div class="lat-grupo"><div class="lat-titulo">{E(nome_cat)}</div><ul>{li}</ul></div>')
     return "".join(grupos)
 
@@ -691,7 +725,7 @@ def pagina_modulo(mod):
     for p in mod["paginas"]:
         for k in soma:
             soma[k] = max(soma[k], p["contagem"][k]) if k != "regras" else soma[k] + p["contagem"][k]
-    fluxos = [p for p in mod["paginas"] if p["cat"] == "fluxos"]
+    fluxos = [p for p in mod["paginas"] if p["cat"] == "fluxos" and not p.get("roteiro_de")]
     numeros = [(len(mod["paginas"]), "documentos"), (len(fluxos), "fluxos documentados")]
     if soma["casos"]:
         numeros.append((soma["casos"], "casos de teste (maior plano)"))
@@ -707,11 +741,23 @@ def pagina_modulo(mod):
         if not itens:
             continue
         if cat == "fluxos":
-            cards = "".join(
-                f'<a class="fluxo-card" href="{p["slug"]}.html">'
-                + (f'<img src="{p["fluxograma"]}" alt="" loading="lazy">' if p["fluxograma"] else '<div class="fluxo-sem-img">Fluxo descrito em texto</div>')
-                + f'<span>{E(p["titulo"])}</span></a>' for p in itens)
-            grade = f'<div class="fluxos">{cards}</div>'
+            roteiros = {p["roteiro_de"]: p for p in itens if p.get("roteiro_de")}
+            cards = []
+            for p in itens:
+                if p.get("roteiro_de"):
+                    continue
+                card = (f'<a class="fluxo-card" href="{p["slug"]}.html">'
+                        + (f'<img src="{p["fluxograma"]}" alt="" loading="lazy">' if p["fluxograma"] else '<div class="fluxo-sem-img">Fluxo descrito em texto</div>')
+                        + f'<span>{E(p["titulo"])}</span></a>')
+                r = roteiros.get(p["arq"])
+                if r:
+                    telas = telas_do_roteiro(r)
+                    li = "".join(f'<li><a href="{r["slug"]}.html#{a}">{E(n)}</a></li>' for n, a in telas)
+                    word = f' · <a href="{r["word"]}" download>Word</a>' if r["word"] else ""
+                    card = (f'<div class="fluxo-bloco">{card}<details class="fluxo-roteiro" open><summary>Passo a passo para testar ({len(telas)} telas)</summary>'
+                            f'<ol>{li}</ol><p class="fluxo-roteiro-tudo"><a href="{r["slug"]}.html">Abrir o roteiro completo</a>{word}</p></details></div>')
+                cards.append(card)
+            grade = f'<div class="fluxos">{"".join(cards)}</div>'
         else:
             cards = "".join(
                 f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo">{E(p["titulo"])}</span>'
@@ -768,7 +814,7 @@ def pagina_inicial(origem):
 
     vg = next(m for m in MODULOS if m["id"] == "visao-geral")
     total_docs = sum(len(m["paginas"]) for m in MODULOS)
-    total_fluxos = sum(1 for m in MODULOS for p in m["paginas"] if p["cat"] == "fluxos")
+    total_fluxos = sum(1 for m in MODULOS for p in m["paginas"] if p["cat"] == "fluxos" and not p.get("roteiro_de"))
     modulos_com_doc = sum(1 for m in MODULOS if m["paginas"] and m["id"] not in ESPECIAIS)
     total_modulos = len([m for m in MODULOS if m["id"] not in ESPECIAIS])
 
