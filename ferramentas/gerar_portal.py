@@ -264,7 +264,10 @@ RE_LINHA_SEG = re.compile(
     r"Quem conhece o endere[çc]o|abre(?:m)? telas? .* pelo endere[çc]o|endere[çc]o da p[áa]gina|\btokens?\b|\bhash\b|localStorage|"
     r"a si mesmo o n[íi]vel|se colocar no N[íi]vel 03|perfil completo|Sem login exigido|a[çc][õo]es do perfil ignoradas|HSPermission|"
     r"DV-EST-0(?:08|09|28|35|36)|sem a fun[çc][ãa]o|fun[çc][ãa]o 48|n[úu]meros? fixos? de fun|Qualquer usu[áa]rio (?:do sistema|com login|aprova|autoriza)|sem nenhum acesso ao Estoque|"
-    r"apagou as a[çc][õo]es|apaga permiss|salvar a conta|acesso pelo endere[çc]o|abrem? sem permiss[ãa]o|abert[ao]s? pelo endere[çc]o|[Aa]bertas? pelo endere[çc]o|por usu[áa]rio sem permiss[ãa]o|DV-EST-00[57]",
+    r"apagou as a[çc][õo]es|apaga permiss|salvar a conta|acesso pelo endere[çc]o|abrem? sem permiss[ãa]o|abert[ao]s? pelo endere[çc]o|[Aa]bertas? pelo endere[çc]o|por usu[áa]rio sem permiss[ãa]o|DV-EST-00[57]|"
+    r"pelo endere[çc]o[^|]{0,80}(?:sem permiss|sem acesso|acesso negado)|sem permiss[ãa]o[^|]{0,80}pelo endere[çc]o|"
+    r"troca obrigat[óo]ria[^|]{0,40}(?:contornada|pulada)|senha sem diferenciar|DV-PRI-02[12]|[Aa]cesso direto pelo endere[çc]o|"
+    r"sem nenhuma fun[çc][ãa]o d[oa] [^|]{0,30}abrir|sem acesso [^|]{0,40}pelo endere[çc]o",
     re.I)
 
 
@@ -456,6 +459,7 @@ def cabecalho(titulo, raiz, ativo=""):
     <a href="{raiz}index.html#diretoria">Diretoria</a>
     <a href="{raiz}index.html#publicos">Por público</a>
     <a href="{raiz}anvisa.html"{' aria-current="page"' if ativo == 'anvisa' else ''}>ANVISA</a>
+    <a href="{raiz}cronograma.html"{' aria-current="page"' if ativo == 'cronograma' else ''}>Cronograma</a>
     <a href="{raiz}apresentacao.html">Apresentação</a>
   </nav>
   <div class="topo-acoes">
@@ -606,6 +610,9 @@ def gerar(origem, destino, relatorio):
 
     (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
     (destino / "anvisa.html").write_text(pagina_anvisa(origem, busca), encoding="utf-8")
+    cron = pagina_cronograma(origem)
+    if cron:
+        (destino / "cronograma.html").write_text(cron, encoding="utf-8")
     (destino / "portal/busca.json").write_text(json.dumps(busca, ensure_ascii=False), encoding="utf-8")
     normas = indice_normas(origem)
     if normas:
@@ -1007,6 +1014,166 @@ def pagina_anvisa(origem, busca):
 {ANV_JS}
 """ + rodape(raiz))
 
+
+# ---------------------------------------------------------------------------------------------
+# Página Cronograma: andamento da homologação, módulo a módulo, com previsão de término.
+# Fonte: homologacao/cronograma.json (mantido a cada rodada, junto com o diário de bordo).
+# ---------------------------------------------------------------------------------------------
+import datetime as _dt
+
+MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"]
+
+
+def _dbr(iso):
+    d = _dt.date.fromisoformat(iso)
+    return f"{d.day:02d}/{d.month:02d}"
+
+
+def pagina_cronograma(origem):
+    arq = Path(origem) / "homologacao" / "cronograma.json"
+    if not arq.exists():
+        return ""
+    cr = json.loads(arq.read_text(encoding="utf-8"))
+    hoje = _dt.date.today()
+    mods = cr["modulos"]
+    cores = {m["id"]: m["cor"] for m in MODULOS}
+    datas = [_dt.date.fromisoformat(f[k]) for m in mods for f in m["fases"] for k in ("inicio", "fim")]
+    datas += [_dt.date.fromisoformat(x["data"]) for x in cr.get("marcos", [])]
+    ini = min(datas) - _dt.timedelta(days=(min(datas).weekday()))  # começa na segunda
+    fim = max(datas) + _dt.timedelta(days=(6 - max(datas).weekday()))  # termina no domingo
+    dias = [ini + _dt.timedelta(days=i) for i in range((fim - ini).days + 1)]
+    n = len(dias)
+    pct = lambda i: f"{i / n * 100:.3f}%"
+    rot = {"feito": "feito", "andamento": "em andamento", "previsto": "previsto"}
+    legenda = cr.get("fases_legenda", {})
+
+    # Cabeçalho do gráfico: meses e dias
+    meses = []
+    i = 0
+    while i < n:
+        j = i
+        while j < n and dias[j].month == dias[i].month:
+            j += 1
+        rotulo_mes = f"{MESES[dias[i].month - 1]}/{dias[i].year}" if j - i >= 7 else MESES[dias[i].month - 1]
+        meses.append(f'<div class="cr-mes" style="left:{pct(i)};width:{pct(j - i)}">{rotulo_mes}</div>')
+        i = j
+    diasx = "".join(
+        f'<div class="cr-dia{" cr-fds" if d.weekday() >= 5 else ""}{" cr-hoje" if d == hoje else ""}" style="left:{pct(k)};width:{pct(1)}"><span>{d.day}</span></div>'
+        for k, d in enumerate(dias))
+    marcos_html = "".join(
+        f'<div class="cr-marco cr-{x["status"]}{" cr-marco-baixo" if k % 2 else ""}" style="left:{pct((_dt.date.fromisoformat(x["data"]) - ini).days + 1)}" title="{E(x["nome"])} ({_dbr(x["data"])})"><span>{_dbr(x["data"])} {E(x["nome"])}</span></div>'
+        for k, x in enumerate(cr.get("marcos", [])))
+
+    linhas = []
+    for m in mods:
+        cor = cores.get(m["id"], "#64748b")
+        barras = []
+        for f in m["fases"]:
+            a = (_dt.date.fromisoformat(f["inicio"]) - ini).days
+            b = (_dt.date.fromisoformat(f["fim"]) - ini).days + 1
+            titulo = f'{legenda.get(f["tipo"], f["tipo"])}: {_dbr(f["inicio"])} a {_dbr(f["fim"])} ({rot.get(f["status"], f["status"])})'
+            if f.get("nota"):
+                titulo += f'. {f["nota"]}'
+            rotulo = f'<span>{E(legenda.get(f["tipo"], f["tipo"]))}</span>' if b - a >= 5 else ""
+            barras.append(f'<div class="cr-barra cr-{f["tipo"]} cr-{f["status"]}" style="left:{pct(a)};width:{pct(b - a)}" title="{E(titulo)}">{rotulo}</div>')
+        t = m.get("testes")
+        prog = ""
+        if t:
+            p = round(t["conclusivos"] / t["planejados"] * 100) if t["planejados"] else 0
+            prog = f'<div class="cr-prog" title="{t["conclusivos"]} de {t["planejados"]} casos conclusivos"><i style="width:{p}%;--cor:{cor}"></i></div><small>{t["conclusivos"]}/{t["planejados"]} casos</small>'
+        href = f'documentacao/{m["id"]}/index.html'
+        linhas.append(
+            f'<div class="cr-linha"><div class="cr-rotulo"><a href="{href}" style="--cor:{cor}">{E(m["nome"])}</a><em>{E(m["situacao"])}</em>{prog}</div>'
+            f'<div class="cr-trilha">{"".join(f"<i class=\"cr-fds-fundo\" style=\"left:{pct(k)};width:{pct(1)}\"></i>" for k, d in enumerate(dias) if d.weekday() >= 5)}'
+            f'{f"<i class=\"cr-hoje-linha\" style=\"left:{pct((hoje - ini).days)}\"></i>" if ini <= hoje <= fim else ""}{"".join(barras)}</div></div>')
+
+    # Números gerais
+    com_t = [m for m in mods if m.get("testes")]
+    planejados = sum(m["testes"]["planejados"] for m in com_t)
+    conclusivos = sum(m["testes"]["conclusivos"] for m in com_t)
+    alta_pend = sum(m["testes"]["alta_pendentes"] for m in com_t)
+    fechados = sum(1 for m in com_t if m["situacao"].lower().startswith("fechado"))
+    previstos = [_dt.date.fromisoformat(f["fim"]) for m in mods for f in m["fases"] if f["status"] != "feito"]
+    termino = max(previstos) if previstos else max(datas)
+    marcos_tab = "".join(f'<tr><td>{_dbr(x["data"])}/{_dt.date.fromisoformat(x["data"]).year}</td><td>{E(x["nome"])}</td><td><span class="cr-selo cr-{x["status"]}">{rot.get(x["status"], x["status"])}</span></td></tr>' for x in cr.get("marcos", []))
+
+    # Detalhe por módulo
+    det = []
+    for m in mods:
+        cor = cores.get(m["id"], "#64748b")
+        t = m.get("testes")
+        fases = "".join(
+            f'<tr><td>{E(legenda.get(f["tipo"], f["tipo"]))}</td><td>{_dbr(f["inicio"])} a {_dbr(f["fim"])}</td>'
+            f'<td><span class="cr-selo cr-{f["status"]}">{rot.get(f["status"], f["status"])}</span></td><td>{E(f.get("nota", ""))}</td></tr>'
+            for f in m["fases"])
+        tnum = ""
+        if t:
+            tnum = (f'<p class="cr-num"><strong>{t["conclusivos"]}</strong> de {t["planejados"]} casos com resultado · '
+                    f'<strong>{t["alta_pendentes"]}</strong> de {t["alta"]} casos de prioridade Alta ainda por testar · '
+                    f'{t["rodadas_feitas"]} rodada(s) feita(s)</p>' + (f'<p class="cr-nota">{E(t["nota"])}</p>' if t.get("nota") else ""))
+        falta = "".join(f"<li>{E(x)}</li>" for x in m.get("falta", []))
+        det.append(f'<details class="cr-det" id="cr-{m["id"]}" style="--cor:{cor}"><summary><span>{E(m["nome"])}</span><em>{E(m["situacao"])}</em></summary>'
+                   f'<div class="cr-det-corpo">{tnum}<div class="tabela"><table><thead><tr><th>Fase</th><th>Período</th><th>Situação</th><th>Observação</th></tr></thead><tbody>{fases}</tbody></table></div>'
+                   f'<h4>O que falta</h4><ul>{falta}</ul></div></details>')
+
+    premissas = "".join(f"<li>{_inline(x)}</li>" for x in cr.get("premissas", []))
+    leg = "".join(f'<span class="cr-leg cr-{k}">{E(v)}</span>' for k, v in legenda.items())
+    raiz = ""
+    return (cabecalho("Cronograma da homologação · iLabMedSys", raiz, "cronograma") + f"""
+<main id="conteudo" class="cronograma">
+  <section class="anv-faixa">
+    <div class="anv-faixa-interna">
+      <nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <span>Cronograma</span></nav>
+      <h1>Cronograma da homologação</h1>
+      <p>Onde cada módulo está, o que já foi testado e quanto falta para fechar. As datas futuras são previsão. Atualizado em {E(cr.get("atualizado", HOJE))}.</p>
+    </div>
+  </section>
+  <div class="cr-conteudo">
+    <div class="cr-numeros" aria-label="Números gerais">
+      <div class="numero"><strong>{fechados}<small>/{len(com_t)}</small></strong><span>módulos fechados</span></div>
+      <div class="numero"><strong>{conclusivos}<small>/{planejados}</small></strong><span>casos de teste com resultado</span></div>
+      <div class="numero"><strong>{alta_pend}</strong><span>casos de prioridade Alta por testar</span></div>
+      <div class="numero"><strong>{termino.day:02d}/{termino.month:02d}</strong><span>previsão de término ({termino.year})</span></div>
+    </div>
+
+    <section class="cr-sec">
+      <h2>Linha do tempo</h2>
+      <p class="cr-sub">Uma linha por módulo. Barra cheia: feito. Barra listrada: previsto. A linha vertical marca hoje. Passe o mouse sobre uma barra para ver o detalhe.</p>
+      <div class="cr-legenda">{leg}<span class="cr-leg cr-leg-prev">previsto</span></div>
+      <div class="cr-rolagem"><div class="cr-gantt" style="--n:{n}">
+        <div class="cr-cab"><div class="cr-rotulo"></div><div class="cr-trilha cr-cab-meses">{"".join(meses)}</div></div>
+        <div class="cr-cab"><div class="cr-rotulo"></div><div class="cr-trilha cr-cab-dias">{diasx}</div></div>
+        {"".join(linhas)}
+        <div class="cr-linha cr-marcos"><div class="cr-rotulo"><strong>Marcos</strong></div><div class="cr-trilha">{marcos_html}</div></div>
+      </div></div>
+    </section>
+
+    <section class="cr-sec">
+      <h2>Marcos</h2>
+      <div class="tabela"><table><thead><tr><th>Data</th><th>Marco</th><th>Situação</th></tr></thead><tbody>{marcos_tab}</tbody></table></div>
+    </section>
+
+    <section class="cr-sec">
+      <h2>Módulo a módulo</h2>
+      <p class="cr-sub">Clique no módulo para ver as fases, os números dos testes e o que falta.</p>
+      {"".join(det)}
+    </section>
+
+    <section class="cr-sec">
+      <h2>Como a previsão foi feita</h2>
+      <ul class="cr-premissas">{premissas}</ul>
+    </section>
+  </div>
+</main>
+""" + rodape(raiz))
+
+
+def _inline(md):
+    """Negrito e código do Markdown, só para frases curtas."""
+    t = E(md)
+    t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+    t = re.sub(r"`(.+?)`", r"<code>\1</code>", t)
+    return t
 
 
 def main():
