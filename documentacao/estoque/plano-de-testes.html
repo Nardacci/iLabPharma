@@ -866,7 +866,7 @@
 <td>Ver se a devolução da produção abriu análise no CQ ou deixou o saldo disponível direto</td>
 <td>Registrar o comportamento (RN003) para a Garantia da Qualidade decidir</td>
 <td>Alta</td>
-<td>Não testado</td>
+<td>Bloqueado (13/10): a tela só reconhece lotes que saíram por uma solicitação do <strong>tipo Produção</strong> (ligada a uma Ordem de Produção), e no ambiente só existem solicitações atendidas do tipo Consumo (00038/00040, rodada 6). Mensagem exata: "Lote não encontrado ou não possui movimentação para produção!" (<code>devolucao_producao_ed.aspx.cs:243</code>). Depende do módulo Produção (ainda não testado) para gerar o dado certo</td>
 </tr>
 <tr>
 <td>CT-EST-092</td>
@@ -993,14 +993,14 @@
 <td>Confirmar a remessa</td>
 <td>Data de liberação gravada; saldo baixado; aviso da Rastreabilidade se o módulo estiver ativo</td>
 <td>Alta</td>
-<td>Inconclusivo (13/10): o Finalizar foi feito <strong>sem a justificativa obrigatória</strong> e mostrou "Justificativa não informada!" seguido de "Erro ao gerar a solicitação do material!" (DV-EST-046). Refazer com a justificativa preenchida na rodada 7</td>
+<td>Falhou (13/10, confirmado): refeito com a justificativa preenchida — "Finalizar" continua dando <strong>o mesmo erro</strong> ("Erro ao gerar a solicitação do material!"), sem a mensagem de justificativa. Prova que a causa não é a justificativa; a hipótese do centro de custo (<code>gerarSolicitacao()</code>) segue como provável. <strong>DV-EST-046 sobe para Alta (confirmado)</strong></td>
 </tr>
 <tr>
 <td>CT-EST-116</td>
 <td>Conferir no módulo Rastreabilidade se a remessa confirmada aparece para envio</td>
 <td>Registrar o que aparece</td>
 <td>Alta</td>
-<td>Não testado: depende do CT-EST-115, que não foi confirmado (DV-EST-046)</td>
+<td>Não testado: depende do CT-EST-115, que continua falhando mesmo com a justificativa preenchida (DV-EST-046)</td>
 </tr>
 <tr>
 <td>CT-EST-117</td>
@@ -1163,14 +1163,14 @@
 <td>Justificar e apurar</td>
 <td>Saldo ajustado; endereços liberados; relatório de apuração gerado</td>
 <td>Alta</td>
-<td>Não testado</td>
+<td>Bloqueado (13/10): o sistema não deixa abrir o inventário com solicitações pendentes, exatamente como a proposta previa. Mensagem exata: "Existem solicitações não finalizadas para os parâmetros informados!" (recebimentos 00013 a 00018 pendentes). Não foram cancelados nem encerrados para forçar</td>
 </tr>
 <tr>
 <td>CT-EST-138</td>
 <td>Histórico do lote <code>TESTELOTE001</code> depois da apuração</td>
 <td>Mostra o ajuste com usuário, data e justificativa. <strong>Registrar se não mostrar</strong></td>
 <td>Alta</td>
-<td>Não testado</td>
+<td>Bloqueado: depende do CT-EST-137</td>
 </tr>
 <tr>
 <td>CT-EST-139</td>
@@ -1284,7 +1284,7 @@
 <td>Entrada de amostra de retenção do <code>TESTEPA001</code></td>
 <td>Amostra reservada e endereçada; aparece na consulta</td>
 <td>Baixa</td>
-<td>Não testado</td>
+<td>Passou em parte (13/10): a entrada foi gravada e o saldo foi corretamente reservado (5 un. em endereço próprio, <code>TESTE RETENCAO</code>), mas a amostra <strong>não aparece na "Consulta Disponibilidade (Referência-Retenção-Estabilidade)"</strong> nem é localizada depois pela tela de Saída (ver CT-EST-176, DV-EST-047). Foi preciso criar o almoxarifado, o local e o endereço <code>TESTE RETENCAO</code> (nenhum cadastro do tipo existia no ambiente)</td>
 </tr>
 <tr>
 <td>CT-EST-172</td>
@@ -1319,7 +1319,7 @@
 <td><strong>Saída da amostra de retenção antes do vencimento do lote</strong></td>
 <td>Pela norma, deveria impedir ou alertar. <strong>Registrar com evidência se aceitar</strong></td>
 <td>Alta</td>
-<td>Não testado</td>
+<td>Bloqueado (13/10): não foi possível nem chegar à pergunta da norma — a tela "Saída - Retenção" não lista <strong>nenhum endereço de origem</strong> para o lote, mesmo com a amostra fisicamente presente (saldo confirmado por consulta de endereço) e a "Consulta Disponibilidade" também vazia. <strong>Achado novo: DV-EST-047 (Alta)</strong> — o controle de amostra de retenção/referência/estabilidade não localiza o que a própria tela de entrada gravou</td>
 </tr>
 <tr>
 <td>CT-EST-177</td>
@@ -1345,8 +1345,8 @@
 <tr>
 <td>Alta</td>
 <td>46</td>
-<td>36</td>
-<td>10</td>
+<td>37</td>
+<td>9</td>
 </tr>
 <tr>
 <td>Média</td>
@@ -1357,14 +1357,14 @@
 <tr>
 <td>Baixa</td>
 <td>101</td>
-<td>35</td>
-<td>66</td>
+<td>36</td>
+<td>65</td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
 <td><strong>162</strong></td>
-<td><strong>76</strong></td>
-<td><strong>86</strong></td>
+<td><strong>78</strong></td>
+<td><strong>84</strong></td>
 </tr>
 </tbody>
 </table></div>
@@ -1394,8 +1394,8 @@
 <td>Uso do lote e saída; risco R-EST-15 e 16</td>
 </tr>
 <tr>
-<td>7</td>
-<td>CT-EST-090 a 094, 134 a 138, 170 a 177</td>
+<td>~~7~~</td>
+<td>~~CT-EST-090 a 094, 134 a 138, 170 a 177~~ <strong>Feita em 13/10/2026:</strong> CT-EST-171 passou em parte (amostra reservada, mas não aparece na consulta); CT-EST-091, 137, 138 e 176 bloqueados; CT-EST-115 confirmado como falha (DV-EST-046 sobe para Alta) e CT-EST-116 continua não testado. Achado novo: DV-EST-047 (controle de amostra de retenção/referência/estabilidade não localiza o que a entrada gravou)</td>
 <td>Devolução, inventário e amostras de retenção</td>
 </tr>
 <tr>

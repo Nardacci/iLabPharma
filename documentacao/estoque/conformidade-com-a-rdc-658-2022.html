@@ -186,7 +186,7 @@
 <li><strong>(T, rodada 3)</strong> O ciclo andou: solicitação, amostragem, laudo, "Atualizar resultado" e Movimentação de Quarentena; o lote aprovado só sai para <strong>locais comuns</strong> e fica disponível (CT-EST-207). Lotes em quarentena e reprovados <strong>não aparecem</strong> na lista do Atendimento (CT-EST-208).</li>
 <li><strong>(T, rodada 3)</strong> O lote <strong>reprovado</strong> (<code>TESTEPA998</code>) ficou bloqueado e saiu da Movimentação e do Atendimento (CT-EST-211). Mas o Estoque <strong>só soube</strong> depois de alguém clicar em "Atualizar resultado", e o saldo mostrou o mesmo material em quarentena e bloqueado ao mesmo tempo (DV-EST-029).</li>
 <li><strong>(T, rodada 3 e 4)</strong> A Movimentação de Material lista lotes <strong>em quarentena</strong>, mas a tela só oferece <strong>locais de quarentena</strong> como destino, e os lotes aguardando análise não têm botão para abrir na Movimentação de Quarentena (CT-EST-039 e 050). <strong>Não se confirmou</strong> que dê para levar o lote a um local comum pela tela (DV-EST-033, agora de gravidade baixa). <em>Falta testar</em> se o servidor aceita a operação enviada sem a tela, porque a trava do servidor foi desligada (RN-EST-059).</li>
-<li><strong>(T, rodada 6)</strong> A Movimentação de Quarentena <strong>aceita destino incompleto</strong> (só local, sem rua, coluna e andar) e o lote aprovado <code>TESTEPA003</code> <strong>perdeu as 80 unidades</strong>: saída gravada, entrada nenhuma (DV-EST-044, Alta). O registro deixa de refletir o que existe no armazém (art. 124).</li>
+<li><strong>(T, rodadas 6 e 7)</strong> A Movimentação de Quarentena <strong>aceita destino incompleto</strong> (só local, sem rua, coluna e andar) e o lote aprovado <code>TESTEPA003</code> <strong>perdeu as 80 unidades</strong>: saída gravada, entrada nenhuma (DV-EST-044, Alta). Na rodada 7, com destino completo, o <code>TESTEPA004</code> passou de quarentena a disponível sem perda: a causa é a falta de validação do destino. O registro deixa de refletir o que existe no armazém (art. 124).</li>
 <li><strong>(T, rodada 4)</strong> O lote <strong>reprovado</strong> só tem destino de <strong>refugo</strong>; movido para o local de refugo, o saldo passou a mostrar "Reprovado" e ele não aparece no Atendimento (CT-EST-051 a 053, passaram).</li>
 </ul>
 <h4 id="tema-4-uso-so-de-material-dentro-da-validade-e-da-data-de-reanalise">Tema 4 · Uso só de material dentro da validade e da data de reanálise</h4>
@@ -216,7 +216,7 @@
 <h4 id="tema-8-amostras-de-retencao-guardadas-pelo-prazo">Tema 8 · Amostras de retenção guardadas pelo prazo</h4>
 <ul>
 <li><strong>(C)</strong> O saldo separa as amostras de retenção, de referência e de estabilidade (RN-EST-093), mas <strong>não há prazo mínimo de guarda nem trava de saída</strong> (<code>3.estoque/fluxos/almoxarifado-cq.md</code>).</li>
-<li><em>A confirmar no teste.</em></li>
+<li><strong>(T, rodada 7)</strong> Nenhum almoxarifado do tipo Retenção existia no ambiente: o controle de amostras nunca tinha sido usado. Com o cadastro feito, a <strong>Entrada - Retenção</strong> grava certo (5 unidades do <code>TESTEPA001</code> em endereço próprio), mas a <strong>Consulta de Disponibilidade e a Saída não encontram a amostra</strong> (DV-EST-047, Alta). A saída antes do vencimento (CT-EST-176) nem pôde ser testada. O tema continua <strong>Não atende</strong>.</li>
 </ul>
 <h4 id="tema-9-registro-verdadeiro-feito-no-momento-da-acao">Tema 9 · Registro verdadeiro, feito no momento da ação</h4>
 <ul>
@@ -237,7 +237,7 @@
 <ul>
 <li><strong>(C)</strong> A remessa guarda o destinatário e o lote (RN-EST-124 a 132), e o Histórico do Lote reúne movimentações, análises e notas (RN-EST-076).</li>
 <li><strong>Falta:</strong> a remessa gerada pela fatura do Comercial não gera evento na Rastreabilidade, e o Estoque tem os seus <strong>próprios eventos ANVISA</strong>, repetidos (RN-RAS-037 e 039). Nada entrega à GQ a lista de para onde foi cada lote.</li>
-<li><strong>(T, rodada 6)</strong> A lista de lotes da Remessa <strong>não oferece</strong> o lote em quarentena nem o reprovado (CT-EST-114). O Finalizar sem justificativa mostra um erro enganoso (DV-EST-046); a confirmação da remessa e o aviso à Rastreabilidade (CT-EST-115 e 116) ficaram <strong>inconclusivos</strong>: refazer com a justificativa preenchida.</li>
+<li><strong>(T, rodadas 6 e 7)</strong> A lista de lotes da Remessa <strong>não oferece</strong> o lote em quarentena nem o reprovado (CT-EST-114). Mas a remessa <strong>não pode ser finalizada</strong>: "Erro ao gerar a solicitação do material!", confirmado com a justificativa preenchida (DV-EST-046, Alta). Sem remessa confirmada, não há registro de distribuição nem aviso à Rastreabilidade (CT-EST-115 falhou; 116 bloqueado).</li>
 </ul>
 <h4 id="tema-12-integracoes-confiaveis-entre-os-sistemas">Tema 12 · Integrações confiáveis entre os sistemas</h4>
 <ul>
@@ -256,7 +256,7 @@
 <h4 id="tema-14-ajuste-de-saldo-no-inventario-com-autoria-e-justificativa">Tema 14 · Ajuste de saldo no inventário com autoria e justificativa</h4>
 <ul>
 <li><strong>(C)</strong> A apuração ajusta os saldos, mas <strong>não se sabe</strong> se o ajuste fica no histórico do lote com usuário e justificativa (<code>fluxos/inventario.md</code>, RN004).</li>
-<li><em>A verificar no teste</em> (CT-EST-134 a 138).</li>
+<li><strong>(T, rodada 7)</strong> O Inventário <strong>não abre</strong> enquanto houver recebimento ou solicitação pendente no ambiente ("Existem solicitações não finalizadas para os parâmetros informados!"); como os recebimentos 00013 a 00018 ficaram pendentes desde o DV-EST-016, o ajuste de saldo (CT-EST-137 e 138) não pôde ser testado. Continua <strong>A verificar</strong>.</li>
 </ul>
 <hr />
 <h3 id="3-pontos-para-validar-com-a-garantia-da-qualidade-e-a-area">3. Pontos para validar com a Garantia da Qualidade e a área</h3>
@@ -298,7 +298,7 @@
 <td>4</td>
 </tr>
 <tr>
-<td>CT-EST-134 a 138: inventário</td>
+<td>CT-EST-137 e 138: inventário, <strong>bloqueado</strong> até encerrar os recebimentos pendentes (decisão da área)</td>
 <td>14</td>
 </tr>
 <tr>
@@ -306,12 +306,20 @@
 <td>3, 11</td>
 </tr>
 <tr>
-<td>CT-EST-115 e 116 com a justificativa preenchida: confirmação da remessa e aviso à Rastreabilidade</td>
+<td>~~CT-EST-115 com a justificativa~~ (feito na rodada 7: falhou de novo, DV-EST-046). CT-EST-116 depende da correção</td>
 <td>11</td>
 </tr>
 <tr>
-<td>Repetir a Movimentação de Quarentena com endereço completo e com incompleto (DV-EST-044)</td>
+<td>~~Movimentação de Quarentena com endereço completo~~ (feito na rodada 7: funciona; a perda é só com destino incompleto)</td>
 <td>3, 9</td>
+</tr>
+<tr>
+<td>CT-EST-176 (saída de amostra antes do vencimento): depende da correção do DV-EST-047</td>
+<td>8</td>
+</tr>
+<tr>
+<td>CT-EST-091 (devolução da produção): depende de uma Ordem de Produção de teste (módulo Produção)</td>
+<td>3</td>
 </tr>
 </tbody>
 </table></div>
