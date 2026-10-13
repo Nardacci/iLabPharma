@@ -128,6 +128,7 @@ MODULOS = [
             ("5.garantia_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
             ("5.garantia_qualidade/roteiros/desvios-capa.md", "Roteiro de execução: Desvios e CAPA (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Desvios e CAPA.docx"),
             ("5.garantia_qualidade/roteiros/autoinspecao-auditoria.md", "Roteiro de execução: Autoinspeção e auditoria (passo a passo)", "testes", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Autoinspecao e Auditoria.docx"),
             ("5.garantia_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
