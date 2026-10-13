@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Estoque ideal · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="o-estoque-ideal.html" aria-current=page>O Estoque ideal</a></li><li><a href="o-estoque-entre-os-modulos-as-travas.html">O Estoque entre os módulos: as travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Defeitos para correção</div><ul><li><a href="defeitos-para-correcao.html">Defeitos para correção</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>O ideal</span></nav>
+    <header class="doc-cabecalho">
+      <h1>O Estoque ideal</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - O Ideal.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>O ideal.</strong> Como o Estoque deve trabalhar para atender à RDC 658/2022 e ao Guia 33/2020. Este documento não descreve o legado. Usa o que foi levantado no código e <strong>confirmado nos testes de tela</strong> só para mostrar <strong>o que manter, o que corrigir e o que construir</strong>. Complementa <code>modelo-ideal/01-qualidade-entre-modulos.md</code>, que define as travas entre os módulos. Versão 0.1, de 13/10/2026, para validação com o Estoque, o CQ e a Garantia da Qualidade.</p>
+<h2 id="1-o-papel-do-estoque-no-erp">1. O papel do Estoque no ERP</h2>
+<p>O Estoque é o <strong>dono do saldo e da situação de cada lote</strong>. Tudo o que a fábrica usa, separa, remete ou vende passa por ele, e todos os outros módulos perguntam a ele "este lote pode?".</p>
+<p>No modelo ideal, o Estoque <strong>guarda e protege a situação única do lote</strong>, mas <strong>não decide</strong> sobre ela: quem a muda é o CQ (laudo), a Pessoa Delegada (liberação), a GQ (retenção e recolhimento) ou o próprio sistema (pelas datas de validade e de reanálise). O Estoque executa a decisão <strong>na hora</strong>, em todas as telas.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>O Estoque faz</th>
+<th>O Estoque não faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recebe só de fornecedor aprovado, com inspeção documentada</td>
+<td>Aprovar ou reprovar o lote (é do CQ)</td>
+</tr>
+<tr>
+<td>Põe todo lote que entra em quarentena e só o tira dela por decisão do CQ</td>
+<td>Liberar o produto acabado para venda (é da Pessoa Delegada, trava 4)</td>
+</tr>
+<tr>
+<td>Guarda o saldo por endereço e a situação única do lote, com histórico de toda mudança</td>
+<td>Mudar a situação de um lote por conta própria</td>
+</tr>
+<tr>
+<td>Separa e remete só lote disponível, dentro da validade, pelo prazo mais curto</td>
+<td>Deixar uma tela dizer "sucesso" sem ter gravado</td>
+</tr>
+<tr>
+<td>Registra cada saída para o recolhimento</td>
+<td>Apagar ou alterar uma saída já feita</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-como-o-lote-anda">2. Como o lote anda</h2>
+<figure><a href="../img/estoque/est-ideal-fluxograma.png" target="_blank" rel="noopener"><img src="../img/estoque/est-ideal-fluxograma.png" alt="Estoque ideal: da entrada à saída rastreável" loading="lazy"></a><figcaption>Estoque ideal: da entrada à saída rastreável · clique para ampliar</figcaption></figure>
+
+<p><strong>O lote passa por estas situações, e cada mudança fica no histórico (quem, quando e por quê):</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Situação do lote</th>
+<th>Quem leva a ela</th>
+<th>O que o sistema confere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recebimento</td>
+<td>Em recebimento</td>
+<td>Estoque</td>
+<td>Fornecedor aprovado; inspeção do veículo feita; nota e lote como o fabricante emitiu; validade não vencida</td>
+</tr>
+<tr>
+<td>Entrada</td>
+<td><strong>Quarentena</strong></td>
+<td>Sistema, na gravação</td>
+<td>A gravação é uma só (conferência, endereço e solicitação de análise); se falhar, nada fica pela metade</td>
+</tr>
+<tr>
+<td>Análise</td>
+<td><strong>Em análise</strong></td>
+<td>Sistema, quando o CQ colhe a amostra</td>
+<td>A amostra sai do saldo pela quantidade pesada</td>
+</tr>
+<tr>
+<td>Laudo</td>
+<td><strong>Aprovado pelo CQ</strong> ou <strong>Reprovado</strong></td>
+<td>CQ, com assinatura</td>
+<td>O laudo muda a situação <strong>na hora</strong>; reprovado só vai a local de refugo</td>
+</tr>
+<tr>
+<td>Liberação</td>
+<td><strong>Liberado para venda</strong> (produto acabado)</td>
+<td>Pessoa Delegada, com assinatura</td>
+<td>Laudo, registro do lote e ausência de desvio aberto</td>
+</tr>
+<tr>
+<td>Uso</td>
+<td>Separado, usado ou remetido</td>
+<td>Estoque</td>
+<td>Só lote disponível; pelo prazo mais curto; situação conferida de novo na gravação</td>
+</tr>
+<tr>
+<td>Qualquer momento</td>
+<td><strong>Retido</strong>, <strong>Vencido</strong>, <strong>Reanálise vencida</strong> ou <strong>Recolhido</strong></td>
+<td>GQ, CQ ou o sistema</td>
+<td>O lote sai de tudo, até a decisão registrada</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="3-as-funcoes-do-estoque-ideal">3. As funções do Estoque ideal</h2>
+<p><strong>Ação:</strong> <strong>Manter</strong> = o legado já faz como deve; <strong>Corrigir</strong> = existe, mas não atende; <strong>Construir</strong> = não existe.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Função</th>
+<th>Referência</th>
+<th>Ação</th>
+<th>Como deve funcionar</th>
+<th>No legado hoje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Situação única do lote, guardada e protegida</td>
+<td><a href="#tema-1-situacao-unica-do-lote-guardada-e-protegida">Arts. 157 e 189</a></td>
+<td>Corrigir</td>
+<td>O Estoque guarda <strong>uma só situação por lote</strong> (tabela da seção 4) e a aplica em toda tela: separar, movimentar, remeter, vender. Só o sistema, o CQ, a Pessoa Delegada e a GQ a mudam; o Estoque não decide</td>
+<td>Existem situações separadas no saldo (quarentena, vencido, reanálise, bloqueado, reprovado, retenção); faltam "liberado para venda", "retido" e "recolhido", e as travas estão desligadas</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Recebimento só de fornecedor aprovado</td>
+<td><a href="#tema-2-recebimento-so-de-fornecedor-aprovado">Art. 8º, VI</a></td>
+<td>Construir</td>
+<td>Cadastro único de fornecedor qualificado, por material, sob a GQ. O recebimento de fornecedor não qualificado é recusado ou exige decisão registrada da GQ</td>
+<td>A avaliação não qualifica nem bloqueia (DV-EST-022)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Inspeção e conferência documentadas</td>
+<td><a href="#tema-3-inspecao-e-conferencia-documentadas">Arts. 156 e 183</a></td>
+<td>Corrigir</td>
+<td>Inspeção do veículo obrigatória, com respostas; veículo reprovado não recebe; divergência de quantidade com justificativa e aviso à Qualidade</td>
+<td>Checklist opcional, aprovado sem respostas; divergência aceita com "Deseja continuar?"</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Quarentena imediata e sem atalho</td>
+<td><a href="#tema-4-quarentena-imediata-e-sem-atalho">Art. 157</a></td>
+<td>Corrigir</td>
+<td>Todo lote que entra (compra, produto acabado, devolução) nasce em quarentena e só sai por decisão do CQ. A saída da quarentena é conferida no servidor</td>
+<td>As entradas criam a quarentena; a trava de saída está desligada; a devolução da produção volta direto ao saldo</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Validade e reanálise: bloqueio automático e uso pelo prazo mais curto</td>
+<td><a href="#tema-5-validade-e-reanalise-bloqueio-automatico-e-uso-pelo-prazo-mais-curto">Art. 189</a></td>
+<td>Corrigir</td>
+<td>Lote vencido ou com reanálise vencida muda sozinho de situação, no dia; a entrada recusa validade anterior a hoje; a separação sugere o lote que vence antes</td>
+<td>O saldo já separa o vencido; a entrada aceita lote vencido; a lista não ordena pela validade</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Lote como o fabricante o emitiu</td>
+<td><a href="#tema-6-lote-como-o-fabricante-o-emitiu">Art. 141, V</a></td>
+<td>Corrigir</td>
+<td>O código do lote é guardado exatamente como na embalagem, com o lote do fabricante ao lado do lote interno</td>
+<td>Perde os hífens (DV-EST-001)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Produto acabado só de ordem de produção liberada</td>
+<td><a href="#tema-7-produto-acabado-so-de-ordem-de-producao-liberada">Arts. 124 e 164</a></td>
+<td>Corrigir</td>
+<td>A entrada de produto acabado exige a ordem de produção, lida da Produção; não se digita lote livre</td>
+<td>Ordem opcional, lote inventado aceito (DV-EST-024)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Liberação pela Pessoa Delegada</td>
+<td><a href="#tema-8-liberacao-pela-pessoa-delegada">Art. 8º, XV</a></td>
+<td>Construir</td>
+<td>O produto acabado só vai a "liberado para venda" por decisão registrada da Pessoa Delegada, com assinatura eletrônica, conferindo laudo, registro do lote e ausência de desvio aberto</td>
+<td>A aprovação do laudo faz as vezes; não existe a situação</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Amostras de retenção e referência</td>
+<td><a href="#tema-9-amostras-de-retencao-e-referencia">Art. 14, VIII</a></td>
+<td>Corrigir</td>
+<td>Prazo de guarda por produto e trava de saída antes do prazo; as amostras ficam fora do saldo disponível</td>
+<td>O saldo já separa as amostras; sem prazo nem trava</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Gravar tudo ou nada</td>
+<td><a href="#tema-10-gravar-tudo-ou-nada">Art. 124</a></td>
+<td>Corrigir</td>
+<td>Nenhuma tela mostra sucesso sem ter gravado; o conjunto da operação (conferência, endereçamento, análise) é uma só gravação</td>
+<td>Endereçamento mostra sucesso sem gravar (DV-EST-016); conferência com erro fica "conferida" (DV-EST-015)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Histórico de toda alteração de saldo e de cadastro</td>
+<td><a href="#tema-11-historico-de-toda-alteracao-de-saldo-e-de-cadastro">Art. 125</a></td>
+<td>Corrigir</td>
+<td>Cada mudança de saldo, de situação, de endereço e de avaliação grava valor anterior, novo, quem, quando e motivo, no servidor</td>
+<td>Saldos por gatilhos, sem autoria; exclusão de endereço sem justificativa; avaliação sem histórico</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Registro de saída e de distribuição</td>
+<td><a href="#tema-12-registro-de-saida-e-de-distribuicao">Arts. 346 e 347</a></td>
+<td>Corrigir</td>
+<td>Cada saída (remessa, venda, devolução ao fornecedor) guarda lote, quantidade, destinatário e endereço da data; a saída nunca é apagada; o registro chega à Rastreabilidade e à GQ</td>
+<td>A remessa guarda destinatário e lote; não informa a Rastreabilidade; eventos ANVISA próprios, repetidos</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Integrações confiáveis</td>
+<td><a href="#tema-13-integracoes-confiaveis">Guia 33, 9.3.2.3</a></td>
+<td>Corrigir</td>
+<td>Estoque e CQ, Estoque e Produção, Estoque e Comercial confirmados pelos dois lados; falha avisa e não deixa a operação pela metade; a Produção usa só a API do Estoque</td>
+<td>Análise que não abre sem aviso; Produção grava direto no banco do Estoque</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Dados de entrada com formato e limite</td>
+<td><a href="#tema-14-dados-de-entrada-com-formato-e-limite">Guia 33, 9.3.2.3</a></td>
+<td>Corrigir</td>
+<td>Quantidade com casa decimal visível e confirmada; limites de período; nota fiscal com mensagem do campo que falta</td>
+<td>"100" vira 0,100; 13 meses aceitos; série em branco sem aviso</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Ajuste de saldo no inventário</td>
+<td><a href="#tema-15-ajuste-de-saldo-no-inventario">Art. 125</a></td>
+<td>Manter</td>
+<td>Apuração com usuário, justificativa e aprovação; histórico do lote mostra o ajuste</td>
+<td><em>A verificar no teste</em></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="4-a-situacao-do-lote-e-o-que-cada-situacao-permite">4. A situação do lote e o que cada situação permite</h2>
+<p>Esta tabela é a <strong>trava 1</strong> do modelo ideal, vista do Estoque. "Sim" é o único caso em que a tela oferece o lote.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Separar para a produção</th>
+<th>Movimentar para local comum</th>
+<th>Remeter ou vender</th>
+<th>Quem a muda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quarentena</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Sistema (entrada)</td>
+</tr>
+<tr>
+<td>Em análise</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Sistema, pelo CQ</td>
+</tr>
+<tr>
+<td>Aprovado pelo CQ</td>
+<td>Sim (material); não (produto acabado)</td>
+<td>Sim</td>
+<td>Não (produto acabado)</td>
+<td>CQ, com assinatura</td>
+</tr>
+<tr>
+<td>Liberado para venda</td>
+<td>—</td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Pessoa Delegada, com assinatura</td>
+</tr>
+<tr>
+<td>Reprovado</td>
+<td>Não</td>
+<td>Só local de refugo</td>
+<td>Não</td>
+<td>CQ, com assinatura</td>
+</tr>
+<tr>
+<td>Retido</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>GQ ou CQ</td>
+</tr>
+<tr>
+<td>Vencido ou reanálise vencida</td>
+<td>Não</td>
+<td>Só local de bloqueio</td>
+<td>Não</td>
+<td>Sistema, pela data</td>
+</tr>
+<tr>
+<td>Recolhido</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>GQ</td>
+</tr>
+<tr>
+<td>Amostra (retenção, referência, estabilidade)</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>CQ</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Regra:</strong> a situação é conferida <strong>na gravação</strong>, e não só na lista. Um lote que mudou de situação entre a escolha e a confirmação é recusado.</p>
+<h2 id="5-integracoes-com-os-outros-modulos">5. Integrações com os outros módulos</h2>
+<p>Todas seguem o requisito 16 do documento 01: <strong>quando falham, avisam e não deixam a operação pela metade.</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Com</th>
+<th>O Estoque recebe</th>
+<th>O Estoque envia</th>
+<th>Quando</th>
+<th>Trava</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Controle da Qualidade</strong></td>
+<td>Laudo (aprovado ou reprovado, validade, nova data de reanálise); pedido de amostra</td>
+<td>Solicitação de análise de cada lote que entra; amostra pesada</td>
+<td>Na entrada; no laudo</td>
+<td>1, 2</td>
+</tr>
+<tr>
+<td><strong>Garantia da Qualidade</strong></td>
+<td>Retenção por desvio, reclamação ou recolhimento; qualificação do fornecedor; certificação da Pessoa Delegada</td>
+<td>Lista de onde está cada lote; situação do lote</td>
+<td>Ao abrir o evento; no recebimento</td>
+<td>1, 3, 4, 5, 11</td>
+</tr>
+<tr>
+<td><strong>Produção</strong></td>
+<td>Ordem de produção liberada (para a entrada de produto acabado); pedido de insumos</td>
+<td>Saldo e reserva dos insumos; lotes separados; produto acabado aceito</td>
+<td>Na solicitação, na pesagem e na entrada</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>Comercial</strong></td>
+<td>Reserva e remessa da venda</td>
+<td>Lotes liberados para venda; confirmação da reserva, da separação e da remessa</td>
+<td>A cada pedido, fatura e cancelamento</td>
+<td>1, 4</td>
+</tr>
+<tr>
+<td><strong>Rastreabilidade</strong></td>
+<td>Pedido de situação do lote</td>
+<td>Evento de entrega e de recebimento, lido pela Rastreabilidade (um só registro)</td>
+<td>Na saída</td>
+<td>1, 11</td>
+</tr>
+<tr>
+<td><strong>Principal</strong></td>
+<td>Usuários, funções, assinatura eletrônica, locais</td>
+<td>—</td>
+<td>Em cada gravação</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="6-quem-faz-o-que-no-estoque">6. Quem faz o quê no Estoque</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Função</th>
+<th>Pode</th>
+<th>Não pode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recebimento</td>
+<td>Receber, inspecionar e conferir</td>
+<td>Autorizar o recebimento que ele mesmo cadastrou</td>
+</tr>
+<tr>
+<td>Almoxarife</td>
+<td>Endereçar, movimentar, separar, remeter</td>
+<td>Mudar a situação do lote</td>
+</tr>
+<tr>
+<td>CQ</td>
+<td>Aprovar ou reprovar o laudo, com assinatura</td>
+<td>Aprovar o laudo da análise que ele mesmo fez</td>
+</tr>
+<tr>
+<td>Pessoa Delegada</td>
+<td>Liberar o produto acabado para venda</td>
+<td>Ser quem aprovou o laudo daquele lote, salvo decisão registrada <em>(a validar)</em></td>
+</tr>
+<tr>
+<td>GQ</td>
+<td>Reter, recolher, qualificar fornecedor</td>
+<td>Mexer em saldo</td>
+</tr>
+<tr>
+<td>Inventário</td>
+<td>Contar e apurar</td>
+<td>Apurar o que ele mesmo contou</td>
+</tr>
+</tbody>
+</table></div>
+<p>A função é <strong>conferida no servidor, em toda gravação</strong>, e não só na tela (documento 01, requisito 15).</p>
+<h2 id="7-o-que-manter-do-legado">7. O que manter do legado</h2>
+<p>O que os testes e o código mostram que já funciona como deve e vale levar para a nova versão:</p>
+<ul>
+<li><strong>Quem cadastra não autoriza:</strong> o recebimento recusa a mesma pessoa nos dois papéis (CT-EST-189, passou).</li>
+<li><strong>Validade obrigatória</strong> para item com controle de validade (CT-EST-185, passou).</li>
+<li><strong>Entrada em quarentena com análise aberta:</strong> as entradas de produção e avulsa criam o saldo em quarentena e a solicitação no CQ (CT-EST-097 e 210, passaram).</li>
+<li><strong>Item, lote e fabricante repetidos</strong> na mesma lista são recusados (CT-EST-095).</li>
+<li><strong>Almoxarifado visível só para o grupo</strong> ligado a ele (CT-EST-014).</li>
+<li><strong>Saldo separado por situação</strong> (quarentena, vencido, reanálise, bloqueado, reprovado, retenção, referência, estabilidade e disponível), que serve de base à situação única.</li>
+<li><strong>Lista de lotes</strong> que exclui o que não está disponível (RN-EST-094, RN-EST-102, RN-EST-125).</li>
+<li><strong>Reanálise agendada</strong> com análise aberta no CQ e lote fora do disponível (RN-EST-087).</li>
+<li><strong>Histórico do lote</strong> que reúne movimentações, análises, notas e remessas (RN-EST-076).</li>
+<li><strong>Justificativa</strong> na alteração, na exclusão e no cancelamento.</li>
+<li><strong>Exclusão lógica</strong> e registro de quem criou e alterou.</li>
+</ul>
+<h2 id="8-pontos-para-validar-com-o-estoque-o-cq-e-a-gq">8. Pontos para validar com o Estoque, o CQ e a GQ</h2>
+<ol>
+<li>Quem é a Pessoa Delegada, e a liberação do produto acabado é a aprovação do laudo ou uma etapa a mais?</li>
+<li>A sobra devolvida da produção precisa de nova análise antes de voltar ao saldo?</li>
+<li>O que é "fornecedor aprovado" e o que o recebimento faz com o não aprovado: recusa ou pede decisão da GQ?</li>
+<li>Qual é o prazo de guarda das amostras de retenção, por produto?</li>
+<li>A entrada de produto acabado exige sempre a ordem de produção, ou há entradas sem ordem na prática (produto devolvido, terceirizado)?</li>
+<li>O Estoque decide a situação "vencido" pelo dia, ou a empresa tem uma tolerância?</li>
+</ol>
+<!-- NORMAS:INICIO -->
+<h2 id="o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</h2>
+<p>Texto literal das normas citadas em cada tema, extraído dos arquivos da pasta <code>Documentação/</code> (RDC nº 658/2022 em português e Guia nº 33/2020) por <code>homologacao/ferramentas/citar_normas_diagnostico.py</code>. "(...)" marca trechos omitidos. No portal, clique na referência de cada tema para ver o texto.</p>
+<h3 id="tema-1-situacao-unica-do-lote-guardada-e-protegida">Tema 1 · Situação única do lote, guardada e protegida</h3>
+<p><strong>RDC 658/2022, art. 157</strong></p>
+<blockquote>
+<p>Art. 157. Os materiais recebidos e os produtos acabados devem ser fisicamente ou administrativamente colocados em quarentena imediatamente após o recebimento ou processamento, até que sejam liberados para uso ou distribuição.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 189</strong></p>
+<blockquote>
+<p>Art. 189. Somente matérias-primas que tiverem sido liberadas pelo departamento de Controle de Qualidade e que estiverem dentro de sua data de reteste devem ser utilizadas.</p>
+</blockquote>
+<h3 id="tema-2-recebimento-so-de-fornecedor-aprovado">Tema 2 · Recebimento só de fornecedor aprovado</h3>
+<p><strong>RDC 658/2022, art. 8º</strong></p>
+<blockquote>
+<p>Art. 8º Um Sistema da Qualidade Farmacêutica adequado à fabricação de medicamentos deve garantir que:</p>
+<p>(...)</p>
+<p>VI - sejam tomadas providências para a fabricação, fornecimento e uso das matérias-primas e materiais de embalagem corretos, a seleção e monitoramento dos fornecedores e verificação da conformidade de cada recebimento com o fornecedor aprovado;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-3-inspecao-e-conferencia-documentadas">Tema 3 · Inspeção e conferência documentadas</h3>
+<p><strong>RDC 658/2022, art. 156</strong></p>
+<blockquote>
+<p>Art. 156. Danos aos recipientes e qualquer outro problema que possa afetar adversamente a qualidade do material devem ser investigados, registrados e relatados à Unidade de Qualidade.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 183</strong></p>
+<blockquote>
+<p>Art. 183. Para cada entrega de matéria-prima, os recipientes devem ser verificados quanto à integridade da embalagem, incluindo o selo de evidência de violação quando pertinente, também deve ser verificada a correspondência entre a nota de entrega, o pedido de compra, as etiquetas do fornecedor e as informações aprovadas pelo fabricante do medicamento para o fabricante e fornecedor dos excipientes.</p>
+<p>Parágrafo único. As verificações durante o recebimento de cada entrega devem ser documentadas.</p>
+</blockquote>
+<h3 id="tema-4-quarentena-imediata-e-sem-atalho">Tema 4 · Quarentena imediata e sem atalho</h3>
+<p><strong>RDC 658/2022, art. 157</strong></p>
+<blockquote>
+<p>Art. 157. Os materiais recebidos e os produtos acabados devem ser fisicamente ou administrativamente colocados em quarentena imediatamente após o recebimento ou processamento, até que sejam liberados para uso ou distribuição.</p>
+</blockquote>
+<h3 id="tema-5-validade-e-reanalise-bloqueio-automatico-e-uso-pelo-prazo-mais-curto">Tema 5 · Validade e reanálise: bloqueio automático e uso pelo prazo mais curto</h3>
+<p><strong>RDC 658/2022, art. 189</strong></p>
+<blockquote>
+<p>Art. 189. Somente matérias-primas que tiverem sido liberadas pelo departamento de Controle de Qualidade e que estiverem dentro de sua data de reteste devem ser utilizadas.</p>
+</blockquote>
+<h3 id="tema-6-lote-como-o-fabricante-o-emitiu">Tema 6 · Lote como o fabricante o emitiu</h3>
+<p><strong>RDC 658/2022, art. 141</strong></p>
+<blockquote>
+<p>Art. 141. Os registros de recebimento devem incluir:</p>
+<p>(...)</p>
+<p>V - o número de lote ou número de referência do fabricante;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-7-produto-acabado-so-de-ordem-de-producao-liberada">Tema 7 · Produto acabado só de ordem de produção liberada</h3>
+<p><strong>RDC 658/2022, art. 124</strong></p>
+<blockquote>
+<p>Art. 124. Os registros devem ser realizados ou completados sempre que uma ação for realizada e de modo a permitir que todas as atividades significativas relativas à fabricação de medicamentos sejam rastreáveis.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 164</strong></p>
+<blockquote>
+<p>Art. 164. Em todos os momentos durante o processo, todos os materiais, recipientes de granel, itens principais de equipamentos e, quando necessário, as salas utilizadas devem ser rotuladas e identificadas com uma indicação do produto ou material que está sendo processado, sua concentração, quando aplicável, e número do lote.</p>
+<p>Parágrafo único. Quando for o caso, a indicação de que trata o caput deste artigo também deve mencionar o estágio de produção.</p>
+</blockquote>
+<h3 id="tema-8-liberacao-pela-pessoa-delegada">Tema 8 · Liberação pela Pessoa Delegada</h3>
+<p><strong>RDC 658/2022, art. 8º</strong></p>
+<blockquote>
+<p>Art. 8º Um Sistema da Qualidade Farmacêutica adequado à fabricação de medicamentos deve garantir que:</p>
+<p>(...)</p>
+<p>XV - os medicamentos não sejam comercializados ou distribuídos antes da Pessoa Delegada pelo Sistema de Gestão da Qualidade Farmacêutica ter certificado que cada lote do produto foi produzido e controlado de acordo com os requerimentos de registro e quaisquer outras normas relevantes à produção, ao controle e à liberação de medicamentos;</p>
+<p>(...)</p>
+</blockquote>
+<h3 id="tema-9-amostras-de-retencao-e-referencia">Tema 9 · Amostras de retenção e referência</h3>
+<p><strong>RDC 658/2022, art. 14</strong></p>
+<blockquote>
+<p>Art. 14. Os requerimentos básicos do Controle de Qualidade são:</p>
+<p>(...)</p>
+<p>VIII - amostras de referência suficientes de matérias-primas e produtos devem ser mantidas de acordo com a instrução normativa específica para permitir a futura análise do produto, se necessário.</p>
+</blockquote>
+<h3 id="tema-10-gravar-tudo-ou-nada">Tema 10 · Gravar tudo ou nada</h3>
+<p><strong>RDC 658/2022, art. 124</strong></p>
+<blockquote>
+<p>Art. 124. Os registros devem ser realizados ou completados sempre que uma ação for realizada e de modo a permitir que todas as atividades significativas relativas à fabricação de medicamentos sejam rastreáveis.</p>
+</blockquote>
+<h3 id="tema-11-historico-de-toda-alteracao-de-saldo-e-de-cadastro">Tema 11 · Histórico de toda alteração de saldo e de cadastro</h3>
+<p><strong>RDC 658/2022, art. 125</strong></p>
+<blockquote>
+<p>Art. 125. Toda a alteração feita no registro de um documento deve ser assinada e datada, devendo permitir a leitura da informação original.</p>
+<p>Parágrafo único. Quando apropriado, o motivo da alteração deve ser registrado.</p>
+</blockquote>
+<h3 id="tema-12-registro-de-saida-e-de-distribuicao">Tema 12 · Registro de saída e de distribuição</h3>
+<p><strong>RDC 658/2022, art. 346</strong></p>
+<blockquote>
+<p>Art. 346. Os registros de distribuição de lote/produto devem estar prontamente disponíveis para as pessoas responsáveis pelo recolhimento.</p>
+</blockquote>
+<p><strong>RDC 658/2022, art. 347</strong></p>
+<blockquote>
+<p>Art. 347. Os registros de distribuição devem conter informações suficientes sobre atacadistas e clientes diretamente abastecidos, mesmo quando se trate de produtos exportados e amostras médicas.</p>
+</blockquote>
+<h3 id="tema-13-integracoes-confiaveis">Tema 13 · Integrações confiáveis</h3>
+<p><strong>Guia nº 33/2020, item 9.3.2.3 (Requisitos Operacionais)</strong></p>
+<blockquote>
+<p>Dados – requisitos relacionados ao manuseio de dados, considerando-se o seu impacto na segurança do paciente, na qualidade do produto e na integridade dos dados, abrangendo os seguintes pontos:
+- Definição dos registros eletrônicos;
+- Definição dos tipos de dados, incluindo a identificação das características, formatação, parâmetros críticos, intervalo e formato de datas válidos, limites e exatidão e assim por diante;
+- Onde e como os dados serão gravados (ex.: bancos de dados relacionais, arquivos criptografados etc.)
+- Campos necessários;
+- Migração de dados (importação e exportação);
+- Entrada de dados e subsequente edição;
+- Backup e recuperação;
+- Requisitos para arquivamento;
+- Segurança dos dados e integridade.</p>
+<p>Interfaces – devem ser definidas (se aplicável), abrangendo os seguintes pontos:
+- Interface(s) com o usuário – definidas em termos de níveis de acesso (operador, administrador, gerente do sistema) ou funções quando apropriado;
+- Interface(s) com outros sistemas;
+- Interface(s) com equipamentos, tais como sensores ou atuadores. Isto pode incluir listas de I/O (entrada e saída) para sistemas utilizados para controle de processos;
+- Forma de entrada e saída de dados pelos usuários (ex.: teclado, leitor de código de barras, impressoras etc.).</p>
+</blockquote>
+<h3 id="tema-14-dados-de-entrada-com-formato-e-limite">Tema 14 · Dados de entrada com formato e limite</h3>
+<p><strong>Guia nº 33/2020, item 9.3.2.3 (Requisitos Operacionais)</strong></p>
+<blockquote>
+<p>Dados – requisitos relacionados ao manuseio de dados, considerando-se o seu impacto na segurança do paciente, na qualidade do produto e na integridade dos dados, abrangendo os seguintes pontos:
+- Definição dos registros eletrônicos;
+- Definição dos tipos de dados, incluindo a identificação das características, formatação, parâmetros críticos, intervalo e formato de datas válidos, limites e exatidão e assim por diante;
+- Onde e como os dados serão gravados (ex.: bancos de dados relacionais, arquivos criptografados etc.)
+- Campos necessários;
+- Migração de dados (importação e exportação);
+- Entrada de dados e subsequente edição;
+- Backup e recuperação;
+- Requisitos para arquivamento;
+- Segurança dos dados e integridade.</p>
+</blockquote>
+<h3 id="tema-15-ajuste-de-saldo-no-inventario">Tema 15 · Ajuste de saldo no inventário</h3>
+<p><strong>RDC 658/2022, art. 125</strong></p>
+<blockquote>
+<p>Art. 125. Toda a alteração feita no registro de um documento deve ser assinada e datada, devendo permitir a leitura da informação original.</p>
+<p>Parágrafo único. Quando apropriado, o motivo da alteração deve ser registrado.</p>
+</blockquote>
+<!-- NORMAS:FIM -->
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-o-papel-do-estoque-no-erp">1. O papel do Estoque no ERP</a></li><li><a href="#2-como-o-lote-anda">2. Como o lote anda</a></li><li><a href="#3-as-funcoes-do-estoque-ideal">3. As funções do Estoque ideal</a></li><li><a href="#4-a-situacao-do-lote-e-o-que-cada-situacao-permite">4. A situação do lote e o que cada situação permite</a></li><li><a href="#5-integracoes-com-os-outros-modulos">5. Integrações com os outros módulos</a></li><li><a href="#6-quem-faz-o-que-no-estoque">6. Quem faz o quê no Estoque</a></li><li><a href="#7-o-que-manter-do-legado">7. O que manter do legado</a></li><li><a href="#8-pontos-para-validar-com-o-estoque-o-cq-e-a-gq">8. Pontos para validar com o Estoque, o CQ e a GQ</a></li><li><a href="#o-que-a-anvisa-pede-textos-citados">O que a ANVISA pede: textos citados</a></li><li class="sub"><a href="#tema-1-situacao-unica-do-lote-guardada-e-protegida">Tema 1 · Situação única do lote, guardada e protegida</a></li><li class="sub"><a href="#tema-2-recebimento-so-de-fornecedor-aprovado">Tema 2 · Recebimento só de fornecedor aprovado</a></li><li class="sub"><a href="#tema-3-inspecao-e-conferencia-documentadas">Tema 3 · Inspeção e conferência documentadas</a></li><li class="sub"><a href="#tema-4-quarentena-imediata-e-sem-atalho">Tema 4 · Quarentena imediata e sem atalho</a></li><li class="sub"><a href="#tema-5-validade-e-reanalise-bloqueio-automatico-e-uso-pelo-prazo-mais-curto">Tema 5 · Validade e reanálise: bloqueio automático e uso pelo prazo mais curto</a></li><li class="sub"><a href="#tema-6-lote-como-o-fabricante-o-emitiu">Tema 6 · Lote como o fabricante o emitiu</a></li><li class="sub"><a href="#tema-7-produto-acabado-so-de-ordem-de-producao-liberada">Tema 7 · Produto acabado só de ordem de produção liberada</a></li><li class="sub"><a href="#tema-8-liberacao-pela-pessoa-delegada">Tema 8 · Liberação pela Pessoa Delegada</a></li><li class="sub"><a href="#tema-9-amostras-de-retencao-e-referencia">Tema 9 · Amostras de retenção e referência</a></li><li class="sub"><a href="#tema-10-gravar-tudo-ou-nada">Tema 10 · Gravar tudo ou nada</a></li><li class="sub"><a href="#tema-11-historico-de-toda-alteracao-de-saldo-e-de-cadastro">Tema 11 · Histórico de toda alteração de saldo e de cadastro</a></li><li class="sub"><a href="#tema-12-registro-de-saida-e-de-distribuicao">Tema 12 · Registro de saída e de distribuição</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

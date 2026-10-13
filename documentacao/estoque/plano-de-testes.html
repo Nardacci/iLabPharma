@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de testes · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="o-estoque-ideal.html">O Estoque ideal</a></li><li><a href="o-estoque-entre-os-modulos-as-travas.html">O Estoque entre os módulos: as travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Defeitos para correção</div><ul><li><a href="defeitos-para-correcao.html">Defeitos para correção</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html" aria-current=page>Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Plano de testes</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 13/10/2026 · <strong>Versão a testar:</strong> legado entregue pelo fornecedor · <strong>Executor previsto:</strong> Claude Code no computador da pessoa, pela VPN, com a habilidade <code>executar-testes</code> (passo a passo em <code>homologacao/COMO-EXECUTAR-TESTES.md</code>).</p>
+<p>Os casos das seções 6.1 a 6.11 foram <strong>montados por script</strong> a partir dos fluxos e dos cadastros de apoio (<code>homologacao/ferramentas/montar_plano_testes_est.py</code>), que também lê a <strong>situação</strong> de cada caso nos <code>resultado.md</code> das rodadas já feitas. Se um fluxo mudar ou uma rodada nova for registrada, gere essas seções de novo.</p>
+<hr />
+<h3 id="1-objetivo">1. Objetivo</h3>
+<p>Confirmar nas telas o que a leitura do código encontrou no Estoque:
+- as regras de negócio (<code>entregaveis/fonte/regras-de-negocio.md</code>);
+- os pontos de atenção dos dez fluxos;
+- os riscos de prioridade alta (<code>07-analise-de-risco.md</code>) e os temas da conformidade (<code>04-conformidade-regulatoria.md</code>);
+- a situação das 98 telas do menu (<code>11-inventario-de-telas.md</code>).</p>
+<h3 id="2-escopo">2. Escopo</h3>
+<ul>
+<li>Os dez fluxos e os cadastros de apoio.</li>
+<li>O CQ entra onde um caso pede para conferir o efeito lá: análise, laudo e liberação (CT-EST-200 a 209 e 211).</li>
+<li>A Produção e o Comercial entram só onde um caso pede (solicitação vinda da Produção, venda de produto acabado).</li>
+<li><strong>Fora:</strong> as cópias das telas do Principal (usuários, perfis, local), que se testam no Principal; o acesso e a segurança têm documento próprio (confidencial).</li>
+</ul>
+<h3 id="3-ambiente-e-preparacao">3. Ambiente e preparação</h3>
+<h4 id="3-1-antes-de-qualquer-caso">3.1 Antes de qualquer caso</h4>
+<ol>
+<li>Conferir que o Estoque abre com <code>t.admin</code> e que o almoxarifado <code>TESTE ALMOX</code> aparece (grupo do usuário ligado a ele).</li>
+<li><strong>Conferir quem mais usa o ambiente.</strong> Na rodada 2 apareceu um recebimento (00017, de 11/10) que o teste não criou. Se outra pessoa mexe nos lotes <code>TESTE</code>, os saldos podem mudar sem aviso.</li>
+<li>Nas listas com duas páginas (recebimento), conferir <strong>a página</strong> antes de gravar a nota (houve nota gravada no recebimento errado, em 08 e 12/10).</li>
+</ol>
+<h4 id="3-2-usuarios">3.2 Usuários</h4>
+<p>Usar os usuários que já existem (<code>t.admin</code>, <code>t.cadastro</code>, <code>t.consulta</code>, <code>t.semadmin</code>, com os perfis <code>TESTE*</code>). <strong>Não guardar senhas neste repositório.</strong></p>
+<h4 id="3-3-dados-ja-existentes-no-ambiente-reaproveitar">3.3 Dados já existentes no ambiente (reaproveitar)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Onde</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almoxarifado <code>TESTE ALMOX</code>, locais <code>TESTE</code> 901 a 905 e endereços</td>
+<td>Estoque</td>
+<td>Todos os casos de endereço e movimentação</td>
+</tr>
+<tr>
+<td>Itens <code>TST0001</code> (<code>TESTE MATERIA PRIMA</code>), <code>TST0002</code> e <code>TST0003</code> (<code>TESTE PRODUTO ACABADO</code>)</td>
+<td>Estoque</td>
+<td>Entradas, análise, compras</td>
+</tr>
+<tr>
+<td><strong>Saldo em quarentena:</strong> <code>TESTEPA001</code>, <code>TESTEPA999</code> (lote inventado), <code>TESTEPA998</code> (vencido) e <code>TESTELOTE003</code> (do <code>TST0001</code>)</td>
+<td>Estoque</td>
+<td>Quarentena, laudo do CQ, movimentação, remessa</td>
+</tr>
+<tr>
+<td>Fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code> (avaliado com 350 pontos)</td>
+<td>Principal e Estoque</td>
+<td>Casos de fornecedor</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="3-4-dado-que-falta">3.4 Dado que falta</h4>
+<p>Um lote <strong>aprovado e disponível</strong> (sem quarentena) para separar e remeter: sai da rodada 3, com a aprovação do laudo do <code>TESTEPA001</code> ou do <code>TESTELOTE003</code>.</p>
+<h4 id="3-5-cuidado">3.5 Cuidado</h4>
+<h4 id="3-6-limite-conhecido">3.6 Limite conhecido</h4>
+<p>O caminho <strong>Recebimento → Conferência → Endereçamento</strong> não grava (DV-EST-016), e a causa depende do DBA, que não respondeu: fica <strong>pendente</strong>. Para ter saldo, usar <strong>Entrada de Material - Produção</strong> e <strong>Entrada de Material - Outras</strong>, que gravam por outra rotina (rodada 2).</p>
+<h3 id="4-evidencias-e-registro">4. Evidências e registro</h3>
+<p>Como nos outros módulos:
+- captura de cada passo relevante nos casos de prioridade <strong>alta</strong>;
+- captura do resultado nos de prioridade <strong>média</strong>;
+- em <code>homologacao/3.estoque/execucao/&lt;AAAA-MM-DD&gt;/evidencias/CT-EST-xxx-passo-N.png</code>;
+- o <code>resultado.md</code> da rodada, com a lista dos dados <code>TESTE</code> criados.</p>
+<p><strong>Atenção:</strong> a etiqueta e o relatório "Imprimir" abrem em janela própria; o roteiro precisa ler essa janela.</p>
+<h3 id="5-criterios-de-aceite">5. Critérios de aceite</h3>
+<p>Para cada caso:
+- <strong>Passou:</strong> o sistema faz o que a norma e o fluxo pedem;
+- <strong>Falhou (norma):</strong> o sistema faz o que o código previa e a norma não admite; vira um desvio (DV-EST-nnn);
+- <strong>Bloqueado:</strong> depende de outro caso que falhou ou de dado que falta.</p>
+<h3 id="6-casos-de-teste">6. Casos de teste</h3>
+<p><strong>Prioridade:</strong> <strong>Alta</strong> = caso ligado a um risco de prioridade alta (<code>07-analise-de-risco.md</code>) ou de permissão; <strong>Média</strong> = o resultado esperado pede para registrar uma falha prevista; <strong>Baixa</strong> = regras de preenchimento e caminhos normais.</p>
+<h4 id="6-1-cadastros-de-apoio-24-casos-0-alta-5-media-19-baixa">6.1 Cadastros de apoio (24 casos: 0 alta, 5 média, 19 baixa)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-001</td>
+<td>Incluir com todos os obrigatórios</td>
+<td>Salva e aparece na lista</td>
+<td>Baixa</td>
+<td>Passou (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-002</td>
+<td>Tentar salvar sem cada obrigatório, um de cada vez</td>
+<td>Mensagem do campo, nada é salvo</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-003</td>
+<td>Incluir um segundo registro com o mesmo código e a mesma descrição</td>
+<td>Recusa por duplicidade (achado 4)</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-004</td>
+<td>Alterar um campo com justificativa</td>
+<td>Salva; o histórico mostra valor antigo, valor novo, usuário, data e justificativa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-005</td>
+<td>Alterar sem justificativa</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-006</td>
+<td>Inativar (quando houver Situação)</td>
+<td>Some das listas de escolha das telas que o usam</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-007</td>
+<td>Excluir sem vínculo, com justificativa</td>
+<td>Some da lista; o histórico do registro excluído continua consultável</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-008</td>
+<td>Excluir um registro em uso por outro cadastro</td>
+<td>Recusa com mensagem clara do motivo</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-009</td>
+<td>Relatório e Excel, quando houver</td>
+<td>Gera com os dados da lista</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-010</td>
+<td>Unidade de medida</td>
+<td>Incluir <code>TST</code> e abrir a Apresentação do item</td>
+<td>Apresentação criada sozinha (achado 5); verificar o histórico dela</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-011</td>
+<td>Grupo e Subgrupo</td>
+<td>Incluir subgrupo sem grupo; excluir grupo com subgrupo</td>
+<td>Primeiro recusado; segundo recusado com mensagem</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-012</td>
+<td>Local de armazenagem</td>
+<td>Incluir sem almoxarifado; incluir sem cada marcação (quarentena, controlado, refrigerado, umidade, refugo)</td>
+<td>Recusas; com tudo preenchido, o local aparece no endereçamento</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-013</td>
+<td>Rua, Coluna, Andar</td>
+<td>Código zero; excluir rua usada num endereço</td>
+<td>Recusas</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-014</td>
+<td>Grupo × almoxarifado</td>
+<td>Ligar <code>TESTE GRUPO ESTOQUE</code> a <code>TESTE ALMOX</code> e entrar com um usuário do grupo e outro fora dele</td>
+<td>Só o usuário do grupo vê o almoxarifado nas telas de movimentação</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-015</td>
+<td>Item</td>
+<td>Salvar sem almoxarifado; tipo não próprio sem cliente; estoque mínimo maior que o máximo; grau de pureza inválido</td>
+<td>Recusas com as mensagens do código; registrar se mínimo maior que máximo é aceito</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-EST-016</td>
+<td>Item controlado</td>
+<td>Criar <code>TESTE CONTROLADO</code> com substância controlada e local controlado</td>
+<td>Registrar o que o sistema pede a mais para controlado (achado 6)</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-EST-017</td>
+<td>Apresentação do fornecedor</td>
+<td>Incluir sem fornecedor, sem item e sem código do fornecedor; depois completo</td>
+<td>Recusas; completo aparece no recebimento da nota</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-018</td>
+<td>Classificação de reanálise</td>
+<td>Incluir sem a primeira reanálise; ligar ao <code>TESTE MATERIA PRIMA</code></td>
+<td>Recusa; o prazo será conferido no fluxo de reanálise</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-019</td>
+<td>Códigos com zeros</td>
+<td>Código 0, 000, 0000 em local, rua, coluna, andar, banco, NCM, fabricante, substância</td>
+<td>Recusa em todos</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-020</td>
+<td>Tipo de movimentação</td>
+<td>Incluir um de entrada que atualiza custo médio e um de saída</td>
+<td>Aparecem nas telas de movimentação conforme o sentido</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-021</td>
+<td>Banco</td>
+<td>Incluir <code>TESTE BANCO</code> no Estoque e procurar no Principal</td>
+<td>Registrar se aparece no Principal e em qual histórico (achado 1)</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-EST-022</td>
+<td>Centro de custo</td>
+<td>Incluir <code>TESTE CC ESTOQUE</code> no Estoque e procurar no Principal (e vice-versa)</td>
+<td>Registrar se são o mesmo cadastro (achado 2)</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>CT-EST-023</td>
+<td>Permissões</td>
+<td>Entrar com usuário sem permissão nos cadastros do Estoque e abrir as telas pelo endereço</td>
+<td>Acesso negado (no Principal as telas abriam: DV-PRI-025)</td>
+<td>Baixa</td>
+</tr>
+<tr>
+<td>CT-EST-024</td>
+<td>Pesquisa</td>
+<td>Pesquisar com e sem acento</td>
+<td>Registrar se repete o DV-PRI-008</td>
+<td>Média</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-2-recebimento-quarentena-e-conferencia-28-casos-14-alta-5-media-9-baixa">6.2 Recebimento, quarentena e conferência (28 casos: 14 alta, 5 média, 9 baixa)</h4>
+<p><strong>Dados:</strong> os cadastros <code>TESTE</code> já criados (<code>TESTE ALMOX</code>, locais, <code>TESTE MATERIA PRIMA</code>), o fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>, um segundo usuário de teste (<code>t.admin</code>) e o recebimento 00013, já finalizado e aguardando autorização. Antes de tudo, ligar o <code>TESTE ALMOX</code> ao grupo do <code>t.admin</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-180</td>
+<td>Checklist de Inspeção Veicular sem placa, sem condutor e sem documento</td>
+<td>Recusas</td>
+<td>Baixa</td>
+<td>Passou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-181</td>
+<td>Checklist sem responder às perguntas, com parecer "Aprovado"</td>
+<td>Pela norma, deveria exigir as respostas. <strong>Registrar se salva</strong> (reteste do DV-EST-004)</td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-182</td>
+<td>Checklist com parecer <strong>Reprovado</strong>; depois, no Recebimento, procurar esse checklist na lista</td>
+<td>Pela norma, não deveria aparecer. <strong>Registrar com evidência se aparecer</strong></td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-183</td>
+<td>Recebimento sem escolher checklist</td>
+<td>Registrar se o sistema exige</td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-184</td>
+<td>Nota fiscal sem cada campo obrigatório; item repetido na nota</td>
+<td>Recusas</td>
+<td>Baixa</td>
+<td>Passou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-185</td>
+<td>Lote com <strong>validade em branco</strong></td>
+<td>Pela norma, deveria exigir. <strong>Registrar se grava 31/12/2099</strong></td>
+<td>Média</td>
+<td>Passou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-186</td>
+<td>Lote com <strong>validade vencida</strong> (ontem)</td>
+<td>Pela norma, deveria recusar ou alertar. <strong>Registrar se aceita</strong></td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-187</td>
+<td>Lote <code>TESTE-LOTE-002</code> com hífen e quantidade 100</td>
+<td>Registrar o código e a quantidade gravados (DV-EST-001 e 002)</td>
+<td>Média</td>
+<td>Passou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-189</td>
+<td>Autorizar com o mesmo usuário que confirmou</td>
+<td>Recusa: "Usuário não pode autorizar!"</td>
+<td>Baixa</td>
+<td>Passou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-190</td>
+<td>Autorizar com um usuário sem nenhuma permissão no Estoque</td>
+<td>Pela norma, deveria recusar. <strong>Registrar se aceita</strong></td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-191</td>
+<td>Conferência com quantidade diferente da nota</td>
+<td>Registrar como o sistema trata a divergência</td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-192</td>
+<td>Conferência assinada por um usuário sem permissão de conferir</td>
+<td>Pela norma, deveria recusar. <strong>Registrar se aceita</strong></td>
+<td>Média</td>
+<td>Não executado (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-193</td>
+<td>Concluir a conferência e ver onde ela fica registrada</td>
+<td>Registrar a tela e o campo que mostram a conferência</td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-194</td>
+<td>Endereçar o lote no <code>TESTE LOCAL QUARENTENA</code></td>
+<td>Endereçado; a solicitação de análise aparece no módulo CQ</td>
+<td>Alta</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-195</td>
+<td>Endereçar em local comum um item com controle de quarentena</td>
+<td>Local comum não aparece na lista</td>
+<td>Baixa</td>
+<td>Não conclusivo (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-196</td>
+<td>Recebimento de fornecedor marcado como "não qualificado" na avaliação</td>
+<td>Registrar se o sistema alerta (fluxo de compras, CT-EST-166)</td>
+<td>Média</td>
+<td>Parcial (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-197</td>
+<td>Histórico do lote depois do endereçamento</td>
+<td>Mostra recebimento, autorização, conferência e endereçamento, com usuários</td>
+<td>Baixa</td>
+<td>Falhou (08/10)</td>
+</tr>
+<tr>
+<td>CT-EST-200</td>
+<td>No CQ, conferir se a solicitação de análise do lote existe e com qual tipo (físico-químico, microbiológico)</td>
+<td>Existe, conforme os controles do item</td>
+<td>Alta</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-201</td>
+<td>Programar a amostragem e a análise; pesar a amostra na Central de Pesagem</td>
+<td>Amostra pesada; o saldo do lote diminui pela quantidade retirada</td>
+<td>Baixa</td>
+<td>Passou com ressalvas (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-202</td>
+<td>Registrar o resultado com regra de intervalo, com valor fora do intervalo</td>
+<td>Registrar como o sistema classifica</td>
+<td>Média</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-203</td>
+<td>Aprovar o laudo com validade anterior a hoje</td>
+<td>Recusa: "A Data de Validade tem que ser maior ou igual a atual."</td>
+<td>Alta</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-205</td>
+<td>O mesmo usuário que fez a análise aprova o laudo</td>
+<td>Registrar se o sistema permite (separação de funções)</td>
+<td>Alta</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-206</td>
+<td>Emitir a etiqueta de aprovação</td>
+<td>Etiqueta emitida com lote, laudo e validade</td>
+<td>Baixa</td>
+<td>Parcial (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-207</td>
+<td>Movimentação de Quarentena do lote aprovado</td>
+<td>Só locais comuns; número do laudo e resultado APROVADO aparecem; o lote fica disponível</td>
+<td>Alta</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-208</td>
+<td>Antes do laudo, tentar separar o lote para a produção</td>
+<td>Não aparece (em quarentena)</td>
+<td>Alta</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-209</td>
+<td>Histórico do lote no fim</td>
+<td>Mostra a análise, o laudo, o aprovador e a movimentação</td>
+<td>Baixa</td>
+<td>Falhou (12/10)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-3-movimentacao-interna-16-casos-4-alta-1-media-11-baixa">6.3 Movimentação interna (16 casos: 4 alta, 1 média, 11 baixa)</h4>
+<p><strong>Dados:</strong> os criados nos cadastros de apoio (<code>TESTE ALMOX</code>, locais <code>TESTE LOCAL NORMAL</code>, <code>TESTE LOCAL QUARENTENA</code>, <code>CONTROLADO</code> e <code>REFRIGERADO</code>, rua, coluna e andar <code>TESTE</code>, <code>TESTE MATERIA PRIMA</code>) e um lote <code>TESTE-LOTE-001</code> recebido pelo fluxo de Recebimento. Todos ficam no sistema.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-030</td>
+<td>Cadastrar endereços <code>TESTE</code> em cada local (normal, quarentena, controlado, refrigerado) com capacidade pequena num deles</td>
+<td>Endereços criados; aparecem na consulta de endereço</td>
+<td>Baixa</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-031</td>
+<td>Cadastrar um endereço repetido</td>
+<td>Recusa (RN003); registrar se a mensagem explica o motivo</td>
+<td>Média</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-032</td>
+<td>Excluir um endereço com saldo e outro vazio</td>
+<td>O primeiro é recusado; o segundo é excluído com justificativa</td>
+<td>Baixa</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-033</td>
+<td>Endereçar o <code>TESTE-LOTE-001</code> sem lote, sem quantidade e com quantidade zero; depois completo</td>
+<td>Recusas; completo, o saldo aparece na disponibilidade por lote e por local</td>
+<td>Alta</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-034</td>
+<td>Movimentar parte do lote entre dois endereços do local normal, com justificativa</td>
+<td>Saldos de origem e destino atualizados; aparece no histórico do lote com usuário, data e justificativa</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-035</td>
+<td>Movimentar sem justificativa</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-036</td>
+<td>Movimentar quantidade maior que o saldo da origem</td>
+<td>Recusa: "O endereço de origem não tem saldo disponível!"</td>
+<td>Alta</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-037</td>
+<td>Movimentar para um endereço que já tem outro item</td>
+<td>Recusa (RN003)</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-038</td>
+<td>Movimentar para o endereço de capacidade pequena uma quantidade que excede o peso</td>
+<td>Recusa por capacidade (RN004)</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-039</td>
+<td><strong>Lote em quarentena:</strong> abrir a movimentação de um lote que está no <code>TESTE LOCAL QUARENTENA</code> e ver quais locais aparecem no destino</td>
+<td>Só locais de quarentena (RN006). <strong>Registrar com evidência</strong> se algum local comum aparece, porque a trava do servidor está desligada</td>
+<td>Alta</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-040</td>
+<td>Item refrigerado: movimentar um item marcado como refrigerado</td>
+<td>O destino oferece só locais refrigerados</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-041</td>
+<td>Usuário de outro grupo: entrar com usuário sem o <code>TESTE ALMOX</code> no grupo</td>
+<td>Não vê o almoxarifado na movimentação nem nas consultas</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-042</td>
+<td>Duas movimentações do mesmo endereço ao mesmo tempo (duas abas)</td>
+<td>A segunda é recusada (RN005)</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-043</td>
+<td>Consultas: disponibilidade geral, por lote e por local; relatório e Excel</td>
+<td>Saldos batem com as movimentações feitas</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-044</td>
+<td>Histórico do lote <code>TESTE-LOTE-001</code></td>
+<td>Mostra recebimento, endereçamento e movimentações, na ordem, com usuário</td>
+<td>Baixa</td>
+<td>BLOQUEADO (07/10)</td>
+</tr>
+<tr>
+<td>CT-EST-045</td>
+<td>Permissão: usuário sem acesso à movimentação abre a tela pelo endereço</td>
+<td>Acesso negado</td>
+<td>Alta</td>
+<td>FALHOU (07/10)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-4-reprovado-reanalise-e-revalidacao-17-casos-6-alta-0-media-11-baixa">6.4 Reprovado, reanálise e revalidação (17 casos: 6 alta, 0 média, 11 baixa)</h4>
+<p><strong>Dados:</strong> o lote <code>TESTELOTE001</code> do <code>TESTE MATERIA PRIMA</code>, já recebido e em quarentena (fluxo de Recebimento), e um segundo lote <code>TESTELOTE002</code> recebido da mesma forma. Locais <code>TESTE LOCAL NORMAL</code>, <code>TESTE LOCAL QUARENTENA</code> e um local de refugo <code>TESTE LOCAL REFUGO</code>, a criar. Classificação de reanálise <code>TESTE</code> com prazo curto, ligada ao item. Dependem do módulo Controle da Qualidade para aprovar e reprovar.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-050</td>
+<td>No CQ, aprovar a análise do <code>TESTELOTE001</code>; na Movimentação de Quarentena, ver os destinos oferecidos</td>
+<td>Só locais comuns; movimentar com justificativa; o lote aparece como disponível</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-051</td>
+<td>No CQ, reprovar a análise do <code>TESTELOTE002</code>; na Movimentação de Quarentena, ver os destinos</td>
+<td>Só locais de refugo; movimentar; o saldo aparece como reprovado e não como disponível</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-052</td>
+<td>Lote reprovado: tentar escolher ou digitar um local comum como destino</td>
+<td>Recusa. <strong>Registrar com evidência</strong> se aceitar</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-053</td>
+<td>Lote reprovado: procurá-lo na Solicitação e na Separação de material</td>
+<td>Não aparece</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-054</td>
+<td>Movimentar quantidade maior que a pendente</td>
+<td>Recusa: "Quantidade informada é superior a pendente!"</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-055</td>
+<td>Agenda de Reanálise: localizar o <code>TESTELOTE001</code> (com a classificação de prazo curto) e agendar com justificativa</td>
+<td>Análise aberta no CQ; lote marcado em reanálise; sai do disponível; etiqueta impressa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-056</td>
+<td>Agendar de novo o mesmo lote</td>
+<td>Recusa: "O Lote possui análise não finalizada!"</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-057</td>
+<td>Agendar um lote bloqueado</td>
+<td>Recusa: "O Lote está bloqueado. Operação não permitida!"</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-058</td>
+<td><strong>Reanálise vencida sem agendamento:</strong> lote com data de reanálise já passada e não agendado; procurá-lo na Solicitação e na Separação</td>
+<td>Pela regra da ANVISA, não deveria aparecer. <strong>Registrar com evidência se aparecer</strong> (regra desligada no banco)</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-059</td>
+<td>Reanálise avulsa de um lote fora da agenda</td>
+<td>Mesmo efeito do CT-EST-055</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-060</td>
+<td>Concluir a reanálise no CQ (aprovada)</td>
+<td>O lote volta ao disponível com a nova data de reanálise</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-061</td>
+<td>Revalidação de Lote: pedir a revalidação do <code>TESTELOTE001</code> com justificativa</td>
+<td>Análise de revalidação aberta no CQ; a validade só muda depois do resultado</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-062</td>
+<td>Lote com validade vencida: procurar na Separação</td>
+<td>Não aparece; na Disponibilidade, conta como vencido</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-063</td>
+<td>Relatórios RM36, RM17, Relação de Lotes - Reanálise e Agenda de Reanálise</td>
+<td>Mostram os lotes TESTE nas situações certas</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-064</td>
+<td>Histórico do lote <code>TESTELOTE001</code></td>
+<td>Mostra aprovação, movimentação, reanálise e revalidação, com usuário e data</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-211</td>
+<td><strong>Reprovar o laudo do <code>TESTEPA998</code></strong> (lote já vencido, em quarentena) no CQ; depois procurá-lo na Movimentação de Quarentena, na Separação, na Remessa e na Disponibilidade</td>
+<td>Só locais de refugo; não aparece para separar nem remeter; conta como reprovado. <strong>Registrar com evidência se o lote seguir disponível</strong> (risco R-EST-10)</td>
+<td>Alta</td>
+<td>Passou com ressalvas (12/10)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-5-solicitacao-e-atendimento-a-producao-14-casos-4-alta-0-media-10-baixa">6.5 Solicitação e atendimento à produção (14 casos: 4 alta, 0 média, 10 baixa)</h4>
+<p><strong>Dados:</strong> o lote <code>TESTELOTE001</code> aprovado e disponível (fluxo de reprovado e reanálise, CT-EST-050), um segundo lote do mesmo item com validade mais curta (<code>TESTELOTE003</code>), o centro de custo <code>TESTE CC ESTOQUE</code> e um perfil de teste com tipos de solicitação liberados. A solicitação de produção depende do módulo Produção; se não houver ordem de produção de teste, usar a solicitação de consumo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-070</td>
+<td>Registrar uma solicitação de consumo do <code>TESTE MATERIA PRIMA</code> sem cada obrigatório; depois completa</td>
+<td>Recusas; completa, fica aberta</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-071</td>
+<td>Aprovar a solicitação com um usuário cujo perfil tem o tipo liberado</td>
+<td>Aprovada; registra quem aprovou</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-072</td>
+<td>Tentar aprovar com um usuário cujo perfil <strong>não</strong> tem o tipo liberado</td>
+<td>Recusa ou a solicitação não aparece para ele</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-073</td>
+<td>Atendimento: ver a ordem dos lotes oferecidos</td>
+<td>Registrar a ordem. Pela boa prática, <code>TESTELOTE003</code> (vence antes) deveria aparecer primeiro; pelo código, não há ordenação</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-074</td>
+<td>Atendimento: escolher o lote que vence <strong>depois</strong> (<code>TESTELOTE001</code>)</td>
+<td>Registrar se o sistema aceita, avisa ou recusa (RN002)</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-075</td>
+<td>Separação: procurar um lote em quarentena, reprovado, bloqueado e em reanálise</td>
+<td>Nenhum aparece</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-076</td>
+<td>Pesagem com divergência de peso numa solicitação de produção</td>
+<td>Não finaliza</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-077</td>
+<td>Pesagem sem tag da balança, sem lacre ou com tara inválida</td>
+<td>Recusas</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-078</td>
+<td>Atender quantidade maior que a solicitada</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-079</td>
+<td>Atender a quantidade correta com justificativa</td>
+<td>Saldo do lote e do endereço baixado; a solicitação muda de situação; o histórico do lote mostra a saída</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-080</td>
+<td>Cancelar uma separação sem justificativa e depois com</td>
+<td>Primeiro recusado; depois cancelado; o saldo volta</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-081</td>
+<td>Saída de Material (Outras) com tipo e motivo <code>TESTE</code></td>
+<td>Saída registrada com justificativa; saldo baixado</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-082</td>
+<td>Solicitação de produção vinda do módulo Produção (se houver ordem de teste)</td>
+<td>Aparece no Estoque com o tipo produção e segue o mesmo fluxo</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-6-devolucao-e-entrada-da-producao-13-casos-5-alta-1-media-7-baixa">6.6 Devolução e entrada da produção (13 casos: 5 alta, 1 média, 7 baixa)</h4>
+<p><strong>Dados:</strong> <code>TESTE MATERIA PRIMA</code> com o lote <code>TESTELOTE001</code> disponível e já atendido numa solicitação (fluxo de solicitação, CT-EST-079); um item de produto acabado <code>TESTE PRODUTO ACABADO</code> com controle de quarentena (cadastros de apoio); locais <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-090</td>
+<td>Devolução da Produção: devolver parte do <code>TESTELOTE001</code> atendido, com justificativa</td>
+<td>Saldo volta ao endereço escolhido; aparece no histórico do lote</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-091</td>
+<td>Ver se a devolução da produção abriu análise no CQ ou deixou o saldo disponível direto</td>
+<td>Registrar o comportamento (RN003) para a Garantia da Qualidade decidir</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-092</td>
+<td>Devolução de Material com um lote que <strong>não existe</strong></td>
+<td>Recusa (RN002)</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-093</td>
+<td>Devolução de Material com o <code>TESTELOTE001</code> (existente)</td>
+<td>Aceita; abre análise no CQ; lote em quarentena</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-094</td>
+<td>Endereçar quantidade maior que a devolvida</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-095</td>
+<td>Entrada de Material - Outras com item, lote e fabricante repetidos na lista</td>
+<td>Recusa: "O Item/Lote/Fabricante já existe na lista!"</td>
+<td>Baixa</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-096</td>
+<td>Entrada de Materiais - Produção do <code>TESTE PRODUTO ACABADO</code>, lote <code>TESTEPA001</code>: ver os destinos</td>
+<td>Só locais de quarentena</td>
+<td>Baixa</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-097</td>
+<td>Concluir a entrada do <code>TESTEPA001</code></td>
+<td>Análise de produto acabado aberta no CQ; etiqueta impressa</td>
+<td>Alta</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-098</td>
+<td><strong>Entrada de produto acabado com lote inventado</strong> (<code>TESTEPA999</code>, sem ordem de produção)</td>
+<td>Pela rastreabilidade, deveria recusar. <strong>Registrar com evidência se aceitar</strong></td>
+<td>Alta</td>
+<td>Falhou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-099</td>
+<td>Entrada com validade inválida ou anterior a hoje</td>
+<td>Recusa: "Data de validade inválida!"</td>
+<td>Alta</td>
+<td>Falhou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-100</td>
+<td>Entrada de Produção (serviços) com custos <code>TESTE</code></td>
+<td>Registrar o comportamento e os campos pedidos</td>
+<td>Média</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-101</td>
+<td>Liberar o <code>TESTEPA001</code> pelo CQ e conferir o histórico do lote</td>
+<td>Entrada, análise e liberação aparecem com usuário e data</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-7-remessa-e-expedicao-11-casos-4-alta-0-media-7-baixa">6.7 Remessa e expedição (11 casos: 4 alta, 0 média, 7 baixa)</h4>
+<p><strong>Dados:</strong> <code>TESTE PRODUTO ACABADO</code>, com o lote <code>TESTEPA001</code> liberado (fluxo de devolução e entradas, CT-EST-101), um lote vencido do mesmo item (<code>TESTEPA002</code>, validade passada) e a pessoa jurídica <code>TESTE PJ FARMACÊUTICA LTDA</code> como cliente ou consignatário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-110</td>
+<td>Remessa de Material sem cada obrigatório; depois completa, com o <code>TESTEPA001</code></td>
+<td>Recusas; completa, a remessa fica aberta</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-111</td>
+<td>Incluir o mesmo lote duas vezes</td>
+<td>Recusa: "O Lote informado já existe na Remessa!"</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-112</td>
+<td>Incluir quantidade maior que o saldo do lote</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-113</td>
+<td>Procurar na lista um lote em quarentena, bloqueado e em reanálise</td>
+<td>Nenhum aparece</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-114</td>
+<td><strong>Procurar o lote vencido <code>TESTEPA002</code></strong></td>
+<td>Pela norma, não deveria aparecer. <strong>Registrar com evidência se aparecer</strong></td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-115</td>
+<td>Confirmar a remessa</td>
+<td>Data de liberação gravada; saldo baixado; aviso da Rastreabilidade se o módulo estiver ativo</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-116</td>
+<td>Conferir no módulo Rastreabilidade se a remessa confirmada aparece para envio</td>
+<td>Registrar o que aparece</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-117</td>
+<td>Remessa GMM com data de embarque anterior à data da guia</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-118</td>
+<td>Saída por Nota Fiscal sem chave da nota</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-119</td>
+<td>Histórico do lote <code>TESTEPA001</code></td>
+<td>Mostra a remessa com destino, usuário e data</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-8-compras-e-avaliacao-do-fornecedor-9-casos-3-alta-0-media-6-baixa">6.8 Compras e avaliação do fornecedor (9 casos: 3 alta, 0 média, 6 baixa)</h4>
+<p><strong>Dados:</strong> os itens <code>TESTE</code>, com consumo registrado pelos fluxos anteriores; o fornecedor <code>TESTE PJ FARMACÊUTICA LTDA</code>; um segundo fornecedor <code>TESTE FORNECEDOR REPROVADO</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-160</td>
+<td>Curva ABC com período inválido e depois válido</td>
+<td>Recusa; válido, mostra a classificação</td>
+<td>Baixa</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-161</td>
+<td>Análise do Estoque com período de 13 meses</td>
+<td>Recusa: "Período de análise não pode ser superior a 12 meses!"</td>
+<td>Baixa</td>
+<td>Falhou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-162</td>
+<td>Gerar pedido a partir da análise</td>
+<td>Pedido criado com os itens da necessidade</td>
+<td>Baixa</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-163</td>
+<td>Pedido de Compra com item repetido</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Passou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-164</td>
+<td>Receber o pedido pelo fluxo de Recebimento e baixar no Recebimento do Item</td>
+<td>Pedido baixado; ver se a baixa foi automática ou manual</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-165</td>
+<td>Avaliação do Fornecedor da entrega do <code>TESTE FORNECEDOR REPROVADO</code> com pontuação baixa, marcando como <strong>não qualificado</strong></td>
+<td>Avaliação salva</td>
+<td>Alta</td>
+<td>Falhou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-166</td>
+<td><strong>Novo recebimento do mesmo <code>TESTE FORNECEDOR REPROVADO</code></strong></td>
+<td>Pela norma, deveria bloquear ou alertar. <strong>Registrar com evidência se o sistema aceitar sem aviso</strong></td>
+<td>Alta</td>
+<td>Falhou (12/10)</td>
+</tr>
+<tr>
+<td>CT-EST-167</td>
+<td>Histórico da avaliação (alteração com justificativa)</td>
+<td>Mostra valor antigo e novo, usuário e justificativa</td>
+<td>Baixa</td>
+<td>Falhou (12/10)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-9-inventario-12-casos-3-alta-1-media-8-baixa">6.9 Inventário (12 casos: 3 alta, 1 média, 8 baixa)</h4>
+<p><strong>Dados:</strong> o almoxarifado <code>TESTE ALMOX</code> com o lote <code>TESTELOTE001</code> endereçado no <code>TESTE LOCAL NORMAL</code> e saldo conhecido; grupo e subgrupo <code>TESTE</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-130</td>
+<td>Abrir inventário com data de ontem</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-131</td>
+<td>Abrir inventário com uma solicitação <code>TESTE</code> pendente no almoxarifado</td>
+<td>Recusa: "O Inventário não pode ser gerado com solicitações pendentes!"</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-132</td>
+<td>Abrir inventário do <code>TESTE ALMOX</code>, <code>TESTE LOCAL NORMAL</code>, grupo <code>TESTE</code></td>
+<td>Aberto; os endereços ficam travados</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-133</td>
+<td>Durante o inventário, tentar separar ou movimentar o <code>TESTELOTE001</code></td>
+<td>Não aparece como disponível</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-134</td>
+<td>Primeira contagem igual ao saldo</td>
+<td>Sem divergência</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-135</td>
+<td>Contagem divergente três vezes, sem justificativa na terceira</td>
+<td>Recusa a terceira sem justificativa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-136</td>
+<td>Apurar antes de finalizar a contagem</td>
+<td>Recusa: "A contagem não foi finalizada!"</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-137</td>
+<td>Justificar e apurar</td>
+<td>Saldo ajustado; endereços liberados; relatório de apuração gerado</td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-138</td>
+<td>Histórico do lote <code>TESTELOTE001</code> depois da apuração</td>
+<td>Mostra o ajuste com usuário, data e justificativa. <strong>Registrar se não mostrar</strong></td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-139</td>
+<td>Reabrir uma contagem e cancelar um segundo inventário <code>TESTE</code></td>
+<td>Funciona; os endereços do cancelado são liberados</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-140</td>
+<td>A mesma pessoa conta as três vezes e apura</td>
+<td>Registrar se o sistema permite (RN003 da contagem)</td>
+<td>Média</td>
+<td>Não testado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-10-kits-9-casos-1-alta-2-media-6-baixa">6.10 Kits (9 casos: 1 alta, 2 média, 6 baixa)</h4>
+<p><strong>Dados:</strong> o kit <code>TESTE KIT</code> com dois componentes (<code>TESTE MATERIA PRIMA</code> e <code>TESTE EMBALAGEM</code>); a pessoa jurídica <code>TESTE PJ FARMACÊUTICA LTDA</code> como cliente; o centro de custo <code>TESTE CC ESTOQUE</code>; lotes com validades diferentes, um vencendo em poucos dias.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-150</td>
+<td>Cadastrar o <code>TESTE KIT</code> sem componente e depois completo</td>
+<td>Recusa; completo, salvo</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-151</td>
+<td>Planejar o <code>TESTE KIT</code> para o cliente com validade mínima de 180 dias; repetir o mesmo kit</td>
+<td>Primeiro salvo; segundo recusado</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-152</td>
+<td>Análise do planejamento sem período e com período</td>
+<td>Recusa; com período, mostra a necessidade</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-153</td>
+<td>Solicitar o kit e separar: tentar usar o lote que vence em poucos dias</td>
+<td>Registrar se a validade mínima é respeitada (RN004)</td>
+<td>Média</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-154</td>
+<td>Enviar pela Remessa de Material (GMM) e tentar reabrir a guia</td>
+<td>Enviado; reabertura recusada</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-155</td>
+<td>Controle de Kits: ver os lotes do componente no cliente</td>
+<td>Mostra lote, validade e remessa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-156</td>
+<td>Repor o lote que está vencendo</td>
+<td>Registrar o que é gerado e se fica no histórico</td>
+<td>Média</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-157</td>
+<td>Relatórios de kit (reposição a vencer, reposição de componentes, planejamento, listagem de lotes)</td>
+<td>Mostram os dados <code>TESTE</code></td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="6-11-almoxarifado-do-cq-9-casos-2-alta-0-media-7-baixa">6.11 Almoxarifado do CQ (9 casos: 2 alta, 0 média, 7 baixa)</h4>
+<p><strong>Dados:</strong> um almoxarifado <code>TESTE ALMOX RETENCAO</code> marcado como retenção e outro <code>TESTE ALMOX ESTABILIDADE</code> marcado como estabilidade, com local, rua, coluna e andar <code>TESTE</code>; o lote <code>TESTEPA001</code> do produto acabado liberado.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que fazer</th>
+<th>Resultado esperado</th>
+<th>Prior.</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-170</td>
+<td>Criar os almoxarifados de retenção e de estabilidade</td>
+<td>Salvos; o saldo neles não conta como disponível</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-171</td>
+<td>Entrada de amostra de retenção do <code>TESTEPA001</code></td>
+<td>Amostra reservada e endereçada; aparece na consulta</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-172</td>
+<td>Entrada de amostra de estabilidade sem tipo de estabilidade</td>
+<td>Recusa: "É necessário informar um tipo de estabilidade!"</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-173</td>
+<td>Entrada de estabilidade com tipo</td>
+<td>Acompanhamento de estabilidade aberto no CQ (conferir no módulo CQ)</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-174</td>
+<td>Movimentar quantidade maior que a disponível</td>
+<td>Recusa</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-175</td>
+<td>Procurar a amostra de retenção na Separação de Material</td>
+<td>Não aparece (não é saldo disponível)</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-176</td>
+<td><strong>Saída da amostra de retenção antes do vencimento do lote</strong></td>
+<td>Pela norma, deveria impedir ou alertar. <strong>Registrar com evidência se aceitar</strong></td>
+<td>Alta</td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>CT-EST-177</td>
+<td>Histórico do lote <code>TESTEPA001</code></td>
+<td>Mostra a entrada e a saída da amostra</td>
+<td>Baixa</td>
+<td>Não testado</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-resumo">7. Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Casos</th>
+<th>Já executados (rodadas de 07, 08, 12 e 13/10)</th>
+<th>A executar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alta</td>
+<td>46</td>
+<td>24</td>
+<td>22</td>
+</tr>
+<tr>
+<td>Média</td>
+<td>15</td>
+<td>6</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Baixa</td>
+<td>101</td>
+<td>30</td>
+<td>71</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>162</strong></td>
+<td><strong>60</strong></td>
+<td><strong>102</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-ordem-sugerida-das-proximas-rodadas">8. Ordem sugerida das próximas rodadas</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Rodada</th>
+<th>Casos</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>~~3~~</td>
+<td>~~CT-EST-200 a 209 e 211~~ <strong>Feita em 13/10/2026</strong> (quarentena, laudo do CQ, liberação, reprovação): 6 passaram, 2 com ressalvas, 1 parcial, 2 falharam</td>
+<td>Temas 3, 4, 7 e 9 do diagnóstico; riscos R-EST-07 a 10</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>CT-EST-033 a 044 e 050 a 065 (movimentação, reprovado e reanálise), com os lotes <code>TESTEPA001</code> e <code>TESTELOTE003</code>, já disponíveis (90 cada). Inclui a Movimentação de Quarentena do lote reprovado e o DV-EST-033</td>
+<td>Saldo e trava da quarentena</td>
+</tr>
+<tr>
+<td>5</td>
+<td>CT-EST-070 a 083 e 110 a 120 (atendimento e remessa)</td>
+<td>Uso do lote e saída; risco R-EST-15 e 16</td>
+</tr>
+<tr>
+<td>6</td>
+<td>CT-EST-090 a 094, 134 a 138, 170 a 177</td>
+<td>Devolução, inventário e amostras de retenção</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Kits e relatórios</td>
+<td>Prioridade baixa</td>
+</tr>
+</tbody>
+</table></div>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-objetivo">1. Objetivo</a></li><li><a href="#2-escopo">2. Escopo</a></li><li><a href="#3-ambiente-e-preparacao">3. Ambiente e preparação</a></li><li><a href="#4-evidencias-e-registro">4. Evidências e registro</a></li><li><a href="#5-criterios-de-aceite">5. Critérios de aceite</a></li><li><a href="#6-casos-de-teste">6. Casos de teste</a></li><li><a href="#7-resumo">7. Resumo</a></li><li><a href="#8-ordem-sugerida-das-proximas-rodadas">8. Ordem sugerida das próximas rodadas</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

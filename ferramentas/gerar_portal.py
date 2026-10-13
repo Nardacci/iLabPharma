@@ -88,10 +88,16 @@ MODULOS = [
     },
     {
         "id": "estoque", "nome": "Estoque", "icone": "▦", "cor": "#2e9b4f",
-        "situacao": "Fluxos prontos, testes pausados", "nivel": 3,
-        "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados; testes de tela parados no Endereçamento, aguardando o DBA.",
+        "situacao": "Em testes", "nivel": 3,
+        "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados. Testes de tela: 4 rodadas (07, 08, 12 e 13/10/2026), 38 desvios. Confirmado na tela: o Endereçamento mostra sucesso e não grava, e o lote não chega à quarentena por esse caminho (a causa está no banco e aguarda o DBA); pelas entradas de material (produção e outras) o lote entra em quarentena e abre a análise no CQ; o laudo reprovado bloqueia o lote, mas o Estoque só sabe quando alguém atualiza a análise; a avaliação do fornecedor não qualifica nem bloqueia ninguém; a entrada de produto acabado aceita lote inventado e vencido; o histórico do lote não mostra usuário, análise nem laudo. Pacote de documentos: inventário das 98 telas do menu, conformidade (14 temas), risco (24 riscos, 18 de prioridade alta), plano de testes (162 casos, 60 executados) e \"O ideal\": o Estoque como dono da situação única do lote.",
         "docs": [
             ("3.estoque/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
+            ("3.estoque/ideal/est-ideal.md", "O Estoque ideal", "ideal", "3.estoque/ideal/LabMedSys - Modulo Estoque - O Ideal.docx"),
+            ("3.estoque/ideal/est-entre-modulos.md", "O Estoque entre os módulos: as travas", "ideal", "3.estoque/ideal/LabMedSys - Modulo Estoque - Entre os Modulos.docx"),
+            ("3.estoque/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
+            ("3.estoque/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
+            ("3.estoque/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
+            ("3.estoque/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
             ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
             ("3.estoque/fluxos/recebimento-quarentena-conferencia.md", "Recebimento e quarentena (conferência)", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Conferencia dos Fluxos de Recebimento e Quarentena.docx"),
@@ -254,7 +260,9 @@ RE_LINHA_SEG = re.compile(
     r"senhas podem ser recuperadas|digitando o endere[çc]o|sem senha em outro navegador|token de acesso|"
     r"token no endere[çc]o|sem entrar no sistema|janela an[ôo]nima|Nenhum filtro obrigat[óo]rio|"
     r"Quem conhece o endere[çc]o|abre(?:m)? telas? .* pelo endere[çc]o|endere[çc]o da p[áa]gina|\btokens?\b|\bhash\b|localStorage|"
-    r"a si mesmo o n[íi]vel|se colocar no N[íi]vel 03|perfil completo|Sem login exigido|a[çc][õo]es do perfil ignoradas|HSPermission",
+    r"a si mesmo o n[íi]vel|se colocar no N[íi]vel 03|perfil completo|Sem login exigido|a[çc][õo]es do perfil ignoradas|HSPermission|"
+    r"DV-EST-0(?:08|09|28|35|36)|sem a fun[çc][ãa]o|fun[çc][ãa]o 48|n[úu]meros? fixos? de fun|Qualquer usu[áa]rio (?:do sistema|com login|aprova|autoriza)|sem nenhum acesso ao Estoque|"
+    r"apagou as a[çc][õo]es|apaga permiss|salvar a conta",
     re.I)
 
 
@@ -767,7 +775,7 @@ def pagina_inicial(origem):
 # coluna da situação no quadro; None = 4ª coluna, como nas conformidades de módulo).
 FONTES_ANVISA = {
     "principal": [(DIAGNOSTICO, "transversal/03-diagnostico-normas.json", "Principal")],
-    "estoque": [(DIAGNOSTICO, "transversal/03-diagnostico-normas.json", "Estoque")],
+    "estoque": [("3.estoque/04-conformidade-regulatoria.md", "3.estoque/04-conformidade-normas.json", None)],
     "garantia-qualidade": [(DIAGNOSTICO, "transversal/03-diagnostico-normas.json", "GQ")],
     "controle-qualidade": [("4.controle_qualidade/04-conformidade-regulatoria.md", "4.controle_qualidade/04-conformidade-normas.json", None)],
     "controle-documentos": [("6.controle_documento/04-conformidade-regulatoria.md", "6.controle_documento/04-conformidade-normas.json", None)],
