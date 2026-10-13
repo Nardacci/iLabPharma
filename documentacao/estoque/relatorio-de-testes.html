@@ -552,6 +552,57 @@
 </tbody>
 </table></div>
 <p>Dois dados da proposta não existiam (centro de custo e cliente de teste) e foram substituídos por registros reais, com a substituição anotada. Detalhes e capturas: <code>execucao/2026-10-13-rodada-6/resultado.md</code>.</p>
+<h3 id="devolucao-inventario-amostras-de-retencao-e-repeticoes-rodada-7-13-10-2026">Devolução, inventário, amostras de retenção e repetições (rodada 7, 13/10/2026)</h3>
+<p>Última rodada do fechamento por risco. <strong>1 caso passou em parte, 1 falhou (confirmado), 5 bloqueados</strong> e uma repetição que confirmou a causa do DV-EST-044.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que foi testado</th>
+<th>Resultado</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-091</td>
+<td>Devolução da Produção</td>
+<td><strong>Bloqueado</strong></td>
+<td>A tela só aceita lotes que saíram por uma solicitação do tipo Produção, ligada a uma Ordem de Produção; o ambiente só tem solicitações de consumo. Depende do módulo Produção</td>
+</tr>
+<tr>
+<td>CT-EST-137, 138</td>
+<td>Abrir, justificar e apurar o inventário</td>
+<td><strong>Bloqueados</strong></td>
+<td>"Existem solicitações não finalizadas para os parâmetros informados!": os recebimentos 00013 a 00018, pendentes desde o DV-EST-016, impedem o inventário. Decisão da área: encerrá-los ou aceitar a limitação</td>
+</tr>
+<tr>
+<td>CT-EST-171</td>
+<td>Entrada de amostra de retenção (5 unidades do <code>TESTEPA001</code>)</td>
+<td><strong>Passou em parte</strong></td>
+<td>Nenhum almoxarifado de retenção existia; criado o <code>TESTE RETENCAO</code> com local e endereço. A entrada gravou certo (saldo e endereço), mas a <strong>Consulta de Disponibilidade não mostra a amostra</strong> (DV-EST-047, Alta)</td>
+</tr>
+<tr>
+<td>CT-EST-176</td>
+<td>Saída da amostra de retenção antes do vencimento</td>
+<td><strong>Bloqueado</strong></td>
+<td>A tela de Saída não oferece nenhum endereço de origem: não encontra a amostra que a Entrada gravou (DV-EST-047). A pergunta da norma (art. 14, VIII) não pôde ser feita</td>
+</tr>
+<tr>
+<td>CT-EST-115 (repetição)</td>
+<td>Finalizar a remessa 00002 <strong>com a justificativa preenchida</strong></td>
+<td><strong>Falhou, confirmado</strong></td>
+<td>O mesmo "Erro ao gerar a solicitação do material!" da rodada 6. Não era a justificativa: a expedição pela tela está travada (DV-EST-046 sobe para Alta). CT-EST-116 continua bloqueado</td>
+</tr>
+<tr>
+<td>Repetição do DV-EST-044</td>
+<td>Movimentação de Quarentena de um lote novo (<code>TESTEPA004</code>, ciclo completo do CQ) com destino <strong>completo</strong></td>
+<td><strong>Funcionou</strong></td>
+<td>40 unidades passaram de quarentena a disponível; saída e entrada sob o mesmo código de movimentação. A perda da rodada 6 vem só do destino incompleto: a tela precisa exigir rua, coluna e andar</td>
+</tr>
+</tbody>
+</table></div>
+<p>Detalhes e capturas: <code>execucao/2026-10-13-rodada-7/resultado.md</code>.</p>
 <h3 id="permissoes-e-acesso">Permissões e acesso</h3>
 <div class="tabela"><table>
 <thead>
@@ -585,10 +636,17 @@
 </thead>
 <tbody>
 <tr>
+<td>DV-EST-047</td>
+<td><strong>Alta</strong></td>
+<td>Regulatório: Movimentações e Consulta Disponibilidade</td>
+<td>A amostra de retenção gravada pela Entrada <strong>não aparece</strong> na Consulta de Disponibilidade nem na Saída: não dá para localizar nem dar saída numa amostra pela tela</td>
+<td>Amostras de retenção guardadas e controladas pelo prazo (RDC 658/2022, art. 14, VIII)</td>
+</tr>
+<tr>
 <td>DV-EST-044</td>
 <td><strong>Alta</strong></td>
 <td>Movimentação de Quarentena</td>
-<td>Aceita destino <strong>sem rua, coluna e andar</strong> e, ao finalizar, grava a saída do lote sem a entrada: <strong>o saldo do lote some</strong>. Com endereço completo funcionou na rodada 3; a confirmar se a perda acontece também nesse caso</td>
+<td>Aceita destino <strong>sem rua, coluna e andar</strong> e, ao finalizar, grava a saída do lote sem a entrada: <strong>o saldo do lote some</strong>. Confirmado na rodada 7: com destino completo funciona; a causa é a falta de validação do destino</td>
 <td>O registro do estoque deixa de refletir o que existe (RDC 658/2022, art. 124); material aprovado desaparece do controle</td>
 </tr>
 <tr>
@@ -719,10 +777,10 @@
 </tr>
 <tr>
 <td>DV-EST-046</td>
-<td>Média</td>
+<td><strong>Alta</strong></td>
 <td>Remessa de Material</td>
-<td>Finalizar sem justificativa mostra "Justificativa não informada!" e também "Erro ao gerar a solicitação do material!": a rotina não para na validação. A confirmação da remessa com justificativa ainda não foi testada</td>
-<td>Mensagem enganosa; se a remessa não finalizar nem com justificativa, a expedição fica travada</td>
+<td><strong>Finalizar nunca conclui</strong>: "Erro ao gerar a solicitação do material!", confirmado com a justificativa preenchida (rodada 7). A remessa não grava data de liberação, não baixa saldo e não avisa a Rastreabilidade</td>
+<td>Registro de distribuição para o recolhimento (arts. 346 e 347); a expedição pela tela está travada</td>
 </tr>
 <tr>
 <td>DV-EST-040</td>
@@ -1033,7 +1091,9 @@
 | Rodada 4: reanálise | Reanálise do <code>TESTELOTE003</code> aberta no CQ (aguardando) | O lote está fora do disponível até concluir |</p>
 <h2 id="proximos-passos">Próximos passos</h2>
 <ul>
-<li><strong>Rodada 6 feita (13/10/2026).</strong> Refazer na rodada 7: CT-EST-115 e 116 com a justificativa preenchida; a Movimentação de Quarentena com endereço completo e com incompleto (DV-EST-044), com um lote novo. Pedir ao DBA os registros da movimentação do <code>TESTEPA003</code>.</li>
+<li><strong>Rodada 7 feita (13/10/2026): fim dos testes por risco do Estoque.</strong> 78 de 162 casos conclusivos; 37 dos 46 de prioridade Alta. Os 9 Alta que faltam estão <strong>bloqueados por causas fora do alcance do teste</strong>: CT-EST-033 (Endereçamento, DBA), 055/058 (classificação de reanálise oculta, DV-EST-043), 091 (precisa de Ordem de Produção), 116 (remessa travada, DV-EST-046), 137/138 (recebimentos pendentes), 176 (amostra não localizada, DV-EST-047) e 033. Próximo passo: entregáveis finais do módulo (relatório final, resumo executivo, regras, requisitos, manual e dossiê), com essas pendências como limitações.</li>
+<li><strong>Pedidos ao DBA:</strong> registros da movimentação do <code>TESTEPA003</code> (DV-EST-044); erro real do Finalizar da remessa <code>00002</code> (DV-EST-046); tabelas de reserva regulatória e saldo por endereço do <code>TESTEPA001</code> (DV-EST-047); causa do Endereçamento (DV-EST-016).</li>
+<li><strong>Decisões da área:</strong> encerrar os recebimentos de teste pendentes para liberar o Inventário; como o item <code>TST0001</code> recebeu a classificação de reanálise (DV-EST-041 e 043).</li>
 <li><strong>Rodadas 4 e 5 feitas (13/10/2026).</strong> A reanálise do <code>TESTELOTE003</code> foi concluída (CT-EST-060). Os casos do prazo de reanálise (055, 058 e 061) ficam <strong>bloqueados até a correção do DV-EST-043</strong> ou até a área mostrar outro caminho para ligar item e classificação. Faltam o Endereçamento (033, aguardando o DBA) e as rodadas 6 (atendimento e remessa) e 7 (devolução, inventário e amostras de retenção), com os últimos casos de prioridade alta.</li>
 <li><strong>Pergunta à área:</strong> como o item <code>TST0001</code> recebeu a classificação de reanálise, se por carga inicial ou script. A resposta decide a leitura dos DV-EST-041 e 043.</li>
 <li><strong>Decisão para a Garantia da Qualidade:</strong> a Qualidade precisa definir <strong>quem pode aprovar, reprovar e emitir o laudo</strong>; hoje a função de chefe só limita Emitir e Reprovar. Confirmar também se a movimentação comum pode mostrar lotes em quarentena.</li>
@@ -1042,7 +1102,7 @@
 </ul>
     </article>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-de-material">Recebimento de Material</a></li><li class="sub"><a href="#quarentena-e-controle-da-qualidade-rodada-3-12-10-2026">Quarentena e Controle da Qualidade (rodada 3, 12/10/2026)</a></li><li class="sub"><a href="#movimentacao-interna-reprovado-e-reanalise-rodada-4-13-10-2026">Movimentação interna, reprovado e reanálise (rodada 4, 13/10/2026)</a></li><li class="sub"><a href="#reanalise-concluida-no-cq-e-trava-da-quarentena-rodada-5-13-10-2026">Reanálise concluída no CQ e trava da quarentena (rodada 5, 13/10/2026)</a></li><li class="sub"><a href="#atendimento-a-producao-e-remessa-rodada-6-13-10-2026">Atendimento à produção e remessa (rodada 6, 13/10/2026)</a></li><li class="sub"><a href="#permissoes-e-acesso">Permissões e acesso</a></li><li><a href="#desvios-encontrados">Desvios encontrados</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-de-material">Recebimento de Material</a></li><li class="sub"><a href="#quarentena-e-controle-da-qualidade-rodada-3-12-10-2026">Quarentena e Controle da Qualidade (rodada 3, 12/10/2026)</a></li><li class="sub"><a href="#movimentacao-interna-reprovado-e-reanalise-rodada-4-13-10-2026">Movimentação interna, reprovado e reanálise (rodada 4, 13/10/2026)</a></li><li class="sub"><a href="#reanalise-concluida-no-cq-e-trava-da-quarentena-rodada-5-13-10-2026">Reanálise concluída no CQ e trava da quarentena (rodada 5, 13/10/2026)</a></li><li class="sub"><a href="#atendimento-a-producao-e-remessa-rodada-6-13-10-2026">Atendimento à produção e remessa (rodada 6, 13/10/2026)</a></li><li class="sub"><a href="#devolucao-inventario-amostras-de-retencao-e-repeticoes-rodada-7-13-10-2026">Devolução, inventário, amostras de retenção e repetições (rodada 7, 13/10/2026)</a></li><li class="sub"><a href="#permissoes-e-acesso">Permissões e acesso</a></li><li><a href="#desvios-encontrados">Desvios encontrados</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
