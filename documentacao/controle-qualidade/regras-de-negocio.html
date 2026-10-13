@@ -36,7 +36,7 @@
     <header class="doc-cabecalho">
       <h1>Regras de negócio</h1>
       <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
-      
+      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
     </header>
     <article class="texto">
 <p><strong>Data:</strong> 09/10/2026 · <strong>Versão analisada:</strong> legado entregue pelo fornecedor (<code>4.controle_qualidade/app</code>) · <strong>Base:</strong> os quatro fluxos do CQ (<code>fluxos/</code>), o reconhecimento (<code>00-reconhecimento.md</code>) e a conformidade (<code>04-conformidade-regulatoria.md</code>).</p>
@@ -298,31 +298,13 @@
 <td>RN-CQ-040</td>
 <td>Laudo final</td>
 <td>Para aprovar ou reprovar, a análise precisa estar em <strong>Liberar laudo</strong>, e quem aprova <strong>não pode ter digitado</strong> nenhum ensaio ("O Responsável pela aprovação precisa ser diferente dos analistas das análises.") (<code>Dom/Analise/LiberarLaudoService.cs:12-55</code>).</td>
-<td>Extraída</td>
-</tr>
-<tr>
-<td>RN-CQ-041</td>
-<td>Laudo final</td>
-<td><strong>Aprovar:</strong> o botão só aparece com todos os resultados dentro da especificação, mas <strong>a gravação não confere</strong>. Exige teor quando a solicitação o pede ("Teor obrigatório."). A validade do laudo vem da validade do lote ou é digitada (com "reanálise prevista") e não pode ser anterior a hoje ("A Data de Validade tem que ser maior ou igual a atual.") (<code>UI/Areas/Analise/Controllers/EmissaoLaudoFinalController.cs:441-467</code>, <code>:733-745</code>).</td>
-<td>Extraída</td>
+<td><strong>Validada no teste (12/10/2026):</strong> quem digitou os resultados não aprova ("O Responsável pela aprovação precisa ser diferente dos analistas das análises.", CT-EST-205); a regra olha quem digitou, e não o analista programado</td>
 </tr>
 <tr>
 <td>RN-CQ-042</td>
 <td>Laudo final</td>
 <td><strong>Reprovar</strong> grava "não aprovado" e a observação. Nem aprovar nem reprovar <strong>gravam quem decidiu</strong> ou deixam histórico (<code>EmissaoLaudoFinalController.cs:489-506</code>).</td>
-<td>Extraída</td>
-</tr>
-<tr>
-<td>RN-CQ-043</td>
-<td>Laudo final</td>
-<td><strong>Emitir o laudo</strong> só confere que o emissor não digitou ensaios. <strong>Não exige</strong> a análise em Liberar laudo <strong>nem a decisão</strong> de aprovar ou reprovar. Grava o responsável pelo laudo e leva a análise a <strong>Laudo liberado</strong> e a solicitação a <strong>Laudo liberado</strong>, <strong>sem histórico</strong> (<code>Dom/Analise/LiberarLaudoService.cs:40-44</code>; <code>EmissaoLaudoFinalController.cs:996-1011</code>).</td>
-<td>Extraída</td>
-</tr>
-<tr>
-<td>RN-CQ-044</td>
-<td>Laudo final</td>
-<td>Nenhuma das três ações confere a <strong>função</strong> de quem aprova ou emite, e nenhuma pede <strong>senha</strong> (<code>EmissaoLaudoFinalController.cs:967-1000</code>).</td>
-<td>Extraída</td>
+<td><strong>Validada no teste (12/10/2026):</strong> reprovar não exige motivo e o CQ não mostra quem decidiu (o campo Responsável mostra quem está vendo a tela). DV-EST-027 e 030</td>
 </tr>
 <tr>
 <td>RN-CQ-045</td>
@@ -334,7 +316,7 @@
 <td>RN-CQ-046</td>
 <td>Laudo final</td>
 <td><strong>Retorno ao Estoque:</strong> quando alguém atualiza a análise na tela do Estoque, o CQ responde, por agrupamento: <strong>reprovada</strong> se alguma análise foi reprovada (<strong>mesmo sem laudo emitido</strong>); <strong>aprovada</strong> só com laudo emitido; <strong>cancelada</strong> se todas foram canceladas; senão, pendente. Também devolve número e validade do laudo, teor e as quantidades de retenção, referência e estabilidade (<code>Svc/SolicitacaoAnalise/SolicitacaoAnaliseAutomaticaService.cs:118-173</code>, <code>:1023-1043</code>).</td>
-<td>Extraída</td>
+<td><strong>Validada no teste (12/10/2026):</strong> o Estoque só atualiza quando alguém clica em "Atualizar resultado"; a reprovação chegou antes de o laudo ser emitido e bloqueou o lote (CT-EST-211, DV-EST-029). Aprovação sem laudo emitido não foi testada</td>
 </tr>
 <tr>
 <td>RN-CQ-047</td>
@@ -1628,7 +1610,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-regras-gerais-do-modulo">1. Regras gerais do módulo</a></li><li><a href="#2-solicitacao-analise-e-laudo">2. Solicitação, análise e laudo</a></li><li><a href="#3-regras-de-amostragem-e-de-analise">3. Regras de amostragem e de análise</a></li><li><a href="#4-estabilidade">4. Estabilidade</a></li><li><a href="#5-agua-e-ambiente">5. Água e ambiente</a></li><li><a href="#6-pontos-de-atencao-dos-fluxos">6. Pontos de atenção dos fluxos</a></li><li><a href="#7-correspondencia-com-os-fluxos">7. Correspondência com os fluxos</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
