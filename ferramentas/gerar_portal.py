@@ -489,6 +489,57 @@ def barra(nivel):
     return f'<ol class="etapas" aria-label="Andamento: {nivel} de 4 etapas">{itens}</ol>'
 
 
+
+# ---------------------------------------------------------------------------------------------
+# Índice das normas (portal/normas.json): o texto de todo artigo da RDC 658/2022, de toda seção do
+# Guia 33/2020 e de cada trava do modelo ideal. O portal.js transforma cada referência ("art. 157",
+# "Guia 33, 9.3.2.3", número na coluna "Trava") num link que abre o texto numa janela.
+# ---------------------------------------------------------------------------------------------
+def _itens_guia(paragrafos):
+    itens = []
+    for p in paragrafos:
+        p = re.sub(r"\s*Guia nº 33/2020 – versão 1, de 26/03/2020\s*", " ", p).strip()
+        if not p:
+            continue
+        for parte in re.split(r"\s*•\s*", p):
+            if not parte.strip():
+                continue
+            continua = parte.lstrip().startswith("✓")
+            pedacos = [x.strip() for x in re.split(r"\s*✓\s*", parte)]
+            cab, subs = pedacos[0], [x for x in pedacos[1:] if x]
+            if continua and itens:
+                itens[-1]["subs"] += subs
+            else:
+                itens.append({"cab": cab, "subs": subs})
+    return itens
+
+
+def indice_normas(origem):
+    """Monta o índice; devolve None (com aviso) se os PDFs ou o extrator não estiverem disponíveis."""
+    import glob as _glob
+    ferr = origem / "homologacao/ferramentas"
+    try:
+        sys.path.insert(0, str(ferr))
+        from extrair_normas import artigos_rdc, secoes_guia  # noqa: E402
+        rdc_pdf = origem / "Documentação/Anvisa/RESOLUÇÃO RDC Nº 658 de 2020.pdf"
+        guia_pdf = Path(_glob.glob(str(origem / "Documentação/Guia-n*33*.pdf"))[0])
+        rdc = {str(n): pars for n, pars in artigos_rdc(rdc_pdf).items()}
+        guia = {sec: {"titulo": (t.strip().capitalize() if t.isupper() else t.strip()), "itens": _itens_guia(pars)}
+                for sec, (t, pars) in secoes_guia(guia_pdf).items()}
+    except Exception as e:  # noqa: BLE001
+        print(f"Aviso: índice das normas não gerado ({e})", file=sys.stderr)
+        return None
+    travas = {}
+    doc = origem / "homologacao/modelo-ideal/01-qualidade-entre-modulos.md"
+    if doc.exists():
+        t = ler(doc)
+        titulos = dict(re.findall(r"^\| (\d+) \| ([^|]+?) \| \[", t, re.M))
+        ap = t.split("<!-- NORMAS:INICIO -->", 1)[-1].split("<!-- NORMAS:FIM -->", 1)[0]
+        for n, corpo in re.findall(r"^## Tema (\d+) · [^\n]*\n(.*?)(?=^## Tema \d+ · |\Z)", ap, re.M | re.S):
+            travas[n] = {"titulo": titulos.get(n, "").strip(),
+                         "html": markdown.markdown(corpo.strip(), extensions=["sane_lists"])}
+    return {"rdc": rdc, "guia": guia, "travas": travas}
+
 def gerar(origem, destino, relatorio):
     conv = Conversor(origem, destino)
     hom = origem / "homologacao"
@@ -556,6 +607,10 @@ def gerar(origem, destino, relatorio):
     (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
     (destino / "anvisa.html").write_text(pagina_anvisa(origem, busca), encoding="utf-8")
     (destino / "portal/busca.json").write_text(json.dumps(busca, ensure_ascii=False), encoding="utf-8")
+    normas = indice_normas(origem)
+    if normas:
+        (destino / "portal/normas.json").write_text(json.dumps(normas, ensure_ascii=False), encoding="utf-8")
+        print(f"Índice das normas: {len(normas['rdc'])} artigos da RDC, {len(normas['guia'])} seções do Guia, {len(normas['travas'])} travas")
 
     if relatorio:
         linhas = ["# Conteúdo retirado do portal (segurança)", "", f"Gerado em {HOJE}. **Este relatório não é publicado.**", ""]
