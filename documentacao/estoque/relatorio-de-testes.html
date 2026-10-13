@@ -39,7 +39,7 @@
       <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
     </header>
     <article class="texto">
-<p><strong>Uso interno.</strong> Resultado dos testes feitos nas telas do módulo Estoque até 12/10/2026. O registro detalhado de cada rodada, com as capturas de tela, está em <code>homologacao/3.estoque/execucao/</code> (rodadas de 07/10, 08/10 e 12/10/2026, esta com três partes).</p>
+<p><strong>Uso interno.</strong> Resultado dos testes feitos nas telas do módulo Estoque até 13/10/2026. O registro detalhado de cada rodada, com as capturas de tela, está em <code>homologacao/3.estoque/execucao/</code> (rodadas de 07/10, 08/10, 12/10 e 13/10/2026).</p>
 <h2 id="resumo">Resumo</h2>
 <p>Os testes do Estoque começaram pelo <strong>Recebimento de Material</strong>, a porta de entrada de tudo o que é guardado e usado na fábrica. Antes dele, foram montados os cadastros de apoio que o teste precisa: almoxarifado, locais, unidade, item e a ligação do almoxarifado ao grupo do usuário.</p>
 <div class="tabela"><table>
@@ -271,12 +271,6 @@
 <td>Aceita a divergência só com "Deseja continuar?", sem justificativa e sem avisar a Qualidade</td>
 </tr>
 <tr>
-<td>CT-EST-192</td>
-<td>Conferência por usuário sem permissão</td>
-<td><strong>Comprovado pelo código</strong></td>
-<td>A tela grava o usuário logado, sem pedir senha nem conferir permissão</td>
-</tr>
-<tr>
 <td>CT-EST-193</td>
 <td>Finalizar a conferência</td>
 <td><strong>Falhou</strong></td>
@@ -387,6 +381,74 @@
 </tr>
 </tbody>
 </table></div>
+<h3 id="movimentacao-interna-reprovado-e-reanalise-rodada-4-13-10-2026">Movimentação interna, reprovado e reanálise (rodada 4, 13/10/2026)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>O que foi testado</th>
+<th>Resultado</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-034 a 038</td>
+<td>Transferir entre endereços; sem justificativa; quantidade maior que a origem; destino com outro item; peso acima da capacidade</td>
+<td><strong>Passaram</strong></td>
+<td>A Movimentação de Material faz a transferência (movimentação 00000104) e recusa as quatro entradas erradas. A recusa por saldo vem com outra mensagem da prevista</td>
+</tr>
+<tr>
+<td>CT-EST-032 (com saldo)</td>
+<td>Excluir endereço que guarda lote</td>
+<td><strong>Passou</strong></td>
+<td>Recusado: "O Registro não pode ser excluido pois possui item em estoque associado"</td>
+</tr>
+<tr>
+<td>CT-EST-039</td>
+<td>Lote em quarentena: quais destinos a tela oferece</td>
+<td><strong>Passou</strong></td>
+<td>Só o local de quarentena. O DV-EST-033 não se confirma pela tela; falta testar a trava do servidor</td>
+</tr>
+<tr>
+<td>CT-EST-051 a 053</td>
+<td>Lote reprovado: destinos, movimentação e listas de atendimento</td>
+<td><strong>Passaram</strong></td>
+<td>Só local de refugo é oferecido; depois da movimentação o saldo mostra Reprovado; o lote reprovado e o em quarentena não aparecem no Atendimento. Antes de mover, o reprovado aparece como Quarentena e Bloqueado, com Reprovado zero (DV-EST-029)</td>
+</tr>
+<tr>
+<td>CT-EST-044</td>
+<td>Histórico do Lote</td>
+<td><strong>Em parte</strong></td>
+<td>Mostra as movimentações, mas não quem fez nem a justificativa (DV-EST-034)</td>
+</tr>
+<tr>
+<td>CT-EST-056, 057, 059</td>
+<td>Reanálise avulsa</td>
+<td><strong>Passaram, com ressalvas</strong></td>
+<td>Gera a reanálise e tira o lote do disponível; não pede justificativa e recusa duas situações diferentes com a mesma mensagem (DV-EST-039)</td>
+</tr>
+<tr>
+<td>CT-EST-040</td>
+<td>Item refrigerado</td>
+<td><strong>Inconclusivo</strong></td>
+<td>A lista de destinos ficou vazia (DV-EST-042, a confirmar)</td>
+</tr>
+<tr>
+<td>CT-EST-055, 061</td>
+<td>Agenda de Reanálise e Revalidação de Lote</td>
+<td><strong>Falham em listar</strong></td>
+<td>Listas vazias, com linha fantasma (DV-EST-040); a agenda não mostra lote de item já movimentado (DV-EST-041)</td>
+</tr>
+<tr>
+<td>CT-EST-058</td>
+<td>Reanálise vencida sem agendamento</td>
+<td><strong>Bloqueado</strong></td>
+<td>Precisa de item novo com classificação de reanálise e do laudo do CQ com data já passada</td>
+</tr>
+</tbody>
+</table></div>
+<p>Detalhes e capturas: <code>execucao/2026-10-13/resultado.md</code>.</p>
 <h3 id="permissoes-e-acesso">Permissões e acesso</h3>
 <div class="tabela"><table>
 <thead>
@@ -399,16 +461,10 @@
 </thead>
 <tbody>
 <tr>
-<td>Acesso pelo menu</td>
-<td>Usuário de teste com permissões do Estoque marcadas no perfil</td>
-<td><strong>Funciona com falhas</strong></td>
-<td>Só entra com a função certa marcada, e a mensagem "Seu perfil não possuí permissão!" não diz qual falta (DV-EST-005)</td>
-</tr>
-<tr>
 <td>CT-EST-030 a 044</td>
 <td>Movimentação interna</td>
-<td><strong>030 a 032 executados na rodada 2; 033 a 044 ainda não</strong></td>
-<td>Agora há lotes disponíveis (<code>TESTEPA001</code> e <code>TESTELOTE003</code>, 90 cada); a movimentação interna é a próxima rodada</td>
+<td><strong>Executados na rodada 4, menos 033, 041 e 042</strong></td>
+<td>Ver a seção acima</td>
 </tr>
 </tbody>
 </table></div>
@@ -506,7 +562,7 @@
 <td>DV-EST-033</td>
 <td>Média</td>
 <td>Estoque: Movimentação de Material</td>
-<td>A lista de lotes oferece lotes em quarentena; só o bloqueado some. <em>A validar com a área</em></td>
+<td>A lista de lotes oferece lotes em quarentena; só o bloqueado some. <em>A validar com a área: pela tela, o lote em quarentena só vai para local de quarentena (rodada 4)</em></td>
 <td>Material em quarentena não deve ser movimentado como disponível</td>
 </tr>
 <tr>
@@ -515,6 +571,34 @@
 <td>Estoque: Histórico do Lote</td>
 <td>Sem usuário, sem hora, sem análise, laudo, aprovador e reprovação</td>
 <td>Rastreabilidade do lote (RDC 658/2022)</td>
+</tr>
+<tr>
+<td>DV-EST-039</td>
+<td>Média</td>
+<td>Reanálise Avulsa</td>
+<td>Não pede justificativa; as recusas (lote já em reanálise, lote reprovado) mostram a mesma mensagem genérica</td>
+<td>Reanálise precisa de motivo registrado</td>
+</tr>
+<tr>
+<td>DV-EST-041</td>
+<td>Média (a confirmar)</td>
+<td>Agenda de Reanálise</td>
+<td>Não lista lote de item que já teve movimentação (a classificação de reanálise trava depois da primeira movimentação)</td>
+<td>O controle da reanálise por prazo depende da agenda</td>
+</tr>
+<tr>
+<td>DV-EST-042</td>
+<td>Média (a confirmar)</td>
+<td>Movimentação de Material</td>
+<td>Item refrigerado fica sem destino, mesmo existindo local refrigerado ativo</td>
+<td>Armazenagem conforme a condição do item</td>
+</tr>
+<tr>
+<td>DV-EST-040</td>
+<td>Baixa</td>
+<td>Revalidação de Lote e Agenda de Reanálise</td>
+<td>Lista vazia mostra linha fantasma com zeros e botão Editar</td>
+<td>Usabilidade</td>
 </tr>
 <tr>
 <td>DV-EST-038</td>
@@ -592,20 +676,6 @@
 <td>Recebimento de Material: lote</td>
 <td>Digitar <code>100</code> na quantidade grava <code>0,100</code>. O erro só aparece no fim</td>
 <td>Risco de quantidade errada no registro de entrada (art. 141, VI)</td>
-</tr>
-<tr>
-<td>DV-EST-005</td>
-<td>Média</td>
-<td>Acesso ao Estoque</td>
-<td>A mensagem de acesso negado não diz qual permissão falta</td>
-<td>Dificulta administrar os perfis. <em>Revisado em 07/10: o perfil do Principal vale no Estoque</em></td>
-</tr>
-<tr>
-<td>DV-EST-007</td>
-<td>Média</td>
-<td>Telas Usuário e Perfil do Estoque</td>
-<td>Abertas pelo endereço, deram erro 500 ou sessão expirada. <strong>Inconclusivo</strong>: refazer</td>
-<td>A confirmar</td>
 </tr>
 <tr>
 <td>DV-EST-003</td>
@@ -827,16 +897,19 @@
 </tr>
 </tbody>
 </table></div>
+<p>| Rodada 4: refugo | Local <code>906 - TESTE LOCAL REFUGO</code> e endereço <code>L906-R901-C901-A901</code> | Criados; recebem o <code>TESTEPA998</code> (reprovado, 90) |
+| Rodada 4: movimentação | 00000104 (10 do <code>TESTEPA001</code> para <code>L905-R905-C905-A905</code>); solicitação de consumo 00040 | Gravadas |
+| Rodada 4: reanálise | Reanálise do <code>TESTELOTE003</code> aberta no CQ (aguardando) | O lote está fora do disponível até concluir |</p>
 <h2 id="proximos-passos">Próximos passos</h2>
 <ul>
-<li><strong>Movimentação interna (CT-EST-033 a 044)</strong> com <code>TESTEPA001</code> e <code>TESTELOTE003</code>, já disponíveis (90 cada); incluir o CT-EST-032 (excluir endereço com saldo) e a Movimentação de Quarentena do lote <strong>reprovado</strong> (<code>TESTEPA998</code>). Depois, os fluxos de solicitação, separação e remessa. Não testados na rodada 3: pesagem, análise microbiológica, estabilidade e amostras de retenção.</li>
+<li><strong>Rodada 4 feita (13/10/2026).</strong> Faltam: concluir a reanálise do <code>TESTELOTE003</code> no CQ (CT-EST-060), criar um item com classificação de reanálise de prazo curto para os casos 055, 058 e 061, a Endereçamento (033, aguardando o DBA) e os fluxos de solicitação, separação e remessa.</li>
 <li><strong>Decisão para a Garantia da Qualidade:</strong> a Qualidade precisa definir <strong>quem pode aprovar, reprovar e emitir o laudo</strong>; hoje a função de chefe só limita Emitir e Reprovar. Confirmar também se a movimentação comum pode mostrar lotes em quarentena.</li>
 <li><strong>Perguntas ao DBA</strong> (quatro, seção 6 da rodada de 08/10/2026): executar a rotina do endereçamento para a nota 9006 e informar o erro. Já não bloqueiam os testes, mas o defeito do Endereçamento segue sem causa.</li>
 <li><strong>Testes por risco:</strong> daqui em diante, primeiro os casos que tocam a norma (lote, validade, quarentena, aprovação do CQ, autorização e acesso). Os demais, à medida que houver crédito.</li>
 </ul>
     </article>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-de-material">Recebimento de Material</a></li><li class="sub"><a href="#quarentena-e-controle-da-qualidade-rodada-3-12-10-2026">Quarentena e Controle da Qualidade (rodada 3, 12/10/2026)</a></li><li class="sub"><a href="#permissoes-e-acesso">Permissões e acesso</a></li><li><a href="#desvios-encontrados">Desvios encontrados</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo">Resumo</a></li><li><a href="#o-que-foi-testado-e-o-resultado">O que foi testado e o resultado</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-de-material">Recebimento de Material</a></li><li class="sub"><a href="#quarentena-e-controle-da-qualidade-rodada-3-12-10-2026">Quarentena e Controle da Qualidade (rodada 3, 12/10/2026)</a></li><li class="sub"><a href="#movimentacao-interna-reprovado-e-reanalise-rodada-4-13-10-2026">Movimentação interna, reprovado e reanálise (rodada 4, 13/10/2026)</a></li><li class="sub"><a href="#permissoes-e-acesso">Permissões e acesso</a></li><li><a href="#desvios-encontrados">Desvios encontrados</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#dados-de-teste-deixados-no-ambiente">Dados de teste deixados no ambiente</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
