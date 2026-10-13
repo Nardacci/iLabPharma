@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roteiro de execução: Autoinspeção e auditoria (passo a passo) · Garantia da Qualidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=261c652a">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../cronograma.html">Cronograma</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#8b1e3f"><span class="icone">◇</span>Garantia da Qualidade</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="a-garantia-da-qualidade-ideal.html">A Garantia da Qualidade ideal</a></li><li><a href="a-garantia-da-qualidade-entre-os-modulos-as-travas.html">A Garantia da Qualidade entre os módulos: as travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="desvios-e-capa.html">Desvios e CAPA</a></li><li><a href="autoinspecao-e-auditoria.html">Autoinspeção e auditoria</a></li><li><a href="treinamento-tecnico.html">Treinamento técnico</a></li><li><a href="assuntos-regulatorios.html">Assuntos regulatórios</a></li><li><a href="controle-de-mudancas.html">Controle de mudanças</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li><li><a href="roteiro-de-execucao-autoinspecao-e-auditoria-passo-a-passo.html" aria-current=page>Roteiro de execução: Autoinspeção e auditoria (passo a passo)</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Garantia da Qualidade</a> › <span>Testes</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Roteiro de execução: Autoinspeção e auditoria (passo a passo)</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/garantia-qualidade/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Autoinspecao e Auditoria.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p>Para quem vai <strong>executar os testes nas telas</strong> do submenu <strong>Autoinspeção e Auditoria</strong> do módulo Garantia da Qualidade, sem precisar ler o fluxo nem o código. É um passo a passo: em cada passo, a tela, o que preencher, onde clicar, o que deve aparecer e o que registrar. Os casos de teste são os do plano (<code>08-plano-de-testes.md</code>, CT-GQ-050 a 065); o fluxo completo, com as regras e o fluxograma, está em <code>fluxos/autoinspecao-auditoria.md</code>.</p>
+<p><strong>Tempo estimado:</strong> 2 a 3 horas, se os dados de preparação já existirem.</p>
+<h2 id="antes-de-comecar">Antes de começar</h2>
+<ul>
+<li>Ambiente de <strong>teste</strong> (nunca produção), pela VPN. Confira a versão no rodapé (3.5.1).</li>
+<li>Todo registro criado começa com <code>TESTE</code>. Não apague nada no fim: os dados ficam para as outras rodadas.</li>
+<li>Em todo caso de prioridade <strong>Alta</strong>, capture a tela em cada passo; nos demais, capture o resultado. Antes de salvar a captura, confira que ela não mostra senha.</li>
+<li>Preencha toda <strong>Justificativa</strong> obrigatória antes de gravar. A mensagem de validação aparece em vermelho acima dos botões.</li>
+<li>Anote o resultado de cada passo na tabela do fim ("Registro dos resultados"). Diferença entre o que a tela fez e o que está escrito aqui <strong>também é resultado</strong>: registre.</li>
+</ul>
+<p><strong>Usuários de teste (já existem no Principal):</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Usuário</th>
+<th>Perfil</th>
+<th>Para quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TESTE ADMIN</code> (<code>t.admin</code>)</td>
+<td>Nível 3</td>
+<td>Cadastros, programação, avaliação</td>
+</tr>
+<tr>
+<td><code>TESTE CADASTRO</code></td>
+<td>Nível 2, divisão <code>TESTE ESTRUTURA FUNCIONAL II</code></td>
+<td>Responsável pela área auditada</td>
+</tr>
+<tr>
+<td><code>TESTE SEMADMIN</code></td>
+<td>Nível 2</td>
+<td>Inspetor interno (precisa da função AUDITOR, ver preparação)</td>
+</tr>
+<tr>
+<td><code>TESTE CONSULTA</code> (<code>t.consulta</code>)</td>
+<td>Nível 1</td>
+<td>Quem não deveria conseguir registrar</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="preparacao-uma-vez">Preparação (uma vez)</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Onde</th>
+<th>O que fazer</th>
+<th>Se não der</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>Principal › Usuários</td>
+<td>Abrir <code>TESTE SEMADMIN</code> e conferir se ele tem a <strong>função "AUDITOR"</strong>. Se não tiver, incluir.</td>
+<td>Se a função AUDITOR não existir no cadastro de funções, <strong>registre</strong>: sem ela, nenhum inspetor interno aparece na programação (a GQ pede ao Principal os usuários com a função de nome "AUDITOR"). Crie a função <code>AUDITOR</code> e ligue ao usuário.</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>Principal › Estrutura funcional</td>
+<td>Conferir que existem duas áreas de teste: <code>TESTE ESTRUTURA FUNCIONAL</code> e <code>TESTE ESTRUTURA FUNCIONAL II</code>, com responsável cadastrado (<code>TESTE CADASTRO</code> é o responsável da II).</td>
+<td>Criar a que faltar, com responsável.</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>GQ › Autoinspeção e Auditoria › Cadastro Tipo Qualificação</td>
+<td>Conferir se já existe <code>TESTE CRITICA</code>.</td>
+<td>Será criado no passo 1.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="passo-a-passo">Passo a passo</h2>
+<p>A coluna "Caso" diz qual caso do plano o passo cobre. A coluna "Registrar" diz o que vira resultado, mesmo quando a tela "funciona".</p>
+<h3 id="tela-1-cadastro-tipo-qualificacao">Tela 1 · Cadastro Tipo Qualificação</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>Menu Autoinspeção e Auditoria › <strong>Cadastro Tipo Qualificação</strong> › Incluir. Preencher <strong>Abreviação</strong> <code>TC</code>, <strong>Descrição</strong> <code>TESTE CRITICA</code>, <strong>Observação</strong> <code>teste</code>, <strong>Ativo</strong> Sim. Salvar.</td>
+<td>Mensagem de sucesso; o registro na lista.</td>
+<td>—</td>
+<td>A mensagem exata.</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Repetir com <code>TM</code> / <code>TESTE MAIOR</code>.</td>
+<td>Mesmo resultado.</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tela-2-cadastro-de-roteiro">Tela 2 · Cadastro de Roteiro</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td><strong>Cadastro de Roteiro</strong> › Incluir. Aba <strong>Cadastrar Competência</strong>: <strong>Título</strong> <code>TESTE ROTEIRO 001</code>, <strong>Observação</strong> <code>teste</code>, <strong>Ativo</strong> Sim.</td>
+<td>Campos aceitos.</td>
+<td>CT-GQ-051</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>Aba <strong>Perguntas</strong> › Adicionar Pergunta, quatro vezes, uma por forma de resposta: (1) <code>Nº</code> 1, <code>Título da pergunta</code> <code>TESTE pergunta texto curto</code>, <code>Qualificação</code> TESTE CRITICA, <code>Como deve ser respondida</code> texto curto, <strong>Resposta obrigatória</strong> marcada; (2) nº 2, texto longo, <strong>Incluir campo de observação</strong> marcado; (3) nº 3, seleção única, <strong>RNC</strong> marcado; (4) nº 4, seleção múltipla. Salvar.</td>
+<td>"Sucesso"; o roteiro na lista com 4 perguntas.</td>
+<td>CT-GQ-051</td>
+<td>Se alguma forma de resposta não existir na lista, registre quais existem.</td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>Incluir de novo um roteiro com o <strong>mesmo título</strong> <code>TESTE ROTEIRO 001</code>. Salvar.</td>
+<td>Recusa: "Título do Roteiro já existe".</td>
+<td>CT-GQ-050</td>
+<td>A mensagem exata. Se aceitar, <strong>falha</strong>.</td>
+</tr>
+<tr>
+<td>2.4</td>
+<td>Incluir um segundo roteiro válido, <code>TESTE ROTEIRO 002</code>, com 2 perguntas (uma com RNC). Salvar.</td>
+<td>Sucesso.</td>
+<td>—</td>
+<td>Será usado na segunda área.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tela-3-cadastro-autoinspecao-e-auditoria">Tela 3 · Cadastro Autoinspeção e Auditoria</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1</td>
+<td><strong>Cadastro Autoinspeção e Auditoria</strong> › Incluir. Abrir a lista <strong>Tipo</strong> e anotar as opções.</td>
+<td>Autoinspeção de rotina, Autoinspeção completa, Autoinspeção específica, Auditoria interna.</td>
+<td>CT-GQ-052 (Alta)</td>
+<td><strong>Capture a lista aberta.</strong> Não há tipo de auditoria de fornecedor: isso é um achado de norma (art. 148, XV), registre mesmo que a tela "funcione".</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td><strong>Nome</strong> <code>TESTE AUTOINSPECAO 001</code>, <strong>Tipo</strong> Autoinspeção de rotina, <strong>Frequência</strong> mensal, <strong>Ativo</strong> Sim. Na seção de roteiros (competências), <strong>buscar</strong> e <strong>Adicionar</strong> <code>TESTE ROTEIRO 001</code> e <code>TESTE ROTEIRO 002</code>. Salvar.</td>
+<td>Sucesso; o cadastro na lista com 2 roteiros.</td>
+<td>—</td>
+<td>Se não houver como ligar roteiros aqui, registre onde a ligação é feita.</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Tentar salvar outro cadastro <strong>sem Tipo</strong> e <strong>sem Frequência</strong>.</td>
+<td>Recusa, com mensagem para cada campo.</td>
+<td>—</td>
+<td>As mensagens.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tela-4-programacao-autoinspecao-e-auditoria">Tela 4 · Programação Autoinspeção e Auditoria</h3>
+<p>A tela tem cinco abas: <strong>Inspeção Auditoria</strong>, <strong>Visualizar Roteiro(s)</strong>, <strong>Programação</strong>, <strong>Lista de Inspecionados/Auditados</strong> e <strong>Responsável Pelo Registro</strong>. Preencha nesta ordem: a lista "Inspetores/Auditores - Roteiro" da quarta aba só mostra quem foi incluído na terceira (não filtra por roteiro, apesar do nome).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1</td>
+<td><strong>Programação Autoinspeção e Auditoria</strong> › Incluir. Aba <strong>Inspeção Auditoria</strong>: buscar <code>TESTE AUTOINSPECAO 001</code>; <strong>Nome da versão</strong> <code>TESTE V1</code>; <strong>Motivo da versão</strong> Planejada; <strong>Período</strong> de <strong>ontem</strong> até daqui a 7 dias; <strong>Turno</strong> Manhã. Salvar.</td>
+<td>Recusa: o período não pode começar antes de hoje.</td>
+<td>CT-GQ-053</td>
+<td>A mensagem. Se aceitar, <strong>falha</strong>.</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Corrigir: início <strong>daqui a 7 dias</strong>, fim <strong>hoje</strong> (início depois do fim). Salvar.</td>
+<td>Recusa.</td>
+<td>CT-GQ-053</td>
+<td>A mensagem.</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>Corrigir: início <strong>hoje</strong>, fim <strong>daqui a 7 dias</strong>. Deixar as abas Programação e Lista vazias. Salvar.</td>
+<td>Recusa por falta de <strong>departamento auditado</strong>. <strong>Não</strong> deve reclamar de coordenador.</td>
+<td>CT-GQ-054</td>
+<td>Se reclamar de coordenador, registre (a regra está desligada no código). Se salvar sem departamento, <strong>falha</strong>.</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td>Aba <strong>Programação</strong>: <strong>Tipo de Recurso</strong> Interno; em <strong>Inspetores/Auditores</strong> escolher <code>TESTE SEMADMIN</code>; <strong>Coordenador da auditoria</strong> Não; Adicionar.</td>
+<td>O inspetor na grade.</td>
+<td>—</td>
+<td>Se a lista de inspetores vier vazia, volte a P1: falta a função AUDITOR. <strong>Registre</strong> esse comportamento.</td>
+</tr>
+<tr>
+<td>4.5</td>
+<td>Ainda na aba Programação: <strong>Tipo de Recurso</strong> Externo; <strong>Nome da empresa</strong> <code>TESTE AUDITORIA EXTERNA LTDA</code> (Pesquisar Empresa; se não existir, registre e siga só com o interno); inspetor <code>TESTE AUDITOR EXTERNO</code>; Adicionar.</td>
+<td>Dois inspetores na grade.</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4.6</td>
+<td>Aba <strong>Lista de Inspecionados/Auditados</strong>: <strong>Roteiro</strong> buscar <code>TESTE ROTEIRO 001</code>; <strong>Depto/setor</strong> <code>TESTE ESTRUTURA FUNCIONAL II</code>; <strong>Responsável pelo depto/setor</strong> <code>TESTE CADASTRO</code> (vem preenchido pela área); <strong>Inspetores/Auditores - Roteiro</strong> <code>TESTE SEMADMIN</code>; Adicionar.</td>
+<td>A linha na grade.</td>
+<td>—</td>
+<td>Se "Não existe funcionário para este setor", a área está sem responsável: volte a P2.</td>
+</tr>
+<tr>
+<td>4.7</td>
+<td>Adicionar a segunda linha: <code>TESTE ROTEIRO 002</code>, área <code>TESTE ESTRUTURA FUNCIONAL</code>, inspetor <code>TESTE SEMADMIN</code>.</td>
+<td>Duas linhas.</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4.8</td>
+<td><strong>Independência:</strong> adicionar uma terceira linha em que o <strong>inspetor é da própria área auditada</strong>: para isso, o inspetor escolhido deve ser o responsável da área (se <code>TESTE CADASTRO</code> não aparecer como inspetor, inclua-o na aba Programação com a função AUDITOR, via P1). Adicionar e Salvar a programação.</td>
+<td>Pela norma (art. 363), deveria impedir ou avisar.</td>
+<td>CT-GQ-055 (Alta)</td>
+<td><strong>Capture.</strong> Se aceitar sem aviso, <strong>falha de norma</strong>. Depois remova a linha e salve de novo, para não contaminar os passos seguintes.</td>
+</tr>
+<tr>
+<td>4.9</td>
+<td>Salvar a programação com as duas linhas válidas.</td>
+<td>Sucesso; na lista, situação <strong>Programada</strong>, com os botões Editar, Iniciar e Cancelar.</td>
+<td>—</td>
+<td>O código gerado (ex.: 0001/26).</td>
+</tr>
+<tr>
+<td>4.10</td>
+<td>Na lista, <strong>Iniciar Programação</strong> da <code>TESTE V1</code>.</td>
+<td>Situação <strong>Em Curso</strong>. Os botões Editar e Cancelar somem.</td>
+<td>CT-GQ-056</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4.11</td>
+<td>Aba <strong>Responsável Pelo Registro</strong> (abrir a programação em consulta).</td>
+<td>Data/hora e usuário de quem criou.</td>
+<td>—</td>
+<td>Se não mostrar quem iniciou, registre.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tela-5-registro-autoinspecao-e-auditoria">Tela 5 · Registro Autoinspeção e Auditoria</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5.1</td>
+<td><strong>Sair</strong> e entrar como <code>TESTE CADASTRO</code> (responsável da área auditada, <strong>não</strong> inspetor). Abrir <strong>Registro Autoinspeção e Auditoria</strong> › <code>TESTE V1</code> › aba <strong>Roteiro</strong> › <code>TESTE ROTEIRO 001</code> (área II).</td>
+<td>Pela norma, a área auditada <strong>não</strong> deveria registrar a própria auditoria.</td>
+<td>CT-GQ-057 (Alta)</td>
+<td><strong>Capture.</strong> Se a tela abrir para responder, <strong>falha de norma</strong>. Responda a pergunta 1 com <code>TESTE resposta da area auditada</code> e salve; depois altere para <code>TESTE alterada</code> e salve: registre se as duas gravações passam.</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Entrar como <code>TESTE SEMADMIN</code> (inspetor). Mesma tela, <code>TESTE ROTEIRO 001</code>. Responder as 4 perguntas. Na pergunta 3 (RNC): resposta <strong>não conforme</strong>, <strong>RNC</strong> <code>TESTE 999</code>, <strong>Item da norma</strong> <code>art. 363</code>, observação <code>teste</code>. Salvar.</td>
+<td>Aceita.</td>
+<td>CT-GQ-058</td>
+<td><code>TESTE 999</code> não existe como Relatório de Desvios. <strong>Registre que aceita qualquer texto</strong> (achado de processo).</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>Deixar a <strong>pergunta 1 (obrigatória) em branco</strong> e tentar <strong>Concluir roteiro</strong>.</td>
+<td>Recusa pela obrigatória.</td>
+<td>—</td>
+<td>A mensagem. Se concluir, registre.</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Preencher a pergunta 1 e <strong>Concluir roteiro</strong> do <code>TESTE ROTEIRO 001</code>. <strong>Não</strong> concluir o <code>TESTE ROTEIRO 002</code>.</td>
+<td>Roteiro 001 concluído; 002 em curso.</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>Procurar o botão <strong>Próxima Etapa</strong> (avançar para avaliação) com o roteiro 002 ainda em curso.</td>
+<td>O botão <strong>não</strong> deveria aparecer.</td>
+<td>CT-GQ-059</td>
+<td>Se aparecer e avançar, registre (a tela esconde o botão, o servidor não confere).</td>
+</tr>
+<tr>
+<td>5.6</td>
+<td>Concluir o <code>TESTE ROTEIRO 002</code> e clicar em <strong>Próxima Etapa</strong>.</td>
+<td>Situação <strong>Pendente Avaliação Auto inspeção e Auditoria</strong>.</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5.7</td>
+<td><strong>Imprimir Roteiro</strong>.</td>
+<td>Relatório com perguntas e respostas.</td>
+<td>—</td>
+<td>Capture a primeira página.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tela-6-avaliacao-autoinspecao-e-auditoria">Tela 6 · Avaliação Autoinspeção e Auditoria</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6.1</td>
+<td>Entrar como <code>TESTE ADMIN</code>. <strong>Avaliação Autoinspeção e Auditoria</strong> › <code>TESTE V1</code>. Aba <strong>Conclusão</strong>: <strong>Período Inspeção</strong> com fim <strong>amanhã</strong>; <strong>Comentários Finais</strong> (evidências) e <strong>Conclusões</strong> em branco. <strong>Finalizar</strong>.</td>
+<td>Recusa: período futuro; evidências e conclusões obrigatórias.</td>
+<td>CT-GQ-060</td>
+<td>As mensagens. Se finalizar, <strong>falha</strong>.</td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>Aba <strong>Roteiros</strong>: registrar um <strong>desvio da auditoria</strong>: Nº <code>TESTE D1</code>, Descrição <code>TESTE desvio original</code>, Situação <code>Aberto</code>. Salvar. Depois alterar a descrição para <code>TESTE desvio alterado</code> e salvar. Abrir o <strong>Log</strong> (histórico) da programação.</td>
+<td>Pela norma, a alteração deveria aparecer no histórico.</td>
+<td>CT-GQ-061 (Alta)</td>
+<td><strong>Capture o histórico.</strong> Se a alteração não constar, <strong>falha de trilha de auditoria</strong>.</td>
+</tr>
+<tr>
+<td>6.3</td>
+<td><strong>Reabrir</strong> a avaliação (botão ou ícone de reabrir).</td>
+<td>Volta para <strong>Em Curso</strong>; os roteiros reabrem. <strong>Não pede justificativa.</strong></td>
+<td>CT-GQ-062</td>
+<td>Registre que não pediu justificativa (achado). Volte ao Registro, conclua os dois roteiros e avance de novo (5.4 a 5.6).</td>
+</tr>
+<tr>
+<td>6.4</td>
+<td>Aba Conclusão: Período Inspeção = hoje a hoje; <strong>Avaliação da auditoria</strong> <code>Não conforme</code>; Comentários Finais <code>TESTE evidencias</code>; Conclusões <code>TESTE conclusoes</code>. <strong>Finalizar</strong>.</td>
+<td>Situação <strong>Finalizado</strong>.</td>
+<td>CT-GQ-063 (Alta)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>6.5</td>
+<td>Ir a <strong>Desvios › Relatório de Desvios</strong> e procurar um RD aberto por esta auditoria (texto <code>TESTE V1</code>, <code>TESTE 999</code> ou <code>TESTE D1</code>).</td>
+<td>Pela norma (art. 366), o resultado "Não conforme" deveria gerar o tratamento do desvio.</td>
+<td>CT-GQ-063 (Alta)</td>
+<td><strong>Capture a busca vazia.</strong> Se nenhum RD existir, <strong>falha de norma</strong>: a auditoria não alimenta o tratamento de desvios.</td>
+</tr>
+<tr>
+<td>6.6</td>
+<td>Na avaliação finalizada, <strong>Visualizar</strong> / imprimir o relatório.</td>
+<td>Relatório com evidências, conclusões e desvios.</td>
+<td>CT-GQ-064</td>
+<td>Capture a primeira página; registre o que falta.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tela-7-planejamento-de-autoinspecao-e-auditorias-relatorio">Tela 7 · Planejamento de Autoinspeção e Auditorias (relatório)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7.1</td>
+<td><strong>Planejamento de Autoinspeção e Auditorias</strong> › ano atual.</td>
+<td><code>TESTE AUTOINSPECAO 001</code> no calendário, com a frequência mensal.</td>
+<td>—</td>
+<td>Capture. Se a programação <code>TESTE V1</code> não aparecer, registre.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="fechamento-excluir-roteiro-em-uso">Fechamento · Excluir roteiro em uso</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso</th>
+<th>Registrar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8.1</td>
+<td><strong>Cadastro de Roteiro</strong> › <code>TESTE ROTEIRO 002</code> › <strong>Excluir</strong>. Depois abrir a programação <code>TESTE V1</code> finalizada e o histórico.</td>
+<td>Pela norma, roteiro usado não deveria ser excluído sem rastro.</td>
+<td>CT-GQ-065</td>
+<td>Registre se excluiu, o efeito na programação (o roteiro some das respostas?) e se o histórico mostra a exclusão.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="ordem-por-risco-se-o-tempo-for-curto">Ordem por risco (se o tempo for curto)</h2>
+<p>Faça primeiro os de prioridade <strong>Alta</strong>: 3.1 (CT-GQ-052), 4.8 (055), 5.1 (057), 6.2 (061) e 6.4 a 6.5 (063). Eles tocam independência, tratamento de desvios, trilha de auditoria e fornecedores. Os demais, na ordem do roteiro.</p>
+<h2 id="registro-dos-resultados">Registro dos resultados</h2>
+<p>Copie esta tabela para o <code>resultado.md</code> da rodada e preencha uma linha por passo.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Passo</th>
+<th>Caso</th>
+<th>Resultado (Passou / Falhou / Falhou a norma / Bloqueado / Inconclusivo)</th>
+<th>O que a tela fez</th>
+<th>Evidência</th>
+<th>Desvio (DV-GQ-nnn)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>—</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2.3</td>
+<td>CT-GQ-050</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>CT-GQ-052</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4.1 a 4.3</td>
+<td>CT-GQ-053, 054</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4.8</td>
+<td>CT-GQ-055</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4.10</td>
+<td>CT-GQ-056</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>CT-GQ-057</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>CT-GQ-058</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>CT-GQ-059</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6.1</td>
+<td>CT-GQ-060</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>CT-GQ-061</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6.3</td>
+<td>CT-GQ-062</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6.4 a 6.5</td>
+<td>CT-GQ-063</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6.6</td>
+<td>CT-GQ-064</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>8.1</td>
+<td>CT-GQ-065</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Dados TESTE criados neste roteiro</strong> (deixar no ambiente): tipos de qualificação <code>TC</code> e <code>TM</code>; roteiros <code>TESTE ROTEIRO 001</code> e <code>002</code>; autoinspeção <code>TESTE AUTOINSPECAO 001</code>; programação <code>TESTE V1</code>; desvio <code>TESTE D1</code>; função <code>AUDITOR</code> ligada a <code>TESTE SEMADMIN</code> (se criada).</p>
+<h2 id="observacoes-para-quem-executa">Observações para quem executa</h2>
+<ul>
+<li>Os nomes dos campos vêm do código das telas e foram conferidos nas capturas disponíveis da Programação. Onde o nome na tela for outro, <strong>anote a diferença</strong> no resultado; isso corrige o roteiro.</li>
+<li>O campo "Comentários Finais" da Avaliação é o que o código chama de "evidências de não conformidade".</li>
+<li>Se um passo ficar impossível (dado que não existe, tela que não abre), marque <strong>Bloqueado</strong> e siga para o próximo que não dependa dele.</li>
+</ul>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#antes-de-comecar">Antes de começar</a></li><li><a href="#preparacao-uma-vez">Preparação (uma vez)</a></li><li><a href="#passo-a-passo">Passo a passo</a></li><li class="sub"><a href="#tela-1-cadastro-tipo-qualificacao">Tela 1 · Cadastro Tipo Qualificação</a></li><li class="sub"><a href="#tela-2-cadastro-de-roteiro">Tela 2 · Cadastro de Roteiro</a></li><li class="sub"><a href="#tela-3-cadastro-autoinspecao-e-auditoria">Tela 3 · Cadastro Autoinspeção e Auditoria</a></li><li class="sub"><a href="#tela-4-programacao-autoinspecao-e-auditoria">Tela 4 · Programação Autoinspeção e Auditoria</a></li><li class="sub"><a href="#tela-5-registro-autoinspecao-e-auditoria">Tela 5 · Registro Autoinspeção e Auditoria</a></li><li class="sub"><a href="#tela-6-avaliacao-autoinspecao-e-auditoria">Tela 6 · Avaliação Autoinspeção e Auditoria</a></li><li class="sub"><a href="#tela-7-planejamento-de-autoinspecao-e-auditorias-relatorio">Tela 7 · Planejamento de Autoinspeção e Auditorias (relatório)</a></li><li class="sub"><a href="#fechamento-excluir-roteiro-em-uso">Fechamento · Excluir roteiro em uso</a></li><li><a href="#ordem-por-risco-se-o-tempo-for-curto">Ordem por risco (se o tempo for curto)</a></li><li><a href="#registro-dos-resultados">Registro dos resultados</a></li><li><a href="#observacoes-para-quem-executa">Observações para quem executa</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
