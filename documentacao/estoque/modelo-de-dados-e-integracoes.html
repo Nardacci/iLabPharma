@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modelo de dados e integrações · Estoque · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=d2851f33">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../index.html#diretoria">Diretoria</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Documentos do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2e9b4f"><span class="icone">▦</span>Estoque</a>
+    <div class="lat-grupo"><div class="lat-titulo">Comece por aqui</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li><li><a href="relatorio-de-testes.html">Relatório de testes</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">O ideal</div><ul><li><a href="o-estoque-ideal.html">O Estoque ideal</a></li><li><a href="o-estoque-entre-os-modulos-as-travas.html">O Estoque entre os módulos: as travas</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Fluxos do processo</div><ul><li><a href="recebimento-e-quarentena-conferencia.html">Recebimento e quarentena (conferência)</a></li><li><a href="movimentacao-interna.html">Movimentação interna</a></li><li><a href="reprovado-reanalise-e-revalidacao.html">Reprovado, reanálise e revalidação</a></li><li><a href="solicitacao-e-atendimento-a-producao.html">Solicitação e atendimento à produção</a></li><li><a href="devolucao-e-entradas-da-producao.html">Devolução e entradas da produção</a></li><li><a href="remessa-e-expedicao.html">Remessa e expedição</a></li><li><a href="inventario.html">Inventário</a></li><li><a href="kits.html">Kits</a></li><li><a href="compras-e-avaliacao-do-fornecedor.html">Compras e avaliação do fornecedor</a></li><li><a href="almoxarifado-do-controle-da-qualidade.html">Almoxarifado do Controle da Qualidade</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="cadastros-de-apoio.html">Cadastros de apoio</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Qualidade e ANVISA</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Requisitos e dados</div><ul><li><a href="modelo-de-dados-e-integracoes.html" aria-current=page>Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Defeitos para correção</div><ul><li><a href="defeitos-para-correcao.html">Defeitos para correção</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Testes</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Estoque</a> › <span>Requisitos e dados</span></nav>
+    <header class="doc-cabecalho">
+      <h1>Modelo de dados e integrações</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    <article class="texto">
+<p><strong>Data:</strong> 13/10/2026 · <strong>Para quem:</strong> desenvolvedores e DBA.</p>
+<p><strong>Base:</strong>
+- os roteiros do projeto de banco (<code>3.estoque/app/Hsolutions.Estoque.DB</code>: 165 tabelas, 23 visões, 26 procedimentos e 36 sinônimos);
+- as consultas no código (<code>LaboSys_DAL</code> e <code>LaboSys_BLL</code>);
+- os dez fluxos e os testes de tela de 07, 08 e 12/10/2026.</p>
+<p>Comparação feita por script: roteiros × código. <strong>Não houve acesso ao banco</strong>: o que depende do dado real fica como ponto para o DBA (seção 7).</p>
+<h3 id="1-visao-geral">1. Visão geral</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tabelas nos roteiros</td>
+<td>165</td>
+</tr>
+<tr>
+<td>Chaves estrangeiras declaradas</td>
+<td>268</td>
+</tr>
+<tr>
+<td>Visões</td>
+<td>23</td>
+</tr>
+<tr>
+<td>Procedimentos (stored procedures)</td>
+<td>26</td>
+</tr>
+<tr>
+<td>Gatilhos (triggers)</td>
+<td>11, dos quais <strong>3 desligados</strong> nos próprios roteiros</td>
+</tr>
+<tr>
+<td>Sinônimos (tabelas de outros bancos lidas como se fossem do Estoque)</td>
+<td>36 (31 usados no código)</td>
+</tr>
+<tr>
+<td>Tabelas do código <strong>sem roteiro</strong> e sem sinônimo</td>
+<td>34 (ver seção 5)</td>
+</tr>
+<tr>
+<td>Tabelas dos roteiros <strong>sem uso no código</strong></td>
+<td>36 (ver seção 5)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Padrão das tabelas:</strong> chave numérica (<code>ID_...</code>), <code>ATIVO</code> e <code>LIXEIRA</code> para exclusão lógica, e quem criou, alterou e excluiu, com as datas. A maior parte do saldo é calculada pelo banco, não pela tela.</p>
+<h3 id="2-o-ciclo-do-lote">2. O ciclo do lote</h3>
+<p><code>mermaid
+erDiagram
+  TBL_RECEBIMENTO ||--o{ TBL_NF_ITEM_LOTE : "recebe"
+  TBL_NF_ITEM_LOTE ||--o{ TBL_NF_ITEM_LOTE_ENDERECO : "endereça"
+  TBL_ITEM ||--o{ TBL_ITEM_LOTE : "tem lotes"
+  TBL_ITEM_LOTE ||--o{ TBL_LOTE_ENDERECO : "saldo por endereço"
+  TBL_MOVIMENTACAO ||--o{ TBL_MOVIMENTACAO_ITEM : "itens"
+  TBL_MOVIMENTACAO_ITEM }o--|| TBL_ITEM_LOTE : "movimenta"
+  TBL_ITEM_LOTE ||--o{ TBL_ANALISE_CONTROLE : "análise do CQ"
+  TBL_SOLICITACAO_ITEM ||--o{ TBL_SOLICITACAO_ITEM_LOTE : "lotes atendidos"
+  TBL_SOLICITACAO_ITEM_LOTE ||--o{ TBL_SEPARACAO_LOTE : "separação"
+  TBL_REMESSA ||--o{ TBL_REMESSA_ITEM : "itens"
+  TBL_REMESSA_ITEM ||--o{ TBL_REMESSA_LOTE : "lotes"</code></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>O que guarda</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TBL_ITEM</code>, <code>TBL_ITEM_LOTE</code>, <code>TBL_ITEM_LOTE_TEOR</code>, <code>TBL_ITEM_LOTE_VOLUME</code></td>
+<td>O item e cada lote, com validade, fabricante, teor e volumes</td>
+<td>O lote tem índice (<code>IX_TBL_ITEM_LOTE</code>), mas <strong>o código do lote é texto livre</strong>: sem ligação com o lote da Produção</td>
+</tr>
+<tr>
+<td><code>TBL_LOTE_ENDERECO</code></td>
+<td><strong>Saldo do lote em cada endereço</strong> (5 colunas)</td>
+<td>Atualizado por <strong>gatilho</strong> (<code>trAllLLoteEndereco</code>): a autoria fica só na movimentação (RN-EST-006)</td>
+</tr>
+<tr>
+<td><code>TBL_MOVIMENTACAO</code>, <code>TBL_MOVIMENTACAO_ITEM</code></td>
+<td>Toda entrada, saída e movimentação, com tipo e motivo</td>
+<td>É o <strong>livro-razão</strong>: o saldo se reconstrói por ela. 4 chaves estrangeiras no item</td>
+</tr>
+<tr>
+<td><code>TBL_RECEBIMENTO</code>, <code>TBL_NF_ITEM_LOTE</code>, <code>_ENDERECO</code>, <code>_VOLUME</code>, <code>_PEDIDO</code></td>
+<td>A nota, os lotes recebidos, os endereços e os volumes</td>
+<td>Gatilho <code>trInsUpd_CriarLotePadrao</code> <strong>desligado</strong>; gatilho <code>trg_Conferido</code> <strong>desligado</strong></td>
+</tr>
+<tr>
+<td><code>TBL_ANALISE_CONTROLE</code> (42 colunas), <code>_AMOSTRA</code>, <code>_ENDERECO</code>, <code>_OBSERVACAO</code></td>
+<td>A análise de cada lote no CQ, vista do Estoque</td>
+<td>O resultado do laudo é <strong>copiado</strong> do CQ quando alguém atualiza a análise (DV-EST-029)</td>
+</tr>
+<tr>
+<td><code>TBL_SOLICITACAO_ITEM</code>, <code>_LOTE</code>, <code>TBL_SEPARACAO_LOTE</code>, <code>TBL_PESAGEM</code></td>
+<td>Pedido de material, lotes atendidos, separação e pesagem</td>
+<td>Gatilho <code>trAll_StatusSolicitacao</code> <strong>desligado</strong> (RN-EST-099)</td>
+</tr>
+<tr>
+<td><code>TBL_REMESSA</code>, <code>_ITEM</code>, <code>_LOTE</code></td>
+<td>Saídas por remessa e por guia</td>
+<td>Guarda destinatário, endereço e lote</td>
+</tr>
+<tr>
+<td><code>TBL_INVENTARIO</code>, <code>_ITEM</code>, <code>_CONTAGEM</code>, <code>TBL_STATUS_INVENTARIO</code></td>
+<td>Contagens e apuração</td>
+<td>A apuração roda no procedimento <code>pProcessaInventario</code></td>
+</tr>
+<tr>
+<td><code>TBL_EVENTO_ANVISA</code>, <code>_DET</code></td>
+<td>Eventos de entrega e recebimento para o SNCM</td>
+<td><strong>Repetidos</strong> com os da Rastreabilidade (RN-RAS-037)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-situacao-do-lote-no-saldo">3. Situação do lote no saldo</h3>
+<p>O saldo é <strong>calculado por visões</strong> (<code>VW_SALDO_ITEM_LOTE_ENDERECO</code>, <code>VW_ITEM_LOTE_SALDO_DISPONIVEL</code> e outras), que separam o saldo em quarentena, vencido ou em reanálise, bloqueado, reprovado, inventário, retenção, referência, estabilidade e <strong>disponível</strong> (RN-EST-093). Não existe uma coluna "situação do lote": a situação <strong>sai de combinações</strong> de local (quarentena, refugo), marca de bloqueio e reanálise, validade e análise.</p>
+<p><strong>Leitura:</strong> é a base da situação única do lote (<code>ideal/est-ideal.md</code>), mas hoje a situação é <strong>deduzida</strong>, e não guardada. Por isso o laudo reprovado só aparece depois de "Atualizar resultado", e o saldo mostrou o mesmo material em quarentena e bloqueado ao mesmo tempo (DV-EST-029).</p>
+<h3 id="4-cadastros-qualidade-e-inventario">4. Cadastros, qualidade e inventário</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Tabelas</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estrutura física</td>
+<td><code>TBL_ALMOXARIFADO</code>, <code>TBL_STQ_LOCAL</code>, <code>_RUA</code>, <code>_COLUNA</code>, <code>_ANDAR</code> e <code>_ENDERECO</code> (no código, a rua aparece como <code>TBL_ESTOQUE_RUA</code>)</td>
+<td>O grupo do usuário liga ao almoxarifado por visões (<code>VW_GRUPO_USUARIO_*</code>)</td>
+</tr>
+<tr>
+<td>Fornecedor</td>
+<td><code>TBL_QUALIFICACAO_FORNECEDOR</code>, <code>_ITEM</code> e <code>_PERGUNTA</code></td>
+<td><strong>Sem coluna de qualificado nem nota de corte</strong>; ninguém consulta no recebimento (DV-EST-022)</td>
+</tr>
+<tr>
+<td>Gestão</td>
+<td><code>TBL_GST_*</code> (7 tabelas), curva ABC, pedido de compra</td>
+<td>Alertas e parâmetros sem uso no código (seção 5)</td>
+</tr>
+<tr>
+<td>Tipos</td>
+<td>15 tabelas <code>TBL_TIPO_*</code></td>
+<td>Tipo de movimentação, de documento, de análise e outros</td>
+</tr>
+<tr>
+<td>Kits</td>
+<td>Cadastro, planejamento, solicitação e controle</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Histórico</td>
+<td><code>TBL_LOG_ALTERACAO</code> (no código, <code>TBL_LOG_ALTERACAO_ESTOQUE</code>)</td>
+<td>Alteração e exclusão de cadastro; <strong>o histórico do lote não mostra usuário nem análise</strong> (DV-EST-034)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-desencontros-entre-o-codigo-e-os-roteiros">5. Desencontros entre o código e os roteiros</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Desencontro</th>
+<th>Detalhe</th>
+<th>Leitura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>12 tabelas com outro nome</strong> no código</td>
+<td>O código usa o sufixo <code>_ESTOQUE</code>: <code>TBL_ANALISE</code>, <code>TBL_NOTA_FISCAL</code>, <code>TBL_CENTRO_CUSTO</code>, <code>TBL_EQUIPAMENTO</code>, <code>TBL_PRODUCAO</code>, <code>TBL_LOG_ALTERACAO</code>, <code>TBL_TIPO_ANALISE</code>, <code>TBL_TIPO_DOCUMENTO</code>, <code>TBL_TIPO_FUNCAO</code>, <code>TBL_UNIDADE_MEDIDA</code>, <code>TBL_OBJETOS_TELA</code> e <code>SIS_CONFIGURACAO</code></td>
+<td>Os nomes foram trocados para não bater com os do Principal; os <strong>roteiros estão desatualizados</strong>. Mesmo padrão do CQ e da Rastreabilidade</td>
+</tr>
+<tr>
+<td><strong>34 tabelas usadas no código e sem roteiro</strong></td>
+<td>As 12 acima, mais as da Produção (<code>PRD_*_SUBETAPA</code>, <code>TBL_TELA_SUBETAPA</code>, <code>TBL_AUTORIZACAO_ESTOQUE_PRODUCAO</code>, <code>TBL_CONFIRMACAO_ESTOQUE_PRODUCAO</code>, <code>TBL_INSUMO_PRINCIPAL</code>), <code>TBL_LIBERACAO_CQ_ITEM</code> e <code>_LOCAL</code>, <code>TBL_ITENS_LOTES_PADRAO</code>, <code>TBL_ESTOQUE_RUA</code> e <code>TBL_MEDIDA</code></td>
+<td>O banco real tem tabelas que o projeto não cria: <strong>um banco novo, feito só pelos roteiros, não roda o sistema</strong></td>
+</tr>
+<tr>
+<td><strong>36 tabelas nos roteiros sem uso no código</strong></td>
+<td>Entre elas: <code>TBL_GST_ALERTA*</code>, <code>TBL_REGULATORIO_RESERVA</code>, <code>TBL_RESERVA_ENDERECO</code>, <code>TBL_RESERVA_ESTABILIDADE</code>, <code>TBL_CONTROLE_PESAGEM</code>, <code>TBL_CLIENTE</code>, <code>IMPORTAITEM</code>, <code>IMPORTASALDO</code> e as <code>TMP_*</code></td>
+<td>Parte é nome antigo (as 12 trocadas); parte é resto de funções que não existem mais</td>
+</tr>
+<tr>
+<td><strong>3 gatilhos desligados</strong></td>
+<td>Criação do lote padrão, situação da solicitação e conferência do lote</td>
+<td>Regras que o fornecedor desligou e não substituiu (RN-EST-040 e 099)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-integracoes">6. Integrações</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Origem</th>
+<th>Como chega</th>
+<th>Onde fica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuários, perfis, funções, locais, pessoas jurídicas</td>
+<td>Principal</td>
+<td><strong>Sinônimos</strong> (31 usados) e cópias de telas</td>
+<td>Lidos e <strong>gravados</strong> direto nas tabelas do Principal</td>
+</tr>
+<tr>
+<td>Solicitação de análise e laudo</td>
+<td>Estoque ↔ CQ</td>
+<td>API; o laudo é copiado quando alguém atualiza a análise</td>
+<td><code>TBL_ANALISE_CONTROLE</code></td>
+</tr>
+<tr>
+<td>Reserva e remessa da venda</td>
+<td>Comercial → Estoque</td>
+<td>API <strong>sem autenticação</strong></td>
+<td><code>TBL_SOLICITACAO*</code>, <code>TBL_REMESSA*</code></td>
+</tr>
+<tr>
+<td>Insumos, pesagem e produto acabado</td>
+<td>Produção ↔ Estoque</td>
+<td>API, serviço e <strong>gravação direta no banco do Estoque</strong>, com uma cópia do código do Estoque dentro da Produção</td>
+<td>Tabelas de solicitação e movimentação</td>
+</tr>
+<tr>
+<td>Eventos de entrega e recebimento</td>
+<td>Estoque → Rastreabilidade</td>
+<td>Microsserviço; <strong>a resposta não é lida</strong></td>
+<td><code>TBL_EVENTO_ANVISA*</code></td>
+</tr>
+<tr>
+<td>Certificação da Pessoa Delegada, retenção por desvio, recolhimento, fornecedor qualificado</td>
+<td>GQ</td>
+<td><strong>Nenhuma</strong></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-anomalias-e-pontos-para-o-dba">7. Anomalias e pontos para o DBA</h3>
+<ol>
+<li><strong>O banco não é reproduzível pelos roteiros</strong> (34 tabelas sem roteiro e 12 com nome diferente).</li>
+<li><strong>A situação do lote é deduzida</strong>, e não guardada: não há uma coluna única.</li>
+<li><strong>O saldo é mantido por gatilhos</strong>, sem a autoria de quem mudou; a trilha só existe na movimentação.</li>
+<li><strong>O código do lote é texto livre</strong>, sem ligação com a ordem de produção (DV-EST-024).</li>
+<li><strong>Três gatilhos desligados</strong> nos roteiros.</li>
+<li><strong><code>pFinalizaRecebimento</code></strong> deveria gravar a entrada numa só transação; no teste, o Endereçamento não gravou (DV-EST-016). <em>Pedir ao DBA:</em> o motivo do desfazer (permissão, restrição ou erro) e se as tabelas citadas existem com os mesmos nomes do código.</li>
+<li><strong>Tabela de histórico:</strong> <code>TBL_LOG_ALTERACAO</code> guarda cadastros; confirmar se a tabela do histórico do lote existe com usuário e hora.</li>
+<li><strong>Dados que dependem do banco:</strong> quais perfis têm as funções do Estoque; quantas entradas com lote vencido já existem; se há lotes sem análise.</li>
+</ol>
+    </article>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-visao-geral">1. Visão geral</a></li><li><a href="#2-o-ciclo-do-lote">2. O ciclo do lote</a></li><li><a href="#3-situacao-do-lote-no-saldo">3. Situação do lote no saldo</a></li><li><a href="#4-cadastros-qualidade-e-inventario">4. Cadastros, qualidade e inventário</a></li><li><a href="#5-desencontros-entre-o-codigo-e-os-roteiros">5. Desencontros entre o código e os roteiros</a></li><li><a href="#6-integracoes">6. Integrações</a></li><li><a href="#7-anomalias-e-pontos-para-o-dba">7. Anomalias e pontos para o DBA</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

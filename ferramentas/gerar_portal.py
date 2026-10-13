@@ -89,7 +89,7 @@ MODULOS = [
     {
         "id": "estoque", "nome": "Estoque", "icone": "▦", "cor": "#2e9b4f",
         "situacao": "Em testes", "nivel": 3,
-        "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados. Testes de tela: 4 rodadas (07, 08, 12 e 13/10/2026), 38 desvios. Confirmado na tela: o Endereçamento mostra sucesso e não grava, e o lote não chega à quarentena por esse caminho (a causa está no banco e aguarda o DBA); pelas entradas de material (produção e outras) o lote entra em quarentena e abre a análise no CQ; o laudo reprovado bloqueia o lote, mas o Estoque só sabe quando alguém atualiza a análise; a avaliação do fornecedor não qualifica nem bloqueia ninguém; a entrada de produto acabado aceita lote inventado e vencido; o histórico do lote não mostra usuário, análise nem laudo. Pacote de documentos: inventário das 98 telas do menu, conformidade (14 temas), risco (24 riscos, 18 de prioridade alta), plano de testes (162 casos, 60 executados) e \"O ideal\": o Estoque como dono da situação única do lote.",
+        "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados. Testes de tela: 4 rodadas (07, 08, 12 e 13/10/2026), 38 desvios. Confirmado na tela: o Endereçamento mostra sucesso e não grava, e o lote não chega à quarentena por esse caminho (a causa está no banco e aguarda o DBA); pelas entradas de material (produção e outras) o lote entra em quarentena e abre a análise no CQ; o laudo reprovado bloqueia o lote, mas o Estoque só sabe quando alguém atualiza a análise; a avaliação do fornecedor não qualifica nem bloqueia ninguém; a entrada de produto acabado aceita lote inventado e vencido; o histórico do lote não mostra usuário, análise nem laudo. Pacote de documentos: inventário das 98 telas do menu, conformidade (14 temas), risco (24 riscos, 18 de prioridade alta), plano de testes (162 casos, 60 executados) modelo de dados e matriz de permissões, mais \"O ideal\": o Estoque como dono da situação única do lote. Os defeitos para correção chegam a 30.",
         "docs": [
             ("3.estoque/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
             ("3.estoque/ideal/est-ideal.md", "O Estoque ideal", "ideal", "3.estoque/ideal/LabMedSys - Modulo Estoque - O Ideal.docx"),
@@ -97,6 +97,8 @@ MODULOS = [
             ("3.estoque/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("3.estoque/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
             ("3.estoque/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
+            ("3.estoque/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
+            ("3.estoque/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("3.estoque/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
             ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
