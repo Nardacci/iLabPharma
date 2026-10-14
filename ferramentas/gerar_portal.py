@@ -123,6 +123,8 @@ MODULOS = [
             ("3.estoque/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("3.estoque/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
             ("3.estoque/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
+            ("3.estoque/entregaveis/fonte/analise-de-requisitos.md", "Análise de requisitos", "tecnico", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Analise de Requisitos.docx"),
+            ("3.estoque/05-requisitos.md", "Requisitos da nova versão (rascunho)", "tecnico", None),
             ("3.estoque/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
             ("3.estoque/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("3.estoque/08-plano-de-testes.md", "Plano de testes", "testes", None),
