@@ -112,8 +112,8 @@ MODULOS = [
     },
     {
         "id": "estoque", "nome": "Estoque", "icone": "▦", "cor": "#2e9b4f",
-        "situacao": "Em testes", "nivel": 3,
-        "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados. Testes de tela: 5 rodadas (07, 08 e 12 a 13/10/2026), 42 desvios. Confirmado na tela: o Endereçamento mostra sucesso e não grava, e o lote não chega à quarentena por esse caminho (a causa está no banco e aguarda o DBA); pelas entradas de material (produção e outras) o lote entra em quarentena e abre a análise no CQ; o laudo reprovado bloqueia o lote, mas o Estoque só sabe quando alguém atualiza a análise; a avaliação do fornecedor não qualifica nem bloqueia ninguém; a entrada de produto acabado aceita lote inventado e vencido; o histórico do lote não mostra usuário, análise nem laudo. Pacote de documentos: inventário das 98 telas do menu, conformidade (14 temas), risco (24 riscos, 18 de prioridade alta), plano de testes (162 casos, 69 executados) modelo de dados e matriz de permissões, mais \"O ideal\": o Estoque como dono da situação única do lote. Os defeitos para correção chegam a 30.",
+        "situacao": "Homologado: não apto", "nivel": 4,
+        "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados. Testes de tela por risco: 7 rodadas (07 a 13/10/2026), 78 dos 162 casos conclusivos, 37 dos 46 casos Alta; 39 defeitos para correção (11 de prioridade alta). Confirmado na tela: o Endereçamento mostra sucesso e não grava (causa no banco, aguarda o DBA); pelas entradas de material o lote entra em quarentena e abre a análise no CQ; o laudo reprovado bloqueia o lote, mas o Estoque só sabe quando alguém atualiza a análise; a avaliação do fornecedor não qualifica nem bloqueia ninguém; a entrada de produto acabado aceita lote inventado e vencido; o histórico do lote não mostra usuário, análise nem laudo. Fechado em 14/10/2026 com os cinco entregáveis: resumo executivo, dossiê, regras de negócio, análise de requisitos e manual do usuário. Reabre só se o DBA ou a área resolverem as pendências (9 casos Alta bloqueados).",
         "docs": [
             ("3.estoque/entregaveis/fonte/resumo-executivo.md", "Resumo executivo", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Resumo Executivo.docx"),
             ("3.estoque/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Dossie de Homologacao.docx"),
@@ -130,6 +130,7 @@ MODULOS = [
             ("3.estoque/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
             ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
+            ("3.estoque/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Manual do Usuario.docx"),
             ("3.estoque/fluxos/recebimento-quarentena-conferencia.md", "Recebimento e quarentena (conferência)", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Conferencia dos Fluxos de Recebimento e Quarentena.docx"),
             ("3.estoque/fluxos/movimentacao-interna.md", "Movimentação interna", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Movimentacao Interna.docx"),
             ("3.estoque/fluxos/reprovado-reanalise-revalidacao.md", "Reprovado, reanálise e revalidação", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Reprovado, Reanalise e Revalidacao.docx"),
@@ -278,7 +279,7 @@ MODULOS = [
 
 PUBLICOS = [
     ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("visao-geral", "mapa-de-integracoes-entre-os-modulos"), ("principal", "resumo-executivo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
-    ("Usuários das áreas", "Como cada processo funciona nas telas.", [("principal", "manual-do-usuario"), ("estoque", "recebimento-e-quarentena-conferencia"), ("garantia-qualidade", "desvios-e-capa")]),
+    ("Usuários das áreas", "Como cada processo funciona nas telas.", [("principal", "manual-do-usuario"), ("estoque", "manual-do-usuario"), ("garantia-qualidade", "desvios-e-capa")]),
     ("Garantia da Qualidade", "Conformidade, riscos e rastreabilidade.", [("garantia-qualidade", "conformidade-com-a-rdc-658-2022"), ("principal", "conformidade-regulatoria"), ("principal", "dossie-de-homologacao")]),
     ("Desenvolvimento", "Requisitos e dados para a nova versão.", [("principal", "analise-de-requisitos"), ("principal", "modelo-de-dados-e-integracoes"), ("visao-geral", "telas-tabelas-e-codigo-repetidos-entre-os-modulos")]),
 ]
