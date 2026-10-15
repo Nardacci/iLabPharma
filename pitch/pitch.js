@@ -372,7 +372,7 @@
       } else {
         var ultimo = i === cenas.length - 1;
         if (ultimo) s.classList.add('final');
-        var contatos = ultimo && D.contatos && D.contatos.length ? '<div class="contatos">' + D.contatos.map(function (p) {
+        var contatos = ultimo && D.contatos && D.contatos.length ? '<div class="contatos"><p class="contatos-t">Vamos conversar</p>' + D.contatos.map(function (p) {
           return '<div class="contato"><b>' + esc(p.nome) + '</b>' + (p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + (p.celular ? '<a href="tel:' + esc(p.celular.replace(/[^\d+]/g, '')) + '">' + esc(p.celular) + '</a>' : '') + '</div>';
         }).join('') + '</div>' : '';
         s.innerHTML = '<div class="a">' + c.a + '</div><div class="b">' + c.b + '</div><p class="apoio">' + esc(c.apoio) + '</p>' +
