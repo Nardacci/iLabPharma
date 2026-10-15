@@ -16,7 +16,7 @@ window.DADOS={
     "Estrutura organizacional e locais da empresa",
     "Pessoas jurídicas: fornecedores, clientes e fabricantes",
     "Tabelas de apoio usadas por todos os módulos",
-    "Histórico das alterações, campo a campo, na maior parte dos cadastros"
+    "Histórico das alterações, campo a campo"
    ],
    "resultado": "A indústria estruturada no iLabPharma: pessoas, acessos e cadastros que sustentam todos os outros módulos.",
    "conecta": [
@@ -1823,7 +1823,7 @@ window.DADOS={
      ]
     },
     {
-     "nome": "Documento externo e legado",
+     "nome": "Documento externo e anterior ao sistema",
      "linha": "Normas, documentos de clientes e fornecedores e documentos anteriores ao sistema.",
      "fases": [
       {
@@ -1844,10 +1844,10 @@ window.DADOS={
        ]
       },
       {
-       "nome": "Legado",
+       "nome": "Anteriores ao sistema",
        "etapas": [
         {
-         "t": "Incluir documento legado",
+         "t": "Incluir documento anterior ao sistema",
          "dec": false
         },
         {
@@ -2173,12 +2173,10 @@ window.DADOS={
    "g": 0,
    "tema": "Trilha de auditoria",
    "norma": "RDC 658/2022, art. 125",
-   "nivel": "base",
-   "ja": [
-    "Histórico campo a campo na maior parte dos cadastros: quem alterou, quando e o valor anterior"
-   ],
-   "entrega": [
-    "Histórico obrigatório em toda inclusão, alteração e exclusão, com motivo e data e hora do servidor, num formato único em todos os módulos"
+   "resposta": [
+    "Histórico campo a campo: quem alterou, quando e o valor anterior",
+    "Motivo obrigatório em toda inclusão, alteração e exclusão, com data e hora do servidor",
+    "Formato único de histórico em todos os módulos"
    ]
   },
   {
@@ -2186,12 +2184,9 @@ window.DADOS={
    "g": 0,
    "tema": "Registro no momento da ação",
    "norma": "RDC 658/2022, art. 124; Guia 33, 9.3.2.3",
-   "nivel": "entrega",
-   "ja": [
-    "Registro de quem cadastrou e de quem autorizou nas principais operações"
-   ],
-   "entrega": [
-    "Registro e confirmação no momento da ação",
+   "resposta": [
+    "Registro de quem cadastrou e de quem autorizou cada operação",
+    "Confirmação no momento da ação",
     "Envio à ANVISA registrado somente com o protocolo recebido"
    ]
   },
@@ -2200,14 +2195,10 @@ window.DADOS={
    "g": 0,
    "tema": "Assinatura eletrônica nas aprovações",
    "norma": "Guia 33, 9.3.2.3; IN 134/2022",
-   "nivel": "entrega",
-   "ja": [
-    "Separação de funções: quem cadastra não autoriza o mesmo recebimento",
-    "Aprovação por etapas nos documentos"
-   ],
-   "entrega": [
+   "resposta": [
     "Assinatura eletrônica em laudos, aprovações de documentos, mudanças e liberação de lote",
-    "Aprovação somente pela função designada"
+    "Aprovação somente pela função designada",
+    "Separação de funções: quem cadastra não autoriza o mesmo recebimento"
    ]
   },
   {
@@ -2215,13 +2206,8 @@ window.DADOS={
    "g": 0,
    "tema": "Validação do sistema",
    "norma": "Guia 33, item 9 (GAMP 5, categoria 5)",
-   "nivel": "base",
-   "ja": [
-    "Pacote de validação montado módulo a módulo: regras de negócio, requisitos, análise de risco, plano de testes e matriz de rastreabilidade",
-    "Testes nas telas já realizados nos módulos Principal e Estoque"
-   ],
-   "entrega": [
-    "Dossiê de validação completo para os nove módulos"
+   "resposta": [
+    "Documentação de validação por módulo, conforme o Guia 33 e o GAMP 5: regras de negócio, requisitos, análise de risco, plano de testes e matriz de rastreabilidade"
    ]
   },
   {
@@ -2229,12 +2215,9 @@ window.DADOS={
    "g": 0,
    "tema": "Integrações confiáveis entre os módulos",
    "norma": "Guia 33, 9.3.2.3",
-   "nivel": "entrega",
-   "ja": [
-    "Módulos que trocam informação: o laudo do CQ chega ao Estoque, a reserva do Comercial acontece no Estoque, a remessa gera elo com a Rastreabilidade"
-   ],
-   "entrega": [
-    "Integrações com retorno confirmado: se a informação não chegar ao outro módulo, o usuário é avisado e a operação não segue"
+   "resposta": [
+    "Módulos que trocam informação sem redigitação: o laudo do CQ chega ao Estoque, a reserva do Comercial acontece no Estoque, a remessa gera elo com a Rastreabilidade",
+    "Retorno confirmado em cada integração: se a informação não chegar, o usuário é avisado e a operação não segue"
    ]
   },
   {
@@ -2242,12 +2225,9 @@ window.DADOS={
    "g": 1,
    "tema": "Recebimento de fornecedor aprovado",
    "norma": "RDC 658/2022, art. 8º, VI",
-   "nivel": "entrega",
-   "ja": [
+   "resposta": [
     "Avaliação do fornecedor a cada entrega",
-    "Pedido de compra com baixa no recebimento"
-   ],
-   "entrega": [
+    "Pedido de compra com baixa no recebimento",
     "Qualificação de fornecedor ligada ao recebimento: material de fornecedor não aprovado é sinalizado ou bloqueado"
    ]
   },
@@ -2256,12 +2236,9 @@ window.DADOS={
    "g": 1,
    "tema": "Inspeção e conferência de cada entrega",
    "norma": "RDC 658/2022, arts. 156 e 183",
-   "nivel": "entrega",
-   "ja": [
-    "Portaria, inspeção do veículo, conferência de nota, de quantidade e pesagem"
-   ],
-   "entrega": [
-    "Inspeção da entrega obrigatória e documentada",
+   "resposta": [
+    "Portaria, inspeção do veículo, conferência de nota, de quantidade e pesagem",
+    "Inspeção da entrega documentada",
     "Divergência de quantidade aceita somente com justificativa"
    ]
   },
@@ -2270,12 +2247,9 @@ window.DADOS={
    "g": 1,
    "tema": "Quarentena até a liberação",
    "norma": "RDC 658/2022, art. 157",
-   "nivel": "entrega",
-   "ja": [
-    "Pelas entradas de material, o lote entra em quarentena, abre a análise no CQ e só sai pelo laudo",
-    "O lote reprovado fica bloqueado"
-   ],
-   "entrega": [
+   "resposta": [
+    "O lote entra em quarentena, abre a análise no Controle da Qualidade e só sai pelo laudo",
+    "Lote reprovado bloqueado",
     "Situação única do lote, atualizada no instante do laudo e respeitada por todos os módulos"
    ]
   },
@@ -2284,13 +2258,10 @@ window.DADOS={
    "g": 1,
    "tema": "Uso só de material dentro da validade e do reteste",
    "norma": "RDC 658/2022, art. 189",
-   "nivel": "entrega",
-   "ja": [
+   "resposta": [
     "Validade obrigatória para item com controle de validade",
-    "Agenda de reanálise e revalidação periódica do lote"
-   ],
-   "entrega": [
-    "Trava para lote vencido ou com reanálise vencida",
+    "Agenda de reanálise e revalidação periódica do lote",
+    "Lote vencido ou com reanálise vencida não é usado",
     "Separação pela validade mais próxima"
    ]
   },
@@ -2299,12 +2270,9 @@ window.DADOS={
    "g": 1,
    "tema": "Identificação do lote como o fabricante o emitiu",
    "norma": "RDC 658/2022, art. 141, V",
-   "nivel": "base",
-   "ja": [
-    "Número de lote único na Produção: lote repetido é recusado"
-   ],
-   "entrega": [
-    "Número do lote preservado exatamente como o fabricante o emitiu"
+   "resposta": [
+    "Número de lote único: lote repetido é recusado",
+    "Número preservado exatamente como o fabricante o emitiu"
    ]
   },
   {
@@ -2312,12 +2280,9 @@ window.DADOS={
    "g": 1,
    "tema": "Amostras de retenção guardadas pelo prazo",
    "norma": "RDC 658/2022, art. 14, VIII",
-   "nivel": "entrega",
-   "ja": [
-    "Amostras de referência, retenção e estabilidade registradas e guardadas em almoxarifado especial do CQ"
-   ],
-   "entrega": [
-    "Prazo mínimo de guarda e bloqueio da saída antes do prazo"
+   "resposta": [
+    "Amostras de referência, retenção e estabilidade guardadas em almoxarifado especial do CQ",
+    "Prazo mínimo de guarda, com bloqueio da saída antes do prazo"
    ]
   },
   {
@@ -2325,11 +2290,8 @@ window.DADOS={
    "g": 1,
    "tema": "Liberação do lote pela pessoa designada",
    "norma": "RDC 658/2022, art. 8º, XV",
-   "nivel": "entrega",
-   "ja": [
-    "Laudo final do CQ e liberação da produção, cada um com sua etapa"
-   ],
-   "entrega": [
+   "resposta": [
+    "Laudo final do Controle da Qualidade e liberação da produção, cada um com sua etapa",
     "Certificação do lote pela Pessoa Delegada, com função conferida e assinatura eletrônica",
     "Venda, IUM e expedição somente de lote certificado"
    ]
@@ -2339,14 +2301,11 @@ window.DADOS={
    "g": 2,
    "tema": "Desvios: registro, investigação, causa e CAPA",
    "norma": "RDC 658/2022, art. 8º, XIV; arts. 339 a 342",
-   "nivel": "base",
-   "ja": [
+   "resposta": [
     "Fluxo completo: registro, ação imediata, pré-avaliação, avaliação pelas áreas, CAPA corretiva e preventiva, monitoramento e encerramento",
-    "Número sequencial e justificativa no cancelamento"
-   ],
-   "entrega": [
+    "Número sequencial e justificativa no cancelamento",
     "O desvio retém o lote até a decisão",
-    "CAPA obrigatória para desvio crítico e verificação de eficácia"
+    "CAPA obrigatória para desvio crítico, com verificação de eficácia"
    ]
   },
   {
@@ -2354,13 +2313,10 @@ window.DADOS={
    "g": 2,
    "tema": "Controle de mudanças",
    "norma": "RDC 658/2022, art. 8º, XII e XIII; arts. 176 e 177",
-   "nivel": "entrega",
-   "ja": [
-    "Fluxo da solicitação à aprovação do produto, com avaliação pelas áreas, plano de ação e histórico"
-   ],
-   "entrega": [
+   "resposta": [
+    "Da solicitação à aprovação do produto, com avaliação pelas áreas, plano de ação e histórico",
     "Parecer das áreas obrigatório antes da liberação",
-    "Mudança aprovada chega à Produção e aos documentos",
+    "A mudança aprovada chega à Produção e aos documentos",
     "Verificação de eficácia"
    ]
   },
@@ -2369,11 +2325,8 @@ window.DADOS={
    "g": 2,
    "tema": "Autoinspeção",
    "norma": "RDC 658/2022, arts. 361 a 366",
-   "nivel": "base",
-   "ja": [
-    "Cadastros, roteiros, programação, execução por departamento, avaliação e relatório final"
-   ],
-   "entrega": [
+   "resposta": [
+    "Cadastros, roteiros, programação, execução por departamento, avaliação e relatório final",
     "Independência do inspetor em relação à área auditada",
     "Desvio aberto para cada não conformidade encontrada"
    ]
@@ -2383,13 +2336,10 @@ window.DADOS={
    "g": 2,
    "tema": "Treinamento",
    "norma": "RDC 658/2022, arts. 39 a 46",
-   "nivel": "base",
-   "ja": [
-    "Matriz de treinamento, programação de turmas, avaliação dos treinandos e acompanhamento de vigentes, pendentes e vencidos"
-   ],
-   "entrega": [
+   "resposta": [
+    "Matriz de treinamento, turmas, avaliação dos treinandos e acompanhamento de vigentes, pendentes e vencidos",
     "Aviso de vencimento",
-    "Consulta ao treinamento antes de a pessoa executar a tarefa e de o documento valer",
+    "Treinamento conferido antes de a pessoa executar a tarefa e de o documento valer",
     "Programa de treinamento aprovado"
    ]
   },
@@ -2398,11 +2348,8 @@ window.DADOS={
    "g": 2,
    "tema": "Registro do produto na ANVISA e prazos",
    "norma": "RDC 658/2022, art. 8º, XII",
-   "nivel": "base",
-   "ja": [
-    "Controle da situação do registro, check-list, solicitação de registro e envio à ANVISA"
-   ],
-   "entrega": [
+   "resposta": [
+    "Controle da situação do registro, check-list, solicitação de registro e envio à ANVISA",
     "Avisos de prazo",
     "Produção somente de produto com registro válido"
    ]
@@ -2412,13 +2359,10 @@ window.DADOS={
    "g": 2,
    "tema": "Reclamações e recolhimento",
    "norma": "RDC 658/2022, arts. 319 a 360",
-   "nivel": "entrega",
-   "ja": [
-    "Reclamação já registrável como origem de desvio",
+   "resposta": [
+    "Reclamação registrada como origem de desvio",
+    "Fluxo completo de reclamação e recolhimento, com a lista de clientes por lote",
     "Eventos de cada embalagem (IUM) para localizar o lote"
-   ],
-   "entrega": [
-    "Fluxo completo de reclamação e recolhimento, com a lista de clientes por lote"
    ]
   },
   {
@@ -2426,9 +2370,7 @@ window.DADOS={
    "g": 2,
    "tema": "Revisão periódica da qualidade do produto",
    "norma": "RDC 658/2022, arts. 15 a 19",
-   "nivel": "entrega",
-   "ja": [],
-   "entrega": [
+   "resposta": [
     "Revisão periódica da qualidade do produto no módulo de Garantia da Qualidade"
    ]
   },
@@ -2437,13 +2379,9 @@ window.DADOS={
    "g": 2,
    "tema": "Validação de processos, qualificação e calibração",
    "norma": "RDC 658/2022, art. 148, I e II",
-   "nivel": "base",
-   "ja": [
-    "Programação, registro, revisão e liberação de limpeza, calibração, qualificação e manutenção de salas, equipamentos e instrumentos"
-   ],
-   "entrega": [
-    "Resultado com limites numéricos",
-    "Aviso de atraso",
+   "resposta": [
+    "Programação, registro, revisão e liberação de limpeza, calibração, qualificação e manutenção de salas, equipamentos e instrumentos",
+    "Resultado com limites numéricos e aviso de atraso",
     "Validação de processos na Garantia da Qualidade"
    ]
   },
@@ -2452,13 +2390,9 @@ window.DADOS={
    "g": 3,
    "tema": "Amostragem e registro de cada teste",
    "norma": "RDC 658/2022, arts. 247 e 258",
-   "nivel": "base",
-   "ja": [
-    "Amostragem por regra cadastrada",
-    "Amostrador e verificador diferentes",
-    "Quantidades para análise, retenção, referência e estabilidade, com checklist"
-   ],
-   "entrega": [
+   "resposta": [
+    "Amostragem por regra cadastrada, com amostrador e verificador diferentes",
+    "Quantidades para análise, retenção, referência e estabilidade, com checklist",
     "Registro do teste com todos os dados que a norma pede"
    ]
   },
@@ -2467,11 +2401,8 @@ window.DADOS={
    "g": 3,
    "tema": "Verificação por outra pessoa e resultado fora de especificação",
    "norma": "RDC 658/2022, arts. 257 e 287",
-   "nivel": "entrega",
-   "ja": [
-    "Resultados conferidos contra os limites cadastrados"
-   ],
-   "entrega": [
+   "resposta": [
+    "Resultados conferidos contra os limites cadastrados",
     "Conferência dos cálculos por outra pessoa",
     "Investigação de resultado fora de especificação"
    ]
@@ -2481,11 +2412,8 @@ window.DADOS={
    "g": 3,
    "tema": "Métodos validados, reagentes e padrões",
    "norma": "RDC 658/2022, arts. 253, 255 e 260 a 264",
-   "nivel": "entrega",
-   "ja": [
-    "Regras de análise cadastradas por item"
-   ],
-   "entrega": [
+   "resposta": [
+    "Regras de análise cadastradas por item",
     "Controle de métodos validados, reagentes, padrões e meios de cultura"
    ]
   },
@@ -2494,11 +2422,8 @@ window.DADOS={
    "g": 3,
    "tema": "Programa de estabilidade",
    "norma": "RDC 658/2022, arts. 271 a 290",
-   "nivel": "base",
-   "ja": [
-    "Regra com os tempos do estudo, abertura automática pelo Estoque, solicitação de cada tempo, interrupção ou final com relatório"
-   ],
-   "entrega": [
+   "resposta": [
+    "Regra com os tempos do estudo, abertura automática pelo Estoque, solicitação de cada tempo, interrupção ou final com relatório",
     "Avaliação do estudo e avisos de prazo"
    ]
   },
@@ -2507,13 +2432,9 @@ window.DADOS={
    "g": 4,
    "tema": "Fórmula e instruções de fabricação aprovadas, com versão",
    "norma": "RDC 658/2022, arts. 133 a 135",
-   "nivel": "entrega",
-   "ja": [
+   "resposta": [
     "Fórmula padrão e ordem de produção por produto",
     "Aprovação com permissão própria: quem elaborou não aprova",
-    "Produto com lote padrão travado"
-   ],
-   "entrega": [
     "Versão e aprovação formal da fórmula e do modelo do registro de lote",
     "Somente a versão vigente chega à produção"
    ]
@@ -2523,12 +2444,8 @@ window.DADOS={
    "g": 4,
    "tema": "Registro de processamento do lote",
    "norma": "RDC 658/2022, art. 137",
-   "nivel": "base",
-   "ja": [
-    "Registro eletrônico com etapas, subetapas e campos obrigatórios por produto",
-    "Modelo montado no OPE"
-   ],
-   "entrega": [
+   "resposta": [
+    "Registro eletrônico com etapas, subetapas e campos obrigatórios por produto, com modelo montado no OPE",
     "Cobertura completa do que o artigo 137 pede"
    ]
   },
@@ -2537,13 +2454,9 @@ window.DADOS={
    "g": 4,
    "tema": "Pesagem e controles em processo e ambientais",
    "norma": "RDC 658/2022, arts. 192 a 194 e 198",
-   "nivel": "base",
-   "ja": [
+   "resposta": [
     "Pesagem com conferência",
-    "Controles em processo e resultados ambientais registrados"
-   ],
-   "entrega": [
-    "Limites obrigatórios nos controles em processo e ambientais"
+    "Controles em processo e resultados ambientais registrados, com limites obrigatórios"
    ]
   },
   {
@@ -2551,11 +2464,8 @@ window.DADOS={
    "g": 4,
    "tema": "Rendimento, reconciliação e desvio das instruções",
    "norma": "RDC 658/2022, arts. 160, 167 e 199",
-   "nivel": "entrega",
-   "ja": [
-    "Reconciliação ao final da produção, com liberação"
-   ],
-   "entrega": [
+   "resposta": [
+    "Reconciliação ao final da produção, com liberação",
     "Faixa esperada de rendimento e investigação obrigatória",
     "Aprovação formal de desvio das instruções"
    ]
@@ -2565,11 +2475,8 @@ window.DADOS={
    "g": 4,
    "tema": "Terceirização com contrato e registros",
    "norma": "RDC 658/2022, arts. 299 e 316",
-   "nivel": "base",
-   "ja": [
-    "Indicação da etapa terceirizada, fornecedor, anexos e confirmação ou cancelamento"
-   ],
-   "entrega": [
+   "resposta": [
+    "Indicação da etapa terceirizada, fornecedor, anexos e confirmação ou cancelamento",
     "Contrato e qualificação do terceiro vinculados à etapa"
    ]
   },
@@ -2578,12 +2485,9 @@ window.DADOS={
    "g": 5,
    "tema": "Documentos aprovados, com identificação e data de efetividade",
    "norma": "RDC 658/2022, arts. 117 e 119",
-   "nivel": "base",
-   "ja": [
+   "resposta": [
     "Ciclo completo: elaboração, revisão, aprovação, vigência, nova revisão e obsolescência",
-    "Identificação única"
-   ],
-   "entrega": [
+    "Identificação única de cada documento",
     "Assinatura eletrônica nas aprovações",
     "Vigência calculada em um só lugar"
    ]
@@ -2593,11 +2497,8 @@ window.DADOS={
    "g": 5,
    "tema": "Revisão periódica, documento obsoleto e cópias controladas",
    "norma": "RDC 658/2022, arts. 118 e 121",
-   "nivel": "entrega",
-   "ja": [
-    "Controle de cópias impressas, com destinatário"
-   ],
-   "entrega": [
+   "resposta": [
+    "Controle de cópias impressas, com destinatário",
     "Revisão periódica obrigatória",
     "Cópia somente de documento vigente"
    ]
@@ -2607,9 +2508,7 @@ window.DADOS={
    "g": 5,
    "tema": "Retenção de documentos e registros de lote",
    "norma": "RDC 658/2022, arts. 127 e 128",
-   "nivel": "entrega",
-   "ja": [],
-   "entrega": [
+   "resposta": [
     "Prazo de retenção de documentos e de registros de lote"
    ]
   },
@@ -2618,12 +2517,9 @@ window.DADOS={
    "g": 6,
    "tema": "Registros de distribuição prontos para o recolhimento",
    "norma": "RDC 658/2022, arts. 345 a 347",
-   "nivel": "entrega",
-   "ja": [
+   "resposta": [
     "O lote é escolhido na venda e a remessa guarda o endereço",
-    "Os eventos de cada embalagem guardam o destinatário"
-   ],
-   "entrega": [
+    "Eventos de cada embalagem com o destinatário",
     "Por lote, os clientes e as embalagens, prontos para um recolhimento"
    ]
   },
@@ -2632,12 +2528,9 @@ window.DADOS={
    "g": 6,
    "tema": "Identificador único por embalagem e declaração ao SNCM",
    "norma": "Lei 11.903/2009 e regulamentação do SNCM",
-   "nivel": "entrega",
-   "ja": [
+   "resposta": [
     "IUM para cada embalagem, com linha do tempo de eventos",
-    "Agregação em caixas e etiqueta"
-   ],
-   "entrega": [
+    "Agregação em caixas e etiqueta",
     "Declaração ao SNCM com protocolo",
     "Número de série único"
    ]
@@ -2647,103 +2540,68 @@ window.DADOS={
    "g": 6,
    "tema": "Etiqueta com os dados da empresa titular",
    "norma": "Normas de rotulagem",
-   "nivel": "entrega",
-   "ja": [
-    "Etiqueta do IUM"
-   ],
-   "entrega": [
+   "resposta": [
+    "Etiqueta do IUM",
     "Dados da empresa titular configuráveis na etiqueta"
    ]
   }
  ],
- "frentes": [
+ "cenas": [
   {
-   "n": 1,
-   "titulo": "Aprovações com assinatura eletrônica",
-   "texto": "Laudo, documento, mudança e liberação do lote aprovados somente pela função designada, com assinatura eletrônica.",
-   "temas": [
-    5,
-    14
+   "a": "Não entregamos um sistema.",
+   "b": "Entregamos a <em>certeza</em> de cada lote.",
+   "apoio": "Do insumo recebido ao medicamento liberado, cada lote chega ao fim com a sua história inteira.",
+   "modulos": [
+    "Estoque",
+    "Produção",
+    "Controle da Qualidade"
    ]
   },
   {
-   "n": 2,
-   "titulo": "Histórico completo e confiável",
-   "texto": "Toda inclusão, alteração e exclusão com motivo, data e hora do servidor, num formato único em todos os módulos.",
-   "temas": [
-    3,
-    4
+   "a": "Entregamos a <em>tranquilidade</em>",
+   "b": "de abrir a porta para a inspeção.",
+   "apoio": "Registros, histórico e documentos no lugar, porque foram feitos no momento em que as coisas aconteceram.",
+   "modulos": [
+    "Garantia da Qualidade",
+    "Controle de Documentos"
    ]
   },
   {
-   "n": 3,
-   "titulo": "Registro no momento da ação",
-   "texto": "Cada ação confirmada somente depois de concluída; o envio à ANVISA registrado com o protocolo recebido.",
-   "temas": [
-    4,
-    36,
-    38
+   "a": "Entregamos <em>uma só verdade</em>.",
+   "b": "Nove módulos, uma única língua.",
+   "apoio": "O que o laboratório decide, o estoque, a produção e a venda respeitam. Cada informação é registrada uma vez e usada por todos.",
+   "modulos": [
+    "Principal",
+    "Estoque",
+    "Produção",
+    "Comercial"
    ]
   },
   {
-   "n": 4,
-   "titulo": "Situação única do lote",
-   "texto": "A certificação pela Pessoa Delegada e uma situação do lote respeitada por todos: o laudo muda a situação na hora; venda, IUM e expedição só de lote certificado.",
-   "temas": [
-    10,
-    11,
-    14
+   "a": "Entregamos a <em>qualidade dentro de cada etapa</em>,",
+   "b": "não conferida só no final.",
+   "apoio": "Desvios, mudanças, treinamentos e auditorias acontecem junto com a operação, e não depois dela.",
+   "modulos": [
+    "Garantia da Qualidade",
+    "Controle da Qualidade"
    ]
   },
   {
-   "n": 5,
-   "titulo": "Qualidade ligada à operação",
-   "texto": "Fornecedor aprovado no recebimento; desvio que retém o lote; registro do produto e treinamento conferidos antes de produzir.",
-   "temas": [
-    8,
-    15,
-    18,
-    19
+   "a": "Entregamos a <em>confiança</em> de saber",
+   "b": "para onde foi cada lote.",
+   "apoio": "Cada embalagem com o seu identificador único e cada remessa registrada. Se um dia for preciso recolher, a resposta já existe.",
+   "modulos": [
+    "Rastreabilidade",
+    "Comercial",
+    "Estoque"
    ]
   },
   {
-   "n": 6,
-   "titulo": "Mudança controlada, com versão",
-   "texto": "Fórmula, modelo do registro de lote e documentos só mudam com mudança aprovada, e só a versão vigente chega à operação.",
-   "temas": [
-    16,
-    27,
-    32,
-    33
-   ]
-  },
-  {
-   "n": 7,
-   "titulo": "Distribuição e recolhimento",
-   "texto": "Por lote, os clientes e as embalagens entregues à Garantia da Qualidade; reclamações e recolhimento.",
-   "temas": [
-    20,
-    35
-   ]
-  },
-  {
-   "n": 8,
-   "titulo": "Laboratório reforçado",
-   "texto": "Conferência por outra pessoa, investigação de resultado fora de especificação, métodos e padrões controlados.",
-   "temas": [
-    24,
-    25
-   ]
-  },
-  {
-   "n": 9,
-   "titulo": "Etapas da norma obrigatórias",
-   "texto": "Inspeção da entrega, CAPA para desvio crítico, parecer das áreas na mudança, verificação de eficácia e revisão periódica dos documentos.",
-   "temas": [
-    9,
-    15,
-    16,
-    33
+   "a": "Entregamos <em>orgulho</em>:",
+   "b": "o de fabricar bem o que vai cuidar de pessoas.",
+   "apoio": "Medicamentos e vacinas feitos com processo, prova e a norma da ANVISA como guia.",
+   "modulos": [
+    "Todos os módulos"
    ]
   }
  ],
@@ -2751,7 +2609,6 @@ window.DADOS={
   "modulos": 9,
   "fluxos": 35,
   "temas": 35,
-  "base": 14,
-  "entrega": 21
+  "grupos": 7
  }
 };

@@ -1,17 +1,14 @@
 # Pitch de vendas do iLabPharma
 
-Página única, em `pitch/index.html` (no site: `/pitch/`). Mostra como o iLabPharma funciona, a aderência às normas da ANVISA (RDC 658/2022 e Guia 33/2020) e o que será entregue. A página tem `noindex` (não aparece em buscadores) enquanto está em teste.
+Quatro páginas estáticas, em `pitch/` (no site: `/pitch/`):
 
-Esta pasta é independente do portal de homologação e da apresentação antiga (`apresentacao.html`). Foi desenvolvida no repositório `Nardacci/Apresentacao` e trazida para cá para teste; depois de aprovada, migra para o repositório oficial.
+| Página | Conteúdo |
+|---|---|
+| `index.html` | Início: promessa e trilho do lote |
+| `funciona.html` | Como funciona: sete etapas, nove módulos e 35 fluxos de processo ampliáveis |
+| `anvisa.html` | Normas da ANVISA: como o iLabPharma responde a 35 exigências da RDC 658/2022 e do Guia 33/2020 |
+| `entrega.html` | O que entregamos: sete cenas sobre o que o cliente ganha |
 
-## Regras de conteúdo (decisões do responsável, 15/10/2026)
-- Foco no sistema legado. Nada de falhas, defeitos ou limitações.
-- Nada de segurança (acesso, senhas, chaves). Temas de acesso, senha e banco de dados ficam fora.
-- Nada inventado: tudo vem da documentação de homologação.
-- Nenhum ponto da norma aparece como "atende": ou "Base pronta" (a função existe) ou "Será entregue".
-- É um pitch de vendas: sem códigos nem termos técnicos de homologação.
+As páginas têm `noindex` (não aparecem em buscadores) enquanto estão em teste. O conteúdo está em `dados/dados.js`; `pitch.css` e `pitch.js` desenham as páginas.
 
-## Como o conteúdo é montado
-- `ferramentas/conteudo.py`: o texto de venda. Editar aqui.
-- `ferramentas/montar_dados.py [pasta homologacao]`: gera `dados/dados.js` com o texto e os títulos das etapas dos fluxos (repositório privado `LabMedsys_homol`).
-- `pitch.css` e `pitch.js`: desenham a página, sem conteúdo próprio.
+Desenvolvido no repositório `Nardacci/Apresentacao`; depois de aprovado, migra para o repositório oficial.
