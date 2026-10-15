@@ -217,6 +217,65 @@ window.DADOS={
    ],
    "fluxos": [
     {
+     "nome": "Compras e avaliação do fornecedor",
+     "linha": "Da necessidade de estoque ao pedido, à baixa no recebimento e à avaliação do fornecedor.",
+     "fases": [
+      {
+       "nome": "Análise da necessidade",
+       "etapas": [
+        {
+         "t": "Analisar a Curva ABC",
+         "dec": false
+        },
+        {
+         "t": "Analisar o estoque",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Pedido de compra",
+       "etapas": [
+        {
+         "t": "Gerar o pedido a partir da análise",
+         "dec": false
+        },
+        {
+         "t": "Registrar ou ajustar o pedido de compra",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Recebimento e baixa",
+       "etapas": [
+        {
+         "t": "Receber pelo fluxo de Recebimento",
+         "dec": false
+        },
+        {
+         "t": "Baixar o pedido (Recebimento do Item)",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Avaliação do fornecedor",
+       "etapas": [
+        {
+         "t": "Avaliar o fornecedor na entrega",
+         "dec": false
+        },
+        {
+         "t": "O fornecedor está aprovado para entregar?",
+         "dec": true
+        }
+       ]
+      }
+     ],
+     "grupo": "Do pedido ao estoque"
+    },
+    {
      "nome": "Recebimento de materiais",
      "linha": "Da estrutura do almoxarifado à disponibilização do material.",
      "fases": [
@@ -284,7 +343,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Do pedido ao estoque"
     },
     {
      "nome": "Quarentena de materiais e produtos",
@@ -346,131 +406,8 @@ window.DADOS={
         }
        ]
       }
-     ]
-    },
-    {
-     "nome": "Compras e avaliação do fornecedor",
-     "linha": "Da necessidade de estoque ao pedido, à baixa no recebimento e à avaliação do fornecedor.",
-     "fases": [
-      {
-       "nome": "Análise da necessidade",
-       "etapas": [
-        {
-         "t": "Analisar a Curva ABC",
-         "dec": false
-        },
-        {
-         "t": "Analisar o estoque",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Pedido de compra",
-       "etapas": [
-        {
-         "t": "Gerar o pedido a partir da análise",
-         "dec": false
-        },
-        {
-         "t": "Registrar ou ajustar o pedido de compra",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Recebimento e baixa",
-       "etapas": [
-        {
-         "t": "Receber pelo fluxo de Recebimento",
-         "dec": false
-        },
-        {
-         "t": "Baixar o pedido (Recebimento do Item)",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Avaliação do fornecedor",
-       "etapas": [
-        {
-         "t": "Avaliar o fornecedor na entrega",
-         "dec": false
-        },
-        {
-         "t": "O fornecedor está aprovado para entregar?",
-         "dec": true
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "nome": "Movimentação interna",
-     "linha": "Endereçamento e movimentação de lotes, com consulta de saldo e de histórico.",
-     "fases": [
-      {
-       "nome": "Estrutura de endereços",
-       "etapas": [
-        {
-         "t": "Cadastrar endereço do estoque",
-         "dec": false
-        },
-        {
-         "t": "Ligar grupo de usuário ao almoxarifado",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Endereçamento",
-       "etapas": [
-        {
-         "t": "Endereçar o lote",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Movimentação entre endereços",
-       "etapas": [
-        {
-         "t": "Informar tipo de movimentação e item",
-         "dec": false
-        },
-        {
-         "t": "Selecionar lote e endereço de origem",
-         "dec": false
-        },
-        {
-         "t": "Escolher o destino",
-         "dec": false
-        },
-        {
-         "t": "O destino comporta o item?",
-         "dec": true
-        },
-        {
-         "t": "Confirmar com justificativa",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Consulta e rastreabilidade",
-       "etapas": [
-        {
-         "t": "Consultar disponibilidade e endereços",
-         "dec": false
-        },
-        {
-         "t": "Consultar histórico do lote e do item",
-         "dec": false
-        }
-       ]
-      }
-     ]
+     ],
+     "grupo": "Do pedido ao estoque"
     },
     {
      "nome": "Reprovado, reanálise e revalidação",
@@ -540,162 +477,111 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Do pedido ao estoque"
     },
     {
-     "nome": "Solicitação e atendimento à produção",
-     "linha": "Do pedido de material à entrega pelo Estoque, com pesagem.",
+     "nome": "Movimentação interna",
+     "linha": "Endereçamento e movimentação de lotes, com consulta de saldo e de histórico.",
      "fases": [
       {
-       "nome": "Solicitação",
+       "nome": "Estrutura de endereços",
        "etapas": [
         {
-         "t": "Registrar a solicitação de material",
+         "t": "Cadastrar endereço do estoque",
          "dec": false
         },
         {
-         "t": "A solicitação precisa de aprovação?",
+         "t": "Ligar grupo de usuário ao almoxarifado",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Endereçamento",
+       "etapas": [
+        {
+         "t": "Endereçar o lote",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Movimentação entre endereços",
+       "etapas": [
+        {
+         "t": "Informar tipo de movimentação e item",
+         "dec": false
+        },
+        {
+         "t": "Selecionar lote e endereço de origem",
+         "dec": false
+        },
+        {
+         "t": "Escolher o destino",
+         "dec": false
+        },
+        {
+         "t": "O destino comporta o item?",
+         "dec": true
+        },
+        {
+         "t": "Confirmar com justificativa",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Consulta e rastreabilidade",
+       "etapas": [
+        {
+         "t": "Consultar disponibilidade e endereços",
+         "dec": false
+        },
+        {
+         "t": "Consultar histórico do lote e do item",
+         "dec": false
+        }
+       ]
+      }
+     ],
+     "grupo": "Dentro do estoque"
+    },
+    {
+     "nome": "Almoxarifado do Controle da Qualidade",
+     "linha": "Guarda das amostras de referência, retenção e estabilidade.",
+     "fases": [
+      {
+       "nome": "Estrutura",
+       "etapas": [
+        {
+         "t": "Marcar o almoxarifado como referência, retenção ou estabilidade",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Entrada da amostra",
+       "etapas": [
+        {
+         "t": "Registrar a entrada (referência, retenção ou estabilidade)",
+         "dec": false
+        },
+        {
+         "t": "A amostra é de estabilidade?",
          "dec": true
         }
        ]
       },
       {
-       "nome": "Separação",
+       "nome": "Movimentação e saída",
        "etapas": [
         {
-         "t": "Separar o material",
+         "t": "Movimentar entre endereços",
          "dec": false
         },
         {
-         "t": "Pesar, quando exigido",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Atendimento",
-       "etapas": [
-        {
-         "t": "Atender a solicitação",
-         "dec": false
-        },
-        {
-         "t": "Encerrar a solicitação",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Outras saídas e consultas",
-       "etapas": [
-        {
-         "t": "Registrar saída de material (outras)",
-         "dec": false
-        },
-        {
-         "t": "Consultar solicitações e histórico do lote",
-         "dec": false
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "nome": "Devolução e entradas",
-     "linha": "Sobra da produção, devoluções, entradas avulsas e produto acabado.",
-     "fases": [
-      {
-       "nome": "Devolução da produção",
-       "etapas": [
-        {
-         "t": "Registrar a devolução da produção",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Devolução e entradas avulsas",
-       "etapas": [
-        {
-         "t": "Registrar a devolução de material",
-         "dec": false
-        },
-        {
-         "t": "Registrar entrada de material (outras)",
-         "dec": false
-        },
-        {
-         "t": "Endereçar e enviar para análise",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Entrada do produto acabado",
-       "etapas": [
-        {
-         "t": "Registrar a entrada de materiais - produção",
-         "dec": false
-        },
-        {
-         "t": "Análise de produto acabado",
-         "dec": false
-        },
-        {
-         "t": "Entrada de produção (serviços)",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Liberação e consulta",
-       "etapas": [
-        {
-         "t": "Liberar ou reprovar pelo CQ",
-         "dec": false
-        },
-        {
-         "t": "Consultar histórico do lote",
-         "dec": false
-        }
-       ]
-      }
-     ]
-    },
-    {
-     "nome": "Remessa e expedição",
-     "linha": "Saída de material, por guia ou por nota fiscal, com elo para a rastreabilidade.",
-     "fases": [
-      {
-       "nome": "Montar a remessa",
-       "etapas": [
-        {
-         "t": "Registrar a remessa de material",
-         "dec": false
-        },
-        {
-         "t": "Escolher os lotes",
-         "dec": false
-        },
-        {
-         "t": "Remessa por guia (GMM), quando aplicável",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Confirmar e expedir",
-       "etapas": [
-        {
-         "t": "Confirmar a remessa",
-         "dec": false
-        },
-        {
-         "t": "O módulo Rastreabilidade está ativo?",
-         "dec": true
-        },
-        {
-         "t": "Saída por nota fiscal",
+         "t": "Registrar a saída da amostra",
          "dec": false
         }
        ]
@@ -704,12 +590,17 @@ window.DADOS={
        "nome": "Consulta",
        "etapas": [
         {
-         "t": "Consultar remessas e relatório de saída",
+         "t": "Consultar a disponibilidade",
          "dec": false
+        },
+        {
+         "t": "O prazo de guarda é controlado?",
+         "dec": true
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Dentro do estoque"
     },
     {
      "nome": "Inventário",
@@ -771,7 +662,180 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Dentro do estoque"
+    },
+    {
+     "nome": "Solicitação e atendimento à produção",
+     "linha": "Do pedido de material à entrega pelo Estoque, com pesagem.",
+     "fases": [
+      {
+       "nome": "Solicitação",
+       "etapas": [
+        {
+         "t": "Registrar a solicitação de material",
+         "dec": false
+        },
+        {
+         "t": "A solicitação precisa de aprovação?",
+         "dec": true
+        }
+       ]
+      },
+      {
+       "nome": "Separação",
+       "etapas": [
+        {
+         "t": "Separar o material",
+         "dec": false
+        },
+        {
+         "t": "Pesar, quando exigido",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Atendimento",
+       "etapas": [
+        {
+         "t": "Atender a solicitação",
+         "dec": false
+        },
+        {
+         "t": "Encerrar a solicitação",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Outras saídas e consultas",
+       "etapas": [
+        {
+         "t": "Registrar saída de material (outras)",
+         "dec": false
+        },
+        {
+         "t": "Consultar solicitações e histórico do lote",
+         "dec": false
+        }
+       ]
+      }
+     ],
+     "grupo": "Entradas e saídas do estoque"
+    },
+    {
+     "nome": "Devolução e entradas",
+     "linha": "Sobra da produção, devoluções, entradas avulsas e produto acabado.",
+     "fases": [
+      {
+       "nome": "Devolução da produção",
+       "etapas": [
+        {
+         "t": "Registrar a devolução da produção",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Devolução e entradas avulsas",
+       "etapas": [
+        {
+         "t": "Registrar a devolução de material",
+         "dec": false
+        },
+        {
+         "t": "Registrar entrada de material (outras)",
+         "dec": false
+        },
+        {
+         "t": "Endereçar e enviar para análise",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Entrada do produto acabado",
+       "etapas": [
+        {
+         "t": "Registrar a entrada de materiais - produção",
+         "dec": false
+        },
+        {
+         "t": "Análise de produto acabado",
+         "dec": false
+        },
+        {
+         "t": "Entrada de produção (serviços)",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Liberação e consulta",
+       "etapas": [
+        {
+         "t": "Liberar ou reprovar pelo CQ",
+         "dec": false
+        },
+        {
+         "t": "Consultar histórico do lote",
+         "dec": false
+        }
+       ]
+      }
+     ],
+     "grupo": "Entradas e saídas do estoque"
+    },
+    {
+     "nome": "Remessa e expedição",
+     "linha": "Saída de material, por guia ou por nota fiscal, com elo para a rastreabilidade.",
+     "fases": [
+      {
+       "nome": "Montar a remessa",
+       "etapas": [
+        {
+         "t": "Registrar a remessa de material",
+         "dec": false
+        },
+        {
+         "t": "Escolher os lotes",
+         "dec": false
+        },
+        {
+         "t": "Remessa por guia (GMM), quando aplicável",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Confirmar e expedir",
+       "etapas": [
+        {
+         "t": "Confirmar a remessa",
+         "dec": false
+        },
+        {
+         "t": "O módulo Rastreabilidade está ativo?",
+         "dec": true
+        },
+        {
+         "t": "Saída por nota fiscal",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Consulta",
+       "etapas": [
+        {
+         "t": "Consultar remessas e relatório de saída",
+         "dec": false
+        }
+       ]
+      }
+     ],
+     "grupo": "Entradas e saídas do estoque"
     },
     {
      "nome": "Kits",
@@ -833,61 +897,8 @@ window.DADOS={
         }
        ]
       }
-     ]
-    },
-    {
-     "nome": "Almoxarifado do Controle da Qualidade",
-     "linha": "Guarda das amostras de referência, retenção e estabilidade.",
-     "fases": [
-      {
-       "nome": "Estrutura",
-       "etapas": [
-        {
-         "t": "Marcar o almoxarifado como referência, retenção ou estabilidade",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Entrada da amostra",
-       "etapas": [
-        {
-         "t": "Registrar a entrada (referência, retenção ou estabilidade)",
-         "dec": false
-        },
-        {
-         "t": "A amostra é de estabilidade?",
-         "dec": true
-        }
-       ]
-      },
-      {
-       "nome": "Movimentação e saída",
-       "etapas": [
-        {
-         "t": "Movimentar entre endereços",
-         "dec": false
-        },
-        {
-         "t": "Registrar a saída da amostra",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Consulta",
-       "etapas": [
-        {
-         "t": "Consultar a disponibilidade",
-         "dec": false
-        },
-        {
-         "t": "O prazo de guarda é controlado?",
-         "dec": true
-        }
-       ]
-      }
-     ]
+     ],
+     "grupo": "Entradas e saídas do estoque"
     }
    ]
   },
