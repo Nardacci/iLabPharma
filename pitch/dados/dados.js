@@ -24,9 +24,169 @@ window.DADOS={
    ],
    "imagem": [
     "fluxo-modulo-principal.html",
-    "Ver o fluxograma do módulo Principal"
+    "Ver o fluxograma ilustrado do módulo Principal"
    ],
-   "fluxos": []
+   "fluxos": [
+    {
+     "nome": "Cadastro, validação e disponibilização",
+     "linha": "Dos cadastros e parâmetros aos dados mestres disponíveis para todos os módulos.",
+     "fases": [
+      {
+       "nome": "Cadastro e parametrização",
+       "etapas": [
+        {
+         "t": "Organização e empresas: pessoa jurídica, estrutura organizacional, centro de custo, conta contábil e gerencial",
+         "dec": false
+        },
+        {
+         "t": "Usuários e perfis: profissional, conta de usuário, perfil e grupo de usuários, funções profissionais",
+         "dec": false
+        },
+        {
+         "t": "Estrutura física e recursos: ambientes, equipamentos, instrumentos, pontos de água e utilidades",
+         "dec": false
+        },
+        {
+         "t": "Tabelas e parâmetros: grau de contaminação, configurações e notificações do sistema",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Validação e controle",
+       "etapas": [
+        {
+         "t": "Regras de negócio",
+         "dec": false
+        },
+        {
+         "t": "Permissões e perfis",
+         "dec": false
+        },
+        {
+         "t": "Trilha de auditoria (audit trail)",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Dados mestres",
+       "etapas": [
+        {
+         "t": "Dados disponíveis para os módulos dependentes",
+         "dec": false
+        }
+       ]
+      }
+     ],
+     "paralelo": false
+    },
+    {
+     "nome": "Como os módulos usam os cadastros",
+     "linha": "O que cada módulo busca no Principal.",
+     "fases": [
+      {
+       "nome": "Produção",
+       "etapas": [
+        {
+         "t": "Ambientes, equipamentos e instrumentos",
+         "dec": false
+        },
+        {
+         "t": "OPE",
+         "dec": false
+        },
+        {
+         "t": "Usuários e centros de custo",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Estoque",
+       "etapas": [
+        {
+         "t": "Locais físicos",
+         "dec": false
+        },
+        {
+         "t": "Fornecedores e pessoas jurídicas",
+         "dec": false
+        },
+        {
+         "t": "Itens e centros de custo",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Controle da Qualidade",
+       "etapas": [
+        {
+         "t": "Ambientes e instrumentos",
+         "dec": false
+        },
+        {
+         "t": "Profissionais e setores",
+         "dec": false
+        },
+        {
+         "t": "Usuários",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Garantia da Qualidade",
+       "etapas": [
+        {
+         "t": "Profissionais e estrutura organizacional",
+         "dec": false
+        },
+        {
+         "t": "Documentos",
+         "dec": false
+        },
+        {
+         "t": "Treinamentos",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Controle de Documentos",
+       "etapas": [
+        {
+         "t": "Estrutura organizacional e perfis",
+         "dec": false
+        },
+        {
+         "t": "Aprovadores",
+         "dec": false
+        },
+        {
+         "t": "Vigência",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Rastreabilidade",
+       "etapas": [
+        {
+         "t": "Lotes, produtos e insumos",
+         "dec": false
+        },
+        {
+         "t": "Movimentações e eventos",
+         "dec": false
+        }
+       ]
+      }
+     ],
+     "paralelo": true
+    }
+   ]
   },
   {
    "id": "materiais",
@@ -2607,7 +2767,7 @@ window.DADOS={
  ],
  "totais": {
   "modulos": 9,
-  "fluxos": 35,
+  "fluxos": 37,
   "temas": 35,
   "grupos": 7
  }
