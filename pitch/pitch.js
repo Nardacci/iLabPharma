@@ -155,8 +155,11 @@
       h += '<div class="bloco"><h4>Ao final desta etapa</h4><p class="resultado">' + esc(e.resultado) + '</p><h4>Conecta com</h4><ul class="conecta">' + e.conecta.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div></div>';
       h += '<div class="fluxos"><h4>Fluxos do processo' + (e.fluxos.length ? ' · ' + e.fluxos.length : '') + '</h4>';
       if (e.fluxos.length) {
+        var ultimoG = null;
         h += '<div class="fluxo-lista">' + e.fluxos.map(function (f, k) {
-          return '<div class="fcard" data-k="' + k + '"><button class="fcab" type="button" aria-expanded="false"><span class="ft"><b>' + esc(f.nome) + '</b><small>' + esc(f.linha) + '</small></span><span class="seta" aria-hidden="true">⌄</span></button><div class="fcorpo"></div></div>';
+          var cab = '';
+          if (f.grupo && f.grupo !== ultimoG) { cab = '<p class="grupo-fluxo">' + esc(f.grupo) + '</p>'; ultimoG = f.grupo; }
+          return cab + '<div class="fcard" data-k="' + k + '"><button class="fcab" type="button" aria-expanded="false"><span class="ft"><b>' + esc(f.nome) + '</b><small>' + esc(f.linha) + '</small></span><span class="seta" aria-hidden="true">⌄</span></button><div class="fcorpo"></div></div>';
         }).join('') + '</div>';
       } else {
         h += '<p class="vazio">Os cadastros do Principal sustentam todos os fluxos dos outros módulos.</p>';
