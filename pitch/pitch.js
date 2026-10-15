@@ -24,7 +24,7 @@
 
   /* ---------- diagrama de fluxo ---------- */
   function diagrama(f) {
-    var h = '<div class="diagrama">';
+    var h = '<div class="diagrama' + (f.paralelo ? ' paralelo' : '') + '">';
     f.fases.forEach(function (fase, i) {
       var cor = CORES[i % CORES.length];
       h += '<div class="fase" style="--cor:' + cor + '"><div class="fase-cab"><i>' + (i + 1) + '</i>' + esc(fase.nome) + '</div><div class="fase-passos">';
