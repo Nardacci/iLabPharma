@@ -74,6 +74,111 @@ def telas_do_roteiro(pagina):
 # Áreas que não são módulos do sistema: ficam fora dos cartões e das contagens de módulos.
 ESPECIAIS = {"visao-geral"}
 
+# ---------------------------------------------------------------------------------------------
+# Roteiro de leitura: cada módulo vira um caminho com começo, passos numerados e fim. Nenhum
+# documento sai do portal; só ganha ordem. O caminho entre os módulos segue o processo do lote.
+# ---------------------------------------------------------------------------------------------
+CAMINHO = ["visao-geral", "principal", "estoque", "producao", "ope", "controle-qualidade",
+           "garantia-qualidade", "controle-documentos", "comercial", "rastreabilidade"]
+PASSOS = [
+    ("conhecer", "Conheça o módulo", "O que é, o que tem e como as telas se organizam nos menus."),
+    ("fluxos", "Siga o processo", "Como o trabalho anda, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
+    ("regras", "Regras e permissões", "O que o sistema faz com cada dado, quem pode fazer o quê e como usar."),
+    ("norma", "Norma e risco", "O que a ANVISA exige e onde está o risco."),
+    ("testes", "Testes e defeitos", "O que foi testado nas telas, o que falhou e como corrigir."),
+    ("nova", "A nova versão", "Como o módulo deve funcionar: o ideal, os requisitos e os dados."),
+    ("fecho", "Fechamento", "O dossiê que reúne tudo e dá o parecer do módulo."),
+]
+PRIORIDADE = {
+    "conhecer": ["resumo executivo", "reconhecimento", "inventário"],
+    "regras": ["regras de negócio", "matriz de permiss", "manual", "cadastros"],
+    "norma": ["conformidade", "risco", "rastreabilidade"],
+    "testes": ["plano", "relatório", "defeitos"],
+    "nova": ["ideal", "entre os módulos", "requisitos", "modelo de dados", "comparação"],
+    "visao": ["processo fabril", "integrações", "diagnóstico", "repetidos", "qualidade entre"],
+}
+ORDEM_FLUXOS = {
+    "estoque": ["compras", "recebimento", "reprovado", "movimenta", "almoxarifado", "inventário", "solicita", "devolu", "remessa", "kits"],
+    "producao": ["produto", "prepara", "autoriza", "registro de lote", "terceiriza"],
+    "controle-qualidade": ["regras", "solicita", "água", "estabilidade"],
+    "garantia-qualidade": ["desvios", "mudan", "autoinspe", "treinamento", "assuntos"],
+    "controle-documentos": ["tipo de documento", "ciclo", "cópias", "externo"],
+    "comercial": ["cliente", "cotação", "fatura"],
+    "rastreabilidade": ["geração", "eventos"],
+}
+
+
+def _pos(chaves, titulo):
+    t = titulo.lower()
+    for i, c in enumerate(chaves):
+        if c in t:
+            return i
+    return 99
+
+
+def passo_de(p):
+    t, cat = p["titulo"].lower(), p["cat"]
+    if cat == "fluxos" or p.get("roteiro_de"):
+        return "fluxos"
+    if "dossiê" in t:
+        return "fecho"
+    if "regras de negócio" in t:
+        return "regras"
+    if cat == "inicio":
+        return "testes" if "relatório de testes" in t else "conhecer"
+    if cat == "negocio":
+        return "regras"
+    if cat == "qualidade":
+        return "norma"
+    if cat in ("testes", "defeitos"):
+        return "testes"
+    return "nova"
+
+
+def organizar_roteiro(mod):
+    """Ordena os documentos do módulo em passos e liga cada um ao anterior e ao próximo."""
+    mod["roteiro"], mod["seq"] = [], []
+    if not mod["paginas"]:
+        return
+    if mod["id"] in ESPECIAIS:
+        pags = sorted(mod["paginas"], key=lambda p: _pos(PRIORIDADE["visao"], p["titulo"]))
+        grupos = [("visao", "Visão de ponta a ponta", "Como o processo se encadeia entre os módulos, onde a corrente quebra e o que repete.", pags)]
+    else:
+        grupos = []
+        for chave, nome, desc in PASSOS:
+            pags = [p for p in mod["paginas"] if passo_de(p) == chave]
+            if chave == "fluxos":
+                fl = sorted([p for p in pags if not p.get("roteiro_de")], key=lambda p: _pos(ORDEM_FLUXOS.get(mod["id"], []), p["titulo"]))
+                ro = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
+                pags = []
+                for p in fl:
+                    pags.append(p)
+                    if p["arq"] in ro:
+                        pags.append(ro[p["arq"]])
+            else:
+                pags = sorted(pags, key=lambda p: _pos(PRIORIDADE.get(chave, []), p["titulo"]))
+            if pags:
+                grupos.append((chave, nome, desc, pags))
+    seq = [p for g in grupos for p in g[3]]
+    for i, g in enumerate(grupos, 1):
+        for p in g[3]:
+            p["passo_n"], p["passo_nome"], p["passo_total"] = i, g[1], len(grupos)
+    for k, p in enumerate(seq):
+        p["n"], p["total"] = k + 1, len(seq)
+        p["ant"] = seq[k - 1] if k else None
+        p["prox"] = seq[k + 1] if k + 1 < len(seq) else None
+    mod["roteiro"], mod["seq"] = grupos, seq
+
+
+def vizinhos(mod):
+    """Módulo anterior e seguinte no caminho do processo (só os que têm documentos)."""
+    ids = [m for m in CAMINHO if any(x["id"] == m and x["paginas"] for x in MODULOS)]
+    if mod["id"] not in ids:
+        return None, None
+    i = ids.index(mod["id"])
+    por_id = {x["id"]: x for x in MODULOS}
+    return (por_id[ids[i - 1]] if i else None), (por_id[ids[i + 1]] if i + 1 < len(ids) else None)
+
 MODULOS = [
     {
         "id": "visao-geral", "nome": "Visão entre módulos", "icone": "◎", "cor": "#2563eb",
@@ -633,6 +738,9 @@ def gerar(origem, destino, relatorio):
             busca.append({"t": titulo, "m": mod["nome"], "u": f"documentacao/{mod['id']}/{s}.html",
                           "h": titulos[:40], "x": texto[:6000]})
 
+    for mod in MODULOS:
+        organizar_roteiro(mod)
+
     # Páginas de documento
     for mod in MODULOS:
         if not mod["paginas"]:
@@ -669,13 +777,10 @@ def gerar(origem, destino, relatorio):
 
 def nav_lateral(mod, atual):
     grupos = []
-    for cat, (nome_cat, _) in CATEGORIAS.items():
-        itens = [p for p in mod["paginas"] if p["cat"] == cat]
-        if not itens:
-            continue
-        roteiros = {p["roteiro_de"]: p for p in itens if p.get("roteiro_de")}
+    for i, (chave, nome, _desc, pags) in enumerate(mod["roteiro"], 1):
+        roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
         li = ""
-        for p in itens:
+        for p in pags:
             if p.get("roteiro_de"):
                 continue
             li += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a>'
@@ -683,7 +788,9 @@ def nav_lateral(mod, atual):
             if r:
                 li += f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo para testar</a></li></ul>'
             li += "</li>"
-        grupos.append(f'<div class="lat-grupo"><div class="lat-titulo">{E(nome_cat)}</div><ul>{li}</ul></div>')
+        aberto = " lat-atual" if atual and atual.get("passo_nome") == nome else ""
+        num = f'<span class="lat-n">{i}</span>' if chave != "visao" else ""
+        grupos.append(f'<div class="lat-grupo{aberto}"><div class="lat-titulo">{num}{E(nome)}</div><ul>{li}</ul></div>')
     return "".join(grupos)
 
 
@@ -697,19 +804,39 @@ def toc_html(toc):
     return f'<nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul>{"".join(itens)}</ul></nav>'
 
 
+def _cartao_ap(rotulo, titulo, href, lado):
+    return f'<a class="ap ap-{lado}" href="{href}"><small>{E(rotulo)}</small><strong>{E(titulo)}</strong></a>'
+
+
 def pagina_documento(mod, p):
     raiz = "../../"
-    cat_nome = CATEGORIAS[p["cat"]][0]
     word = f'<a class="botao" href="{p["word"]}" download>⤓ Baixar em Word</a>' if p["word"] else ""
     aviso = '<p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>' if p["limpo"] else ""
+    ant_mod, prox_mod = vizinhos(mod)
+    if p["ant"]:
+        ant = _cartao_ap("← Anterior", p["ant"]["titulo"], f'{p["ant"]["slug"]}.html', "ant")
+    elif ant_mod:
+        ant = _cartao_ap("← Módulo anterior", ant_mod["nome"], f'../{ant_mod["id"]}/index.html', "ant")
+    else:
+        ant = _cartao_ap("← Início do roteiro", mod["nome"], "index.html", "ant")
+    if p["prox"]:
+        prox = _cartao_ap("Próximo →", p["prox"]["titulo"], f'{p["prox"]["slug"]}.html', "prox")
+    elif prox_mod:
+        prox = _cartao_ap("Fim do módulo · próximo módulo →", prox_mod["nome"], f'../{prox_mod["id"]}/index.html', "prox")
+    else:
+        prox = _cartao_ap("Fim do roteiro", "Voltar ao início do portal", f"{raiz}index.html", "prox")
+    pct = round(p["n"] / p["total"] * 100)
+    unico = p["passo_total"] == 1
+    onde = (f'Passo {p["passo_n"]} de {p["passo_total"]} · {E(p["passo_nome"])}' if not unico else E(p["passo_nome"]))
     return (cabecalho(f"{p['titulo']} · {mod['nome']} · iLabMedSys", raiz) + f"""
 <div class="doc-layout">
-  <aside class="lateral" aria-label="Documentos do módulo">
+  <aside class="lateral" aria-label="Roteiro do módulo">
     <a class="lat-modulo" href="index.html" style="--cor:{mod['cor']}"><span class="icone">{mod['icone']}</span>{E(mod['nome'])}</a>
     {nav_lateral(mod, p)}
   </aside>
   <main class="doc" id="conteudo">
-    <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a> › <span>{E(cat_nome)}</span></nav>
+    <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a> › <span>{onde}</span></nav>
+    <div class="onde-estou" aria-label="Onde você está no roteiro"><span>{onde}</span><span>documento {p["n"]} de {p["total"]}</span><div class="prog-doc"><i style="width:{pct}%"></i></div></div>
     <header class="doc-cabecalho">
       <h1>{E(p['titulo'])}</h1>
       <div class="doc-acoes">{word}<button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
@@ -718,6 +845,7 @@ def pagina_documento(mod, p):
     <article class="texto">
 {p['corpo']}
     </article>
+    <nav class="anterior-proximo" aria-label="Anterior e próximo">{ant}{prox}</nav>
   </main>
   {toc_html(p['toc'])}
 </div>
@@ -741,17 +869,15 @@ def pagina_modulo(mod):
     num_html = "".join(f'<div class="numero"><strong>{n}</strong><span>{E(r)}</span></div>' for n, r in numeros)
 
     blocos, submenu = [], []
-    for cat, (nome_cat, desc) in CATEGORIAS.items():
-        itens = [p for p in mod["paginas"] if p["cat"] == cat]
-        if not itens:
-            continue
-        if cat == "fluxos":
-            roteiros = {p["roteiro_de"]: p for p in itens if p.get("roteiro_de")}
+    total = len(mod["seq"])
+    for i, (chave, nome, desc, pags) in enumerate(mod["roteiro"], 1):
+        if chave == "fluxos":
+            roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
             cards = []
-            for p in itens:
+            for p in pags:
                 if p.get("roteiro_de"):
                     continue
-                card = (f'<a class="fluxo-card" href="{p["slug"]}.html">'
+                card = (f'<a class="fluxo-card" href="{p["slug"]}.html"><span class="fluxo-n">{p["n"]}</span>'
                         + (f'<img src="{p["fluxograma"]}" alt="" loading="lazy">' if p["fluxograma"] else '<div class="fluxo-sem-img">Fluxo descrito em texto</div>')
                         + f'<span>{E(p["titulo"])}</span></a>')
                 r = roteiros.get(p["arq"])
@@ -765,13 +891,25 @@ def pagina_modulo(mod):
             grade = f'<div class="fluxos">{"".join(cards)}</div>'
         else:
             cards = "".join(
-                f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo">{E(p["titulo"])}</span>'
-                f'<span class="doc-card-meta">{"Word disponível" if p["word"] else "Leitura no portal"}</span></a>' for p in itens)
+                f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
+                f'<span class="doc-card-meta">{"Word disponível" if p["word"] else "Leitura no portal"}</span></a>' for p in pags)
             grade = f'<div class="doc-cards">{cards}</div>'
-        classe = "secao secao-ideal" if cat == "ideal" else "secao"
-        blocos.append(f'<section class="{classe}" id="sec-{cat}"><h2>{E(nome_cat)}</h2><p class="secao-desc">{E(desc)}</p>{grade}</section>')
-        submenu.append(f'<a href="#sec-{cat}"{" class=\"submenu-ideal\"" if cat == "ideal" else ""}>{E(nome_cat)}</a>')
-    submenu_html = f'<nav class="submenu" aria-label="Seções do módulo">{"".join(submenu)}</nav>' if len(submenu) > 1 else ""
+        classe = "secao passo secao-ideal" if chave == "nova" else "secao passo"
+        numero = f'<span class="passo-n">{i}</span>' if chave != "visao" else ""
+        blocos.append(f'<section class="{classe}" id="passo-{chave}"><div class="passo-cab">{numero}<div><h2>{E(nome)}</h2><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
+        submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "nova" else ""}>{(str(i) + " · ") if chave != "visao" else ""}{E(nome)}</a>')
+    submenu_html = f'<nav class="submenu" aria-label="Passos do roteiro">{"".join(submenu)}</nav>' if len(submenu) > 1 else ""
+
+    primeiro, ultimo = mod["seq"][0], mod["seq"][-1]
+    ant_mod, prox_mod = vizinhos(mod)
+    comece = (f'<section class="comece"><div><p class="comece-rotulo">Comece aqui</p>'
+              f'<p>O roteiro deste módulo tem <strong>{len(mod["roteiro"])} passo{"s" if len(mod["roteiro"]) != 1 else ""}</strong> e <strong>{total} documentos</strong>, '
+              f'do primeiro ({E(primeiro["titulo"])}) ao último ({E(ultimo["titulo"])}). Leia na ordem: cada documento leva ao próximo.</p></div>'
+              f'<a class="botao botao-grande" href="{primeiro["slug"]}.html">Iniciar o roteiro →</a></section>')
+    fim = (f'<section class="fim-roteiro"><p class="comece-rotulo">Fim do roteiro deste módulo</p>'
+           + (f'<p>Segue o caminho do processo: <a class="botao" href="../{prox_mod["id"]}/index.html">Próximo módulo: {E(prox_mod["nome"])} →</a></p>' if prox_mod
+              else '<p>Este é o último módulo do caminho. <a class="botao" href="../../index.html">Voltar ao início do portal</a></p>')
+           + (f'<p class="fim-ant">Antes deste: <a href="../{ant_mod["id"]}/index.html">{E(ant_mod["nome"])}</a></p>' if ant_mod else "") + '</section>')
 
     return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
 <main class="pagina-modulo" id="conteudo">
@@ -785,8 +923,10 @@ def pagina_modulo(mod):
     </div>
   </header>
   <div class="numeros">{num_html}</div>
+  {comece}
   {submenu_html}
   {''.join(blocos)}
+  {fim}
 </main>
 """ + rodape(raiz))
 
@@ -794,17 +934,30 @@ def pagina_modulo(mod):
 def pagina_inicial(origem):
     raiz = ""
     cards = []
-    for mod in MODULOS:
-        if mod["id"] in ESPECIAIS:
-            continue
+    por_id = {m["id"]: m for m in MODULOS}
+    ordem = [por_id[i] for i in CAMINHO if i in por_id and i not in ESPECIAIS]
+    ordem += [m for m in MODULOS if m["id"] not in ESPECIAIS and m not in ordem]
+    for k, mod in enumerate(ordem, 1):
         n = len(mod["paginas"])
-        inner = (f'<div class="mc-topo"><span class="mc-icone" style="--cor:{mod["cor"]}">{mod["icone"]}</span>{selo(mod["situacao"])}</div>'
+        inner = (f'<div class="mc-topo"><span class="mc-icone" style="--cor:{mod["cor"]}">{mod["icone"]}</span><span class="mc-n" title="Posição no caminho do lote">{k}</span>{selo(mod["situacao"])}</div>'
                  f'<h3>{E(mod["nome"])}</h3><p>{E(mod["resumo"])}</p>{barra(mod["nivel"])}'
                  f'<div class="mc-rodape">{f"{n} documentos" if n else "Ainda sem documentação"}</div>')
         if n:
             cards.append(f'<a class="modulo-card" href="documentacao/{mod["id"]}/index.html">{inner}</a>')
         else:
             cards.append(f'<div class="modulo-card modulo-futuro" aria-disabled="true">{inner}</div>')
+
+    passos_caminho = "".join(
+        f'<li><a href="documentacao/{m["id"]}/index.html" style="--cor:{m["cor"]}"><span class="cam-n">{k}</span><span class="cam-nome">{E(m["nome"])}</span></a></li>'
+        for k, m in enumerate(ordem, 1) if m["paginas"])
+    vg0 = por_id["visao-geral"]
+    caminho = (f'''<section class="secao" id="caminho">
+    <h2>O caminho do lote pelos módulos</h2>
+    <p class="secao-desc">A documentação segue o processo: começa no cadastro-base e termina na rastreabilidade do medicamento. Dentro de cada módulo há um roteiro com começo, passos numerados e fim, e o último documento leva ao módulo seguinte.</p>
+    <div class="caminho-marcos"><span><b>Começa em</b> {E(ordem[0]["nome"])}</span><span><b>Termina em</b> {E(ordem[-1]["nome"])}</span>
+      <a class="botao botao-secundario" href="documentacao/visao-geral/index.html">Antes de começar: a visão de ponta a ponta →</a></div>
+    <ol class="caminho">{passos_caminho}</ol>
+  </section>''')
 
     def link(mid, s):
         mod = next(m for m in MODULOS if m["id"] == mid)
@@ -857,9 +1010,11 @@ def pagina_inicial(origem):
     </ol>
   </section>
 
+  {caminho}
+
   <section class="secao" id="modulos">
     <h2>Módulos</h2>
-    <p class="secao-desc">Escolha um módulo para ver seus fluxos, regras, testes e documentos para baixar.</p>
+    <p class="secao-desc">Os módulos estão na ordem do caminho do lote. Escolha um para ver o seu roteiro: fluxos, regras, testes e documentos para baixar.</p>
     <div class="modulos">{''.join(cards)}</div>
   </section>
 
