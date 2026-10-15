@@ -82,11 +82,12 @@ CAMINHO = ["visao-geral", "principal", "estoque", "producao", "ope", "controle-q
            "garantia-qualidade", "controle-documentos", "comercial", "rastreabilidade"]
 PASSOS = [
     ("conhecer", "Conheça o módulo", "O que é, o que tem e como as telas se organizam nos menus."),
-    ("fluxos", "Siga o processo", "Como o trabalho anda, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
-    ("regras", "Regras e permissões", "O que o sistema faz com cada dado, quem pode fazer o quê e como usar."),
+    ("fluxos", "Siga o processo", "Como o trabalho anda hoje, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
+    ("regras", "Regras e permissões", "O que o sistema faz hoje com cada dado, quem pode fazer o quê e como usar."),
+    ("ideal", "O ideal: como deve funcionar", "Como o módulo deve trabalhar para atender à ANVISA: funções, comportamento, integrações com os outros módulos e papéis. Mostra o que manter, corrigir e construir."),
     ("norma", "Norma e risco", "O que a ANVISA exige e onde está o risco."),
     ("testes", "Testes e defeitos", "O que foi testado nas telas, o que falhou e como corrigir."),
-    ("nova", "A nova versão", "Como o módulo deve funcionar: o ideal, os requisitos e os dados."),
+    ("dados", "Requisitos e dados", "Para a equipe de desenvolvimento da nova versão."),
     ("fecho", "Fechamento", "O dossiê que reúne tudo e dá o parecer do módulo."),
 ]
 PRIORIDADE = {
@@ -94,7 +95,8 @@ PRIORIDADE = {
     "regras": ["regras de negócio", "matriz de permiss", "manual", "cadastros"],
     "norma": ["conformidade", "risco", "rastreabilidade"],
     "testes": ["plano", "relatório", "defeitos"],
-    "nova": ["ideal", "entre os módulos", "requisitos", "modelo de dados", "comparação"],
+    "ideal": ["ideal", "entre os módulos"],
+    "dados": ["requisitos", "modelo de dados", "comparação"],
     "visao": ["processo fabril", "integrações", "diagnóstico", "repetidos", "qualidade entre"],
 }
 ORDEM_FLUXOS = {
@@ -132,7 +134,9 @@ def passo_de(p):
         return "norma"
     if cat in ("testes", "defeitos"):
         return "testes"
-    return "nova"
+    if cat == "ideal":
+        return "ideal"
+    return "dados"
 
 
 def organizar_roteiro(mod):
@@ -202,6 +206,7 @@ MODULOS = [
             ("1.principal/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("1.principal/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Regras de Negocio.docx"),
             ("1.principal/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Manual do Usuario.docx"),
+            ("1.principal/ideal/pri-ideal.md", "O Principal ideal: o dono do que é global", "ideal", "1.principal/ideal/LabMedSys - Modulo Principal - O Ideal.docx"),
             ("1.principal/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("1.principal/04-conformidade-regulatoria.md", "Conformidade regulatória", "qualidade", None),
             ("1.principal/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
@@ -894,10 +899,10 @@ def pagina_modulo(mod):
                 f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
                 f'<span class="doc-card-meta">{"Word disponível" if p["word"] else "Leitura no portal"}</span></a>' for p in pags)
             grade = f'<div class="doc-cards">{cards}</div>'
-        classe = "secao passo secao-ideal" if chave == "nova" else "secao passo"
+        classe = "secao passo secao-ideal" if chave == "ideal" else "secao passo"
         numero = f'<span class="passo-n">{i}</span>' if chave != "visao" else ""
         blocos.append(f'<section class="{classe}" id="passo-{chave}"><div class="passo-cab">{numero}<div><h2>{E(nome)}</h2><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
-        submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "nova" else ""}>{(str(i) + " · ") if chave != "visao" else ""}{E(nome)}</a>')
+        submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "ideal" else ""}>{(str(i) + " · ") if chave != "visao" else ""}{E(nome)}</a>')
     submenu_html = f'<nav class="submenu" aria-label="Passos do roteiro">{"".join(submenu)}</nav>' if len(submenu) > 1 else ""
 
     primeiro, ultimo = mod["seq"][0], mod["seq"][-1]
