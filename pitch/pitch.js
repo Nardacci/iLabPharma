@@ -9,6 +9,79 @@
   var reduzir = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var CORES = ['#ff7a00', '#3ea6ff', '#38d17a', '#9b7bff', '#ffc545'];
   var pag = document.body.getAttribute('data-pag');
+  var pagina = {};            // ganchos da página atual: mostrar(passo), proximo(), anterior()
+  var zoomAberto = function () { return false; };
+
+  /* ---------- roteiro: do início ao fim ---------- */
+  var SEQ = [{ p: 'inicio', url: 'index.html', cap: 'Início', tit: 'Início' }];
+  D.etapas.forEach(function (e) {
+    SEQ.push({ p: 'funciona', url: 'funciona.html#' + e.id, id: e.id, parte: 'visao', cap: 'Como funciona', tit: e.nome });
+    SEQ.push({ p: 'funciona', url: 'funciona.html#' + e.id + '-fluxos', id: e.id, parte: 'fluxos', cap: 'Como funciona', tit: e.nome + ' · fluxos' });
+  });
+  D.grupos.forEach(function (g, i) { SEQ.push({ p: 'anvisa', url: 'anvisa.html#g' + i, g: i, cap: 'Normas da ANVISA', tit: g }); });
+  SEQ.push({ p: 'entrega', url: 'entrega.html', cap: 'O que entregamos', tit: 'O que entregamos' });
+  var CAPS = ['Início', 'Como funciona', 'Normas da ANVISA', 'O que entregamos'];
+  var atualSeq = 0;
+
+  function navegar(url) {
+    if (reduzir) { window.location.href = url; return; }
+    document.body.classList.add('saindo');
+    setTimeout(function () { window.location.href = url; }, 200);
+  }
+  function ir(k) {
+    if (k < 0 || k >= SEQ.length) return;
+    var t = SEQ[k];
+    if (t.p === pag && pagina.mostrar) { pagina.mostrar(t); atualSeq = k; barra(); }
+    else navegar(t.url);
+  }
+  function proximo() {
+    if (pagina.proximo && pagina.proximo()) return;
+    if (atualSeq >= SEQ.length - 1) { navegar('index.html'); return; }
+    ir(atualSeq + 1);
+  }
+  function anterior() {
+    if (pagina.anterior && pagina.anterior()) return;
+    ir(atualSeq - 1);
+  }
+
+  function barra() {
+    var b = $('#seq');
+    if (!b) return;
+    if (pag === 'inicio') { b.style.display = 'none'; return; }
+    var k = atualSeq, ult = SEQ.length - 1;
+    var cap = SEQ[k].cap, capI = CAPS.indexOf(cap);
+    var prox = k < ult ? SEQ[k + 1].tit : 'Recomeçar';
+    var ant = k > 0 ? SEQ[k - 1].tit : '';
+    var dentro = pagina.rotulos ? pagina.rotulos() : null;   // 'O que entregamos' anda de cena em cena
+    var ehFim = k >= ult && !(dentro && dentro.prox);
+    if (dentro && dentro.prox) prox = dentro.prox;
+    if (dentro && dentro.ant) ant = dentro.ant;
+    // posição dentro do capítulo
+    var do_cap = SEQ.filter(function (s) { return s.cap === cap; });
+    var pos = do_cap.indexOf(SEQ[k]) + 1;
+    b.innerHTML =
+      '<button type="button" class="seq-bt" id="seqAnt" aria-label="Anterior"' + (k === 0 && !(dentro && dentro.ant) ? ' disabled' : '') + '><span aria-hidden="true">←</span><span class="seq-rot"><small>Anterior</small>' + esc(ant) + '</span></button>' +
+      '<div class="seq-meio"><ol class="seq-caps">' + CAPS.map(function (c, i) { return '<li><button type="button" data-cap="' + i + '" class="' + (i === capI ? 'on' : (i < capI ? 'feito' : '')) + '">' + esc(c) + '</button></li>'; }).join('') + '</ol>' +
+      '<div class="seq-prog" role="progressbar" aria-valuemin="0" aria-valuemax="' + ult + '" aria-valuenow="' + k + '"><i style="width:' + (k / ult * 100) + '%"></i></div>' +
+      '<small class="seq-pos">' + (do_cap.length > 1 ? pos + ' de ' + do_cap.length + ' · ' + esc(SEQ[k].tit) : esc(cap)) + '</small></div>' +
+      '<button type="button" class="seq-bt prox" id="seqProx" aria-label="Próximo"><span class="seq-rot"><small>' + (ehFim ? 'Fim' : 'Próximo') + '</small>' + esc(prox) + '</span><span aria-hidden="true">' + (ehFim ? '↺' : '→') + '</span></button>';
+    $('#seqAnt').addEventListener('click', anterior);
+    $('#seqProx').addEventListener('click', proximo);
+    $$('[data-cap]', b).forEach(function (x) {
+      x.addEventListener('click', function () {
+        var c = CAPS[+x.getAttribute('data-cap')];
+        for (var i = 0; i < SEQ.length; i++) if (SEQ[i].cap === c) { ir(i); break; }
+      });
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (zoomAberto() || e.altKey || e.ctrlKey || e.metaKey) return;
+    var t = e.target && e.target.tagName;
+    if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); if (pag === 'inicio') navegar('funciona.html#industria'); else proximo(); }
+    else if (e.key === 'ArrowLeft' && pag !== 'inicio') { e.preventDefault(); anterior(); }
+  });
 
   /* ---------- transição entre páginas ---------- */
   document.addEventListener('click', function (ev) {
@@ -17,8 +90,7 @@
     var h = a.getAttribute('href');
     if (!h || h.charAt(0) === '#' || /^(https?:|mailto:)/.test(h) || reduzir) return;
     ev.preventDefault();
-    document.body.classList.add('saindo');
-    setTimeout(function () { window.location.href = h; }, 200);
+    navegar(h);
   });
   window.addEventListener('pageshow', function (e) { if (e.persisted) document.body.classList.remove('saindo'); });
 
@@ -36,6 +108,7 @@
 
   /* ---------- ampliação (tela cheia) do fluxo ---------- */
   var zoom = null, zEscala = 1, zUltimoFoco = null;
+  zoomAberto = function () { return !!(zoom && zoom.classList.contains('aberto')); };
   function montarZoom() {
     zoom = el('div', 'zoom');
     zoom.setAttribute('role', 'dialog'); zoom.setAttribute('aria-modal', 'true'); zoom.setAttribute('aria-label', 'Fluxo ampliado');
@@ -62,13 +135,13 @@
     window.addEventListener('pointerup', function () { drag = null; area.classList.remove('arrastando'); });
     area.addEventListener('wheel', function (e) { if (e.ctrlKey || e.metaKey) { e.preventDefault(); escalar(zEscala * (e.deltaY < 0 ? 1.1 : 1 / 1.1)); } }, { passive: false });
     document.addEventListener('keydown', function (e) {
-      if (!zoom.classList.contains('aberto')) return;
+      if (!zoomAberto()) return;
       if (e.key === 'Escape' && !document.fullscreenElement) fecharZoom();
       else if (e.key === '+' || e.key === '=') escalar(zEscala * 1.2);
       else if (e.key === '-' || e.key === '_') escalar(zEscala / 1.2);
       else if (e.key === '0') ajustar();
     });
-    window.addEventListener('resize', function () { if (zoom.classList.contains('aberto')) ajustar(); });
+    window.addEventListener('resize', function () { if (zoomAberto()) ajustar(); });
   }
   function escalar(s) {
     zEscala = Math.max(.4, Math.min(3, s));
@@ -104,18 +177,11 @@
     if (zUltimoFoco && zUltimoFoco.focus) zUltimoFoco.focus();
   }
 
+  var topo = function () { window.scrollTo({ top: 0, behavior: reduzir ? 'auto' : 'smooth' }); };
+  var hashAtual = function () { return location.hash.replace('#', ''); };
+
   /* ---------- página: início ---------- */
   if (pag === 'inicio') {
-    var T = D.totais;
-    var portas = [
-      ['funciona.html', 'Entenda como o iLabPharma funciona', 'Sete etapas, ' + T.modulos + ' módulos e ' + T.fluxos + ' fluxos de processo', true],
-      ['anvisa.html', 'Dentro das normas da ANVISA', T.temas + ' pontos da RDC 658/2022 e do Guia 33/2020'],
-      ['entrega.html', 'O que entregamos', 'Muito além de um sistema']
-    ];
-    $('#portas').innerHTML = portas.map(function (p, i) {
-      return '<a class="porta' + (p[3] ? ' principal' : '') + '" href="' + p[0] + '"><span class="num">' + (i + 1) + '</span><span><b>' + esc(p[1]) + '</b><small>' + esc(p[2]) + '</small></span><span class="seta" aria-hidden="true">→</span></a>';
-    }).join('');
-
     var trilho = $('#trilho'), atualI = 0;
     var prog = el('li', 'prog'); prog.setAttribute('aria-hidden', 'true'); trilho.appendChild(prog);
     D.etapas.forEach(function (e) {
@@ -137,23 +203,25 @@
 
   /* ---------- página: como funciona ---------- */
   if (pag === 'funciona') {
-    var atual = 0, tocando = false, timer = null;
+    var atual = 0;
     var lista = $('#passos');
     D.etapas.forEach(function (e, i) {
       var li = el('li'), b = el('button', 'passo');
       b.type = 'button';
       b.innerHTML = '<span class="n">' + e.num + '</span><span class="t"><b>' + esc(e.nome) + '</b><small>' + esc(e.modulos.join(' · ')) + '</small></span>';
-      b.addEventListener('click', function () { parar(); escolher(i); });
+      b.addEventListener('click', function () { ir(1 + 2 * i); });
       li.appendChild(b); lista.appendChild(li);
     });
 
     var painelHtml = function (i) {
       var e = D.etapas[i];
-      var h = '<div class="mods">' + e.modulos.map(function (m) { return '<span class="chip mod">' + esc(m) + '</span>'; }).join('') + '</div>';
+      var mods = '<div class="mods">' + e.modulos.map(function (m) { return '<span class="chip mod">' + esc(m) + '</span>'; }).join('') + '</div>';
+      var h = '<div class="parte parte-visao">' + mods;
       h += '<h3>' + esc(e.titulo) + '</h3><p class="pergunta">' + esc(e.pergunta) + '</p><p class="texto">' + esc(e.texto) + '</p>';
       h += '<div class="duas"><div class="bloco"><h4>O que o sistema faz</h4><ul class="faz">' + e.faz.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
-      h += '<div class="bloco"><h4>Ao final desta etapa</h4><p class="resultado">' + esc(e.resultado) + '</p><h4>Conecta com</h4><ul class="conecta">' + e.conecta.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div></div>';
-      h += '<div class="fluxos"><h4>Fluxos do processo' + (e.fluxos.length ? ' · ' + e.fluxos.length : '') + '</h4>';
+      h += '<div class="bloco"><h4>Ao final desta etapa</h4><p class="resultado">' + esc(e.resultado) + '</p><h4>Conecta com</h4><ul class="conecta">' + e.conecta.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div></div></div>';
+      h += '<div class="parte parte-fluxos">' + mods + '<h3>Fluxos do processo · ' + esc(e.nome) + '</h3>';
+      h += '<p class="texto">Cada fluxo mostra as fases e as etapas do processo. Use "Ampliar o fluxo" para ver em tela cheia.</p><div class="fluxos">';
       if (e.fluxos.length) {
         var ultimoG = null;
         h += '<div class="fluxo-lista">' + e.fluxos.map(function (f, k) {
@@ -165,10 +233,21 @@
         h += '<p class="vazio">Os cadastros do Principal sustentam todos os fluxos dos outros módulos.</p>';
       }
       if (e.imagem) h += '<p class="vermais"><a href="' + e.imagem[0] + '" target="_blank" rel="noopener">' + esc(e.imagem[1]) + ' <span aria-hidden="true">↗</span></a></p>';
-      h += '</div><div class="nav-painel">' +
-        (i > 0 ? '<button class="btn" type="button" data-ir="' + (i - 1) + '">← ' + esc(D.etapas[i - 1].nome) + '</button>' : '<span></span>') +
-        (i < D.etapas.length - 1 ? '<button class="btn primario" type="button" data-ir="' + (i + 1) + '">' + esc(D.etapas[i + 1].nome) + ' →</button>' : '<a class="btn primario" href="anvisa.html">Dentro das normas da ANVISA →</a>') + '</div>';
-      return h;
+      return h + '</div></div>';
+    };
+
+    var abrirCard = function (novo, c, abrir) {
+      $$('.fcard.aberto', novo).forEach(function (o) { o.classList.remove('aberto'); $('.fcab', o).setAttribute('aria-expanded', 'false'); });
+      if (!abrir) return;
+      var f = D.etapas[atual].fluxos[+c.getAttribute('data-k')];
+      var corpo = $('.fcorpo', c);
+      if (!corpo.firstChild) {
+        corpo.innerHTML = '<div class="fbarra"><p class="dica"></p><button class="ampliar" type="button">⤢ Ampliar o fluxo</button></div>' + diagrama(f);
+        $('.ampliar', corpo).addEventListener('click', function () { abrirZoom(f, D.etapas[atual].nome + ' · ' + f.linha); });
+      }
+      c.classList.add('aberto'); $('.fcab', c).setAttribute('aria-expanded', 'true');
+      var dg = $('.diagrama', corpo), dica = $('.dica', corpo);
+      dica.textContent = (dg.scrollWidth > dg.clientWidth + 4) ? 'Role para o lado ou amplie o fluxo para ver todas as fases.' : '';
     };
 
     var montarPainel = function () {
@@ -176,81 +255,78 @@
       novo.innerHTML = painelHtml(atual);
       p.parentNode.replaceChild(novo, p);
       $$('.fcard', novo).forEach(function (c) {
-        $('.fcab', c).addEventListener('click', function () {
-          parar();
-          var abrir = !c.classList.contains('aberto');
-          $$('.fcard.aberto', novo).forEach(function (o) { o.classList.remove('aberto'); $('.fcab', o).setAttribute('aria-expanded', 'false'); });
-          if (!abrir) return;
-          var f = D.etapas[atual].fluxos[+c.getAttribute('data-k')];
-          var corpo = $('.fcorpo', c);
-          if (!corpo.firstChild) {
-            corpo.innerHTML = '<div class="fbarra"><p class="dica"></p><button class="ampliar" type="button">⤢ Ampliar o fluxo</button></div>' + diagrama(f);
-            $('.ampliar', corpo).addEventListener('click', function () { abrirZoom(f, D.etapas[atual].nome + ' · ' + f.linha); });
-          }
-          c.classList.add('aberto'); $('.fcab', c).setAttribute('aria-expanded', 'true');
-          var dg = $('.diagrama', corpo), dica = $('.dica', corpo);
-          dica.textContent = (dg.scrollWidth > dg.clientWidth + 4) ? 'Role para o lado ou amplie o fluxo para ver todas as fases.' : '';
-        });
+        $('.fcab', c).addEventListener('click', function () { abrirCard(novo, c, !c.classList.contains('aberto')); });
       });
-      $$('[data-ir]', novo).forEach(function (b) {
-        b.addEventListener('click', function () { parar(); escolher(+b.getAttribute('data-ir')); window.scrollTo({ top: 0, behavior: reduzir ? 'auto' : 'smooth' }); });
-      });
+      var primeiro = $('.fcard', novo);
+      if (primeiro) abrirCard(novo, primeiro, true);   // o primeiro fluxo já vem aberto
     };
 
-    var escolher = function (i) {
-      atual = i;
+    var parteAtual = 'visao';
+    var escolher = function (i, parte) {
+      var mudou = i !== atual || !$('#painel .parte');
+      atual = i; parteAtual = parte || 'visao';
       $$('.passo', lista).forEach(function (b, k) { b.classList.toggle('ativo', k === i); });
-      montarPainel();
-      if (history.replaceState) history.replaceState(null, '', '#' + D.etapas[i].id);
+      if (mudou) montarPainel();
+      var p = $('#painel');
+      p.classList.toggle('ver-fluxos', parteAtual === 'fluxos');
+      p.classList.remove('anima'); void p.offsetWidth; p.classList.add('anima');
+      $$('.fcard.aberto', p).forEach(function (c) {
+        var dg = $('.diagrama', c), dica = $('.dica', c);
+        if (dg && dica) dica.textContent = (dg.scrollWidth > dg.clientWidth + 4) ? 'Role para o lado ou amplie o fluxo para ver todas as fases.' : '';
+      });
+      if (history.replaceState) history.replaceState(null, '', '#' + D.etapas[i].id + (parteAtual === 'fluxos' ? '-fluxos' : ''));
     };
 
-    var btnTocar = $('#tocar');
-    var parar = function () {
-      tocando = false; clearInterval(timer); timer = null;
-      btnTocar.setAttribute('aria-pressed', 'false'); $('#tocarIco').textContent = '▶'; $('#tocarTxt').textContent = 'Seguir o lote';
-    };
-    btnTocar.addEventListener('click', function () {
-      if (tocando) { parar(); return; }
-      if (atual === D.etapas.length - 1) escolher(0);
-      tocando = true; btnTocar.setAttribute('aria-pressed', 'true'); $('#tocarIco').textContent = '❚❚'; $('#tocarTxt').textContent = 'Pausar';
-      timer = setInterval(function () { escolher((atual + 1) % D.etapas.length); }, 5500);
-    });
+    pagina.mostrar = function (t) { escolher(D.etapas.map(function (e) { return e.id; }).indexOf(t.id), t.parte); topo(); };
 
-    var ini = 0, hash = location.hash.replace('#', '');
-    D.etapas.forEach(function (e, i) { if (e.id === hash) ini = i; });
-    escolher(ini);
+    var hh = hashAtual(), ini = 0, parteIni = 'visao';
+    if (/-fluxos$/.test(hh)) { parteIni = 'fluxos'; hh = hh.replace(/-fluxos$/, ''); }
+    D.etapas.forEach(function (e, i) { if (e.id === hh) ini = i; });
+    escolher(ini, parteIni);
+    atualSeq = 1 + 2 * ini + (parteIni === 'fluxos' ? 1 : 0);
   }
 
-  /* ---------- página: normas da ANVISA ---------- */
+  /* ---------- página: normas da ANVISA (uma tela por grupo) ---------- */
   if (pag === 'anvisa') {
-    var T2 = D.totais;
-    $('#cobertura').innerHTML = '<div class="kpi"><b>' + T2.temas + '</b><span>exigências da norma, com a resposta do sistema</span></div>' +
-      '<div class="kpi"><b>' + T2.grupos + '</b><span>grupos: do sistema computadorizado à rastreabilidade</span></div>' +
-      '<div class="kpi"><b>' + T2.modulos + '</b><span>módulos trabalhando juntos</span></div>';
-    var fg = -1, fil = $('#filtros');
-    fil.innerHTML = '<button type="button" class="fchip on" data-g="-1">Todas</button>' + D.grupos.map(function (g, i) { return '<button type="button" class="fchip" data-g="' + i + '">' + esc(g) + '</button>'; }).join('');
+    var gAtual = 0, T2 = D.totais;
+    var fil = $('#filtros');
+    fil.innerHTML = D.grupos.map(function (g, i) { return '<button type="button" role="tab" class="fchip" data-g="' + i + '">' + esc(g) + '</button>'; }).join('');
     fil.addEventListener('click', function (ev) {
       var b = ev.target.closest('.fchip'); if (!b) return;
-      fg = +b.getAttribute('data-g');
-      $$('.fchip', fil).forEach(function (x) { x.classList.toggle('on', x === b); });
-      desenhar();
+      ir(1 + 2 * D.etapas.length + (+b.getAttribute('data-g')));
     });
-    var desenhar = function () {
+    var desenharG = function () {
+      $$('.fchip', fil).forEach(function (x) { x.classList.toggle('on', +x.getAttribute('data-g') === gAtual); x.setAttribute('aria-selected', +x.getAttribute('data-g') === gAtual); });
+      var cob = $('#cobertura');
+      if (gAtual === 0) {
+        cob.style.display = '';
+        cob.innerHTML = '<div class="kpi"><b>' + T2.temas + '</b><span>exigências da norma, com a resposta do sistema</span></div>' +
+          '<div class="kpi"><b>' + T2.grupos + '</b><span>grupos: do sistema computadorizado à rastreabilidade</span></div>' +
+          '<div class="kpi"><b>' + T2.modulos + '</b><span>módulos trabalhando juntos</span></div>';
+      } else { cob.style.display = 'none'; cob.innerHTML = ''; }
+      var qtd = D.normas.filter(function (n) { return n.g === gAtual; }).length;
+      $('#anvisaSub').textContent = D.grupos[gAtual] + ' · ' + qtd + (qtd === 1 ? ' exigência' : ' exigências') + ' da RDC 658/2022 e do Guia 33/2020.';
       var box = $('#normas'); box.innerHTML = '';
       D.normas.forEach(function (n) {
-        if (fg >= 0 && n.g !== fg) return;
+        if (n.g !== gAtual) return;
         var c = el('article', 'tema');
         c.id = 'tema-' + n.id;
-        c.innerHTML = '<div><h3>' + esc(n.tema) + '</h3><div class="norma">' + esc(n.norma) + ' · ' + esc(D.grupos[n.g]) + '</div></div>' +
+        c.innerHTML = '<div><h3>' + esc(n.tema) + '</h3><div class="norma">' + esc(n.norma) + '</div></div>' +
           '<div><h5>Como o iLabPharma responde</h5><ul>' + n.resposta.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
         box.appendChild(c);
       });
+      if (history.replaceState) history.replaceState(null, '', '#g' + gAtual);
     };
-    desenhar();
+    pagina.mostrar = function (t) { gAtual = t.g; desenharG(); topo(); };
+    var m = /^g(\d+)$/.exec(hashAtual());
+    if (m && +m[1] < D.grupos.length) gAtual = +m[1];
+    desenharG();
+    atualSeq = 1 + 2 * D.etapas.length + gAtual;
   }
 
   /* ---------- página: o que entregamos ---------- */
   if (pag === 'entrega') {
+    atualSeq = SEQ.length - 1;
     var cenas = [{ intro: true }].concat(D.cenas);
     var box2 = $('#cenas'), pts = $('#pontos');
     var CORES2 = ['#ff7a00', '#3ea6ff', '#38d17a', '#9b7bff', '#ffc545', '#ff7a00', '#3ea6ff'];
@@ -259,13 +335,15 @@
       s.style.setProperty('--cor', CORES2[i % CORES2.length]);
       s.style.setProperty('--gx', (20 + (i * 17) % 60) + '%'); s.style.setProperty('--gy', (30 + (i * 23) % 40) + '%');
       if (c.intro) {
-        s.innerHTML = '<p class="kicker"><span class="ponto"></span>O que entregamos</p><div class="a">O que o <em>iLabPharma</em> entrega?</div><div class="apoio">Role para descobrir.</div><div class="rolar" aria-hidden="true">↓</div>';
+        s.innerHTML = '<p class="kicker"><span class="ponto"></span>O que entregamos</p><div class="a">O que o <em>iLabPharma</em> entrega?</div><div class="apoio">Use <kbd>→</kbd> ou role para descobrir.</div><div class="rolar" aria-hidden="true">↓</div>';
       } else {
         var ultimo = i === cenas.length - 1;
         if (ultimo) s.classList.add('final');
+        var contatos = ultimo && D.contatos && D.contatos.length ? '<div class="contatos">' + D.contatos.map(function (p) {
+          return '<div class="contato"><b>' + esc(p.nome) + '</b>' + (p.email ? '<a href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>' : '') + (p.celular ? '<a href="tel:' + esc(p.celular.replace(/[^\d+]/g, '')) + '">' + esc(p.celular) + '</a>' : '') + '</div>';
+        }).join('') + '</div>' : '';
         s.innerHTML = '<div class="a">' + c.a + '</div><div class="b">' + c.b + '</div><p class="apoio">' + esc(c.apoio) + '</p>' +
-          '<div class="mods">' + c.modulos.map(function (m) { return '<span class="chip mod">' + esc(m) + '</span>'; }).join('') + '</div>' +
-          (ultimo ? '<div class="mods"><a class="btn primario" href="funciona.html">Ver como funciona →</a><a class="btn" href="anvisa.html">Dentro das normas da ANVISA</a></div>' : '') +
+          '<div class="mods">' + c.modulos.map(function (m2) { return '<span class="chip mod">' + esc(m2) + '</span>'; }).join('') + '</div>' + contatos +
           '<div class="num-cena" aria-hidden="true">' + String(i).padStart(2, '0') + '</div>';
       }
       box2.appendChild(s);
@@ -273,19 +351,36 @@
       d.addEventListener('click', function () { s.scrollIntoView({ behavior: reduzir ? 'auto' : 'smooth' }); });
       pts.appendChild(d);
     });
-    var todas = $$('.cena'), bolas = $$('button', pts);
+    var todas = $$('.cena'), bolas = $$('button', pts), cenaAtual = 0;
+    var vaiPara = function (k) { todas[k].scrollIntoView({ behavior: reduzir ? 'auto' : 'smooth', block: 'start' }); };
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (es) {
         es.forEach(function (x) {
           if (x.isIntersecting) {
             x.target.classList.add('vis');
-            var k = todas.indexOf(x.target);
-            bolas.forEach(function (b, j) { b.classList.toggle('on', j === k); });
+            cenaAtual = todas.indexOf(x.target);
+            bolas.forEach(function (b, j) { b.classList.toggle('on', j === cenaAtual); });
+            barra();
           }
         });
       }, { threshold: .55 });
       todas.forEach(function (s) { io.observe(s); });
     } else { todas.forEach(function (s) { s.classList.add('vis'); }); }
     todas[0].classList.add('vis'); bolas[0].classList.add('on');
+    // dentro de "O que entregamos", o Próximo e o Anterior andam de cena em cena
+    pagina.proximo = function () { if (cenaAtual < todas.length - 1) { vaiPara(cenaAtual + 1); return true; } return false; };
+    pagina.anterior = function () { if (cenaAtual > 0) { vaiPara(cenaAtual - 1); return true; } return false; };
+    pagina.rotulos = function () { return { prox: cenaAtual < todas.length - 1 ? 'Próxima cena' : null, ant: cenaAtual > 0 ? 'Cena anterior' : null }; };
   }
+
+  window.addEventListener('hashchange', function () {
+    var hh = hashAtual(), k = -1;
+    if (pag === 'funciona') {
+      for (var i = 0; i < SEQ.length; i++) if (SEQ[i].p === 'funciona' && SEQ[i].url.split('#')[1] === hh) { k = i; break; }
+    } else if (pag === 'anvisa') {
+      for (var j2 = 0; j2 < SEQ.length; j2++) if (SEQ[j2].p === 'anvisa' && 'g' + SEQ[j2].g === hh) { k = j2; break; }
+    }
+    if (k >= 0 && k !== atualSeq) ir(k);
+  });
+  barra();
 })();

@@ -986,7 +986,62 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Definir o que se fabrica"
+    },
+    {
+     "nome": "OPE: modelo do registro de lote",
+     "linha": "Estrutura, conteúdo e entrega do modelo à Produção.",
+     "fases": [
+      {
+       "nome": "Estrutura",
+       "etapas": [
+        {
+         "t": "Criar o modelo do produto",
+         "dec": false
+        },
+        {
+         "t": "Etapas e subetapas",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Conteúdo",
+       "etapas": [
+        {
+         "t": "Texto e campos",
+         "dec": false
+        },
+        {
+         "t": "Configurar campos",
+         "dec": false
+        },
+        {
+         "t": "Validações e cálculos",
+         "dec": false
+        },
+        {
+         "t": "Controle em processo e final",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Para a Produção",
+       "etapas": [
+        {
+         "t": "Conferir e imprimir",
+         "dec": false
+        },
+        {
+         "t": "Baixar e enviar na ordem",
+         "dec": false
+        }
+       ]
+      }
+     ],
+     "grupo": "Definir o que se fabrica"
     },
     {
      "nome": "Preparação da área",
@@ -1027,7 +1082,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Preparar e autorizar"
     },
     {
      "nome": "Autorização, início e final",
@@ -1102,7 +1158,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Preparar e autorizar"
     },
     {
      "nome": "Registro de lote",
@@ -1164,7 +1221,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Fabricar e registrar"
     },
     {
      "nome": "Terceirização e validade",
@@ -1200,60 +1258,8 @@ window.DADOS={
         }
        ]
       }
-     ]
-    },
-    {
-     "nome": "OPE: modelo do registro de lote",
-     "linha": "Estrutura, conteúdo e entrega do modelo à Produção.",
-     "fases": [
-      {
-       "nome": "Estrutura",
-       "etapas": [
-        {
-         "t": "Criar o modelo do produto",
-         "dec": false
-        },
-        {
-         "t": "Etapas e subetapas",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Conteúdo",
-       "etapas": [
-        {
-         "t": "Texto e campos",
-         "dec": false
-        },
-        {
-         "t": "Configurar campos",
-         "dec": false
-        },
-        {
-         "t": "Validações e cálculos",
-         "dec": false
-        },
-        {
-         "t": "Controle em processo e final",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Para a Produção",
-       "etapas": [
-        {
-         "t": "Conferir e imprimir",
-         "dec": false
-        },
-        {
-         "t": "Baixar e enviar na ordem",
-         "dec": false
-        }
-       ]
-      }
-     ]
+     ],
+     "grupo": "Fabricar e registrar"
     }
    ]
   },
@@ -1339,7 +1345,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Preparar o laboratório"
     },
     {
      "nome": "Solicitação, análise e laudo",
@@ -1409,7 +1416,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Analisar"
     },
     {
      "nome": "Água e ambiente",
@@ -1450,7 +1458,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Monitorar"
     },
     {
      "nome": "Estabilidade",
@@ -1512,7 +1521,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Monitorar"
     }
    ]
   },
@@ -1613,7 +1623,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Investigar e corrigir"
     },
     {
      "nome": "Controle de mudanças",
@@ -1680,7 +1691,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Investigar e corrigir"
     },
     {
      "nome": "Autoinspeção e auditoria",
@@ -1738,7 +1750,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Verificar e capacitar"
     },
     {
      "nome": "Treinamento",
@@ -1792,7 +1805,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Verificar e capacitar"
     },
     {
      "nome": "Assuntos regulatórios",
@@ -1845,7 +1859,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Regulatório"
     }
    ]
   },
@@ -1872,6 +1887,47 @@ window.DADOS={
     "Garantia da Qualidade (treinamento ligado ao POP)"
    ],
    "fluxos": [
+    {
+     "nome": "Tipo de documento, arquivos e modelos",
+     "linha": "O cadastro que define o caminho de cada tipo de documento.",
+     "fases": [
+      {
+       "nome": "Tipo",
+       "etapas": [
+        {
+         "t": "Cadastrar o tipo de documento",
+         "dec": false
+        },
+        {
+         "t": "Definir o caminho do tipo",
+         "dec": false
+        },
+        {
+         "t": "Excluir o tipo",
+         "dec": false
+        }
+       ]
+      },
+      {
+       "nome": "Ciclo básico",
+       "etapas": [
+        {
+         "t": "Incluir arquivo ou modelo",
+         "dec": false
+        },
+        {
+         "t": "Salvar",
+         "dec": false
+        },
+        {
+         "t": "Nova revisão",
+         "dec": true
+        }
+       ]
+      }
+     ],
+     "grupo": "Definir e elaborar"
+    },
     {
      "nome": "Ciclo do documento",
      "linha": "Da inclusão à vigência, com revisão, substituição e obsolescência.",
@@ -1941,7 +1997,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Definir e elaborar"
     },
     {
      "nome": "Controle de cópias",
@@ -1991,7 +2048,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Distribuir e consultar"
     },
     {
      "nome": "Documento externo e anterior ao sistema",
@@ -2036,47 +2094,8 @@ window.DADOS={
         }
        ]
       }
-     ]
-    },
-    {
-     "nome": "Tipo de documento, arquivos e modelos",
-     "linha": "O cadastro que define o caminho de cada tipo de documento.",
-     "fases": [
-      {
-       "nome": "Tipo",
-       "etapas": [
-        {
-         "t": "Cadastrar o tipo de documento",
-         "dec": false
-        },
-        {
-         "t": "Definir o caminho do tipo",
-         "dec": false
-        },
-        {
-         "t": "Excluir o tipo",
-         "dec": false
-        }
-       ]
-      },
-      {
-       "nome": "Ciclo básico",
-       "etapas": [
-        {
-         "t": "Incluir arquivo ou modelo",
-         "dec": false
-        },
-        {
-         "t": "Salvar",
-         "dec": false
-        },
-        {
-         "t": "Nova revisão",
-         "dec": true
-        }
-       ]
-      }
-     ]
+     ],
+     "grupo": "Distribuir e consultar"
     }
    ]
   },
@@ -2148,7 +2167,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Venda"
     },
     {
      "nome": "Cotação, requisição e reserva",
@@ -2193,7 +2213,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Venda"
     },
     {
      "nome": "Fatura, remessa e cancelamento",
@@ -2238,7 +2259,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Venda"
     },
     {
      "nome": "Geração de IUM e agregação",
@@ -2279,7 +2301,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Rastreabilidade"
     },
     {
      "nome": "Eventos e declaração à ANVISA",
@@ -2324,7 +2347,8 @@ window.DADOS={
         }
        ]
       }
-     ]
+     ],
+     "grupo": "Rastreabilidade"
     }
    ]
   }

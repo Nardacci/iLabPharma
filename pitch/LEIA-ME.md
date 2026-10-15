@@ -1,13 +1,13 @@
 # Pitch de vendas do iLabPharma
 
-Quatro páginas estáticas, em `pitch/` (no site: `/pitch/`):
+Apresentação em roteiro linear, do início ao fim, em quatro páginas estáticas (no site: `/pitch/`). O botão **Próximo** (ou a seta →) avança; **Anterior** (ou ←) volta.
 
-| Página | Conteúdo |
-|---|---|
-| `index.html` | Início: promessa e trilho do lote |
-| `funciona.html` | Como funciona: sete etapas, nove módulos e 37 fluxos de processo ampliáveis |
-| `anvisa.html` | Normas da ANVISA: como o iLabPharma responde a 35 exigências da RDC 658/2022 e do Guia 33/2020 |
-| `entrega.html` | O que entregamos: sete cenas sobre o que o cliente ganha |
+| Capítulo | Telas | Página |
+|---|---|---|
+| Início | 1 | `index.html` |
+| Como funciona | 14 (7 etapas, cada uma com visão geral e fluxos) | `funciona.html` |
+| Normas da ANVISA | 7 (um grupo por tela) | `anvisa.html` |
+| O que entregamos | 7 cenas | `entrega.html` |
 
 As páginas têm `noindex` (não aparecem em buscadores) enquanto estão em teste. O conteúdo está em `dados/dados.js`; `pitch.css` e `pitch.js` desenham as páginas.
 
