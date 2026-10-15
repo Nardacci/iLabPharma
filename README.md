@@ -18,7 +18,7 @@ A página inicial (`index.html`) é o **portal iLabMedSys** (novo nome do LabMed
 Nenhum documento sai do portal; todos ganham ordem (decisão do responsável, 15/10/2026).
 
 - **Entre módulos:** o caminho do lote (`CAMINHO` no gerador): Principal, Estoque, Produção, OPE, Controle da Qualidade, Garantia da Qualidade, Controle de Documentos, Comercial e Rastreabilidade. A visão de ponta a ponta vem antes. O último documento de cada módulo aponta para o módulo seguinte.
-- **Dentro de cada módulo:** um roteiro de até sete passos (`PASSOS`): Conheça o módulo, Siga o processo, Regras e permissões, Norma e risco, Testes e defeitos, A nova versão e Fechamento (o dossiê). A página do módulo tem "Comece aqui" e "Fim do roteiro".
+- **Dentro de cada módulo:** um roteiro de até oito passos (`PASSOS`): Conheça o módulo, Siga o processo, Regras e permissões (o que o sistema faz hoje), **O ideal: como deve funcionar** (destacado em verde), Norma e risco, Testes e defeitos, Requisitos e dados e Fechamento (o dossiê). A página do módulo tem "Comece aqui" e "Fim do roteiro".
 - **Em cada documento:** "Passo X de Y", "documento N de M", barra de progresso e Anterior/Próximo no pé da página. Os fluxos seguem a ordem do processo, e o passo a passo de teste vem logo depois do fluxo a que pertence.
 - Em que passo cada documento entra é decidido por `passo_de()`, e a ordem dentro do passo por `PRIORIDADE` e `ORDEM_FLUXOS`, ambos no gerador.
 
