@@ -211,23 +211,36 @@
   /* ---------- tela: início ---------- */
   (function initInicio() {
     var trilho = $('#trilho'), atualI = 0;
+    // o trilho mostra o caminho inteiro: as sete etapas e depois as normas e o que entregamos
+    var itens = D.etapas.map(function (e) {
+      return { num: e.num, nome: e.nome, sub: e.modulos.join(' · '), href: '#' + e.id, mod: e.modulos.join(' + '), texto: e.titulo };
+    });
+    itens.push({ num: '08', nome: 'Dentro das normas da ANVISA', sub: 'RDC 658/2022 e Guia 33/2020', href: '#g0', mod: 'ANVISA', texto: D.totais.temas + ' exigências, cada uma com a resposta do iLabPharma.' });
+    itens.push({ num: '09', nome: 'O que entregamos', sub: 'O que o cliente ganha', href: '#entrega', mod: 'Além do sistema', texto: 'Muito além de um sistema.' });
     var prog = el('li', 'prog'); prog.setAttribute('aria-hidden', 'true'); trilho.appendChild(prog);
-    D.etapas.forEach(function (e) {
+    itens.forEach(function (e) {
       var li = el('li'), b = el('a', 'no');
-      b.href = '#' + e.id;
-      b.innerHTML = '<span class="bola">' + e.num + '</span><span class="rot">' + esc(e.nome) + '<small>' + esc(e.modulos.join(' · ')) + '</small></span>';
+      b.href = e.href;
+      b.innerHTML = '<span class="bola">' + e.num + '</span><span class="rot">' + esc(e.nome) + '<small>' + esc(e.sub) + '</small></span>';
       li.appendChild(b); trilho.appendChild(li);
     });
     var marcar = function () {
       var nos = $$('.no', trilho);
       nos.forEach(function (n, i) { n.classList.toggle('ativo', i === atualI); n.classList.toggle('feito', i < atualI); });
       prog.style.height = (nos[atualI].parentNode.offsetTop - nos[0].parentNode.offsetTop) + 'px';
-      var e = D.etapas[atualI];
-      $('#trilhoCard').innerHTML = '<span class="mod">' + esc(e.modulos.join(' + ')) + '</span><b>' + esc(e.nome) + '</b><span>' + esc(e.titulo) + '</span>';
+      var e = itens[atualI];
+      $('#trilhoCard').innerHTML = '<span class="mod">' + esc(e.mod) + '</span><b>' + esc(e.nome) + '</b><span>' + esc(e.texto) + '</span>';
     };
     views.inicio = { mostrar: marcar };
     marcar();
-    if (!reduzir) setInterval(function () { if (view !== 'inicio') return; atualI = (atualI + 1) % NE; marcar(); }, 2800);
+    // anda uma vez, do início ao fim, e para no último passo (sem recomeçar)
+    if (!reduzir) {
+      var relogio = setInterval(function () {
+        if (view !== 'inicio') return;
+        if (atualI >= itens.length - 1) { clearInterval(relogio); return; }
+        atualI++; marcar();
+      }, 2200);
+    }
   })();
 
   /* ---------- tela: como funciona ---------- */
