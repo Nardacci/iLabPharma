@@ -2378,13 +2378,7 @@ window.DADOS={
   "Documentos: a versão certa, no lugar certo.",
   "Depois da fabricação: saber para onde foi cada lote."
  ],
- "contatos": [
-  {
-   "nome": "Sidnei",
-   "email": "sidnei@hsolutions.com.br",
-   "celular": "21 98121-7868"
-  }
- ],
+ "contatos": [],
  "normas": [
   {
    "id": 3,
