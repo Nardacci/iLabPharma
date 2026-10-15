@@ -233,7 +233,9 @@
         h += '<p class="vazio">Os cadastros do Principal sustentam todos os fluxos dos outros módulos.</p>';
       }
       if (e.imagem) h += '<p class="vermais"><a href="' + e.imagem[0] + '" target="_blank" rel="noopener">' + esc(e.imagem[1]) + ' <span aria-hidden="true">↗</span></a></p>';
-      return h + '</div></div>';
+      h += '</div>';
+      if (e.ponte) h += '<p class="ponte"><span>Na sequência</span>' + esc(e.ponte) + '</p>';
+      return h + '</div>';
     };
 
     var abrirCard = function (novo, c, abrir) {
@@ -305,7 +307,7 @@
           '<div class="kpi"><b>' + T2.modulos + '</b><span>módulos trabalhando juntos</span></div>';
       } else { cob.style.display = 'none'; cob.innerHTML = ''; }
       var qtd = D.normas.filter(function (n) { return n.g === gAtual; }).length;
-      $('#anvisaSub').textContent = D.grupos[gAtual] + ' · ' + qtd + (qtd === 1 ? ' exigência' : ' exigências') + ' da RDC 658/2022 e do Guia 33/2020.';
+      $('#anvisaSub').innerHTML = '<b class="fio">' + esc((D.fios || [])[gAtual] || '') + '</b> ' + esc(D.grupos[gAtual]) + ' · ' + qtd + (qtd === 1 ? ' exigência' : ' exigências') + ' da RDC 658/2022 e do Guia 33/2020.';
       var box = $('#normas'); box.innerHTML = '';
       D.normas.forEach(function (n) {
         if (n.g !== gAtual) return;

@@ -186,7 +186,8 @@ window.DADOS={
      ],
      "paralelo": true
     }
-   ]
+   ],
+   "ponte": "Com a indústria estruturada, o primeiro material pode chegar."
   },
   {
    "id": "materiais",
@@ -900,7 +901,8 @@ window.DADOS={
      ],
      "grupo": "Entradas e saídas do estoque"
     }
-   ]
+   ],
+   "ponte": "Com o material liberado e guardado, a produção pode pedi-lo e fabricar."
   },
   {
    "id": "fabricacao",
@@ -1261,7 +1263,8 @@ window.DADOS={
      ],
      "grupo": "Fabricar e registrar"
     }
-   ]
+   ],
+   "ponte": "Em cada ponto do caminho, o laboratório confirma que o lote está dentro do especificado."
   },
   {
    "id": "cq",
@@ -1524,7 +1527,8 @@ window.DADOS={
      ],
      "grupo": "Monitorar"
     }
-   ]
+   ],
+   "ponte": "Os resultados alimentam a Garantia da Qualidade, que investiga, corrige e previne."
   },
   {
    "id": "gq",
@@ -1862,7 +1866,8 @@ window.DADOS={
      ],
      "grupo": "Regulatório"
     }
-   ]
+   ],
+   "ponte": "E tudo isso se apoia em documentos e procedimentos sob controle."
   },
   {
    "id": "documentos",
@@ -2097,7 +2102,8 @@ window.DADOS={
      ],
      "grupo": "Distribuir e consultar"
     }
-   ]
+   ],
+   "ponte": "Com o lote liberado e documentado, ele segue para o cliente, sem perder a sua história."
   },
   {
    "id": "distribuicao",
@@ -2350,7 +2356,8 @@ window.DADOS={
      ],
      "grupo": "Rastreabilidade"
     }
-   ]
+   ],
+   "ponte": "Agora, como cada exigência da ANVISA é atendida ao longo desse caminho."
   }
  ],
  "grupos": [
@@ -2361,6 +2368,15 @@ window.DADOS={
   "Fabricação",
   "Documentação",
   "Distribuição e rastreabilidade"
+ ],
+ "fios": [
+  "A base de tudo: o próprio sistema precisa merecer confiança.",
+  "Do portão ao estoque: nenhum material é usado sem ser liberado.",
+  "Como a empresa investiga, corrige e aprende com o que acontece.",
+  "No laboratório, resultados que se podem provar.",
+  "Na fábrica, instruções aprovadas e registros completos.",
+  "Documentos: a versão certa, no lugar certo.",
+  "Depois da fabricação: saber para onde foi cada lote."
  ],
  "normas": [
   {
