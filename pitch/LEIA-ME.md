@@ -1,6 +1,6 @@
 # Pitch de vendas do iLabPharma
 
-Apresentação em roteiro linear, do início ao fim, em quatro páginas estáticas (no site: `/pitch/`). O botão **Próximo** (ou a seta →) avança; **Anterior** (ou ←) volta.
+Apresentação em roteiro linear, do início ao fim, em **um só documento** (`index.html`; no site: `/pitch/`). As telas se alternam sem recarregar, então a tela cheia (botão no topo ou tecla F) se mantém. `funciona.html`, `anvisa.html` e `entrega.html` apenas redirecionam para os endereços `#...` correspondentes. O botão **Próximo** (ou a seta →) avança; **Anterior** (ou ←) volta.
 
 | Capítulo | Telas | Página |
 |---|---|---|
