@@ -206,6 +206,7 @@ MODULOS = [
             ("1.principal/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("1.principal/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Regras de Negocio.docx"),
             ("1.principal/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Manual do Usuario.docx"),
+            ("1.principal/ideal/pri-ideal.md", "O Principal ideal: o dono do que é global", "ideal", "1.principal/ideal/LabMedSys - Modulo Principal - O Ideal.docx"),
             ("1.principal/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("1.principal/04-conformidade-regulatoria.md", "Conformidade regulatória", "qualidade", None),
             ("1.principal/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
