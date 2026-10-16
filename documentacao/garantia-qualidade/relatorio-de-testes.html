@@ -41,7 +41,7 @@
       <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
     </header>
     <article class="texto">
-<p>Atualizado em 15-16/10/2026 · Versão testada: 3.5.1 (legado do fornecedor) · Ambiente de teste · Executor: agente, no computador da pessoa, pela VPN.</p>
+<p>Atualizado em 16/10/2026 · Versão testada: 3.5.1 (legado do fornecedor) · Ambiente de teste · Executor: agente, no computador da pessoa, pela VPN.</p>
 <h3 id="situacao-geral">Situação geral</h3>
 <div class="tabela"><table>
 <thead>
@@ -71,9 +71,17 @@
 <td>3</td>
 <td>12</td>
 </tr>
+<tr>
+<td>3: repetição dos bloqueados da rodada 2, com os passos corrigidos pelo código</td>
+<td>16/10/2026</td>
+<td>13</td>
+<td>0</td>
+<td>3</td>
+<td>10</td>
+</tr>
 </tbody>
 </table></div>
-<p>Dos 93 casos do plano (<code>08-plano-de-testes.md</code>), 27 foram executados (12 + 15). Faltam os de prioridade Média e Baixa, e os 12 bloqueados da rodada 2 dependem de 5 defeitos novos (DV-GQ-011 a 015) serem corrigidos ou contornados.</p>
+<p>Dos 93 casos do plano (<code>08-plano-de-testes.md</code>), 27 foram executados pelo menos uma vez (12 + 15; a rodada 3 repete 13 deles). Dos 27 de prioridade alta, <strong>16 têm resultado conclusivo</strong> e <strong>11 seguem sem conclusão</strong>. Dois dos cinco defeitos da rodada 2 (DV-GQ-011 e DV-GQ-014) <strong>foram descartados</strong>: eram gaps do script de teste, não do sistema. DV-GQ-012 e DV-GQ-013 ficam <strong>confirmados</strong> (o segundo, com a causa exata). DV-GQ-015 continua a confirmar. Um defeito novo apareceu: <strong>DV-GQ-016</strong> (Liberação do Plano de Ação Corretivo também sem "Reprovar"). Os 10 casos ainda bloqueados dependem agora, principalmente, de <strong>lacunas de dado/configuração de teste</strong> (não de defeitos do sistema): onde fica a função de perfil das telas de registro de produto, o cadastro de competência inspetor×roteiro, e a ligação entre Solicitação e Programação de treinamento.</p>
 <h3 id="o-que-a-rodada-1-mostrou-em-linguagem-simples">O que a rodada 1 mostrou, em linguagem simples</h3>
 <ol start="2">
 <li><strong>A GQ aprova o que a área não aceitou.</strong> Pelo botão normal, a mudança que uma área marcou "Não Aceito" segue para o plano de ação.</li>
@@ -236,18 +244,107 @@
 </tbody>
 </table></div>
 <p>Detalhes, evidências e dados TESTE criados: <code>execucao/2026-10-15/resultado.md</code>.</p>
+<h3 id="o-que-a-rodada-3-mostrou-em-linguagem-simples">O que a rodada 3 mostrou, em linguagem simples</h3>
+<ol>
+<li><strong>Dois dos cinco defeitos da rodada 2 não eram do sistema.</strong> A CAPA (DV-GQ-011) grava normalmente quando os 7 campos do diagrama e uma Divisão/Seção <strong>com Responsável</strong> são preenchidos — faltava esse último campo no teste anterior. O vínculo de roteiro à autoinspeção (DV-GQ-014) também funciona: salvar o cadastro primeiro, buscar o roteiro pelo título, confirmar pelo botão "INCLUIR" do modal.</li>
+<li><strong>O plano corretivo chega a ser aprovado — mas também não tem como ser reprovado.</strong> Segui o RD 009/26 do zero (CAPA → Plano Corretivo → Execução → Monitoramento) até "Aprovado Plano Ação Corretiva". Na última tela, só existe "Aprovar"; o código até prevê um estado "Reprovada" para esse plano, mas a tela nunca oferece esse caminho (DV-GQ-016, novo — mesma família do DV-GQ-012).</li>
+<li><strong>O plano preventivo reprovado se fecha como "Finalizado" de qualquer forma.</strong> Marcar a única ação como "Não implementada" não muda o resultado: o único botão ("Aprovar") fecha o desvio (DV-GQ-012 confirmado).</li>
+<li><strong>A Programação de Treinamento tem uma causa exata e grave.</strong> Escolher o treinamento na lista funciona, mas o campo esquece a escolha (zera sozinho) assim que o usuário clica em qualquer outro campo da tela para continuar preenchendo — isso é inevitável no uso normal, não um detalhe de automação. Por isso a tela nunca salva pelo fluxo comum (DV-GQ-013, causa refinada).</li>
+<li><strong>O inspetor da própria área auditada é aceito sem nenhum aviso</strong> (CT-GQ-055 confirmado pela norma).</li>
+<li><strong>Dados de teste ainda faltando, não defeitos:</strong> função de perfil das 4 telas de registro de produto; cadastro de competência inspetor×roteiro (trava a Programação de Autoinspeção); e a ligação entre Solicitação de Treinamento e uma Programação específica (trava a Conclusão de Treinamento).</li>
+</ol>
+<h3 id="casos-executados-na-rodada-3">Casos executados na rodada 3</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Resultado</th>
+<th>Desvio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-GQ-097 registro de produto no menu</td>
+<td>Bloqueado (perfil não localizado/ajustado)</td>
+<td>DV-GQ-015</td>
+</tr>
+<tr>
+<td>CT-GQ-099 produto indeferido</td>
+<td>Bloqueado</td>
+<td>DV-GQ-015</td>
+</tr>
+<tr>
+<td>CT-GQ-022 plano corretivo reprovado sem saída</td>
+<td>Falhou (defeito: só "Aprovar")</td>
+<td>DV-GQ-011 descartado; DV-GQ-016 novo</td>
+</tr>
+<tr>
+<td>CT-GQ-023 plano preventivo reprovado</td>
+<td>Falhou (defeito: fecha como "Finalizado" mesmo assim)</td>
+<td>DV-GQ-012 confirmado</td>
+</tr>
+<tr>
+<td>CT-GQ-055 independência do inspetor</td>
+<td>Falhou (norma)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-057 área auditada registrando a própria auditoria</td>
+<td>Bloqueado (programação não salva — lacuna de dado)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-061 histórico de alteração do desvio da auditoria</td>
+<td>Bloqueado</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-063 auditoria não conforme sem gerar desvio</td>
+<td>Bloqueado</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-076 treinando ausente com nota 0 "Suficiente"</td>
+<td>Bloqueado (conclusão sem treinandos listados)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-078 histórico da conclusão do treinamento</td>
+<td>Bloqueado</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-080 funcionário com treinamento vencido continua trabalhando</td>
+<td>Bloqueado (depende do dia seguinte)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-081 turma insuficiente no Controle de Documentos</td>
+<td>Bloqueado</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-GQ-093 programação sem aviso de vencimento</td>
+<td>Bloqueado (depende do dia seguinte)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Detalhes, evidências e dados TESTE criados: <code>execucao/2026-10-16/resultado.md</code>.</p>
 <h3 id="o-que-ficou-para-a-proxima-rodada">O que ficou para a próxima rodada</h3>
 <ul>
-<li>Repetir os casos bloqueados depois de conferir as causas pelo código (16/10): DV-GQ-011 e 014 podem ser falta de preenchimento ou fluxo diferente; DV-GQ-012 (sem Reprovar; reprovado vai a Concluído) e DV-GQ-013 (referência nula) são defeitos confirmados no código; DV-GQ-015 depende das funções do perfil. Detalhe em <code>execucao/2026-10-15/resultado.md</code>.</li>
+<li>Descobrir onde fica a função de perfil que libera as 4 telas de registro de produto (DV-GQ-015) — pode precisar de acesso ao banco ou de uma pergunta direta à TI.</li>
+<li>Investigar o cadastro de competência inspetor×roteiro (CT-GQ-057/061/063) e a "Alocação" que liga Solicitação a Programação de treinamento (CT-GQ-076/078/081).</li>
+<li>Checar CT-GQ-093 e CT-GQ-080 a partir de 17/10/2026.</li>
 <li>CT-GQ-025 (acompanhamento), e os casos de prioridade Média e Baixa dos quatro fluxos já roteirizados.</li>
-<li>Confirmar no dia seguinte o efeito (ou a falta de aviso) da programação regulatória que vence amanhã (CT-GQ-093), já deixada pronta no ambiente.</li>
 <li>Pedir ao DBA: tabela de histórico da GQ e vínculo de produto e material (a busca vazia pode ser falta de cadastro na Produção).</li>
 <li>Preparação do ambiente: a avaliação por área depende do campo <strong>Divisão</strong> no cadastro do usuário (Principal), não do Responsável da Estrutura funcional. <code>TESTE CADASTRO</code> ficou com Divisão <code>TESTE ESTRUTURA FUNCIONAL II</code>.</li>
+<li>Registrar formalmente DV-GQ-016 e a causa refinada do DV-GQ-013 nos documentos de defeitos consolidados do módulo (fora do escopo de uma rodada de testes).</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-testes.html"><small>← Anterior</small><strong>Plano de testes</strong></a><a class="ap ap-prox" href="modelo-de-dados-e-integracoes.html"><small>Próximo →</small><strong>Modelo de dados e integrações</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#situacao-geral">Situação geral</a></li><li><a href="#o-que-a-rodada-1-mostrou-em-linguagem-simples">O que a rodada 1 mostrou, em linguagem simples</a></li><li><a href="#casos-executados">Casos executados</a></li><li><a href="#o-que-a-rodada-2-mostrou-em-linguagem-simples">O que a rodada 2 mostrou, em linguagem simples</a></li><li><a href="#casos-executados-na-rodada-2">Casos executados na rodada 2</a></li><li><a href="#o-que-ficou-para-a-proxima-rodada">O que ficou para a próxima rodada</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#situacao-geral">Situação geral</a></li><li><a href="#o-que-a-rodada-1-mostrou-em-linguagem-simples">O que a rodada 1 mostrou, em linguagem simples</a></li><li><a href="#casos-executados">Casos executados</a></li><li><a href="#o-que-a-rodada-2-mostrou-em-linguagem-simples">O que a rodada 2 mostrou, em linguagem simples</a></li><li><a href="#casos-executados-na-rodada-2">Casos executados na rodada 2</a></li><li><a href="#o-que-a-rodada-3-mostrou-em-linguagem-simples">O que a rodada 3 mostrou, em linguagem simples</a></li><li><a href="#casos-executados-na-rodada-3">Casos executados na rodada 3</a></li><li><a href="#o-que-ficou-para-a-proxima-rodada">O que ficou para a próxima rodada</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 16/10/2026</div>

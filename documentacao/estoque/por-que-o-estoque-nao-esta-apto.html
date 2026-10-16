@@ -156,16 +156,67 @@
 <p>O modelo de como o Estoque deve funcionar está em <strong>"O Estoque ideal"</strong> (passo 4 do roteiro).</p>
 <h2 id="5-limitacoes-desta-homologacao">5. Limitações desta homologação</h2>
 <ul>
-<li><strong>9 casos de prioridade alta ficaram bloqueados</strong> por causas fora do alcance do teste pela tela: o DBA (Endereçamento, erro da remessa, reserva da amostra de retenção e a movimentação que perdeu saldo), a Ordem de Produção, recebimentos de teste pendentes e defeitos do próprio sistema.</li>
+<li><strong>9 casos de prioridade alta ficaram bloqueados</strong> por causas fora do alcance do teste pela tela: o banco de dados (seção 6), a Ordem de Produção, recebimentos de teste pendentes e defeitos do próprio sistema.</li>
 <li><strong>75 casos de prioridade média e baixa não foram executados</strong>, por decisão do responsável de fechar o módulo por risco. Eles ficam como testes de aceite da nova versão.</li>
 <li>Perguntas ainda sem resposta da área: quem é a Pessoa Delegada; o que é fornecedor aprovado; se a sobra devolvida precisa de nova análise; o prazo das amostras de retenção.</li>
 </ul>
-<h2 id="6-como-o-modulo-passa-a-apto">6. Como o módulo passa a "apto"</h2>
-<p>Executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige <strong>100% dos casos de prioridade alta aprovados</strong> e as pendências do DBA respondidas.</p>
+<h2 id="6-o-que-preciso-do-dba">6. O que preciso do DBA</h2>
+<p>O teste pela tela não alcança estas causas. Cada pedido traz o <strong>dado do ambiente de teste</strong> e <strong>o que informar de volta</strong>. Nenhum pede alteração de dado: são consultas e uma execução em transação de teste.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Defeito</th>
+<th>O que preciso</th>
+<th>Dado de teste</th>
+<th>O que informar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>DV-EST-016: o Endereçamento mostra "sucesso" e não grava</td>
+<td>Executar a rotina <code>pFinalizaRecebimento</code> (a mesma que a tela chama) para a <strong>nota fiscal 9006</strong>, com o usuário <code>t.admin</code>, dentro de uma transação de teste. A rotina abre uma transação e <strong>desfaz tudo</strong> se algo falha, e a tela não confere o resultado</td>
+<td>Recebimento <strong>00016</strong>, NF <strong>9006</strong>, item <code>TST0002</code>, lote <code>TESTELOTE002</code> (100 unidades), local <code>902 - TESTE LOCAL QUARENTENA</code>, endereço <code>L902-R901-C901-A901</code></td>
+<td>A <strong>mensagem de erro</strong> e a <strong>tabela ou restrição</strong> onde falha. Se a rotina implantada no banco de teste é <strong>igual</strong> à do pacote (<code>Hsolutions.Estoque.DB/Stored Procedures/pFinalizaRecebimento.sql</code>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DV-EST-046: a remessa não finaliza ("Erro ao gerar a solicitação do material!")</td>
+<td>Capturar a <strong>exceção real</strong> durante o Finalizar: a tela troca qualquer erro por essa mensagem genérica. Pode ser o registro de erros do aplicativo ou um rastreio no banco enquanto se clica em Finalizar</td>
+<td>Remessa <strong>00002</strong> (<code>TESTE ALMOX</code> → <code>TESTE PJ MIN LTDA</code>), item <code>TST0003</code>, lote <code>TA0002/26</code>, 5 unidades, com a justificativa preenchida</td>
+<td>A <strong>exceção e o comando SQL</strong> que falha na geração da solicitação de material</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DV-EST-047: a amostra de retenção gravada não aparece na consulta nem na saída</td>
+<td>Consultar o que foi <strong>gravado</strong> para o lote e comparar com o que a tela <strong>Consulta Disponibilidade (Referência - Retenção - Estabilidade)</strong> lê</td>
+<td>Lote <code>TESTEPA001</code>: 5 unidades em retenção no almoxarifado <code>00018 - TESTE RETENCAO</code>, local <code>907 - TESTE LOCAL RETENCAO</code>, endereço <code>L907-R901-C901-A901</code></td>
+<td>As <strong>linhas gravadas</strong> (saldo por endereço e reserva regulatória) e <strong>qual campo</strong> (tipo, situação ou almoxarifado) impede a consulta de enxergá-las</td>
+</tr>
+<tr>
+<td>4</td>
+<td>DV-EST-044: a movimentação de quarentena fez o saldo desaparecer</td>
+<td>Listar os <strong>registros de movimentação e de saldo</strong> do lote e mostrar o que a saída e a entrada gravaram</td>
+<td>Lote <code>TESTEPA003</code> (item <code>TST0003</code>, entrada <code>TA0005/26</code>): saiu de <code>L902-R901-C905-A901</code> e o destino foi <code>L905-R000-C000-A000</code> (endereço que não existe), 80 unidades</td>
+<td>Se a <strong>entrada no destino foi gravada</strong> (e onde) ou só a saída; se a quantidade ainda existe em alguma tabela</td>
+</tr>
+<tr>
+<td>5</td>
+<td>DV-EST-041 e 043: o prazo de reanálise do item</td>
+<td>Dizer <strong>como o item <code>TST0001</code> recebeu</strong> a classificação de reanálise: carga inicial ou script. O campo não aparece na tela de Item</td>
+<td>Item <code>TST0001</code>, lote <code>TESTELOTE003</code> (reanálise em 12/10/2028)</td>
+<td>O <strong>valor gravado</strong> no item e <strong>de onde veio</strong> (script, carga ou tela)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Sem estas cinco respostas, os 9 casos de prioridade alta bloqueados não podem ser fechados, e as correções 1, 9 e 10 da seção 4 ficam sem causa confirmada.</p>
+<h2 id="7-como-o-modulo-passa-a-apto">7. Como o módulo passa a "apto"</h2>
+<p>Executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige <strong>100% dos casos de prioridade alta aprovados</strong> e as cinco respostas do DBA (seção 6).</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="modelo-de-dados-e-integracoes.html"><small>← Anterior</small><strong>Modelo de dados e integrações</strong></a><a class="ap ap-prox" href="dossie-de-homologacao.html"><small>Próximo →</small><strong>Dossiê de homologação</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-os-numeros">1. Os números</a></li><li><a href="#2-por-que-nao-esta-apto">2. Por que não está apto</a></li><li><a href="#3-o-que-ja-funciona-e-vale-manter">3. O que já funciona (e vale manter)</a></li><li><a href="#4-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">4. O que precisa ser corrigido para uma nova homologação</a></li><li><a href="#5-limitacoes-desta-homologacao">5. Limitações desta homologação</a></li><li><a href="#6-como-o-modulo-passa-a-apto">6. Como o módulo passa a &quot;apto&quot;</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-os-numeros">1. Os números</a></li><li><a href="#2-por-que-nao-esta-apto">2. Por que não está apto</a></li><li><a href="#3-o-que-ja-funciona-e-vale-manter">3. O que já funciona (e vale manter)</a></li><li><a href="#4-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">4. O que precisa ser corrigido para uma nova homologação</a></li><li><a href="#5-limitacoes-desta-homologacao">5. Limitações desta homologação</a></li><li><a href="#6-o-que-preciso-do-dba">6. O que preciso do DBA</a></li><li><a href="#7-como-o-modulo-passa-a-apto">7. Como o módulo passa a &quot;apto&quot;</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 16/10/2026</div>
