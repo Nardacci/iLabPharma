@@ -88,7 +88,7 @@ PASSOS = [
     ("norma", "Norma e risco", "O que a ANVISA exige e onde está o risco."),
     ("testes", "Testes e defeitos", "O que foi testado nas telas, o que falhou e como corrigir."),
     ("dados", "Requisitos e dados", "Para a equipe de desenvolvimento da nova versão."),
-    ("fecho", "Fechamento", "O dossiê que reúne tudo e dá o parecer do módulo."),
+    ("fecho", "Fechamento", "O parecer do módulo, por que ele está (ou não) apto, e o dossiê que reúne tudo."),
 ]
 PRIORIDADE = {
     "conhecer": ["resumo executivo", "reconhecimento", "inventário"],
@@ -97,6 +97,7 @@ PRIORIDADE = {
     "testes": ["plano", "relatório", "defeitos"],
     "ideal": ["ideal", "entre os módulos"],
     "dados": ["requisitos", "modelo de dados", "comparação"],
+    "fecho": ["não está apto", "dossiê"],
     "visao": ["processo fabril", "integrações", "diagnóstico", "repetidos", "qualidade entre"],
 }
 ORDEM_FLUXOS = {
@@ -122,7 +123,7 @@ def passo_de(p):
     t, cat = p["titulo"].lower(), p["cat"]
     if cat == "fluxos" or p.get("roteiro_de"):
         return "fluxos"
-    if "dossiê" in t:
+    if "dossiê" in t or "não está apto" in t:
         return "fecho"
     if "regras de negócio" in t:
         return "regras"
@@ -203,6 +204,7 @@ MODULOS = [
         "resumo": "Porta de entrada dos nove módulos: login, usuários, perfis, permissões, cadastros gerais e a base da trilha de auditoria. Analisado, testado em duas rodadas (78 casos) e com todos os entregáveis.",
         "docs": [
             ("1.principal/entregaveis/fonte/resumo-executivo.md", "Resumo executivo", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Resumo Executivo.docx"),
+            ("1.principal/entregaveis/fonte/por-que-nao-apta.md", "Por que o Principal não está apto", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Por que nao esta apto.docx"),
             ("1.principal/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Dossie de Homologacao.docx"),
             ("1.principal/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("1.principal/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Regras de Negocio.docx"),
@@ -226,6 +228,7 @@ MODULOS = [
         "situacao": "Homologado: não apto", "nivel": 4,
         "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados. Testes de tela por risco: 7 rodadas (07 a 13/10/2026), 78 dos 162 casos conclusivos, 37 dos 46 casos Alta; 39 defeitos para correção (11 de prioridade alta). Confirmado na tela: o Endereçamento mostra sucesso e não grava (causa no banco, aguarda o DBA); pelas entradas de material o lote entra em quarentena e abre a análise no CQ; o laudo reprovado bloqueia o lote, mas o Estoque só sabe quando alguém atualiza a análise; a avaliação do fornecedor não qualifica nem bloqueia ninguém; a entrada de produto acabado aceita lote inventado e vencido; o histórico do lote não mostra usuário, análise nem laudo. Fechado em 14/10/2026 com os cinco entregáveis: resumo executivo, dossiê, regras de negócio, análise de requisitos e manual do usuário. Reabre só se o DBA ou a área resolverem as pendências (9 casos Alta bloqueados).",
         "docs": [
+            ("3.estoque/entregaveis/fonte/por-que-nao-apta.md", "Por que o Estoque não está apto", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Por que nao esta apto.docx"),
             ("3.estoque/entregaveis/fonte/resumo-executivo.md", "Resumo executivo", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Resumo Executivo.docx"),
             ("3.estoque/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Dossie de Homologacao.docx"),
             ("3.estoque/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
@@ -267,6 +270,7 @@ MODULOS = [
             ("5.garantia_qualidade/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("5.garantia_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
+            ("5.garantia_qualidade/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Relatorio de Testes.docx"),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
@@ -412,7 +416,9 @@ RE_LINHA_SEG = re.compile(
     r"apagou as a[çc][õo]es|apaga permiss|salvar a conta|acesso pelo endere[çc]o|abrem? sem permiss[ãa]o|abert[ao]s? pelo endere[çc]o|[Aa]bertas? pelo endere[çc]o|por usu[áa]rio sem permiss[ãa]o|DV-EST-00[57]|"
     r"pelo endere[çc]o[^|]{0,80}(?:sem permiss|sem acesso|acesso negado)|sem permiss[ãa]o[^|]{0,80}pelo endere[çc]o|"
     r"troca obrigat[óo]ria[^|]{0,40}(?:contornada|pulada)|senha sem diferenciar|DV-PRI-02[12]|[Aa]cesso direto pelo endere[çc]o|"
-    r"sem nenhuma fun[çc][ãa]o d[oa] [^|]{0,30}abrir|sem acesso [^|]{0,40}pelo endere[çc]o",
+    r"sem nenhuma fun[çc][ãa]o d[oa] [^|]{0,30}abrir|sem acesso [^|]{0,40}pelo endere[çc]o|"
+    r"prote[çc][ãa]o [ée] s[óo] visual|servidor aceita|se colocou no N[íi]vel|Qualquer usu[áa]rio se torna|usu[áa]rio de consulta incluiu|"
+    r"a[çc][õo]es do perfil \(incluir, alterar\)|abre sem login|autopromo[çc][ãa]o|CT-GQ-11[12]",
     re.I)
 
 
@@ -906,6 +912,9 @@ def pagina_modulo(mod):
         submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "ideal" else ""}>{(str(i) + " · ") if chave != "visao" else ""}{E(nome)}</a>')
     submenu_html = f'<nav class="submenu" aria-label="Passos do roteiro">{"".join(submenu)}</nav>' if len(submenu) > 1 else ""
 
+    _apto = next((p for p in mod["paginas"] if "não está apto" in p["titulo"].lower()), None)
+    selo_link = (f'<a class="selo-link" href="{_apto["slug"]}.html" title="Por que não está apto">{selo(mod["situacao"])}<span class="selo-saiba">Por quê? →</span></a>'
+                 if _apto and mod["situacao"] == "Homologado: não apto" else selo(mod["situacao"]))
     primeiro, ultimo = mod["seq"][0], mod["seq"][-1]
     ant_mod, prox_mod = vizinhos(mod)
     comece = (f'<section class="comece"><div><p class="comece-rotulo">Comece aqui</p>'
@@ -925,7 +934,7 @@ def pagina_modulo(mod):
     <div>
       <h1>{E(mod['nome'])}</h1>
       <p>{E(mod['resumo'])}</p>
-      <div class="mod-status">{selo(mod['situacao'])}{barra(mod['nivel'])}</div>
+      <div class="mod-status">{selo_link}{barra(mod['nivel'])}</div>
     </div>
   </header>
   <div class="numeros">{num_html}</div>
