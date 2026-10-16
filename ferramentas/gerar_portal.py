@@ -413,7 +413,9 @@ RE_LINHA_SEG = re.compile(
     r"apagou as a[çc][õo]es|apaga permiss|salvar a conta|acesso pelo endere[çc]o|abrem? sem permiss[ãa]o|abert[ao]s? pelo endere[çc]o|[Aa]bertas? pelo endere[çc]o|por usu[áa]rio sem permiss[ãa]o|DV-EST-00[57]|"
     r"pelo endere[çc]o[^|]{0,80}(?:sem permiss|sem acesso|acesso negado)|sem permiss[ãa]o[^|]{0,80}pelo endere[çc]o|"
     r"troca obrigat[óo]ria[^|]{0,40}(?:contornada|pulada)|senha sem diferenciar|DV-PRI-02[12]|[Aa]cesso direto pelo endere[çc]o|"
-    r"sem nenhuma fun[çc][ãa]o d[oa] [^|]{0,30}abrir|sem acesso [^|]{0,40}pelo endere[çc]o",
+    r"sem nenhuma fun[çc][ãa]o d[oa] [^|]{0,30}abrir|sem acesso [^|]{0,40}pelo endere[çc]o|"
+    r"prote[çc][ãa]o [ée] s[óo] visual|servidor aceita|se colocou no N[íi]vel|Qualquer usu[áa]rio se torna|usu[áa]rio de consulta incluiu|"
+    r"a[çc][õo]es do perfil \(incluir, alterar\)|abre sem login|autopromo[çc][ãa]o|CT-GQ-11[12]",
     re.I)
 
 
