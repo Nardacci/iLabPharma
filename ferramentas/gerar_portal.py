@@ -267,6 +267,7 @@ MODULOS = [
             ("5.garantia_qualidade/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("5.garantia_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
+            ("5.garantia_qualidade/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Relatorio de Testes.docx"),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
