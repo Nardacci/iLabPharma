@@ -193,6 +193,7 @@ MODULOS = [
             ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
             ("transversal/02-mapa-do-processo-fabril.md", "Mapa do processo fabril", "inicio", "transversal/LabMedSys - Mapa do Processo Fabril.docx"),
             ("transversal/01-telas-repetidas.md", "Telas, tabelas e código repetidos entre os módulos", "tecnico", "transversal/LabMedSys - Telas Tabelas e Codigo Repetidos.docx"),
+            ("transversal/reunioes/2026-10-13-ata.md", "Ata da reunião de 13/10/2026: por que tantas telas e tabelas", "tecnico", None),
             ("modelo-ideal/01-qualidade-entre-modulos.md", "Qualidade entre os módulos: situação do lote e travas", "ideal", "modelo-ideal/entregaveis/LabMedSys - Modelo Ideal - Qualidade entre os Modulos.docx"),
         ],
     },
