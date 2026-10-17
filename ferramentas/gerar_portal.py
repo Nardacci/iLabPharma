@@ -72,7 +72,7 @@ def telas_do_roteiro(pagina):
 
 
 # Áreas que não são módulos do sistema: ficam fora dos cartões e das contagens de módulos.
-ESPECIAIS = {"visao-geral"}
+ESPECIAIS = {"visao-geral", "cliente-ivb"}
 
 # ---------------------------------------------------------------------------------------------
 # Roteiro de leitura: cada módulo vira um caminho com começo, passos numerados e fim. Nenhum
@@ -185,6 +185,15 @@ def vizinhos(mod):
     return (por_id[ids[i - 1]] if i else None), (por_id[ids[i + 1]] if i + 1 < len(ids) else None)
 
 MODULOS = [
+    {
+        "id": "cliente-ivb", "nome": "Cliente IVB", "icone": "★", "cor": "#0d9488",
+        "situacao": "Em andamento", "nivel": 2,
+        "resumo": "A versão do cliente IVB: Principal, Estoque, Garantia da Qualidade, Controle da Qualidade e Controle de Documentos. Escopo, situação de cada módulo na versão nova e aderência ao edital.",
+        "docs": [
+            ("cliente-ivb/01-escopo-e-situacao.md", "Escopo e situação dos cinco módulos", "inicio", None),
+            ("cliente-ivb/02-aderencia-ao-edital.md", "Aderência ao edital", "inicio", None),
+        ],
+    },
     {
         "id": "visao-geral", "nome": "Visão entre módulos", "icone": "◎", "cor": "#2563eb",
         "situacao": "Em andamento", "nivel": 2,
@@ -609,6 +618,7 @@ def cabecalho(titulo, raiz, ativo=""):
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
     <a href="{raiz}index.html#diretoria">Diretoria</a>
     <a href="{raiz}index.html#publicos">Por público</a>
+    <a href="{raiz}documentacao/cliente-ivb/index.html"{' aria-current="page"' if ativo == 'ivb' else ''}>Cliente IVB</a>
     <a href="{raiz}anvisa.html"{' aria-current="page"' if ativo == 'anvisa' else ''}>ANVISA</a>
     <a href="{raiz}cronograma.html"{' aria-current="page"' if ativo == 'cronograma' else ''}>Cronograma</a>
     <a href="{raiz}apresentacao.html">Apresentação</a>
@@ -1026,6 +1036,14 @@ def pagina_inicial(origem):
   </section>
 
   {caminho}
+
+  <section class="secao destaque" style="--cor:{por_id['cliente-ivb']['cor']}">
+    <div>
+      <h2>Cliente IVB</h2>
+      <p>A versão do IVB tem cinco módulos: Principal, Estoque, Garantia da Qualidade, Controle da Qualidade e Controle de Documentos. Veja o escopo, a situação de cada um na versão nova e a aderência ao edital.</p>
+    </div>
+    <a class="botao" href="documentacao/cliente-ivb/index.html">Abrir o menu do IVB →</a>
+  </section>
 
   <section class="secao" id="modulos">
     <h2>Módulos</h2>
