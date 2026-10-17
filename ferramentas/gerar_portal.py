@@ -145,6 +145,22 @@ def passo_de(p):
     return "dados"
 
 
+def docs_com_telas(mod, hom):
+    """No Principal, as telas da versão nova (por menu) vêm do manifesto gerado em homologacao/."""
+    docs = list(mod["docs"])
+    if mod["id"] != "principal":
+        return docs
+    arq = hom / "versao-nova/1.principal/telas/manifest.json"
+    if not arq.exists():
+        return docs
+    man = json.loads(arq.read_text(encoding="utf-8"))
+    gerais = [(m["arq"], m["titulo"], "novo", None) for m in man if not m.get("grupo")]
+    telas = [(m["arq"], m["titulo"], "novo", None, {k: m[k] for k in ("grupo", "tela", "rotulo", "roteiro_de", "situacao") if k in m}) for m in man if m.get("grupo")]
+    velhos = [d for d in docs if d[2] == "novo"]
+    resto = [d for d in docs if d[2] != "novo"]
+    return resto + gerais + velhos + telas
+
+
 def organizar_roteiro(mod):
     """Ordena os documentos do módulo em passos e liga cada um ao anterior e ao próximo."""
     mod["roteiro"], mod["seq"] = [], []
@@ -165,6 +181,8 @@ def organizar_roteiro(mod):
                     pags.append(p)
                     if p["arq"] in ro:
                         pags.append(ro[p["arq"]])
+            elif chave == "novo":
+                pags = sorted(pags, key=lambda p: p["ordem"])
             else:
                 pags = sorted(pags, key=lambda p: _pos(PRIORIDADE.get(chave, []), p["titulo"]))
             if pags:
@@ -729,7 +747,10 @@ def gerar(origem, destino, relatorio):
 
     for mod in MODULOS:
         mod["paginas"] = []
-        for arq, titulo, cat, word in mod["docs"]:
+        mod["docs"] = docs_com_telas(mod, hom)
+        for ordem, item in enumerate(mod["docs"]):
+            arq, titulo, cat, word = item[:4]
+            extra = item[4] if len(item) > 4 else {}
             fonte = hom / arq
             original = ler(fonte)
             antes = len(retirado)
@@ -739,7 +760,9 @@ def gerar(origem, destino, relatorio):
             s = slug(titulo)
             pagina = {"titulo": titulo, "slug": s, "cat": cat, "arq": arq, "toc": toc, "corpo": corpo,
                       "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo,
-                      "roteiro_de": ROTEIROS.get(arq)}
+                      "roteiro_de": ROTEIROS.get(arq) or extra.get("roteiro_de"), "ordem": ordem,
+                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"),
+                      "situacao_tela": extra.get("situacao")}
             m = re.search(r'<img src="(\.\./img/[^"]+fluxograma[^"]*)"', corpo)
             if m:
                 pagina["fluxograma"] = m.group(1)
@@ -813,13 +836,19 @@ def nav_lateral(mod, atual):
     for i, (chave, nome, _desc, pags) in enumerate(mod["roteiro"], 1):
         roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
         li = ""
+        grupo_atual = None
         for p in pags:
             if p.get("roteiro_de"):
                 continue
-            li += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a>'
+            if p.get("grupo") and p["grupo"] != grupo_atual:
+                grupo_atual = p["grupo"]
+                li += f'<li class="lat-menu">{E(grupo_atual)}</li>'
+            rotulo = p.get("tela") or p["titulo"]
+            li += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(rotulo)}</a>'
             r = roteiros.get(p["arq"])
             if r:
-                li += f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo para testar</a></li></ul>'
+                li += (f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>'
+                       f'{"Passo a passo de homologação" if r.get("grupo") else "Passo a passo para testar"}</a></li></ul>')
             li += "</li>"
         aberto = " lat-atual" if atual and atual.get("passo_nome") == nome else ""
         num = f'<span class="lat-n">{i}</span>' if chave != "visao" else ""
@@ -922,6 +951,22 @@ def pagina_modulo(mod):
                             f'<ol>{li}</ol><p class="fluxo-roteiro-tudo"><a href="{r["slug"]}.html">Abrir o roteiro completo</a>{word}</p></details></div>')
                 cards.append(card)
             grade = f'<div class="fluxos">{"".join(cards)}</div>'
+        elif chave == "novo" and any(p.get("grupo") for p in pags):
+            def _card(p):
+                return (f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
+                        f'<span class="doc-card-meta">Leitura no portal</span></a>')
+            partes = [f'<div class="doc-cards">{"".join(_card(p) for p in pags if not p.get("grupo"))}</div>']
+            roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
+            for g in dict.fromkeys(p["grupo"] for p in pags if p.get("grupo")):
+                cartoes = ""
+                for p in [x for x in pags if x.get("grupo") == g and not x.get("roteiro_de")]:
+                    r = roteiros.get(p["arq"])
+                    cartoes += (f'<div class="doc-card tela-card"><a class="doc-card-titulo" href="{p["slug"]}.html"><span class="doc-n">{p["n"]}</span>{E(p["tela"])}</a>'
+                                f'<span class="doc-card-meta">{E(p.get("situacao_tela") or "")}</span>'
+                                f'<span class="tela-links"><a href="{p["slug"]}.html">Resumo geral</a>'
+                                + (f' · <a href="{r["slug"]}.html">Passo a passo</a>' if r else "") + '</span></div>')
+                partes.append(f'<h3 class="novo-menu">{E(g)}</h3><div class="doc-cards">{cartoes}</div>')
+            grade = "".join(partes)
         else:
             cards = "".join(
                 f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
