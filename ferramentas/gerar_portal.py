@@ -94,7 +94,7 @@ PRIORIDADE = {
     "conhecer": ["resumo executivo", "reconhecimento", "inventário"],
     "regras": ["regras de negócio", "matriz de permiss", "manual", "cadastros"],
     "norma": ["conformidade", "risco", "rastreabilidade"],
-    "testes": ["plano", "relatório", "defeitos"],
+    "testes": ["versão nova: o que", "versão nova: situação", "plano", "relatório", "defeitos", "versão nova: resultado"],
     "ideal": ["ideal", "entre os módulos"],
     "dados": ["requisitos", "modelo de dados", "comparação"],
     "fecho": ["não está apto", "dossiê"],
@@ -230,6 +230,8 @@ MODULOS = [
             ("1.principal/10-comparacao-nova-versao.md", "Comparação com a nova versão", "tecnico", None),
             ("1.principal/01-regras-de-negocio.md", "Regras de negócio (rascunho com fontes)", "tecnico", None),
             ("1.principal/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("versao-nova/1.principal/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "testes", None),
+            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/resultado.md", "Versão nova: resultado da rodada 2", "testes", None),
         ],
     },
     {
@@ -251,6 +253,7 @@ MODULOS = [
             ("3.estoque/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
             ("3.estoque/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("3.estoque/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("versao-nova/3.estoque/resumo-versao-nova.md", "Versão nova: situação", "testes", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
             ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
             ("3.estoque/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Manual do Usuario.docx"),
@@ -281,6 +284,8 @@ MODULOS = [
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("5.garantia_qualidade/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Relatorio de Testes.docx"),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "testes", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Versão nova: resultado da rodada 4", "testes", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
             ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
@@ -325,6 +330,7 @@ MODULOS = [
          ("4.controle_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("4.controle_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
+         ("versao-nova/4.controle_qualidade/resumo-versao-nova.md", "Versão nova: situação", "testes", None),
          ("4.controle_qualidade/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "4.controle_qualidade/defeitos/LabMedSys - Modulo Controle da Qualidade - Defeitos para Correcao.docx"),
          ("4.controle_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("4.controle_qualidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
@@ -346,6 +352,7 @@ MODULOS = [
          ("6.controle_documento/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
          ("6.controle_documento/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("6.controle_documento/08-plano-de-testes.md", "Plano de testes", "testes", None),
+         ("versao-nova/6.controle_documento/resumo-versao-nova.md", "Versão nova: situação", "testes", None),
          ("6.controle_documento/fluxos/ciclo-documento.md", "Ciclo do documento", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Ciclo do Documento.docx"),
          ("6.controle_documento/fluxos/controle-copias.md", "Controle de cópias", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Controle de Copias.docx"),
          ("6.controle_documento/fluxos/externo-legado.md", "Documento externo e documento legado", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Documento Externo e Legado.docx"),
@@ -415,6 +422,7 @@ RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil
 TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca", re.I)
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
+    r"API n[ãa]o confere|Math\.random|gerad[ao]s? no navegador|senha provis[óo]ria (?:aparece|e senha de reset)|DV-PRI-N-01[179]\b|\bN-01[179]\b|"
     r"SEG-[A-Z]{2,4}-\d+|03-achados-de-seguranca|achados de seguran[çc]a|inje[çc][ãa]o de SQL|SQL injection|"
     r"criptografia revers[íi]vel|chave fixa|credenciais|senhas? (?:podem ser |s[ãa]o )?recuper[áa]ve|"
     r"senhas podem ser recuperadas|digitando o endere[çc]o|sem senha em outro navegador|token de acesso|"
