@@ -45,6 +45,7 @@ CATEGORIAS = {
     "tecnico": ("Requisitos e dados", "Para a equipe de desenvolvimento da nova versão."),
     "defeitos": ("Defeitos para correção", "Para a equipe de desenvolvimento: cada defeito encontrado nos testes, com o passo a passo para reproduzir, as capturas, o trecho do código e uma sugestão de correção."),
     "testes": ("Testes", "Plano de testes, resultados e evidências."),
+    "novo": ("iLabPharma Novo", "Testes da versão nova."),
 }
 
 # Roteiro de execução (passo a passo para quem testa) -> fluxo a que pertence. Na página do módulo, cada
@@ -72,7 +73,7 @@ def telas_do_roteiro(pagina):
 
 
 # Áreas que não são módulos do sistema: ficam fora dos cartões e das contagens de módulos.
-ESPECIAIS = {"visao-geral", "cliente-ivb"}
+ESPECIAIS = {"visao-geral"}
 
 # ---------------------------------------------------------------------------------------------
 # Roteiro de leitura: cada módulo vira um caminho com começo, passos numerados e fim. Nenhum
@@ -89,6 +90,7 @@ PASSOS = [
     ("testes", "Testes e defeitos", "O que foi testado nas telas, o que falhou e como corrigir."),
     ("dados", "Requisitos e dados", "Para a equipe de desenvolvimento da nova versão."),
     ("fecho", "Fechamento", "O parecer do módulo, por que ele está (ou não) apto, e o dossiê que reúne tudo."),
+    ("novo", "iLabPharma Novo", "A versão nova do sistema (as mesmas regras com ferramentas atualizadas): o que foi testado, o que ficou igual, melhorou ou piorou em relação ao sistema entregue."),
 ]
 PRIORIDADE = {
     "conhecer": ["resumo executivo", "reconhecimento", "inventário"],
@@ -98,6 +100,7 @@ PRIORIDADE = {
     "ideal": ["ideal", "entre os módulos"],
     "dados": ["requisitos", "modelo de dados", "comparação"],
     "fecho": ["não está apto", "dossiê"],
+    "novo": ["o que os testes", "situação", "plano", "usuários", "comparação", "rodada 1", "rodada 2", "rodada 4", "rodada 5"],
     "visao": ["processo fabril", "integrações", "diagnóstico", "repetidos", "qualidade entre"],
 }
 ORDEM_FLUXOS = {
@@ -121,6 +124,8 @@ def _pos(chaves, titulo):
 
 def passo_de(p):
     t, cat = p["titulo"].lower(), p["cat"]
+    if cat == "novo":
+        return "novo"
     if cat == "fluxos" or p.get("roteiro_de"):
         return "fluxos"
     if "dossiê" in t or "não está apto" in t:
@@ -186,19 +191,11 @@ def vizinhos(mod):
 
 MODULOS = [
     {
-        "id": "cliente-ivb", "nome": "Cliente IVB", "icone": "★", "cor": "#0d9488",
-        "situacao": "Em andamento", "nivel": 2,
-        "resumo": "A versão do cliente IVB: Principal, Estoque, Garantia da Qualidade, Controle da Qualidade e Controle de Documentos. Escopo, situação de cada módulo na versão nova e aderência ao edital.",
-        "docs": [
-            ("cliente-ivb/01-escopo-e-situacao.md", "Escopo e situação dos cinco módulos", "inicio", None),
-            ("cliente-ivb/02-aderencia-ao-edital.md", "Aderência ao edital", "inicio", None),
-        ],
-    },
-    {
         "id": "visao-geral", "nome": "Visão entre módulos", "icone": "◎", "cor": "#2563eb",
         "situacao": "Em andamento", "nivel": 2,
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
+            ("cliente-ivb/02-aderencia-ao-edital.md", "Aderência ao edital do IVB", "inicio", None),
             ("transversal/04-mapa-de-integracoes.md", "Mapa de integrações entre os módulos", "inicio", "transversal/LabMedSys - Mapa de Integracoes entre Modulos.docx"),
             ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
             ("transversal/02-mapa-do-processo-fabril.md", "Mapa do processo fabril", "inicio", "transversal/LabMedSys - Mapa do Processo Fabril.docx"),
@@ -230,8 +227,12 @@ MODULOS = [
             ("1.principal/10-comparacao-nova-versao.md", "Comparação com a nova versão", "tecnico", None),
             ("1.principal/01-regras-de-negocio.md", "Regras de negócio (rascunho com fontes)", "tecnico", None),
             ("1.principal/08-plano-de-testes.md", "Plano de testes", "testes", None),
-            ("versao-nova/1.principal/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "testes", None),
-            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/resultado.md", "Versão nova: resultado da rodada 2", "testes", None),
+            ("versao-nova/1.principal/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "novo", None),
+            ("versao-nova/1.principal/plano-de-regressao.md", "Versão nova: plano de regressão", "novo", None),
+            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/usuarios-de-teste.md", "Versão nova: usuários de teste", "novo", None),
+            ("versao-nova/COMPARACAO-CODIGO.md", "Versão nova: comparação do código com o legado", "novo", None),
+            ("versao-nova/1.principal/execucao/2026-10-17/resultado.md", "Versão nova: resultado da rodada 1", "novo", None),
+            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/resultado.md", "Versão nova: resultado da rodada 2", "novo", None),
         ],
     },
     {
@@ -253,7 +254,7 @@ MODULOS = [
             ("3.estoque/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
             ("3.estoque/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("3.estoque/08-plano-de-testes.md", "Plano de testes", "testes", None),
-            ("versao-nova/3.estoque/resumo-versao-nova.md", "Versão nova: situação", "testes", None),
+            ("versao-nova/3.estoque/resumo-versao-nova.md", "Versão nova: situação", "novo", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
             ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
             ("3.estoque/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Manual do Usuario.docx"),
@@ -284,9 +285,9 @@ MODULOS = [
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("5.garantia_qualidade/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Relatorio de Testes.docx"),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
-            ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "testes", None),
-            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Versão nova: resultado da rodada 4", "testes", None),
-            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17-rodada-5/resultado.md", "Versão nova: resultado da rodada 5", "testes", None),
+            ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "novo", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Versão nova: resultado da rodada 4", "novo", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17-rodada-5/resultado.md", "Versão nova: resultado da rodada 5", "novo", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
             ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
@@ -331,7 +332,7 @@ MODULOS = [
          ("4.controle_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("4.controle_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
-         ("versao-nova/4.controle_qualidade/resumo-versao-nova.md", "Versão nova: situação", "testes", None),
+         ("versao-nova/4.controle_qualidade/resumo-versao-nova.md", "Versão nova: situação", "novo", None),
          ("4.controle_qualidade/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "4.controle_qualidade/defeitos/LabMedSys - Modulo Controle da Qualidade - Defeitos para Correcao.docx"),
          ("4.controle_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("4.controle_qualidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
@@ -353,7 +354,7 @@ MODULOS = [
          ("6.controle_documento/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
          ("6.controle_documento/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("6.controle_documento/08-plano-de-testes.md", "Plano de testes", "testes", None),
-         ("versao-nova/6.controle_documento/resumo-versao-nova.md", "Versão nova: situação", "testes", None),
+         ("versao-nova/6.controle_documento/resumo-versao-nova.md", "Versão nova: situação", "novo", None),
          ("6.controle_documento/fluxos/ciclo-documento.md", "Ciclo do documento", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Ciclo do Documento.docx"),
          ("6.controle_documento/fluxos/controle-copias.md", "Controle de cópias", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Controle de Copias.docx"),
          ("6.controle_documento/fluxos/externo-legado.md", "Documento externo e documento legado", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Documento Externo e Legado.docx"),
@@ -423,6 +424,7 @@ RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil
 TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca", re.I)
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
+    r"RG-PRI-03[789]|CT-PRI-050|DV-PRI-02[35]\b|senha de teste fixa|senha provis[óo]ria pendente|Senha provis[óo]ria leva|PERMISS[ÃA]O EXCLU[ÍI]DA|dão as permissões"
     r"N[íi]vel 3 foi tocado|n[ãa]o deixou nenhum registro|DV-GQ-009|usu[áa]rio de consulta.*gravando|recusa quem n[ãa]o tem acesso ao m[óo]dulo|"
     r"API n[ãa]o confere|Math\.random|gerad[ao]s? no navegador|senha provis[óo]ria (?:aparece|e senha de reset)|DV-PRI-N-01[179]\b|\bN-01[179]\b|"
     r"SEG-[A-Z]{2,4}-\d+|03-achados-de-seguranca|achados de seguran[çc]a|inje[çc][ãa]o de SQL|SQL injection|"
@@ -628,7 +630,6 @@ def cabecalho(titulo, raiz, ativo=""):
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
     <a href="{raiz}index.html#diretoria">Diretoria</a>
     <a href="{raiz}index.html#publicos">Por público</a>
-    <a href="{raiz}documentacao/cliente-ivb/index.html"{' aria-current="page"' if ativo == 'ivb' else ''}>Cliente IVB</a>
     <a href="{raiz}anvisa.html"{' aria-current="page"' if ativo == 'anvisa' else ''}>ANVISA</a>
     <a href="{raiz}cronograma.html"{' aria-current="page"' if ativo == 'cronograma' else ''}>Cronograma</a>
     <a href="{raiz}apresentacao.html">Apresentação</a>
@@ -1046,14 +1047,6 @@ def pagina_inicial(origem):
   </section>
 
   {caminho}
-
-  <section class="secao destaque" style="--cor:{por_id['cliente-ivb']['cor']}">
-    <div>
-      <h2>Cliente IVB</h2>
-      <p>A versão do IVB tem cinco módulos: Principal, Estoque, Garantia da Qualidade, Controle da Qualidade e Controle de Documentos. Veja o escopo, a situação de cada um na versão nova e a aderência ao edital.</p>
-    </div>
-    <a class="botao" href="documentacao/cliente-ivb/index.html">Abrir o menu do IVB →</a>
-  </section>
 
   <section class="secao" id="modulos">
     <h2>Módulos</h2>
