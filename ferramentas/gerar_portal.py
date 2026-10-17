@@ -286,6 +286,7 @@ MODULOS = [
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "testes", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Versão nova: resultado da rodada 4", "testes", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17-rodada-5/resultado.md", "Versão nova: resultado da rodada 5", "testes", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
             ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
@@ -422,6 +423,7 @@ RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil
 TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca", re.I)
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
+    r"N[íi]vel 3 foi tocado|n[ãa]o deixou nenhum registro|DV-GQ-009|usu[áa]rio de consulta.*gravando|recusa quem n[ãa]o tem acesso ao m[óo]dulo|"
     r"API n[ãa]o confere|Math\.random|gerad[ao]s? no navegador|senha provis[óo]ria (?:aparece|e senha de reset)|DV-PRI-N-01[179]\b|\bN-01[179]\b|"
     r"SEG-[A-Z]{2,4}-\d+|03-achados-de-seguranca|achados de seguran[çc]a|inje[çc][ãa]o de SQL|SQL injection|"
     r"criptografia revers[íi]vel|chave fixa|credenciais|senhas? (?:podem ser |s[ãa]o )?recuper[áa]ve|"
