@@ -324,6 +324,7 @@ MODULOS = [
             ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Resultado da rodada 4", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-17-rodada-5/resultado.md", "Resultado da rodada 5", "novo", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-18-rodada-6/resultado.md", "Resultado da rodada 6", "novo", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
             ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
@@ -460,6 +461,7 @@ RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil
 TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca", re.I)
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
+    r"hip[óo]tese[^.]*Grupo Perfil|GrupoUsuario|\b403\b|a hip[óo]tese que proponho|O `t\.consulta` nunca foi colocado"
     r"RG-PRI-03[789]|CT-PRI-050|DV-PRI-02[35]\b|senha de teste fixa|senha provis[óo]ria pendente|Senha provis[óo]ria leva|PERMISS[ÃA]O EXCLU[ÍI]DA|dão as permissões"
     r"N[íi]vel 3 foi tocado|n[ãa]o deixou nenhum registro|DV-GQ-009|usu[áa]rio de consulta.*gravando|recusa quem n[ãa]o tem acesso ao m[óo]dulo|"
     r"API n[ãa]o confere|Math\.random|gerad[ao]s? no navegador|senha provis[óo]ria (?:aparece|e senha de reset)|DV-PRI-N-01[179]\b|\bN-01[179]\b|"

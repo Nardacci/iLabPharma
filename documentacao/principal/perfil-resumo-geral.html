@@ -71,7 +71,7 @@
 <p>Cadastro dos perfis de acesso: cada perfil é um conjunto de funções (telas e ações) que dá permissão ao usuário. A conta do usuário recebe um ou mais perfis.</p>
 <ul>
 <li>A única exigência de cadastro é a descrição, de até 45 caracteres.</li>
-<li>A árvore de funções traz hoje só os grupos Administração e Cadastros. <strong>Marcar uma tela marca todas as ações dela</strong> (e marcar "CADASTROS" marca as 88 funções abaixo). Não existe a ação "Consultar": marcar a tela já dá a consulta.</li>
+<li>A tela tem <strong>uma aba por módulo</strong> (Principal, Produção, Estoque, Controle da Qualidade, Comercial, Controle de Documentos, Configurador OPE, Garantia da Qualidade e Rastreabilidade). Na aba Principal, <strong>marcar uma tela marca todas as ações dela</strong> (e marcar "CADASTROS" marca as 88 funções abaixo). Não existe a ação "Consultar": marcar a tela já dá a consulta. Os testes de 17/10 olharam a fundo só a aba Principal.</li>
 <li>A lista tem Editar e Ver log; <strong>não tem Excluir</strong>. O perfil só pode ser inativado.</li>
 <li>A pesquisa ignora maiúsculas, mas não ignora acento.</li>
 <li>A caixa de perfis da Conta usuário mostra só os 10 primeiros em ordem alfabética: um perfil novo cujo nome venha depois da letra F não pode ser atribuído a ninguém.</li>
@@ -148,6 +148,14 @@
 <td>Novo</td>
 <td>—</td>
 </tr>
+<tr>
+<td>RG-PRI-039</td>
+<td>Histórico com valor longo (mais de 300 caracteres)</td>
+<td>(corte em 255)</td>
+<td>Não se aplica: a descrição aceita 45 caracteres</td>
+<td>Bloqueado</td>
+<td>—</td>
+</tr>
 </tbody>
 </table></div>
 <p>Evidências (capturas): RG-PRI-030 a 039 (rodada 1). As capturas ficam na pasta <code>evidencias/</code> de cada rodada.</p>
@@ -177,15 +185,15 @@
 <td>A pesquisa não ignora acento (DV-PRI-008). Persiste.</td>
 </tr>
 <tr>
-<td>DV-GQ-N-006</td>
+<td>DV-GQ-N-008</td>
 <td>Alta</td>
-<td>A árvore de funções só oferece Administração e Cadastros. O legado oferecia funções de todos os módulos (abas por módulo). Sem elas, nenhum perfil novo dá acesso a Estoque, GQ, CQ ou Controle de Documentos pela tela. Regressão pelo código; falta ver a tela do legado.</td>
+<td>Um perfil novo com as funções da GQ marcadas faz o menu da GQ aparecer, mas o servidor da GQ recusa tudo para quem o usa (só o perfil ADMINISTRADOR funciona). A causa não foi confirmada; deve afetar também Estoque, CQ e Controle de Documentos. Impede montar usuários de consulta ou de auditor de teste. (Substitui o DV-GQ-N-006, que não procede: a tela de Perfil tem, sim, as abas dos outros módulos.)</td>
 </tr>
 </tbody>
 </table></div>
 <h3 id="para-quem-desenvolve">Para quem desenvolve</h3>
 <ul>
-<li>Incluir na árvore as funções de todos os módulos (no legado: <code>perfil_ed.aspx.cs</code>, abas <code>TabModulo*</code>) e manter a ação "Consultar" separada (DV-GQ-N-006).</li>
+<li>Explicar por que um perfil novo com funções da GQ não dá acesso funcional e entregar um perfil de consulta que o servidor aceite (DV-GQ-N-008). Manter a ação "Consultar" separada das demais.</li>
 <li>Exigir justificativa ao alterar permissões e gravá-la no histórico (DV-PRI-024; requisito corrigido RF-PRI-036).</li>
 <li>A caixa de perfis da Conta usuário deve listar todos os perfis ativos (N-006), com pesquisa.</li>
 <li>Marcar uma tela não deve marcar todas as ações sem o usuário ver: considerar marcar só a consulta.</li>
@@ -194,11 +202,11 @@
 <ul>
 <li>Os perfis de teste têm o prefixo <code>0.T.</code> (para aparecerem entre os 10 primeiros da Conta usuário): <code>0.T.TESTE_ADMIN</code>, <code>0.T.TESTE_CONSULTA</code>, <code>0.T.TESTE_CADASTRO</code>, <code>0.T.TESTE_SEM_ADMIN</code>.</li>
 <li>Perfil não tem Excluir: limpe só inativando.</li>
+<li>Os casos de controle de acesso desta tela (RG-PRI-037 e 038) e os de sessão do Login ficam em arquivo confidencial e não entram nas contagens.</li>
 </ul>
 <h3 id="para-a-gestao">Para a gestão</h3>
 <ul>
-<li>A tela de perfis é o centro do controle de acesso (RDC 658, acesso e rastreabilidade). Dois pontos pesam: a alteração de permissão sem motivo registrado e a falta das funções dos outros módulos, que impede dar acesso ao IVB pela tela.</li>
-<li>Decisão pendente: como dar acesso à GQ aos usuários de teste enquanto a árvore estiver incompleta (rodada 6).</li>
+<li>A tela de perfis é o centro do controle de acesso (RDC 658, acesso e rastreabilidade). Dois pontos pesam: a alteração de permissão sem motivo registrado e o perfil novo da GQ que não dá acesso funcional (DV-GQ-N-008), o que impede testar permissões dentro dos módulos.</li>
 </ul>
 <p>O passo a passo para homologar esta tela está na página seguinte.</p>
     </article>
