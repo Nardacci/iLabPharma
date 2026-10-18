@@ -517,6 +517,10 @@ def bloco_diretoria(origem):
   </section>"""
 
 
+# Nomes de pessoas reais do ambiente de teste: não vão ao portal.
+NOMES_REAIS = re.compile(r"\b(?:FELIPE SILVA|BERTIN|Jean Song|JO[ÃA]O MARCOS(?:\.ADM)?(?: VALERIO)?|MARCOS\.ADM|VALERIO)\b", re.I)
+
+
 def limpar(md, nome, retirado):
     """Retira o conteúdo de segurança. Devolve o texto limpo; anota o que saiu em `retirado`."""
     linhas = md.splitlines()
@@ -547,7 +551,7 @@ def limpar(md, nome, retirado):
         if RE_LINHA_SEG.search(linha):
             retirado.append((nome, f"Linha: {linha.strip()[:160]}"))
             continue
-        saida.append(linha)
+        saida.append(NOMES_REAIS.sub("(profissional do ambiente)", linha))
     return "\n".join(saida) + "\n"
 
 
