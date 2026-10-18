@@ -100,7 +100,7 @@ PRIORIDADE = {
     "ideal": ["ideal", "entre os módulos"],
     "dados": ["requisitos", "modelo de dados", "comparação"],
     "fecho": ["não está apto", "dossiê"],
-    "novo": ["o que os testes", "situação", "plano", "usuários", "comparação", "rodada 1", "rodada 2", "rodada 4", "rodada 5"],
+    "novo": ["resumo dos testes", "situação", "plano", "usuários", "comparação", "rodada 1", "rodada 2", "rodada 4", "rodada 5"],
     "visao": ["processo fabril", "integrações", "diagnóstico", "repetidos", "qualidade entre"],
 }
 ORDEM_FLUXOS = {
@@ -245,12 +245,12 @@ MODULOS = [
             ("1.principal/10-comparacao-nova-versao.md", "Comparação com a nova versão", "tecnico", None),
             ("1.principal/01-regras-de-negocio.md", "Regras de negócio (rascunho com fontes)", "tecnico", None),
             ("1.principal/08-plano-de-testes.md", "Plano de testes", "testes", None),
-            ("versao-nova/1.principal/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "novo", None),
-            ("versao-nova/1.principal/plano-de-regressao.md", "Versão nova: plano de regressão", "novo", None),
-            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/usuarios-de-teste.md", "Versão nova: usuários de teste", "novo", None),
-            ("versao-nova/COMPARACAO-CODIGO.md", "Versão nova: comparação do código com o legado", "novo", None),
-            ("versao-nova/1.principal/execucao/2026-10-17/resultado.md", "Versão nova: resultado da rodada 1", "novo", None),
-            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/resultado.md", "Versão nova: resultado da rodada 2", "novo", None),
+            ("versao-nova/1.principal/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
+            ("versao-nova/1.principal/plano-de-regressao.md", "Plano de regressão", "novo", None),
+            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/usuarios-de-teste.md", "Usuários de teste", "novo", None),
+            ("versao-nova/COMPARACAO-CODIGO.md", "Comparação do código com o legado", "novo", None),
+            ("versao-nova/1.principal/execucao/2026-10-17/resultado.md", "Resultado da rodada 1", "novo", None),
+            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/resultado.md", "Resultado da rodada 2", "novo", None),
         ],
     },
     {
@@ -272,7 +272,7 @@ MODULOS = [
             ("3.estoque/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
             ("3.estoque/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("3.estoque/08-plano-de-testes.md", "Plano de testes", "testes", None),
-            ("versao-nova/3.estoque/resumo-versao-nova.md", "Versão nova: situação", "novo", None),
+            ("versao-nova/3.estoque/resumo-versao-nova.md", "Situação na versão nova", "novo", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
             ("3.estoque/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Regras de Negocio.docx"),
             ("3.estoque/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Manual do Usuario.docx"),
@@ -303,9 +303,9 @@ MODULOS = [
             ("5.garantia_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
             ("5.garantia_qualidade/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Relatorio de Testes.docx"),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
-            ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Versão nova: o que os testes mostraram", "novo", None),
-            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Versão nova: resultado da rodada 4", "novo", None),
-            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17-rodada-5/resultado.md", "Versão nova: resultado da rodada 5", "novo", None),
+            ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Resultado da rodada 4", "novo", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-17-rodada-5/resultado.md", "Resultado da rodada 5", "novo", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
             ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
@@ -350,7 +350,7 @@ MODULOS = [
          ("4.controle_qualidade/01-regras-de-negocio.md", "Regras de negócio", "negocio", None),
          ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("4.controle_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
-         ("versao-nova/4.controle_qualidade/resumo-versao-nova.md", "Versão nova: situação", "novo", None),
+         ("versao-nova/4.controle_qualidade/resumo-versao-nova.md", "Situação na versão nova", "novo", None),
          ("4.controle_qualidade/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "4.controle_qualidade/defeitos/LabMedSys - Modulo Controle da Qualidade - Defeitos para Correcao.docx"),
          ("4.controle_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("4.controle_qualidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
@@ -372,7 +372,7 @@ MODULOS = [
          ("6.controle_documento/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
          ("6.controle_documento/06-modelo-de-dados.md", "Modelo de dados e integrações", "tecnico", None),
          ("6.controle_documento/08-plano-de-testes.md", "Plano de testes", "testes", None),
-         ("versao-nova/6.controle_documento/resumo-versao-nova.md", "Versão nova: situação", "novo", None),
+         ("versao-nova/6.controle_documento/resumo-versao-nova.md", "Situação na versão nova", "novo", None),
          ("6.controle_documento/fluxos/ciclo-documento.md", "Ciclo do documento", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Ciclo do Documento.docx"),
          ("6.controle_documento/fluxos/controle-copias.md", "Controle de cópias", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Controle de Copias.docx"),
          ("6.controle_documento/fluxos/externo-legado.md", "Documento externo e documento legado", "fluxos", "6.controle_documento/fluxos/LabMedSys - Modulo Controle de Documentos - Fluxo Documento Externo e Legado.docx"),
@@ -834,8 +834,10 @@ def gerar(origem, destino, relatorio):
 def _nav_arvore(pags, roteiros, atual):
     """Menu em árvore (menu do sistema > tela > resumo e passo a passo), com os grupos que abrem e fecham."""
     html = ""
-    for p in [x for x in pags if not x.get("grupo") and not x.get("roteiro_de")]:
-        html += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a></li>'
+    gerais = [x for x in pags if not x.get("grupo") and not x.get("roteiro_de")]
+    if gerais:
+        itens = "".join(f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a></li>' for p in gerais)
+        html += f'<li><details class="lat-menu-d"{" open" if atual in gerais else ""}><summary>Informações gerais</summary><ul>{itens}</ul></details></li>'
     for g in dict.fromkeys(x["grupo"] for x in pags if x.get("grupo")):
         telas, g_aberto = "", False
         for p in [x for x in pags if x.get("grupo") == g and not x.get("roteiro_de")]:
@@ -970,7 +972,7 @@ def pagina_modulo(mod):
             def _card(p):
                 return (f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
                         f'<span class="doc-card-meta">Leitura no portal</span></a>')
-            partes = [f'<div class="doc-cards">{"".join(_card(p) for p in pags if not p.get("grupo"))}</div>']
+            partes = [f'<h3 class="novo-menu">Informações gerais</h3><div class="doc-cards">{"".join(_card(p) for p in pags if not p.get("grupo"))}</div>']
             roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
             for g in dict.fromkeys(p["grupo"] for p in pags if p.get("grupo")):
                 cartoes = ""
