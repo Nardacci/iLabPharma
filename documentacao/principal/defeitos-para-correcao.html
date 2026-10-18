@@ -130,14 +130,6 @@
 <td>Principal › Cadastros › Cadastro de Ambientes, Cadastro de Equipamentos e Pessoa Jurídica (pesquisa)</td>
 <td>CT-PRI-096 (Ambiente, Equipamento e Pessoa jurídica), 05/10/2026</td>
 </tr>
-<tr>
-<td><a href="#dv-pri-018">DV-PRI-018</a></td>
-<td>Na tela inicial, o link do módulo Patrimônio aponta para o próprio servidor e não abre para o usuário</td>
-<td>Baixa</td>
-<td>Aberto</td>
-<td>Principal › Tela inicial (lista de módulos) › Patrimônio</td>
-<td>achado ao abrir os módulos (seção 6.2 do plano), 05/10/2026</td>
-</tr>
 </tbody>
 </table></div>
 <h2 id="dv-pri-009">DV-PRI-009</h2>
@@ -1044,7 +1036,6 @@
 <h3 id="observacoes_7">Observações</h3>
 <p>Na Pessoa jurídica, a pesquisa "farmaceutica" trouxe só as empresas gravadas sem acento; a TESTE com FARMACÊUTICA não apareceu (captura CT-PRI-096-pj-passo-1.png, não anexada por mostrar CNPJs de empresas).</p>
 <h2 id="dv-pri-018">DV-PRI-018</h2>
-<p><strong>Na tela inicial, o link do módulo Patrimônio aponta para o próprio servidor e não abre para o usuário</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1058,21 +1049,19 @@
 </thead>
 <tbody>
 <tr>
-<td>Baixa</td>
-<td>Aberto</td>
-<td>Principal › Tela inicial (lista de módulos) › Patrimônio</td>
-<td>achado ao abrir os módulos (seção 6.2 do plano)</td>
-<td>05/10/2026 (rodada 2)</td>
-<td>—</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
 <h3 id="o-que-acontece_9">O que acontece</h3>
-<p>Na tela inicial, ao clicar no módulo <strong>Patrimônio</strong>, o navegador tenta abrir um endereço <code>localhost</code> (o próprio computador do usuário) e a conexão é recusada. Todos os outros módulos habilitados (Produção, Estoque, Controle da Qualidade, Comercial, Controle de Documentos, Configurador OPE, Garantia da Qualidade e Rastreabilidade) abrem normalmente.</p>
 <h3 id="como-reproduzir_9">Como reproduzir</h3>
 <ol>
 <li>Entrar no módulo <strong>Principal</strong> com um usuário que tenha acesso aos módulos.</li>
-<li>Na tela inicial, clicar no ícone do módulo <strong>Patrimônio</strong>.</li>
 </ol>
 <p><strong>Dados de teste usados:</strong> usuário administrador do ambiente de teste; nenhum dado criado.</p>
 <h3 id="esperado-e-obtido_9">Esperado e obtido</h3>
@@ -1085,16 +1074,11 @@
 </thead>
 <tbody>
 <tr>
-<td>Abrir o módulo Patrimônio, como os demais; ou, se o módulo não fizer parte do sistema entregue, não mostrar o ícone.</td>
-<td>O navegador tenta abrir um endereço <code>localhost</code> e mostra conexão recusada.</td>
-</tr>
-<tr>
 <td>### Onde está no código</td>
 <td></td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Causa (provável):</strong> os links dos módulos vêm da tabela <code>SIS_MODULO</code>, coluna <code>LINK</code>. O script de carga do banco grava todos os módulos com endereço <code>localhost</code>; no ambiente de teste os outros módulos foram ajustados, mas a linha do Patrimônio ficou com o valor original e com <code>HABILITADO = 1</code>. A montagem da lista de módulos fica numa biblioteca compartilhada (fora de <code>1.principal/app</code>), não conferida. Investigar: o valor de <code>SIS_MODULO.LINK</code> para <code>CHAVE = 'PATRIMONIO'</code> no banco de teste (pedir ao DBA).</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1105,22 +1089,19 @@
 </thead>
 <tbody>
 <tr>
-<td><code>Hsolutions.Principal.DB/dml.sql</code></td>
-<td>10321</td>
-<td>Carga inicial do módulo PATRIMONIO em SIS_MODULO, habilitado e com link localhost (os demais módulos também nascem assim e precisam ser ajustados na instalação).</td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (1.principal/app).</em></p>
 <h3 id="sugestao-de-correcao_9">Sugestão de correção</h3>
 <ul>
-<li>Confirmar se o módulo Patrimônio faz parte do sistema. <em>Ponto para validar:</em> entre as pastas entregues não há aplicação web do Patrimônio, só bibliotecas em <code>10.HSolution.Library</code>.</li>
-<li>Se não fizer parte: gravar <code>HABILITADO = 0</code> para o Patrimônio, para o ícone sumir.</li>
 <li>Se fizer: corrigir o <code>LINK</code> no ambiente com o endereço publicado.</li>
 <li>Incluir no roteiro de instalação a conferência dos links de todos os módulos e não usar <code>localhost</code> no script de carga.</li>
 </ul>
 <h3 id="como-confirmar-a-correcao_9">Como confirmar a correção</h3>
-<p>Entrar no Principal, clicar em cada módulo da tela inicial e conferir que todos abrem; o Patrimônio deve abrir ou não aparecer.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-testes.html"><small>← Anterior</small><strong>Plano de testes</strong></a><a class="ap ap-prox" href="visao-geral-por-menu.html"><small>Próximo →</small><strong>Visão geral por menu</strong></a></nav>
   </main>

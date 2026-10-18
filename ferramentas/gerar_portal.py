@@ -327,6 +327,7 @@ MODULOS = [
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-18-rodada-6/resultado.md", "Resultado da rodada 6", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-18-rodada-7/resultado.md", "Resultado da rodada 7", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-18-rodada-8/resultado.md", "Resultado da rodada 8", "novo", None),
+            ("versao-nova/5.garantia_qualidade/execucao/2026-10-18-rodada-9/resultado.md", "Resultado da rodada 9", "novo", None),
             ("5.garantia_qualidade/roteiros/assuntos-regulatorios.md", "Roteiro de execução: Assuntos regulatórios (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/roteiros/treinamento.md", "Roteiro de execução: Treinamento técnico (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Treinamento.docx"),
             ("5.garantia_qualidade/roteiros/controle-mudancas.md", "Roteiro de execução: Controle de mudanças (passo a passo)", "fluxos", "5.garantia_qualidade/roteiros/LabMedSys - Modulo Garantia da Qualidade - Roteiro de Testes Controle de Mudancas.docx"),
@@ -463,11 +464,13 @@ RE_TITULO_SEG = re.compile(r"seguran[çc]a|achados? de seguran|ações do perfil
 TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca", re.I)
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
-    r"ADMINISTRADOR \(s[óo] leitura\)|tem 5 a[çc][õo]es marcadas|nem a[çc][ãa]o marcada|Retirar a[çc][õo]es at[ée]|Nenhuma combina[çc][ãa]o liberou|Registrado aqui e no confidencial"
-    r"s[óo] o perfil (?:1|ADMINISTRADOR)|perfil 1 \(ADMINISTRADOR\)|MARCOS_ADM|DV-GQ-N-013|\bProfileId\b|perfil 18|`0\.T\.TESTE_GQ_TUDO`|PEDIDO-AO-DESENVOLVIMENTO"
-    r"servidor exija uma a[çc][ãa]o|lia perfis do Principal|perfil 25 tem|Teste proposto: criar um perfil|ADMINISTRADOR, que funciona"
-    r"hip[óo]tese[^.]*Grupo Perfil|GrupoUsuario|\b403\b|a hip[óo]tese que proponho|O `t\.consulta` nunca foi colocado"
-    r"RG-PRI-03[789]|CT-PRI-050|DV-PRI-02[35]\b|senha de teste fixa|senha provis[óo]ria pendente|Senha provis[óo]ria leva|PERMISS[ÃA]O EXCLU[ÍI]DA|dão as permissões"
+    r"BERTIN, FELIPE SILVA|Os auditores dispon[íi]veis no novo|6 contas \(BERTIN|"
+    r"1\.507|s[óo] o id 1|perfil espelho|ESPELHO_ADMIN|nenhum perfil criado pela tela|Patrim[ôo]nio|a tela de Perfil n[ãa]o governa|causa est[áa] no perfil 1|C[óo]digo da API nova|c[óo]digo da API|id fixo|perfis 1 e 18|perfil 1|perfil 27|Fato: \*\*s[óo]|"
+    r"ADMINISTRADOR \(s[óo] leitura\)|tem 5 a[çc][õo]es marcadas|nem a[çc][ãa]o marcada|Retirar a[çc][õo]es at[ée]|Nenhuma combina[çc][ãa]o liberou|Registrado aqui e no confidencial|"
+    r"s[óo] o perfil (?:1|ADMINISTRADOR)|perfil 1 \(ADMINISTRADOR\)|MARCOS_ADM|DV-GQ-N-013|\bProfileId\b|perfil 18|`0\.T\.TESTE_GQ_TUDO`|PEDIDO-AO-DESENVOLVIMENTO|"
+    r"servidor exija uma a[çc][ãa]o|lia perfis do Principal|perfil 25 tem|Teste proposto: criar um perfil|ADMINISTRADOR, que funciona|"
+    r"hip[óo]tese[^.]*Grupo Perfil|GrupoUsuario|\b403\b|a hip[óo]tese que proponho|O `t\.consulta` nunca foi colocado|"
+    r"RG-PRI-03[789]|CT-PRI-050|DV-PRI-02[35]\b|senha de teste fixa|senha provis[óo]ria pendente|Senha provis[óo]ria leva|PERMISS[ÃA]O EXCLU[ÍI]DA|dão as permissões|"
     r"N[íi]vel 3 foi tocado|n[ãa]o deixou nenhum registro|DV-GQ-009|usu[áa]rio de consulta.*gravando|recusa quem n[ãa]o tem acesso ao m[óo]dulo|"
     r"API n[ãa]o confere|Math\.random|gerad[ao]s? no navegador|senha provis[óo]ria (?:aparece|e senha de reset)|DV-PRI-N-01[179]\b|\bN-01[179]\b|"
     r"SEG-[A-Z]{2,4}-\d+|03-achados-de-seguranca|achados de seguran[çc]a|inje[çc][ãa]o de SQL|SQL injection|"
