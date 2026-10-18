@@ -82,18 +82,25 @@ ESPECIAIS = {"visao-geral"}
 CAMINHO = ["visao-geral", "principal", "estoque", "producao", "ope", "controle-qualidade",
            "garantia-qualidade", "controle-documentos", "comercial", "rastreabilidade"]
 PASSOS = [
-    ("conhecer", "Conheça o módulo", "O que é, o que tem e como as telas se organizam nos menus."),
-    ("fluxos", "Siga o processo", "Como o trabalho anda hoje, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
-    ("regras", "Regras e permissões", "O que o sistema faz hoje com cada dado, quem pode fazer o quê e como usar."),
-    ("ideal", "O ideal: como deve funcionar", "Como o módulo deve trabalhar para atender à ANVISA: funções, comportamento, integrações com os outros módulos e papéis. Mostra o que manter, corrigir e construir."),
-    ("norma", "Norma e risco", "O que a ANVISA exige e onde está o risco."),
-    ("testes", "Testes e defeitos", "O que foi testado nas telas, o que falhou e como corrigir."),
-    ("dados", "Requisitos e dados", "Para a equipe de desenvolvimento da nova versão."),
+    ("resumo", "Resumo do módulo", "O que é o módulo, em que situação está e o que decidir. Vale para o sistema entregue e para a versão nova."),
+    ("fluxos", "Siga o processo", "Como o trabalho anda, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
+    ("ideal", "O ideal: como deve funcionar", "Como o módulo deve trabalhar para atender à ANVISA: funções, comportamento, integrações com os outros módulos e papéis. Mostra o que manter, corrigir e acrescentar."),
+    ("norma", "ANVISA: norma e risco", "O que a ANVISA exige e onde está o risco."),
+    ("dados", "Requisitos e dados", "Para a equipe de desenvolvimento: requisitos corrigidos, comparação entre as versões, modelo de dados e integrações."),
     ("fecho", "Fechamento", "O parecer do módulo, por que ele está (ou não) apto, e o dossiê que reúne tudo."),
+    ("conhecer", "Telas e situação", "O que existe no sistema entregue, como as telas se organizam nos menus e o que funciona."),
+    ("regras", "Regras e uso", "O que o sistema entregue faz com cada dado, quem pode fazer o quê e como usar."),
+    ("testes", "Testes e defeitos", "O que foi testado nas telas do sistema entregue, o que falhou e como corrigir."),
     ("novo", "iLabPharma Novo", "A versão nova do sistema (as mesmas regras com ferramentas atualizadas): o que foi testado, o que ficou igual, melhorou ou piorou em relação ao sistema entregue."),
 ]
+# Seções do roteiro do módulo: cada passo pertence a uma.
+SECOES = [
+    ("modulo", "Sobre o módulo", "Vale para o sistema entregue e para a versão nova.", ["resumo", "fluxos", "ideal", "norma", "dados", "fecho"]),
+    ("legado", "Legado", "O sistema entregue pelo fornecedor: como é hoje.", ["conhecer", "regras", "testes"]),
+    ("novo", "iLabPharma Novo", "A versão nova, por menu do sistema.", ["novo"]),
+]
 PRIORIDADE = {
-    "conhecer": ["resumo executivo", "reconhecimento", "inventário"],
+    "conhecer": ["reconhecimento", "inventário"],
     "regras": ["regras de negócio", "matriz de permiss", "manual", "cadastros"],
     "norma": ["conformidade", "risco", "rastreabilidade"],
     "testes": ["versão nova: o que", "versão nova: situação", "plano", "relatório", "defeitos", "versão nova: resultado"],
@@ -133,6 +140,8 @@ def passo_de(p):
     if "regras de negócio" in t:
         return "regras"
     if cat == "inicio":
+        if "resumo executivo" in t or "resumo do módulo" in t:
+            return "resumo"
         return "testes" if "relatório de testes" in t else "conhecer"
     if cat == "negocio":
         return "regras"
@@ -161,6 +170,13 @@ def docs_com_telas(mod, hom):
     return resto + gerais + velhos + telas
 
 
+def _secao_de(chave):
+    for sk, sn, sd, chaves in SECOES:
+        if chave in chaves:
+            return sk, sn, sd
+    return "visao", "Visão de ponta a ponta", ""
+
+
 def organizar_roteiro(mod):
     """Ordena os documentos do módulo em passos e liga cada um ao anterior e ao próximo."""
     mod["roteiro"], mod["seq"] = [], []
@@ -171,7 +187,8 @@ def organizar_roteiro(mod):
         grupos = [("visao", "Visão de ponta a ponta", "Como o processo se encadeia entre os módulos, onde a corrente quebra e o que repete.", pags)]
     else:
         grupos = []
-        for chave, nome, desc in PASSOS:
+        ordem_passos = [x for sk, sn, sd, chaves in SECOES for c in chaves for x in PASSOS if x[0] == c]
+        for chave, nome, desc in ordem_passos:
             pags = [p for p in mod["paginas"] if passo_de(p) == chave]
             if chave == "fluxos":
                 fl = sorted([p for p in pags if not p.get("roteiro_de")], key=lambda p: _pos(ORDEM_FLUXOS.get(mod["id"], []), p["titulo"]))
@@ -191,6 +208,7 @@ def organizar_roteiro(mod):
     for i, g in enumerate(grupos, 1):
         for p in g[3]:
             p["passo_n"], p["passo_nome"], p["passo_total"] = i, g[1], len(grupos)
+            p["secao_nome"] = _secao_de(g[0])[1]
     for k, p in enumerate(seq):
         p["n"], p["total"] = k + 1, len(seq)
         p["ant"] = seq[k - 1] if k else None
@@ -227,7 +245,7 @@ MODULOS = [
         "situacao": "Homologado: não apto", "nivel": 4,
         "resumo": "Porta de entrada dos nove módulos: login, usuários, perfis, permissões, cadastros gerais e a base da trilha de auditoria. Analisado, testado em duas rodadas (78 casos) e com todos os entregáveis.",
         "docs": [
-            ("1.principal/entregaveis/fonte/resumo-executivo.md", "Resumo executivo", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Resumo Executivo.docx"),
+            ("1.principal/entregaveis/fonte/resumo-executivo.md", "Resumo do módulo", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Resumo Executivo.docx"),
             ("1.principal/entregaveis/fonte/por-que-nao-apta.md", "Por que o Principal não está apto", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Por que nao esta apto.docx"),
             ("1.principal/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Dossie de Homologacao.docx"),
             ("1.principal/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
@@ -248,7 +266,7 @@ MODULOS = [
             ("versao-nova/1.principal/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
             ("versao-nova/1.principal/plano-de-regressao.md", "Plano de regressão", "novo", None),
             ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/usuarios-de-teste.md", "Usuários de teste", "novo", None),
-            ("versao-nova/COMPARACAO-CODIGO.md", "Comparação do código com o legado", "novo", None),
+            ("versao-nova/COMPARACAO-CODIGO.md", "Comparação do código com o legado", "tecnico", None),
             ("versao-nova/1.principal/execucao/2026-10-17/resultado.md", "Resultado da rodada 1", "novo", None),
             ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/resultado.md", "Resultado da rodada 2", "novo", None),
         ],
@@ -259,7 +277,7 @@ MODULOS = [
         "resumo": "Recebimento, quarentena, endereçamento, movimentação, atendimento à produção, devolução, remessa, inventário e kits. Dez fluxos documentados. Testes de tela por risco: 7 rodadas (07 a 13/10/2026), 78 dos 162 casos conclusivos, 37 dos 46 casos Alta; 39 defeitos para correção (11 de prioridade alta). Confirmado na tela: o Endereçamento mostra sucesso e não grava (causa no banco, aguarda o DBA); pelas entradas de material o lote entra em quarentena e abre a análise no CQ; o laudo reprovado bloqueia o lote, mas o Estoque só sabe quando alguém atualiza a análise; a avaliação do fornecedor não qualifica nem bloqueia ninguém; a entrada de produto acabado aceita lote inventado e vencido; o histórico do lote não mostra usuário, análise nem laudo. Fechado em 14/10/2026 com os cinco entregáveis: resumo executivo, dossiê, regras de negócio, análise de requisitos e manual do usuário. Reabre só se o DBA ou a área resolverem as pendências (9 casos Alta bloqueados).",
         "docs": [
             ("3.estoque/entregaveis/fonte/por-que-nao-apta.md", "Por que o Estoque não está apto", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Por que nao esta apto.docx"),
-            ("3.estoque/entregaveis/fonte/resumo-executivo.md", "Resumo executivo", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Resumo Executivo.docx"),
+            ("3.estoque/entregaveis/fonte/resumo-executivo.md", "Resumo do módulo", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Resumo Executivo.docx"),
             ("3.estoque/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Dossie de Homologacao.docx"),
             ("3.estoque/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
             ("3.estoque/ideal/est-ideal.md", "O Estoque ideal", "ideal", "3.estoque/ideal/LabMedSys - Modulo Estoque - O Ideal.docx"),
@@ -429,7 +447,7 @@ MODULOS = [
 ]
 
 PUBLICOS = [
-    ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("visao-geral", "mapa-de-integracoes-entre-os-modulos"), ("principal", "resumo-executivo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
+    ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("visao-geral", "mapa-de-integracoes-entre-os-modulos"), ("principal", "resumo-do-modulo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
     ("Usuários das áreas", "Como cada processo funciona nas telas.", [("principal", "manual-do-usuario"), ("estoque", "manual-do-usuario"), ("garantia-qualidade", "desvios-e-capa")]),
     ("Garantia da Qualidade", "Conformidade, riscos e rastreabilidade.", [("garantia-qualidade", "conformidade-com-a-rdc-658-2022"), ("principal", "conformidade-regulatoria"), ("principal", "dossie-de-homologacao")]),
     ("Desenvolvimento", "Requisitos e dados para a nova versão.", [("principal", "analise-de-requisitos"), ("principal", "modelo-de-dados-e-integracoes"), ("visao-geral", "telas-tabelas-e-codigo-repetidos-entre-os-modulos")]),
@@ -853,6 +871,7 @@ def _nav_arvore(pags, roteiros, atual):
 
 def nav_lateral(mod, atual):
     grupos = []
+    secao_atual = None
     for i, (chave, nome, _desc, pags) in enumerate(mod["roteiro"], 1):
         roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
         li = ""
@@ -868,8 +887,14 @@ def nav_lateral(mod, atual):
                     li += f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo para testar</a></li></ul>'
                 li += "</li>"
         aberto = " lat-atual" if atual and atual.get("passo_nome") == nome else ""
-        num = f'<span class="lat-n">{i}</span>' if chave != "visao" else ""
-        grupos.append(f'<div class="lat-grupo{aberto}"><div class="lat-titulo">{num}{E(nome)}</div><ul>{li}</ul></div>')
+        sk, sn, _sd = _secao_de(chave)
+        if sk != secao_atual and chave != "visao":
+            secao_atual = sk
+            grupos.append(f'<div class="lat-secao">{E(sn)}</div>')
+        if chave == "novo":
+            grupos.append(f'<div class="lat-grupo{aberto}"><ul>{li}</ul></div>')
+        else:
+            grupos.append(f'<div class="lat-grupo{aberto}"><div class="lat-titulo">{E(nome)}</div><ul>{li}</ul></div>')
     return "".join(grupos)
 
 
@@ -906,7 +931,9 @@ def pagina_documento(mod, p):
         prox = _cartao_ap("Fim do roteiro", "Voltar ao início do portal", f"{raiz}index.html", "prox")
     pct = round(p["n"] / p["total"] * 100)
     unico = p["passo_total"] == 1
-    onde = (f'Passo {p["passo_n"]} de {p["passo_total"]} · {E(p["passo_nome"])}' if not unico else E(p["passo_nome"]))
+    sec = p.get("secao_nome") or ""
+    onde = (E(p["passo_nome"]) if unico or not sec or sec == "Visão de ponta a ponta"
+            else (E(sec) if sec == p["passo_nome"] else f'{E(sec)} · {E(p["passo_nome"])}'))
     return (cabecalho(f"{p['titulo']} · {mod['nome']} · iLabMedSys", raiz) + f"""
 <div class="doc-layout">
   <aside class="lateral" aria-label="Roteiro do módulo">
@@ -938,7 +965,7 @@ def pagina_modulo(mod):
         for k in soma:
             soma[k] = max(soma[k], p["contagem"][k]) if k != "regras" else soma[k] + p["contagem"][k]
     fluxos = [p for p in mod["paginas"] if p["cat"] == "fluxos" and not p.get("roteiro_de")]
-    numeros = [(len(mod["paginas"]), "documentos"), (len(fluxos), "fluxos documentados")]
+    numeros = [(len(mod["paginas"]), "documentos")] + ([(len(fluxos), "fluxos documentados")] if fluxos else [])
     if soma["casos"]:
         numeros.append((soma["casos"], "casos de teste (maior plano)"))
     if soma["requisitos"]:
@@ -948,6 +975,7 @@ def pagina_modulo(mod):
     num_html = "".join(f'<div class="numero"><strong>{n}</strong><span>{E(r)}</span></div>' for n, r in numeros)
 
     blocos, submenu = [], []
+    secao_atual = None
     total = len(mod["seq"])
     for i, (chave, nome, desc, pags) in enumerate(mod["roteiro"], 1):
         if chave == "fluxos":
@@ -990,9 +1018,16 @@ def pagina_modulo(mod):
                 f'<span class="doc-card-meta">{"Word disponível" if p["word"] else "Leitura no portal"}</span></a>' for p in pags)
             grade = f'<div class="doc-cards">{cards}</div>'
         classe = "secao passo secao-ideal" if chave == "ideal" else "secao passo"
-        numero = f'<span class="passo-n">{i}</span>' if chave != "visao" else ""
-        blocos.append(f'<section class="{classe}" id="passo-{chave}"><div class="passo-cab">{numero}<div><h2>{E(nome)}</h2><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
-        submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "ideal" else ""}>{(str(i) + " · ") if chave != "visao" else ""}{E(nome)}</a>')
+        sk, sn, sd = _secao_de(chave)
+        if sk != secao_atual and chave != "visao":
+            secao_atual = sk
+            blocos.append(f'<h2 class="secao-titulo" id="secao-{sk}">{E(sn)}</h2><p class="secao-desc">{E(sd)}</p>')
+            submenu.append(f'<a href="#secao-{sk}" class="submenu-secao">{E(sn)}</a>')
+        if chave == "novo":
+            blocos.append(f'<section class="{classe}" id="passo-{chave}">{grade}</section>')
+        else:
+            blocos.append(f'<section class="{classe}" id="passo-{chave}"><div class="passo-cab"><div><h3>{E(nome)}</h3><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
+            submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "ideal" else ""}>{E(nome)}</a>')
     submenu_html = f'<nav class="submenu" aria-label="Passos do roteiro">{"".join(submenu)}</nav>' if len(submenu) > 1 else ""
 
     _apto = next((p for p in mod["paginas"] if "não está apto" in p["titulo"].lower()), None)
@@ -1001,7 +1036,7 @@ def pagina_modulo(mod):
     primeiro, ultimo = mod["seq"][0], mod["seq"][-1]
     ant_mod, prox_mod = vizinhos(mod)
     comece = (f'<section class="comece"><div><p class="comece-rotulo">Comece aqui</p>'
-              f'<p>O roteiro deste módulo tem <strong>{len(mod["roteiro"])} passo{"s" if len(mod["roteiro"]) != 1 else ""}</strong> e <strong>{total} documentos</strong>, '
+              f'<p>O roteiro deste módulo tem <strong>{len({_secao_de(g[0])[0] for g in mod["roteiro"]})} parte{"s" if len({_secao_de(g[0])[0] for g in mod["roteiro"]}) != 1 else ""}</strong> e <strong>{total} documentos</strong>, '
               f'do primeiro ({E(primeiro["titulo"])}) ao último ({E(ultimo["titulo"])}). Leia na ordem: cada documento leva ao próximo.</p></div>'
               f'<a class="botao botao-grande" href="{primeiro["slug"]}.html">Iniciar o roteiro →</a></section>')
     fim = (f'<section class="fim-roteiro"><p class="comece-rotulo">Fim do roteiro deste módulo</p>'
