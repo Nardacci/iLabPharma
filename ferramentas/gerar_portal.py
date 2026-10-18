@@ -135,7 +135,7 @@ def passo_de(p):
         return "novo"
     if cat == "fluxos" or p.get("roteiro_de"):
         return "fluxos"
-    if "dossiê" in t or "não está apto" in t:
+    if "dossiê" in t or "não está apto" in t or "parecer" in t:
         return "fecho"
     if "regras de negócio" in t:
         return "regras"
@@ -247,6 +247,7 @@ MODULOS = [
         "docs": [
             ("1.principal/entregaveis/fonte/resumo-executivo.md", "Resumo do módulo", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Resumo Executivo.docx"),
             ("1.principal/entregaveis/fonte/por-que-nao-apta.md", "Por que o Principal não está apto", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Por que nao esta apto.docx"),
+            ("1.principal/entregaveis/fonte/parecer-versao-nova.md", "Parecer da versão nova do Principal", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Parecer da Versao Nova.docx"),
             ("1.principal/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Dossie de Homologacao.docx"),
             ("1.principal/11-inventario-de-telas.md", "Inventário de telas e situação", "inicio", None),
             ("1.principal/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Regras de Negocio.docx"),
