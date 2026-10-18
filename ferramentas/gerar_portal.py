@@ -831,25 +831,40 @@ def gerar(origem, destino, relatorio):
     print(f"Portal gerado: {total} documentos, {len(retirado)} trechos de segurança retirados.")
 
 
+def _nav_arvore(pags, roteiros, atual):
+    """Menu em árvore (menu do sistema > tela > resumo e passo a passo), com os grupos que abrem e fecham."""
+    html = ""
+    for p in [x for x in pags if not x.get("grupo") and not x.get("roteiro_de")]:
+        html += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a></li>'
+    for g in dict.fromkeys(x["grupo"] for x in pags if x.get("grupo")):
+        telas, g_aberto = "", False
+        for p in [x for x in pags if x.get("grupo") == g and not x.get("roteiro_de")]:
+            r = roteiros.get(p["arq"])
+            t_aberto = atual is p or atual is r
+            g_aberto = g_aberto or t_aberto
+            filhos = (f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>Resumo geral</a></li>'
+                      + (f'<li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo de homologação</a></li>' if r else ""))
+            telas += (f'<li><details class="lat-tela"{" open" if t_aberto else ""}><summary>{E(p["tela"])}</summary><ul>{filhos}</ul></details></li>')
+        html += f'<li><details class="lat-menu-d"{" open" if g_aberto else ""}><summary>{E(g)}</summary><ul>{telas}</ul></details></li>'
+    return html
+
+
 def nav_lateral(mod, atual):
     grupos = []
     for i, (chave, nome, _desc, pags) in enumerate(mod["roteiro"], 1):
         roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
         li = ""
-        grupo_atual = None
-        for p in pags:
-            if p.get("roteiro_de"):
-                continue
-            if p.get("grupo") and p["grupo"] != grupo_atual:
-                grupo_atual = p["grupo"]
-                li += f'<li class="lat-menu">{E(grupo_atual)}</li>'
-            rotulo = p.get("tela") or p["titulo"]
-            li += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(rotulo)}</a>'
-            r = roteiros.get(p["arq"])
-            if r:
-                li += (f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>'
-                       f'{"Passo a passo de homologação" if r.get("grupo") else "Passo a passo para testar"}</a></li></ul>')
-            li += "</li>"
+        if any(p.get("grupo") for p in pags):
+            li = _nav_arvore(pags, roteiros, atual)
+        else:
+            for p in pags:
+                if p.get("roteiro_de"):
+                    continue
+                li += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a>'
+                r = roteiros.get(p["arq"])
+                if r:
+                    li += f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo para testar</a></li></ul>'
+                li += "</li>"
         aberto = " lat-atual" if atual and atual.get("passo_nome") == nome else ""
         num = f'<span class="lat-n">{i}</span>' if chave != "visao" else ""
         grupos.append(f'<div class="lat-grupo{aberto}"><div class="lat-titulo">{num}{E(nome)}</div><ul>{li}</ul></div>')
