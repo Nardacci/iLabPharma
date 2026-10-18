@@ -41,32 +41,160 @@
       
     </header>
     <article class="texto">
-<p><strong>Menu:</strong> Cadastros · <strong>Situação na versão nova:</strong> Ainda não testada · <strong>Tela equivalente no legado:</strong> <code>administrativas/local_fisico_lst</code>, <code>_ed</code> (Não testada; no legado não tem relatório)</p>
+<p><strong>Menu:</strong> Cadastros · <strong>Situação na versão nova:</strong> Testada · <strong>Tela equivalente no legado:</strong> <code>administrativas/local_fisico_lst</code>, <code>_ed</code> (Não testada; no legado não tem relatório)</p>
 <h3 id="em-uma-olhada">Em uma olhada</h3>
-<p>Esta tela <strong>ainda não foi testada</strong> na versão nova. O que se sabe é só o que a tela mostra ao abrir e o que o sistema entregue tinha.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Casos executados</th>
+<th>Igual</th>
+<th>Regressão</th>
+<th>Melhoria</th>
+<th>Novo</th>
+<th>Bloqueado</th>
+<th>Defeitos listados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+</tr>
+</tbody>
+</table></div>
+<p>Classes: <strong>Igual</strong> (mesmo comportamento do sistema entregue, inclusive a falha), <strong>Regressão</strong> (piorou), <strong>Melhoria</strong> (falhava e agora funciona), <strong>Novo</strong> (o sistema entregue não tinha resultado) e <strong>Bloqueado</strong> (não deu para executar).</p>
 <h3 id="o-que-a-tela-faz">O que a tela faz</h3>
 <p>Tela do menu Cadastros que abre com lista e pesquisa na versão nova.</p>
 <ul>
-<li>Na versão nova a tela abre e lista, sem erro de API (reconhecimento da rodada 1). Nada além disso foi testado.</li>
+<li>Botões: Incluir sim, Excel não, Imprimir não. Histórico (Log): sim.</li>
+<li>Campos obrigatórios (marcados com asterisco): Nome, Empresa, Conta gerencial, Responsável, Ativo.</li>
+<li>Campos de busca por digitação (sugestões).</li>
 <li>Legado: Não testada; no legado não tem relatório.</li>
 </ul>
+<h3 id="resultado-dos-testes">Resultado dos testes</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Cenário</th>
+<th>Legado</th>
+<th>Versão nova (o que a tela mostrou)</th>
+<th>Classe</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R3-LF-01</td>
+<td>Obrigatórios</td>
+<td>Pontos de água e Categoria dizem o campo</td>
+<td>Vazio e um a um: só o aviso "Preencha os campos obrigatórios antes de salvar.", sem dizer qual campo (Nome, Empresa, Conta gerencial, Responsável). Ativo é marcado como obrigatório, mas gravar sem escolher grava como "Sim"</td>
+<td>Regressão</td>
+<td>N-033</td>
+</tr>
+<tr>
+<td>R3-LF-02</td>
+<td>Incluir</td>
+<td>não testada no legado</td>
+<td>Mínimo e completo (com Centro de custo, que é opcional) gravam; as caixas de Empresa, Conta gerencial, Centro de custo e Responsável sugerem os nomes ao digitar</td>
+<td>Novo</td>
+<td>—</td>
+</tr>
+<tr>
+<td>R3-LF-03</td>
+<td>Limites e duplicado</td>
+<td>não testada no legado</td>
+<td>Nome 50 grava; passa disso o campo corta em 50. Nome repetido na mesma conta gerencial é recusado: "Ja existe local fisico com este nome para a conta gerencial informada."</td>
+<td>Melhoria</td>
+<td>N-027</td>
+</tr>
+<tr>
+<td>R3-LF-04</td>
+<td>Alterar e inativar</td>
+<td>não testada no legado</td>
+<td>Sem justificativa: "A justificativa é obrigatória."; com justificativa grava; histórico sem justificativa</td>
+<td>Regressão</td>
+<td>N-029</td>
+</tr>
+<tr>
+<td>R3-LF-05</td>
+<td>Excluir</td>
+<td>não testada no legado</td>
+<td>O botão SIM fica desabilitado até digitar a justificativa; depois exclui (204)</td>
+<td>Melhoria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>R3-LF-06</td>
+<td>Excel e Imprimir</td>
+<td>legado: "Sem relatório"</td>
+<td>Não existem (a lista só tem PESQUISAR e LIMPAR)</td>
+<td>Igual</td>
+<td>—</td>
+</tr>
+<tr>
+<td>R3-LF-07</td>
+<td>Pesquisa</td>
+<td>DV-PRI-008</td>
+<td>Por Empresa, Conta gerencial, Código, Nome e Ativo. "AGUA" não acha "T. LOCAL FISICO COMPLETO ÁGUA"; "água" e "ÁGUA" acham</td>
+<td>Igual</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Evidências (capturas): R3 (rodada 3, 18/10/2026). As capturas ficam na pasta <code>evidencias/</code> de cada rodada.</p>
+<h3 id="defeitos-e-pontos-de-atencao">Defeitos e pontos de atenção</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Defeito</th>
+<th>Gravidade</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-PRI-N-033</td>
+<td>Média</td>
+<td>Obrigatórios e inativos sem padrão: Utensílios e Grupo deixam passar um obrigatório que só o servidor recusa (com texto genérico); Local físico e Conta gerencial só dizem "preencha os campos" sem apontar o campo; "Ativo", "Operação" e "Tipo" valem sem escolher (assumem Sim, Depreciação e Sintética); função inativa aparece sem nome no Profissional e grupo inativo continua na lista de escolha</td>
+</tr>
+<tr>
+<td>DV-PRI-N-027</td>
+<td>Baixa</td>
+<td>Textos: "Exclus&atilde;o realizada com sucesso!" (código HTML à mostra, Utilidades); "A justificativa é; obrigatória." (Instrumentos); "Confirma a exclusão do ponto do item?" (Pontos de água); "NãO" (Conta gerencial); título "RELATÓRIO DE ENTRADA" (PDF de Grupo); botão Excel com rótulo "X" (Instrumentos e Utensílios); mensagens do servidor sem acento ("Ja existe", "nao", "fabricacao"); "ATIVO SIM → NAO" no histórico</td>
+</tr>
+<tr>
+<td>DV-PRI-N-029</td>
+<td>Alta</td>
+<td>O histórico (Log) não mostra a justificativa digitada, em 8 das 10 telas de cadastro (Pontos de água, Utilidades, Utensílios, Categoria, Local físico, Conta gerencial, Grupo, Funções; também em Notificações padrão, que nem pede). A justificativa é gravada (a API de log a devolve); só a tela esconde. Aparece em Instrumentos e Conta contábil</td>
+</tr>
+</tbody>
+</table></div>
 <h3 id="para-quem-desenvolve">Para quem desenvolve</h3>
 <ul>
-<li>Sem achados: a tela ainda não foi testada. Os desvios já conhecidos do legado para telas de cadastro (DV-PRI-007 descrição repetida, DV-PRI-008 pesquisa sem acento, DV-PRI-009 exclusão sem justificativa) são o ponto de partida da conferência.</li>
+<li>N-033: Mesmo padrão em todas as telas.</li>
+<li>N-027: Textos corretos.</li>
+<li>N-029: Mostrar quem, quando, o que mudou e por quê.</li>
 </ul>
 <h3 id="para-quem-testa-qa">Para quem testa (QA)</h3>
 <ul>
-<li>Use o roteiro padrão de cadastro (aba Passo a passo). Registros de teste começam por <code>T.</code>; use o perfil <code>0.T.TESTE_ADMIN</code> ou <code>0.T.TESTE_CADASTRO</code>.</li>
+<li>Registros de teste criados e devolvidos ao estado original: ver a seção 8 do resultado da rodada 3 (<code>versao-nova/1.principal/execucao/2026-10-18-rodada-3/resultado.md</code>).</li>
+<li>Antes de repetir, use o perfil <code>0.T.TESTE_ADMIN</code> ou <code>0.T.TESTE_CADASTRO</code>; registros novos começam por <code>T.</code>.</li>
 </ul>
 <h3 id="para-a-gestao">Para a gestão</h3>
 <ul>
-<li>Ainda sem resultado. Entra na próxima frente de testes do Principal.</li>
+<li>Defeitos de gravidade Alta: N-029. São os que mais pesam para a rastreabilidade (histórico e integridade entre cadastros).</li>
 </ul>
 <p>O passo a passo para homologar esta tela está na página seguinte.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="categoria-de-equipamento-passo-a-passo-de-homologacao.html"><small>← Anterior</small><strong>Categoria de equipamento: passo a passo de homologação</strong></a><a class="ap ap-prox" href="local-fisico-passo-a-passo-de-homologacao.html"><small>Próximo →</small><strong>Local físico: passo a passo de homologação</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#em-uma-olhada">Em uma olhada</a></li><li><a href="#o-que-a-tela-faz">O que a tela faz</a></li><li><a href="#para-quem-desenvolve">Para quem desenvolve</a></li><li><a href="#para-quem-testa-qa">Para quem testa (QA)</a></li><li><a href="#para-a-gestao">Para a gestão</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#em-uma-olhada">Em uma olhada</a></li><li><a href="#o-que-a-tela-faz">O que a tela faz</a></li><li><a href="#resultado-dos-testes">Resultado dos testes</a></li><li><a href="#defeitos-e-pontos-de-atencao">Defeitos e pontos de atenção</a></li><li><a href="#para-quem-desenvolve">Para quem desenvolve</a></li><li><a href="#para-quem-testa-qa">Para quem testa (QA)</a></li><li><a href="#para-a-gestao">Para a gestão</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 18/10/2026</div>

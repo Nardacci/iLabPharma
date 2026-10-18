@@ -41,32 +41,201 @@
       
     </header>
     <article class="texto">
-<p><strong>Menu:</strong> Cadastros · <strong>Situação na versão nova:</strong> Ainda não testada · <strong>Tela equivalente no legado:</strong> <code>administracao/grupo_usuario_lst</code>, <code>_ed</code>, <code>_rel</code> (Não testada)</p>
+<p><strong>Menu:</strong> Cadastros · <strong>Situação na versão nova:</strong> Testada · <strong>Tela equivalente no legado:</strong> <code>administracao/grupo_usuario_lst</code>, <code>_ed</code>, <code>_rel</code> (Não testada)</p>
 <h3 id="em-uma-olhada">Em uma olhada</h3>
-<p>Esta tela <strong>ainda não foi testada</strong> na versão nova. O que se sabe é só o que a tela mostra ao abrir e o que o sistema entregue tinha.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Casos executados</th>
+<th>Igual</th>
+<th>Regressão</th>
+<th>Melhoria</th>
+<th>Novo</th>
+<th>Bloqueado</th>
+<th>Defeitos listados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+<td>4</td>
+<td>0</td>
+<td>6</td>
+</tr>
+</tbody>
+</table></div>
+<p>Classes: <strong>Igual</strong> (mesmo comportamento do sistema entregue, inclusive a falha), <strong>Regressão</strong> (piorou), <strong>Melhoria</strong> (falhava e agora funciona), <strong>Novo</strong> (o sistema entregue não tinha resultado) e <strong>Bloqueado</strong> (não deu para executar).</p>
 <h3 id="o-que-a-tela-faz">O que a tela faz</h3>
 <p>Tela do menu Cadastros que abre com lista e pesquisa na versão nova. No legado esta tela ficava em Administração.</p>
 <ul>
-<li>Na versão nova a tela abre e lista, sem erro de API (reconhecimento da rodada 1). Nada além disso foi testado.</li>
+<li>Botões: Incluir sim, Excel sim, Imprimir sim. Histórico (Log): sim.</li>
+<li>Campos obrigatórios (marcados com asterisco): Nome (mensagem diz "Descrição"); Código também é obrigatório (ver N-026).</li>
 <li>Legado: Não testada.</li>
 </ul>
+<h3 id="resultado-dos-testes">Resultado dos testes</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Cenário</th>
+<th>Legado</th>
+<th>Versão nova (o que a tela mostrou)</th>
+<th>Classe</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R3-GU-01</td>
+<td>Obrigatórios</td>
+<td>não testada no legado</td>
+<td>Vazio: "A Descrição é obrigatória." (o campo chama-se Nome). O Código também é obrigatório, mas não está marcado: sem código a tela pergunta, o servidor recusa e a tela diz "Não foi possível salvar o ponto de água." (texto de outra tela)</td>
+<td>Regressão</td>
+<td>N-026</td>
+</tr>
+<tr>
+<td>R3-GU-02</td>
+<td>Incluir</td>
+<td>não testada no legado</td>
+<td>Mínimo (nome e código) e completo gravam; o nome é gravado em maiúsculas</td>
+<td>Novo</td>
+<td>—</td>
+</tr>
+<tr>
+<td>R3-GU-03</td>
+<td>Limites</td>
+<td>não testada no legado</td>
+<td>O campo Nome deixa digitar 255, mas o servidor só aceita até uma extensão entre 100 e 150 (100 grava, 150 recusa) e a tela mostra de novo "Não foi possível salvar o ponto de água."; Código: 10 grava, 12 recusa (campo sem limite)</td>
+<td>Novo</td>
+<td>N-026</td>
+</tr>
+<tr>
+<td>R3-GU-04</td>
+<td>Duplicado</td>
+<td>não testada no legado</td>
+<td>Nome repetido é recusado: "Ja existe um grupo cadastrado com o nome informado."</td>
+<td>Melhoria</td>
+<td>N-027</td>
+</tr>
+<tr>
+<td>R3-GU-05</td>
+<td>Alterar e inativar</td>
+<td>não testada no legado</td>
+<td>Sem justificativa: "A Justificativa é obrigatória."; com justificativa grava; histórico sem justificativa</td>
+<td>Regressão</td>
+<td>N-029</td>
+</tr>
+<tr>
+<td>R3-GU-06</td>
+<td>Excluir sem uso</td>
+<td>não testada no legado</td>
+<td>Exige justificativa ("A justificativa é obrigatória."); com justificativa: 204</td>
+<td>Melhoria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>R3-GU-07</td>
+<td>Excluir com uso</td>
+<td>não testada no legado</td>
+<td>Grupo de um profissional: a API recusa (400) "Exclusao invalida, existem referencias com outras tabelas." (genérica), e a tela não mostra mensagem</td>
+<td>Regressão</td>
+<td>N-024</td>
+</tr>
+<tr>
+<td>R3-GU-08</td>
+<td>Pesquisa</td>
+<td>DV-PRI-008</td>
+<td>"água" e "ÁGUA" acham; "AGUA" não</td>
+<td>Igual</td>
+<td>—</td>
+</tr>
+<tr>
+<td>R3-GU-09</td>
+<td>Excel</td>
+<td>não testada no legado</td>
+<td>Baixa <code>grupos_usuario...xlsx</code> com todos os 8 grupos, com a lista filtrada em 1: ignora o filtro</td>
+<td>Novo</td>
+<td>N-025</td>
+</tr>
+<tr>
+<td>R3-GU-10</td>
+<td>Imprimir</td>
+<td>não testada no legado</td>
+<td>O PDF respeita o filtro ("NOME: T. GRUPO"), mas o título é "RELATÓRIO DE ENTRADA"; "SUA LOGO AQUI"</td>
+<td>Novo</td>
+<td>N-027, N-028</td>
+</tr>
+</tbody>
+</table></div>
+<p>Evidências (capturas): R3 (rodada 3, 18/10/2026). As capturas ficam na pasta <code>evidencias/</code> de cada rodada.</p>
+<h3 id="defeitos-e-pontos-de-atencao">Defeitos e pontos de atenção</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Defeito</th>
+<th>Gravidade</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-PRI-N-026</td>
+<td>Média</td>
+<td>Grupo de usuários: o Código é obrigatório no servidor mas não na tela; o Nome aceita 255 na tela e só 100 a 149 no servidor; o Código aceita até 10 e a tela não limita. Todas as recusas mostram "Não foi possível salvar o ponto de água." (texto de outra tela)</td>
+</tr>
+<tr>
+<td>DV-PRI-N-027</td>
+<td>Baixa</td>
+<td>Textos: "Exclus&atilde;o realizada com sucesso!" (código HTML à mostra, Utilidades); "A justificativa é; obrigatória." (Instrumentos); "Confirma a exclusão do ponto do item?" (Pontos de água); "NãO" (Conta gerencial); título "RELATÓRIO DE ENTRADA" (PDF de Grupo); botão Excel com rótulo "X" (Instrumentos e Utensílios); mensagens do servidor sem acento ("Ja existe", "nao", "fabricacao"); "ATIVO SIM → NAO" no histórico</td>
+</tr>
+<tr>
+<td>DV-PRI-N-029</td>
+<td>Alta</td>
+<td>O histórico (Log) não mostra a justificativa digitada, em 8 das 10 telas de cadastro (Pontos de água, Utilidades, Utensílios, Categoria, Local físico, Conta gerencial, Grupo, Funções; também em Notificações padrão, que nem pede). A justificativa é gravada (a API de log a devolve); só a tela esconde. Aparece em Instrumentos e Conta contábil</td>
+</tr>
+<tr>
+<td>DV-PRI-N-024</td>
+<td>Média</td>
+<td>Exclusão recusada sem mensagem: Categoria de equipamento e Grupo de usuários em uso (a API diz o motivo, a tela só fecha a pergunta) e Conta gerencial sem justificativa (a pergunta não faz nada)</td>
+</tr>
+<tr>
+<td>DV-PRI-N-025</td>
+<td>Média</td>
+<td>O Excel de Grupo de usuários e o Excel e o Imprimir de Utensílios ignoram o filtro da tela (trazem todos os registros; o PDF de Utensílios diz "FILTRO: EXIBIR TUDO")</td>
+</tr>
+<tr>
+<td>DV-PRI-N-028</td>
+<td>Média</td>
+<td>Todos os PDF de Imprimir trazem "SUA LOGO AQUI" no lugar da logomarca e "Laboratório Farmacêutico" no lugar do nome da empresa</td>
+</tr>
+</tbody>
+</table></div>
 <h3 id="para-quem-desenvolve">Para quem desenvolve</h3>
 <ul>
-<li>Sem achados: a tela ainda não foi testada. Os desvios já conhecidos do legado para telas de cadastro (DV-PRI-007 descrição repetida, DV-PRI-008 pesquisa sem acento, DV-PRI-009 exclusão sem justificativa) são o ponto de partida da conferência.</li>
+<li>N-026: Marcar o obrigatório, alinhar os limites e dizer o motivo certo.</li>
+<li>N-027: Textos corretos.</li>
+<li>N-029: Mostrar quem, quando, o que mudou e por quê.</li>
+<li>N-024: Mostrar o motivo e deixar o usuário tentar de novo.</li>
+<li>N-025: Mesmo conteúdo da lista filtrada.</li>
+<li>N-028: Cabeçalho oficial com o nome da empresa.</li>
 </ul>
 <h3 id="para-quem-testa-qa">Para quem testa (QA)</h3>
 <ul>
-<li>Use o roteiro padrão de cadastro (aba Passo a passo). Registros de teste começam por <code>T.</code>; use o perfil <code>0.T.TESTE_ADMIN</code> ou <code>0.T.TESTE_CADASTRO</code>.</li>
+<li>Registros de teste criados e devolvidos ao estado original: ver a seção 8 do resultado da rodada 3 (<code>versao-nova/1.principal/execucao/2026-10-18-rodada-3/resultado.md</code>).</li>
+<li>Antes de repetir, use o perfil <code>0.T.TESTE_ADMIN</code> ou <code>0.T.TESTE_CADASTRO</code>; registros novos começam por <code>T.</code>.</li>
 </ul>
 <h3 id="para-a-gestao">Para a gestão</h3>
 <ul>
-<li>Ainda sem resultado. Entra na próxima frente de testes do Principal.</li>
+<li>Defeitos de gravidade Alta: N-029. São os que mais pesam para a rastreabilidade (histórico e integridade entre cadastros).</li>
 </ul>
 <p>O passo a passo para homologar esta tela está na página seguinte.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="conta-gerencial-passo-a-passo-de-homologacao.html"><small>← Anterior</small><strong>Conta gerencial: passo a passo de homologação</strong></a><a class="ap ap-prox" href="grupo-de-usuarios-passo-a-passo-de-homologacao.html"><small>Próximo →</small><strong>Grupo de usuários: passo a passo de homologação</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#em-uma-olhada">Em uma olhada</a></li><li><a href="#o-que-a-tela-faz">O que a tela faz</a></li><li><a href="#para-quem-desenvolve">Para quem desenvolve</a></li><li><a href="#para-quem-testa-qa">Para quem testa (QA)</a></li><li><a href="#para-a-gestao">Para a gestão</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#em-uma-olhada">Em uma olhada</a></li><li><a href="#o-que-a-tela-faz">O que a tela faz</a></li><li><a href="#resultado-dos-testes">Resultado dos testes</a></li><li><a href="#defeitos-e-pontos-de-atencao">Defeitos e pontos de atenção</a></li><li><a href="#para-quem-desenvolve">Para quem desenvolve</a></li><li><a href="#para-quem-testa-qa">Para quem testa (QA)</a></li><li><a href="#para-a-gestao">Para a gestão</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 18/10/2026</div>
