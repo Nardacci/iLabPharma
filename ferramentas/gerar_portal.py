@@ -218,6 +218,7 @@ def organizar_roteiro(mod):
         for p in g[3]:
             p["passo_n"], p["passo_nome"], p["passo_total"] = i, g[1], len(grupos)
             p["secao_nome"] = _secao_de(g[0])[1]
+            p["sit"] = _secao_de(g[0])[0]
     for k, p in enumerate(seq):
         p["n"], p["total"] = k + 1, len(seq)
         p["ant"] = seq[k - 1] if k else None
@@ -838,6 +839,10 @@ def gerar(origem, destino, relatorio):
 
     for mod in MODULOS:
         organizar_roteiro(mod)
+    hom_ = Path(origem) / "homologacao"
+    if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
+        DADOS_PAINEL["pn"] = json.loads((hom_ / "painel.json").read_text(encoding="utf-8"))
+        DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads((hom_ / "cronograma.json").read_text(encoding="utf-8"))["modulos"]}
 
     # Páginas de documento
     for mod in MODULOS:
@@ -847,7 +852,8 @@ def gerar(origem, destino, relatorio):
         pasta.mkdir(parents=True, exist_ok=True)
         for p in mod["paginas"]:
             (pasta / f"{p['slug']}.html").write_text(pagina_documento(mod, p), encoding="utf-8")
-        (pasta / "index.html").write_text(pagina_modulo(mod), encoding="utf-8")
+        for sit in ("index", "legado", "novo", "ideal"):
+            (pasta / f"{sit}.html").write_text(pagina_modulo(mod, sit), encoding="utf-8")
 
     (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
     (destino / "anvisa.html").write_text(pagina_anvisa(origem, busca), encoding="utf-8")
@@ -958,6 +964,10 @@ def pagina_documento(mod, p):
     sec = p.get("secao_nome") or ""
     onde = (E(p["passo_nome"]) if unico or not sec or sec == "Visão de ponta a ponta"
             else (E(sec) if sec == p["passo_nome"] else f'{E(sec)} · {E(p["passo_nome"])}'))
+    _sit = p.get("sit")
+    _info = next((x for x in SITUACOES_MOD if x[0] == _sit), None)
+    onde_curto = E(p["passo_nome"]) if _info and not unico else onde
+    trilha_sit = (f' › <a class="sit-trilha" href="{_sit}.html" style="--cor:{_info[3]}">{E(_info[1])}</a>' if _info else "")
     return (cabecalho(f"{p['titulo']} · {mod['nome']} · iLabMedSys", raiz) + f"""
 <div class="doc-layout">
   <aside class="lateral" aria-label="Roteiro do módulo">
@@ -965,7 +975,7 @@ def pagina_documento(mod, p):
     {nav_lateral(mod, p)}
   </aside>
   <main class="doc" id="conteudo">
-    <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a> › <span>{onde}</span></nav>
+    <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a>{trilha_sit} › <span>{onde_curto}</span></nav>
     <div class="onde-estou" aria-label="Onde você está no roteiro"><span>{onde}</span><span>documento {p["n"]} de {p["total"]}</span><div class="prog-doc"><i style="width:{pct}%"></i></div></div>
     <header class="doc-cabecalho">
       <h1>{E(p['titulo'])}</h1>
@@ -982,26 +992,129 @@ def pagina_documento(mod, p):
 """ + rodape(raiz))
 
 
-def pagina_modulo(mod):
+SITUACOES_MOD = [
+    ("legado", "Legado", "o sistema entregue pelo fornecedor", "#6b7a8c"),
+    ("novo", "Novo", "a versão nova, em teste", "#1f6feb"),
+    ("ideal", "Ideal", "como deve funcionar para cumprir a ANVISA", "#7b3fe4"),
+]
+DADOS_PAINEL = {"pn": {}, "cr": {}}
+
+
+def estado_situacoes(mod):
+    """Veredito e descrição de cada situação do módulo, com base no cronograma.json e no painel.json."""
+    pn, cr = DADOS_PAINEL["pn"], DADOS_PAINEL["cr"]
+    c = cr.get(mod["id"], {})
+    t = c.get("testes") or {}
+    sit = c.get("situacao", "")
+    if sit.startswith("Fechado"):
+        leg = ("nao", "Não apto")
+    elif sit.startswith("Em testes"):
+        leg = ("parcial", "Em testes")
+    else:
+        leg = ("vazio", "Só análise de código")
+    nv = pn.get("modulos_novo", {}).get(mod["id"])
+    nov = (nv[0], nv[1]) if nv else ("vazio", "Não iniciado")
+    ideal_ok = sit.startswith("Fechado") and any(p["cat"] == "ideal" for p in mod["paginas"])
+    ide = ("ideal", "Definido (testes concluídos)") if ideal_ok else ("vazio", "Rascunho: aguarda os testes")
+    desc_nov = pn.get("descricao_novo", {}).get(mod["id"]) or "Ainda não testado na versão nova. Quando os testes começarem, os resultados aparecem aqui."
+    desc_ide = ("Como o módulo deve funcionar para atender à ANVISA, a partir dos testes de código e de tela já concluídos." if ideal_ok
+                else "Rascunho. O ideal só é dado como definido depois do fim dos testes do módulo.")
+    num_nov = [tuple(x) for x in pn.get("numeros_novo", {}).get(mod["id"], [])]
+    return {
+        "legado": {"chip": leg, "desc": mod["resumo"], "casos": (t.get("conclusivos", 0), t.get("planejados", 0))},
+        "novo": {"chip": nov, "desc": desc_nov, "numeros": num_nov},
+        "ideal": {"chip": ide, "desc": desc_ide},
+    }
+
+
+def troca_situacao(atual, mod):
+    """Barra que deixa claro em qual situação (Legado, Novo ou Ideal) o leitor está e leva às outras."""
+    itens = [("index", "Visão geral", "#334155")] + [(k, n, c) for k, n, _d, c in SITUACOES_MOD]
+    return ('<nav class="sit-troca" aria-label="Situação do módulo">'
+            + "".join(f'<a href="{k}.html" style="--cor:{c}"{" aria-current=page" if k == atual else ""}>{E(n)}</a>' for k, n, c in itens) + '</nav>')
+
+
+def pagina_modulo(mod, sit="index"):
+    """Visão geral do módulo (sit='index') ou uma das três situações: 'legado', 'novo', 'ideal'."""
     raiz = "../../"
+    estados = estado_situacoes(mod)
+    ant_mod, prox_mod = vizinhos(mod)
+    fim = (f'<section class="fim-roteiro"><p class="comece-rotulo">Fim do roteiro deste módulo</p>'
+           + (f'<p>Segue o caminho do processo: <a class="botao" href="../{prox_mod["id"]}/index.html">Próximo módulo: {E(prox_mod["nome"])} →</a></p>' if prox_mod
+              else '<p>Este é o último módulo do caminho. <a class="botao" href="../../index.html">Voltar ao início do portal</a></p>')
+           + (f'<p class="fim-ant">Antes deste: <a href="../{ant_mod["id"]}/index.html">{E(ant_mod["nome"])}</a></p>' if ant_mod else "") + '</section>')
+
+    if sit == "index":
+        resumo = [g for g in mod["roteiro"] if _secao_de(g[0])[0] == "modulo"]
+        cartoes = []
+        for k, nome, curta, cor in SITUACOES_MOD:
+            est = estados[k]
+            cl, rot = est["chip"]
+            pags = [p for g in mod["roteiro"] if _secao_de(g[0])[0] == k for p in g[3]]
+            if k == "legado":
+                nums = [(len(pags), "documentos"), (f'{est["casos"][0]}/{est["casos"][1]}', "casos de teste")]
+            elif k == "novo":
+                nums = [(len(pags), "documentos")] + est["numeros"][:2]
+            else:
+                req = max([p["contagem"]["requisitos"] for p in pags] + [0])
+                nums = [(len(pags), "documentos")] + ([(req, "requisitos")] if req else [])
+            nums_h = "".join(f'<div><b>{E(str(a))}</b><span>{E(b)}</span></div>' for a, b in nums)
+            cartoes.append(f'<a class="sit-card" href="{k}.html" style="--cor:{cor}"><span class="sit-tag">{E(nome)}</span><span class="sit-curta">{E(curta)}</span>'
+                           f'<span class="pn-v pn-{cl}">{E(rot)}</span><span class="sit-desc">{E(est["desc"])}</span>'
+                           f'<span class="pn-nums">{nums_h}</span><span class="sit-ir">Abrir o {E(nome)} →</span></a>')
+        blocos_resumo = ""
+        for chave, nome, desc, pags in resumo:
+            blocos_resumo = "".join(f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
+                                    f'<span class="doc-card-meta">{"Word disponível" if p["word"] else "Leitura no portal"}</span></a>' for p in pags)
+        return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
+<main class="pagina-modulo" id="conteudo">
+  <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
+  <header class="mod-cabecalho" style="--cor:{mod['cor']}">
+    <div class="mod-icone" aria-hidden="true">{mod['icone']}</div>
+    <div>
+      <p class="sit-etiqueta" style="--cor:#334155">Visão geral do módulo</p>
+      <h1>{E(mod['nome'])}</h1>
+      <p>O mesmo módulo, visto em três situações separadas: o sistema entregue (Legado), a versão nova e o ideal.</p>
+    </div>
+  </header>
+  {troca_situacao("index", mod)}
+  <h2 class="secao-titulo">As três situações</h2>
+  <div class="sit-cards">{"".join(cartoes)}</div>
+  <h2 class="secao-titulo">Resumo do módulo</h2>
+  <p class="secao-desc">Um resumo só, que situa o módulo nas três situações.</p>
+  <div class="doc-cards">{blocos_resumo}</div>
+  {fim}
+</main>
+""" + rodape(raiz))
+
+    nome_sit, curta, cor = next((n, c, k) for kk, n, c, k in SITUACOES_MOD if kk == sit)
+    est = estados[sit]
+    grupos = [g for g in mod["roteiro"] if _secao_de(g[0])[0] == sit]
+    pags_sit = [p for g in grupos for p in g[3]]
     soma = {"casos": 0, "regras": 0, "requisitos": 0, "desvios": 0}
-    for p in mod["paginas"]:
+    for p in pags_sit:
         for k in soma:
             soma[k] = max(soma[k], p["contagem"][k]) if k != "regras" else soma[k] + p["contagem"][k]
-    fluxos = [p for p in mod["paginas"] if p["cat"] == "fluxos" and not p.get("roteiro_de")]
-    numeros = [(len(mod["paginas"]), "documentos")] + ([(len(fluxos), "fluxos documentados")] if fluxos else [])
-    if soma["casos"]:
-        numeros.append((soma["casos"], "casos de teste (maior plano)"))
-    if soma["requisitos"]:
-        numeros.append((soma["requisitos"], "requisitos para a nova versão"))
-    if soma["desvios"]:
-        numeros.append((soma["desvios"], "desvios registrados nos testes"))
-    num_html = "".join(f'<div class="numero"><strong>{n}</strong><span>{E(r)}</span></div>' for n, r in numeros)
+    fluxos = [p for p in pags_sit if p["cat"] == "fluxos" and not p.get("roteiro_de")]
+    numeros = [(len(pags_sit), "documentos")]
+    if sit == "legado":
+        if fluxos:
+            numeros.append((len(fluxos), "fluxos documentados"))
+        c, pl = est["casos"]
+        if pl:
+            numeros.append((f"{c}/{pl}", "casos de teste executados"))
+        if soma["desvios"]:
+            numeros.append((soma["desvios"], "desvios registrados nos testes"))
+    elif sit == "novo":
+        numeros += est["numeros"]
+    else:
+        if soma["requisitos"]:
+            numeros.append((soma["requisitos"], "requisitos para a versão corrigida"))
+    num_html = "".join(f'<div class="numero"><strong>{E(str(n))}</strong><span>{E(r)}</span></div>' for n, r in numeros)
 
     blocos, submenu = [], []
     secao_atual = None
-    total = len(mod["seq"])
-    for i, (chave, nome, desc, pags) in enumerate(mod["roteiro"], 1):
+    for i, (chave, nome, desc, pags) in enumerate(grupos, 1):
         if chave == "fluxos":
             roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
             cards = []
@@ -1043,47 +1156,44 @@ def pagina_modulo(mod):
             grade = f'<div class="doc-cards">{cards}</div>'
         classe = "secao passo secao-ideal" if chave == "ideal" else "secao passo"
         sk, sn, sd = _secao_de(chave)
-        if sk != secao_atual and chave != "visao":
-            secao_atual = sk
-            blocos.append(f'<h2 class="secao-titulo" id="secao-{sk}">{E(sn)}</h2><p class="secao-desc">{E(sd)}</p>')
-            submenu.append(f'<a href="#secao-{sk}" class="submenu-secao">{E(sn)}</a>')
         if chave in ("novo", "resumo"):
             blocos.append(f'<section class="{classe}" id="passo-{chave}">{grade}</section>')
         else:
             blocos.append(f'<section class="{classe}" id="passo-{chave}"><div class="passo-cab"><div><h3>{E(nome)}</h3><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
             submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "ideal" else ""}>{E(nome)}</a>')
     submenu_html = f'<nav class="submenu" aria-label="Passos do roteiro">{"".join(submenu)}</nav>' if len(submenu) > 1 else ""
+    if not pags_sit:
+        blocos = ['<p class="secao-desc sit-vazio">Ainda não há documentos nesta situação. Eles aparecem aqui quando existirem.</p>']
 
-    _apto = next((p for p in mod["paginas"] if "não está apto" in p["titulo"].lower()), None)
-    selo_link = (f'<a class="selo-link" href="{_apto["slug"]}.html" title="Por que não está apto">{selo(mod["situacao"])}<span class="selo-saiba">Por quê? →</span></a>'
-                 if _apto and mod["situacao"] == "Homologado: não apto" else selo(mod["situacao"]))
-    primeiro, ultimo = mod["seq"][0], mod["seq"][-1]
-    ant_mod, prox_mod = vizinhos(mod)
-    comece = (f'<section class="comece"><div><p class="comece-rotulo">Comece aqui</p>'
-              f'<p>O roteiro deste módulo tem <strong>{len({_secao_de(g[0])[0] for g in mod["roteiro"]})} parte{"s" if len({_secao_de(g[0])[0] for g in mod["roteiro"]}) != 1 else ""}</strong> e <strong>{total} documentos</strong>, '
-              f'do primeiro ({E(primeiro["titulo"])}) ao último ({E(ultimo["titulo"])}). Leia na ordem: cada documento leva ao próximo.</p></div>'
-              f'<a class="botao botao-grande" href="{primeiro["slug"]}.html">Iniciar o roteiro →</a></section>')
-    fim = (f'<section class="fim-roteiro"><p class="comece-rotulo">Fim do roteiro deste módulo</p>'
-           + (f'<p>Segue o caminho do processo: <a class="botao" href="../{prox_mod["id"]}/index.html">Próximo módulo: {E(prox_mod["nome"])} →</a></p>' if prox_mod
-              else '<p>Este é o último módulo do caminho. <a class="botao" href="../../index.html">Voltar ao início do portal</a></p>')
-           + (f'<p class="fim-ant">Antes deste: <a href="../{ant_mod["id"]}/index.html">{E(ant_mod["nome"])}</a></p>' if ant_mod else "") + '</section>')
+    _apto = next((p for p in pags_sit if "não está apto" in p["titulo"].lower()), None)
+    cl, rot = est["chip"]
+    selo_sit = (f'<a class="selo-link" href="{_apto["slug"]}.html" title="Por que não está apto"><span class="pn-v pn-{cl}">{E(rot)}</span><span class="selo-saiba">Por quê? →</span></a>'
+                if _apto else f'<span class="pn-v pn-{cl}">{E(rot)}</span>')
+    comece = ""
+    if pags_sit:
+        primeiro, ultimo = pags_sit[0], pags_sit[-1]
+        comece = (f'<section class="comece" style="border-color:{cor}"><div><p class="comece-rotulo" style="color:{cor}">Comece aqui</p>'
+                  f'<p>Esta parte tem <strong>{len(pags_sit)} documentos</strong>, do primeiro ({E(primeiro["titulo"])}) ao último ({E(ultimo["titulo"])}). Leia na ordem: cada documento leva ao próximo.</p></div>'
+                  f'<a class="botao botao-grande" href="{primeiro["slug"]}.html">Iniciar o roteiro →</a></section>')
 
-    return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
+    return (cabecalho(f"{mod['nome']} · {nome_sit} · iLabMedSys", raiz, "modulos") + f"""
 <main class="pagina-modulo" id="conteudo">
-  <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
-  <header class="mod-cabecalho" style="--cor:{mod['cor']}">
+  <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a> › <span>{E(nome_sit)}</span></nav>
+  <header class="mod-cabecalho mod-sit" style="--cor:{cor}">
     <div class="mod-icone" aria-hidden="true">{mod['icone']}</div>
     <div>
-      <h1>{E(mod['nome'])}</h1>
-      <p>{E(mod['resumo'])}</p>
-      <div class="mod-status">{selo_link}{barra(mod['nivel'])}</div>
+      <p class="sit-etiqueta" style="--cor:{cor}">{E(nome_sit)} · {E(curta)}</p>
+      <h1>{E(mod['nome'])} <span class="sit-sufixo">· {E(nome_sit)}</span></h1>
+      <p>{E(est["desc"])}</p>
+      <div class="mod-status">{selo_sit}</div>
     </div>
   </header>
+  {troca_situacao(sit, mod)}
   <div class="numeros">{num_html}</div>
   {comece}
   {submenu_html}
   {''.join(blocos)}
-  {fim}
+  {fim if sit == "legado" else ""}
 </main>
 """ + rodape(raiz))
 
@@ -1151,16 +1261,16 @@ def bloco_painel(origem, ordem):
             cl, rot = "parcial", "Em testes"
         else:
             cl, rot = "vazio", "Só código"
-        cel_leg.append(f'<a class="pn-n pn-{cl}" href="{href}">{rot}<small>{conc}/{plan} casos</small></a>')
+        cel_leg.append(f'<a class="pn-n pn-{cl}" href="documentacao/{m["id"]}/legado.html">{rot}<small>{conc}/{plan} casos</small></a>')
         nv = pn["modulos_novo"].get(m["id"])
         if nv:
-            cel_nov.append(f'<a class="pn-n pn-{nv[0]}" href="{href}">{E(nv[1])}<small>{E(nv[2])}</small></a>')
+            cel_nov.append(f'<a class="pn-n pn-{nv[0]}" href="documentacao/{m["id"]}/novo.html">{E(nv[1])}<small>{E(nv[2])}</small></a>')
         else:
-            cel_nov.append(f'<a class="pn-n pn-vazio" href="{href}">Não iniciado</a>')
+            cel_nov.append(f'<a class="pn-n pn-vazio" href="documentacao/{m["id"]}/novo.html">Não iniciado</a>')
         if ideal_pronto(m):
-            cel_ide.append(f'<a class="pn-n pn-ideal" href="{href}#secao-ideal">Ideal definido<small>testes concluídos</small></a>')
+            cel_ide.append(f'<a class="pn-n pn-ideal" href="documentacao/{m["id"]}/ideal.html">Ideal definido<small>testes concluídos</small></a>')
         else:
-            cel_ide.append(f'<a class="pn-n pn-vazio" href="{href}#secao-ideal">Aguarda os testes<small>rascunho</small></a>')
+            cel_ide.append(f'<a class="pn-n pn-vazio" href="documentacao/{m["id"]}/ideal.html">Aguarda os testes<small>rascunho</small></a>')
 
     def raia(classe, nome, cels):
         return f'<div class="pn-raia"><div class="pn-lane pn-l-{classe}">{nome}</div>{"".join(cels)}</div>'
