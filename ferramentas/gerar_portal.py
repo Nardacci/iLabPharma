@@ -86,18 +86,21 @@ PASSOS = [
     ("fluxos", "Siga o processo", "Como o trabalho anda, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
     ("ideal", "O ideal: como deve funcionar", "Como o módulo deve trabalhar para atender à ANVISA: funções, comportamento, integrações com os outros módulos e papéis. Mostra o que manter, corrigir e acrescentar."),
     ("norma", "ANVISA: norma e risco", "O que a ANVISA exige e onde está o risco."),
-    ("dados", "Requisitos e dados", "Para a equipe de desenvolvimento: requisitos corrigidos, comparação entre as versões, modelo de dados e integrações."),
+    ("dados", "Dados e integrações", "Para a equipe de desenvolvimento: modelo de dados e integrações do sistema entregue."),
     ("fecho", "Fechamento", "O parecer do módulo, por que ele está (ou não) apto, e o dossiê que reúne tudo."),
     ("conhecer", "Telas e situação", "O que existe no sistema entregue, como as telas se organizam nos menus e o que funciona."),
     ("regras", "Regras e uso", "O que o sistema entregue faz com cada dado, quem pode fazer o quê e como usar."),
     ("testes", "Testes e defeitos", "O que foi testado nas telas do sistema entregue, o que falhou e como corrigir."),
     ("novo", "iLabPharma Novo", "A versão nova do sistema (as mesmas regras com ferramentas atualizadas): o que foi testado, o que ficou igual, melhorou ou piorou em relação ao sistema entregue."),
+    ("novo_parecer", "Parecer e comparação com o legado", "O veredito sobre a versão nova e o que mudou em relação ao sistema entregue."),
+    ("requisitos", "Requisitos da versão corrigida", "O que a versão corrigida precisa fazer: requisitos com origem nos achados, para quem desenvolve."),
 ]
 # Seções do roteiro do módulo: cada passo pertence a uma.
 SECOES = [
-    ("modulo", "Sobre o módulo", "Vale para o sistema entregue e para a versão nova.", ["resumo", "fluxos", "ideal", "norma", "dados", "fecho"]),
-    ("legado", "Legado", "O sistema entregue pelo fornecedor: como é hoje.", ["conhecer", "regras", "testes"]),
-    ("novo", "iLabPharma Novo", "A versão nova, por menu do sistema.", ["novo"]),
+    ("modulo", "Sobre o módulo", "Um resumo só, que situa o módulo nas três situações.", ["resumo"]),
+    ("legado", "Legado", "O sistema entregue pelo fornecedor: como é hoje, o que foi testado e o veredito.", ["conhecer", "fluxos", "regras", "norma", "dados", "testes", "fecho"]),
+    ("novo", "iLabPharma Novo", "A versão nova: testes por menu do sistema, parecer e comparação com o legado.", ["novo", "novo_parecer"]),
+    ("ideal", "Ideal", "Como o módulo deve funcionar para atender à ANVISA, e os requisitos da versão corrigida. Vale como definição nos módulos com testes concluídos (Principal e Estoque); nos demais é rascunho até o fim dos testes.", ["ideal", "requisitos"]),
 ]
 PRIORIDADE = {
     "conhecer": ["reconhecimento", "inventário"],
@@ -105,7 +108,9 @@ PRIORIDADE = {
     "norma": ["conformidade", "risco", "rastreabilidade"],
     "testes": ["versão nova: o que", "versão nova: situação", "plano", "relatório", "defeitos", "versão nova: resultado"],
     "ideal": ["ideal", "entre os módulos"],
-    "dados": ["requisitos", "modelo de dados", "comparação"],
+    "dados": ["modelo de dados", "comparação"],
+    "requisitos": ["análise de requisitos", "requisitos"],
+    "novo_parecer": ["parecer", "comparação", "situação", "o que os testes"],
     "fecho": ["não está apto", "dossiê"],
     "novo": ["resumo dos testes", "situação", "plano", "usuários", "comparação", "rodada 1", "rodada 2", "rodada 4", "rodada 5"],
     "visao": ["processo fabril", "integrações", "diagnóstico", "repetidos", "qualidade entre"],
@@ -135,6 +140,10 @@ def passo_de(p):
         return "novo"
     if cat == "fluxos" or p.get("roteiro_de"):
         return "fluxos"
+    if "requisitos" in t:
+        return "requisitos"
+    if "versão nova" in t or "nova versão" in t:
+        return "novo_parecer"
     if "dossiê" in t or "não está apto" in t or "parecer" in t:
         return "fecho"
     if "regras de negócio" in t:
@@ -198,7 +207,7 @@ def organizar_roteiro(mod):
                     pags.append(p)
                     if p["arq"] in ro:
                         pags.append(ro[p["arq"]])
-            elif chave == "novo":
+            elif chave in ("novo", "resumo"):
                 pags = sorted(pags, key=lambda p: p["ordem"])
             else:
                 pags = sorted(pags, key=lambda p: _pos(PRIORIDADE.get(chave, []), p["titulo"]))
@@ -906,7 +915,7 @@ def nav_lateral(mod, atual):
         if sk != secao_atual and chave != "visao":
             secao_atual = sk
             grupos.append(f'<div class="lat-secao">{E(sn)}</div>')
-        if chave == "novo":
+        if chave in ("novo", "resumo"):
             grupos.append(f'<div class="lat-grupo{aberto}"><ul>{li}</ul></div>')
         else:
             grupos.append(f'<div class="lat-grupo{aberto}"><div class="lat-titulo">{E(nome)}</div><ul>{li}</ul></div>')
@@ -1038,7 +1047,7 @@ def pagina_modulo(mod):
             secao_atual = sk
             blocos.append(f'<h2 class="secao-titulo" id="secao-{sk}">{E(sn)}</h2><p class="secao-desc">{E(sd)}</p>')
             submenu.append(f'<a href="#secao-{sk}" class="submenu-secao">{E(sn)}</a>')
-        if chave == "novo":
+        if chave in ("novo", "resumo"):
             blocos.append(f'<section class="{classe}" id="passo-{chave}">{grade}</section>')
         else:
             blocos.append(f'<section class="{classe}" id="passo-{chave}"><div class="passo-cab"><div><h3>{E(nome)}</h3><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
@@ -1113,8 +1122,12 @@ def bloco_painel(origem, ordem):
                 (str(total_conc), f"casos executados, de {total_plan} planejados"),
                 (f"{ok} / {parc} / {nao}", "temas da RDC: atende / em parte / não atende"),
                 (str(alta_pend), "casos de prioridade Alta ainda sem resultado")]
-    n_ideal = sum(1 for m in ordem if any(p["cat"] == "ideal" for p in m["paginas"]))
-    ide_nums = [(f"{n_ideal} de {n_mod}", "módulos com “o ideal” escrito (a validar)")] + [tuple(x) for x in ide["numeros"]]
+    def ideal_pronto(m):
+        """O ideal só representa a verdade onde os testes de código e de tela terminaram (situação Fechado)."""
+        return any(p["cat"] == "ideal" for p in m["paginas"]) and cr.get(m["id"], {}).get("situacao", "").startswith("Fechado")
+
+    n_ideal = sum(1 for m in ordem if ideal_pronto(m))
+    ide_nums = [(f"{n_ideal} de {n_mod}", "módulos com o ideal definido (testes concluídos)")] + [tuple(x) for x in ide["numeros"]]
 
     def cartao(classe, titulo, dado, numeros, destino=""):
         rotulo, cl = dado["veredito"]
@@ -1144,10 +1157,10 @@ def bloco_painel(origem, ordem):
             cel_nov.append(f'<a class="pn-n pn-{nv[0]}" href="{href}">{E(nv[1])}<small>{E(nv[2])}</small></a>')
         else:
             cel_nov.append(f'<a class="pn-n pn-vazio" href="{href}">Não iniciado</a>')
-        if any(p["cat"] == "ideal" for p in m["paginas"]):
-            cel_ide.append(f'<a class="pn-n pn-ideal" href="{href}">Ideal escrito<small>a validar com a GQ</small></a>')
+        if ideal_pronto(m):
+            cel_ide.append(f'<a class="pn-n pn-ideal" href="{href}#secao-ideal">Ideal definido<small>testes concluídos</small></a>')
         else:
-            cel_ide.append(f'<a class="pn-n pn-vazio" href="{href}">A escrever</a>')
+            cel_ide.append(f'<a class="pn-n pn-vazio" href="{href}#secao-ideal">Aguarda os testes<small>rascunho</small></a>')
 
     def raia(classe, nome, cels):
         return f'<div class="pn-raia"><div class="pn-lane pn-l-{classe}">{nome}</div>{"".join(cels)}</div>'
@@ -1155,7 +1168,7 @@ def bloco_painel(origem, ordem):
     mapa = f"""<div class="pn-mapa" role="region" aria-label="Situação de cada módulo, nas três situações">
       <div class="pn-raia pn-cab"><div></div>{cab}</div>
       {raia("leg", "Legado", cel_leg)}{raia("nov", "Novo", cel_nov)}{raia("ide", "Ideal", cel_ide)}
-      <p class="pn-legenda"><i class="pn-nao"></i>Não apto <i class="pn-parcial"></i>Em testes <i class="pn-ideal"></i>Ideal escrito <i class="pn-vazio"></i>Ainda sem resultado</p>
+      <p class="pn-legenda"><i class="pn-nao"></i>Não apto <i class="pn-parcial"></i>Em testes <i class="pn-ideal"></i>Ideal definido <i class="pn-vazio"></i>Ainda sem resultado</p>
     </div>"""
 
     quebras = "".join(f'<div class="pn-quebra"><b>{E(a)}</b>{E(b)}<span>Fonte: {E(c)}</span></div>' for a, b, c in pn["quebras"])
