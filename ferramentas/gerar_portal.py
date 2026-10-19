@@ -95,9 +95,10 @@ PASSOS = [
 ]
 # Seções do roteiro do módulo: cada passo pertence a uma.
 SECOES = [
-    ("modulo", "Sobre o módulo", "Vale para o sistema entregue e para a versão nova.", ["resumo", "fluxos", "ideal", "norma", "dados", "fecho"]),
+    ("modulo", "Sobre o módulo", "Vale para o sistema entregue e para a versão nova.", ["resumo", "fluxos", "norma", "dados", "fecho"]),
     ("legado", "Legado", "O sistema entregue pelo fornecedor: como é hoje.", ["conhecer", "regras", "testes"]),
     ("novo", "iLabPharma Novo", "A versão nova, por menu do sistema.", ["novo"]),
+    ("ideal", "Ideal", "Como o módulo deve funcionar para atender à ANVISA. Vale como definição nos módulos com testes concluídos (Principal e Estoque); nos demais é rascunho até o fim dos testes.", ["ideal"]),
 ]
 PRIORIDADE = {
     "conhecer": ["reconhecimento", "inventário"],
@@ -1113,8 +1114,12 @@ def bloco_painel(origem, ordem):
                 (str(total_conc), f"casos executados, de {total_plan} planejados"),
                 (f"{ok} / {parc} / {nao}", "temas da RDC: atende / em parte / não atende"),
                 (str(alta_pend), "casos de prioridade Alta ainda sem resultado")]
-    n_ideal = sum(1 for m in ordem if any(p["cat"] == "ideal" for p in m["paginas"]))
-    ide_nums = [(f"{n_ideal} de {n_mod}", "módulos com “o ideal” escrito (a validar)")] + [tuple(x) for x in ide["numeros"]]
+    def ideal_pronto(m):
+        """O ideal só representa a verdade onde os testes de código e de tela terminaram (situação Fechado)."""
+        return any(p["cat"] == "ideal" for p in m["paginas"]) and cr.get(m["id"], {}).get("situacao", "").startswith("Fechado")
+
+    n_ideal = sum(1 for m in ordem if ideal_pronto(m))
+    ide_nums = [(f"{n_ideal} de {n_mod}", "módulos com o ideal definido (testes concluídos)")] + [tuple(x) for x in ide["numeros"]]
 
     def cartao(classe, titulo, dado, numeros, destino=""):
         rotulo, cl = dado["veredito"]
@@ -1144,10 +1149,10 @@ def bloco_painel(origem, ordem):
             cel_nov.append(f'<a class="pn-n pn-{nv[0]}" href="{href}">{E(nv[1])}<small>{E(nv[2])}</small></a>')
         else:
             cel_nov.append(f'<a class="pn-n pn-vazio" href="{href}">Não iniciado</a>')
-        if any(p["cat"] == "ideal" for p in m["paginas"]):
-            cel_ide.append(f'<a class="pn-n pn-ideal" href="{href}">Ideal escrito<small>a validar com a GQ</small></a>')
+        if ideal_pronto(m):
+            cel_ide.append(f'<a class="pn-n pn-ideal" href="{href}#secao-ideal">Ideal definido<small>testes concluídos</small></a>')
         else:
-            cel_ide.append(f'<a class="pn-n pn-vazio" href="{href}">A escrever</a>')
+            cel_ide.append(f'<a class="pn-n pn-vazio" href="{href}#secao-ideal">Aguarda os testes<small>rascunho</small></a>')
 
     def raia(classe, nome, cels):
         return f'<div class="pn-raia"><div class="pn-lane pn-l-{classe}">{nome}</div>{"".join(cels)}</div>'
@@ -1155,7 +1160,7 @@ def bloco_painel(origem, ordem):
     mapa = f"""<div class="pn-mapa" role="region" aria-label="Situação de cada módulo, nas três situações">
       <div class="pn-raia pn-cab"><div></div>{cab}</div>
       {raia("leg", "Legado", cel_leg)}{raia("nov", "Novo", cel_nov)}{raia("ide", "Ideal", cel_ide)}
-      <p class="pn-legenda"><i class="pn-nao"></i>Não apto <i class="pn-parcial"></i>Em testes <i class="pn-ideal"></i>Ideal escrito <i class="pn-vazio"></i>Ainda sem resultado</p>
+      <p class="pn-legenda"><i class="pn-nao"></i>Não apto <i class="pn-parcial"></i>Em testes <i class="pn-ideal"></i>Ideal definido <i class="pn-vazio"></i>Ainda sem resultado</p>
     </div>"""
 
     quebras = "".join(f'<div class="pn-quebra"><b>{E(a)}</b>{E(b)}<span>Fonte: {E(c)}</span></div>' for a, b, c in pn["quebras"])
