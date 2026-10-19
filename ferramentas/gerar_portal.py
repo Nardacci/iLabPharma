@@ -1079,6 +1079,134 @@ def pagina_modulo(mod):
 """ + rodape(raiz))
 
 
+def bloco_painel(origem, ordem):
+    """Painel da página inicial: veredito, três situações (Legado, Novo, Ideal), mapa do lote, quebras e ANVISA.
+    Números de casos vêm do cronograma.json; o restante, do painel.json."""
+    hom = Path(origem) / "homologacao"
+    if not (hom / "painel.json").exists() or not (hom / "cronograma.json").exists():
+        return ""
+    pn = json.loads((hom / "painel.json").read_text(encoding="utf-8"))
+    cr = {m["id"]: m for m in json.loads((hom / "cronograma.json").read_text(encoding="utf-8"))["modulos"]}
+    total_plan = sum(c["testes"]["planejados"] for c in cr.values() if c.get("testes"))
+    total_conc = sum(c["testes"]["conclusivos"] for c in cr.values() if c.get("testes"))
+    alta_pend = sum(c["testes"]["alta_pendentes"] for c in cr.values() if c.get("testes"))
+    n_mod = len(ordem)
+
+    # Aderência à ANVISA no legado (contagem do próprio diagnóstico)
+    arq = hom / DIAGNOSTICO
+    nums = ("0", "0", "0", "0")
+    if arq.exists():
+        m = re.search(r"\*\*Contagem:\*\* Atende (\d+) · Parcial (\d+).*?Não atende (\d+).*?A verificar (\d+)", arq.read_text(encoding="utf-8"))
+        if m:
+            nums = m.groups()
+    ok, parc, nao, ver = (int(x) for x in nums)
+    total_temas = ok + parc + nao + ver
+
+    def chip(classe, rotulo):
+        return f'<span class="pn-v pn-{classe}">{E(rotulo)}</span>'
+
+    def nums_html(itens):
+        return "".join(f'<div><b>{E(a)}</b><span>{E(b)}</span></div>' for a, b in itens)
+
+    leg, nov, ide = pn["legado"], pn["novo"], pn["ideal"]
+    leg_nums = [(f'{leg["modulos_homologados"]} de {n_mod}', "módulos homologados (testados e com parecer)"),
+                (str(total_conc), f"casos executados, de {total_plan} planejados"),
+                (f"{ok} / {parc} / {nao}", "temas da RDC: atende / em parte / não atende"),
+                (str(alta_pend), "casos de prioridade Alta ainda sem resultado")]
+    n_ideal = sum(1 for m in ordem if any(p["cat"] == "ideal" for p in m["paginas"]))
+    ide_nums = [(f"{n_ideal} de {n_mod}", "módulos com “o ideal” escrito (a validar)")] + [tuple(x) for x in ide["numeros"]]
+
+    def cartao(classe, titulo, dado, numeros, destino=""):
+        rotulo, cl = dado["veredito"]
+        return (f'<div class="pn-card pn-{classe}"><h3>{titulo}</h3><p class="pn-q">{E(dado["pergunta"])}</p>{chip(cl, rotulo)}'
+                f'<div class="pn-nums">{nums_html(numeros)}</div><p class="pn-prox"><em>Para destravar:</em> {E(dado["trava"])}</p></div>')
+
+    cartoes = (cartao("leg", "Legado", leg, leg_nums) + cartao("nov", "Novo", nov, nov["numeros"]) + cartao("ide", "Ideal", ide, ide_nums))
+
+    # mapa do lote
+    cab = "".join(f'<div class="pn-h"><span>{k}</span>{E(m["nome"])}</div>' for k, m in enumerate(ordem, 1))
+    cel_leg, cel_nov, cel_ide = [], [], []
+    for m in ordem:
+        c = cr.get(m["id"], {})
+        t = c.get("testes") or {}
+        plan, conc = t.get("planejados", 0), t.get("conclusivos", 0)
+        sit = c.get("situacao", "")
+        href = f'documentacao/{m["id"]}/index.html'
+        if sit.startswith("Fechado"):
+            cl, rot = "nao", "Não apto"
+        elif sit.startswith("Em testes"):
+            cl, rot = "parcial", "Em testes"
+        else:
+            cl, rot = "vazio", "Só código"
+        cel_leg.append(f'<a class="pn-n pn-{cl}" href="{href}">{rot}<small>{conc}/{plan} casos</small></a>')
+        nv = pn["modulos_novo"].get(m["id"])
+        if nv:
+            cel_nov.append(f'<a class="pn-n pn-{nv[0]}" href="{href}">{E(nv[1])}<small>{E(nv[2])}</small></a>')
+        else:
+            cel_nov.append(f'<a class="pn-n pn-vazio" href="{href}">Não iniciado</a>')
+        if any(p["cat"] == "ideal" for p in m["paginas"]):
+            cel_ide.append(f'<a class="pn-n pn-ideal" href="{href}">Ideal escrito<small>a validar com a GQ</small></a>')
+        else:
+            cel_ide.append(f'<a class="pn-n pn-vazio" href="{href}">A escrever</a>')
+
+    def raia(classe, nome, cels):
+        return f'<div class="pn-raia"><div class="pn-lane pn-l-{classe}">{nome}</div>{"".join(cels)}</div>'
+
+    mapa = f"""<div class="pn-mapa" role="region" aria-label="Situação de cada módulo, nas três situações">
+      <div class="pn-raia pn-cab"><div></div>{cab}</div>
+      {raia("leg", "Legado", cel_leg)}{raia("nov", "Novo", cel_nov)}{raia("ide", "Ideal", cel_ide)}
+      <p class="pn-legenda"><i class="pn-nao"></i>Não apto <i class="pn-parcial"></i>Em testes <i class="pn-ideal"></i>Ideal escrito <i class="pn-vazio"></i>Ainda sem resultado</p>
+    </div>"""
+
+    quebras = "".join(f'<div class="pn-quebra"><b>{E(a)}</b>{E(b)}<span>Fonte: {E(c)}</span></div>' for a, b, c in pn["quebras"])
+
+    def barra_anv(rotulo, partes):
+        seg = "".join(f'<div class="pn-seg pn-{cl}" style="width:{pct}%">{E(txt)}</div>' for pct, cl, txt in partes if pct)
+        return f'<p class="pn-bl">{rotulo}</p><div class="pn-bar">{seg}</div>'
+
+    pct = lambda n: round(100 * n / total_temas) if total_temas else 0
+    anvisa = (barra_anv("Legado", [(pct(ok), "ok", f"{ok} atendem"), (pct(parc), "parcial", f"{parc} em parte"), (pct(nao), "nao", f"{nao} não atendem"), (pct(ver), "vazio", f"{ver} a verificar")])
+              + barra_anv("Novo", [(100, "vazio", "a medir tema a tema, conforme os testes avançam")])
+              + barra_anv("Ideal", [(100, "ideal", f"{total_temas} de {total_temas} temas atendidos")]))
+
+    return f"""<section class="pn-topo">
+    <div class="pn-topo-in">
+      <p class="sobretitulo">LabMedSys agora é iLabMedSys · situação em {E(pn["atualizado"])}</p>
+      <h1>{E(pn["veredito"]["titulo"])}</h1>
+      <p class="pn-sub">{E(pn["veredito"]["sub"])}</p>
+      <div class="pn-escada" aria-label="Três situações do sistema">
+        <div class="pn-deg pn-d-leg"><b>Legado</b><span>o que o fornecedor entregou</span></div><span class="pn-seta">corrigir falhas →</span>
+        <div class="pn-deg pn-d-nov"><b>Novo</b><span>o que o desenvolvimento entrega</span></div><span class="pn-seta">fechar as lacunas →</span>
+        <div class="pn-deg pn-d-ide"><b>Ideal</b><span>o que a ANVISA exige</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="secao" id="situacao">
+    <h2>Três retratos do mesmo sistema</h2>
+    <p class="secao-desc">Cada cartão responde a uma pergunta, com o veredito primeiro e os números depois.</p>
+    <div class="pn-tres">{cartoes}</div>
+  </section>
+  <section class="secao" id="mapa">
+    <h2>O lote pelos {n_mod} módulos, nas três situações</h2>
+    <p class="secao-desc">É o processo fabril, do recebimento à rastreabilidade. Cada raia é uma situação; a cor diz se o elo segura. Clique num módulo para abrir o roteiro dele.</p>
+    {mapa}
+  </section>
+  <section class="secao" id="quebras">
+    <h2>Onde a corrente quebra (legado)</h2>
+    <p class="secao-desc">Pontos em que um módulo não conversa direito com o outro, já confirmados no código ou nas telas.</p>
+    <div class="pn-quebras">{quebras}</div>
+  </section>
+  <section class="secao" id="diretoria">
+    <h2>Aderência à ANVISA</h2>
+    <p class="secao-desc">{total_temas} temas da RDC 658/2022 e do Guia 33/2020, avaliados no legado (Principal, Estoque e Garantia da Qualidade). A versão nova entra tema a tema, conforme for testada.</p>
+    {anvisa}
+    <div class="hero-acoes" style="margin-top:16px">
+      <a class="botao" href="documentacao/visao-geral/diagnostico-de-conformidade-com-a-anvisa.html">Ler o diagnóstico →</a>
+      <a class="botao botao-secundario" href="documentacao/arquivos/visao-geral/LabMedSys - Diagnostico de Conformidade ANVISA.docx">Baixar em Word</a>
+    </div>
+  </section>"""
+
+
 def pagina_inicial(origem):
     raiz = ""
     cards = []
@@ -1124,45 +1252,14 @@ def pagina_inicial(origem):
     modulos_com_doc = sum(1 for m in MODULOS if m["paginas"] and m["id"] not in ESPECIAIS)
     total_modulos = len([m for m in MODULOS if m["id"] not in ESPECIAIS])
 
-    diretoria = bloco_diretoria(origem)
+    painel = bloco_painel(origem, ordem)
     return (cabecalho("iLabMedSys · Documentação do sistema", raiz) + f"""
 <main id="conteudo">
-  <section class="hero">
-    <div class="hero-texto">
-      <p class="sobretitulo">LabMedSys agora é iLabMedSys</p>
-      <h1>Tudo o que sabemos sobre o sistema, em um só lugar.</h1>
-      <p class="hero-desc">A homologação do sistema de gestão da fábrica, módulo por módulo: o que existe e funciona, como cada processo anda nas telas, o que a ANVISA exige e onde o sistema falha.</p>
-      <div class="hero-acoes">
-        <a class="botao botao-grande" href="#diretoria">Diagnóstico para a diretoria</a>
-        <a class="botao botao-grande botao-secundario" href="#modulos">Explorar os módulos</a>
-        <a class="botao botao-grande botao-secundario" href="apresentacao.html">Ver a apresentação ↗</a>
-      </div>
-    </div>
-    <div class="hero-numeros" aria-label="Números da documentação">
-      <div class="numero"><strong>{modulos_com_doc}<small>/{total_modulos}</small></strong><span>módulos com documentação</span></div>
-      <div class="numero"><strong>{total_docs}</strong><span>documentos publicados</span></div>
-      <div class="numero"><strong>{total_fluxos}</strong><span>fluxos documentados</span></div>
-    </div>
-  </section>
-
-  {diretoria}
-
-  <section class="secao" id="como-ler">
-    <h2>Como a homologação avança</h2>
-    <p class="secao-desc">Cada módulo passa pelas mesmas quatro etapas. A barra em cada cartão mostra onde ele está.</p>
-    <ol class="jornada">
-      <li><strong>Reconhecimento</strong><span>Telas, tabelas e integrações levantadas no código.</span></li>
-      <li><strong>Fluxos</strong><span>Cada processo descrito etapa por etapa, com regras e fluxograma.</span></li>
-      <li><strong>Testes</strong><span>Casos executados nas telas, com evidências e desvios.</span></li>
-      <li><strong>Entregáveis</strong><span>Regras, manual, requisitos, dossiê e resumo para a diretoria.</span></li>
-    </ol>
-  </section>
-
-  {caminho}
+  {painel}
 
   <section class="secao" id="modulos">
     <h2>Módulos</h2>
-    <p class="secao-desc">Os módulos estão na ordem do caminho do lote. Escolha um para ver o seu roteiro: fluxos, regras, testes e documentos para baixar.</p>
+    <p class="secao-desc">Na ordem do caminho do lote. Escolha um para ver o roteiro dele: fluxos, regras, testes e documentos para baixar. O primeiro passo de cada módulo traz o resumo completo.</p>
     <div class="modulos">{''.join(cards)}</div>
   </section>
 
