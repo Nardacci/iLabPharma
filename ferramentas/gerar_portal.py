@@ -1063,6 +1063,25 @@ def intro_modulo(mod):
     return m.group(1) if m else t
 
 
+def pn_classes_modulo(mod):
+    return DADOS_PAINEL["pn"].get("classes_novo", {}).get(mod["id"])
+
+
+def bloco_classes(cn):
+    """Classes dos casos na versão nova. As medidas (comparadas com o legado ou sem legado) ficam na barra;
+    as atribuídas por referência a outro módulo aparecem à parte, com o critério, e não entram na barra."""
+    tot = sum(v for _, v, _ in cn["classes"]) or 1
+    seg = "".join(f'<div class="pn-seg pn-c-{k}" style="width:{100 * v / tot:.1f}%" title="{E(n)}: {v}"></div>' for n, v, k in cn["classes"])
+    lg = "".join(f'<li><i class="pn-c-{k}"></i><span>{E(n)}</span><b>{v}</b></li>' for n, v, k in cn["classes"])
+    html = f'<div class="pn-emp">{seg}</div><ul class="pn-lg">{lg}</ul><p class="pn-nota">{E(cn["nota"])}</p>'
+    ref = cn.get("referencia")
+    if ref:
+        lr = "".join(f'<li><i class="pn-c-{k}"></i><span>{E(n)}</span><b>{v}</b></li>' for n, v, k in ref["classes"])
+        html += (f'<div class="pn-ref"><h5>{E(ref["titulo"])}</h5><ul class="pn-lg">{lr}</ul>'
+                 f'<p class="pn-nota">{E(ref["criterio"])}</p></div>')
+    return html
+
+
 def pagina_modulo(mod, sit="index"):
     """Visão geral do módulo (sit='index') ou uma das três situações: 'legado', 'novo', 'ideal'."""
     raiz = "../../"
@@ -1140,6 +1159,8 @@ def pagina_modulo(mod, sit="index"):
         if soma["requisitos"]:
             numeros.append((soma["requisitos"], "requisitos para a versão corrigida"))
     num_html = "".join(f'<div class="numero"><strong>{E(str(n))}</strong><span>{E(r)}</span></div>' for n, r in numeros)
+    cn_mod = pn_classes_modulo(mod) if sit == "novo" else None
+    classes_html = f'<section class="pn-classes"><h2>Resultado por classe na versão nova</h2>{bloco_classes(cn_mod)}</section>' if cn_mod else ""
 
     blocos, submenu = [], []
     secao_atual = None
@@ -1219,6 +1240,7 @@ def pagina_modulo(mod, sit="index"):
   </header>
   {troca_situacao(sit, mod)}
   <div class="numeros">{num_html}</div>
+  {classes_html}
   {comece}
   {submenu_html}
   {''.join(blocos)}
@@ -1326,10 +1348,7 @@ def bloco_painel(origem, ordem):
         icl, irot = ("ideal", "Definido") if ideal_pronto(m) else ("vazio", "Rascunho")
         cn = pn.get("classes_novo", {}).get(m["id"])
         if cn:
-            tot = sum(v for _, v, _ in cn["classes"]) or 1
-            seg = "".join(f'<div class="pn-seg pn-c-{k}" style="width:{100 * v / tot:.1f}%" title="{E(n)}: {v}"></div>' for n, v, k in cn["classes"])
-            lg = "".join(f'<li><i class="pn-c-{k}"></i><span>{E(n)}</span><b>{v}</b></li>' for n, v, k in cn["classes"])
-            corpo = f'<div class="pn-emp">{seg}</div><ul class="pn-lg">{lg}</ul><p class="pn-nota">{E(cn["nota"])}</p>'
+            corpo = bloco_classes(cn)
         else:
             corpo = '<p class="pn-nota">Ainda não testado na versão nova. Quando os testes começarem, a comparação com o legado aparece aqui.</p>'
         return (f'<div class="pn-det" data-m="{m["id"]}"{"" if m is ordem[0] else " hidden"}>'
