@@ -30,6 +30,9 @@ from pathlib import Path
 
 import markdown
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import biblioteca  # noqa: E402
+
 HOJE = datetime.date.today().strftime("%d/%m/%Y")
 
 # ---------------------------------------------------------------------------------------------
@@ -693,6 +696,7 @@ def cabecalho(titulo, raiz, ativo=""):
   <a class="marca" href="{raiz}index.html" aria-label="iLabMedSys, página inicial"><img src="{raiz}assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
   <nav class="topo-nav" aria-label="Principal">
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
+    <a href="{raiz}biblioteca.html"{' aria-current="page"' if ativo == 'biblioteca' else ''}>Biblioteca</a>
     <a href="{raiz}index.html#diretoria">Diretoria</a>
     <a href="{raiz}index.html#publicos">Por público</a>
     <a href="{raiz}anvisa.html"{' aria-current="page"' if ativo == 'anvisa' else ''}>ANVISA</a>
@@ -781,7 +785,7 @@ def indice_normas(origem):
                          "html": markdown.markdown(corpo.strip(), extensions=["sane_lists"])}
     return {"rdc": rdc, "guia": guia, "travas": travas}
 
-def gerar(origem, destino, relatorio):
+def gerar(origem, destino, relatorio, atualizar_metadados=False):
     conv = Conversor(origem, destino)
     hom = origem / "homologacao"
     doc_dir = destino / "documentacao"
@@ -861,6 +865,20 @@ def gerar(origem, destino, relatorio):
 
     (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
     (destino / "anvisa.html").write_text(pagina_anvisa(origem, busca), encoding="utf-8")
+    # Biblioteca: metadados com fonte única em homologacao/biblioteca-metadados.csv
+    nomes = {m["id"]: m["nome"] for m in MODULOS}
+    entradas = biblioteca.montar_entradas(MODULOS, origem, nomes)
+    entradas, rel_bib = biblioteca.aplicar_e_relatar(entradas, hom_ / "biblioteca-metadados.csv", atualizar_metadados)
+    (destino / "biblioteca.html").write_text(
+        biblioteca.pagina_biblioteca(entradas, ["principal", "estoque", "producao", "ope", "controle-qualidade", "garantia-qualidade", "controle-documentos", "comercial", "rastreabilidade", "entre-módulos"],
+                                     cabecalho, rodape, E), encoding="utf-8")
+    print(f"Biblioteca: {rel_bib['total']} documentos; {rel_bib['do_arquivo']} com linha no arquivo de metadados, {rel_bib['sem_linha']} sem linha "
+          f"({rel_bib['acrescentadas']} acrescentadas agora); {rel_bib['a_classificar']} com valor a classificar; {rel_bib['revisadas']} revisadas."
+)
+    if rel_bib["linhas_sobrando"]:
+        print(f"AVISO: {len(rel_bib['linhas_sobrando'])} linha(s) do arquivo de metadados sem documento no portal (removido ou renomeado). Nada foi apagado; confira e remova à mão se for o caso:")
+        for c in rel_bib["linhas_sobrando"]:
+            print(f"  - {c}")
     cron = pagina_cronograma(origem)
     if cron:
         (destino / "cronograma.html").write_text(cron, encoding="utf-8")
@@ -1840,8 +1858,9 @@ def main():
     ap.add_argument("--origem", required=True, help="Pasta do repositório LabMedsys_homol")
     ap.add_argument("--destino", default=".", help="Pasta do repositório iLabPharma")
     ap.add_argument("--relatorio", help="Arquivo (fora do site) para listar o que foi retirado")
+    ap.add_argument("--atualizar-metadados", action="store_true", help="Acrescenta ao arquivo de metadados da Biblioteca as linhas que faltam (não altera as existentes)")
     a = ap.parse_args()
-    gerar(Path(a.origem).resolve(), Path(a.destino).resolve(), a.relatorio)
+    gerar(Path(a.origem).resolve(), Path(a.destino).resolve(), a.relatorio, a.atualizar_metadados)
 
 
 if __name__ == "__main__":
