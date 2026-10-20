@@ -1029,9 +1029,16 @@ def estado_situacoes(mod):
 
 def troca_situacao(atual, mod):
     """Barra que deixa claro em qual situação (Legado, Novo ou Ideal) o leitor está e leva às outras."""
-    itens = [("index", "Visão geral", "#334155")] + [(k, n, c) for k, n, _d, c in SITUACOES_MOD]
+    itens = [("index", "← Página do módulo", "#334155")] + [(k, n, c) for k, n, _d, c in SITUACOES_MOD]
     return ('<nav class="sit-troca" aria-label="Situação do módulo">'
             + "".join(f'<a href="{k}.html" style="--cor:{c}"{" aria-current=page" if k == atual else ""}>{E(n)}</a>' for k, n, c in itens) + '</nav>')
+
+
+def intro_modulo(mod):
+    """Primeira frase do resumo: o que o módulo é, valendo para as três situações."""
+    t = mod["resumo"].strip()
+    m = re.match(r"(.+?[.!?])(\s|$)", t)
+    return m.group(1) if m else t
 
 
 def pagina_modulo(mod, sit="index"):
@@ -1074,11 +1081,11 @@ def pagina_modulo(mod, sit="index"):
     <div>
       <p class="sit-etiqueta" style="--cor:#334155">Visão geral do módulo</p>
       <h1>{E(mod['nome'])}</h1>
-      <p>O mesmo módulo, visto em três situações separadas: o sistema entregue (Legado), a versão nova e o ideal.</p>
+      <p>{E(intro_modulo(mod))}</p>
     </div>
   </header>
-  {troca_situacao("index", mod)}
-  <h2 class="secao-titulo">As três situações</h2>
+  <h2 class="secao-titulo">Escolha uma situação</h2>
+  <p class="secao-desc">O módulo é o mesmo. O que muda é o retrato: o sistema entregue, a versão nova ou o que deve ser.</p>
   <div class="sit-cards">{"".join(cartoes)}</div>
   <h2 class="secao-titulo">Resumo do módulo</h2>
   <p class="secao-desc">Um resumo só, que situa o módulo nas três situações.</p>
@@ -1279,9 +1286,12 @@ def bloco_painel(origem, ordem):
               f'<div class="pn-cd pn-cd-ide"><h3>Ideal</h3><p>Módulos com o ideal definido (testes concluídos)</p>{r_ide}</div>')
 
     # --- casos por módulo
+    def _t(m):
+        return cr.get(m["id"], {}).get("testes") or {}
     barras = "".join(
-        f'<div class="pn-br"><span>{E(m["nome"])}</span><div class="pn-trilho"><i style="width:{round(100 * (cr.get(m["id"], {}).get("testes") or {}).get("conclusivos", 0) / max((cr.get(m["id"], {}).get("testes") or {}).get("planejados", 1), 1))}%"></i></div>'
-        f'<b>{(cr.get(m["id"], {}).get("testes") or {}).get("conclusivos", 0)}/{(cr.get(m["id"], {}).get("testes") or {}).get("planejados", 0)}</b></div>' for m in ordem)
+        f'<a class="pn-br" href="documentacao/{m["id"]}/index.html" title="Abrir {E(m["nome"])}"><span>{E(m["nome"])}</span>'
+        f'<div class="pn-trilho"><i style="width:{round(100 * _t(m).get("conclusivos", 0) / max(_t(m).get("planejados", 1), 1))}%"></i></div>'
+        f'<b>{_t(m).get("conclusivos", 0)}/{_t(m).get("planejados", 0)}</b></a>' for m in ordem)
 
     # --- detalhe do módulo, com seletor
     def detalhe(m):
@@ -1301,7 +1311,7 @@ def bloco_painel(origem, ordem):
         else:
             corpo = '<p class="pn-nota">Ainda não testado na versão nova. Quando os testes começarem, a comparação com o legado aparece aqui.</p>'
         return (f'<div class="pn-det" data-m="{m["id"]}"{"" if m is ordem[0] else " hidden"}>'
-                f'<ul class="pn-tres-linhas"><li><em>Legado</em>{chip(lcl, lrot)}<small>{t.get("conclusivos", 0)} de {t.get("planejados", 0)} casos</small></li>'
+                f'<p class="pn-det-nome"><a href="documentacao/{m["id"]}/index.html">Abrir a página de {E(m["nome"])} →</a></p><ul class="pn-tres-linhas"><li><em>Legado</em>{chip(lcl, lrot)}<small>{t.get("conclusivos", 0)} de {t.get("planejados", 0)} casos</small></li>'
                 f'<li><em>Novo</em>{chip(ncl, nrot)}</li><li><em>Ideal</em>{chip(icl, irot)}</li></ul>'
                 f'<h4>Versão nova × legado</h4>{corpo}'
                 f'<p class="pn-det-links"><a href="documentacao/{m["id"]}/legado.html">Legado</a> · <a href="documentacao/{m["id"]}/novo.html">Novo</a> · <a href="documentacao/{m["id"]}/ideal.html">Ideal</a></p></div>')
@@ -1309,7 +1319,7 @@ def bloco_painel(origem, ordem):
     detalhes = "".join(detalhe(m) for m in ordem)
 
     # mapa do lote
-    cab = "".join(f'<div class="pn-h"><span>{k}</span>{E(m["nome"])}</div>' for k, m in enumerate(ordem, 1))
+    cab = "".join(f'<a class="pn-h" href="documentacao/{m["id"]}/index.html" title="Abrir {E(m["nome"])}"><span>{k}</span>{E(m["nome"])}</a>' for k, m in enumerate(ordem, 1))
     cel_leg, cel_nov, cel_ide = [], [], []
     for m in ordem:
         c = cr.get(m["id"], {})
