@@ -164,11 +164,14 @@ def passo_de(p):
 
 
 def docs_com_telas(mod, hom):
-    """No Principal, as telas da versão nova (por menu) vêm do manifesto gerado em homologacao/."""
+    """As telas da versão nova (por menu) vêm de manifestos gerados em homologacao/: no Principal, as telas testadas;
+    na Garantia da Qualidade, as telas a criar (Controle de Desvios e de Mudanças)."""
     docs = list(mod["docs"])
-    if mod["id"] != "principal":
+    fontes = {"principal": "versao-nova/1.principal/telas/manifest.json",
+              "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json"}
+    if mod["id"] not in fontes:
         return docs
-    arq = hom / "versao-nova/1.principal/telas/manifest.json"
+    arq = hom / fontes[mod["id"]]
     if not arq.exists():
         return docs
     man = json.loads(arq.read_text(encoding="utf-8"))
@@ -274,6 +277,7 @@ MODULOS = [
             ("1.principal/10-comparacao-nova-versao.md", "Comparação com a nova versão", "tecnico", None),
             ("1.principal/01-regras-de-negocio.md", "Regras de negócio (rascunho com fontes)", "tecnico", None),
             ("1.principal/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("versao-nova/1.principal/manual/manual-principal-versao-nova.md", "Manual da versão nova, por tela", "novo", "versao-nova/1.principal/manual/LabMedSys - Modulo Principal - Manual da Versao Nova por Tela.docx"),
             ("versao-nova/1.principal/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
             ("versao-nova/1.principal/plano-de-regressao.md", "Plano de regressão", "novo", None),
             ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/usuarios-de-teste.md", "Usuários de teste", "novo", None),
@@ -476,7 +480,7 @@ TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
     r"BERTIN, FELIPE SILVA|Os auditores dispon[íi]veis no novo|6 contas \(BERTIN|"
-    r"1\.507|s[óo] o id 1|perfil espelho|ESPELHO_ADMIN|nenhum perfil criado pela tela|Patrim[ôo]nio|a tela de Perfil n[ãa]o governa|causa est[áa] no perfil 1|C[óo]digo da API nova|c[óo]digo da API|id fixo|perfis 1 e 18|perfil 1|perfil 27|Fato: \*\*s[óo]|"
+    r"1\.507|s[óo] o id 1|perfil espelho|ESPELHO_ADMIN|nenhum perfil criado pela tela|m[óo]dulo Patrim[ôo]nio|a tela de Perfil n[ãa]o governa|causa est[áa] no perfil 1|C[óo]digo da API nova|c[óo]digo da API|id fixo|perfis 1 e 18|perfil 1|perfil 27|Fato: \*\*s[óo]|"
     r"ADMINISTRADOR \(s[óo] leitura\)|tem 5 a[çc][õo]es marcadas|nem a[çc][ãa]o marcada|Retirar a[çc][õo]es at[ée]|Nenhuma combina[çc][ãa]o liberou|Registrado aqui e no confidencial|"
     r"s[óo] o perfil (?:1|ADMINISTRADOR)|perfil 1 \(ADMINISTRADOR\)|MARCOS_ADM|DV-GQ-N-013|\bProfileId\b|perfil 18|`0\.T\.TESTE_GQ_TUDO`|PEDIDO-AO-DESENVOLVIMENTO|"
     r"servidor exija uma a[çc][ãa]o|lia perfis do Principal|perfil 25 tem|Teste proposto: criar um perfil|ADMINISTRADOR, que funciona|"
@@ -892,7 +896,7 @@ def _nav_arvore(pags, roteiros, atual):
             r = roteiros.get(p["arq"])
             t_aberto = atual is p or atual is r
             g_aberto = g_aberto or t_aberto
-            filhos = (f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>Resumo geral</a></li>'
+            filhos = (f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p.get("rotulo") or "Resumo geral")}</a></li>'
                       + (f'<li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo de homologação</a></li>' if r else ""))
             telas += (f'<li><details class="lat-tela"{" open" if t_aberto else ""}><summary>{E(p["tela"])}</summary><ul>{filhos}</ul></details></li>')
         html += f'<li><details class="lat-menu-d"{" open" if g_aberto else ""}><summary>{E(g)}</summary><ul>{telas}</ul></details></li>'
@@ -1152,7 +1156,7 @@ def pagina_modulo(mod, sit="index"):
                     r = roteiros.get(p["arq"])
                     cartoes += (f'<div class="doc-card tela-card"><a class="doc-card-titulo" href="{p["slug"]}.html"><span class="doc-n">{p["n"]}</span>{E(p["tela"])}</a>'
                                 f'<span class="doc-card-meta">{E(p.get("situacao_tela") or "")}</span>'
-                                f'<span class="tela-links"><a href="{p["slug"]}.html">Resumo geral</a>'
+                                f'<span class="tela-links"><a href="{p["slug"]}.html">{E(p.get("rotulo") or "Resumo geral")}</a>'
                                 + (f' · <a href="{r["slug"]}.html">Passo a passo</a>' if r else "") + '</span></div>')
                 partes.append(f'<h3 class="novo-menu">{E(g)}</h3><div class="doc-cards">{cartoes}</div>')
             grade = "".join(partes)
