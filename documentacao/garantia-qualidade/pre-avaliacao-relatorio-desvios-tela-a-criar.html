@@ -41,7 +41,7 @@
       
     </header>
     <article class="texto">
-<p><strong>Menu:</strong> Garantia da Qualidade · Controle de Desvios · <strong>Ficha:</strong> rascunho automático, a completar · <strong>Origem no sistema entregue:</strong> <code>PreAvaliacaoRNC</code></p>
+<p><strong>Menu:</strong> Garantia da Qualidade · Controle de Desvios · <strong>Ficha:</strong> completa, a validar com a Garantia da Qualidade · <strong>Origem no sistema entregue:</strong> <code>PreAvaliacaoRNC</code></p>
 <p>As telas novas <strong>seguem o processo e as regras do sistema entregue</strong>, sem transcrever o que for falha de código, de conceito ou de campo mal colocado. Cada decisão na ficha é <strong>Manter</strong>, <strong>Corrigir</strong> ou <strong>Ideal depois</strong>.</p>
 <h3 id="como-e-a-tela-no-sistema-entregue-layout-reconstruido">Como é a tela no sistema entregue (layout reconstruído)</h3>
 <p>Reconstruído a partir do código das páginas do sistema entregue: mostra os campos, os rótulos, os asteriscos de obrigatório e a posição. <strong>Não tem dados e não usa o tema do Principal</strong>; os prints reais estão logo abaixo. Opções marcadas por padrão (caixas e botões de opção) são do código, não de dados.</p>
@@ -57,1648 +57,291 @@
 <h4 id="visualizar">Visualizar</h4>
 <figure><a href="../img/garantia-qualidade/03-layout-visualizar.jpg" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/03-layout-visualizar.jpg" alt="Pré Avaliação Relatório Desvios: Visualizar" loading="lazy"></a><figcaption>Pré Avaliação Relatório Desvios: Visualizar · clique para ampliar</figcaption></figure>
 
-<h2 id="levantamento-no-codigo-rascunho-automatico">Levantamento no código (rascunho automático)</h2>
-<p>A ficha completa desta tela ainda não foi escrita. Abaixo está o levantamento automático feito no código do sistema entregue: páginas, rotas, campos, modelos, regras de validação do servidor, situações e mensagens.</p>
-<p><strong>Menu:</strong> Garantia da Qualidade › Controle de Desvios › Pré Avaliação Relatório Desvios<br />
-<strong>Origem no legado:</strong> área <code>Bloco2</code>, controlador <code>PreAvaliacaoRNCController</code> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs</code>)<br />
-<strong>Estado:</strong> rascunho automático do levantamento; a ficha completa fica em <code>../fichas/</code>.</p>
-<blockquote>
-<p>Este levantamento descreve o <strong>comportamento atual do sistema entregue</strong>, sem julgamento. A decisão do que manter, corrigir ou deixar para o ideal está na ficha completa.</p>
-</blockquote>
-<h3 id="1-paginas-da-tela">1. Páginas da tela</h3>
+<h2 id="ficha-da-tela-nova">Ficha da tela nova</h2>
+<p>Mesma regra de trabalho das fichas 1 e 2: seguir o processo e as regras do sistema entregue, sem transcrever sem analisar. Cada decisão é <strong>Manter</strong>, <strong>Corrigir</strong> ou <strong>Ideal depois</strong>. O que é igual (lista, anexos, lotes, mensagens padrão, PDF) vale como nas fichas anteriores e não se repete.</p>
+<h3 id="1-para-que-serve">1. Para que serve</h3>
+<p>É a terceira etapa do desvio, feita por quem responde pela Garantia da Qualidade (no formulário aparece como <strong>Chefe DGQ</strong>). A pessoa lê o RD e a ação imediata e decide duas coisas:</p>
+<ol>
+<li><strong>Como o desvio foi detectado</strong> (o "meio de detecção").</li>
+<li><strong>Quais áreas ficam envolvidas</strong> na avaliação.</li>
+</ol>
+<p>O resultado decide o caminho: <strong>com áreas escolhidas</strong>, o RD vai para <strong>Pendente Responsável Área</strong> (tela Avaliação Área); <strong>sem nenhuma área</strong>, vai direto para <strong>Pendente Avaliação do Relatório de Desvios</strong>.</p>
+<p>Lugar no processo: Relatório de Desvios → Registro Ação Corretiva Imediata → <strong>Pré Avaliação</strong> → Avaliação Área (se houver áreas) → Avaliação do Relatório → CAPA e planos.</p>
+<h3 id="2-paginas-da-tela">2. Páginas da tela</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Página</th>
-<th>Arquivo</th>
-<th>Modelo</th>
+<th>O que mostra</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Editar</td>
-<td>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Editar.cshtml</td>
-<td>PartialRelatorioDesvioModel</td>
+<td>Lista</td>
+<td>RDs na etapa, com filtros</td>
 </tr>
 <tr>
-<td>Incluir</td>
-<td>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Incluir.cshtml</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Index</td>
-<td>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Index.cshtml</td>
-<td>PreAvaliacaoRNCIndexModel</td>
+<td>Editar (pré-avaliar)</td>
+<td>O RD, a ação imediata e as seções "Meios de Detecção do Desvio", "Área(s) Envolvida(s)" e o bloco da pré-avaliação</td>
 </tr>
 <tr>
 <td>Visualizar</td>
-<td>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Visualizar.cshtml</td>
-<td>PreAvaliacaoRNCEditarModel</td>
+<td>O RD somente leitura</td>
+</tr>
+<tr>
+<td>Histórico, Imprimir</td>
+<td>Como na ficha 1</td>
 </tr>
 </tbody>
 </table></div>
-<p>Partials usados: <code>HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRelatorioDesvio.cshtml</code>, <code>HSolutions.GQ.UI/Views/Shared/_Log.cshtml</code>, <code>HSolutions.GQ.UI/Views/Shared/_GridAnexos.cshtml</code></p>
-<h3 id="2-acoes-do-controlador-rotas">2. Ações do controlador (rotas)</h3>
+<h3 id="3-quem-pode-ver-e-fazer-o-que">3. Quem pode ver e fazer o quê</h3>
+<p><strong>No legado</strong> (<code>GerenciadorAcessoTelaPreAvaliacaoRNCIndex.cs</code>):</p>
+<ul>
+<li>A lista traz só RDs <strong>Pendente Pré Avaliação</strong>.</li>
+<li><strong>Editar:</strong> enquanto o RD <strong>ainda não tem pré-avaliação, a regra devolve "pode" para qualquer usuário</strong>, sem olhar nível nem área. Só depois de existir uma pré-avaliação é que <strong>nível 1</strong> perde o botão e <strong>nível 2</strong> só edita da própria área.</li>
+<li>Visualizar, Histórico e Imprimir: qualquer usuário com grupo de perfil.</li>
+</ul>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Decisão</th>
+<th>O que fazer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Corrigir</strong></td>
+<td>A primeira checagem vence as outras, então hoje <strong>qualquer nível pré-avalia</strong> (conceito errado: o formulário chama a pessoa de "Chefe DGQ"). Na tela nova a regra vale desde a primeira vez. <strong>Validar com a GQ quem pode:</strong> a proposta é <strong>nível 3 e 4</strong>.</td>
+</tr>
+<tr>
+<td><strong>Corrigir</strong></td>
+<td>O servidor aplica a regra em toda ação, como nas fichas 1 e 2.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-lista">4. Lista</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Regra no legado</th>
+<th>Decisão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RD/Nº</td>
+<td>Texto "contém" (sem a leitura de <code>número/AA</code> que as telas 1 e 2 têm).</td>
+<td><strong>Corrigir:</strong> igual às fichas 1 e 2 (número exato, ano opcional).</td>
+</tr>
+<tr>
+<td>Descrição, Data início, Data fim</td>
+<td>Como na ficha 1.</td>
+<td><strong>Corrigir</strong> como na ficha 1.</td>
+</tr>
+<tr>
+<td>Situação</td>
+<td>O filtro aparece na tela mas o servidor o <strong>ignora</strong> (está em comentário no código); a lista já é só "Pendente Pré Avaliação".</td>
+<td><strong>Corrigir:</strong> tirar o filtro desta tela.</td>
+</tr>
+<tr>
+<td>Meios de Detecção</td>
+<td>Não existe aqui.</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Colunas e ações por linha: como na ficha 1. <strong>Corrigir</strong> a paginação no servidor.</p>
+<h3 id="5-formulario">5. Formulário</h3>
+<p><strong>Relato do RD, ação imediata, anexos:</strong> vêm das etapas anteriores.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Decisão</th>
+<th>O que fazer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Corrigir</strong></td>
+<td>O relato (descrição, local, item, lotes, observação) fica <strong>somente leitura</strong>. Hoje a gravação regrava todos esses campos.</td>
+</tr>
+<tr>
+<td><strong>Corrigir</strong></td>
+<td>A <strong>descrição da ação imediata</strong> também fica somente leitura. Hoje, se vier texto, a gravação <strong>substitui</strong> o que o supervisor da área escreveu. Quem não concordar com a ação deve dizer isso na observação da pré-avaliação.</td>
+</tr>
+<tr>
+<td><strong>Validar com a GQ</strong></td>
+<td>Anexos: acrescentar sim; apagar os de etapas anteriores, não.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Seção "Meios de Detecção do Desvio":</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Obrig.</th>
+<th>Regra</th>
+<th>Decisão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Meio de detecção</td>
+<td>opção única</td>
+<td>Sim</td>
+<td>Valores: Processo/Produção, Auditoria Interna, Inspeção Sanitária, Controle da Qualidade, Garantia da Qualidade, SAC/Fármaco, <strong>Outros</strong> (99). Servidor: "Meio de Detecção da não conformidade é obrigatório."</td>
+<td><strong>Manter</strong></td>
+</tr>
+<tr>
+<td>Outros (texto)</td>
+<td>texto</td>
+<td>Só se o meio for "Outros"</td>
+<td>Habilitado só com "Outros". Servidor: "É obrigatório informar um Meio de Detecção da não conformidade no campo Outros."</td>
+<td><strong>Manter</strong>; <strong>Corrigir</strong> limite de tamanho.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Seção "Área(s) Envolvida(s)":</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Obrig.</th>
+<th>Regra</th>
+<th>Decisão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Áreas</td>
+<td>caixas de marcar, 3 por linha</td>
+<td>Não</td>
+<td>Lista de todas as áreas do Principal. Marcou: o RD vai a <strong>Pendente Responsável Área</strong>; nenhuma: vai a <strong>Pendente Avaliação do Relatório de Desvios</strong>. A gravação <strong>soma</strong> as áreas escolhidas às que já existirem, sem conferir repetição.</td>
+<td><strong>Manter</strong> o desvio de caminho. <strong>Corrigir:</strong> não duplicar área; mostrar na tela, antes de gravar, para onde o RD vai ("Vai para a avaliação das áreas" ou "Vai direto para a avaliação do relatório").</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Bloco da pré-avaliação:</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Obrig.</th>
+<th>Regra e origem</th>
+<th>Decisão</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Observação da pré-avaliação</td>
+<td>texto longo</td>
+<td>Não</td>
+<td>Sem validação.</td>
+<td><strong>Manter</strong>; <strong>Validar:</strong> deve ser obrigatória quando se muda a ação ou se envolve área?</td>
+</tr>
+<tr>
+<td>Data e hora</td>
+<td>só leitura</td>
+<td>—</td>
+<td>O servidor grava o valor que vier da tela (<code>DateTime.Parse(model.DataHoraPreAvaliacaoRDChefeDGQ)</code>). Validação: "A Data de criação é obrigatória."</td>
+<td><strong>Corrigir:</strong> hora do <strong>servidor</strong>.</td>
+</tr>
+<tr>
+<td>Responsável</td>
+<td>só leitura</td>
+<td>—</td>
+<td>Usuário logado; validação "O Responsavel é obrigatório."</td>
+<td><strong>Manter</strong> (sempre da sessão).</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>texto</td>
+<td>Sim, ao gravar</td>
+<td>Regra do RD (ficha 1).</td>
+<td><strong>Corrigir</strong>, como na ficha 2 (depende da resposta da GQ).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-acoes-e-regras">6. Ações e regras</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Ação</th>
-<th>Retorno</th>
-<th>Parâmetros</th>
-<th>Atributos</th>
-<th>Linha</th>
+<th>O que acontece</th>
+<th>Decisão</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Index</td>
-<td>ActionResult</td>
-<td></td>
-<td>AutorizacaoHandler</td>
-<td>42</td>
+<td><strong>Gravar a pré-avaliação</strong></td>
+<td>Valida; guarda o meio de detecção, o responsável, a data e a observação; guarda as áreas; muda a situação conforme a seção 1; grava histórico (antes e depois), mas <strong>sem a justificativa digitada</strong> (o código manda justificativa vazia); "Alteração efetuada com sucesso."</td>
+<td><strong>Manter</strong>; <strong>Corrigir</strong> histórico com a justificativa.</td>
 </tr>
 <tr>
-<td>Pesquisar</td>
-<td>JsonResult</td>
-<td>DateTime? dataInicio, DateTime? dataFim, int? indice, string rncn, string descricao, int situacao</td>
-<td>HttpPost</td>
-<td>49</td>
+<td><strong>Autor do RD</strong></td>
+<td>A gravação <strong>troca o responsável do RD</strong> pelo usuário que pré-avaliou (a pré-avaliação tem o seu próprio responsável).</td>
+<td><strong>Corrigir</strong>, como na ficha 2: o autor não muda.</td>
 </tr>
 <tr>
-<td>Incluir</td>
-<td>ActionResult</td>
-<td></td>
-<td>AutorizacaoHandler</td>
-<td>109</td>
+<td><strong>Cancelar</strong></td>
+<td>Não existe nesta tela.</td>
+<td><strong>Validar com a GQ:</strong> o RD só pode ser cancelado nas etapas 1 e 2? Depois disso, sem saída?</td>
 </tr>
 <tr>
-<td>Editar</td>
-<td>ActionResult</td>
-<td>int id</td>
-<td>AutorizacaoHandler</td>
-<td>122</td>
-</tr>
-<tr>
-<td>Visualizar</td>
-<td>ActionResult</td>
-<td>int id</td>
-<td></td>
-<td>169</td>
-</tr>
-<tr>
-<td>EditarRelatorioDesvio</td>
-<td>JsonResult</td>
-<td>PartialRelatorioDesvioModel model</td>
-<td>HttpPost</td>
-<td>201</td>
-</tr>
-<tr>
-<td>ListarResponsaveisPorArea</td>
-<td>JsonResult</td>
-<td>int idArea</td>
-<td>HttpPost</td>
-<td>395</td>
-</tr>
-<tr>
-<td>Imprimir</td>
-<td>ActionResult</td>
-<td>int id</td>
-<td>HttpGet</td>
-<td>417</td>
-</tr>
-<tr>
-<td>GetLocalOcorrencia</td>
-<td>JsonResult</td>
-<td>string dados</td>
-<td>HttpPost</td>
-<td>460</td>
-</tr>
-<tr>
-<td>GetItem</td>
-<td>JsonResult</td>
-<td>string dados, string strTipoItem</td>
-<td>HttpPost</td>
-<td>470</td>
+<td><strong>Visualizar, Imprimir, Histórico</strong></td>
+<td>Como na ficha 1.</td>
+<td><strong>Manter</strong></td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="3-campos-colunas-e-botoes">3. Campos, colunas e botões</h3>
-<h4 id="incluir-hsolutions-gq-ui-areas-bloco2-views-preavaliacaornc-incluir-cshtml">Incluir (<code>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Incluir.cshtml</code>)</h4>
-<p><strong>Títulos e seções:</strong> Incluir (:7)</p>
-<h4 id="index-hsolutions-gq-ui-areas-bloco2-views-preavaliacaornc-index-cshtml">Index (<code>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Index.cshtml</code>)</h4>
-<p><strong>Rótulos:</strong> RD/Nº (:27); Descrição (:32); Data Início (:37); Situação (:56)</p>
+<h3 id="7-situacao-e-historico">7. Situação e histórico</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Tipo</th>
-<th>Campo</th>
-<th>Linha</th>
+<th>Evento</th>
+<th>Situação depois</th>
+<th>Histórico</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>input:text</td>
-<td>txtRNCN</td>
-<td>28</td>
+<td>Gravar com áreas envolvidas</td>
+<td>Pendente Responsável Área</td>
+<td>Sim</td>
 </tr>
 <tr>
-<td>input:text</td>
-<td>txtDescricao</td>
-<td>33</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataInicio</td>
-<td>39</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataFim</td>
-<td>43</td>
-</tr>
-<tr>
-<td>select</td>
-<td>cboSituacao</td>
-<td>57</td>
+<td>Gravar sem áreas</td>
+<td>Pendente Avaliação Relatório de Desvios</td>
+<td>Sim</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Botões e atalhos:</strong> Limpar (:48); Pesquisar (:49)</p>
-<h4 id="visualizar-hsolutions-gq-ui-areas-bloco2-views-preavaliacaornc-visualizar-cshtml">Visualizar (<code>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Visualizar.cshtml</code>)</h4>
-<p><strong>Títulos e seções:</strong> Meios de detecção da não conformidade: (:64); Setor envolvido na N.C: (:171); Áreas envolvidas (:275)</p>
-<p><strong>Rótulos:</strong> RD/Nº (:55); Processo/Produção (:70); Auditoria (:76); Controle de qualidade (:82); Garantia de qualidade (:88); Descrição * (:96); Descrição Não Conformidade * (:100); Data/Hora (:133); Responsável (:138); Observação (:142); Justificativa (:147); Comunicado a GQ por: (:161); Em: (:165); CQ (:175); CQ (:178); DGQ (:184); DGQ (:187); DPCALOG (:193); DPCALOG (:196); Produção (:201); Produção (:204); Manutenção (:209); Manutenção (:212); Comunicado por: (:218); Em: (:222); Data/Hora (:237); Responsável (:242); Observação (:246); Justificativa (:251); Descrição da ação Imediata (:269); CQ (:279); CQ (:282); DGQ (:288); DGQ (:291); DPCALOG (:296); DPCALOG (:299); Produção (:304); Produção (:307); Manutenção (:312); Manutenção (:315); Crítico (:339); Maior (:346); Menor (:353); Data/Hora (:415); Responsável (:420); Observação (:424); Justificativa (:429)</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Campo</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>input:hidden</td>
-<td>hfId</td>
-<td>40</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfAcao</td>
-<td>41</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtRNCN</td>
-<td>56</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDescricao</td>
-<td>97</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDescricaoNaoConformidade</td>
-<td>101</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHora</td>
-<td>134</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavel</td>
-<td>139</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtObservacao</td>
-<td>143</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtJustificativa</td>
-<td>148</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtComunicadoGQ</td>
-<td>162</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataComunicadoGQ</td>
-<td>166</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbCQ</td>
-<td>174</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbCQ</td>
-<td>177</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDGQ</td>
-<td>183</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDGQ</td>
-<td>186</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDPCALOG</td>
-<td>192</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDPCALOG</td>
-<td>195</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbProducao</td>
-<td>200</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbProducao</td>
-<td>203</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbManutancao</td>
-<td>208</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbManutancao</td>
-<td>211</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtComunicado</td>
-<td>219</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataComunicado</td>
-<td>223</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraLiberacao</td>
-<td>238</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelLiberacao</td>
-<td>243</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtObservacaoLiberacao</td>
-<td>247</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtJustificativaLiberacao</td>
-<td>252</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDescricaoAcaoImediata</td>
-<td>270</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbCQ</td>
-<td>278</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbCQ</td>
-<td>281</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDGQ</td>
-<td>287</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDGQ</td>
-<td>290</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDPCALOG</td>
-<td>295</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbDPCALOG</td>
-<td>298</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbProducao</td>
-<td>303</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbProducao</td>
-<td>306</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbManutancao</td>
-<td>311</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbManutancao</td>
-<td>314</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraPreAvaliacao</td>
-<td>416</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelPreAvaliacao</td>
-<td>421</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtObservacaoPreAvaliacao</td>
-<td>425</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtJustificativaPreAvaliacao</td>
-<td>430</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnImprimir</td>
-<td>442</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnVoltar</td>
-<td>443</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnFecharModal_log</td>
-<td>458</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Botões e atalhos:</strong> Imprimir (:442); Voltar (:443); FECHAR (:458)</p>
-<h4 id="partialrelatoriodesvio-hsolutions-gq-ui-areas-bloco2-views-shared-partialrelatoriodesvio-cshtml">_PartialRelatorioDesvio (<code>HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRelatorioDesvio.cshtml</code>)</h4>
-<p><strong>Rótulos:</strong> RD/Nº (:91); Data da abertura (:95); Local da ocorrência * (:102); @Model.TiposItemDesvio[i].Text&amp;nbsp&amp;nbsp&amp;nbsp (:124); Nº Lote * (:143); Nº Tag * (:151); Registro de entrada * (:160); &amp;nbsp (:168); Não Conformidade * (:191); Observação (:198); Observação (:231); Data/Hora (:244); Responsável (:249); Área do Relator (:254); Descrição (:278); Data/Hora (:292); Responsável (:297); Área do Supervisor (:302); CAPA/Nº (:326); Divisão/Seção * (:332); Responsável * (:336); &amp;nbsp (:341); Descrição (:451); Necessário abertura de Controle de Mudança? (:463); Crítico (:476); Maior (:480); Menor (:484); Data/Hora (:495); Responsável (:500); Observação (:505); @Model.MetodosDeteccaoNaoConformidade[i].Text&amp;nbsp&amp;nbsp&amp;nbsp (:545); Outros (:552); @Model.SelectListItemAreasEnvolvidas[i].Text&amp;nbsp&amp;nbsp&amp;nbsp (:604); Data/Hora (:689); Responsável (:694); Observação (:699); Data/Hora (:728); Àrea (:733); Responsável (:738); Observação * (:744); Necessário abertura de CAPA? (:770); OBS: Se não, justificar no espaço abaixo: (:773); Observação (:779); Data/Hora (:794); Responsável (:799); Data/Hora (:814); Responsável (:819); Observação * (:824); Justificativa * (:842)</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Campo</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>input:hidden</td>
-<td>hfId</td>
-<td>75</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfIdLocalOcorrencia</td>
-<td>76</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfIdAreaEnvolvida</td>
-<td>77</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfEAcaoImediata</td>
-<td>78</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfDisableFields</td>
-<td>79</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfActionType</td>
-<td>80</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfDisabledSalvar</td>
-<td>81</td>
-</tr>
-<tr>
-<td>input:hidden</td>
-<td>hfSituacaoAtual</td>
-<td>82</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtRNCN</td>
-<td>92</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataAbertura</td>
-<td>96</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtLocalOcorrencia</td>
-<td>103</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnLocalOcorrencia</td>
-<td>106</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtItemDesvio</td>
-<td>130</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnItemDesvio</td>
-<td>133</td>
-</tr>
-<tr>
-<td>select</td>
-<td>cboNumeroLote</td>
-<td>144</td>
-</tr>
-<tr>
-<td>select</td>
-<td>cboTag</td>
-<td>152</td>
-</tr>
-<tr>
-<td>select</td>
-<td>cboRegistroEntrada</td>
-<td>161</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnAdicionarLoteRegistroEntrada</td>
-<td>169</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDescricaoRD</td>
-<td>192</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtObservacaoRD</td>
-<td>199</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtObservacaoAnexo</td>
-<td>232</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHora</td>
-<td>245</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavel</td>
-<td>250</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtAreaRelator</td>
-<td>255</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDescricaoAcaoCorretivaImediata</td>
-<td>279</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraAcaoImediata</td>
-<td>293</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelAcaoImediata</td>
-<td>298</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtAreaSupervisorAcaoImediata</td>
-<td>303</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtCapaNum</td>
-<td>327</td>
-</tr>
-<tr>
-<td>select</td>
-<td>slAreaResponsavel</td>
-<td>337</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnAdicionarArea</td>
-<td>343</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDiagrama1</td>
-<td>415</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDiagrama2</td>
-<td>418</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDiagrama3</td>
-<td>421</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDiagrama4</td>
-<td>426</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDiagrama5</td>
-<td>429</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDiagrama6</td>
-<td>432</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtDiagrama7</td>
-<td>439</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtCapaAvaliacaoImpacto</td>
-<td>452</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbAberturaControleMudanca</td>
-<td>464</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraCapa</td>
-<td>496</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelCapa</td>
-<td>501</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtObservacaoCapa</td>
-<td>506</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtObservacaoCapa</td>
-<td>507</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtMetodoDeteccaoNCOutros</td>
-<td>555</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtMetodoDeteccaoNCOutros</td>
-<td>559</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraPreAvaliacao</td>
-<td>690</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelPreAvaliacao</td>
-<td>695</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtObservacaoPreAvaliacao</td>
-<td>700</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraAvaliacaoArea</td>
-<td>729</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtAreaResponsavelAvaliacaoAreaRD</td>
-<td>734</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelAvaliacaoArea</td>
-<td>739</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtObservacaoAvaliacaoArea</td>
-<td>745</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtObservacaoAvaliacaoArea</td>
-<td>746</td>
-</tr>
-<tr>
-<td>input:checkbox</td>
-<td>cbAberturaCapa</td>
-<td>771</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtObservacaoAberturaCapa</td>
-<td>780</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraAvaliacaoRD</td>
-<td>795</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelAvaliacaoRD</td>
-<td>800</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtDataHoraAvaliacaoChefeDGQ</td>
-<td>815</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtResponsavelAvaliacaoChefeDGQ</td>
-<td>820</td>
-</tr>
-<tr>
-<td>textarea</td>
-<td>txtObservacaoAvaliacaoChefeDGQ</td>
-<td>825</td>
-</tr>
-<tr>
-<td>input:text</td>
-<td>txtjustificativa</td>
-<td>843</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnVoltar</td>
-<td>854</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnSalvar</td>
-<td>857</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnFecharModal_log</td>
-<td>873</td>
-</tr>
-<tr>
-<td>input:button</td>
-<td>btnItensFecharModal_log</td>
-<td>885</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Botões e atalhos:</strong> buscar (:106); buscar (:133); Adicionar (:169); Adicionar (:343); Voltar (:854); Salvar (:857); FECHAR (:873); FECHAR (:885)</p>
-<h4 id="log-hsolutions-gq-ui-views-shared-log-cshtml">_Log (<code>HSolutions.GQ.UI/Views/Shared/_Log.cshtml</code>)</h4>
-<p><strong>Botões e atalhos:</strong> FECHAR (:7)</p>
-<h3 id="4-modelos-de-dados-da-tela">4. Modelos de dados da tela</h3>
-<h4 id="gridmodel-hsolutions-gq-ui-models-gridmodel-cs">GridModel (<code>HSolutions.GQ.UI/Models/GridModel.cs</code>)</h4>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Propriedade</th>
-<th>Validação</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IEnumerable<T></td>
-<td>Source</td>
-<td></td>
-<td>14</td>
-</tr>
-<tr>
-<td>PaginacaoGridModel</td>
-<td>Paginacao</td>
-<td></td>
-<td>16</td>
-</tr>
-</tbody>
-</table></div>
-<h4 id="partialrelatoriodesviomodel-hsolutions-gq-ui-areas-bloco2-models-partialrelatoriodesviomodel-cs">PartialRelatorioDesvioModel (<code>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs</code>)</h4>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Propriedade</th>
-<th>Validação</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IList<AnexoModel></td>
-<td>Anexos</td>
-<td></td>
-<td>22</td>
-</tr>
-<tr>
-<td>IList<ItemLoteRegistroEntradaModel></td>
-<td>ListaItensLoteRegistroEntrada</td>
-<td></td>
-<td>23</td>
-</tr>
-<tr>
-<td>IList<SelectListItem></td>
-<td>TiposItemDesvio</td>
-<td></td>
-<td>24</td>
-</tr>
-<tr>
-<td>IList<AreaEnvolvidaAvaliacaoRDModel></td>
-<td>AreasEnvolvidas</td>
-<td></td>
-<td>25</td>
-</tr>
-<tr>
-<td>IList<TipoVisualizacaoRD></td>
-<td>TiposVisualizacaoRD</td>
-<td></td>
-<td>26</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Id</td>
-<td></td>
-<td>28</td>
-</tr>
-<tr>
-<td>int</td>
-<td>IdAreaEnvolvida</td>
-<td></td>
-<td>29</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Rnc</td>
-<td></td>
-<td>30</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataRD</td>
-<td></td>
-<td>31</td>
-</tr>
-<tr>
-<td>int</td>
-<td>IdLocalOcorrencia</td>
-<td></td>
-<td>32</td>
-</tr>
-<tr>
-<td>string</td>
-<td>LocalOcorrencia</td>
-<td></td>
-<td>33</td>
-</tr>
-<tr>
-<td>int</td>
-<td>TipoItem</td>
-<td></td>
-<td>34</td>
-</tr>
-<tr>
-<td>int</td>
-<td>IdItemRD</td>
-<td></td>
-<td>35</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DescriptionItemRD</td>
-<td></td>
-<td>36</td>
-</tr>
-<tr>
-<td>string</td>
-<td>TagItemRD</td>
-<td></td>
-<td>37</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DescricaoDesvio</td>
-<td></td>
-<td>38</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoDesvio</td>
-<td></td>
-<td>39</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoAnexo</td>
-<td></td>
-<td>40</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Justificativa</td>
-<td></td>
-<td>41</td>
-</tr>
-<tr>
-<td>string</td>
-<td>NomeResponsavelRD</td>
-<td></td>
-<td>42</td>
-</tr>
-<tr>
-<td>string</td>
-<td>AreaDoResponsavelRD</td>
-<td></td>
-<td>43</td>
-</tr>
-<tr>
-<td>TipoSituacao</td>
-<td>Situacao</td>
-<td></td>
-<td>45</td>
-</tr>
-<tr>
-<td>int</td>
-<td>SituacaoAtual</td>
-<td></td>
-<td>46</td>
-</tr>
-<tr>
-<td>bool</td>
-<td>EAcaoImediata</td>
-<td></td>
-<td>49</td>
-</tr>
-<tr>
-<td>bool</td>
-<td>ECancelamento</td>
-<td></td>
-<td>50</td>
-</tr>
-<tr>
-<td>bool</td>
-<td>EVisualizar</td>
-<td></td>
-<td>51</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DescricaoAcaoCorretivaImediata</td>
-<td></td>
-<td>55</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataHoraAcaoImediata</td>
-<td></td>
-<td>56</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelAcaoImediata</td>
-<td></td>
-<td>57</td>
-</tr>
-<tr>
-<td>string</td>
-<td>AreaSupervisorAcaoImediata</td>
-<td></td>
-<td>58</td>
-</tr>
-<tr>
-<td>IList<SelectListItem></td>
-<td>MetodosDeteccaoNaoConformidade</td>
-<td></td>
-<td>62</td>
-</tr>
-<tr>
-<td>IList<SelectListItem></td>
-<td>SelectListItemAreasEnvolvidas</td>
-<td></td>
-<td>63</td>
-</tr>
-<tr>
-<td>TipoMetodoDeteccaoNaoConformidade</td>
-<td>MeioDeteccao</td>
-<td></td>
-<td>64</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoPreAvaliacaoRDChefeDGQ</td>
-<td></td>
-<td>65</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataHoraPreAvaliacaoRDChefeDGQ</td>
-<td></td>
-<td>66</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelPreAvaliacaoRD</td>
-<td></td>
-<td>67</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoAvaliacaoAreaRD</td>
-<td></td>
-<td>70</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataHoraAvaliacaoAreaRD</td>
-<td></td>
-<td>71</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelAvaliacaoAreaRD</td>
-<td></td>
-<td>72</td>
-</tr>
-<tr>
-<td>string</td>
-<td>AreaResponsavelAvaliacaoAreaRD</td>
-<td></td>
-<td>73</td>
-</tr>
-<tr>
-<td>bool</td>
-<td>NecessariaAberturaCapa</td>
-<td></td>
-<td>76</td>
-</tr>
-<tr>
-<td>bool</td>
-<td>NecessariaAberturaControleMudanca</td>
-<td></td>
-<td>77</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoAberturaCapa</td>
-<td></td>
-<td>78</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataHoraAvaliacaoRD</td>
-<td></td>
-<td>79</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelAvaliacaoRD</td>
-<td></td>
-<td>80</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataHoraAvaliacaoChefeDGQRD</td>
-<td></td>
-<td>81</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelAvaliacaoChefeDGQRD</td>
-<td></td>
-<td>82</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoAvaliacaoChefeDGQ</td>
-<td></td>
-<td>83</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaNum</td>
-<td></td>
-<td>86</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaDiagrama1</td>
-<td></td>
-<td>87</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaDiagrama2</td>
-<td></td>
-<td>88</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaDiagrama3</td>
-<td></td>
-<td>89</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaDiagrama4</td>
-<td></td>
-<td>90</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaDiagrama5</td>
-<td></td>
-<td>91</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaDiagrama6</td>
-<td></td>
-<td>92</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaDiagrama7</td>
-<td></td>
-<td>93</td>
-</tr>
-<tr>
-<td>string</td>
-<td>CapaAvaliacaoImpacto</td>
-<td></td>
-<td>94</td>
-</tr>
-<tr>
-<td>TipoCriticidade</td>
-<td>CapaCriticidade</td>
-<td></td>
-<td>95</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelCapa</td>
-<td></td>
-<td>96</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoCapa</td>
-<td></td>
-<td>97</td>
-</tr>
-</tbody>
-</table></div>
-<h4 id="preavaliacaornceditarmodel-hsolutions-gq-ui-areas-bloco2-models-preavaliacaornceditarmodel-cs">PreAvaliacaoRNCEditarModel (<code>HSolutions.GQ.UI/Areas/Bloco2/Models/PreAvaliacaoRNCEditarModel.cs</code>)</h4>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Propriedade</th>
-<th>Validação</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IList<AnexoModel></td>
-<td>Anexos</td>
-<td></td>
-<td>17</td>
-</tr>
-<tr>
-<td>IList<AreaModel></td>
-<td>Areas</td>
-<td></td>
-<td>18</td>
-</tr>
-<tr>
-<td>IList<AreaResponsavelReuniaoAvaliacaoRNCModel></td>
-<td>AreasResponsaveisReuniaoRNC</td>
-<td></td>
-<td>19</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Id</td>
-<td></td>
-<td>23</td>
-</tr>
-<tr>
-<td>string</td>
-<td>RNCN</td>
-<td></td>
-<td>24</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Justificativa</td>
-<td></td>
-<td>25</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Observacao</td>
-<td></td>
-<td>26</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Descricao</td>
-<td></td>
-<td>27</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DescricaoNaoConformidade</td>
-<td></td>
-<td>28</td>
-</tr>
-<tr>
-<td>TipoMetodoDeteccaoNaoConformidade</td>
-<td>MetodoDeteccaoNaoConformidade</td>
-<td></td>
-<td>29</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Responsavel</td>
-<td></td>
-<td>31</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataAtualizacao</td>
-<td></td>
-<td>32</td>
-</tr>
-<tr>
-<td>string</td>
-<td>JustificativaLiberacao</td>
-<td></td>
-<td>34</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoLiberacao</td>
-<td></td>
-<td>35</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataLiberacao</td>
-<td></td>
-<td>36</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelLiberacao</td>
-<td></td>
-<td>37</td>
-</tr>
-<tr>
-<td>string</td>
-<td>JustificativaPreAvaliacao</td>
-<td></td>
-<td>39</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ObservacaoPreAvaliacao</td>
-<td></td>
-<td>40</td>
-</tr>
-<tr>
-<td>string</td>
-<td>ResponsavelPreAvaliacao</td>
-<td></td>
-<td>41</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataPreAvaliacao</td>
-<td></td>
-<td>42</td>
-</tr>
-<tr>
-<td>int</td>
-<td>ClassificacaoGrauCriticidade</td>
-<td></td>
-<td>43</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DescricaoAcoesImediatas</td>
-<td></td>
-<td>44</td>
-</tr>
-<tr>
-<td>IList<int></td>
-<td>AreasEnvolvidasAcaoImediata</td>
-<td></td>
-<td>45</td>
-</tr>
-<tr>
-<td>string</td>
-<td>AcaoAprovarReprovar</td>
-<td></td>
-<td>46</td>
-</tr>
-<tr>
-<td>string</td>
-<td>NomeUsuarioComunicadoGQ</td>
-<td></td>
-<td>48</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataComunicadoGQ</td>
-<td></td>
-<td>49</td>
-</tr>
-<tr>
-<td>string</td>
-<td>NomeUsuarioComunicado</td>
-<td></td>
-<td>50</td>
-</tr>
-<tr>
-<td>string</td>
-<td>DataComunicado</td>
-<td></td>
-<td>51</td>
-</tr>
-<tr>
-<td>IList<int></td>
-<td>SetoresEnvolvidos</td>
-<td></td>
-<td>52</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Metodo</td>
-<td></td>
-<td>54</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Maquina</td>
-<td></td>
-<td>55</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Medida</td>
-<td></td>
-<td>56</td>
-</tr>
-<tr>
-<td>string</td>
-<td>MeioAmbiente</td>
-<td></td>
-<td>57</td>
-</tr>
-<tr>
-<td>string</td>
-<td>MaoDeObra</td>
-<td></td>
-<td>58</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Material</td>
-<td></td>
-<td>59</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Problema</td>
-<td></td>
-<td>60</td>
-</tr>
-</tbody>
-</table></div>
-<h4 id="preavaliacaorncindexmodel-hsolutions-gq-ui-areas-bloco2-models-preavaliacaorncindexmodel-cs">PreAvaliacaoRNCIndexModel (<code>HSolutions.GQ.UI/Areas/Bloco2/Models/PreAvaliacaoRNCIndexModel.cs</code>)</h4>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Propriedade</th>
-<th>Validação</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IList<SituacaoDto></td>
-<td>Situacoes</td>
-<td></td>
-<td>15</td>
-</tr>
-</tbody>
-</table></div>
-<h4 id="preavaliacaorncresultadoindexmodel-hsolutions-gq-ui-areas-bloco2-models-preavaliacaorncresultadoindexmodel-cs">PreAvaliacaoRNCResultadoIndexModel (<code>HSolutions.GQ.UI/Areas/Bloco2/Models/PreAvaliacaoRNCResultadoIndexModel.cs</code>)</h4>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Propriedade</th>
-<th>Validação</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>int</td>
-<td>Id</td>
-<td></td>
-<td>16</td>
-</tr>
-<tr>
-<td>string</td>
-<td>RNCN</td>
-<td></td>
-<td>17</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Descricao</td>
-<td></td>
-<td>18</td>
-</tr>
-<tr>
-<td>DateTime?</td>
-<td>DataAbertura</td>
-<td></td>
-<td>19</td>
-</tr>
-<tr>
-<td>string</td>
-<td>Situacao</td>
-<td></td>
-<td>20</td>
-</tr>
-</tbody>
-</table></div>
-<h4 id="uploadmodel-hsolutions-gq-ui-models-uploadmodel-cs">UploadModel (<code>HSolutions.GQ.UI/Models/UploadModel.cs</code>)</h4>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Propriedade</th>
-<th>Validação</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>string</td>
-<td>Url</td>
-<td></td>
-<td>43</td>
-</tr>
-<tr>
-<td>string</td>
-<td>PosCallback</td>
-<td></td>
-<td>47</td>
-</tr>
-<tr>
-<td>string</td>
-<td>PreCallback</td>
-<td></td>
-<td>51</td>
-</tr>
-<tr>
-<td>IDictionary<int, string></td>
-<td>Status</td>
-<td></td>
-<td>53</td>
-</tr>
-<tr>
-<td>bool</td>
-<td>ExibeObservacao</td>
-<td></td>
-<td>54</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="5-situacao-estado-e-historico">5. Situação (estado) e histórico</h3>
-<ul>
-<li><strong>Pesquisar</strong> (:49)</li>
-<li>CONSULTA: PendentePreAvaliacao</li>
-<li><strong>EditarRelatorioDesvio</strong> (:201)</li>
-<li>MUDA PARA: PendenteAvaliacaoRelatorioDesvio (:226), PendenteResponsavelArea (:250)</li>
-<li>HISTÓRICO: altera com histórico (:370)</li>
-</ul>
-<h3 id="6-regras-de-validacao-do-servidor">6. Regras de validação do servidor</h3>
-<p>Cada linha é uma regra que o servidor confere ao gravar. A mensagem é a que o usuário vê.</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Validador</th>
-<th>Quando recusa (condição)</th>
-<th>Mensagem</th>
-<th>Campo</th>
-<th>Linha</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>AcaoCorretivaImediataRDValidator</td>
-<td>if (entity == null)</td>
-<td>Entidade de domínio não pode ser nula.</td>
-<td>—</td>
-<td>17</td>
-</tr>
-<tr>
-<td>AcaoCorretivaImediataRDValidator</td>
-<td>if (string.IsNullOrEmpty(relatorioNaoConformidade.AcaoCorretivaImediata.Descricao))</td>
-<td>Descrição da ação imediata é obrigatória.</td>
-<td>Descricao</td>
-<td>26</td>
-</tr>
-<tr>
-<td>PreAvaliacaoRNCValidator</td>
-<td>if (entity == null)</td>
-<td>Entidade de domínio não pode ser nula.</td>
-<td>—</td>
-<td>17</td>
-</tr>
-<tr>
-<td>PreAvaliacaoRNCValidator</td>
-<td>if (relatorioNaoConformidade.MetodoDeteccaoNaoConformidade == Enumeradores.TipoMetodoDeteccaoNaoConformidade.Nenhum)</td>
-<td>Meio de Detecção da não conformidade é obrigatório.</td>
-<td>MetodoDeteccaoNaoConformidade</td>
-<td>27</td>
-</tr>
-<tr>
-<td>PreAvaliacaoRNCValidator</td>
-<td>if (string.IsNullOrEmpty(relatorioNaoConformidade.MetodoDeteccaoNCOutros))</td>
-<td>É obrigatório informar um Meio de Detecção da não conformidade no campo Outros.</td>
-<td>MetodoDeteccaoNaoConformidade</td>
-<td>35</td>
-</tr>
-<tr>
-<td>PreAvaliacaoRNCValidator</td>
-<td>if (relatorioNaoConformidade.PreAvaliacaoRNC.DataCriacao == DateTime.MinValue)</td>
-<td>A Data de criação é obrigatória.</td>
-<td>DataCriacaoPreAvaliacaoRNC</td>
-<td>46</td>
-</tr>
-<tr>
-<td>PreAvaliacaoRNCValidator</td>
-<td>if (string.IsNullOrEmpty(relatorioNaoConformidade.PreAvaliacaoRNC.NomeResponsavel))</td>
-<td>O Responsavel é obrigatório.</td>
-<td>NomeResponsavelPreAvaliacaoRNC</td>
-<td>52</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (entity == null)</td>
-<td>Entidade de domínio não pode ser nula.</td>
-<td>—</td>
-<td>17</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (string.IsNullOrEmpty(relatorioNaoConformidade.Descricao))</td>
-<td>Descrição é obrigatória.</td>
-<td>Descricao</td>
-<td>26</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (relatorioNaoConformidade.IdLocalOcorrencia == 0)</td>
-<td>Local de Ocorrência é obrigatório.</td>
-<td>LocalOcorrencia</td>
-<td>32</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (relatorioNaoConformidade.Situacao != Enumeradores.TipoSituacao.Cancelada)</td>
-<td>Justificativa é obrigatória.</td>
-<td>Justificativa</td>
-<td>40</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (string.IsNullOrEmpty(relatorioNaoConformidade.JustificativaCancelamento) &amp;&amp;</td>
-<td>Justificativa é obrigatório, quando a situação é de cancelamento.</td>
-<td>Justificativa</td>
-<td>49</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (relatorioNaoConformidade.Anexos.Where(a =&gt; string.IsNullOrEmpty(a.Arquivo)).Any())</td>
-<td>O Anexo é obrigatório.</td>
-<td>ArquivoAnexo</td>
-<td>58</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (relatorioNaoConformidade.Anexos.Where(a =&gt; string.IsNullOrEmpty(a.Descricao)).Any())</td>
-<td>O Anexo é obrigatório.</td>
-<td>DescricaoAnexo</td>
-<td>64</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (relatorioNaoConformidade.DataCriacao == DateTime.MinValue)</td>
-<td>A Data de criação é obrigatória.</td>
-<td>DataCriacao</td>
-<td>72</td>
-</tr>
-<tr>
-<td>RelatorioNaoConformidadeValidator</td>
-<td>if (string.IsNullOrEmpty(relatorioNaoConformidade.NomeResponsavel))</td>
-<td>O Responsavel é obrigatório.</td>
-<td>NomeResponsavel</td>
-<td>78</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="7-mensagens-servidor-e-navegador">7. Mensagens (servidor e navegador)</h3>
-<p><em>Nada encontrado.</em></p>
-<p><strong>Script <code>HSolutions.GQ.UI/Areas/Bloco2/Script/PreAvaliacaoRNCEditar.js</code></strong> — ações chamadas: actionEditar, actionImprimir, actionListarResponsaveisPorArea</p>
-<p><em>Nada encontrado.</em></p>
-<p><strong>Script <code>HSolutions.GQ.UI/Areas/Bloco2/Script/PreAvaliacaoRNCIndex.js</code></strong> — ações chamadas: actionImprimir, actionPesquisar</p>
-<p><em>Nada encontrado.</em></p>
-<p><strong>Script <code>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js</code></strong> — ações chamadas: actionCancelar, actionEditar, actionGetAreaCapa, actionGetItem, actionGetLocalOcorrencia, actionIncluir</p>
-<p><em>Nada encontrado.</em></p>
-<h3 id="8-a-completar-na-analise">8. A completar na análise</h3>
-<ul>
-<li>[ ] Regras de cada campo (obrigatório, tamanho, máscara, origem da lista).</li>
-<li>[ ] Quem pode ver e executar cada ação (funções de permissão).</li>
-<li>[ ] Lookups com outros módulos (Estoque, Produção, Principal).</li>
-<li>[ ] Anexos, relatórios (PDF) e notificações.</li>
-<li>[ ] Falhas conhecidas a replicar (inventário de telas e plano de testes).</li>
-<li>[ ] Casos de teste de aceite (plano de testes da GQ).</li>
-</ul>
+<h3 id="8-mensagens-do-servidor">8. Mensagens (do servidor)</h3>
+<p>Meio de Detecção da não conformidade é obrigatório. · É obrigatório informar um Meio de Detecção da não conformidade no campo Outros. · A Data de criação é obrigatória. · O Responsavel é obrigatório. · Descrição da ação imediata é obrigatória. · Mais as do RD (ficha 1). <strong>Corrigir</strong> os textos como na ficha 1.</p>
+<h3 id="9-integracoes">9. Integrações</h3>
+<p>Lê o Principal (usuário, áreas, equipamento/TAG) e a Produção e o Estoque (item e lote), como nas fichas anteriores. <strong>Ideal depois:</strong> avisar por e-mail ou notificação as áreas escolhidas (hoje ninguém é avisado, RN-GQ-009).</p>
+<h3 id="10-casos-de-teste-de-aceite">10. Casos de teste de aceite</h3>
+<p>Do plano da GQ: <strong>CT-GQ-009</strong> (pré-avaliar o desvio e conferir situação, data e histórico) e <strong>CT-GQ-010</strong> (conferir que não há classificação de risco). Casos novos: só nível 3 e 4 pré-avaliam; relato e ação imediata somente leitura; meio "Outros" sem texto é recusado; escolher área leva a Avaliação Área; não escolher leva à Avaliação do Relatório; área escolhida duas vezes não duplica; hora e responsável vêm do servidor; o filtro de situação não aparece.</p>
+<h3 id="11-pontos-para-a-garantia-da-qualidade-validar">11. Pontos para a Garantia da Qualidade validar</h3>
+<ol>
+<li>Quem pode pré-avaliar: <strong>nível 3 e 4</strong>? (Hoje, qualquer um.)</li>
+<li>A observação da pré-avaliação deve ser obrigatória?</li>
+<li>O RD pode ser cancelado depois da etapa 2? Por quem?</li>
+<li>Escolher áreas é opcional de propósito? Qual é a regra para decidir?</li>
+<li>O meio de detecção só é conhecido aqui. Os filtros "Meios de Detecção" das telas 1 e 2 ficam vazios até esta etapa: tirá-los dessas telas?</li>
+<li>Classificação do desvio por <strong>criticidade</strong> (crítico, maior, menor): o legado só pede isso na etapa do CAPA. Fica assim?</li>
+</ol>
+<h3 id="12-para-a-api-a-confirmar-com-o-contrato-do-desenvolvimento">12. Para a API (a confirmar com o contrato do desenvolvimento)</h3>
+<p>Listar RDs pendentes de pré-avaliação; obter o RD; <strong>gravar a pré-avaliação</strong> (meio de detecção, texto de "Outros", áreas envolvidas, observação, justificativa) com validação por campo e resposta dizendo a nova situação; histórico; lista de meios de detecção e de áreas. Hora e responsável vêm do servidor.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="registro-acao-corretiva-imediata-tela-a-criar.html"><small>← Anterior</small><strong>Registro Ação Corretiva Imediata: tela a criar</strong></a><a class="ap ap-prox" href="avaliacao-area-tela-a-criar.html"><small>Próximo →</small><strong>Avaliação Área: tela a criar</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#como-e-a-tela-no-sistema-entregue-layout-reconstruido">Como é a tela no sistema entregue (layout reconstruído)</a></li><li><a href="#levantamento-no-codigo-rascunho-automatico">Levantamento no código (rascunho automático)</a></li><li class="sub"><a href="#1-paginas-da-tela">1. Páginas da tela</a></li><li class="sub"><a href="#2-acoes-do-controlador-rotas">2. Ações do controlador (rotas)</a></li><li class="sub"><a href="#3-campos-colunas-e-botoes">3. Campos, colunas e botões</a></li><li class="sub"><a href="#4-modelos-de-dados-da-tela">4. Modelos de dados da tela</a></li><li class="sub"><a href="#5-situacao-estado-e-historico">5. Situação (estado) e histórico</a></li><li class="sub"><a href="#6-regras-de-validacao-do-servidor">6. Regras de validação do servidor</a></li><li class="sub"><a href="#7-mensagens-servidor-e-navegador">7. Mensagens (servidor e navegador)</a></li><li class="sub"><a href="#8-a-completar-na-analise">8. A completar na análise</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#como-e-a-tela-no-sistema-entregue-layout-reconstruido">Como é a tela no sistema entregue (layout reconstruído)</a></li><li><a href="#ficha-da-tela-nova">Ficha da tela nova</a></li><li class="sub"><a href="#1-para-que-serve">1. Para que serve</a></li><li class="sub"><a href="#2-paginas-da-tela">2. Páginas da tela</a></li><li class="sub"><a href="#3-quem-pode-ver-e-fazer-o-que">3. Quem pode ver e fazer o quê</a></li><li class="sub"><a href="#4-lista">4. Lista</a></li><li class="sub"><a href="#5-formulario">5. Formulário</a></li><li class="sub"><a href="#6-acoes-e-regras">6. Ações e regras</a></li><li class="sub"><a href="#7-situacao-e-historico">7. Situação e histórico</a></li><li class="sub"><a href="#8-mensagens-do-servidor">8. Mensagens (do servidor)</a></li><li class="sub"><a href="#9-integracoes">9. Integrações</a></li><li class="sub"><a href="#10-casos-de-teste-de-aceite">10. Casos de teste de aceite</a></li><li class="sub"><a href="#11-pontos-para-a-garantia-da-qualidade-validar">11. Pontos para a Garantia da Qualidade validar</a></li><li class="sub"><a href="#12-para-a-api-a-confirmar-com-o-contrato-do-desenvolvimento">12. Para a API (a confirmar com o contrato do desenvolvimento)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/10/2026</div>
