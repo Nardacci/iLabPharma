@@ -874,7 +874,11 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
                                      cabecalho, rodape, E), encoding="utf-8")
     print(f"Biblioteca: {rel_bib['total']} documentos; {rel_bib['do_arquivo']} com linha no arquivo de metadados, {rel_bib['sem_linha']} sem linha "
           f"({rel_bib['acrescentadas']} acrescentadas agora); {rel_bib['a_classificar']} com valor a classificar; {rel_bib['revisadas']} revisadas."
-          + (f" Linhas do arquivo sem documento: {rel_bib['linhas_sobrando']}" if rel_bib["linhas_sobrando"] else ""))
+)
+    if rel_bib["linhas_sobrando"]:
+        print(f"AVISO: {len(rel_bib['linhas_sobrando'])} linha(s) do arquivo de metadados sem documento no portal (removido ou renomeado). Nada foi apagado; confira e remova à mão se for o caso:")
+        for c in rel_bib["linhas_sobrando"]:
+            print(f"  - {c}")
     cron = pagina_cronograma(origem)
     if cron:
         (destino / "cronograma.html").write_text(cron, encoding="utf-8")

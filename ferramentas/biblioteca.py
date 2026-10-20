@@ -19,7 +19,7 @@ from pathlib import Path
 CAMPOS = ["chave", "modulo", "titulo", "tipo", "publico", "visao", "classificacao", "regra", "revisado", "observacao"]
 A_CLASSIFICAR = "a classificar"
 VISOES = ["legado", "novo", "ideal", "geral"]
-PUBLICOS = ["diretoria", "áreas", "GQ", "desenvolvimento"]
+PUBLICOS = ["diretoria", "áreas", "GQ", "desenvolvimento", "todos"]
 
 # (padrão no título, tipo, nome da regra). A primeira que casar vale.
 REGRAS_TIPO = [
@@ -37,7 +37,7 @@ REGRAS_TIPO = [
     (r"dossiê", "dossiê", "titulo:dossiê"),
     (r"manual", "manual", "titulo:manual"),
     (r"regras de negócio", "regras", "titulo:regras"),
-    (r"matriz de permiss", A_CLASSIFICAR, "titulo:matriz-de-permissões(dúvida: regra ou segurança?)"),
+    (r"matriz de permiss", "permissões e acessos", "titulo:permissões-e-acessos"),
     (r"requisitos", "requisitos", "titulo:requisitos"),
     (r"conformidade|análise de risco|matriz de rastreabilidade", "conformidade e risco", "titulo:conformidade-risco"),
     (r"plano de testes|plano de regressão|relatório de testes|resultado da rodada|resumo dos testes|usuários de teste", "teste", "titulo:teste"),
@@ -52,8 +52,8 @@ PUBLICO_POR_TIPO = {
     "conformidade e risco": ["GQ"], "teste": ["GQ", "desenvolvimento"], "roteiro de teste": ["GQ", "desenvolvimento"],
     "defeitos": ["desenvolvimento"], "dados e integração": ["desenvolvimento"], "ideal": ["GQ", "desenvolvimento"],
     "tela a criar": ["desenvolvimento", "GQ"], "tela testada": ["GQ", "desenvolvimento"], "reconhecimento": ["GQ", "desenvolvimento"],
-    "visão entre módulos": ["diretoria", "GQ"],
-}  # "ata" e "guia de leitura" ficam de fora de propósito: o público é "a classificar"
+    "visão entre módulos": ["diretoria", "GQ"], "permissões e acessos": ["GQ", "desenvolvimento"], "guia de leitura": ["todos"],
+}  # "ata" fica de fora de propósito: o público é "a classificar"
 
 
 def tipo_automatico(titulo, cat):
@@ -197,7 +197,7 @@ JS = r"""
     var q=norm(el.q.value.trim()),m=el.modulo.value,t=el.tipo.value,p=el.publico.value,v=el.visao.value,f=el.formato.value;
     var r=docs.filter(function(d){
       if(m&&d.m!==m)return false; if(t&&d.tp!==t)return false; if(v&&d.v!==v)return false;
-      if(p&&d.p.indexOf(p)<0)return false; if(f==='word'&&!d.w)return false;
+      if(p&&d.p.indexOf(p)<0&&d.p.indexOf('todos')<0)return false; if(f==='word'&&!d.w)return false;
       if(q&&norm(d.t+' '+d.mn+' '+d.tp).indexOf(q)<0)return false; return true;});
     var o=el.ordem.value;
     if(o==='data')r.sort(function(a,b){return (b.d||'').localeCompare(a.d||'');});
