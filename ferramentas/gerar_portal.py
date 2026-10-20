@@ -164,11 +164,14 @@ def passo_de(p):
 
 
 def docs_com_telas(mod, hom):
-    """No Principal, as telas da versão nova (por menu) vêm do manifesto gerado em homologacao/."""
+    """As telas da versão nova (por menu) vêm de manifestos gerados em homologacao/: no Principal, as telas testadas;
+    na Garantia da Qualidade, as telas a criar (Controle de Desvios e de Mudanças)."""
     docs = list(mod["docs"])
-    if mod["id"] != "principal":
+    fontes = {"principal": "versao-nova/1.principal/telas/manifest.json",
+              "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json"}
+    if mod["id"] not in fontes:
         return docs
-    arq = hom / "versao-nova/1.principal/telas/manifest.json"
+    arq = hom / fontes[mod["id"]]
     if not arq.exists():
         return docs
     man = json.loads(arq.read_text(encoding="utf-8"))
@@ -892,7 +895,7 @@ def _nav_arvore(pags, roteiros, atual):
             r = roteiros.get(p["arq"])
             t_aberto = atual is p or atual is r
             g_aberto = g_aberto or t_aberto
-            filhos = (f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>Resumo geral</a></li>'
+            filhos = (f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p.get("rotulo") or "Resumo geral")}</a></li>'
                       + (f'<li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo de homologação</a></li>' if r else ""))
             telas += (f'<li><details class="lat-tela"{" open" if t_aberto else ""}><summary>{E(p["tela"])}</summary><ul>{filhos}</ul></details></li>')
         html += f'<li><details class="lat-menu-d"{" open" if g_aberto else ""}><summary>{E(g)}</summary><ul>{telas}</ul></details></li>'
@@ -1152,7 +1155,7 @@ def pagina_modulo(mod, sit="index"):
                     r = roteiros.get(p["arq"])
                     cartoes += (f'<div class="doc-card tela-card"><a class="doc-card-titulo" href="{p["slug"]}.html"><span class="doc-n">{p["n"]}</span>{E(p["tela"])}</a>'
                                 f'<span class="doc-card-meta">{E(p.get("situacao_tela") or "")}</span>'
-                                f'<span class="tela-links"><a href="{p["slug"]}.html">Resumo geral</a>'
+                                f'<span class="tela-links"><a href="{p["slug"]}.html">{E(p.get("rotulo") or "Resumo geral")}</a>'
                                 + (f' · <a href="{r["slug"]}.html">Passo a passo</a>' if r else "") + '</span></div>')
                 partes.append(f'<h3 class="novo-menu">{E(g)}</h3><div class="doc-cards">{cartoes}</div>')
             grade = "".join(partes)
