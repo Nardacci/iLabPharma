@@ -277,6 +277,7 @@ MODULOS = [
             ("1.principal/10-comparacao-nova-versao.md", "Comparação com a nova versão", "tecnico", None),
             ("1.principal/01-regras-de-negocio.md", "Regras de negócio (rascunho com fontes)", "tecnico", None),
             ("1.principal/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("versao-nova/1.principal/manual/manual-principal-versao-nova.md", "Manual da versão nova, por tela", "novo", "versao-nova/1.principal/manual/LabMedSys - Modulo Principal - Manual da Versao Nova por Tela.docx"),
             ("versao-nova/1.principal/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
             ("versao-nova/1.principal/plano-de-regressao.md", "Plano de regressão", "novo", None),
             ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/usuarios-de-teste.md", "Usuários de teste", "novo", None),
@@ -479,7 +480,7 @@ TITULOS_PERMITIDOS = re.compile(r"usu[áa]rios, perfis e permiss|nivel_seguranca
 RE_CALLOUT_SEG = re.compile(r"seguran[çc]a|confidencial|verifica[çc][ãa]o de acesso", re.I)
 RE_LINHA_SEG = re.compile(
     r"BERTIN, FELIPE SILVA|Os auditores dispon[íi]veis no novo|6 contas \(BERTIN|"
-    r"1\.507|s[óo] o id 1|perfil espelho|ESPELHO_ADMIN|nenhum perfil criado pela tela|Patrim[ôo]nio|a tela de Perfil n[ãa]o governa|causa est[áa] no perfil 1|C[óo]digo da API nova|c[óo]digo da API|id fixo|perfis 1 e 18|perfil 1|perfil 27|Fato: \*\*s[óo]|"
+    r"1\.507|s[óo] o id 1|perfil espelho|ESPELHO_ADMIN|nenhum perfil criado pela tela|m[óo]dulo Patrim[ôo]nio|a tela de Perfil n[ãa]o governa|causa est[áa] no perfil 1|C[óo]digo da API nova|c[óo]digo da API|id fixo|perfis 1 e 18|perfil 1|perfil 27|Fato: \*\*s[óo]|"
     r"ADMINISTRADOR \(s[óo] leitura\)|tem 5 a[çc][õo]es marcadas|nem a[çc][ãa]o marcada|Retirar a[çc][õo]es at[ée]|Nenhuma combina[çc][ãa]o liberou|Registrado aqui e no confidencial|"
     r"s[óo] o perfil (?:1|ADMINISTRADOR)|perfil 1 \(ADMINISTRADOR\)|MARCOS_ADM|DV-GQ-N-013|\bProfileId\b|perfil 18|`0\.T\.TESTE_GQ_TUDO`|PEDIDO-AO-DESENVOLVIMENTO|"
     r"servidor exija uma a[çc][ãa]o|lia perfis do Principal|perfil 25 tem|Teste proposto: criar um perfil|ADMINISTRADOR, que funciona|"
