@@ -1244,7 +1244,69 @@ def bloco_painel(origem, ordem):
         return (f'<div class="pn-card pn-{classe}"><h3>{titulo}</h3><p class="pn-q">{E(dado["pergunta"])}</p>{chip(cl, rotulo)}'
                 f'<div class="pn-nums">{nums_html(numeros)}</div><p class="pn-prox"><em>Para destravar:</em> {E(dado["trava"])}</p></div>')
 
-    cartoes = (cartao("leg", "Legado", leg, leg_nums) + cartao("nov", "Novo", nov, nov["numeros"]) + cartao("ide", "Ideal", ide, ide_nums))
+    # --- bloco de atenção
+    atencao = "".join(f'<div class="pn-k"><b>{a["n"]}</b><span>{E(a["titulo"])}<small>{E(a["sub"])}</small></span></div>' for a in pn.get("atencao", []))
+
+    # --- roscas: uma por situação
+    def rosca(partes, centro, sub):
+        tot = sum(v for _, v, _ in partes) or 1
+        r, c, off, arcos = 52, 2 * 3.14159265 * 52, 0.0, ""
+        for nome, v, k in partes:
+            if not v:
+                continue
+            l = c * v / tot
+            arcos += (f'<circle r="{r}" cx="70" cy="70" fill="none" class="pn-arco pn-c-{k}" stroke-width="16" '
+                      f'stroke-dasharray="{max(l - 2, 0.1):.1f} {c - l + 2:.1f}" stroke-dashoffset="{-off:.1f}" transform="rotate(-90 70 70)"><title>{E(nome)}: {v}</title></circle>')
+            off += l
+        leg = "".join(f'<li><i class="pn-c-{k}"></i><span>{E(n)}</span><b>{v}</b></li>' for n, v, k in partes)
+        return (f'<div class="pn-rosca"><svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="{E(sub)}"><circle r="{r}" cx="70" cy="70" fill="none" class="pn-fundo" stroke-width="16"/>'
+                f'{arcos}<text x="70" y="72" text-anchor="middle" class="pn-rc-n">{E(centro)}</text><text x="70" y="90" text-anchor="middle" class="pn-rc-s">{E(sub)}</text></svg><ul class="pn-lg">{leg}</ul></div>')
+
+    def conta(cels):
+        return [("nao", "Não apto"), ("parcial", "Em testes"), ("vazio", "Só código")] if cels is None else cels
+    n_leg = {"nao": 0, "parcial": 0, "vazio": 0}
+    n_nov = {"nao": 0, "parcial": 0, "vazio": 0}
+    for m in ordem:
+        sit = cr.get(m["id"], {}).get("situacao", "")
+        n_leg["nao" if sit.startswith("Fechado") else "parcial" if sit.startswith("Em testes") else "vazio"] += 1
+        nv = pn["modulos_novo"].get(m["id"])
+        n_nov[nv[0] if nv else "vazio"] += 1
+    r_leg = rosca([("Não apto", n_leg["nao"], "nao"), ("Em testes", n_leg["parcial"], "parcial"), ("Só código", n_leg["vazio"], "vazio")], str(n_mod), "módulos")
+    r_nov = rosca([("Não apto", n_nov["nao"], "nao"), ("Em testes", n_nov["parcial"], "parcial"), ("Não iniciado", n_nov["vazio"], "vazio")], str(n_mod), "módulos")
+    r_ide = rosca([("Definido", n_ideal, "ideal"), ("Rascunho", n_mod - n_ideal, "vazio")], f"{n_ideal} de {n_mod}", "definidos")
+    roscas = (f'<div class="pn-cd pn-cd-leg"><h3>Legado</h3><p>Módulos pelo veredito do sistema entregue</p>{r_leg}</div>'
+              f'<div class="pn-cd pn-cd-nov"><h3>Novo</h3><p>Módulos pela situação na versão nova</p>{r_nov}</div>'
+              f'<div class="pn-cd pn-cd-ide"><h3>Ideal</h3><p>Módulos com o ideal definido (testes concluídos)</p>{r_ide}</div>')
+
+    # --- casos por módulo
+    barras = "".join(
+        f'<div class="pn-br"><span>{E(m["nome"])}</span><div class="pn-trilho"><i style="width:{round(100 * (cr.get(m["id"], {}).get("testes") or {}).get("conclusivos", 0) / max((cr.get(m["id"], {}).get("testes") or {}).get("planejados", 1), 1))}%"></i></div>'
+        f'<b>{(cr.get(m["id"], {}).get("testes") or {}).get("conclusivos", 0)}/{(cr.get(m["id"], {}).get("testes") or {}).get("planejados", 0)}</b></div>' for m in ordem)
+
+    # --- detalhe do módulo, com seletor
+    def detalhe(m):
+        c = cr.get(m["id"], {})
+        t = c.get("testes") or {}
+        sit = c.get("situacao", "")
+        lcl, lrot = ("nao", "Não apto") if sit.startswith("Fechado") else ("parcial", "Em testes") if sit.startswith("Em testes") else ("vazio", "Só análise de código")
+        nv = pn["modulos_novo"].get(m["id"])
+        ncl, nrot = (nv[0], nv[1]) if nv else ("vazio", "Não iniciado")
+        icl, irot = ("ideal", "Definido") if ideal_pronto(m) else ("vazio", "Rascunho")
+        cn = pn.get("classes_novo", {}).get(m["id"])
+        if cn:
+            tot = sum(v for _, v, _ in cn["classes"]) or 1
+            seg = "".join(f'<div class="pn-seg pn-c-{k}" style="width:{100 * v / tot:.1f}%" title="{E(n)}: {v}"></div>' for n, v, k in cn["classes"])
+            lg = "".join(f'<li><i class="pn-c-{k}"></i><span>{E(n)}</span><b>{v}</b></li>' for n, v, k in cn["classes"])
+            corpo = f'<div class="pn-emp">{seg}</div><ul class="pn-lg">{lg}</ul><p class="pn-nota">{E(cn["nota"])}</p>'
+        else:
+            corpo = '<p class="pn-nota">Ainda não testado na versão nova. Quando os testes começarem, a comparação com o legado aparece aqui.</p>'
+        return (f'<div class="pn-det" data-m="{m["id"]}"{"" if m is ordem[0] else " hidden"}>'
+                f'<ul class="pn-tres-linhas"><li><em>Legado</em>{chip(lcl, lrot)}<small>{t.get("conclusivos", 0)} de {t.get("planejados", 0)} casos</small></li>'
+                f'<li><em>Novo</em>{chip(ncl, nrot)}</li><li><em>Ideal</em>{chip(icl, irot)}</li></ul>'
+                f'<h4>Versão nova × legado</h4>{corpo}'
+                f'<p class="pn-det-links"><a href="documentacao/{m["id"]}/legado.html">Legado</a> · <a href="documentacao/{m["id"]}/novo.html">Novo</a> · <a href="documentacao/{m["id"]}/ideal.html">Ideal</a></p></div>')
+    opcoes = "".join(f'<option value="{m["id"]}">{E(m["nome"])}</option>' for m in ordem)
+    detalhes = "".join(detalhe(m) for m in ordem)
 
     # mapa do lote
     cab = "".join(f'<div class="pn-h"><span>{k}</span>{E(m["nome"])}</div>' for k, m in enumerate(ordem, 1))
@@ -1288,9 +1350,7 @@ def bloco_painel(origem, ordem):
         return f'<p class="pn-bl">{rotulo}</p><div class="pn-bar">{seg}</div>'
 
     pct = lambda n: round(100 * n / total_temas) if total_temas else 0
-    anvisa = (barra_anv("Legado", [(pct(ok), "ok", f"{ok} atendem"), (pct(parc), "parcial", f"{parc} em parte"), (pct(nao), "nao", f"{nao} não atendem"), (pct(ver), "vazio", f"{ver} a verificar")])
-              + barra_anv("Novo", [(100, "vazio", "a medir tema a tema, conforme os testes avançam")])
-              + barra_anv("Ideal", [(100, "ideal", f"{total_temas} de {total_temas} temas atendidos")]))
+    anvisa_barra = barra_anv("Legado", [(pct(ok), "ok", ""), (pct(parc), "parcial", ""), (pct(nao), "nao", ""), (pct(ver), "vazio", "")]).replace('<p class="pn-bl">Legado</p>', "")
 
     return f"""<section class="pn-topo">
     <div class="pn-topo-in">
@@ -1304,14 +1364,28 @@ def bloco_painel(origem, ordem):
       </div>
     </div>
   </section>
+  <section class="secao" id="atencao">
+    <div class="pn-pre"><h2>🔔 Precisa de você agora</h2><p>Itens que travam o avanço e dependem de pessoas.</p><div class="pn-g4">{atencao}</div></div>
+  </section>
   <section class="secao" id="situacao">
-    <h2>Três retratos do mesmo sistema</h2>
-    <p class="secao-desc">Cada cartão responde a uma pergunta, com o veredito primeiro e os números depois.</p>
-    <div class="pn-tres">{cartoes}</div>
+    <h2>Os módulos nas três situações</h2>
+    <p class="secao-desc">Cada rosca conta os {n_mod} módulos em uma situação do sistema.</p>
+    <div class="pn-tres">{roscas}</div>
+  </section>
+  <section class="secao" id="indicadores">
+    <div class="pn-tres pn-tres-ind">
+      <div class="pn-cd"><h3>Casos de teste por módulo</h3><p>{total_conc} executados de {total_plan} planejados, no legado</p>{barras}</div>
+      <div class="pn-cd" id="diretoria"><h3>Aderência à ANVISA</h3><p>{total_temas} temas da RDC 658/2022 e do Guia 33/2020, no legado</p>
+        <div class="pn-grande"><div><b class="pn-t-ok">{ok}</b><span>atendem</span></div><div><b class="pn-t-parcial">{parc}</b><span>em parte</span></div><div><b class="pn-t-nao">{nao}</b><span>não atendem</span></div></div>
+        {anvisa_barra}
+        <p class="pn-nota">Na versão nova a medida entra tema a tema, conforme os testes avançam.</p>
+        <p class="pn-det-links"><a href="documentacao/visao-geral/diagnostico-de-conformidade-com-a-anvisa.html">Ler o diagnóstico →</a> · <a href="documentacao/arquivos/visao-geral/LabMedSys - Diagnostico de Conformidade ANVISA.docx">Word</a></p></div>
+      <div class="pn-cd"><h3>Detalhe de um módulo</h3><p><label for="pn-sel">Módulo: </label><select id="pn-sel" class="pn-sel">{opcoes}</select></p>{detalhes}</div>
+    </div>
   </section>
   <section class="secao" id="mapa">
     <h2>O lote pelos {n_mod} módulos, nas três situações</h2>
-    <p class="secao-desc">É o processo fabril, do recebimento à rastreabilidade. Cada raia é uma situação; a cor diz se o elo segura. Clique num módulo para abrir o roteiro dele.</p>
+    <p class="secao-desc">É o processo fabril, do recebimento à rastreabilidade. Cada raia é uma situação; a cor diz se o elo segura. Clique num módulo para abrir a página dele.</p>
     {mapa}
   </section>
   <section class="secao" id="quebras">
@@ -1319,15 +1393,7 @@ def bloco_painel(origem, ordem):
     <p class="secao-desc">Pontos em que um módulo não conversa direito com o outro, já confirmados no código ou nas telas.</p>
     <div class="pn-quebras">{quebras}</div>
   </section>
-  <section class="secao" id="diretoria">
-    <h2>Aderência à ANVISA</h2>
-    <p class="secao-desc">{total_temas} temas da RDC 658/2022 e do Guia 33/2020, avaliados no legado (Principal, Estoque e Garantia da Qualidade). A versão nova entra tema a tema, conforme for testada.</p>
-    {anvisa}
-    <div class="hero-acoes" style="margin-top:16px">
-      <a class="botao" href="documentacao/visao-geral/diagnostico-de-conformidade-com-a-anvisa.html">Ler o diagnóstico →</a>
-      <a class="botao botao-secundario" href="documentacao/arquivos/visao-geral/LabMedSys - Diagnostico de Conformidade ANVISA.docx">Baixar em Word</a>
-    </div>
-  </section>"""
+  <script>(function(){{var s=document.getElementById('pn-sel');if(!s)return;s.addEventListener('change',function(){{document.querySelectorAll('.pn-det').forEach(function(e){{e.hidden=e.getAttribute('data-m')!==s.value;}});}});}})();</script>"""
 
 
 def pagina_inicial(origem):
