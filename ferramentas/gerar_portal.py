@@ -1160,7 +1160,7 @@ def pagina_modulo(mod, sit="index"):
             numeros.append((soma["requisitos"], "requisitos para a versão corrigida"))
     num_html = "".join(f'<div class="numero"><strong>{E(str(n))}</strong><span>{E(r)}</span></div>' for n, r in numeros)
     cn_mod = pn_classes_modulo(mod) if sit == "novo" else None
-    classes_html = f'<section class="pn-classes"><h2>Resultado por classe na versão nova</h2>{bloco_classes(cn_mod)}</section>' if cn_mod else ""
+    classes_html = f'<section class="pn-classes"><h2>Resultado por classe na versão nova</h2>{bloco_classes(cn_mod)}</section>\n  ' if cn_mod else ""
 
     blocos, submenu = [], []
     secao_atual = None
@@ -1240,8 +1240,7 @@ def pagina_modulo(mod, sit="index"):
   </header>
   {troca_situacao(sit, mod)}
   <div class="numeros">{num_html}</div>
-  {classes_html}
-  {comece}
+  {classes_html}{comece}
   {submenu_html}
   {''.join(blocos)}
   {fim if sit == "legado" else ""}
@@ -1354,7 +1353,7 @@ def bloco_painel(origem, ordem):
         return (f'<div class="pn-det" data-m="{m["id"]}"{"" if m is ordem[0] else " hidden"}>'
                 f'<p class="pn-det-nome"><a href="documentacao/{m["id"]}/index.html">Abrir a página de {E(m["nome"])} →</a></p><ul class="pn-tres-linhas"><li><em>Legado</em>{chip(lcl, lrot)}<small>{t.get("conclusivos", 0)} de {t.get("planejados", 0)} casos</small></li>'
                 f'<li><em>Novo</em>{chip(ncl, nrot)}</li><li><em>Ideal</em>{chip(icl, irot)}</li></ul>'
-                f'<h4>Versão nova × legado</h4>{corpo}'
+                f'<h4>Resultado dos casos na versão nova</h4>{corpo}'
                 f'<p class="pn-det-links"><a href="documentacao/{m["id"]}/legado.html">Legado</a> · <a href="documentacao/{m["id"]}/novo.html">Novo</a> · <a href="documentacao/{m["id"]}/ideal.html">Ideal</a></p></div>')
     opcoes = "".join(f'<option value="{m["id"]}">{E(m["nome"])}</option>' for m in ordem)
     detalhes = "".join(detalhe(m) for m in ordem)
