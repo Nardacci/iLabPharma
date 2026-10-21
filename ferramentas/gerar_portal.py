@@ -362,21 +362,22 @@ MODULOS = [
             ("5.garantia_qualidade/fluxos/treinamento.md", "Treinamento técnico", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Treinamento.docx"),
             ("5.garantia_qualidade/fluxos/assuntos-regulatorios.md", "Assuntos regulatórios", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/fluxos/controle-mudancas.md", "Controle de mudanças", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Controle de Mudancas.docx"),
-            ("5.garantia_qualidade/desvios/telas/00-visao-geral.md", "Controle de Desvios: visão geral", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Visao Geral.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/01-relatorio-de-desvios.md", "Tela 1 · Relatório de Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 01 Relatório de Desvios.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/02-registro-acao-corretiva-imediata.md", "Tela 2 · Registro Ação Corretiva Imediata", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 02 Registro Ação Corretiva Imediata.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/03-pre-avaliacao-relatorio-desvios.md", "Tela 3 · Pré Avaliação Relatório Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 03 Pré Avaliação Relatório Desvios.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/04-avaliacao-area.md", "Tela 4 · Avaliação Área", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 04 Avaliação Área.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/05-avaliacao-relatorio-desvios.md", "Tela 5 · Avaliação Relatório Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 05 Avaliação Relatório Desvios.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/06-relatorio-de-capa.md", "Tela 6 · Relatório de CAPA", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 06 Relatório de CAPA.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/07-plano-de-acao-corretiva.md", "Tela 7 · Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 07 Plano de Ação Corretiva.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/08-execucao-do-plano-de-acao-corretiva.md", "Tela 8 · Execução do Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 08 Execução do Plano de Ação Corretiva.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/09-monitoramento-do-plano-de-acao-corretiva.md", "Tela 9 · Monitoramento do Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 09 Monitoramento do Plano de Ação Corretiva.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/10-plano-de-acao-preventiva.md", "Tela 10 · Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 10 Plano de Ação Preventiva.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/11-execucao-plano-de-acao-preventiva.md", "Tela 11 · Execução Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 11 Execução Plano de Ação Preventiva.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/12-monitoramento-do-plano-de-acao-preventiva.md", "Tela 12 · Monitoramento do Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 12 Monitoramento do Plano de Ação Preventiva.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/13-acompanhamento-rd.md", "Tela 13 · Acompanhamento RD", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 13 Acompanhamento RD.docx", {"desvios": True}),
-            ("5.garantia_qualidade/desvios/telas/14-controle-de-emissao-de-rnc.md", "Tela 14 · Controle de Emissão de RNC", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 14 Controle de Emissão de RNC.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/00-entenda-o-menu.md", "Controle de Desvios: entenda o menu", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Entenda o Menu.docx", {"desvios": True, "intro": True}),
+            ("5.garantia_qualidade/desvios/telas/00-visao-geral.md", "Controle de Desvios: visão geral", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Visao Geral.docx", {"desvios": True, "intro": True}),
+            ("5.garantia_qualidade/desvios/telas/01-relatorio-de-desvios.md", "Tela 1 · Relatório de Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 01 Relatório de Desvios.docx", {"desvios": True, "resumo": "Registrar o desvio: o que aconteceu, onde e qual item foi afetado", "tela_n": 1}),
+            ("5.garantia_qualidade/desvios/telas/02-registro-acao-corretiva-imediata.md", "Tela 2 · Registro Ação Corretiva Imediata", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 02 Registro Ação Corretiva Imediata.docx", {"desvios": True, "resumo": "Registrar a contenção feita na hora", "tela_n": 2}),
+            ("5.garantia_qualidade/desvios/telas/03-pre-avaliacao-relatorio-desvios.md", "Tela 3 · Pré Avaliação Relatório Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 03 Pré Avaliação Relatório Desvios.docx", {"desvios": True, "resumo": "Primeira leitura da GQ e escolha das áreas envolvidas", "tela_n": 3}),
+            ("5.garantia_qualidade/desvios/telas/04-avaliacao-area.md", "Tela 4 · Avaliação Área", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 04 Avaliação Área.docx", {"desvios": True, "resumo": "Cada área envolvida dá o seu parecer", "tela_n": 4}),
+            ("5.garantia_qualidade/desvios/telas/05-avaliacao-relatorio-desvios.md", "Tela 5 · Avaliação Relatório Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 05 Avaliação Relatório Desvios.docx", {"desvios": True, "resumo": "A GQ conclui a avaliação e decide se abre CAPA", "tela_n": 5}),
+            ("5.garantia_qualidade/desvios/telas/06-relatorio-de-capa.md", "Tela 6 · Relatório de CAPA", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 06 Relatório de CAPA.docx", {"desvios": True, "resumo": "Investigação da causa, impacto e criticidade", "tela_n": 6}),
+            ("5.garantia_qualidade/desvios/telas/07-plano-de-acao-corretiva.md", "Tela 7 · Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 07 Plano de Ação Corretiva.docx", {"desvios": True, "resumo": "Definir as ações corretivas, responsáveis e prazos", "tela_n": 7}),
+            ("5.garantia_qualidade/desvios/telas/08-execucao-do-plano-de-acao-corretiva.md", "Tela 8 · Execução do Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 08 Execução do Plano de Ação Corretiva.docx", {"desvios": True, "resumo": "Cada responsável informa a conclusão da sua ação", "tela_n": 8}),
+            ("5.garantia_qualidade/desvios/telas/09-monitoramento-do-plano-de-acao-corretiva.md", "Tela 9 · Monitoramento do Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 09 Monitoramento do Plano de Ação Corretiva.docx", {"desvios": True, "resumo": "Verificação final do plano corretivo", "tela_n": 9}),
+            ("5.garantia_qualidade/desvios/telas/10-plano-de-acao-preventiva.md", "Tela 10 · Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 10 Plano de Ação Preventiva.docx", {"desvios": True, "resumo": "Definir as ações para o desvio não se repetir", "tela_n": 10}),
+            ("5.garantia_qualidade/desvios/telas/11-execucao-plano-de-acao-preventiva.md", "Tela 11 · Execução Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 11 Execução Plano de Ação Preventiva.docx", {"desvios": True, "resumo": "Cada responsável informa a conclusão da ação preventiva", "tela_n": 11}),
+            ("5.garantia_qualidade/desvios/telas/12-monitoramento-do-plano-de-acao-preventiva.md", "Tela 12 · Monitoramento do Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 12 Monitoramento do Plano de Ação Preventiva.docx", {"desvios": True, "resumo": "Verificação final e encerramento do desvio", "tela_n": 12}),
+            ("5.garantia_qualidade/desvios/telas/13-acompanhamento-rd.md", "Tela 13 · Acompanhamento RD", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 13 Acompanhamento RD.docx", {"desvios": True, "resumo": "Os desvios por período e situação, para imprimir", "tela_n": 13}),
+            ("5.garantia_qualidade/desvios/telas/14-controle-de-emissao-de-rnc.md", "Tela 14 · Controle de Emissão de RNC", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 14 Controle de Emissão de RNC.docx", {"desvios": True, "resumo": "Os relatórios emitidos, por ano, para imprimir", "tela_n": 14}),
         ],
     },
     {"id": "producao", "nome": "Produção", "icone": "⚙", "cor": "#b45309", "situacao": "Pronto para testes", "nivel": 2,
@@ -834,7 +835,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             pagina = {"titulo": titulo, "slug": s, "cat": cat, "arq": arq, "toc": toc, "corpo": corpo,
                       "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo,
                       "roteiro_de": ROTEIROS.get(arq) or extra.get("roteiro_de"), "ordem": ordem,
-                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"),
+                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"), "resumo_tela": extra.get("resumo"), "tela_n": extra.get("tela_n"), "intro": extra.get("intro"),
                       "situacao_tela": extra.get("situacao")}
             m = re.search(r'<img src="(\.\./img/[^"]+fluxograma[^"]*)"', corpo)
             if m:
@@ -1091,6 +1092,18 @@ def intro_modulo(mod):
     return m.group(1) if m else t
 
 
+def cartoes_desvios(pags):
+    """Cartões do menu Controle de Desvios: as páginas de apoio e uma por tela, com o que cada tela faz."""
+    apoio = [p for p in pags if p.get("intro")]
+    telas = [p for p in pags if p.get("tela_n")]
+    h = '<div class="doc-cards">' + "".join(
+        f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo">{E(p["titulo"])}</span><span class="doc-card-meta">Comece por aqui</span></a>' for p in apoio) + "</div>"
+    h += '<div class="doc-cards">' + "".join(
+        f'<a class="doc-card tela-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["tela_n"]}</span>{E(p["titulo"].split("· ", 1)[-1])}</span>'
+        f'<span class="doc-card-meta">{E(p.get("resumo_tela") or "")}</span></a>' for p in telas) + "</div>"
+    return h
+
+
 def pagina_modulo(mod, sit="index"):
     """Visão geral do módulo (sit='index') ou uma das três situações: 'legado', 'novo', 'ideal'."""
     raiz = "../../"
@@ -1123,6 +1136,15 @@ def pagina_modulo(mod, sit="index"):
         for chave, nome, desc, pags in resumo:
             blocos_resumo = "".join(f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
                                     f'<span class="doc-card-meta">{"Word disponível" if p["word"] else "Leitura no portal"}</span></a>' for p in pags)
+        dv = [p for g in mod["roteiro"] for p in g[3] if p.get("desvios")]
+        bloco_menus = ""
+        if dv:
+            entenda = next(p for p in dv if p.get("intro"))
+            bloco_menus = ('<h2 class="secao-titulo">Menus do sistema, tela a tela</h2>'
+                           '<p class="secao-desc">Cada menu do sistema entregue tem uma página por tela, com o manual do usuário, os campos, as regras, o fluxo e os casos de teste, e o Word para baixar.</p>'
+                           '<h3 class="novo-menu">Controle de Desvios (14 telas)</h3>'
+                           '<p class="secao-desc">Onde a Garantia da Qualidade registra o que saiu do combinado na fábrica, investiga a causa, corrige e confere. É o processo que a ANVISA mais olha numa inspeção. '
+                           f'<a href="{entenda["slug"]}.html">Entenda o menu: o que faz e por que importa</a>.</p>' + cartoes_desvios(dv))
         return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
 <main class="pagina-modulo" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
@@ -1140,6 +1162,7 @@ def pagina_modulo(mod, sit="index"):
   <h2 class="secao-titulo">Resumo do módulo</h2>
   <p class="secao-desc">Um resumo só, que situa o módulo nas três situações.</p>
   <div class="doc-cards">{blocos_resumo}</div>
+  {bloco_menus}
   {fim}
 </main>
 """ + rodape(raiz))
@@ -1190,6 +1213,8 @@ def pagina_modulo(mod, sit="index"):
                             f'<ol>{li}</ol><p class="fluxo-roteiro-tudo"><a href="{r["slug"]}.html">Abrir o roteiro completo</a>{word}</p></details></div>')
                 cards.append(card)
             grade = f'<div class="fluxos">{"".join(cards)}</div>'
+        elif chave == "desvios":
+            grade = cartoes_desvios(pags)
         elif chave == "novo" and any(p.get("grupo") for p in pags):
             def _card(p):
                 return (f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
