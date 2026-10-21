@@ -835,7 +835,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             pagina = {"titulo": titulo, "slug": s, "cat": cat, "arq": arq, "toc": toc, "corpo": corpo,
                       "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo,
                       "roteiro_de": ROTEIROS.get(arq) or extra.get("roteiro_de"), "ordem": ordem,
-                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"), "resumo_tela": extra.get("resumo"), "tela_n": extra.get("tela_n"), "intro": extra.get("intro"),
+                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"), "aba": extra.get("aba"), "resumo_tela": extra.get("resumo"), "tela_n": extra.get("tela_n"), "intro": extra.get("intro"),
                       "situacao_tela": extra.get("situacao")}
             m = re.search(r'<img src="(\.\./img/[^"]+fluxograma[^"]*)"', corpo)
             if m:
@@ -883,6 +883,15 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
         pasta.mkdir(parents=True, exist_ok=True)
         for p in mod["paginas"]:
             (pasta / f"{p['slug']}.html").write_text(pagina_documento(mod, p), encoding="utf-8")
+        # Endereços antigos das telas do Controle de Desvios (uma página por tela): levam à página de análise da tela
+        for p in mod["paginas"]:
+            if p.get("tela_n") and p.get("aba") == "analise":
+                antigo = slug(f"Tela {p['tela_n']} · {p['tela']}")
+                if antigo != p["slug"]:
+                    (pasta / f"{antigo}.html").write_text(
+                        f'<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>{E(p["tela"])} · iLabMedSys</title>'
+                        f'<meta http-equiv="refresh" content="0; url={p["slug"]}.html"><link rel="canonical" href="{p["slug"]}.html"></head>'
+                        f'<body><p>Esta página mudou: <a href="{p["slug"]}.html">{E(p["tela"])}: análise</a>.</p></body></html>', encoding="utf-8")
         for sit in ("index", "legado", "novo", "ideal"):
             (pasta / f"{sit}.html").write_text(pagina_modulo(mod, sit), encoding="utf-8")
 
@@ -939,13 +948,15 @@ def _nav_arvore(pags, roteiros, atual):
         html += f'<li><details class="lat-menu-d"{" open" if atual in gerais else ""}><summary>Informações gerais</summary><ul>{itens}</ul></details></li>'
     for g in dict.fromkeys(x["grupo"] for x in pags if x.get("grupo")):
         telas, g_aberto = "", False
-        for p in [x for x in pags if x.get("grupo") == g and not x.get("roteiro_de")]:
-            r = roteiros.get(p["arq"])
-            t_aberto = atual is p or atual is r
+        pags_g = [x for x in pags if x.get("grupo") == g and not x.get("roteiro_de")]
+        for nome_tela in dict.fromkeys(x["tela"] for x in pags_g):
+            paginas = [x for x in pags_g if x["tela"] == nome_tela]
+            rots = [roteiros[x["arq"]] for x in paginas if roteiros.get(x["arq"])]
+            t_aberto = any(atual is x for x in paginas) or any(atual is r for r in rots)
             g_aberto = g_aberto or t_aberto
-            filhos = (f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p.get("rotulo") or "Resumo geral")}</a></li>'
-                      + (f'<li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo de homologação</a></li>' if r else ""))
-            telas += (f'<li><details class="lat-tela"{" open" if t_aberto else ""}><summary>{E(p["tela"])}</summary><ul>{filhos}</ul></details></li>')
+            filhos = "".join(f'<li><a href="{x["slug"]}.html"{" aria-current=page" if x is atual else ""}>{E(x.get("rotulo") or "Resumo geral")}</a></li>' for x in paginas)
+            filhos += "".join(f'<li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo de homologação</a></li>' for r in rots)
+            telas += (f'<li><details class="lat-tela"{" open" if t_aberto else ""}><summary>{E(nome_tela)}</summary><ul>{filhos}</ul></details></li>')
         html += f'<li><details class="lat-menu-d"{" open" if g_aberto else ""}><summary>{E(g)}</summary><ul>{telas}</ul></details></li>'
     return html
 
@@ -1010,6 +1021,11 @@ def pagina_documento(mod, p):
         prox = _cartao_ap("Fim do módulo · próximo módulo →", prox_mod["nome"], f'../{prox_mod["id"]}/index.html', "prox")
     else:
         prox = _cartao_ap("Fim do roteiro", "Voltar ao início do portal", f"{raiz}index.html", "prox")
+    abas = ""
+    if p.get("tela_n") and p.get("aba"):
+        irmas = sorted([x for x in mod["paginas"] if x.get("tela_n") == p["tela_n"] and x.get("aba")], key=lambda x: ABAS_DESVIOS.index(x["aba"]))
+        abas = ('<nav class="abas-tela" aria-label="Páginas desta tela">'
+                + "".join(f'<a href="{x["slug"]}.html"{" aria-current=page" if x is p else ""}>{E(x["rotulo"])}</a>' for x in irmas) + '</nav>')
     pct = round(p["n"] / p["total"] * 100)
     unico = p["passo_total"] == 1
     sec = p.get("secao_nome") or ""
@@ -1033,6 +1049,7 @@ def pagina_documento(mod, p):
       <div class="doc-acoes">{word}<button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
       {aviso}
     </header>
+    {abas}
     <article class="texto">
 {p['corpo']}
     </article>
@@ -1092,16 +1109,23 @@ def intro_modulo(mod):
     return m.group(1) if m else t
 
 
+ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
+
+
 def cartoes_desvios(pags):
-    """Cartões do menu Controle de Desvios: as páginas de apoio e uma por tela, com o que cada tela faz."""
+    """Cartões do menu Controle de Desvios: as páginas de apoio e uma por tela, com o que cada tela faz e as cinco páginas dela."""
     apoio = [p for p in pags if p.get("intro")]
-    telas = [p for p in pags if p.get("tela_n")]
     h = '<div class="doc-cards">' + "".join(
         f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo">{E(p["titulo"])}</span><span class="doc-card-meta">Comece por aqui</span></a>' for p in apoio) + "</div>"
-    h += '<div class="doc-cards">' + "".join(
-        f'<a class="doc-card tela-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["tela_n"]}</span>{E(p["titulo"].split("· ", 1)[-1])}</span>'
-        f'<span class="doc-card-meta">{E(p.get("resumo_tela") or "")}</span></a>' for p in telas) + "</div>"
-    return h
+    cart = ""
+    for n in sorted({p["tela_n"] for p in pags if p.get("tela_n")}):
+        irmas = sorted([p for p in pags if p.get("tela_n") == n], key=lambda x: ABAS_DESVIOS.index(x["aba"]))
+        pa = irmas[0]
+        links = " · ".join(f'<a href="{x["slug"]}.html">{E(x["rotulo"])}</a>' for x in irmas)
+        cart += (f'<div class="doc-card tela-card"><a class="doc-card-titulo" href="{pa["slug"]}.html"><span class="doc-n">{n}</span>{E(pa["tela"])}</a>'
+                 f'<span class="doc-card-meta">{E(pa.get("resumo_tela") or "")}</span><span class="tela-links">{links}</span></div>')
+    return h + f'<div class="doc-cards">{cart}</div>'
+
 
 
 def pagina_modulo(mod, sit="index"):
