@@ -32,6 +32,7 @@ import markdown
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import biblioteca  # noqa: E402
+import higiene  # noqa: E402
 
 HOJE = datetime.date.today().strftime("%d/%m/%Y")
 
@@ -283,7 +284,6 @@ MODULOS = [
             ("versao-nova/1.principal/manual/manual-principal-versao-nova.md", "Manual da versão nova, por tela", "novo", "versao-nova/1.principal/manual/LabMedSys - Modulo Principal - Manual da Versao Nova por Tela.docx"),
             ("versao-nova/1.principal/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
             ("versao-nova/1.principal/plano-de-regressao.md", "Plano de regressão", "novo", None),
-            ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/usuarios-de-teste.md", "Usuários de teste", "novo", None),
             ("versao-nova/COMPARACAO-CODIGO.md", "Comparação do código com o legado", "tecnico", None),
             ("versao-nova/1.principal/execucao/2026-10-17/resultado.md", "Resultado da rodada 1", "novo", None),
             ("versao-nova/1.principal/execucao/2026-10-17-rodada-2/resultado.md", "Resultado da rodada 2", "novo", None),
@@ -569,7 +569,7 @@ def limpar(md, nome, retirado):
         if RE_LINHA_SEG.search(linha):
             retirado.append((nome, f"Linha: {linha.strip()[:160]}"))
             continue
-        saida.append(NOMES_REAIS.sub("(profissional do ambiente)", linha))
+        saida.append(higiene.redigir(NOMES_REAIS.sub("(profissional do ambiente)", linha)))
     return "\n".join(saida) + "\n"
 
 
@@ -787,6 +787,10 @@ def indice_normas(origem):
 
 def gerar(origem, destino, relatorio, atualizar_metadados=False):
     conv = Conversor(origem, destino)
+    n_logins = higiene.carregar(origem)
+    print(f"Higiene: {n_logins} logins de teste lidos da fonte privada para redação.")
+    if not n_logins:
+        print("AVISO: a fonte dos logins de teste não foi encontrada; o login não pode ser redigido nem verificado.", file=sys.stderr)
     hom = origem / "homologacao"
     doc_dir = destino / "documentacao"
     if doc_dir.exists():
@@ -836,7 +840,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
                         print(r.stderr, file=sys.stderr)
                         raise SystemExit(f"Falha ao gerar o Word de {arq}")
                 else:
-                    shutil.copy2(hom / word, alvo)
+                    higiene.copiar_word(hom / word, alvo)
                 pagina["word"] = f"../arquivos/{mod['id']}/{nome}"
             mod["paginas"].append(pagina)
             texto = re.sub(r"<[^>]+>", " ", corpo)
@@ -849,8 +853,8 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
         organizar_roteiro(mod)
     hom_ = Path(origem) / "homologacao"
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
-        DADOS_PAINEL["pn"] = json.loads((hom_ / "painel.json").read_text(encoding="utf-8"))
-        DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads((hom_ / "cronograma.json").read_text(encoding="utf-8"))["modulos"]}
+        DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
+        DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads(higiene.redigir((hom_ / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}
 
     # Páginas de documento
     for mod in MODULOS:
@@ -899,6 +903,12 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
         Path(relatorio).write_text("\n".join(linhas) + "\n", encoding="utf-8")
     total = sum(len(m["paginas"]) for m in MODULOS)
     print(f"Portal gerado: {total} documentos, {len(retirado)} trechos de segurança retirados.")
+    achados = higiene.verificar(destino)
+    if achados:
+        for arq, o_que, n in achados:
+            print(f"BLOQUEADO: {arq}: {o_que} (x{n})", file=sys.stderr)
+        raise SystemExit(f"Higiene: {len(achados)} problema(s) no portal gerado. Nada deve ser publicado.")
+    print("Higiene: nenhum endereço privado, login de teste ou pasta proibida no portal gerado.")
 
 
 def _nav_arvore(pags, roteiros, atual):
@@ -1233,8 +1243,8 @@ def bloco_painel(origem, ordem):
     hom = Path(origem) / "homologacao"
     if not (hom / "painel.json").exists() or not (hom / "cronograma.json").exists():
         return ""
-    pn = json.loads((hom / "painel.json").read_text(encoding="utf-8"))
-    cr = {m["id"]: m for m in json.loads((hom / "cronograma.json").read_text(encoding="utf-8"))["modulos"]}
+    pn = json.loads(higiene.redigir((hom / "painel.json").read_text(encoding="utf-8")))
+    cr = {m["id"]: m for m in json.loads(higiene.redigir((hom / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}
     total_plan = sum(c["testes"]["planejados"] for c in cr.values() if c.get("testes"))
     total_conc = sum(c["testes"]["conclusivos"] for c in cr.values() if c.get("testes"))
     alta_pend = sum(c["testes"]["alta_pendentes"] for c in cr.values() if c.get("testes"))
@@ -1710,7 +1720,7 @@ def pagina_cronograma(origem):
     arq = Path(origem) / "homologacao" / "cronograma.json"
     if not arq.exists():
         return ""
-    cr = json.loads(arq.read_text(encoding="utf-8"))
+    cr = json.loads(higiene.redigir(arq.read_text(encoding="utf-8")))
     hoje = _dt.date.today()
     mods = cr["modulos"]
     cores = {m["id"]: m["cor"] for m in MODULOS}
