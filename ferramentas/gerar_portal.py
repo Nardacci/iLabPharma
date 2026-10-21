@@ -1161,8 +1161,7 @@ def pagina_modulo(mod, sit="index"):
   <div class="sit-cards">{"".join(cartoes)}</div>
   <h2 class="secao-titulo">Resumo do módulo</h2>
   <p class="secao-desc">Um resumo só, que situa o módulo nas três situações.</p>
-  <div class="doc-cards">{blocos_resumo}</div>
-  {bloco_menus}
+  <div class="doc-cards">{blocos_resumo}</div>{bloco_menus}
   {fim}
 </main>
 """ + rodape(raiz))
