@@ -88,6 +88,7 @@ CAMINHO = ["visao-geral", "principal", "estoque", "producao", "ope", "controle-q
 PASSOS = [
     ("resumo", "Resumo do módulo", "O que é o módulo, em que situação está e o que decidir. Vale para o sistema entregue e para a versão nova."),
     ("fluxos", "Siga o processo", "Como o trabalho anda, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
+    ("desvios", "Controle de Desvios: tela a tela", "Uma página por tela do menu Controle de Desvios (14 telas): manual do usuário, campos, botões, mensagens, regras de negócio, fluxo, falhas e casos de teste, cada uma com o Word para baixar."),
     ("ideal", "O ideal: como deve funcionar", "Como o módulo deve trabalhar para atender à ANVISA: funções, comportamento, integrações com os outros módulos e papéis. Mostra o que manter, corrigir e acrescentar."),
     ("norma", "ANVISA: norma e risco", "O que a ANVISA exige e onde está o risco."),
     ("dados", "Dados e integrações", "Para a equipe de desenvolvimento: modelo de dados e integrações do sistema entregue."),
@@ -102,7 +103,7 @@ PASSOS = [
 # Seções do roteiro do módulo: cada passo pertence a uma.
 SECOES = [
     ("modulo", "Sobre o módulo", "Um resumo só, que situa o módulo nas três situações.", ["resumo"]),
-    ("legado", "Legado", "O sistema entregue pelo fornecedor: como é hoje, o que foi testado e o veredito.", ["conhecer", "fluxos", "regras", "norma", "dados", "testes", "fecho"]),
+    ("legado", "Legado", "O sistema entregue pelo fornecedor: como é hoje, o que foi testado e o veredito.", ["conhecer", "fluxos", "desvios", "regras", "norma", "dados", "testes", "fecho"]),
     ("novo", "iLabPharma Novo", "A versão nova: testes por menu do sistema, parecer e comparação com o legado.", ["novo", "novo_parecer"]),
     ("ideal", "Ideal", "Como o módulo deve funcionar para atender à ANVISA, e os requisitos da versão corrigida. Vale como definição nos módulos com testes concluídos (Principal e Estoque); nos demais é rascunho até o fim dos testes.", ["ideal", "requisitos"]),
 ]
@@ -140,6 +141,8 @@ def _pos(chaves, titulo):
 
 def passo_de(p):
     t, cat = p["titulo"].lower(), p["cat"]
+    if p.get("desvios"):
+        return "desvios"
     if cat == "novo":
         return "novo"
     if cat == "fluxos" or p.get("roteiro_de"):
@@ -359,6 +362,21 @@ MODULOS = [
             ("5.garantia_qualidade/fluxos/treinamento.md", "Treinamento técnico", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Treinamento.docx"),
             ("5.garantia_qualidade/fluxos/assuntos-regulatorios.md", "Assuntos regulatórios", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Assuntos Regulatorios.docx"),
             ("5.garantia_qualidade/fluxos/controle-mudancas.md", "Controle de mudanças", "fluxos", "5.garantia_qualidade/fluxos/LabMedSys - Modulo Garantia da Qualidade - Fluxo Controle de Mudancas.docx"),
+            ("5.garantia_qualidade/desvios/telas/00-visao-geral.md", "Controle de Desvios: visão geral", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Visao Geral.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/01-relatorio-de-desvios.md", "Tela 1 · Relatório de Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 01 Relatório de Desvios.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/02-registro-acao-corretiva-imediata.md", "Tela 2 · Registro Ação Corretiva Imediata", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 02 Registro Ação Corretiva Imediata.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/03-pre-avaliacao-relatorio-desvios.md", "Tela 3 · Pré Avaliação Relatório Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 03 Pré Avaliação Relatório Desvios.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/04-avaliacao-area.md", "Tela 4 · Avaliação Área", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 04 Avaliação Área.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/05-avaliacao-relatorio-desvios.md", "Tela 5 · Avaliação Relatório Desvios", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 05 Avaliação Relatório Desvios.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/06-relatorio-de-capa.md", "Tela 6 · Relatório de CAPA", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 06 Relatório de CAPA.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/07-plano-de-acao-corretiva.md", "Tela 7 · Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 07 Plano de Ação Corretiva.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/08-execucao-do-plano-de-acao-corretiva.md", "Tela 8 · Execução do Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 08 Execução do Plano de Ação Corretiva.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/09-monitoramento-do-plano-de-acao-corretiva.md", "Tela 9 · Monitoramento do Plano de Ação Corretiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 09 Monitoramento do Plano de Ação Corretiva.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/10-plano-de-acao-preventiva.md", "Tela 10 · Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 10 Plano de Ação Preventiva.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/11-execucao-plano-de-acao-preventiva.md", "Tela 11 · Execução Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 11 Execução Plano de Ação Preventiva.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/12-monitoramento-do-plano-de-acao-preventiva.md", "Tela 12 · Monitoramento do Plano de Ação Preventiva", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 12 Monitoramento do Plano de Ação Preventiva.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/13-acompanhamento-rd.md", "Tela 13 · Acompanhamento RD", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 13 Acompanhamento RD.docx", {"desvios": True}),
+            ("5.garantia_qualidade/desvios/telas/14-controle-de-emissao-de-rnc.md", "Tela 14 · Controle de Emissão de RNC", "negocio", "5.garantia_qualidade/desvios/telas/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 14 Controle de Emissão de RNC.docx", {"desvios": True}),
         ],
     },
     {"id": "producao", "nome": "Produção", "icone": "⚙", "cor": "#b45309", "situacao": "Pronto para testes", "nivel": 2,
@@ -816,7 +834,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             pagina = {"titulo": titulo, "slug": s, "cat": cat, "arq": arq, "toc": toc, "corpo": corpo,
                       "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo,
                       "roteiro_de": ROTEIROS.get(arq) or extra.get("roteiro_de"), "ordem": ordem,
-                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"),
+                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"),
                       "situacao_tela": extra.get("situacao")}
             m = re.search(r'<img src="(\.\./img/[^"]+fluxograma[^"]*)"', corpo)
             if m:
