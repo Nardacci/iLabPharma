@@ -57,7 +57,7 @@
 <td>RN-GQ-059</td>
 <td>O Acompanhamento RD imprime os desvios de um período, por situação. Não agrupa por causa, área ou produto, o que seria preciso para a análise de tendência (art. 342 da RDC 658/2022). Obs.: a parte sobre o Controle de Emissão de RNC está na página da tela 14.</td>
 <td>AcompanhamentoRNCController.cs:36-71; Reports/DadosRNCFactory.cs:259-295</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-025): o PDF lista por período e situação e não agrupa por causa ou área. A coluna de criticidade sai em branco (DV-GQ-031)</td>
 </tr>
 <tr>
 <td>RN-GQ-060</td>
@@ -69,7 +69,7 @@
 <td>RN-GQ-D13-01</td>
 <td>O período é obrigatório (as duas datas), conferido só no navegador. O servidor não confere.</td>
 <td>Bloco2/Script/AcompanhamentoRNCIndex.js:19-22; AcompanhamentoRNCController.cs:36-46</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N13-01): sem datas, só início ou só fim, o navegador mostra "Preencha o Período." e não abre janela. Que o servidor não confere não foi exercitado</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-02</td>
@@ -87,25 +87,25 @@
 <td>RN-GQ-D13-04</td>
 <td>A situação é opcional e só há seis opções. As situações iniciais, Finalizado, Cancelado, Reprovado Plano Ação Corretiva e Finalizado sem Relatório CAPA não podem ser escolhidas.</td>
 <td>Bloco2/Models/AcompanhamentoRNCIndexModel.cs:19-37; AcompanhamentoRNCController.cs:48-52</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N13-02; DV-GQ-028): o filtro não oferece Finalizado, Cancelado, Pendente Registro, Pré Avaliação, Responsável Área nem CAPA</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-05</td>
 <td>A opção "Aprovado Plano Ação Preventiva" nunca devolve desvios, porque nenhum desvio recebe essa situação: o fim do plano preventivo leva o desvio a Finalizado.</td>
 <td>AcompanhamentoRNCIndexModel.cs:35-36; Bloco2/Controllers/LiberacaoPlanoAcaoPreventivaRNCController.cs:239-248</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N13-02): "Aprovado Plano Ação Preventiva" devolve vazio, porque nenhum desvio chega a essa situação</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-06</td>
 <td>Com a situação em TODAS, o relatório traz todos os desvios do período, inclusive os cancelados; o código não os exclui.</td>
 <td>AcompanhamentoRNCController.cs:46,48-52</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-F12; DV-GQ-037): o desvio 018/26, cancelado na tela, aparece no PDF de todas as situações, mas com a situação Pendente Registro Ação Corretiva. Que cancelados entram sem marca não foi conferido para os demais</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-07</td>
 <td>A coluna GRAU CRITICIDADE sai sempre em branco.</td>
 <td>Reports/DadosRNCFactory.cs:265,286</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N13-06 e F13; DV-GQ-031): a coluna sai em branco também para o CAPA crítico (038/26) e o menor (039/26)</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-08</td>
@@ -149,6 +149,30 @@
 <td>Reports/RNCAcompanhamentoRelatorio.cs:23-27</td>
 <td>Extraída</td>
 </tr>
+<tr>
+<td>RN-GQ-D13-15</td>
+<td>Escolhida uma das situações oferecidas, o PDF traz exatamente os desvios daquela situação. Contagens conferidas: Pendente Plano Ação Corretiva 2 de 2; Pendente Avaliação Relatório de Desvios 3 de 3; Pendente Monitoramento do Plano Ação Preventiva 4 de 4; Pendente Monitoramento do Plano Ação Corretiva 4 de 4; Aprovado Plano Ação Corretiva 6 de 6.</td>
+<td>Observado na tela (execucao/2026-10-21-desvios-rodada-1/resultado.md, CT-GQ-N13-02)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N13-02)</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-16</td>
+<td>Na impressão de todas as situações, a situação do PDF difere da situação da tela em 2 de 51 desvios lidos (018/26 e 026/26). Não foi reconferido de qual lado está a diferença.</td>
+<td>Observado na tela (resultado.md, CT-GQ-F12)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F12; DV-GQ-037)</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-17</td>
+<td>A data e a hora impressas no PDF saem no formato americano (mm/dd/aaaa hh:mm:ss AM/PM); o endereço de impressão também leva as datas em mm/dd/aaaa.</td>
+<td>Observado na tela (resultado.md, CT-GQ-025); linha do código a localizar</td>
+<td>Validada no teste (21/10/2026, CT-GQ-025; DV-GQ-034)</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-18</td>
+<td>Uma linha de descrição muito longa (quase 3.000 caracteres) atravessa a quebra de página do PDF: o texto continua na página seguinte, mas a linha é partida.</td>
+<td>Observado na tela (resultado.md, CT-GQ-F14)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F14)</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -165,67 +189,82 @@
 <tr>
 <td>CT-GQ-025 (Baixa)</td>
 <td>Tela: Acompanhamento RD. Preparação: desvios de teste de hoje. Fazer: Data Início e até = hoje, Situação TODAS, Imprimir. Esperado: PDF com os desvios TESTE e suas situações; registrar se aparecem agrupados por causa ou área (não aparecem)</td>
-<td>Sem resultado</td>
+<td>Passou com ressalva em 21/10/2026: coluna de criticidade em branco (DV-GQ-031) e data no formato americano (DV-GQ-034)</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-01 (Média)</td>
 <td>Período vazio. Fazer: Imprimir sem datas; só com Data Início; só com até. Esperado: faixa "Preencha o Período." nos três casos; nenhuma janela abre</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-02 (Alta)</td>
 <td>Cada situação do filtro. Preparação: um desvio em cada uma das seis situações oferecidas. Fazer: Imprimir seis vezes, uma por situação. Esperado: só desvios daquela situação. Registrar a de "Aprovado Plano Ação Preventiva" (pelo código, vazia, RN-GQ-D13-05)</td>
-<td>Sem resultado</td>
+<td>Passou com ressalva em 21/10/2026: o filtro não oferece todas as situações, "Aprovado Plano Ação Preventiva" devolve vazio (DV-GQ-028) e a situação do PDF difere da tela em 2 desvios (DV-GQ-037)</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-03 (Média)</td>
 <td>Dia final do período. Preparação: desvio criado hoje às 15h. Fazer: início e fim iguais a hoje. Esperado: o desvio aparece (o código soma um dia ao fim)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-04 (Média)</td>
 <td>Datas fora do comum. Fazer: início maior que o fim; 31/02/2026; 00/00/0000; ano 1900. Esperado: aviso claro. Registrar o que acontece (PDF vazio, erro técnico ou outra mensagem)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-05 (Média)</td>
 <td>Situações que não podem ser escolhidas. Preparação: um desvio Finalizado e um Cancelado. Fazer: Imprimir com TODAS. Esperado: registrar se os dois aparecem (pelo código sim, RN-GQ-D13-06) e que não existe filtro por Finalizado nem Cancelado</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-06 (Alta)</td>
 <td>Coluna GRAU CRITICIDADE. Preparação: desvio com CAPA e criticidade Crítico. Fazer: Imprimir. Esperado pela norma: a criticidade aparece. Pelo código, sai em branco (RN-GQ-D13-07)</td>
-<td>Sem resultado</td>
+<td>Falhou em 21/10/2026 (DV-GQ-031)</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-07 (Média)</td>
 <td>Coluna STATUS DAS AÇÕES. Preparação: desvios sem plano, com plano corretivo sem ação concluída, com uma de duas ações concluídas, com todas concluídas e com monitoramento aprovado. Fazer: Imprimir. Esperado: Não Iniciadas, Não Implementadas, Implementadas Parcialmente e Implementadas Integralmente, e a linha de Ações Preventivas só quando há plano preventivo</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-08 (Média)</td>
 <td>Ação removida. Preparação: plano com duas ações, uma removida antes de salvar e a outra concluída. Fazer: Imprimir. Esperado pela lógica: Integralmente. Pelo código, a ação removida pode contar (RN-GQ-D13-11)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-09 (Baixa)</td>
 <td>Colunas SETOR SOLICITANTE e MEIO DETECÇÃO. Preparação: desvio com meio "Processo/Produção" e com mais de uma área envolvida. Fazer: Imprimir. Esperado: meio com " / "; setor é a área do responsável, e as áreas envolvidas não aparecem (RN-GQ-D13-08)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-10 (Baixa)</td>
 <td>Cabeçalho e rodapé. Fazer: Imprimir e conferir cliente, logotipo, período, data, usuário e página. Esperado: dados corretos; A3 não, A4 deitada</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-11 (Baixa)</td>
 <td>Limpar. Fazer: preencher datas e situação, clicar em Limpar. Esperado: datas vazias, Situação TODAS, faixa de erro escondida</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-12 (Média)</td>
 <td>Período sem desvios. Fazer: período de um ano sem desvios, Imprimir. Esperado: relatório sem linhas ou aviso; registrar o que mostra</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-F12 (volume e consulta)</td>
+<td>Acompanhamento: todos os desvios da massa aparecem e a situação do PDF confere com a da tela</td>
+<td>Falhou em 21/10/2026 (DV-GQ-037)</td>
+</tr>
+<tr>
+<td>CT-GQ-F13 (volume e consulta)</td>
+<td>Acompanhamento: coluna de criticidade confere com a tela</td>
+<td>Falhou em 21/10/2026 (DV-GQ-031)</td>
+</tr>
+<tr>
+<td>CT-GQ-F14 (volume e consulta)</td>
+<td>Acompanhamento: quebra de página do PDF com uma linha de descrição muito longa (quase 3.000 caracteres)</td>
+<td>Passou com ressalva em 21/10/2026: a linha atravessa a quebra da página 1 para a 2; o texto continua, mas a linha é partida</td>
 </tr>
 </tbody>
 </table></div>
@@ -235,7 +274,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

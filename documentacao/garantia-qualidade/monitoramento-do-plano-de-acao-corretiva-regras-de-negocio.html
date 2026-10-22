@@ -58,7 +58,7 @@
 <td>RN-GQ-049</td>
 <td>Obrigatórios para aprovar: a observação da verificação final e o resultado da implementação das ações. O código exige ao menos uma linha de resultado, e cada linha precisa de Ação Nº e Observação. Não exige um resultado por ação do plano.</td>
 <td>LiberacaoPlanoAcaoCorretivaValidator.cs:25-50</td>
-<td>Extraída (corrigida: ver Divergências)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N09-01, N09-02 e N09-03, RD 055/26): verificação final vazia, nenhum resultado, e resultado sem número ou sem observação são recusados com as mensagens do código. Não exige um resultado por ação do plano: confirmado em N09-05. (Corrigida: ver Divergências)</td>
 </tr>
 <tr>
 <td>RN-GQ-050</td>
@@ -70,7 +70,7 @@
 <td>RN-GQ-051</td>
 <td>Aprovado: o plano fica Aprovada e o desvio vai para Aprovado Plano Ação Corretiva. Qualquer coisa diferente de "a" vira Reprovado Plano Ação Corretiva; a tela não tem botão para isso, e esse estado não tem saída.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:234-243; Editar.cshtml:203-209</td>
-<td>Validada no teste em parte (16/10/2026, CT-GQ-022, DV-GQ-016): falta de botão Reprovar. Que o servidor trate tudo que não é "a" como reprovação continua A confirmar no teste</td>
+<td>Validada no teste em parte (16/10/2026, CT-GQ-022, DV-GQ-016): falta de botão Reprovar; reconfirmada em 21/10/2026 (passo P9.3: a tela só tem Aprovar). Aprovar leva o desvio a Aprovado Plano Ação Corretiva (CT-GQ-N09-05). Que o servidor trate tudo que não é "a" como reprovação continua A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-052</td>
@@ -112,13 +112,13 @@
 <td>RN-GQ-D09-006</td>
 <td>O número da ação no resultado é texto livre: nada liga o resultado a uma ação do plano, e não se exige um resultado por ação.</td>
 <td>LiberacaoPlanoAcaoCorretivaValidator.cs:31-52; RegistroNaoConformidadeEditarModel.cs:121-127</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N09-05, DV-GQ-021, Alta): resultado com Ação Nº 99, que não existe, foi aceito e o plano foi aprovado (evidências N09-05-antes, N09-05-apos-aprovar)</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-007</td>
 <td>"Ações Corretivas Implementadas" (Sim ou Não) não é conferido na aprovação: o plano pode ser aprovado com a resposta Não.</td>
 <td>LiberacaoPlanoAcaoCorretivaValidator.cs:25-50; LiberacaoPlanoAcaoCorretivaRNCController.cs:232</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste em parte (21/10/2026): o plano foi aprovado com um resultado "Implementada = Não" (RD 052/26, passo P9.3, DV-GQ-021). A caixa "Ações Corretivas Implementadas = Não" da verificação final não foi isolada no teste (CT-GQ-N09-11 não executado)</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-008</td>
@@ -154,25 +154,31 @@
 <td>RN-GQ-D09-013</td>
 <td>O filtro Situação "Aprovado Plano Ação Corretiva" não acrescenta restrição, então mostra as três situações.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:85-95</td>
-<td>A confirmar no teste</td>
+<td>Confirmada como falha (21/10/2026, CT-GQ-F11, DV-GQ-028): o filtro "Aprovado Plano Ação Corretiva" devolveu 10 linhas misturadas com pendentes</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-014</td>
 <td>Filtro de datas: início e fim são independentes; o fim vale 00:00.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:79-83</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F08, DV-GQ-027): só com a Data Início aparecem as linhas do dia (9); com início e fim no mesmo dia, 0 linhas; só com a Data Fim, 0 linhas</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-015</td>
 <td>Ao aprovar, o desvio vai a Aprovado Plano Ação Corretiva, a aprovação grava histórico, a tela trava e o botão "Plano de Ação Preventiva" aparece.</td>
 <td>LiberacaoPlanoAcaoCorretivaSalvar.js:267-275; LiberacaoPlanoAcaoCorretivaRNCController.cs:236-237 e 263</td>
-<td>Validada no teste em parte (16/10/2026, rodada 3: o RD 009/26 chegou a Aprovado Plano Ação Corretiva). Histórico e botão do preventivo: A confirmar no teste</td>
+<td>Validada no teste em parte (16/10/2026, rodada 3: o RD 009/26 chegou a Aprovado Plano Ação Corretiva) e em 21/10/2026 (CT-GQ-N09-05: o desvio foi a Aprovado Plano Ação Corretiva). Histórico e botão do preventivo: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-016</td>
 <td>Os anexos ficam ligados ao desvio; anexo removido recebe lixeira, usuário e data.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:390-426</td>
 <td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-D09-017</td>
+<td>A aprovação aceita um plano que não tem nenhuma ação: o desvio com plano salvo sem ações (ver tela 7, DV-GQ-020) foi aprovado com um resultado qualquer.</td>
+<td>LiberacaoPlanoAcaoCorretivaValidator.cs:31-52 (Extraída do código); tela em CT-GQ-N09-05</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N09-05, RD 053/26, DV-GQ-021; evidência N09-05-apos-aprovar)</td>
 </tr>
 </tbody>
 </table></div>
@@ -198,99 +204,94 @@
 <td>Falhou (defeito), 16/10/2026, DV-GQ-016: só existe Aprovar; o desvio chegou a Aprovado Plano Ação Corretiva</td>
 </tr>
 <tr>
-<td>CT-GQ-114 (Baixa)</td>
-<td>Tela: Monitoramento. Preparação: usuário sem a permissão exigida. Fazer: abrir pelo menu. Esperado: volta para a lista (detalhe no documento interno)</td>
-<td>Sem resultado individual</td>
-</tr>
-<tr>
 <td>CT-GQ-N09-01 (Alta)</td>
 <td>Tela: Monitoramento, Aprovar. Preparação: todas as ações Finalizado; um resultado preenchido. Fazer: deixar a verificação final em branco e clicar em Aprovar. Esperado: "A Observação de Verificação Final é obrigatória." na faixa do bloco; situação igual</td>
-<td>Sem teste</td>
+<td>Passou em 21/10/2026 (RD 055/26): "A Observação de Verificação Final é obrigatória."</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-02 (Alta)</td>
 <td>Tela: Monitoramento, Aprovar. Preparação: todas as ações Finalizado; verificação final preenchida; nenhum resultado. Fazer: Aprovar. Esperado: "É necessária resultado da implementação das Ações."</td>
-<td>Sem teste</td>
+<td>Passou em 21/10/2026 (RD 055/26): "É necessária resultado da implementação das Ações."</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-03 (Alta)</td>
 <td>Tela: Monitoramento, bloco de resultados. Preparação: plano aberto. Fazer: Adicionar com tudo vazio; só sem Ação Nº; só sem Observação. Esperado: "Ação Nº é obrigatória." e "Observação é obrigatória."; nada entra na grade</td>
-<td>Sem teste</td>
+<td>Passou em 21/10/2026 (RD 055/26): mensagens de Ação Nº e de Observação; nada entra na grade</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-04 (Média)</td>
 <td>Tela: Monitoramento, Implementada. Preparação: plano aberto. Fazer: Adicionar resultado sem escolher Sim ou Não. Esperado pela norma: recusa; verificar se a linha aparece como Não e como foi gravada</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-05 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: plano com três ações, todas Finalizado. Fazer: um único resultado com Ação Nº 99, que não existe, e aprovar. Esperado pela norma: recusa; verificar se aprova (RN-GQ-D09-006)</td>
-<td>Sem teste</td>
+<td>Falhou em 21/10/2026 (DV-GQ-021): aprovou com Ação Nº 99 inexistente, com "Implementada = Não" e com plano sem ações</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-06 (Alta)</td>
 <td>Tela: Monitoramento, Salvar. Preparação: plano aberto, resultados e verificação preenchidos. Fazer: clicar em Salvar, SIM, OK sem justificativa; depois com justificativa. Esperado: "A justificativa é obrigatória!"; depois "Alteração efetuada com sucesso."; situação do desvio igual; histórico gravado</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-07 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: plano aberto, um resultado novo na grade. Fazer: clicar em Salvar duas vezes seguidas sem recarregar a tela e depois recarregar. Esperado pela norma: um só resultado; verificar duplicação (RN-GQ-D09-008)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-08 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: um resultado já salvo. Fazer: recarregar; clicar no lápis e na lixeira do resultado antigo; adicionar um segundo resultado. Esperado: resultado antigo editável e visível; verificar se não responde e se some da grade (RN-GQ-D09-009)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-09 (Alta)</td>
 <td>Tela: Monitoramento, Aprovar. Preparação: desvio com todas as ações Finalizado, resultado e verificação preenchidos. Fazer: Aprovar e confirmar SIM. Esperado: "Alteração efetuada com sucesso."; Aprovado Plano Ação Corretiva; campos travados; botão Plano de Ação Preventiva; desvio listado no plano preventivo; histórico gravado</td>
-<td>Sem teste individual; cadeia percorrida em 16/10 (RD 009/26)</td>
+<td>Não executado como caso individual; cadeia percorrida em 16/10 (RD 009/26) e aprovação vista em 21/10/2026 no CT-GQ-N09-05</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-10 (Alta)</td>
 <td>Tela: Monitoramento, Aprovar. Preparação: tela pronta para aprovar. Fazer: clicar em Aprovar e NÃO na confirmação. Esperado: nada gravado; situação igual</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-11 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: ações Finalizado. Fazer: marcar "Ações Corretivas Implementadas" Não, resultado "Implementada Não" e aprovar. Esperado pela norma: não aprovar; verificar se aprova (RN-GQ-D09-007)</td>
-<td>Sem teste</td>
+<td>Não executado como escrito; a aprovação com um resultado "Implementada = Não" foi vista no CT-GQ-N09-05</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-12 (Média)</td>
 <td>Tela: Monitoramento. Preparação: plano com Salvar parcial já feito (com justificativa). Fazer: Aprovar e consultar o histórico. Esperado: justificativa anterior preservada; verificar se foi substituída por vazio (RN-GQ-D09-005)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-13 (Média)</td>
 <td>Tela: Monitoramento, lista. Preparação: desvios nas três situações. Fazer: filtrar por cada situação. Esperado: só a situação escolhida; verificar que "Aprovado" não mostra as outras (RN-GQ-D09-013)</td>
-<td>Sem teste</td>
+<td>Não executado como escrito; o filtro de situação foi exercitado no caso de volume CT-GQ-F11 (Falhou, DV-GQ-028)</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-14 (Média)</td>
 <td>Tela: Monitoramento, lista. Preparação: desvio aberto em dia conhecido. Fazer: Data Início sozinha; Data Fim sozinha; as duas iguais. Esperado: resultados coerentes; verificar se o próprio dia some quando é a Data Fim</td>
-<td>Sem teste</td>
+<td>Não executado como escrito; o filtro de datas foi exercitado no caso de volume CT-GQ-F08 (Falhou, DV-GQ-027)</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-15 (Média)</td>
 <td>Tela: Monitoramento, lista. Preparação: desvios variados. Fazer: RD/Nº "005" e "005/26"; Descrição parcial. Esperado: o desvio é achado nos dois formatos de número; verificar o formato com ano</td>
-<td>Sem teste</td>
+<td>Não executado como escrito; o filtro por RD/Nº foi exercitado nos casos de volume CT-GQ-F05 e F06 (Falhou, DV-GQ-026)</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-16 (Média)</td>
 <td>Tela: Monitoramento, bloco Responsável Pela Liberação. Preparação: plano aberto por usuário diferente de quem registrou o desvio. Fazer: ler o campo Responsável. Esperado: nome de quem libera; verificar se mostra o responsável do desvio</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-17 (Baixa)</td>
 <td>Tela: Monitoramento, Visualizar. Preparação: desvio em Aprovado Plano Ação Corretiva. Fazer: abrir pelo ícone Visualizar; Imprimir. Esperado: tudo travado; só Imprimir e Voltar; PDF de CAPA com o plano e os resultados</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-18 (Média)</td>
 <td>Tela: Monitoramento, anexos. Preparação: plano aberto. Fazer: enviar anexo sem arquivo, sem descrição e completo; salvar e abrir o plano. Esperado: mensagens de anexo; anexo ligado ao desvio</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-20 (Média)</td>
@@ -300,17 +301,42 @@
 <tr>
 <td>CT-GQ-N09-21 a N09-24 (Alta e Média)</td>
 <td>Casos de segurança: ver documento interno</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-25 (Baixa)</td>
 <td>Tela: Monitoramento. Preparação: plano aberto. Fazer: Observação da verificação final e dos resultados com 5.000 caracteres e com aspas, menor e e comercial; salvar e reabrir. Esperado: aceita; texto íntegro nas grades e na impressão</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-26 (Baixa)</td>
 <td>Tela: Monitoramento, Imprimir. Preparação: desvio aprovado. Fazer: Imprimir pela lista e pela tela. Esperado: PDF de CAPA com resultados e verificação final</td>
-<td>Sem teste</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-F05 (volume)</td>
+<td>Telas 1 a 12, lista desta tela. Fazer: filtro por RD só com o número. Esperado: acha o desvio</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F06 (volume)</td>
+<td>Telas 3 a 5 e 7 a 12, lista desta tela. Fazer: filtro por RD com o ano (por exemplo "030/26"). Esperado: acha o desvio</td>
+<td>Falhou em 21/10/2026 (DV-GQ-026)</td>
+</tr>
+<tr>
+<td>CT-GQ-F08 (volume)</td>
+<td>Telas 7 a 12, lista desta tela. Fazer: Data Início e Data Fim no mesmo dia; e só Data Fim. Esperado: o desvio do dia aparece</td>
+<td>Falhou em 21/10/2026 (DV-GQ-027): 0 linhas nos dois casos, embora só com a Data Início aparecessem 9</td>
+</tr>
+<tr>
+<td>CT-GQ-F09 (volume)</td>
+<td>Telas 1 a 12, lista desta tela. Fazer: data inválida (31/02/2026). Esperado: mensagem de data inválida</td>
+<td>Passou com ressalva em 21/10/2026: a data é ignorada em silêncio e a lista sai completa (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F11 (volume)</td>
+<td>Telas 4, 7, 9, 10 e 12, filtro de situação. Fazer: filtrar por "Aprovado Plano Ação Corretiva". Esperado: só os desvios dessa situação</td>
+<td>Falhou em 21/10/2026 (DV-GQ-028): 10 linhas misturadas com pendentes</td>
 </tr>
 </tbody>
 </table></div>
@@ -320,7 +346,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

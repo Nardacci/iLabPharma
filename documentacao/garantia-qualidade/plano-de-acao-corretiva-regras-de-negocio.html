@@ -58,13 +58,13 @@
 <td>RN-GQ-046</td>
 <td>Cada ação exige descrição, responsável e prazo. O responsável é escolhido entre os responsáveis de uma divisão/seção.</td>
 <td>PlanoAcaoCorretivaValidator.cs:41-77; PlanoAcaoCorretivaRNCController.cs:441</td>
-<td>Extraída</td>
+<td>Validada no teste em parte (21/10/2026, CT-GQ-N07-01 e CT-GQ-N07-02): descrição e prazo da ação são cobrados na tela; o responsável só é cobrado depois que a divisão é escolhida. Plano com ações de duas áreas diferentes: não confirmado (o desvio do teste tinha uma ação)</td>
 </tr>
 <tr>
 <td>RN-GQ-047</td>
 <td>Ao salvar o plano, o desvio vai direto para Pendente Monitoramento do Plano Ação Corretiva. Não há aprovação do plano antes da execução.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:224</td>
-<td>Validada no teste (16/10/2026, rodada 3: o desvio RD 009/26 seguiu do plano à execução e ao monitoramento; sem captura própria desta tela)</td>
+<td>Validada no teste (16/10/2026, rodada 3: o desvio RD 009/26 seguiu do plano à execução e ao monitoramento; sem captura própria desta tela) e de novo em 21/10/2026, CT-GQ-019 (RD 052/26): salvar levou direto a Pendente Monitoramento do Plano Ação Corretiva, sem aprovação do plano (evidência P7.3-apos-salvar)</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-001</td>
@@ -82,25 +82,25 @@
 <td>RN-GQ-D07-003</td>
 <td>O título do plano (Ação Corretiva) e a descrição são obrigatórios.</td>
 <td>PlanoAcaoCorretivaValidator.cs:33-43</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N07-01): título e descrição vazios mostram "A Ação Corretiva é obrigatória." e "A Descrição Ação Corretiva é obrigatória."; desvio ficou em Pendente Plano Ação Corretiva</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-004</td>
 <td>O plano precisa ter ao menos uma ação; sem ação, aparecem as três mensagens de plano, responsável e prazo obrigatórios.</td>
 <td>PlanoAcaoCorretivaValidator.cs:45-55</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N07-01): as três mensagens de plano, responsável e prazo apareceram na faixa do bloco de ações. Atenção ao D07-005: a regra falha quando as ações são removidas pela lixeira</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-005</td>
 <td>O validador percorre todas as ações do plano, inclusive as marcadas como removidas. Por isso, remover todas as ações e salvar pode gravar um plano sem nenhuma ação ativa.</td>
 <td>PlanoAcaoCorretivaValidator.cs:45 e 59; PlanoAcaoCorretivaRNCController.cs:353 e 364</td>
-<td>A confirmar no teste</td>
+<td>Confirmada como falha (21/10/2026, CT-GQ-N07-06, DV-GQ-020, Alta): com todas as ações removidas pela lixeira, Salvar mostrou "Alteração efetuada com sucesso." e o desvio foi para Pendente Monitoramento sem nenhuma ação (evidências N07-06-acoes-removidas, N07-06-salvar-sem-acoes, N07-06b-monitoramento-plano-sem-acoes)</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-006</td>
 <td>O prazo da ação só é recusado se faltar ou tiver ano menor que 1930. Prazo no passado é aceito.</td>
 <td>PlanoAcaoCorretivaValidator.cs:73</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026): plano com prazo no passado foi aceito na criação (RD 054/26, visto no CT-GQ-N08-04). Comparação com a abertura do desvio e ano menor que 1930: não exercitados</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-007</td>
@@ -148,19 +148,25 @@
 <td>RN-GQ-D07-014</td>
 <td>O filtro de situação oferece só "Pendente Plano Ação Corretiva" e compara com a situação do plano, que nunca recebe esse valor (nasce como Pendente Aprovação e depois vira Aprovada ou Reprovada). A escolha dessa opção tende a devolver lista vazia.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:47-49 e 88-96 e 160</td>
-<td>A confirmar no teste</td>
+<td>Confirmada como falha (21/10/2026, CT-GQ-F11, DV-GQ-028): o filtro "Pendente Plano Ação Corretiva" devolveu 0 linhas, embora a lista tivesse 6</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-015</td>
 <td>O filtro RD/Nº procura o texto digitado dentro do número sequencial sem o ano, enquanto a máscara pede número/ano.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:67-68; PlanoAcaoCorretivaIndex.js:6; RegistroNaoConformidadeController.cs:278-281</td>
-<td>A confirmar no teste</td>
+<td>Confirmada como falha (21/10/2026, CT-GQ-F06, DV-GQ-026): "030/26" não acha o desvio; o número puro acha (CT-GQ-F05)</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-016</td>
 <td>Filtro de datas: só início = mesmo dia; início e fim = fim às 00:00 do último dia.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:73-86</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste em parte (21/10/2026, CT-GQ-F08 e F09, DV-GQ-027): só com a Data Início aparecem as linhas do dia (6); com início e fim no mesmo dia a lista vem vazia (0); data inválida é ignorada em silêncio. Só Data Fim: não visto nesta tela</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-017</td>
+<td>Ao Adicionar uma ação, a tela cobra descrição e prazo; o responsável só é cobrado depois que a divisão/seção é escolhida, e a divisão em si não é exigida. Nada entra na grade enquanto faltar dado.</td>
+<td>PlanoAcaoCorretivaSalvar.js:255-277 (Extraída do código); tela em CT-GQ-N07-02</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N07-02, RD 053/26; evidências N07-02-adicionar-vazio, P7.2-acao-sem-prazo)</td>
 </tr>
 </tbody>
 </table></div>
@@ -176,109 +182,129 @@
 </thead>
 <tbody>
 <tr>
-<td>CT-GQ-018 (Baixa)</td>
-<td>Tela: Plano de Ação Corretiva. Preparação: usuário sem a permissão exigida para planos. Fazer: abrir o plano. Esperado: volta para a lista (detalhe no documento interno)</td>
-<td>Sem resultado individual</td>
-</tr>
-<tr>
 <td>CT-GQ-019 (Baixa)</td>
 <td>Tela: Plano de Ação Corretiva. Preparação: desvio em Pendente Plano Ação Corretiva e duas áreas com responsáveis. Fazer: criar plano com duas ações de áreas diferentes e salvar. Esperado: desvio vai direto para Pendente Monitoramento, sem aprovação do plano</td>
-<td>Sem resultado individual; a cadeia foi percorrida com uma ação em 16/10 (RD 009/26)</td>
+<td>Passou com ressalva em 21/10/2026: o desvio foi direto para Pendente Monitoramento, sem aprovação do plano (RD 052/26); plano com ações de duas áreas não foi confirmado (o desvio tinha uma ação)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-01 (Alta)</td>
 <td>Tela: Plano, Editar. Preparação: desvio em Pendente Plano Ação Corretiva. Fazer: clicar em Salvar sem preencher nada e confirmar SIM. Esperado: as cinco mensagens (título, descrição, plano, responsável, prazo) nas faixas vermelhas; desvio continua em Pendente Plano Ação Corretiva</td>
-<td>Sem teste</td>
+<td>Passou em 21/10/2026 (RD 053/26): cinco mensagens em duas faixas; desvio continuou em Pendente Plano Ação Corretiva</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-02 (Alta)</td>
 <td>Tela: Plano, bloco Ações Corretivas. Preparação: plano aberto. Fazer: clicar em Adicionar com todos os campos vazios; depois só sem descrição; só sem responsável; só sem prazo. Esperado: "Descrição é obrigatória.", "Responsável é obrigatório.", "Data Prazo é obrigatória." conforme o campo faltante; nada entra na grade</td>
-<td>Sem teste</td>
+<td>Passou com ressalva em 21/10/2026: Adicionar vazio mostra descrição e prazo; o responsável só é cobrado depois de escolher a divisão, que não é exigida</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-03 (Média)</td>
 <td>Tela: Plano, campo Prazo. Preparação: ação com descrição e responsável. Fazer: informar prazo 31/02/2026, 00/00/0000, 29/02/2028, a data de hoje, uma data passada e 01/01/1900. Esperado: máscara só aceita números; datas impossíveis dão "Ocorreu um erro inesperado."; data passada aceita; ano 1900 recusado com "O Prazo na Ação Corretiva número N é obrigatório." (A confirmar no teste)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-04 (Média)</td>
 <td>Tela: Plano, Divisão/Seção. Preparação: divisão sem responsável cadastrado (Principal). Fazer: escolher a divisão. Esperado: lista de responsáveis fica vazia e desabilitada; a mensagem "Essa área não possui responsáveis." deve aparecer (o código sugere que não aparece)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-05 (Baixa)</td>
 <td>Tela: Plano, Divisão/Seção. Preparação: divisão já escolhida. Fazer: voltar o campo para "SELECIONE". Esperado: lista de responsáveis desabilitada sem erro de tela; verificar se há erro de script</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-06 (Alta)</td>
 <td>Tela: Plano. Preparação: plano com ações adicionadas. Fazer: remover todas as ações pela lixeira e salvar. Esperado pela norma: recusar, pedindo ao menos uma ação; verificar se o sistema grava plano sem ação ativa (RN-GQ-D07-005)</td>
-<td>Sem teste</td>
+<td>Falhou em 21/10/2026 (DV-GQ-020): salvou sem nenhuma ação e o desvio foi a Pendente Monitoramento</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-07 (Alta)</td>
 <td>Tela: Plano. Preparação: desvio em Pendente Monitoramento com plano e duas ações, uma já concluída. Fazer: reabrir o plano, trocar o prazo da ação pendente, adicionar e salvar sem justificativa. Esperado: o plano é aceito; conferir no histórico o valor antigo e novo, e se o responsável da ação foi mantido (RN-GQ-D07-011 e 013)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-08 (Alta)</td>
 <td>Tela: Plano e janela Histórico. Preparação: plano salvo. Fazer: abrir o Histórico da linha. Esperado: título, descrição, ações, responsável do plano, data e hora do servidor e usuário; verificar se há justificativa</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-09 (Média)</td>
 <td>Tela: Plano, anexos. Preparação: plano aberto. Fazer: Enviar sem arquivo; depois com arquivo e sem descrição; depois com ambos; excluir; abrir. Esperado: "O arquivo não foi informado."; "A descrição não foi informada."; "Arquivo enviado com sucesso."; o anexo some da grade ao excluir</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-10 (Média)</td>
 <td>Tela: Plano, campo Observação. Preparação: plano aberto. Fazer: digitar uma observação e depois enviar um anexo. Esperado: a observação deve continuar na tela; verificar se foi apagada (Inferência)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-11 (Média)</td>
 <td>Tela: Plano, lista. Preparação: ao menos três desvios nas duas situações da lista. Fazer: pesquisar com RD/Nº "005/26" e depois só "005" (se a máscara permitir). Esperado: o desvio é encontrado nos dois casos; verificar se o formato completo não acha nada</td>
-<td>Sem teste</td>
+<td>Não executado como escrito; o tema foi exercitado no caso de volume CT-GQ-F06 (Falhou, DV-GQ-026)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-12 (Média)</td>
 <td>Tela: Plano, lista. Preparação: desvio em Pendente Plano Ação Corretiva. Fazer: filtrar Situação por "Pendente Plano Ação Corretiva". Esperado: o desvio aparece; verificar se vem lista vazia (RN-GQ-D07-014)</td>
-<td>Sem teste</td>
+<td>Não executado como escrito; o tema foi exercitado no caso de volume CT-GQ-F11 (Falhou, DV-GQ-028)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-13 (Média)</td>
 <td>Tela: Plano, lista. Preparação: desvio aberto num dia conhecido. Fazer: pesquisar só com Data Início naquele dia; depois com início e fim iguais; depois fim no dia seguinte. Esperado: aparece nos três; verificar se o desvio some quando fim é o próprio dia</td>
-<td>Sem teste</td>
+<td>Não executado como escrito; o tema foi exercitado no caso de volume CT-GQ-F08 (Falhou, DV-GQ-027)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-14 (Baixa)</td>
 <td>Tela: Plano, lista. Preparação: desvios com meios de detecção variados. Fazer: filtrar por cada um dos sete meios e por Descrição parcial e em maiúsculas; clicar em Limpar. Esperado: só os desvios do meio escolhido; Limpar esvazia tudo</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-15 (Média)</td>
 <td>Tela: Plano, ícone Editar. Preparação: desvio sem plano. Fazer: abrir o plano e voltar sem salvar; consultar o Histórico. Esperado pela norma: nada gravado; verificar se um plano vazio foi criado (RN-GQ-D07-002)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-16 (Baixa)</td>
 <td>Tela: Plano, Imprimir. Preparação: plano salvo; e outro desvio sem item (DV-GQ-010). Fazer: Imprimir pela lista e pela tela. Esperado: PDF do CAPA com título, descrição e ações; verificar o desvio sem item</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-17 a N07-20 (Alta e Média)</td>
 <td>Casos de segurança: ver documento interno</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-21 (Baixa)</td>
 <td>Tela: Plano. Preparação: plano aberto. Fazer: texto de 5.000 caracteres no título, na descrição e na observação; salvar e imprimir. Esperado: aceita (sem limite no código) e imprime sem cortar</td>
-<td>Sem teste</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-22 (Baixa)</td>
 <td>Tela: Plano, ação existente. Preparação: plano salvo com uma ação. Fazer: clicar no lápis da ação, mudar só o prazo, Adicionar e Salvar. Esperado: o responsável da ação é mantido; verificar se ele foi apagado (Inferência)</td>
-<td>Sem teste</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-F05 (volume)</td>
+<td>Telas 1 a 12, lista desta tela. Fazer: filtro por RD só com o número. Esperado: acha o desvio</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F06 (volume)</td>
+<td>Telas 3 a 5 e 7 a 12, lista desta tela. Fazer: filtro por RD com o ano (por exemplo "030/26"). Esperado: acha o desvio</td>
+<td>Falhou em 21/10/2026 (DV-GQ-026)</td>
+</tr>
+<tr>
+<td>CT-GQ-F08 (volume)</td>
+<td>Telas 7 a 12, lista desta tela. Fazer: Data Início e Data Fim no mesmo dia; e só Data Fim. Esperado: o desvio do dia aparece</td>
+<td>Falhou em 21/10/2026 (DV-GQ-027): 0 linhas com início e fim iguais, embora só com a Data Início aparecessem 6</td>
+</tr>
+<tr>
+<td>CT-GQ-F09 (volume)</td>
+<td>Telas 1 a 12, lista desta tela. Fazer: data inválida (31/02/2026). Esperado: mensagem de data inválida</td>
+<td>Passou com ressalva em 21/10/2026: a data é ignorada em silêncio e a lista sai completa (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F11 (volume)</td>
+<td>Telas 4, 7, 9, 10 e 12, filtro de situação. Fazer: filtrar por "Pendente Plano Ação Corretiva". Esperado: só os desvios dessa situação</td>
+<td>Falhou em 21/10/2026 (DV-GQ-028): 0 linhas, com 6 na lista</td>
 </tr>
 </tbody>
 </table></div>
@@ -288,7 +314,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

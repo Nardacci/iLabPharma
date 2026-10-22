@@ -46,6 +46,7 @@
 <h2 id="resumo-da-tela">Resumo da tela</h2>
 <h3 id="execucao-do-plano-de-acao-corretiva">Execução do Plano de Ação Corretiva</h3>
 <p>Menu: Controle de Desvios › Execução do Plano de Ação Corretiva. Versão legado (código entregue pelo fornecedor). Rascunho de 21/10/2026, feito só pela leitura do código; o que não foi testado está marcado como "A confirmar no teste".</p>
+<p>Atualizado em 22/10/2026 com o resultado da rodada 1 de testes de tela (21/10/2026; <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>). O que a tela mostrou está marcado como "rodada 1" ou "21/10/2026"; o que o teste não exercitou continua como estava.</p>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>É a tela em que cada responsável informa que cumpriu a sua ação do plano corretivo: registra a data de conclusão e, se quiser, uma observação e anexos. Quando salva, a ação passa a "Finalizado". A tela trabalha ação por ação, não desvio por desvio.</p>
 <h4 id="quem-usa">Quem usa</h4>
@@ -78,7 +79,7 @@
 <h4 id="o-que-a-tela-representa">O que a tela representa</h4>
 <p>O plano foi salvo, o desvio está em "Pendente Monitoramento do Plano Ação Corretiva" e cada ação aparece na lista da pessoa que recebeu a tarefa. Esta tela trabalha ação por ação, não desvio por desvio. Ao salvar, a ação passa a "Finalizado" e fica com a data de conclusão e uma observação opcional. A situação do desvio não muda (RN-GQ-048).</p>
 <p>Quem depende dela é o Monitoramento. A GQ olha as ações do plano e vê quais estão "Finalizado" e quais ainda estão "Pendente". O botão Aprovar só aparece quando nenhuma ação está pendente. Se a execução for pulada, a ação continua pendente e o Monitoramento não mostra o botão. Mas o servidor não confere isso, e um plano já foi aprovado com ação pendente em teste (DV-GQ-002).</p>
-<p>O que o sistema exige aqui é pouco: só a data de conclusão, que não pode ser futura. Não pede descrição do que foi feito nem evidência (RN-GQ-D08-017). Por isso, a qualidade da prova depende de quem preenche. A observação digitada também pode não voltar ao reabrir a tela, porque a tela lê outra coluna do banco (RN-GQ-D08-010, a confirmar no teste).</p>
+<p>O que o sistema exige aqui é pouco: só a data de conclusão, que não pode ser futura. Não pede descrição do que foi feito nem evidência (RN-GQ-D08-017). Por isso, a qualidade da prova depende de quem preenche. A observação digitada também pode não voltar ao reabrir a tela, porque a tela lê outra coluna do banco (RN-GQ-D08-010; confirmado no teste de 21/10/2026, DV-GQ-024).</p>
 <p>A tela busca no módulo Principal a lista de usuários e a divisão de quem está conectado. Não lê nem grava nada na Produção nem no Estoque, e não abre mudança nem auditoria.</p>
 <h4 id="o-que-muda-para-o-resto-da-fabrica">O que muda para o resto da fábrica</h4>
 <p>Nada muda fora do menu Controle de Desvios. Concluir uma ação não altera lote, material, equipamento nem processo. Se a ação corrigia, por exemplo, um procedimento ou um equipamento, o sistema não confere se isso foi de fato feito no chão de fábrica: só guarda a declaração do responsável.</p>
@@ -101,14 +102,41 @@
 </ul>
 <h4 id="defeitos-ja-confirmados-em-teste-ligados-a-esta-tela">Defeitos já confirmados em teste, ligados a esta tela</h4>
 <ul>
-<li>Não há defeito DV-GQ registrado específico desta tela. Na rodada 3 (16/10/2026), a ação do RD 009/26 foi concluída pela tela e o desvio seguiu ao monitoramento (CT-GQ-022). O CT-GQ-020 não tem resultado individual.</li>
+<li>Até a rodada de 21/10/2026 não havia defeito DV-GQ registrado específico desta tela (ver a subseção seguinte). Na rodada 3 (16/10/2026), a ação do RD 009/26 foi concluída pela tela e o desvio seguiu ao monitoramento (CT-GQ-022). O CT-GQ-020 não tem resultado individual.</li>
 <li>DV-GQ-002 (Alta, rodada 1): o monitoramento aprova o plano com ação ainda pendente por chamada direta. Relaciona-se com esta tela porque é aqui que a ação seria finalizada.</li>
 </ul>
+<h4 id="confirmado-na-rodada-1-21-10-2026">Confirmado na rodada 1 (21/10/2026)</h4>
+<p>Defeitos novos que dizem respeito a esta tela (fonte: <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>):</p>
+<ul>
+<li>DV-GQ-024 (Média): ao reabrir pelo lápis uma ação finalizada que tinha observação, a Observação vem vazia; a data volta preenchida (CT-GQ-N08-05).</li>
+<li>DV-GQ-025 (Alta, telas 8 e 11): a conclusão de ação aceita tudo sem aviso. Ação com prazo vencido concluída com a data de hoje: "Alteração efetuada com sucesso.", sem aviso de atraso (CT-GQ-N08-04). Ação já finalizada regravada com outra data e outra observação: aceita sem justificativa; o histórico da ação guarda o valor antigo e o novo, mas a justificativa fica vazia (CT-GQ-N08-06). O plano com prazo no passado também foi aceito na criação.</li>
+<li>DV-GQ-026 (Média): o filtro RD/Nº não acha com o número e o ano; acha só com o número (CT-GQ-F06).</li>
+<li>DV-GQ-027 (Média): filtro de datas. Nesta tela, início e fim no mesmo dia devolvem lista vazia, e data inválida é ignorada em silêncio (CT-GQ-F08 e F09).</li>
+</ul>
+<p>Pontos de atenção do código que a tela confirmou:</p>
+<ul>
+<li>Observação perdida ao reabrir (RN-GQ-D08-010): confirmado, DV-GQ-024.</li>
+<li>Execução sem justificativa e sem aviso de atraso (RN-GQ-D08-006 e D08-015): confirmado, DV-GQ-025.</li>
+<li>A recusa da data futura e da data vazia funciona como descrito (RN-GQ-048).</li>
+</ul>
+<p>Pontos de atenção que o teste não exercitou (continuam "A confirmar no teste"): uma linha por desvio quando há duas ações do mesmo responsável (RN-GQ-D08-002); filtro Responsável sem efeito (RN-GQ-D08-005); regra do ícone Editar com defeito de código; falha da pesquisa com a mensagem de "solicitações mudanças"; o Responsável mostrado no Visualizar; o Histórico antes da primeira execução; anexos; impressão.</p>
+<p>O que a tela fez como esperado: recusa de data vazia e de data futura; desvio permanece em Pendente Monitoramento depois da execução (CT-GQ-020, CT-GQ-N08-01).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>11-inventario-de-telas.md (linha 121) lista a Execução do Plano de Ação Corretiva entre as telas "em que a leitura do código não encontrou falha própria". A leitura desta página encontrou: observação lida da coluna errada, responsável do Visualizar errado, lista com uma linha por desvio, filtro Responsável sem efeito e regra de ícone com defeito. Sugere-se corrigir o inventário e a contagem de 9 telas "sem falha apontada".</li>
 <li>11-inventario-de-telas.md marca a tela como "Não testada"; na rodada de 16/10 ela foi usada na cadeia do RD 009/26.</li>
 <li>01-regras-de-negocio.md, RN-GQ-048, está correta. Falta registrar que a lista traz uma linha por desvio e que o filtro Responsável não funciona (RN-GQ-D08-002 e 005).</li>
+</ul>
+<h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
+<p>Comparação entre o que esta página dizia e o que a tela mostrou. Resolvidas nesta atualização, salvo onde indicado.</p>
+<ul>
+<li>A página dizia que a observação pode não voltar ao reabrir a ação (inferência do código). A tela confirmou: DV-GQ-024. Resolvida.</li>
+<li>A página dizia que reexecutar uma ação finalizada não pede justificativa. A tela confirmou, e mostrou que o histórico guarda valor antigo e novo com justificativa vazia: DV-GQ-025. Resolvida.</li>
+<li>A página dizia que concluir depois do prazo é aceito sem aviso. A tela confirmou. Resolvida.</li>
+<li>O filtro Descrição: o roteiro de testes previa a descrição do desvio; a tela filtra pela descrição da ação. Esta página já descrevia a tela corretamente. Sem correção.</li>
+<li>O filtro RD/Nº com o ano não acha (DV-GQ-026) e o filtro de datas falha com início e fim no mesmo dia (DV-GQ-027). A página já avisava que podia ocorrer; agora é fato. Resolvida.</li>
+<li>A frase "não há defeito DV-GQ registrado específico desta tela" estava desatualizada; corrigida na seção Falhas e pontos de atenção. Resolvida.</li>
+<li>Item 11-inventario-de-telas.md (linha 121), que lista esta tela entre as "sem falha própria": a rodada 1 mostra falhas (DV-GQ-024 e DV-GQ-025). Não resolvida aqui, porque o inventário está fora do lote desta atualização.</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-acao-corretiva-anvisa.html"><small>← Anterior</small><strong>Plano de Ação Corretiva: Anvisa</strong></a><a class="ap ap-prox" href="execucao-do-plano-de-acao-corretiva-manual-do-usuario.html"><small>Próximo →</small><strong>Execução do Plano de Ação Corretiva: Manual do usuário</strong></a></nav>
@@ -116,7 +144,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#execucao-do-plano-de-acao-corretiva">Execução do Plano de Ação Corretiva</a></li><li><a href="#importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

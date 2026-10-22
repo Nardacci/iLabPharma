@@ -56,7 +56,7 @@
 - Trechos comuns: HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRegistroNC.cshtml, _GridAcoesPreventivas.cshtml e _GridAcoesResultados.cshtml
 - Scripts: HSolutions.GQ.UI/Areas/Bloco2/Script/LiberacaoPlanoAcaoPreventivaIndex.js e LiberacaoPlanoAcaoPreventivaSalvar.js</p>
 <p>Como ler as fontes: "Bloco2/" é HSolutions.GQ.UI/Areas/Bloco2/; "UI/" é HSolutions.GQ.UI/; "Domain/" é HSolutions.GQ.Domain/; "Reports/" é HSolutions.GQ.Reports/Bloco2/; "DB/" é Hsolutions.GQ.DB/Tables/; "Infra/" é HSolutions.GQ.Infrastructure/. Quando só aparece o nome do controlador, é LiberacaoPlanoAcaoPreventivaRNCController.cs.</p>
-<p>Estado nos testes: testada nas rodadas de 15 e 16/10/2026 (CT-GQ-023). Resultado: Falhou (defeito). O único botão de encerramento é Aprovar, não há Reprovar, e o desvio com a ação marcada "Não implementada" foi encerrado como Finalizado (execucao/2026-10-16/resultado.md). Defeito DV-GQ-012, confirmado.</p>
+<p>Estado nos testes: testada nas rodadas de 15 e 16/10/2026 (CT-GQ-023). Resultado: Falhou (defeito). O único botão de encerramento é Aprovar, não há Reprovar, e o desvio com a ação marcada "Não implementada" foi encerrado como Finalizado (execucao/2026-10-16/resultado.md). Defeito DV-GQ-012, confirmado. Rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com a massa de dados: foram executados CT-GQ-024, CT-GQ-N12-03, N12-06, N12-07 e N12-08 e os casos de volume e consulta F05, F06, F08, F09 e F11. Resultado: 2 passaram, 1 passou com ressalva e 7 falharam.</p>
 <h2 id="importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</h2>
 <h4 id="em-uma-frase">Em uma frase</h4>
 <p>É a última tela do desvio com CAPA: é aqui que a GQ confere se as ações foram feitas e encerra o desvio como "Finalizado".</p>
@@ -83,6 +83,34 @@
 <li>Possível histórico incompleto na primeira gravação (ver Situações e histórico).</li>
 <li>Defeitos confirmados em teste para esta tela: DV-GQ-012 (sem botão Reprovar; o único caminho encerra o desvio mesmo com a ação marcada não implementada). Não há outros registrados.</li>
 </ul>
+<h4 id="confirmado-na-rodada-1-21-10-2026">Confirmado na rodada 1 (21/10/2026)</h4>
+<p>Fonte: execucao/2026-10-21-desvios-rodada-1/resultado.md. Casos desta tela: CT-GQ-024, CT-GQ-N12-03, N12-06, N12-07 e N12-08, mais os de volume e consulta F05, F06, F08, F09 e F11.</p>
+<p>Defeitos novos que dizem respeito a esta tela:</p>
+<ul>
+<li>DV-GQ-022 (gravidade Alta): Aprovar finaliza o desvio sem nenhuma linha de resultado (CT-GQ-N12-06, desvio 045/26) e sem a observação de verificação final (CT-GQ-N12-07, RD 058/26); só pede a confirmação. A tela 9 recusa esses dois casos. Evidências: N12-06-sem-resultado, N12-07-sem-obs-final.</li>
+<li>DV-GQ-023 (Alta): o mesmo usuário escreveu o plano preventivo, executou a ação e aprovou o monitoramento (RD 058/26), e o sistema aceitou sem aviso. Falta a separação de funções. Evidência: CT-GQ-024-historico.</li>
+<li>DV-GQ-026 (Média): o filtro RD/Nº não acha o desvio quando se digita o número com o ano.</li>
+<li>DV-GQ-027 (Média): nesta lista, início e fim no mesmo dia devolvem 0 linhas, e só a data "até" também devolve 0; data impossível (31/02/2026) é ignorada sem mensagem.</li>
+<li>DV-GQ-028 (Média): o filtro "Aprovado Plano Ação Preventiva" devolve pendentes e encerrados misturados, e "Reprovado" devolve 0. Evidência: N12-03-filtro-aprovado.</li>
+</ul>
+<p>Defeito já registrado e reconfirmado:</p>
+<ul>
+<li>DV-GQ-016: não existe botão Reprovar nesta tela (passo P12.1, evidência P12.1-botoes-sem-reprovar). O fato já constava como DV-GQ-012 nesta página.</li>
+</ul>
+<p>Pontos de atenção do código que se confirmaram:</p>
+<ul>
+<li>Sem Reprovar e encerramento sem conferir a implementação (RN-GQ-D12-02 e D12-05, parcialmente).</li>
+<li>A lista não distingue plano aceito de não aceito (RN-GQ-D12-01) e o filtro "Aprovado" não filtra (RN-GQ-D12-13).</li>
+<li>Salvar exige a justificativa na janela do navegador (RN-GQ-D12-04).</li>
+<li>Separação de funções ausente (CT-GQ-024).</li>
+</ul>
+<p>Pontos de atenção que não foram confirmados ou não foram testados:</p>
+<ul>
+<li>Histórico incompleto na primeira gravação (CT-GQ-N12-13), reabrir depois do Salvar e linhas de resultado que não podem ser alteradas (N12-09), responsável exibido (N12-15) e Ações Nº livre (N12-16): não executados nesta tela. O DV-GQ-036 (histórico sem o conteúdo dos resultados) foi visto em outras telas; é provável que valha aqui, mas o histórico do monitoramento não foi aberto (inferência).</li>
+<li>Aprovar com ação ainda Pendente (N12-10) e com "Implementadas = Não" (N12-11): não executados com esse ângulo; o N12-06 finalizou um desvio cuja ação não tinha sido executada.</li>
+<li>Segunda confirmação (N12-12), tela depois de encerrar (N12-14), impressão (N12-17) e anexos (N12-18): não executados.</li>
+<li>Justificativa gravada só no histórico e não no registro (RN-GQ-D12-09): não conferido.</li>
+</ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>RN-GQ-056 (01-regras-de-negocio.md): diz "um resultado por ação"; o validador exige pelo menos uma linha de resultado e não liga cada linha a uma ação (LiberacaoPlanoAcaoPreventivaValidator.cs:38-58). Corrigido nesta página.</li>
@@ -90,13 +118,22 @@
 <li>Plano de testes 08, CT-GQ-023: o texto previa "Reprovar" na tela; o botão não existe (DV-GQ-012).</li>
 <li>Roteiro roteiros/desvios-capa.md, passo 12.1: manda clicar em "Reprovar"; o botão não existe. Atualizar para "Aprovar" e registrar a ausência.</li>
 </ul>
+<h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
+<p>A tabela de divergências do resultado.md não traz nenhum item desta tela. Do que a rodada mostrou em comparação com esta página:</p>
+<ul>
+<li>RN-GQ-056, a mensagem "É necessária resultado da implementação das Ações." e a mensagem "A Observação de Verificação Final é obrigatória." (Mensagens do sistema) não apareceram na tela 12 (DV-GQ-022). Resolvida nesta atualização quanto ao texto: regra, campos, botões e mensagens foram corrigidos. A causa (por que o validador não recusou) não foi investigada e fica para a leitura do código ou para o DBA e o desenvolvimento.</li>
+<li>RN-GQ-D12-05 dizia "A confirmar no teste"; o N12-06 confirmou, em parte, que o encerramento não confere a execução das ações. Resolvida.</li>
+<li>O filtro "Aprovado Plano Ação Preventiva" devolveu 9 linhas no CT-GQ-N12-03 e 10 no CT-GQ-F11. O resultado.md não explica a diferença (execuções diferentes, com a massa em mudança). Em aberto.</li>
+<li>O resultado.md não informa a contagem da lista com TODAS, necessária para dizer se o filtro "Aprovado" devolve o mesmo que TODAS, como esta página afirma. Em aberto.</li>
+<li>O roteiro, passo 12.1, que manda clicar em "Reprovar": o botão não existe (já registrado antes; reconfirmado na rodada 1).</li>
+</ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="execucao-plano-de-acao-preventiva-anvisa.html"><small>← Anterior</small><strong>Execução Plano de Ação Preventiva: Anvisa</strong></a><a class="ap ap-prox" href="monitoramento-do-plano-de-acao-preventiva-manual-do-usuario.html"><small>Próximo →</small><strong>Monitoramento do Plano de Ação Preventiva: Manual do usuário</strong></a></nav>
   </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#monitoramento-do-plano-de-acao-preventiva">Monitoramento do Plano de Ação Preventiva</a></li><li><a href="#importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

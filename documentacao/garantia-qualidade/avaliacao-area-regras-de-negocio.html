@@ -57,31 +57,31 @@
 <td>RN-GQ-029</td>
 <td>Cada área envolvida registra <strong>uma</strong> avaliação, com <strong>observação obrigatória</strong>. A avaliação nasce <strong>concluída</strong> (Finalizado) e não pode ser refeita pelo caminho normal</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:258-270</code> e <code>:351-355</code></td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-012 e CT-GQ-013): observação obrigatória e avaliação já concluída (Finalizado). Que a avaliação não possa ser refeita: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-030</td>
 <td>Quando <strong>todas</strong> as áreas avaliaram, o desvio vai para Pendente Avaliação Relatório de Desvios</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:273-276</code></td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-012 e CT-GQ-013): com só a área B avaliando, o desvio ficou em Pendente Responsável Área; depois da área A, foi a Pendente Avaliação Relatório de Desvios</td>
 </tr>
 <tr>
 <td>RN-GQ-031</td>
 <td>Na lista, o botão de avaliar só aparece para quem é da área. <strong>Ao salvar, o sistema não confere de novo</strong> se o usuário pertence à área avaliada: a área do usuário é buscada e não é usada; a área que vale é a enviada pela tela</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:116-117</code>, <code>:249</code> e <code>:256</code></td>
-<td>Extraída; a gravação sem conferência: A confirmar no teste</td>
+<td>Lista só com a linha da área do usuário: validada no teste (21/10/2026, CT-GQ-N04-01). A gravação sem conferência: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-149</td>
 <td>A <strong>área de um usuário</strong> vem do campo <strong>Divisão</strong> do cadastro dele no Principal. Com a Divisão vazia, o usuário não vê nenhuma avaliação de área</td>
 <td><code>HSolutions.GQ.Services/Principal/AreaService.cs:63-69</code>; <code>1.principal/app/LaboSys_UI/Api/AreaController.cs:92-99</code></td>
-<td>Validada no teste (12/10/2026)</td>
+<td>Validada no teste (12/10/2026); reconfirmada em 21/10/2026 (CT-GQ-N04-01): um usuário sem Divisão no cadastro viu a lista vazia</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-01</td>
 <td>A lista traz desvios em Pendente Responsável Área ou Pendente Avaliação Relatório de Desvios, uma linha por área envolvida <strong>não excluída</strong> (lixeira), e só a linha da área do usuário</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:55-57</code>, <code>:101-126</code></td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N04-01 e CT-GQ-013): só a linha da área do usuário; a linha da área que já avaliou continua na lista como Finalizado. Áreas excluídas (lixeira): A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-02</td>
@@ -93,25 +93,25 @@
 <td>RN-GQ-D04-03</td>
 <td>O filtro Situação (Pendente ou Finalizado) olha a avaliação da <strong>área</strong>. Quando nenhuma área do desvio tem a situação pedida, o código volta a listar as áreas sem avaliação, de modo que filtrar por "Finalizado" pode trazer linhas Pendente</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:88-109</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F11): "Finalizado" devolveu 6 linhas misturadas com Pendente (DV-GQ-028)</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-04</td>
 <td>Filtros de texto: RD/Nº e Descrição procuram o trecho digitado. O RD/Nº guardado não tem o ano</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:59-63</code>; <code>HSolutions.GQ.Domain/Entities/Bloco2/ControleDesvios/RegistroNaoConformidade.cs:15-16</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N04-02, CT-GQ-F05 e CT-GQ-F06): o número acha por trecho ("030", "30", "03", "5", "005"); com o ano ("030/26", "30/26", "/26", "005/26") não acha e não avisa (DV-GQ-026). Filtro Descrição nesta tela: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-05</td>
 <td>Datas: só a data inicial traz um único dia; inicial e final, o intervalo até o fim do dia final; só a final é ignorada</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:65-77</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F07 e CT-GQ-F08): só início = um dia; início e fim no mesmo dia = as linhas do dia; só fim ignorada. Data inválida: ver RN-GQ-D04-19</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-06</td>
 <td>O lápis (Editar) só aparece enquanto a avaliação da área não está Finalizado; depois disso, aparece a lupa. Histórico e impressão aparecem sempre</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Models/AvaliacaoAreaRDIndexResultadoModel.cs:53</code>; <code>HSolutions.GQ.UI/Scripts/HSGridApi.js:266-290</code>, <code>:317-355</code></td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-013): lápis enquanto Pendente, lupa depois de Finalizado. Histórico e impressão desta tela: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-07</td>
@@ -147,7 +147,7 @@
 <td>RN-GQ-D04-12</td>
 <td>O histórico da gravação registra a mudança de situação do desvio e a ligação da nova avaliação à área, mas <strong>não</strong> registra o texto da observação nem quem avaliou (esses dados ficam só na própria avaliação)</td>
 <td><code>HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:100-106</code>, <code>:389-390</code></td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-F04): o histórico do desvio não traz o texto das observações das áreas (DV-GQ-036). Quem avaliou: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-13</td>
@@ -185,6 +185,12 @@
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:38-360</code></td>
 <td>Extraída</td>
 </tr>
+<tr>
+<td>RN-GQ-D04-19</td>
+<td>Data inválida no filtro (por exemplo 31/02/2026) é ignorada sem mensagem: a lista sai completa, como se a data não tivesse sido digitada</td>
+<td>Comportamento visto na tela; <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>, CT-GQ-F09</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F09; DV-GQ-027)</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -201,37 +207,32 @@
 <tr>
 <td>CT-GQ-012</td>
 <td>Baixa. Tela: Avaliação Área, Editar. Preparação: desvio com duas áreas em Pendente Responsável Área. Fazer: salvar sem observação; depois só a primeira área avaliar. Esperado: recusa "A Observação da Área é obrigatória."; depois o desvio continua em Pendente Responsável Área</td>
-<td>Sem resultado como caso (a rodada 1 só observou a regra da Divisão, RN-GQ-149)</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-013</td>
 <td>Baixa. Tela: Avaliação Área. Preparação: primeira área já avaliou. Fazer: a segunda área avalia. Esperado: Pendente Avaliação Relatório de Desvios</td>
-<td>Sem resultado como caso</td>
-</tr>
-<tr>
-<td>CT-GQ-113</td>
-<td>Baixa. Tela: lista. Preparação: usuário sem acesso na GQ. Fazer: abrir a lista e clicar Pesquisar. Esperado: lista sem botões de edição (e sem erro)</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-01</td>
 <td>Alta. Lista só da área do usuário. Preparação: desvio com áreas A e B; usuário A e usuário B. Fazer: Pesquisar com cada usuário. Esperado: cada um vê só a linha da própria área; usuário sem Divisão não vê nada (RN-GQ-149)</td>
-<td>Não executado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-02</td>
 <td>Média. Filtro RD/Nº. Fazer: pesquisar por "009", por "009/26" e por "9". Esperado: registrar quais acham o desvio (RN-GQ-D04-04)</td>
-<td>Não executado</td>
+<td>Falhou em 21/10/2026 (DV-GQ-026)</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-03</td>
 <td>Média. Filtro de datas. Fazer: só Data Início; Data Início e fim; só Data fim; data inválida (31/02/2026); data sem barras. Esperado: dia único; intervalo; só fim ignorada; registrar o comportamento com data inválida (RN-GQ-D04-05)</td>
-<td>Não executado</td>
+<td>Não executado como caso próprio; as datas foram cobertas pelos casos de volume CT-GQ-F07, F08 e F09 (abaixo)</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-04</td>
 <td>Média. Filtro Situação. Preparação: desvio com a área A finalizada e a B pendente; outro desvio sem nenhuma avaliação. Fazer: filtrar por Pendente, Finalizado e TODAS. Esperado: registrar se "Finalizado" traz linhas Pendente (RN-GQ-D04-03)</td>
-<td>Não executado</td>
+<td>Não executado como caso próprio; o filtro de situação foi coberto pelo caso de volume CT-GQ-F11 (abaixo)</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-05</td>
@@ -308,6 +309,36 @@
 <td>Baixa. Área excluída. Preparação: desvio com área excluída (lixeira) sem avaliação, em dado de teste. Fazer: a outra área avalia. Esperado: registrar se o desvio avança (RN-GQ-D04-13)</td>
 <td>Não executado</td>
 </tr>
+<tr>
+<td>CT-GQ-F05</td>
+<td>Todas as listas. Filtro por RD só com o número. Fazer: pesquisar "030", "30", "03", "5" e "005". Esperado: acha o desvio</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F06</td>
+<td>Telas 3 a 5 e 7 a 12. Filtro por RD com o ano (nnn/26). Fazer: pesquisar "030/26", "30/26", "/26" e "005/26". Esperado: acha o desvio</td>
+<td>Falhou em 21/10/2026 (DV-GQ-026)</td>
+</tr>
+<tr>
+<td>CT-GQ-F07</td>
+<td>Telas 1 a 6. Filtro por data. Fazer: só Data Início (um dia). Esperado: os desvios daquele dia</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F08</td>
+<td>Telas 7 a 12 (planejado). Filtro por data. Fazer: início e fim no mesmo dia; só Data Fim. Esperado: as linhas do dia; só fim ignorada</td>
+<td>Passou em 21/10/2026 nesta tela (o caso falhou nas telas 7 a 12, DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F09</td>
+<td>Telas 1 a 12. Data inválida. Fazer: Data Início 31/02/2026. Esperado: mensagem de data inválida</td>
+<td>Passou com ressalva em 21/10/2026: a data inválida é ignorada sem mensagem (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F11</td>
+<td>Telas 4, 7, 9, 10 e 12. Filtro Situação. Fazer: filtrar por "Finalizado" e por "Reprovado". Esperado: só a situação escolhida</td>
+<td>Falhou em 21/10/2026 (DV-GQ-028)</td>
+</tr>
 </tbody>
 </table></div>
     </article>
@@ -316,7 +347,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

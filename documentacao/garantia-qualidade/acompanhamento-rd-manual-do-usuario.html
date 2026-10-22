@@ -45,14 +45,34 @@
     <article class="texto texto-largo">
 <ol>
 <li>No menu, abra Controle de Desvios › Acompanhamento RD. A tela tem um bloco Pesquisa com Data Início, até e Situação. Não há lista na tela: o resultado sai direto em PDF.</li>
+</ol>
+<figure><a href="../img/garantia-qualidade/t13-p01-filtros.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t13-p01-filtros.png" alt="Acompanhamento RD: Os filtros e os botões da tela" loading="lazy"></a><figcaption>Acompanhamento RD: Os filtros e os botões da tela · clique para ampliar</figcaption></figure>
+
+<ol start="2">
 <li>Preencha Data Início e até, no formato dd/mm/aaaa (há calendário e máscara). Os dois campos são obrigatórios.</li>
 <li>Se quiser só uma situação, escolha na lista Situação. A opção TODAS (padrão) traz todos os desvios do período.</li>
 <li>Clique em Imprimir. Uma nova janela abre com o PDF "PLANILHA PARA ACOMPANHAMENTO DAS NÃO CONFORMIDADES", em folha A4 deitada, com o cliente, o logotipo, o período, a data e o usuário que imprimiu.</li>
+</ol>
+<figure><a href="../img/garantia-qualidade/t13-p03-pdf.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t13-p03-pdf.png" alt="Acompanhamento RD: O relatório em PDF" loading="lazy"></a><figcaption>Acompanhamento RD: O relatório em PDF · clique para ampliar</figcaption></figure>
+
+<ol start="5">
 <li>Se um dos campos de data estiver vazio, aparece a faixa vermelha "Preencha o Período." e nada é impresso.</li>
+</ol>
+<figure><a href="../img/garantia-qualidade/t13-p02-erro-periodo.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t13-p02-erro-periodo.png" alt="Acompanhamento RD: A mensagem quando falta o período ou o ano" loading="lazy"></a><figcaption>Acompanhamento RD: A mensagem quando falta o período ou o ano · clique para ampliar</figcaption></figure>
+
+<ol start="6">
 <li>Limpar apaga as duas datas, volta a Situação para TODAS e esconde a faixa vermelha.</li>
 <li>Não há botão Pesquisar, Incluir, Editar, Cancelar ou Visualizar. A tela só tem Limpar e Imprimir.</li>
 <li>Para ler o PDF: cada linha é um desvio. Nº RNC é o número com o ano (por exemplo 006/26), MEIO DETECÇÃO é o método registrado, TÓPICO DA NÃO CONFORMIDADE é a descrição do desvio, SETOR SOLICITANTE é a área de quem respondeu pelo desvio, GRAU CRITICIDADE (hoje sai sempre em branco), STATUS DO RNC é a situação do desvio e STATUS DAS AÇÕES resume as ações corretivas e, quando existe plano preventivo, as preventivas.</li>
 </ol>
+<p>Observado na rodada 1 (21/10/2026):</p>
+<ul>
+<li>Sem datas, só com a Data Início ou só com a data "até": aparece a faixa "Preencha o Período." e nenhuma janela abre (CT-GQ-N13-01).</li>
+<li>O PDF da massa tem o cabeçalho "PLANILHA PARA ACOMPANHAMENTO DAS NÃO CONFORMIDADES" e as colunas Nº RNC, meio de detecção, tópico, setor solicitante, grau de criticidade, status do RNC e status das ações, sem agrupamento por causa ou área (CT-GQ-025). A data e a hora impressas no PDF saem no formato americano (10/21/2026 10:03:29 PM; DV-GQ-034).</li>
+<li>A coluna GRAU CRITICIDADE sai em branco, inclusive para o desvio com CAPA crítico (038/26) e para o menor (039/26); nenhuma ocorrência de Crítico, Maior ou Menor no PDF (CT-GQ-N13-06; DV-GQ-031).</li>
+<li>Escolhida uma situação, o PDF traz os desvios dela e a contagem confere (CT-GQ-N13-02). A opção "Aprovado Plano Ação Preventiva" devolve vazio, e a lista de situações não oferece Finalizado, Cancelado, Pendente Registro, Pré Avaliação, Responsável Área nem CAPA (DV-GQ-028).</li>
+<li>Na impressão de "todas as situações" (01/10 a 21/10), a situação impressa difere da situação da tela em 2 de 51 desvios lidos: o 018/26 (na tela, Cancelado; no PDF, Pendente Registro Ação Corretiva) e o 026/26 (na tela, Pendente Pré Avaliação; no PDF, Pendente Responsável Área). Não foi conferido de qual lado está a diferença (DV-GQ-037).</li>
+</ul>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <h3 id="tela-index">Tela (Index)</h3>
 <div class="tabela"><table>
@@ -70,21 +90,21 @@
 <td>Data Início</td>
 <td>Data</td>
 <td>Sim (conferido só no navegador)</td>
-<td>dd/mm/aaaa, máscara e calendário. O navegador só confere se não está vazio; o texto é montado como mm/dd/aaaa na chamada</td>
+<td>dd/mm/aaaa, máscara e calendário. O navegador só confere se não está vazio; o texto é montado como mm/dd/aaaa na chamada Rodada 1 (CT-GQ-N13-01): vazia faz aparecer "Preencha o Período." e nenhuma janela abre.</td>
 <td>Bloco2/Views/AcompanhamentoRNC/Index.cshtml:25; Bloco2/Script/AcompanhamentoRNCIndex.js:2-3,19-28,33-39</td>
 </tr>
 <tr>
 <td>até (Data Fim)</td>
 <td>Data</td>
 <td>Sim (conferido só no navegador)</td>
-<td>dd/mm/aaaa. O servidor soma um dia para incluir o dia final inteiro. Não é comparada com a Data Início</td>
+<td>dd/mm/aaaa. O servidor soma um dia para incluir o dia final inteiro. Não é comparada com a Data Início Rodada 1 (CT-GQ-N13-01): vazia faz aparecer "Preencha o Período." e nenhuma janela abre.</td>
 <td>Index.cshtml:29; AcompanhamentoRNCIndex.js:4-5; AcompanhamentoRNCController.cs:40,46</td>
 </tr>
 <tr>
 <td>Situação</td>
 <td>Lista</td>
 <td>Não</td>
-<td>TODAS (0) ou uma de seis: Pendente Avaliação Relatório de Desvios, Pendente Plano Ação Corretiva, Pendente Monitoramento do Plano Ação Corretiva, Aprovado Plano Ação Corretiva, Pendente Monitoramento do Plano Ação Preventiva, Aprovado Plano Ação Preventiva. Não oferece Finalizado, Cancelado, as situações iniciais nem Reprovado</td>
+<td>TODAS (0) ou uma de seis: Pendente Avaliação Relatório de Desvios, Pendente Plano Ação Corretiva, Pendente Monitoramento do Plano Ação Corretiva, Aprovado Plano Ação Corretiva, Pendente Monitoramento do Plano Ação Preventiva, Aprovado Plano Ação Preventiva. Não oferece Finalizado, Cancelado, as situações iniciais nem Reprovado Rodada 1 (CT-GQ-N13-02; DV-GQ-028): as seis opções filtram e a contagem confere, exceto "Aprovado Plano Ação Preventiva", que devolve vazio. Não oferece Finalizado, Cancelado, Pendente Registro, Pré Avaliação, Responsável Área nem CAPA.</td>
 <td>Index.cshtml:34-40; Bloco2/Models/AcompanhamentoRNCIndexModel.cs:19-37</td>
 </tr>
 <tr>
@@ -133,7 +153,7 @@
 <td>Rodapé: DATA, USUÁRIO e Página x/y</td>
 <td>Texto</td>
 <td>Não se aplica</td>
-<td>Data e hora da impressão, nome de quem imprimiu e paginação</td>
+<td>Data e hora da impressão, nome de quem imprimiu e paginação Rodada 1 (CT-GQ-025; DV-GQ-034): a data e a hora de impressão saíram no formato americano (10/21/2026 10:03:29 PM). O resultado situa essa data no cabeçalho; a posição no PDF fica a conferir.</td>
 <td>AcompanhamentoRNC.rdlc (campos Now(), Usuario e PageNumber)</td>
 </tr>
 <tr>
@@ -168,14 +188,14 @@
 <td>GRAU CRITICIDADE</td>
 <td>Texto</td>
 <td>Não se aplica</td>
-<td>Sempre em branco: o código cria o texto vazio e nunca o preenche, embora o Relatório de CAPA registre a criticidade</td>
+<td>Sempre em branco: o código cria o texto vazio e nunca o preenche, embora o Relatório de CAPA registre a criticidade Rodada 1 (CT-GQ-N13-06; DV-GQ-031): confirmado em branco, também para o CAPA crítico (038/26) e o menor (039/26).</td>
 <td>Reports/DadosRNCFactory.cs:265,286</td>
 </tr>
 <tr>
 <td>STATUS DO RNC</td>
 <td>Texto</td>
 <td>Não se aplica</td>
-<td>Situação atual do desvio, pela descrição do enum</td>
+<td>Situação atual do desvio, pela descrição do enum Rodada 1 (CT-GQ-F12; DV-GQ-037): em 2 de 51 desvios lidos a situação do PDF difere da da tela (018/26 e 026/26).</td>
 <td>Reports/DadosRNCFactory.cs:288</td>
 </tr>
 <tr>
@@ -202,7 +222,7 @@
 <tr>
 <td>Imprimir</td>
 <td>Sempre</td>
-<td>Confere se as duas datas estão preenchidas, monta o endereço com o período e a situação e abre o PDF numa nova janela</td>
+<td>Confere se as duas datas estão preenchidas, monta o endereço com o período e a situação e abre o PDF numa nova janela Rodada 1: sem datas, só com início ou só com fim, mostra "Preencha o Período." e não abre janela (CT-GQ-N13-01); com o período e a situação TODAS, abre o PDF com o cabeçalho e as colunas esperados (CT-GQ-025).</td>
 <td>Não muda o desvio; a tela não grava</td>
 <td>Index.cshtml:45; AcompanhamentoRNCIndex.js:15-31; AcompanhamentoRNCController.cs:36-71</td>
 </tr>
@@ -241,7 +261,7 @@
 <tbody>
 <tr>
 <td>Preencha o Período.</td>
-<td>Imprimir com Data Início ou até vazia</td>
+<td>Imprimir com Data Início ou até vazia Texto visto na tela em 21/10/2026 (CT-GQ-N13-01), sem datas, só com início e só com fim.</td>
 <td>Bloco2/Script/AcompanhamentoRNCIndex.js:20</td>
 </tr>
 <tr>
@@ -277,7 +297,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li class="sub"><a href="#tela-index">Tela (Index)</a></li><li class="sub"><a href="#colunas-do-relatorio-pdf">Colunas do relatório (PDF)</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -63,19 +63,19 @@
 <td>RN-GQ-054</td>
 <td>Cada ação exige descrição, responsável e prazo (as mesmas exigências do corretivo). Ao salvar, o desvio vai para Pendente Monitoramento do Plano Ação Preventiva.</td>
 <td>Domain/Service/PlanoAcaoPreventivaValidator.cs:61-77; PlanoAcaoPreventivaRNCController.cs:181</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, casos CT-GQ-N10-05, N10-06 e N10-12): as exigências da ação e a ida a Pendente Monitoramento do Plano Ação Preventiva apareceram como previsto</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-01</td>
 <td>Ao abrir um desvio na tela pela primeira vez, o sistema cria e grava na hora um plano preventivo vazio (situação própria do plano: Pendente Aprovação), antes de qualquer Salvar.</td>
 <td>PlanoAcaoPreventivaRNCController.cs:125-135</td>
-<td>Extraída</td>
+<td>A confirmar no teste. Rodada 1 (21/10/2026, CT-GQ-N10-13): ao abrir o desvio e voltar sem salvar, o histórico não ganhou registro novo na primeira página, mas não foi possível observar se o plano vazio foi criado (o desvio continua na lista e não tem Visualizar). Inconclusivo</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-02</td>
 <td>O título (Ação Preventiva) e a descrição do plano são obrigatórios, e o plano precisa ter pelo menos uma ação.</td>
 <td>Domain/Service/PlanoAcaoPreventivaValidator.cs:33-55</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N10-05)</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-03</td>
@@ -87,7 +87,7 @@
 <td>RN-GQ-D10-04</td>
 <td>O responsável de cada ação é escolhido entre todos os usuários do Principal, sem filtro por área. A área do responsável não é gravada (fica 0).</td>
 <td>PlanoAcaoPreventivaRNCController.cs:145-149,303-311</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N10-10): a lista traz os usuários sem filtro por área e a ação apareceu na Execução do responsável de outra área. A área gravada (fica 0) não foi conferida</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-05</td>
@@ -117,25 +117,25 @@
 <td>RN-GQ-D10-09</td>
 <td>A gravação registra o histórico campo a campo, sem justificativa, exceto o campo IdResponsavel, que fica de fora do histórico.</td>
 <td>PlanoAcaoPreventivaRNCController.cs:198-199; Infra/Repository/RepositoryBase.cs:100,272-300</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte e contradita em parte no teste (21/10/2026, CT-GQ-N10-12; DV-GQ-036): o histórico registrou a mudança de situação, o título da ação preventiva, a observação e o responsável; as ações (descrição, prazo, responsável) não apareceram. A justificativa vazia e a exclusão do código do responsável não foram conferidas</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-10</td>
 <td>Filtrar a lista por Situação só traz desvios cujo plano preventivo já foi aberto uma vez; sem escolher a situação, aparecem todos em Aprovado Plano Ação Corretiva.</td>
 <td>PlanoAcaoPreventivaRNCController.cs:69-73</td>
-<td>A confirmar no teste</td>
+<td>A confirmar no teste. Rodada 1 (21/10/2026, CT-GQ-F11; DV-GQ-028): com o filtro Aprovado Plano Ação Corretiva a lista trouxe 1 de 6 linhas, o que é compatível com a regra; o motivo (plano já aberto) não foi confirmado porque o CT-GQ-N10-04 não foi executado</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-11</td>
 <td>A data "até" do filtro não inclui o dia final inteiro (compara com a meia-noite do dia).</td>
 <td>PlanoAcaoPreventivaRNCController.cs:66-67</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F08; DV-GQ-027): com Data Início e até iguais a hoje a lista devolveu 0 linhas, embora só com a Data Início de hoje apareçam 5; só com a data até também devolveu 0</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-12</td>
 <td>A busca por RD/Nº compara com o número sem o ano; digitar "006/26" não encontra o desvio, digitar "006" encontra.</td>
 <td>PlanoAcaoPreventivaRNCController.cs:57-58; Domain/Entities/Bloco2/ControleDesvios/RegistroNaoConformidade.cs:16-23</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F05 e CT-GQ-F06; DV-GQ-026): com o ano o desvio não é encontrado; com o número puro, é</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-13</td>
@@ -154,6 +154,12 @@
 <td>Os textos do plano e das ações não têm tamanho máximo (colunas NVARCHAR(MAX)).</td>
 <td>DB/TBL_PLANO_ACAO_PREVENTIVA_RNC.sql:5-8; DB/TBL_ACAO_PREEVENTIVA.sql:6-8</td>
 <td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-D10-16</td>
+<td>Uma data impossível nos filtros de data (por exemplo 31/02/2026) é ignorada, sem mensagem, e a lista sai completa.</td>
+<td>Observado na tela (execucao/2026-10-21-desvios-rodada-1/resultado.md, CT-GQ-F09); linha do código a localizar</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F09; DV-GQ-027)</td>
 </tr>
 </tbody>
 </table></div>
@@ -176,87 +182,112 @@
 <tr>
 <td>CT-GQ-N10-01 (Média)</td>
 <td>Lista só com a situação certa. Preparação: ao menos um desvio em cada situação diferente (um em Aprovado Plano Ação Corretiva, um em Pendente Plano Ação Corretiva). Fazer: Pesquisar sem filtros. Esperado: só aparecem desvios em Aprovado Plano Ação Corretiva</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-02 (Média)</td>
 <td>Filtro RD/Nº. Preparação: desvio 006/26. Fazer: pesquisar "006", depois "006/26". Esperado pela norma interna: os dois encontram. Pelo código, só "006" encontra (regra RN-GQ-D10-12)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-03 (Baixa)</td>
 <td>Filtro de datas. Preparação: desvio criado hoje. Fazer: Data Início e até iguais a hoje; depois só Data Início. Esperado: o desvio de hoje aparece. Pelo código, com "até" igual a hoje ele pode não aparecer (RN-GQ-D10-11)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-04 (Média)</td>
 <td>Filtro Situação e plano nunca aberto. Preparação: dois desvios em Aprovado Plano Ação Corretiva, um deles com a tela do plano já aberta e fechada sem salvar. Fazer: Situação = Aprovado Plano Ação Corretiva e Pesquisar. Esperado: os dois aparecem. Pelo código só aparece o que já teve a tela aberta (RN-GQ-D10-10)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-05 (Alta)</td>
 <td>Salvar sem preencher nada. Preparação: abrir um desvio no Editar. Fazer: Salvar e confirmar sem preencher. Esperado: as faixas vermelhas "A Ação Preventiva é obrigatória.", "A Descrição Ação Preventiva é obrigatória." e as três mensagens de ação; nada gravado e o desvio continua em Aprovado Plano Ação Corretiva</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-06 (Alta)</td>
 <td>Adicionar ação incompleta. Preparação: tela do plano aberta. Fazer: Adicionar com os campos vazios, depois só com a descrição, depois com descrição e responsável. Esperado: as mensagens "Descrição é obrigatória.", "Responsável é obrigatório.", "Data Prazo é obrigatória." na faixa do bloco Ações Preventivas, e a ação só entra na tabela com os três campos</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-07 (Média)</td>
 <td>Formatos de prazo. Preparação: tela do plano com título e descrição. Fazer: adicionar ações com prazo 31/02/2026, 00/00/0000, 01/01/1900, uma data passada e uma data futura; Salvar. Esperado: data impossível e ano antes de 1930 recusados com mensagem clara; data passada e futura aceitas. Registrar a mensagem exata (pelo código, data impossível dá erro técnico "Ocorreu um erro interno não esperado." ou "Ocorreu um erro inesperado.")</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-08 (Média)</td>
 <td>Limites de tamanho. Preparação: tela do plano. Fazer: colar 5 000 caracteres em Ação Preventiva, em Descrição e em Observação; Salvar. Esperado: aceita e grava sem cortar, ou recusa com mensagem. Registrar o que mostra no PDF de CAPA (se o texto sai inteiro)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-09 (Média)</td>
 <td>Várias ações e exclusão. Preparação: tela do plano. Fazer: adicionar três ações com responsáveis diferentes, excluir a segunda na lixeira, Salvar. Esperado: o desvio fica com duas ações. Conferir na Execução que só as duas válidas aparecem e na impressão do CAPA</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-10 (Alta)</td>
 <td>Responsável de outra área. Preparação: usuário de teste de outra área. Fazer: escolher esse responsável em uma ação e salvar. Esperado: a lista mostra todos os usuários; a ação aparece na Execução para esse usuário (regra RN-GQ-D10-04). Registrar se a lista mostra pessoas inativas</td>
-<td>Sem resultado</td>
+<td>Passou com ressalva em 21/10/2026: a ação apareceu na Execução do responsável de outra área</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-11 (Média)</td>
 <td>Responsável não escolhido. Preparação: tela do plano. Fazer: Adicionar com SELECIONE no Responsável. Esperado: "Responsável é obrigatório." Conferir que o valor SELECIONE não vira responsável</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-12 (Alta)</td>
 <td>Histórico depois de salvar. Preparação: salvar um plano com duas ações. Fazer: abrir o ícone Log do desvio (a lista não o mostra mais; abrir pela tela Relatório de Desvios). Esperado: histórico com valor antigo e novo da situação do desvio, quem e quando. Registrar se a mudança de situação aparece e se as ações aparecem (regra RN-GQ-D10-09)</td>
-<td>Sem resultado</td>
+<td>Passou com ressalva em 21/10/2026: o histórico mostra a mudança de situação, mas não as ações do plano (DV-GQ-036)</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-13 (Alta)</td>
 <td>Abrir e sair sem salvar. Preparação: desvio em Aprovado Plano Ação Corretiva sem plano. Fazer: Editar e Voltar sem salvar; depois consultar o histórico. Esperado: nada gravado. Pelo código, um plano vazio é criado e registrado (regra RN-GQ-D10-01)</td>
-<td>Sem resultado</td>
+<td>Passou com ressalva em 21/10/2026: o histórico não ganhou registro novo na primeira página, mas não foi possível observar se um plano vazio foi criado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-14 (Média)</td>
 <td>Anexos. Preparação: tela do plano. Fazer: Enviar sem arquivo, sem descrição, com os dois; excluir o anexo; salvar e abrir o clipe. Esperado: as mensagens "O arquivo não foi informado." e "A descrição não foi informada."; depois "Arquivo enviado com sucesso."; o anexo excluído não fica no desvio</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-15 (Média)</td>
 <td>Recusar a confirmação. Preparação: plano preenchido. Fazer: Salvar e clicar em NÃO. Esperado: nada gravado, tela continua editável</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-16 (Baixa)</td>
 <td>Impressão. Preparação: plano salvo. Fazer: Imprimir na tela e na lista. Esperado: PDF "RELATÓRIO DE CAPA" com o plano, as ações e o responsável. Registrar a data e hora que o PDF mostra para o plano (se é a da abertura ou a do Salvar)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-17 (Média)</td>
 <td>Fechamento da tela após salvar. Preparação: plano salvo. Fazer: observar a tela e a lista. Esperado: campos travados, Salvar escondido, Imprimir e Voltar visíveis, desvio fora da lista</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-F05 (volume e consulta)</td>
+<td>Filtro por RD só com o número, nas telas 1 a 12. Nesta tela: pesquisar pelo número do desvio sem o ano</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F06 (volume e consulta)</td>
+<td>Filtro por RD com o ano (nnn/aa), nas telas 3 a 5 e 7 a 12. Nesta tela: pesquisar com o ano</td>
+<td>Falhou em 21/10/2026 (DV-GQ-026)</td>
+</tr>
+<tr>
+<td>CT-GQ-F08 (volume e consulta)</td>
+<td>Filtro por data nas telas 7 a 12: início e fim no mesmo dia, e só a data fim. Nesta tela: início e fim iguais a hoje devolveram 0 linhas</td>
+<td>Falhou em 21/10/2026 (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F09 (volume e consulta)</td>
+<td>Data inválida (31/02/2026) nos filtros de data das telas 1 a 12</td>
+<td>Passou com ressalva em 21/10/2026: a data inválida é ignorada sem mensagem e a lista sai completa (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F11 (volume e consulta)</td>
+<td>Filtro de situação nas telas 4, 7, 9, 10 e 12. Nesta tela: Aprovado Plano Ação Corretiva trouxe 1 de 6 linhas</td>
+<td>Falhou em 21/10/2026 (DV-GQ-028)</td>
 </tr>
 </tbody>
 </table></div>
@@ -266,7 +297,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

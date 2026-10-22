@@ -101,6 +101,29 @@
 <li>Botão Limpar não limpa a lista (RN-GQ-D01-018). Itens por página: 3 no Web.config (HSolutions.GQ.UI/Web.config:33); o arquivo Web.Release.config remove essa chave (HSolutions.GQ.UI/Web.Release.config:7), o que pode quebrar a paginação numa instalação de produção (A confirmar).</li>
 <li>Arquivos de script sem uso na pasta (Inserir, Editar, Visualizar e Cancelar), e variáveis de endereço apontando para ações que não existem na tela Cancelar (IncluirRelatorioNaoConformidade e EditarRelatorioNaoConformidade; HSolutions.GQ.UI/Areas/Bloco2/Views/RegistroNaoConformidade/Cancelar.cshtml:12-13).</li>
 </ul>
+<h4 id="confirmado-na-rodada-1-21-10-2026">Confirmado na rodada 1 (21/10/2026)</h4>
+<p>Rodada de testes de tela de 21/10/2026, com a massa de dados do menu (resultado completo em execucao/2026-10-21-desvios-rodada-1/resultado.md). Defeitos novos que dizem respeito a esta tela:</p>
+<ul>
+<li>DV-GQ-017 (gravidade Alta). Um apóstrofo na descrição do desvio deixa a grade da lista vazia, sem mensagem, e a paginação trava para todos os desvios. O sinal <code>&lt;B&gt;</code> é lido como marcação HTML e a barra invertida some. A descrição do RD 020/26 foi reparada na massa para a lista voltar a funcionar.</li>
+<li>DV-GQ-018 (Média). Imprimir o RD abre página de erro ("Server Error ... The device is not ready (System.IO.IOException)") em todos os RDs testados. A confirmar se o problema é do ambiente.</li>
+<li>DV-GQ-027 (Média). Data inválida (31/02/2026) no filtro é ignorada em silêncio, sem mensagem.</li>
+<li>DV-GQ-028 (Média). O filtro de situação não oferece todas as situações e "Pendente Avaliação Plano Ação" devolve 0 (as contagens das demais conferem).</li>
+<li>DV-GQ-032 (Baixa). Clicar no título de uma coluna não reordena a lista.</li>
+<li>DV-GQ-033 (Baixa). Salvar com vários campos faltando mostra só a última mensagem (por exemplo, só "Local de Ocorrência é obrigatório.").</li>
+<li>DV-GQ-036 (Alta). O histórico não registra o conteúdo das etapas seguintes (texto da ação imediata, observações das áreas, áreas envolvidas, causas do diagrama, resultados). O cancelamento por esta tela continua fora do histórico (DV-GQ-001).</li>
+<li>Reconfirmados: DV-GQ-001 (cancelamento fora do histórico) e DV-GQ-010 (produto e material não aparecem na busca; só o equipamento funcionou; o caso do lote, CT-GQ-014, ficou bloqueado).</li>
+</ul>
+<p>Pontos de atenção do código confirmados na tela:</p>
+<ul>
+<li>Só uma mensagem por tentativa ao salvar com campos faltando (RN-GQ-D01-015; DV-GQ-033).</li>
+<li>A lista mostra todos os desvios (RN-GQ-D01-001).</li>
+<li>Desvio salvo sem item (RN-GQ-D01-006).</li>
+<li>Cancelamento fora do histórico (RN-GQ-017; DV-GQ-001).</li>
+<li>Número do RD em formato diferente: Incluir mostra nnn/AAAA e a lista nnn/aa.</li>
+<li>Filtro de situação incompleto (RN-GQ-D01-022).</li>
+<li>Aviso novo, fora da lista do código: o apóstrofo na descrição quebra a lista (DV-GQ-017).</li>
+</ul>
+<p>Pontos de atenção não confirmados (não foram testados na rodada 1): botão Limpar que não limpa a lista (RN-GQ-D01-018); duas inclusões ao mesmo tempo com o mesmo número e repetição depois de 999 (a sequência de 001 a 059 não teve falha); data de abertura vinda do navegador nesta tela (CT-GQ-N01-013); código do item e do lote gravados como zero (RN-GQ-D01-005); servidor que não confere situação ao editar e ao cancelar (RN-GQ-D01-009 e D01-011); textos "minímo" e "Responsavel" sem acento (não apareceram nas mensagens exibidas).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <div class="tabela"><table>
 <thead>
@@ -132,13 +155,63 @@
 </tr>
 </tbody>
 </table></div>
+<h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
+<p>Divergências entre a documentação desta página e o que a tela mostrou:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual, lista, ícone Imprimir</td>
+<td>O relatório do RD abre em outra janela</td>
+<td>Página de erro em todos os RDs testados (DV-GQ-018)</td>
+<td>Manual corrigido; causa a confirmar (pode ser do ambiente)</td>
+</tr>
+<tr>
+<td>Manual, Incluir, passo 8</td>
+<td>Uma faixa vermelha traz o motivo da recusa</td>
+<td>Só uma mensagem por tentativa, mesmo com vários campos faltando (DV-GQ-033)</td>
+<td>Manual corrigido</td>
+</tr>
+<tr>
+<td>Manual e Campos, Item e lote</td>
+<td>Produto e Material devolvem itens e lotes na janela "Itens"</td>
+<td>Produto abre a janela vazia; Material mostra "Ocorreu um erro interno não esperado."; só Equipamento devolve itens (DV-GQ-010)</td>
+<td>Manual e Campos corrigidos</td>
+</tr>
+<tr>
+<td>Manual, lista</td>
+<td>As colunas mostram a lista</td>
+<td>Os títulos das colunas parecem links, mas não reordenam (DV-GQ-032)</td>
+<td>Manual corrigido</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-002, filtro de situação</td>
+<td>Situação filtra a lista</td>
+<td>Filtra, mas não oferece todas as situações e uma das opções devolve 0 (DV-GQ-028)</td>
+<td>Regra D01-022 acrescentada</td>
+</tr>
+<tr>
+<td>Número do RD</td>
+<td>Incluir mostra nnn/AAAA e a lista nnn/aa</td>
+<td>Confirmado como estava documentado</td>
+<td>Sem divergência; mantido como característica do sistema</td>
+</tr>
+</tbody>
+</table></div>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="controle-de-desvios-visao-geral.html"><small>← Anterior</small><strong>Controle de Desvios: visão geral</strong></a><a class="ap ap-prox" href="relatorio-de-desvios-manual-do-usuario.html"><small>Próximo →</small><strong>Relatório de Desvios: Manual do usuário</strong></a></nav>
   </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#relatorio-de-desvios">Relatório de Desvios</a></li><li><a href="#importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

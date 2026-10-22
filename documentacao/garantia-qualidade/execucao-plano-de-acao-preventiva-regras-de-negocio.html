@@ -57,13 +57,13 @@
 <td>RN-GQ-055</td>
 <td>Cada responsável informa a conclusão da sua ação, com data de conclusão obrigatória e não futura.</td>
 <td>Domain/Service/AvaliacaoPlanoAcaoPreventivaValidator.cs:25-37</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N11-05 e N11-06): a data vazia e a data futura são recusadas com as mensagens previstas</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-01</td>
 <td>Concluir a ação muda só a situação da ação (de Pendente para Finalizado). A situação do desvio não muda, mesmo quando todas as ações estão concluídas.</td>
 <td>AvaliacaoPlanoAcaoPreventivaRNCController.cs:242-247</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N11-10): depois da primeira e da segunda ação a situação do desvio continuou a mesma e a ação ficou Finalizado</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-02</td>
@@ -87,7 +87,7 @@
 <td>RN-GQ-D11-05</td>
 <td>A conclusão pode ser regravada: se a ação já tem avaliação, a gravação altera a mesma avaliação, sem justificativa.</td>
 <td>AvaliacaoPlanoAcaoPreventivaRNCController.cs:250-257,291-294</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N11-11; DV-GQ-025): a regravação com nova data e observação foi aceita sem justificativa; o histórico da ação mostrou o valor antigo e o novo, com a justificativa vazia</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-06</td>
@@ -99,7 +99,7 @@
 <td>RN-GQ-D11-07</td>
 <td>A data de conclusão não é comparada com o prazo nem com a data do plano: concluir depois do prazo é aceito sem aviso e sem justificativa.</td>
 <td>AvaliacaoPlanoAcaoPreventivaValidator.cs:25-37</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N11-07; DV-GQ-025): uma data de 60 dias atrás, anterior à abertura do desvio, foi aceita sem aviso. Concluir depois do prazo não foi exercitado nesta tela (na tela 8 foi aceito sem aviso, CT-GQ-N08-04)</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-08</td>
@@ -143,6 +143,18 @@
 <td>AvaliacaoPlanoAcaoPreventivaRNCController.cs:104</td>
 <td>Extraída</td>
 </tr>
+<tr>
+<td>RN-GQ-D11-15</td>
+<td>O filtro RD/Nº da lista não acha o desvio quando se digita o número com o ano (por exemplo 057/26); acha com o número puro.</td>
+<td>Observado na tela (execucao/2026-10-21-desvios-rodada-1/resultado.md, CT-GQ-F05 e F06); linha do código a localizar</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F06; DV-GQ-026)</td>
+</tr>
+<tr>
+<td>RN-GQ-D11-16</td>
+<td>Nos filtros de data da lista, início e fim no mesmo dia devolvem 0 linhas, e só a data fim também devolve 0, embora só com a Data Início de hoje apareçam linhas; uma data impossível (31/02/2026) é ignorada sem mensagem.</td>
+<td>Observado na tela (resultado.md, CT-GQ-F08 e F09); linha do código a localizar</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F08 e F09; DV-GQ-027)</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -164,82 +176,102 @@
 <tr>
 <td>CT-GQ-N11-01 (Média)</td>
 <td>Lista só das ações do usuário. Preparação: duas ações com responsáveis diferentes. Fazer: com cada responsável, Pesquisar sem filtros. Esperado: cada um vê só a sua ação</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-02 (Média)</td>
 <td>Filtro Situação. Preparação: uma ação Pendente e uma Finalizado do mesmo responsável. Fazer: Pesquisar com TODAS, Pendente e Finalizado. Esperado: filtra por situação da ação</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-03 (Baixa)</td>
 <td>Filtro Responsável. Fazer: escolher outro usuário no filtro Responsável e Pesquisar. Esperado pela tela: filtrar por responsável. Pelo código, o filtro é ignorado (RN-GQ-D11-11)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-04 (Baixa)</td>
 <td>Filtro Descrição e datas. Fazer: pesquisar por parte do texto da ação e, em outra pesquisa, por parte do texto do desvio. Esperado pelo código: só o texto da ação acha</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-05 (Alta)</td>
 <td>Data de conclusão vazia. Preparação: ação Pendente aberta. Fazer: Salvar e confirmar sem a data. Esperado: faixa "A Data de Conclusão é obrigatória."; ação continua Pendente</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-06 (Alta)</td>
 <td>Data futura. Fazer: data de amanhã, Salvar. Esperado: "A Data de Conclusão não pode ser maior que a data atual."; nada gravado</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-07 (Alta)</td>
 <td>Data de hoje e datas antigas. Fazer: salvar com a data de hoje; em outra ação, uma data anterior à criação do plano e uma depois do prazo. Esperado pela norma interna: aviso ou justificativa para fora do prazo. Pelo código, tudo aceito (RN-GQ-D11-07). Registrar</td>
-<td>Sem resultado</td>
+<td>Falhou em 21/10/2026 (DV-GQ-025)</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-08 (Média)</td>
 <td>Formatos de data. Fazer: 31/02/2026, 00/00/0000, 2026-10-21, texto, data com um dígito. Esperado: recusa com mensagem clara. Registrar a mensagem exata (pode ser "A Data de Conclusão é obrigatória." ou erro genérico)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-09 (Média)</td>
 <td>Observação e tamanho. Fazer: salvar sem observação; salvar com 5 000 caracteres. Esperado: observação é opcional; texto longo aceito ou recusado com mensagem</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-10 (Alta)</td>
 <td>Situação depois de salvar. Preparação: desvio com duas ações. Fazer: concluir só a primeira; depois a segunda. Esperado pelo código: a situação do desvio continua Pendente Monitoramento do Plano Ação Preventiva nas duas vezes (RN-GQ-D11-01); a ação fica Finalizado. Conferir também a tela Relatório de Desvios</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-11 (Alta)</td>
 <td>Regravar uma conclusão. Preparação: ação Finalizado com o desvio ainda em monitoramento. Fazer: abrir de novo, mudar a data e a observação, Salvar. Esperado pela norma: justificativa obrigatória. Pelo código, grava sem justificativa (RN-GQ-D11-05). Conferir o histórico</td>
-<td>Sem resultado</td>
+<td>Falhou em 21/10/2026 (DV-GQ-025)</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-12 (Alta)</td>
 <td>Histórico da conclusão. Preparação: ação concluída. Fazer: abrir o ícone Log da ação. Esperado: inclusão da avaliação, quem e quando, e a mudança de situação. Registrar se aparece o valor antigo e se o texto é "Concluido" (RN-GQ-D11-08)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-13 (Média)</td>
 <td>Responsável exibido. Preparação: ação concluída por um usuário A. Fazer: abrir a mesma ação com o usuário B (por exemplo, por Visualizar depois de o desvio Finalizado). Esperado: a tela mostra A como quem executou. Pelo código, mostra B (RN-GQ-D11-10)</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-14 (Média)</td>
 <td>Lápis e Visualizar. Preparação: um desvio em monitoramento e um já Finalizado, ambos com ação do mesmo usuário. Fazer: Pesquisar. Esperado: lápis no primeiro; ícone Visualizar no segundo, e a tela do segundo abre travada sem Salvar</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-15 (Média)</td>
 <td>Anexos. Fazer: Enviar anexo sem arquivo; sem descrição; completo; Salvar a conclusão. Esperado: mensagens "O arquivo não foi informado." e "A descrição não foi informada."; anexo fica no desvio</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-16 (Baixa)</td>
 <td>Impressão. Fazer: Imprimir na lista e na tela. Esperado: PDF Relatório de CAPA com a data de conclusão e a observação da ação</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-F05 (volume e consulta)</td>
+<td>Filtro por RD só com o número, nas telas 1 a 12. Nesta tela: pesquisar pelo número do desvio sem o ano</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F06 (volume e consulta)</td>
+<td>Filtro por RD com o ano (nnn/aa), nas telas 3 a 5 e 7 a 12. Nesta tela: pesquisar com o ano</td>
+<td>Falhou em 21/10/2026 (DV-GQ-026)</td>
+</tr>
+<tr>
+<td>CT-GQ-F08 (volume e consulta)</td>
+<td>Filtro por data nas telas 7 a 12: início e fim no mesmo dia, e só a data fim. Nesta tela: início e fim iguais a hoje devolveram 0 linhas</td>
+<td>Falhou em 21/10/2026 (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F09 (volume e consulta)</td>
+<td>Data inválida (31/02/2026) nos filtros de data das telas 1 a 12</td>
+<td>Passou com ressalva em 21/10/2026: a data inválida é ignorada sem mensagem e a lista sai completa (DV-GQ-027)</td>
 </tr>
 </tbody>
 </table></div>
@@ -249,7 +281,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

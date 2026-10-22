@@ -59,13 +59,13 @@
 <tr>
 <td>"Ações corretivas e preventivas apropriadas devem ser elaboradas e adotadas em resposta aos desvios de qualidade."</td>
 <td>Art. 341</td>
-<td>Monta o plano de um desvio que já tem Relatório de CAPA, com título, descrição e ações com descrição, responsável e prazo obrigatórios (RN-GQ-046; RN-GQ-D07-003 e 004; PlanoAcaoCorretivaValidator.cs:33-77). A cadeia foi percorrida em teste em 16/10/2026, sem caso individual desta tela</td>
-<td>Atende</td>
+<td>Monta o plano de um desvio que já tem Relatório de CAPA, com título, descrição e ações com descrição, responsável e prazo obrigatórios (RN-GQ-046; RN-GQ-D07-003 e 004; PlanoAcaoCorretivaValidator.cs:33-77). A cadeia foi percorrida em teste em 16/10/2026. Em 21/10/2026 a tela recusou os campos vazios com as mensagens esperadas (CT-GQ-N07-01), mas aceitou salvar o plano sem nenhuma ação (CT-GQ-N07-06, DV-GQ-020)</td>
+<td>Atende em parte</td>
 </tr>
 <tr>
 <td>"... à definição do plano de ação; à implementação das ações definidas no plano de ação ..."</td>
 <td>Art. 3º, LII</td>
-<td>O sistema tem as três etapas (plano, execução e monitoramento). Mas o plano pode ser salvo sem nenhuma ação ativa se as ações forem removidas antes (RN-GQ-D07-005, a confirmar no teste)</td>
+<td>O sistema tem as três etapas (plano, execução e monitoramento). Mas o plano pode ser salvo sem nenhuma ação ativa se as ações forem removidas antes (RN-GQ-D07-005). Confirmado em 21/10/2026: com todas as ações removidas, a tela gravou o plano e o desvio seguiu ao monitoramento sem nenhuma ação (CT-GQ-N07-06, DV-GQ-020)</td>
 <td>Atende em parte</td>
 </tr>
 <tr>
@@ -77,13 +77,13 @@
 <tr>
 <td>"A temporalidade das ações de que trata o caput deste artigo deve ser apropriada e correlacionada com o nível de risco do desvio ..."</td>
 <td>Art. 337, § 1º</td>
-<td>O prazo é livre: prazo no passado é aceito e não é comparado com a abertura do desvio nem com a criticidade do CAPA (RN-GQ-D07-006)</td>
+<td>O prazo é livre: prazo no passado é aceito e não é comparado com a abertura do desvio nem com a criticidade do CAPA (RN-GQ-D07-006). Confirmado em 21/10/2026: plano com prazo no passado foi aceito (RD 054/26)</td>
 <td>Não atende</td>
 </tr>
 <tr>
 <td>"Todas as decisões e medidas tomadas como resultado de um desvio de qualidade devem ser documentadas."</td>
 <td>Art. 337, § 3º</td>
-<td>Salvar grava o plano e as ações com histórico (RN-GQ-D07-013; PlanoAcaoCorretivaRNCController.cs:244). Remover ação ou anexo não pede justificativa (RN-GQ-D07-009)</td>
+<td>Salvar grava o plano e as ações com histórico (RN-GQ-D07-013; PlanoAcaoCorretivaRNCController.cs:244). Remover ação ou anexo não pede justificativa (RN-GQ-D07-009). Na rodada 1, o histórico do desvio não mostrou o conteúdo das ações do plano (DV-GQ-036); o texto sobre histórico campo a campo vale só para o que o histórico exibe</td>
 <td>Atende em parte</td>
 </tr>
 <tr>
@@ -103,12 +103,12 @@
 <h4 id="o-que-um-inspetor-perguntaria-nesta-etapa">O que um inspetor perguntaria nesta etapa</h4>
 <p>Inferência da análise, a validar com Assuntos Regulatórios.</p>
 <ol>
-<li>Mostre o plano de ação deste desvio: quem é responsável por cada ação e qual o prazo? O sistema mostra isso hoje? Sim. A grade de ações e a impressão do CAPA trazem descrição, responsável e prazo.</li>
+<li>Mostre o plano de ação deste desvio: quem é responsável por cada ação e qual o prazo? O sistema mostra isso hoje? Sim. A grade de ações e a impressão do CAPA trazem descrição, responsável e prazo. Ressalva da rodada 1 (21/10/2026): o sistema deixou salvar um plano sem nenhuma ação (DV-GQ-020), e a impressão do CAPA não foi testada a partir desta tela.</li>
 <li>Quem aprovou este plano antes de ele ser executado? O sistema mostra isso hoje? Não. O plano vai direto para a execução ao ser salvo (RN-GQ-047).</li>
 <li>O prazo das ações guarda relação com o risco do desvio? O sistema mostra isso hoje? Não. O prazo é livre e pode estar no passado (RN-GQ-D07-006).</li>
 <li>O plano foi alterado depois de criado? Por quem, quando e por quê? O sistema mostra isso hoje? Em parte. O histórico mostra o que mudou e quando, mas o motivo fica vazio (RN-GQ-D07-013).</li>
 <li>Como e quando vocês vão saber se estas ações funcionaram? O sistema mostra isso hoje? Não. O plano não tem campo de critério ou prazo de verificação de eficácia.</li>
-<li>Havendo ação removida do plano, por quê? O sistema mostra isso hoje? Em parte. A remoção aparece no histórico, sem motivo (RN-GQ-D07-009).</li>
+<li>Havendo ação removida do plano, por quê? O sistema mostra isso hoje? Em parte. A remoção grava histórico, sem motivo (RN-GQ-D07-009). Inferência após a rodada 1 (21/10/2026): como o histórico não mostra o conteúdo das ações do plano (DV-GQ-036), a remoção de uma ação pode nem aparecer; não foi testado isoladamente.</li>
 </ol>
 <h4 id="lacunas-para-a-versao-corrigida">Lacunas para a versão corrigida</h4>
 <ul>
@@ -119,6 +119,9 @@
 <li>Gravar a divisão ou seção de cada ação (RN-GQ-D07-007) e o usuário de quem alterou o plano.</li>
 <li>Campo de critério e prazo para verificar a eficácia de cada ação (RN-GQ-052).</li>
 <li>Não gravar plano vazio só por abrir a tela (RN-GQ-D07-002).</li>
+<li>Recusar o plano sem ação ativa, também no servidor (DV-GQ-020, Alta, rodada 1 de 21/10/2026).</li>
+<li>Corrigir os filtros da lista: RD/Nº com o ano (DV-GQ-026), datas (DV-GQ-027) e situação (DV-GQ-028).</li>
+<li>Fazer o histórico mostrar o conteúdo das ações do plano (DV-GQ-036).</li>
 </ul>
 <h4 id="guia-33-2020">Guia 33/2020</h4>
 <p>Item 9.7.7.1.2 (testes de operação do sistema): o Guia lista, entre o que deve ser verificado, "Trilhas de auditoria e registro de ações críticas, incluídas interações manuais;" e "Recursos de assinatura eletrônica;". A tela tem trilha de auditoria campo a campo no plano e nas ações, mas não tem assinatura eletrônica nem motivo da alteração.</p>
@@ -128,7 +131,7 @@
   
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

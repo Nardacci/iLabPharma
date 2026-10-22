@@ -46,6 +46,7 @@
 <h2 id="resumo-da-tela">Resumo da tela</h2>
 <h3 id="monitoramento-do-plano-de-acao-corretiva">Monitoramento do Plano de Ação Corretiva</h3>
 <p>Menu: Controle de Desvios › Monitoramento do Plano de Ação Corretiva (o código também chama a tela de "Liberação Plano de Ação Corretiva"). Versão legado (código entregue pelo fornecedor). Rascunho de 21/10/2026, feito só pela leitura do código; o que não foi testado está marcado como "A confirmar no teste".</p>
+<p>Atualizado em 22/10/2026 com o resultado da rodada 1 de testes de tela (21/10/2026; <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>). O que a tela mostrou está marcado como "rodada 1" ou "21/10/2026"; o que o teste não exercitou continua como estava.</p>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>É a verificação final da Garantia da Qualidade sobre o plano corretivo. A GQ confere as ações já finalizadas, registra o resultado da implementação de cada ação (número da ação, se foi implementada e uma observação), faz a verificação final (ações implementadas, sim ou não, e observação) e aprova o plano. Há também um "Salvar" que guarda o trabalho sem aprovar.</p>
 <h4 id="quem-usa">Quem usa</h4>
@@ -85,7 +86,7 @@
 <p>A tela busca no módulo Principal os nomes de responsáveis e de divisão, e dados do equipamento na impressão. Não lê nem grava nada na Produção nem no Estoque.</p>
 <h4 id="o-que-muda-para-o-resto-da-fabrica">O que muda para o resto da fábrica</h4>
 <p>Nada muda fora do menu Controle de Desvios. Aprovar o plano corretivo não libera nem bloqueia lote, material ou equipamento, e não abre controle de mudança. O desvio, como um todo, não segura o lote (ver a visão do menu), e a aprovação aqui não muda isso.</p>
-<p>O efeito prático é interno e de auditoria: a aprovação grava histórico e a tela mostra o botão que leva ao plano preventivo. Se a aprovação sair com a ação pendente ou com "Ações Corretivas Implementadas = Não" (RN-GQ-D09-007, a confirmar no teste), a inspeção pode ver um desvio dado como tratado sem que o tratamento tenha sido concluído.</p>
+<p>O efeito prático é interno e de auditoria: a aprovação grava histórico e a tela mostra o botão que leva ao plano preventivo. Se a aprovação sair com a ação pendente ou com "Ações Corretivas Implementadas = Não" (RN-GQ-D09-007; visto em teste de 21/10/2026 com um resultado "Implementada = Não"), a inspeção pode ver um desvio dado como tratado sem que o tratamento tenha sido concluído.</p>
 <h2 id="falhas-e-pontos-de-atencao">Falhas e pontos de atenção</h2>
 <h4 id="o-que-o-codigo-mostra-que-foge-do-esperado-ou-da-norma">O que o código mostra que foge do esperado ou da norma</h4>
 <ul>
@@ -108,6 +109,26 @@
 <li>DV-GQ-002 (Alta, rodada 1, 12/10/2026, CT-GQ-021): o botão Aprovar não aparece com ação Pendente; enviando a mesma operação sem o botão, o plano foi aprovado com a ação Pendente. Evidências em execucao/2026-10-12/evidencias/CT-GQ-021-passo-1 a 5.</li>
 <li>DV-GQ-016 (Alta, rodada 3, 16/10/2026, CT-GQ-022): só existe Aprovar; o plano corretivo nunca pode ser reprovado pela tela. Evidência: CT-GQ-022-final-liberacao-so-aprovar-sem-reprovar.png.</li>
 </ul>
+<h4 id="confirmado-na-rodada-1-21-10-2026">Confirmado na rodada 1 (21/10/2026)</h4>
+<p>Defeitos que dizem respeito a esta tela (fonte: <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>):</p>
+<ul>
+<li>DV-GQ-021 (Alta, novo): o Aprovar aceita o que deveria recusar. Resultado com Ação Nº 99 (que não existe) e Aprovar: "Alteração efetuada com sucesso." e o desvio foi a Aprovado Plano Ação Corretiva (CT-GQ-N09-05, RD 055/26). O mesmo aconteceu com um resultado "Implementada = Não" (RD 052/26) e com um plano sem nenhuma ação (RD 053/26).</li>
+<li>DV-GQ-016 (Alta, já registrado, reconfirmado): não existe Reprovar; Aprovar aceita "Não" (passo P9.3).</li>
+<li>DV-GQ-026 (Média, novo): o filtro RD/Nº não acha com o número e o ano (CT-GQ-F06).</li>
+<li>DV-GQ-027 (Média, novo): filtro de datas. Nesta tela, início e fim no mesmo dia e só Data Fim devolvem lista vazia; data inválida é ignorada em silêncio (CT-GQ-F08 e F09).</li>
+<li>DV-GQ-028 (Média, novo): filtro de situação. "Aprovado Plano Ação Corretiva" devolve também os pendentes (10 linhas misturadas) (CT-GQ-F11).</li>
+<li>DV-GQ-036 (Alta, novo, janela Histórico): o histórico do desvio não traz o conteúdo dos resultados lançados aqui (só situação, responsável e alguns campos).</li>
+</ul>
+<p>Pontos de atenção do código que a tela confirmou:</p>
+<ul>
+<li>Resultado por ação sem ligação com as ações do plano (RN-GQ-D09-006): confirmado.</li>
+<li>Aprovar com "Implementada = Não" (RN-GQ-D09-007): confirmado para o resultado da grade; a caixa da verificação final não foi isolada.</li>
+<li>Filtro "Aprovado" sem filtrar e filtro de datas (RN-GQ-D09-013 e D09-014): confirmados.</li>
+<li>Só existe Aprovar (RN-GQ-051): reconfirmado.</li>
+<li>O botão Aprovar some com ação pendente e o servidor aprova mesmo assim (DV-GQ-002): confirmado em 12/10/2026; não repetido nesta rodada.</li>
+</ul>
+<p>Pontos de atenção que o teste não exercitou (continuam "A confirmar no teste"): Aprovar apaga a justificativa do Salvar (RN-GQ-D09-005); resultados duplicados ou que somem da grade (RN-GQ-D09-008 e D09-009); Responsável mostrado no bloco de liberação (RN-GQ-D09-012); janela de justificativa do Salvar (CT-GQ-N09-06); anexos; impressão; segunda confirmação ao aprovar.</p>
+<p>O que a tela fez como esperado: recusou verificação final vazia, ausência de resultado e resultado sem número ou sem observação (CT-GQ-N09-01 a N09-03).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>RN-GQ-049 (01-regras-de-negocio.md) diz "um resultado por ação (número e observação)". O validador exige ao menos uma linha de resultado, cada uma com número e observação, e não exige um resultado por ação do plano (LiberacaoPlanoAcaoCorretivaValidator.cs:31-52). Corrigido nesta página.</li>
@@ -115,13 +136,27 @@
 <li>RN-GQ-051 diz que o reprovado vai para Reprovado Plano Ação Corretiva sem dizer que a tela não tem como reprovar (Editar.cshtml:203-209). Acrescentado nesta página (DV-GQ-016).</li>
 <li>11-inventario-de-telas.md marca a tela como "Não testada"; nas rodadas de 12/10 (CT-GQ-021) e 16/10 (CT-GQ-022) ela foi usada.</li>
 </ul>
+<h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
+<p>Comparação entre o que esta página dizia e o que a tela mostrou. Resolvidas nesta atualização, salvo onde indicado.</p>
+<ul>
+<li>A página dizia que o resultado por ação é texto livre e que basta um resultado para aprovar. A tela confirmou (Ação Nº 99 aceita; plano sem ação aprovado): DV-GQ-021. Resolvida.</li>
+<li>A página dizia que "Ações Corretivas Implementadas = Não" talvez não impeça a aprovação (inferência). A tela aprovou com um resultado "Implementada = Não"; a caixa da verificação final não foi isolada. Parcialmente resolvida (RN-GQ-D09-007).</li>
+<li>A página dizia que o filtro "Aprovado" não filtra e que o filtro de datas deixa o último dia de fora. A tela confirmou (DV-GQ-028 e DV-GQ-027). Resolvida.</li>
+<li>A página dizia que RD/Nº com o ano pode não achar. A tela confirmou (DV-GQ-026). Resolvida.</li>
+<li>
+<p>As mensagens de verificação final, de ausência de resultado e do Adicionar saíram como o código previa. Sem divergência.</p>
+</li>
+<li>
+<p>Item 11-inventario-de-telas.md ("Não testada"): a rodada 1 dá base para marcar a tela como "Funciona com falhas". Não resolvida aqui, porque o inventário está fora do lote desta atualização.</p>
+</li>
+</ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="execucao-do-plano-de-acao-corretiva-anvisa.html"><small>← Anterior</small><strong>Execução do Plano de Ação Corretiva: Anvisa</strong></a><a class="ap ap-prox" href="monitoramento-do-plano-de-acao-corretiva-manual-do-usuario.html"><small>Próximo →</small><strong>Monitoramento do Plano de Ação Corretiva: Manual do usuário</strong></a></nav>
   </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#monitoramento-do-plano-de-acao-corretiva">Monitoramento do Plano de Ação Corretiva</a></li><li><a href="#importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

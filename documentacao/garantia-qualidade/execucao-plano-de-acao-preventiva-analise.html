@@ -56,7 +56,7 @@
 - Trecho comum "Resumo do RNC": HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRegistroNC.cshtml
 - Scripts: HSolutions.GQ.UI/Areas/Bloco2/Script/AvaliacaoPlanoAcaoPreventivaIndex.js e AvaliacaoPlanoAcaoPreventivaSalvar.js</p>
 <p>Como ler as fontes: "Bloco2/" é HSolutions.GQ.UI/Areas/Bloco2/; "UI/" é HSolutions.GQ.UI/; "Domain/" é HSolutions.GQ.Domain/; "DB/" é Hsolutions.GQ.DB/Tables/; "Infra/" é HSolutions.GQ.Infrastructure/. Quando só aparece o nome do controlador, é AvaliacaoPlanoAcaoPreventivaRNCController.cs.</p>
-<p>Estado nos testes: sem caso próprio executado. Nas rodadas de 15 e 16/10 o desvio RD 006/26 chegou ao monitoramento preventivo, o que indica que a ação foi tratada, mas o passo não está descrito (execucao/2026-10-15/resultado.md).</p>
+<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 057/26 (massa do caso N11). Foram executados cinco casos próprios (CT-GQ-N11-05, N11-06, N11-07, N11-10 e N11-11) e quatro casos de volume e consulta (CT-GQ-F05, F06, F08 e F09). Resultado: 4 passaram, 1 passou com ressalva e 4 falharam. Antes disso, nas rodadas de 15 e 16/10 o desvio RD 006/26 chegou ao monitoramento preventivo, o que indica que a ação foi tratada, mas o passo não está descrito (execucao/2026-10-15/resultado.md).</p>
 <h2 id="importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</h2>
 <h4 id="em-uma-frase">Em uma frase</h4>
 <p>É a tela onde cada responsável diz que fez a sua ação preventiva, e é a única prova, dentro do sistema, de que o plano saiu do papel.</p>
@@ -79,11 +79,40 @@
 <li>O responsável escolhido no plano que não tenha acesso à GQ nunca verá a ação; o desvio fica parado sem aviso (inferência, AvaliacaoPlanoAcaoPreventivaRNCController.cs:121-122).</li>
 <li>Defeitos confirmados em teste para esta tela: nenhum registrado até 16/10/2026. Na etapa seguinte da cadeia, DV-GQ-012 (monitoramento sem botão Reprovar).</li>
 </ul>
+<h4 id="confirmado-na-rodada-1-21-10-2026">Confirmado na rodada 1 (21/10/2026)</h4>
+<p>Fonte: execucao/2026-10-21-desvios-rodada-1/resultado.md. Casos desta tela: CT-GQ-N11-05, N11-06, N11-07, N11-10 e N11-11, mais os de volume e consulta F05, F06, F08 e F09. A frase "nenhum defeito registrado até 16/10/2026" acima vale para aquela data.</p>
+<p>Defeitos novos que dizem respeito a esta tela:</p>
+<ul>
+<li>DV-GQ-025 (gravidade Alta, telas 8 e 11): concluir a ação com uma data anterior à abertura do desvio (22/08/2026, 60 dias antes) e regravar uma conclusão com nova data e observação são aceitos sem aviso e sem justificativa; no histórico da ação a justificativa fica vazia. Na tela 8 o mesmo defeito apareceu com prazo vencido. Evidências: N11-07-data-antiga, N11-11-regravar, N11-11-historico-da-acao.</li>
+<li>DV-GQ-026 (Média): o filtro RD/Nº não acha o desvio quando se digita o número com o ano. Evidência: N04-02-filtro-030.</li>
+<li>DV-GQ-027 (Média): nesta lista, início e fim no mesmo dia devolvem 0 linhas, e só a data "até" também devolve 0; data impossível (31/02/2026) é ignorada sem mensagem.</li>
+</ul>
+<p>Pontos de atenção do código que se confirmaram:</p>
+<ul>
+<li>Concluir a ação não muda a situação do desvio (RN-GQ-D11-01).</li>
+<li>Execução sem justificativa e sem aviso de atraso ou de data fora do esperado (RN-GQ-D11-05 e D11-07; DV-GQ-025).</li>
+<li>Data de conclusão vazia e futura recusadas como previsto (RN-GQ-055).</li>
+</ul>
+<p>Pontos de atenção que não foram confirmados ou não foram testados nesta tela:</p>
+<ul>
+<li>Lista só das ações do próprio responsável (CT-GQ-N11-01), filtro Situação (N11-02), filtro Responsável sem efeito (N11-03) e filtro Descrição (N11-04): não executados.</li>
+<li>Observação perdida ao reabrir a ação: confirmada na tela 8 (DV-GQ-024), mas não conferida nesta tela.</li>
+<li>Histórico da conclusão com o texto "Concluido" e sem valor antigo (CT-GQ-N11-12), responsável exibido (N11-13), anexos (N11-15) e impressão (N11-16): não executados.</li>
+<li>Formatos de data (CT-GQ-N11-08) e texto longo (N11-09): não executados.</li>
+<li>Data da avaliação que vem do navegador (RN-GQ-D11-06): não exercitada.</li>
+</ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>Documento completo do menu (desvios/controle-de-desvios-documento-completo.md), Tela 11: diz "Botões: Concluir ação" e "Ao salvar, o desvio vai para: Ações concluídas". No código o botão é Salvar e o desvio não muda de situação (AvaliacaoPlanoAcaoPreventivaRNCController.cs:242-247). Corrigir o documento.</li>
 <li>RN-GQ-055 (01-regras-de-negocio.md): as linhas citadas do validador (:27 e :34) conferem. O texto diz "igual à corretiva"; esta página não conferiu a tela corretiva, e registra que no preventivo a conclusão pode ser regravada sem justificativa (RN-GQ-D11-05) e que o responsável exibido é o usuário conectado (RN-GQ-D11-10).</li>
 <li>Documento 01, seção 8 e inventário 11: a tela é chamada de "Execução Plano de Ação Preventiva"; o roteiro de menu original dizia "Avaliação Plano de Ação Preventiva". Sem efeito no funcionamento.</li>
+</ul>
+<h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
+<p>A tabela de divergências do resultado.md não traz nenhum item desta tela. Do que a rodada mostrou em comparação com esta página:</p>
+<ul>
+<li>Nenhuma divergência nova entre o texto desta página e a tela nos casos executados: as duas mensagens de data, a situação do desvio que não muda e a regravação sem justificativa conferem.</li>
+<li>Ponto em aberto: RN-GQ-D11-07 fala em concluir depois do prazo e antes da criação do plano; a rodada 1 testou apenas uma data anterior à abertura do desvio. A parte "depois do prazo" desta tela não foi exercitada. Fica para uma nova rodada.</li>
+<li>As divergências desta página registradas antes da rodada (documento completo do menu e RN-GQ-055) não dependiam da tela e continuam como estavam.</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-acao-preventiva-anvisa.html"><small>← Anterior</small><strong>Plano de Ação Preventiva: Anvisa</strong></a><a class="ap ap-prox" href="execucao-plano-de-acao-preventiva-manual-do-usuario.html"><small>Próximo →</small><strong>Execução Plano de Ação Preventiva: Manual do usuário</strong></a></nav>
@@ -91,7 +120,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#execucao-plano-de-acao-preventiva">Execução Plano de Ação Preventiva</a></li><li><a href="#importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
