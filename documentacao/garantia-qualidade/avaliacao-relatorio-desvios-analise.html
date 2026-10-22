@@ -127,9 +127,23 @@
 <p><strong>Código sem uso na tela:</strong> o script antigo com botões Aprovar e Reprovar e o diagrama de causa e efeito (<code>HSolutions.GQ.UI/Areas/Bloco2/Script/AvaliacaoRNCEditar.js</code>), uma cópia da tela de consulta (<code>HSolutions.GQ.UI/Areas/Bloco2/Views/AvaliacaoRNC/Visualizar.cshtml</code>) e a ação <code>ListarResponsaveisPorArea</code> (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:371-390</code>).</p>
 </li>
 <li>
-<p><strong>Usuário sem acesso.</strong> Esta lista não consulta o grupo e continua funcionando; os ícones seguem a regra de situação (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaRelatorioCapaIndex.cs:15</code>). Comparar com a Avaliação Área (CT-GQ-113).</p>
+<p><strong>Usuário sem acesso.</strong> Esta lista não consulta o grupo e continua funcionando; os ícones seguem a regra de situação (<code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaRelatorioCapaIndex.cs:15</code>).</p>
 </li>
 </ol>
+<h4 id="confirmado-na-rodada-1-21-10-2026">Confirmado na rodada 1 (21/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>. Defeitos novos que dizem respeito a esta tela (gravidade entre parênteses):</p>
+<ul>
+<li><strong>DV-GQ-026 (Média).</strong> O filtro RD/Nº não acha o desvio com número e ano ("009/26"); acha com o número puro (CT-GQ-N05-01, CT-GQ-F06). Acontece em 9 das 12 telas de lista.</li>
+<li><strong>DV-GQ-027 (Média).</strong> Data inválida no filtro (31/02/2026) é ignorada sem mensagem (CT-GQ-N05-01, CT-GQ-F09). Nesta tela o uso só da Data Fim e o intervalo funcionaram como previsto.</li>
+<li><strong>DV-GQ-028 (Média).</strong> O filtro Situação oferece só duas situações, e TODAS mostra mais de 8 (32 linhas) (CT-GQ-N05-02). O caso passou com ressalva, porque o código já previa isso (ponto 12).</li>
+<li><strong>DV-GQ-036 (Alta, histórico em geral).</strong> O histórico do desvio omite o conteúdo de várias etapas. Os cinco registros manuais que esta tela grava (ponto 4) não foram abertos nesta rodada, e por isso não é possível dizer se o defeito alcança esta tela.</li>
+</ul>
+<p>Pontos de atenção do código, lidos contra o resultado:</p>
+<ul>
+<li><strong>Confirmados:</strong> 1 (a caixa de controle de mudança não existe nesta tela; CT-GQ-016) e 12 (lista e filtro desencontrados; DV-GQ-028). O ponto 11 foi em parte observado: sem CAPA, o desvio terminou com a observação de uma pessoa só (CT-GQ-015); a falta de segunda revisão segue como ponto para validar com a área.</li>
+<li><strong>Não confirmados porque não foram testados:</strong> 2, 3, 4, 5, 6, 7 (lupa da tabela de áreas), 8, 9, 10, 13 (acentos), 14.</li>
+<li><strong>Inferência, não testada:</strong> o erro de impressão visto em outras telas (DV-GQ-018: "Server Error ... The device is not ready") pode ocorrer também no ícone de impressora desta tela (RN-GQ-D05-13). A confirmar no teste.</li>
+</ul>
 <h4 id="divergencias-com-os-documentos-de-09-10-2026">Divergências com os documentos de 09/10/2026</h4>
 <p>Ver a seção "Divergências encontradas" no fim desta página.</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
@@ -169,13 +183,56 @@
 </tr>
 </tbody>
 </table></div>
+<h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-036 e RN-GQ-039; inventário de telas; fluxo <code>desvios-capa</code></td>
+<td>A avaliação marca a CAPA e também o controle de mudança</td>
+<td>Só existe a caixa de CAPA; a caixa de controle de mudança está apenas na tela Relatório de CAPA, sem efeito</td>
+<td>Resolvida nesta página (Regras, Campos e Botões já diziam). O inventário e o fluxo seguem a corrigir, fora desta atualização</td>
+</tr>
+<tr>
+<td><code>08-plano-de-testes.md</code>, CT-GQ-016</td>
+<td>Avaliar marcando CAPA e controle de mudança</td>
+<td>O caso só pôde ser executado na parte da CAPA</td>
+<td>Resolvida nesta página: resultado registrado para a parte possível. O texto do plano não foi alterado</td>
+</tr>
+<tr>
+<td>Campos da tela, filtro RD/Nº</td>
+<td>Inferência: "009/26" não acha</td>
+<td>Confirmado (DV-GQ-026)</td>
+<td>Resolvida</td>
+</tr>
+<tr>
+<td>Campos da tela, filtro Situação</td>
+<td>O filtro oferece duas situações e a lista mostra mais</td>
+<td>Confirmado: TODAS mostra 32 linhas com mais de 8 situações (DV-GQ-028)</td>
+<td>Resolvida</td>
+</tr>
+<tr>
+<td>Filtro de datas, data inválida</td>
+<td>Não documentado</td>
+<td>Ignorada sem mensagem</td>
+<td>Resolvida: acrescentada a RN-GQ-D05-16 (DV-GQ-027)</td>
+</tr>
+</tbody>
+</table></div>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="avaliacao-area-anvisa.html"><small>← Anterior</small><strong>Avaliação Área: Anvisa</strong></a><a class="ap ap-prox" href="avaliacao-relatorio-desvios-manual-do-usuario.html"><small>Próximo →</small><strong>Avaliação Relatório Desvios: Manual do usuário</strong></a></nav>
   </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#avaliacao-relatorio-desvios">Avaliação Relatório Desvios</a></li><li><a href="#importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

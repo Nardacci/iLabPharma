@@ -59,13 +59,13 @@
 <tr>
 <td>"Ações corretivas e preventivas apropriadas devem ser elaboradas e adotadas em resposta aos desvios de qualidade."</td>
 <td>Art. 341</td>
-<td>O responsável registra a conclusão da própria ação, com data obrigatória e não futura (RN-GQ-055; Domain/Service/AvaliacaoPlanoAcaoPreventivaValidator.cs:25-37). O anexo de evidência é opcional (Editar.cshtml:56-58)</td>
+<td>O responsável registra a conclusão da própria ação, com data obrigatória e não futura (RN-GQ-055; Domain/Service/AvaliacaoPlanoAcaoPreventivaValidator.cs:25-37). O anexo de evidência é opcional (Editar.cshtml:56-58) Rodada 1 (21/10/2026): data de conclusão vazia e futura são recusadas com as mensagens previstas (CT-GQ-N11-05 e N11-06).</td>
 <td>Atende em parte</td>
 </tr>
 <tr>
 <td>"... ações corretivas e/ou ações preventivas (CAPAs) apropriadas devem ser identificadas e implementadas em resposta às investigações, ..."</td>
 <td>Art. 8º, § 4º</td>
-<td>A ação passa de Pendente para Finalizado, mas o servidor não confere a situação do desvio ao gravar (RN-GQ-D11-01; RN-GQ-D11-09; AvaliacaoPlanoAcaoPreventivaRNCController.cs:221-340)</td>
+<td>A ação passa de Pendente para Finalizado, mas o servidor não confere a situação do desvio ao gravar (RN-GQ-D11-01; RN-GQ-D11-09; AvaliacaoPlanoAcaoPreventivaRNCController.cs:221-340) Rodada 1 (CT-GQ-N11-10): depois de concluir as duas ações o desvio continuou na mesma situação, como previsto.</td>
 <td>Atende em parte</td>
 </tr>
 <tr>
@@ -77,13 +77,13 @@
 <tr>
 <td>"Toda a alteração feita no registro de um documento deve ser assinada e datada, devendo permitir a leitura da informação original." Parágrafo único: "Quando apropriado, o motivo da alteração deve ser registrado."</td>
 <td>Art. 125, caput e parágrafo único</td>
-<td>A conclusão pode ser regravada, entra no histórico campo a campo, mas sem campo de justificativa. O histórico não guarda o valor antigo da situação da ação (RN-GQ-D11-05; RN-GQ-D11-08, a confirmar no teste)</td>
+<td>A conclusão pode ser regravada, entra no histórico campo a campo, mas sem campo de justificativa. O histórico não guarda o valor antigo da situação da ação (RN-GQ-D11-05; RN-GQ-D11-08, a confirmar no teste) Rodada 1 (CT-GQ-N11-11; DV-GQ-025): regravar a conclusão com nova data e observação foi aceito sem justificativa; o histórico da ação mostrou o valor antigo e o novo, com a justificativa vazia.</td>
 <td>Atende em parte</td>
 </tr>
 <tr>
 <td>"A temporalidade das ações de que trata o caput deste artigo deve ser apropriada e correlacionada com o nível de risco do desvio ..."</td>
 <td>Art. 337, § 1º</td>
-<td>Concluir depois do prazo é aceito sem aviso e sem justificativa; não há situação de atraso (RN-GQ-D11-07; RN-GQ-009)</td>
+<td>Concluir depois do prazo é aceito sem aviso e sem justificativa; não há situação de atraso (RN-GQ-D11-07; RN-GQ-009) Rodada 1 (CT-GQ-N11-07; DV-GQ-025): uma data de conclusão 60 dias anterior, antes da abertura do desvio, foi aceita sem aviso.</td>
 <td>Não atende</td>
 </tr>
 <tr>
@@ -99,8 +99,8 @@
 <ol>
 <li>Quem executou esta ação e quando? O sistema mostra isso hoje? Em parte. O nome de quem executou fica gravado, mas a tela mostra sempre o usuário conectado, e a data vem do navegador.</li>
 <li>Que evidência prova que a ação foi feita? O sistema mostra isso hoje? Em parte. Há campo de observação e anexo, mas ambos são opcionais.</li>
-<li>A ação foi concluída dentro do prazo? Se não, por quê? O sistema mostra isso hoje? Não. O prazo não é comparado com a conclusão e não há campo de justificativa.</li>
-<li>A conclusão foi alterada depois de registrada? O sistema mostra isso hoje? Em parte. O histórico existe, mas sem motivo, e a regravação é aceita mesmo com o desvio Finalizado.</li>
+<li>A ação foi concluída dentro do prazo? Se não, por quê? O sistema mostra isso hoje? Não. O prazo não é comparado com a conclusão e não há campo de justificativa; na rodada 1 até uma data anterior à abertura do desvio foi aceita sem aviso (DV-GQ-025).</li>
+<li>A conclusão foi alterada depois de registrada? O sistema mostra isso hoje? Em parte. O histórico existe e, na rodada 1, mostrou o valor antigo e o novo da regravação, mas sem motivo (justificativa vazia, DV-GQ-025); a regravação é aceita mesmo com o desvio Finalizado (código; não exercitado).</li>
 <li>Todas as ações do plano foram executadas antes do encerramento? O sistema mostra isso hoje? Não. A GQ não tem visão geral nesta tela e o encerramento não confere isso.</li>
 </ol>
 <h4 id="lacunas-para-a-versao-corrigida">Lacunas para a versão corrigida</h4>
@@ -111,16 +111,18 @@
 <li>Evidência de execução obrigatória quando a ação a exigir, em vez de anexo opcional (RN-GQ-D11-13).</li>
 <li>Aviso à GQ quando todas as ações estiverem concluídas, e aviso de ação atrasada (RN-GQ-009).</li>
 <li>Guardar o valor antigo no histórico da situação da ação, com nome legível (RN-GQ-D11-08).</li>
+<li>Avisar o atraso e exigir justificativa para concluir fora do prazo ou com data anterior à abertura, e para regravar uma conclusão (DV-GQ-025).</li>
+<li>Corrigir os filtros da lista: RD/Nº com o ano e datas de um só dia (DV-GQ-026, DV-GQ-027).</li>
 </ul>
 <h4 id="guia-33-2020">Guia 33/2020</h4>
-<p>Item 9.3.2.3 (Requisitos Operacionais): o Guia lista entre as funções do sistema "Trilhas de auditoria;" e "Utilização de assinaturas eletrônicas;". Esta tela grava histórico da conclusão (a confirmar no teste), mas sem justificativa e sem assinatura eletrônica. Também usa a hora do navegador para a data da avaliação (RN-GQ-D11-06), e não a do servidor.</p>
+<p>Item 9.3.2.3 (Requisitos Operacionais): o Guia lista entre as funções do sistema "Trilhas de auditoria;" e "Utilização de assinaturas eletrônicas;". Esta tela grava histórico da conclusão (na rodada 1 o histórico da ação mostrou o valor antigo e o novo), mas sem justificativa e sem assinatura eletrônica. Também usa a hora do navegador para a data da avaliação (RN-GQ-D11-06), e não a do servidor.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="execucao-plano-de-acao-preventiva-regras-de-negocio.html"><small>← Anterior</small><strong>Execução Plano de Ação Preventiva: Regras de negócio</strong></a><a class="ap ap-prox" href="monitoramento-do-plano-de-acao-preventiva-analise.html"><small>Próximo →</small><strong>Monitoramento do Plano de Ação Preventiva: Análise</strong></a></nav>
   </main>
   
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -117,7 +117,7 @@
 <p><strong>Área excluída pode travar o desvio.</strong> A conferência de "todas avaliaram" inclui áreas excluídas (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:273-275</code>).</p>
 </li>
 <li>
-<p><strong>Usuário sem acesso.</strong> A lista consulta o nível do grupo do usuário sem checar se ele tem grupo (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:120</code>; <code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAvaliacaoAreaRDIndex.cs:17</code>). Inferência: dá erro ("Não foi possível obter as relatórios de desvios") em vez de lista vazia (CT-GQ-113).</p>
+<p><strong>Usuário sem acesso.</strong> A lista consulta o nível do grupo do usuário sem checar se ele tem grupo (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:120</code>; <code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAvaliacaoAreaRDIndex.cs:17</code>). Inferência: dá erro ("Não foi possível obter as relatórios de desvios") em vez de lista vazia.</p>
 </li>
 <li>
 <p><strong>Telas sem uso:</strong> <code>Incluir</code> e <code>Cancelar</code> (cópias de outras telas) estão no projeto; o menu não leva a elas (<code>HSolutions.GQ.UI/Areas/Bloco2/Views/AvaliacaoAreaRD/Incluir.cshtml</code>, <code>HSolutions.GQ.UI/Areas/Bloco2/Views/AvaliacaoAreaRD/Cancelar.cshtml</code>, <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:152-162</code>).</p>
@@ -132,6 +132,20 @@
 <h4 id="pontos-para-validar-com-a-area">Pontos para validar com a área</h4>
 <ul>
 <li>A área envolvida precisa ter pelo menos um usuário com a Divisão preenchida; senão ninguém consegue avaliar e o desvio fica parado em Pendente Responsável Área (RN-GQ-149). Definir quem acompanha esse caso.</li>
+</ul>
+<h4 id="confirmado-na-rodada-1-21-10-2026">Confirmado na rodada 1 (21/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>. Defeitos novos que dizem respeito a esta tela (gravidade entre parênteses):</p>
+<ul>
+<li><strong>DV-GQ-026 (Média).</strong> O filtro RD/Nº não acha o desvio quando se digita número e ano ("030/26"); acha com o número puro. Acontece em 9 das 12 telas de lista e nesta (CT-GQ-N04-02, CT-GQ-F06). Não acontece nas telas Relatório de Desvios, Registro Ação Corretiva Imediata e Relatório de CAPA.</li>
+<li><strong>DV-GQ-027 (Média).</strong> Data inválida no filtro é ignorada em silêncio e a lista sai completa (CT-GQ-F09). Nesta tela o intervalo de um dia e o uso só da Data Fim funcionaram como previsto; essas duas falhas ocorrem nas telas de Plano de Ação Corretiva em diante.</li>
+<li><strong>DV-GQ-028 (Média).</strong> O filtro Situação mistura resultados: "Finalizado" trouxe 6 linhas misturadas com Pendente (CT-GQ-F11). O resultado da rodada diz também que "Reprovado" devolve 0 nas telas de lista testadas; a documentação desta tela não lista essa opção (ver Divergências).</li>
+<li><strong>DV-GQ-036 (Alta).</strong> O histórico do desvio registra situação, responsável e alguns campos, mas omite o conteúdo das avaliações e as áreas envolvidas (CT-GQ-F04, desvio 048/26, 25 entradas). Para esta tela, quer dizer que as observações das áreas não aparecem no Log.</li>
+</ul>
+<p>Pontos de atenção do código, lidos contra o resultado:</p>
+<ul>
+<li><strong>Confirmados:</strong> 1 (trilha sem o conteúdo da avaliação: o texto das observações das áreas não aparece no histórico; DV-GQ-036) e 7 (filtro Situação mistura resultados; DV-GQ-028).</li>
+<li><strong>Não confirmados porque não foram testados nesta tela:</strong> 2 (Justificativa ignorada), 3 (datas e responsável mostrados como "de agora"), 4 (observação só com espaços), 5 (reenvio da avaliação), 6 (mais de uma recusa; o caso CT-GQ-N04-15 pede um desvio montado com o DBA), 8 (botão Limpar), 9 (clique no tipo de item), 10 (área excluída), 12 (telas Incluir e Cancelar), 13 (concorrência) e 14 (TAG do equipamento).</li>
+<li><strong>Inferência, não testada:</strong> o erro de impressão visto em outras telas (DV-GQ-018: "Server Error ... The device is not ready") pode ocorrer também no ícone de impressora desta tela, que usa o mesmo modelo de relatório (RN-GQ-D04-17). A confirmar no teste.</li>
 </ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <div class="tabela"><table>
@@ -158,13 +172,56 @@
 </tr>
 </tbody>
 </table></div>
+<h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Campos da tela, filtro RD/Nº</td>
+<td>Inferência: "009/26" não acha</td>
+<td>Confirmado: com o ano a lista não acha e não avisa (DV-GQ-026)</td>
+<td>Resolvida: texto corrigido em Campos, Manual e Regras (RN-GQ-D04-04)</td>
+</tr>
+<tr>
+<td>Filtro Situação</td>
+<td>Podia trazer linhas Pendente ao filtrar por "Finalizado" (A confirmar)</td>
+<td>Confirmado: 6 linhas misturadas (DV-GQ-028)</td>
+<td>Resolvida: RN-GQ-D04-03 validada</td>
+</tr>
+<tr>
+<td>Filtro Situação, opção "Reprovado"</td>
+<td>A tela oferece TODAS, Pendente e Finalizado</td>
+<td>O resultado diz que "Reprovado" devolve 0 nas telas de lista testadas, sem dizer se a tela 4 oferece essa opção</td>
+<td>Em aberto: conferir na tela se a opção existe</td>
+</tr>
+<tr>
+<td>Filtro de datas, data inválida</td>
+<td>Não documentado</td>
+<td>A data inválida (31/02/2026) é ignorada sem mensagem</td>
+<td>Resolvida: acrescentada a RN-GQ-D04-19 (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>Histórico (RN-GQ-D04-12)</td>
+<td>O texto da observação não entra no histórico (A confirmar)</td>
+<td>Confirmado no histórico do desvio 048/26 (DV-GQ-036)</td>
+<td>Resolvida: regra validada em parte; "quem avaliou" segue a confirmar</td>
+</tr>
+</tbody>
+</table></div>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="pre-avaliacao-relatorio-desvios-anvisa.html"><small>← Anterior</small><strong>Pré Avaliação Relatório Desvios: Anvisa</strong></a><a class="ap ap-prox" href="avaliacao-area-manual-do-usuario.html"><small>Próximo →</small><strong>Avaliação Área: Manual do usuário</strong></a></nav>
   </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#avaliacao-area">Avaliação Área</a></li><li><a href="#importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

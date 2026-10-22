@@ -59,7 +59,7 @@
 <tr>
 <td>"Ações corretivas e preventivas apropriadas devem ser elaboradas e adotadas em resposta aos desvios de qualidade."</td>
 <td>Art. 341</td>
-<td>Grava título, descrição e ações com responsável e prazo, todos obrigatórios (RN-GQ-054; RN-GQ-D10-02; Domain/Service/PlanoAcaoPreventivaValidator.cs:33-77). Falta o teste de tela dedicado</td>
+<td>Grava título, descrição e ações com responsável e prazo, todos obrigatórios (RN-GQ-054; RN-GQ-D10-02; Domain/Service/PlanoAcaoPreventivaValidator.cs:33-77). Conferido na rodada 1 (21/10/2026): sem título, descrição e ações, o sistema mostrou as cinco mensagens de obrigatoriedade (CT-GQ-N10-05), e a ação incompleta foi recusada com a mensagem de cada campo (CT-GQ-N10-06)</td>
 <td>Atende</td>
 </tr>
 <tr>
@@ -83,8 +83,8 @@
 <tr>
 <td>"Todas as decisões e medidas tomadas como resultado de um desvio de qualidade devem ser documentadas."</td>
 <td>Art. 337, § 3º</td>
-<td>O plano e as ações ficam gravados com histórico campo a campo (RN-GQ-D10-09; Infra/Repository/RepositoryBase.cs:272-300). Ainda não visto numa tela real</td>
-<td>A verificar</td>
+<td>O plano e as ações ficam gravados com histórico campo a campo (RN-GQ-D10-09; Infra/Repository/RepositoryBase.cs:272-300). Visto na tela na rodada 1 (21/10/2026, CT-GQ-N10-12): o histórico mostra a mudança de situação, o título da ação preventiva, a observação e o responsável, mas não as ações (descrição, prazo e responsável de cada uma) (DV-GQ-036)</td>
+<td>Atende em parte</td>
 </tr>
 <tr>
 <td>"Os registros devem ser realizados ou completados sempre que uma ação for realizada e de modo a permitir que todas as atividades significativas relativas à fabricação de medicamentos sejam rastreáveis."</td>
@@ -95,7 +95,7 @@
 <tr>
 <td>"Toda a alteração feita no registro de um documento deve ser assinada e datada, devendo permitir a leitura da informação original." Parágrafo único: "Quando apropriado, o motivo da alteração deve ser registrado."</td>
 <td>Art. 125, caput e parágrafo único</td>
-<td>Não há campo de justificativa; a gravação usa texto vazio (PlanoAcaoPreventivaRNCController.cs:199). Depois de salvo o plano não pode ser corrigido pela tela (Editar.cshtml:146). O campo do responsável da ação fica de fora do histórico (RN-GQ-D10-09)</td>
+<td>Não há campo de justificativa; a gravação usa texto vazio (PlanoAcaoPreventivaRNCController.cs:199). Depois de salvo o plano não pode ser corrigido pela tela (Editar.cshtml:146). O campo do responsável da ação fica de fora do histórico (RN-GQ-D10-09) Rodada 1: o histórico não traz as ações do plano (DV-GQ-036).</td>
 <td>Atende em parte</td>
 </tr>
 </tbody>
@@ -105,8 +105,8 @@
 <ol>
 <li>Como o prazo de cada ação preventiva foi definido em função do risco do desvio? O sistema mostra isso hoje? Não. O prazo é uma data livre, aceita data passada e não se liga à criticidade.</li>
 <li>Quem aprovou o plano antes de ele ser executado? O sistema mostra isso hoje? Não. O plano vai direto para a execução, sem etapa de aprovação.</li>
-<li>O que mudou no plano depois de salvo, quem mudou e por quê? O sistema mostra isso hoje? Em parte. O histórico grava as alterações campo a campo, mas sem motivo, e a tela nem permite corrigir o plano salvo.</li>
-<li>Mostre as ações preventivas deste desvio, com responsável e prazo. O sistema mostra isso hoje? Sim. A tabela de ações e o PDF do Relatório de CAPA trazem ação, responsável e prazo.</li>
+<li>O que mudou no plano depois de salvo, quem mudou e por quê? O sistema mostra isso hoje? Em parte. Na rodada 1 (21/10/2026) o histórico registrou a mudança de situação, o título, a observação e o responsável, mas não as ações do plano (DV-GQ-036); também não traz o motivo, e a tela nem permite corrigir o plano salvo.</li>
+<li>Mostre as ações preventivas deste desvio, com responsável e prazo. O sistema mostra isso hoje? Em parte. A tabela de ações da tela traz ação, responsável e prazo, e a ação aparece na Execução do responsável (rodada 1, CT-GQ-N10-10). Mas o histórico não registra as ações (DV-GQ-036), e a impressão do Relatório de CAPA deu erro na rodada 1 em outras telas (DV-GQ-018, a confirmar se é do ambiente); a impressão a partir desta tela não foi testada.</li>
 <li>Como a ação preventiva evita que o problema se repita em outro lote ou produto? O sistema mostra isso hoje? Não. O plano não consulta outros desvios, lotes ou produtos.</li>
 </ol>
 <h4 id="lacunas-para-a-versao-corrigida">Lacunas para a versão corrigida</h4>
@@ -117,16 +117,18 @@
 <li>Não gravar nada ao só abrir a tela (RN-GQ-D10-01) e usar a data do Salvar como data do plano.</li>
 <li>Ligar o plano preventivo a desvios anteriores e a outros lotes ou produtos (art. 8º, IX), a validar com a área.</li>
 <li>Corrigir a busca de produto, material e lote no desvio, para o plano chegar com o item afetado (DV-GQ-010).</li>
+<li>Registrar no histórico o conteúdo do plano e de cada ação, e não só a situação (DV-GQ-036).</li>
+<li>Corrigir os filtros da lista: RD/Nº com o ano, datas de um só dia e filtro de situação (DV-GQ-026, DV-GQ-027, DV-GQ-028).</li>
 </ul>
 <h4 id="guia-33-2020">Guia 33/2020</h4>
-<p>Item 9.3.2.3 (Requisitos Operacionais): o Guia lista entre as funções do sistema "Trilhas de auditoria;" e "Utilização de assinaturas eletrônicas;". A tela grava histórico das alterações (a confirmar no teste), mas não tem assinatura eletrônica nem justificativa da alteração.</p>
+<p>Item 9.3.2.3 (Requisitos Operacionais): o Guia lista entre as funções do sistema "Trilhas de auditoria;" e "Utilização de assinaturas eletrônicas;". A tela grava histórico das alterações, mas na rodada 1 ele não trouxe as ações do plano (DV-GQ-036); também não tem assinatura eletrônica nem justificativa da alteração.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-acao-preventiva-regras-de-negocio.html"><small>← Anterior</small><strong>Plano de Ação Preventiva: Regras de negócio</strong></a><a class="ap ap-prox" href="execucao-plano-de-acao-preventiva-analise.html"><small>Próximo →</small><strong>Execução Plano de Ação Preventiva: Análise</strong></a></nav>
   </main>
   
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -58,13 +58,13 @@
 <td>RN-GQ-010</td>
 <td>Obrigatórios: descrição (Não Conformidade) e local da ocorrência. O responsável e a data de criação também são exigidos, mas vêm preenchidos</td>
 <td>HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:26, 32, 72, 78</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-001): sem descrição, a tela mostrou "Descrição é obrigatória."; sem local, "Local de Ocorrência é obrigatório.". Cada tentativa mostra uma mensagem só (DV-GQ-033). Responsável e data de criação não foram exercitados</td>
 </tr>
 <tr>
 <td>RN-GQ-011</td>
 <td>O desvio pode ser ligado a um item. A tela oferece só três tipos (Produto, Equipamento e Material), apesar de o enumerador ter 14. Produto vem da Produção, Material do Estoque (consulta feita na API da Produção) e Equipamento do Principal</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:145-158; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:656-700; HSolutions.GQ.Services/Estoque/EstoqueService.cs:19-21</td>
-<td>Diferente do código no ambiente de teste (CT-GQ-003 e 014, 12/10/2026): a busca de produto e de material não devolve nada e o desvio salva sem item (DV-GQ-010)</td>
+<td>Diferente do código no sistema testado (CT-GQ-003 e 014, 12/10/2026). Reconfirmado em 21/10/2026 (casos CT-GQ-002 e CT-GQ-014): a busca de produto abre a janela vazia, sem mensagem; a de material "TESTE" mostra "Ocorreu um erro interno não esperado."; só a de equipamento devolveu itens (DV-GQ-010)</td>
 </tr>
 <tr>
 <td>RN-GQ-012</td>
@@ -82,43 +82,43 @@
 <td>RN-GQ-014</td>
 <td>Ao salvar, o desvio recebe número sequencial por ano e vai para Pendente Registro Ação Corretiva. A inclusão grava histórico</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:278-282, 313</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, casos CT-GQ-002 e CT-GQ-F02): o RD recebeu número sequencial e a situação Pendente Registro Ação Corretiva; os 59 RDs da massa vão de 001 a 059, sem buracos nem repetição. O histórico "INCLUSÃO DO REGISTRO" foi visto em 12/10/2026</td>
 </tr>
 <tr>
 <td>RN-GQ-015</td>
 <td>A data do relatório gravada é a que vem da tela, do campo Data/Hora do quadro Relatado por (DateTime.Parse(model.DataRD)), e não a hora do servidor</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:208; HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:304</td>
-<td>A confirmar no teste. O CT-GQ-003 (12/10/2026) concluiu que a data alterada não foi gravada, mas é provável que tenha alterado o campo Data da abertura, que não é enviado. Ver Divergências</td>
+<td>A confirmar no teste. O CT-GQ-003 (12/10/2026) concluiu que a data alterada não foi gravada, mas é provável que tenha alterado o campo Data da abertura, que não é enviado. Ver Divergências. Em 21/10/2026 o caso CT-GQ-N01-013 não foi executado nesta tela.</td>
 </tr>
 <tr>
 <td>RN-GQ-016</td>
 <td>Os ícones Editar e Cancelar só aparecem em Pendente Registro Ação Corretiva e para quem a regra de acesso permite. A edição exige justificativa e grava histórico. O servidor não repete a conferência de situação nem de quem edita</td>
 <td>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaRelatorioNaoConformidadeIndex.cs:13-34; HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:36-43; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:340-359, 470</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, caso CT-GQ-004): sem justificativa, "Justificativa é obrigatória."; com ela, o histórico traz o valor antigo e o novo da descrição, a hora, o usuário e a justificativa. A conferência de situação e de quem edita, no servidor, não foi exercitada</td>
 </tr>
 <tr>
 <td>RN-GQ-017</td>
 <td>Cancelamento: justificativa obrigatória. O sistema guarda quem cancelou, quando e o motivo no próprio desvio, mas não grava na trilha de auditoria (alteração sem histórico)</td>
 <td>HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:46-51; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:537-549; HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:94-98</td>
-<td>Validada no teste (12/10/2026, CT-GQ-006): justificativa obrigatória e cancelamento fora do histórico (DV-GQ-001)</td>
+<td>Validada no teste (12/10/2026, CT-GQ-006): justificativa obrigatória e cancelamento fora do histórico (DV-GQ-001); Reconfirmada em 21/10/2026 (passo 1.8, RD 050/26 cancelado por esta tela): o cancelamento não aparece no histórico (DV-GQ-001).</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-001</td>
 <td>A lista mostra todos os RDs fora da lixeira, de todas as áreas e de todas as situações. Não há filtro por área nem por dono</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:67, 73, 117</td>
-<td>Extraída</td>
+<td>Validada no teste (21/10/2026, casos CT-GQ-F01 e CT-GQ-005): a lista mostrou os 59 RDs da massa, de todas as áreas e situações, em 20 páginas</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-002</td>
 <td>Filtros: RD/Nº (número contém e ano 20aa), Descrição (contém), Data Início sozinha (um dia), Data Início com Data Fim (período, com o dia seguinte ao fim incluído), Data Fim sozinha (ignorada), Situação e Meios de Detecção</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:75-114</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, casos CT-GQ-F05, F07, F08, F09 e F16): o número puro e o número com ano acham o desvio; só Data Início acha o dia; início e fim no mesmo dia devolve o dia; só Data Fim é ignorada; data inválida (31/02/2026) é ignorada em silêncio, sem mensagem (DV-GQ-027). Descrição e Meios de Detecção não foram exercitados nesta tela</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-004</td>
 <td>O número do RD é sequencial por ano, com 3 dígitos, e é calculado pelo maior número do ano (comparado como texto) mais 1. É calculado ao abrir Incluir (só para mostrar) e de novo ao salvar. Não há regra de unicidade no banco</td>
 <td>HSolutions.GQ.Infrastructure/Repository/RegistroNaoConformidadeRepository.cs:13-41; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:147-148, 278-281; Hsolutions.GQ.DB/Tables/TBL_REGISTRO_RNC.sql (só a chave primária)</td>
-<td>A confirmar no teste (duas inclusões ao mesmo tempo; passagem de 999 para 1000)</td>
+<td>Validada em parte no teste (21/10/2026, casos CT-GQ-F01 e CT-GQ-F02): os RDs foram de 001 a 059, sem buracos nem repetição. Duas inclusões ao mesmo tempo e a passagem de 999 para 1000 não foram testadas (A confirmar no teste)</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-005</td>
@@ -130,7 +130,7 @@
 <td>RN-GQ-D01-006</td>
 <td>O servidor não exige tipo de item, item, lote nem TAG. Os asteriscos em Nº Lote, Nº Tag e Registro de entrada são só visuais. Sem tipo escolhido, o item é gravado com o tipo Nenhum</td>
 <td>HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:24-81; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:229</td>
-<td>Validada no teste (12/10/2026, CT-GQ-003): o desvio salvou sem item (DV-GQ-010)</td>
+<td>Validada no teste (12/10/2026, CT-GQ-003): o desvio salvou sem item (DV-GQ-010). Reconfirmada em 21/10/2026: a massa tem desvios gravados sem item (por exemplo, o RD 021/26)</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-007</td>
@@ -154,7 +154,7 @@
 <td>RN-GQ-D01-010</td>
 <td>O histórico da edição grava só os campos que mudaram (valor antigo e novo), com a justificativa digitada. O campo Justificativa em si não é registrado como campo alterado; se nada mais mudar, a edição não deixa registro. A inclusão grava só "INCLUSÃO DO REGISTRO"</td>
 <td>HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:272-391, 322, 131-156</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (21/10/2026, casos CT-GQ-004 e CT-GQ-F04): a edição grava o valor antigo e o novo, com hora, usuário e justificativa. O histórico do RD 048/26 (25 entradas) registra situação, responsável, meios de detecção, observação, abertura de CAPA, título das ações e a descrição do relatório, mas omite parte do conteúdo (DV-GQ-036). Edição que muda só a justificativa não foi testada</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-011</td>
@@ -184,7 +184,7 @@
 <td>RN-GQ-D01-015</td>
 <td>Quando há mais de um erro de validação, a tela mostra só o último, porque a função que monta as mensagens apaga as anteriores a cada erro</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:473-521</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-001): salvar com campos faltando mostrou só uma mensagem por tentativa (DV-GQ-033)</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-016</td>
@@ -204,6 +204,36 @@
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/RegistroNaoConformidadeIndex.js:88; HSolutions.GQ.UI/Areas/Bloco2/Views/RegistroNaoConformidade/Index.cshtml:95</td>
 <td>A confirmar no teste</td>
 </tr>
+<tr>
+<td>RN-GQ-D01-019</td>
+<td>Os títulos das colunas da lista (RD, Descrição, Meios, Data e Situação) parecem links, mas clicar neles não reordena a lista</td>
+<td>Observada na tela, sem trecho de código analisado (execucao/2026-10-21-desvios-rodada-1/resultado.md), caso CT-GQ-F03</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-F03): nada acontece ao clicar (DV-GQ-032)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-020</td>
+<td>Um apóstrofo na descrição do desvio deixa a grade da lista vazia, sem mensagem, e trava a paginação para todos os desvios. O sinal <code>&lt;B&gt;</code> foi lido como marcação HTML e a barra invertida sumiu. A descrição do RD 020/26 foi reparada na massa para a lista voltar a funcionar</td>
+<td>Observada na tela, sem trecho de código analisado (execucao/2026-10-21-desvios-rodada-1/resultado.md), defeito DV-GQ-017</td>
+<td>Validada no teste (21/10/2026, DV-GQ-017)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-021</td>
+<td>Imprimir o RD (ícone da impressora) abre página de erro "Server Error ... The device is not ready (System.IO.IOException)" em todos os RDs testados. Os relatórios das telas Acompanhamento RD e Controle de Emissão de RNC imprimem normalmente</td>
+<td>Observada na tela, sem trecho de código analisado (execucao/2026-10-21-desvios-rodada-1/resultado.md), defeito DV-GQ-018</td>
+<td>Validada no teste (21/10/2026, DV-GQ-018); a confirmar se o problema é do ambiente</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-022</td>
+<td>Filtro de situação: as contagens da lista conferem com a massa (Cancelado 6, Finalizado 6, Pendente Plano Ação Corretiva 2, Pendente Avaliação Relatório de Desvios 3, Pendente Monitoramento Preventivo 4 e Corretivo 4, Pendente Registro 10, Pré Avaliação 4, Responsável Área 8, CAPA 2). O filtro não oferece "Aprovado Plano Ação Corretiva" nem "Finalizado sem Relatório CAPA", e "Pendente Avaliação Plano Ação" devolve 0</td>
+<td>Observada na tela, sem trecho de código analisado (execucao/2026-10-21-desvios-rodada-1/resultado.md), caso CT-GQ-F10</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-F10; DV-GQ-028)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-023</td>
+<td>A lista mostra 3 desvios por página (59 RDs em 20 páginas) e o paginador mostra só "« n n+1 »"</td>
+<td>HSolutions.GQ.UI/Web.config:33; caso CT-GQ-F01</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-F01)</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -220,12 +250,12 @@
 <tr>
 <td>CT-GQ-001</td>
 <td>Tela Incluir. Prep.: usuário com grupo. Fazer: Salvar sem descrição e sem local. Esperado: recusa pedindo descrição e local. Prioridade Baixa</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 21/10/2026: aparece uma mensagem só por tentativa (DV-GQ-033)</td>
 </tr>
 <tr>
 <td>CT-GQ-002</td>
 <td>Tela Incluir. Prep.: lote TESTE existente. Fazer: registrar desvio com item produto e o lote. Esperado: número sequencial do ano e situação Pendente Registro Ação Corretiva. Prioridade Baixa</td>
-<td>Não executado como caso próprio; a busca de produto não devolveu nada (DV-GQ-010)</td>
+<td>Passou com ressalva em 21/10/2026: feito com equipamento, porque a busca de produto e de material não devolve resultado (DV-GQ-010)</td>
 </tr>
 <tr>
 <td>CT-GQ-003</td>
@@ -235,22 +265,22 @@
 <tr>
 <td>CT-GQ-004</td>
 <td>Tela Editar. Fazer: editar sem justificativa e depois com; abrir o histórico. Esperado: recusa sem justificativa; com ela, histórico com valor antigo e novo. Prioridade Baixa</td>
-<td>Não executado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-005</td>
 <td>Lista. Prep.: usuário de outra área que não criou o desvio. Fazer: procurar o desvio de outro usuário. Esperado: sem botão de editar. Prioridade Baixa</td>
-<td>Não executado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-006</td>
 <td>Tela Cancelar. Fazer: cancelar com justificativa e consultar o histórico. Registrar se o cancelamento não aparecer no histórico. Prioridade Alta</td>
-<td>Falhou em 12/10/2026 (DV-GQ-001)</td>
+<td>Falhou em 12/10/2026 (DV-GQ-001). Reconfirmado em 21/10/2026 (passo 1.8): o cancelamento continua fora do histórico.</td>
 </tr>
 <tr>
 <td>CT-GQ-014</td>
 <td>Tela Incluir. Fazer: ligar o desvio a um lote TESTE e tentar liberar o lote em CQ, Estoque ou Produção. Registrar se o lote seguir normalmente. Prioridade Alta</td>
-<td>Bloqueado em 12/10/2026 (DV-GQ-010)</td>
+<td>Bloqueado em 12/10/2026 (DV-GQ-010). Bloqueado em 21/10/2026: sem lote nem produto na busca (DV-GQ-010 reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-001</td>
@@ -408,9 +438,49 @@
 <td>Não executado</td>
 </tr>
 <tr>
-<td>CT-GQ-N01-033</td>
-<td>Lista. Prep.: usuário sem acesso na GQ. Fazer: abrir a lista. Esperado: sem Incluir e sem ícones de edição (RN-GQ-D01-003). Prioridade Média</td>
-<td>Não executado (equivale ao CT-GQ-113)</td>
+<td>CT-GQ-F01</td>
+<td>Lista. Fazer: percorrer a paginação com a massa (59 RDs, 3 por página). Esperado: todas as páginas, sem buracos. Observado: 20 páginas, de 001 a 059; o paginador mostra só "« n n+1 »"</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F02</td>
+<td>Lista e Incluir. Fazer: conferir a sequência e o formato do número do RD. Observado: de 001 a 059, sem buracos nem repetição; o Incluir mostra nnn/AAAA e a lista nnn/aa</td>
+<td>Passou com ressalva em 21/10/2026: formato do número diferente entre Incluir e lista</td>
+</tr>
+<tr>
+<td>CT-GQ-F03</td>
+<td>Lista. Fazer: clicar nos títulos das colunas RD, Descrição, Meios, Data e Situação. Esperado: reordenar. Observado: nada acontece</td>
+<td>Falhou em 21/10/2026 (DV-GQ-032)</td>
+</tr>
+<tr>
+<td>CT-GQ-F04</td>
+<td>Histórico. Fazer: abrir o histórico de um desvio editado muitas vezes (RD 048/26, 25 entradas). Observado: 4 páginas, do mais novo para o mais antigo; registra situação, responsável, meios de detecção, observação, abertura de CAPA, título das ações e a descrição do relatório; não registra o texto da ação imediata, as observações das áreas, as áreas envolvidas, as causas do diagrama nem o conteúdo dos resultados</td>
+<td>Passou com ressalva em 21/10/2026: histórico incompleto (DV-GQ-036)</td>
+</tr>
+<tr>
+<td>CT-GQ-F05</td>
+<td>Lista (telas 1 a 12). Fazer: filtrar por RD só com o número. Observado: acha o desvio</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F07</td>
+<td>Lista (telas 1 a 6). Fazer: filtrar só por Data Início (um dia). Observado: acha os desvios do dia</td>
+<td>Passou em 21/10/2026</td>
+</tr>
+<tr>
+<td>CT-GQ-F09</td>
+<td>Lista (telas 1 a 12). Fazer: digitar uma data inválida (31/02/2026). Observado: a data é ignorada em silêncio e a lista sai completa</td>
+<td>Passou com ressalva em 21/10/2026: sem mensagem de data inválida (DV-GQ-027)</td>
+</tr>
+<tr>
+<td>CT-GQ-F10</td>
+<td>Lista. Fazer: filtrar por cada situação e conferir a contagem com a massa. Observado: as contagens batem; o filtro não oferece todas as situações e "Pendente Avaliação Plano Ação" devolve 0</td>
+<td>Passou com ressalva em 21/10/2026: filtro de situação incompleto (DV-GQ-028)</td>
+</tr>
+<tr>
+<td>CT-GQ-F16</td>
+<td>Lista (telas 1, 2 e 6). Fazer: filtrar por RD com o ano (nnn/26). Observado: acha o desvio</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 </tbody>
 </table></div>
@@ -420,7 +490,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

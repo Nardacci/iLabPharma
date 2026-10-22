@@ -45,13 +45,32 @@
     <article class="texto texto-largo">
 <ol>
 <li>No menu, abra Controle de Desvios › Controle de Emissão de RNC. A tela tem o bloco Pesquisa com um único campo, Ano, já preenchido com o ano atual. Não há lista na tela: o resultado sai em PDF.</li>
+</ol>
+<figure><a href="../img/garantia-qualidade/t14-p01-filtros.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t14-p01-filtros.png" alt="Controle de Emissão de RNC: Os filtros e os botões da tela" loading="lazy"></a><figcaption>Controle de Emissão de RNC: Os filtros e os botões da tela · clique para ampliar</figcaption></figure>
+
+<ol start="2">
 <li>Se quiser outro ano, apague e digite os quatro dígitos. O campo só aceita números e no máximo quatro dígitos.</li>
 <li>Clique em Imprimir. Uma nova janela abre com o PDF "FORMULÁRIO DE CONTROLE DE EMISSÃO DE RNC", com o ano no alto e as colunas Nº RNC, DATA, DESCRIÇÃO DA NÃO CONFORMIDADE e DIVISÃO/SEÇÃO.</li>
 <li>O ano precisa estar entre o ano atual e dez anos antes. Fora disso aparece a faixa vermelha "Informe um Ano entre o atual até 10 anos anteriores!" e nada é impresso.</li>
+</ol>
+<figure><a href="../img/garantia-qualidade/t14-p03-pdf.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t14-p03-pdf.png" alt="Controle de Emissão de RNC: O relatório em PDF" loading="lazy"></a><figcaption>Controle de Emissão de RNC: O relatório em PDF · clique para ampliar</figcaption></figure>
+
+<ol start="5">
 <li>Limpar apaga o campo Ano (que fica vazio) e esconde a faixa vermelha. Imprimir com o campo vazio mostra a mesma faixa vermelha.</li>
+</ol>
+<figure><a href="../img/garantia-qualidade/t14-p02-erro-periodo.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t14-p02-erro-periodo.png" alt="Controle de Emissão de RNC: A mensagem quando falta o período ou o ano" loading="lazy"></a><figcaption>Controle de Emissão de RNC: A mensagem quando falta o período ou o ano · clique para ampliar</figcaption></figure>
+
+<ol start="6">
 <li>Não há botão Pesquisar, Incluir, Editar, Cancelar ou Visualizar. A tela só tem Limpar e Imprimir.</li>
 <li>Como ler o PDF: cada linha é um desvio que já passou pela pré-avaliação no ano escolhido. Nº RNC é o número com o ano (por exemplo 006/26), DATA é a data e hora do registro do desvio, DESCRIÇÃO é o texto do desvio e DIVISÃO/SEÇÃO é a área da pessoa que registrou o desvio (vazia se a pessoa não tem área).</li>
 </ol>
+<p>Observado na rodada 1 (21/10/2026):</p>
+<ul>
+<li>O campo Ano abre com 2026 e o PDF traz "ANO: 2026"; a data e a hora impressas saem no formato americano (CT-GQ-N14-01; DV-GQ-034).</li>
+<li>Ano seguinte (2027), 2010, vazio e texto "abc": aparece "Informe um Ano entre o atual até 10 anos anteriores!" e nenhuma janela abre; 2026 imprime (CT-GQ-N14-02).</li>
+<li>O PDF da massa lista só os desvios já pré-avaliados: 001, 002, 003, 005, 006, 009, 010, 014, 027 a 049 e 052 a 059. Ficam de fora, por exemplo, 004, 007, 008, 011 a 013, 015, 016 e 017 a 026 (CT-GQ-N14-06; DV-GQ-030).</li>
+<li>Os desvios cancelados antes da pré-avaliação (004, 011, 017 e 018) não aparecem e não há marca de cancelado, o que deixa buracos na sequência dos números (CT-GQ-N14-07; DV-GQ-030). A coluna DIVISÃO/SEÇÃO fica vazia para vários desvios (CT-GQ-F15).</li>
+</ul>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <h3 id="tela-index">Tela (Index)</h3>
 <div class="tabela"><table>
@@ -111,14 +130,14 @@
 <td>Rodapé: DATA, USUÁRIO e Página x/y</td>
 <td>Texto</td>
 <td>Não se aplica</td>
-<td>Data e hora da impressão, nome de quem imprimiu e paginação</td>
+<td>Data e hora da impressão, nome de quem imprimiu e paginação Rodada 1 (CT-GQ-N14-01; DV-GQ-034): a data e a hora de impressão saíram no formato americano (por exemplo 10/21/2026 10:03 PM).</td>
 <td>RNCControleEmissao.rdlc (campos Now(), Usuario e PageNumber)</td>
 </tr>
 <tr>
 <td>Nº RNC</td>
 <td>Texto</td>
 <td>Não se aplica</td>
-<td>Número do desvio com o ano; sem ano gravado, mostra o Id com zeros</td>
+<td>Número do desvio com o ano; sem ano gravado, mostra o Id com zeros Rodada 1 (CT-GQ-N14-06): só os desvios já pré-avaliados aparecem (DV-GQ-030).</td>
 <td>Reports/DadosRNCFactory.cs:248; Domain/Entities/Bloco2/ControleDesvios/RegistroNaoConformidade.cs:16-34</td>
 </tr>
 <tr>
@@ -139,7 +158,7 @@
 <td>DIVISÃO/SEÇÃO</td>
 <td>Texto</td>
 <td>Não se aplica</td>
-<td>Área da pessoa que registrou o desvio, buscada no Principal; em branco se a pessoa não tem área</td>
+<td>Área da pessoa que registrou o desvio, buscada no Principal; em branco se a pessoa não tem área Rodada 1 (CT-GQ-F15): a coluna fica vazia para vários desvios; o resultado não diz se os criadores não têm área.</td>
 <td>Reports/DadosRNCFactory.cs:241-245,251</td>
 </tr>
 </tbody>
@@ -159,7 +178,7 @@
 <tr>
 <td>Imprimir</td>
 <td>Sempre</td>
-<td>Confere o ano no navegador e abre o PDF numa nova janela</td>
+<td>Confere o ano no navegador e abre o PDF numa nova janela Rodada 1: com o ano atual abre o PDF "ANO: 2026" (CT-GQ-N14-01); com ano seguinte, 2010, vazio ou texto mostra a faixa de erro e não abre janela (CT-GQ-N14-02).</td>
 <td>Não muda o desvio; a tela não grava</td>
 <td>Index.cshtml:28; Bloco2/Script/ControleEmissaoRNCIndex.js:6-17; ControleEmissaoController.cs:29-55</td>
 </tr>
@@ -191,7 +210,7 @@
 <tbody>
 <tr>
 <td>Informe um Ano entre o atual até 10 anos anteriores!</td>
-<td>Imprimir com ano maior que o atual, menor que o atual menos dez, ou vazio</td>
+<td>Imprimir com ano maior que o atual, menor que o atual menos dez, ou vazio Texto visto na tela em 21/10/2026 (CT-GQ-N14-02), com ano seguinte, 2010, vazio e texto.</td>
 <td>Bloco2/Script/ControleEmissaoRNCIndex.js:12</td>
 </tr>
 <tr>
@@ -217,7 +236,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li class="sub"><a href="#tela-index">Tela (Index)</a></li><li class="sub"><a href="#colunas-do-relatorio-pdf">Colunas do relatório (PDF)</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

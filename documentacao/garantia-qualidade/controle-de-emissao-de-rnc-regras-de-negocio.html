@@ -57,7 +57,7 @@
 <td>RN-GQ-059</td>
 <td>O Controle de Emissão de RNC imprime os relatórios emitidos. CORREÇÃO: imprime por ano (não por período) e só os desvios que já passaram pela pré-avaliação. Também não agrupa por causa, área ou produto (art. 342 da RDC 658/2022). Obs.: a parte do Acompanhamento RD está na página da tela 13.</td>
 <td>ControleEmissaoController.cs:30-46</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-06 e N14-07; DV-GQ-030): o PDF é do ano e traz só os desvios que passaram pela pré-avaliação</td>
 </tr>
 <tr>
 <td>RN-GQ-060</td>
@@ -75,19 +75,19 @@
 <td>RN-GQ-D14-03</td>
 <td>Só entram desvios que têm pré-avaliação e cuja pré-avaliação não está pendente. Desvios ainda sem pré-avaliação, e os cancelados antes dela, ficam fora. Inferência: um controle de emissão deveria mostrar todos os números emitidos, inclusive os cancelados, para provar que não há lacuna.</td>
 <td>ControleEmissaoController.cs:36-38</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N14-06, N14-07 e F15; DV-GQ-030): ficam fora os desvios sem pré-avaliação e os cancelados antes dela (004, 011, 017 e 018, entre outros)</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-04</td>
 <td>Desvios cancelados depois da pré-avaliação entram no relatório sem marca de cancelamento.</td>
 <td>ControleEmissaoController.cs:36-38; Reports/DadosRNCFactory.cs:246-252</td>
-<td>A confirmar no teste</td>
+<td>A confirmar no teste. Rodada 1 (21/10/2026, CT-GQ-N14-07): não pôde ser exercitada, porque a tela só deixa cancelar o desvio em Pendente Registro Ação Corretiva, antes da pré-avaliação; pela tela não existe cancelado depois dela</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-05</td>
 <td>A coluna DIVISÃO/SEÇÃO é a área da pessoa que criou o desvio, consultada no Principal desvio a desvio; sem área, fica em branco.</td>
 <td>Reports/DadosRNCFactory.cs:239-245</td>
-<td>Extraída</td>
+<td>Extraída. Rodada 1 (21/10/2026, CT-GQ-F15): a coluna fica vazia para vários desvios; o resultado não diz se os criadores não têm área, como a regra prevê</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-06</td>
@@ -99,7 +99,7 @@
 <td>RN-GQ-D14-07</td>
 <td>Não há ordenação definida (a ordem é a do banco) nem verificação de lacunas na numeração.</td>
 <td>ControleEmissaoController.cs:36-38</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-07 e F15; DV-GQ-030): a sequência sai com buracos e sem nenhum aviso de lacuna. A ordenação das linhas não foi conferida</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-08</td>
@@ -117,7 +117,19 @@
 <td>RN-GQ-D14-10</td>
 <td>O campo Ano vem preenchido com o ano atual do servidor; Limpar o deixa vazio.</td>
 <td>Index.cshtml:23; ControleEmissaoRNCIndex.js:1-4</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-01): o campo mostra o ano atual (2026). O botão Limpar não foi testado</td>
+</tr>
+<tr>
+<td>RN-GQ-D14-11</td>
+<td>A data e a hora impressas no PDF saem no formato americano (mm/dd/aaaa hh:mm AM/PM).</td>
+<td>Observado na tela (execucao/2026-10-21-desvios-rodada-1/resultado.md, CT-GQ-N14-01); linha do código a localizar</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N14-01; DV-GQ-034)</td>
+</tr>
+<tr>
+<td>RN-GQ-D14-12</td>
+<td>Os desvios cancelados antes da pré-avaliação não aparecem no controle e não há marca de cancelado; os números deles viram buracos na sequência, sem aviso.</td>
+<td>Observado na tela (resultado.md, CT-GQ-N14-07 e F15)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N14-07; DV-GQ-030)</td>
 </tr>
 </tbody>
 </table></div>
@@ -135,67 +147,72 @@
 <tr>
 <td>CT-GQ-025 (Baixa)</td>
 <td>Tela: Controle de Emissão de RNC. Preparação: desvios de teste de hoje. Fazer: Imprimir com o ano atual. Esperado: PDF com os desvios TESTE pré-avaliados</td>
-<td>Sem resultado</td>
+<td>Não executado como caso próprio desta tela; coberto em parte pelo CT-GQ-N14-06 (21/10/2026)</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-01 (Média)</td>
 <td>Ano padrão. Fazer: abrir a tela e Imprimir sem mexer. Esperado: o campo mostra o ano atual e o PDF mostra "ANO: aaaa" com o mesmo ano</td>
-<td>Sem resultado</td>
+<td>Passou com ressalva em 21/10/2026: a data de impressão sai no formato americano (DV-GQ-034)</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-02 (Alta)</td>
 <td>Ano acima do atual. Fazer: digitar o ano seguinte e Imprimir. Esperado: faixa "Informe um Ano entre o atual até 10 anos anteriores!" e nenhuma janela</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-03 (Média)</td>
 <td>Limite de dez anos. Fazer: Imprimir com o ano atual menos dez; depois com menos onze. Esperado: o primeiro abre o PDF (sem linhas, se não houver desvios); o segundo mostra a faixa de erro</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-04 (Média)</td>
 <td>Ano vazio e Limpar. Fazer: Limpar, depois Imprimir. Esperado: campo vazio e a faixa de erro</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-05 (Baixa)</td>
 <td>Digitação. Fazer: tentar digitar letras, sinais e mais de quatro dígitos. Esperado: só números e no máximo quatro dígitos</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-06 (Alta)</td>
 <td>Quem entra no relatório. Preparação: um desvio sem pré-avaliação e outro pré-avaliado. Fazer: Imprimir. Esperado pelo código: só o pré-avaliado aparece (RN-GQ-D14-03)</td>
-<td>Sem resultado</td>
+<td>Passou em 21/10/2026 (o comportamento previsto pelo código se confirmou, e é ele que gera o DV-GQ-030)</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-07 (Alta)</td>
 <td>Cancelados. Preparação: um desvio cancelado antes e outro depois da pré-avaliação. Fazer: Imprimir. Esperado pela norma interna de controle de numeração: ambos aparecem, marcados como cancelados. Pelo código, só o segundo aparece, sem marca (RN-GQ-D14-03 e D14-04)</td>
-<td>Sem resultado</td>
+<td>Falhou em 21/10/2026 (DV-GQ-030); a metade "cancelado depois da pré-avaliação" não pôde ser executada, porque a tela só cancela antes da pré-avaliação</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-08 (Média)</td>
 <td>Colunas. Fazer: Imprimir e conferir uma linha. Esperado: Nº RNC com ano (006/26), DATA com data e hora, descrição completa, DIVISÃO/SEÇÃO igual à área de quem registrou</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-09 (Média)</td>
 <td>Área em branco. Preparação: desvio registrado por usuário sem área. Fazer: Imprimir. Esperado: DIVISÃO/SEÇÃO vazia, sem erro</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-10 (Baixa)</td>
 <td>Ano sem desvios. Fazer: Imprimir com um ano sem registros. Esperado: PDF com o cabeçalho e sem linhas, ou um aviso. Registrar</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-11 (Baixa)</td>
 <td>Cabeçalho e rodapé. Fazer: Imprimir e conferir cliente, logotipo, ano, data, usuário e página. Esperado: dados corretos</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-12 (Média)</td>
 <td>Lacunas. Preparação: três desvios consecutivos, o do meio cancelado antes da pré-avaliação. Fazer: Imprimir. Esperado: o controle mostra os três números. Pelo código, o do meio falta, e a lacuna não é sinalizada</td>
-<td>Sem resultado</td>
+<td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-F15 (volume e consulta)</td>
+<td>Controle de Emissão com a massa: todos os desvios aparecem</td>
+<td>Falhou em 21/10/2026 (DV-GQ-030)</td>
 </tr>
 </tbody>
 </table></div>
@@ -205,7 +222,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 21/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
