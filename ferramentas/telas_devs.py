@@ -95,7 +95,7 @@ def montar(modulos, origem, destino):
         por_tela = {}
         for p in mod.get("paginas", []):
             if p.get("tela_n") and p.get("aba"):
-                por_tela.setdefault(_norm(p["tela"]), {})[p["aba"]] = f"documentacao/{mid}/{p['slug']}.html"
+                por_tela.setdefault(_norm(re.sub(r"\s*\(.*?\)", "", p["tela"])), {})[p["aba"]] = f"documentacao/{mid}/{p['slug']}.html"
         menus = {}
         for menu, nome, sit in inv:
             docs = {}
