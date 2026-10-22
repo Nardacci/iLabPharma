@@ -47,6 +47,7 @@
 <h3 id="monitoramento-do-plano-de-acao-corretiva">Monitoramento do Plano de Ação Corretiva</h3>
 <p>Menu: Controle de Desvios › Monitoramento do Plano de Ação Corretiva (o código também chama a tela de "Liberação Plano de Ação Corretiva"). Versão legado (código entregue pelo fornecedor). Rascunho de 21/10/2026, feito só pela leitura do código; o que não foi testado está marcado como "A confirmar no teste".</p>
 <p>Atualizado em 22/10/2026 com o resultado da rodada 1 de testes de tela (21/10/2026; <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>). O que a tela mostrou está marcado como "rodada 1" ou "21/10/2026"; o que o teste não exercitou continua como estava.</p>
+<p>Rodada 2 (22/10/2026; <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>): oito casos desta tela tiveram resultado (3 passaram, 1 passou com ressalva e 4 falharam; o CT-GQ-021 repete o resultado de 12/10). Dois defeitos novos (DV-GQ-048 e DV-GQ-049). O que a rodada 2 mostrou está nas subseções "Rodada 2" de cada seção.</p>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>É a verificação final da Garantia da Qualidade sobre o plano corretivo. A GQ confere as ações já finalizadas, registra o resultado da implementação de cada ação (número da ação, se foi implementada e uma observação), faz a verificação final (ações implementadas, sim ou não, e observação) e aprova o plano. Há também um "Salvar" que guarda o trabalho sem aprovar.</p>
 <h4 id="quem-usa">Quem usa</h4>
@@ -95,6 +96,7 @@
 <li>O resultado por ação não está ligado às ações do plano: "Ações Nº" é texto livre e basta um resultado para aprovar (LiberacaoPlanoAcaoCorretivaValidator.cs:31-52). Uma ação pode ficar sem resultado, ou ter resultado de uma ação que não existe.</li>
 <li>"Ações Corretivas Implementadas = Não" não impede a aprovação (RN-GQ-D09-007). Inferência: um plano pode ser aprovado com a própria verificação dizendo que as ações não foram implementadas. Mesmo padrão do plano preventivo (DV-GQ-012). A confirmar no teste.</li>
 <li>Não há verificação de eficácia da CAPA depois de um prazo (RN-GQ-052; RDC 658/2022, art. 341).</li>
+<li>Quem escreve o plano pode aprová-lo, sem assinatura eletrônica (ver o documento interno). Não há campo gravando quem aprovou: IdResponsavel da liberação nunca é preenchido (RN-GQ-D09-011).</li>
 <li>Aprovar apaga a justificativa que o Salvar parcial tinha gravado (RN-GQ-D09-005). Inferência, a confirmar no teste.</li>
 <li>O Salvar parcial pode duplicar os resultados, e os resultados já gravados não podem ser alterados nem excluídos e somem da grade quando um novo é adicionado (RN-GQ-D09-008 e 009). Inferência pelo script; a confirmar no teste (os resultados escritos das rodadas 1 e 3 não registram esse detalhe).</li>
 <li>O campo Responsável de "Responsável Pela Liberação" mostra o responsável do desvio (RegistroNaoConformidadeEditarModel.cs:174; Editar.cshtml:180), enquanto a view não usada (Visualizar.cshtml:120) mostraria o responsável da liberação. A confirmar no teste.</li>
@@ -129,6 +131,24 @@
 </ul>
 <p>Pontos de atenção que o teste não exercitou (continuam "A confirmar no teste"): Aprovar apaga a justificativa do Salvar (RN-GQ-D09-005); resultados duplicados ou que somem da grade (RN-GQ-D09-008 e D09-009); Responsável mostrado no bloco de liberação (RN-GQ-D09-012); janela de justificativa do Salvar (CT-GQ-N09-06); anexos; impressão; segunda confirmação ao aprovar.</p>
 <p>O que a tela fez como esperado: recusou verificação final vazia, ausência de resultado e resultado sem número ou sem observação (CT-GQ-N09-01 a N09-03).</p>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>. Casos desta tela: CT-GQ-021 (repetido do resultado de 12/10), CT-GQ-N09-06 a N09-11 e N09-19.</p>
+<p>Defeitos novos que dizem respeito a esta tela:</p>
+<ul>
+<li>DV-GQ-048 (Média): Salvar duas vezes seguidas, sem recarregar, com um resultado novo, deixa o resultado duplicado (CT-GQ-N09-07, desvio 042/26).</li>
+<li>DV-GQ-049 (Média): com resultados já salvos, adicionar um novo faz a grade mostrar só o novo até salvar e reabrir; os dados não se perdem (CT-GQ-N09-08).</li>
+</ul>
+<p>Defeitos já registrados e reconfirmados nesta tela:</p>
+<ul>
+<li>DV-GQ-021 (Alta): aprova com "Ações Corretivas Implementadas" = Não e resultado "Implementada Não" (CT-GQ-N09-11). A rodada 1 não tinha isolado a caixa da verificação final; agora está isolada.</li>
+<li>DV-GQ-016 (Alta): não há botão Reprovar.</li>
+<li>DV-GQ-002 (Alta): resultado de 12/10 mantido, não repetido (CT-GQ-021).</li>
+<li>DV-GQ-023 (Alta, estendido à tela 9): o plano é aprovado sem segunda pessoa e sem assinatura eletrônica (CT-GQ-N09-19). As regras de acesso estão no documento interno.</li>
+<li>DV-GQ-036 (Alta): o histórico da aprovação não traz o conteúdo dos resultados nem da verificação final (CT-GQ-N09-09).</li>
+</ul>
+<p>Pontos de atenção do código que a tela confirmou: salvar duas vezes duplica o resultado (RN-GQ-D09-008); resultado antigo some da grade ao adicionar outro (RN-GQ-D09-009, com a diferença de que o lápis e a lixeira aparecem); aprovar com "Não" (RN-GQ-D09-007).</p>
+<p>Observação importante: a tela 9 recusa a aprovação com tudo vazio, enquanto a tela 12 finaliza o desvio vazio (DV-GQ-022). A regra é a mesma nas duas telas; o comportamento observado difere. Causa provável (não comprovada em teste): na tela 12 o serviço que roda as validações descarta qualquer erro interno sem avisar e devolve "sem erros" (RelatorioNaoConformidadeService.cs:22-25). Fica como pergunta ao desenvolvimento.</p>
+<p>Não exercitado nesta rodada (continua "A confirmar no teste"): Aprovar apaga a justificativa do Salvar (RN-GQ-D09-005, CT-GQ-N09-12), Responsável mostrado no bloco de liberação (RN-GQ-D09-012), anexos e impressão. A impressão do relatório de CAPA dá erro de servidor no ambiente (DV-GQ-018).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>RN-GQ-049 (01-regras-de-negocio.md) diz "um resultado por ação (número e observação)". O validador exige ao menos uma linha de resultado, cada uma com número e observação, e não exige um resultado por ação do plano (LiberacaoPlanoAcaoCorretivaValidator.cs:31-52). Corrigido nesta página.</li>
@@ -149,6 +169,16 @@
 <li>
 <p>Item 11-inventario-de-telas.md ("Não testada"): a rodada 1 dá base para marcar a tela como "Funciona com falhas". Não resolvida aqui, porque o inventário está fora do lote desta atualização.</p>
 </li>
+</ul>
+<h4 id="rodada-2-22-10-2026_1">Rodada 2 (22/10/2026)</h4>
+<p>Comparação entre o que esta página dizia e o que a tela mostrou. Resolvidas nesta atualização, salvo onde indicado.</p>
+<ul>
+<li>A página dizia que, depois de aprovar, aparece o botão "Plano de Ação Preventiva". Na tela reaberta o botão não aparece (o desvio aparece na tela Plano de Ação Preventiva). Em aberto: não foi registrado se o botão aparecia logo depois de aprovar, antes de reabrir.</li>
+<li>A página dizia que os resultados já gravados não podem ser editados nem excluídos. Depois de recarregar, a tela mostra lápis e lixeira neles. Se respondem ao clique não foi registrado. Parcialmente resolvida (RN-GQ-D09-009).</li>
+<li>A página dizia que "Ações Corretivas Implementadas = Não" talvez não impeça a aprovação. A tela aprovou (DV-GQ-021). Resolvida (RN-GQ-D09-007).</li>
+<li>A página dizia que Salvar duplica os resultados e que os gravados somem da grade. A tela confirmou os dois (DV-GQ-048 e DV-GQ-049). Resolvida.</li>
+<li>A mensagem "A justificativa é obrigatória!" saiu como o código previa. Sem divergência.</li>
+<li>A página dizia que a mesma regra de validação vale nas telas 9 e 12. A tela 9 recusa a aprovação vazia; a tela 12 finaliza. Em aberto (pergunta ao desenvolvimento, DV-GQ-022).</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="execucao-do-plano-de-acao-corretiva-anvisa.html"><small>← Anterior</small><strong>Execução do Plano de Ação Corretiva: Anvisa</strong></a><a class="ap ap-prox" href="monitoramento-do-plano-de-acao-corretiva-manual-do-usuario.html"><small>Próximo →</small><strong>Monitoramento do Plano de Ação Corretiva: Manual do usuário</strong></a></nav>

@@ -39,7 +39,7 @@
     <header class="doc-cabecalho">
       <h1>Plano de Ação Corretiva: Fluxos</h1>
       <div class="doc-acoes"><a class="botao" href="../arquivos/garantia-qualidade/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 07 Plano de Ação Corretiva - Fluxos.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
-      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+      
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="plano-de-acao-corretiva-analise.html">Análise</a><a href="plano-de-acao-corretiva-manual-do-usuario.html">Manual do usuário</a><a href="plano-de-acao-corretiva-fluxos.html" aria-current=page>Fluxos</a><a href="plano-de-acao-corretiva-regras-de-negocio.html">Regras de negócio</a><a href="plano-de-acao-corretiva-anvisa.html">Anvisa</a></nav>
     <article class="texto texto-largo">
@@ -66,7 +66,7 @@
 </ul>
 <h4 id="o-que-grava-na-trilha-de-auditoria-historico">O que grava na trilha de auditoria (histórico)</h4>
 <ul>
-<li>Salvar o plano usa a gravação com histórico: o histórico é campo a campo, com valor antigo e novo, e inclui o desvio, o plano, as ações e a inclusão de anexos (PlanoAcaoCorretivaRNCController.cs:244; RepositoryBase.cs:100-102 e 272-390; inclusão de anexo em :424). O campo IdResponsavel do plano fica de fora de propósito (PlanoAcaoCorretivaRNCController.cs:242).</li>
+<li>Salvar o plano usa a gravação com histórico: o histórico é campo a campo, com valor antigo e novo, e inclui o desvio, o plano, as ações e a inclusão de anexos (PlanoAcaoCorretivaRNCController.cs:244; RepositoryBase.cs:100-102 e 272-390; inclusão de anexo em :424). O campo IdResponsavel do plano fica de fora de propósito (PlanoAcaoCorretivaRNCController.cs:242). Rodada 2 (22/10/2026): ao alterar uma ação já gravada, o histórico traz o valor antigo e o novo (prazo e responsável); a inclusão das ações no primeiro Salvar não aparece na janela Histórico (CT-GQ-N07-07 e N07-08, DV-GQ-036).</li>
 <li>Marcar uma ação ou anexo como removido (lixeira) também gera histórico (RepositoryBase.cs:308-317 e 433).</li>
 <li>Abrir a tela de um desvio sem plano grava o plano vazio com histórico de inclusão (PlanoAcaoCorretivaRNCController.cs:163).</li>
 </ul>
@@ -111,6 +111,12 @@
 <td>DESCRICAO, ARQUIVO, TAMANHO, CHAVEDIRETORIO, TIPOCONTEUDO, LIXEIRA</td>
 <td>RegistroNaoConformidade_Id liga o anexo ao desvio (também existe PlanoAcaoCorretivaRNC_Id, que esta tela não usa)</td>
 <td>TBL_ANEXO.sql:2-19 e 45-47; AnexoController.cs; PlanoAcaoCorretivaRNCController.cs:317-330</td>
+</tr>
+<tr>
+<td>TBL_LOG_ALTERACAO_GQ e itens</td>
+<td>Objeto, campo, valor antigo, valor novo, usuário, data, justificativa</td>
+<td>O projeto de banco traz TBL_LOG_ALTERACAO, nome diferente do que o código usa (ver o documento interno e a pergunta ao DBA)</td>
+<td>LogAlteracaoConfiguration.cs:16</td>
 </tr>
 </tbody>
 </table></div>

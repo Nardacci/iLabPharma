@@ -85,13 +85,14 @@
 <ul>
 <li>A ação é um registro novo e a descrição do relatório é regravada junto. Quem registra a ação pode alterar descrição, local, item, lotes e anexos do desvio, sem aviso (RN-GQ-D02-007). Fere a integridade do relato original (Guia 33/2020, integridade dos dados; RDC 658/2022, art. 125).</li>
 <li>Responsável e área do relatório mudam para os de quem registrou a ação, e o quadro Relatado por mostra então o nome de quem criou com a área de quem registrou a ação (RN-GQ-D02-008).</li>
+<li>Data e hora da ação vêm da tela (RN-GQ-021) e o nome do responsável da ação também (HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:195). O código do responsável e da área vêm do usuário conectado.</li>
 <li>Justificativa exigida sem necessidade e sem rastro. Exigida mesmo ao registrar a ação pela primeira vez, e sem entrar na coluna Justificativa do histórico (RN-GQ-D02-004 e D02-005).</li>
 <li>Sem aprovação nem verificação do que foi feito. A tela registra um texto livre; não há responsável pela contenção, prazo, evidência, nem avaliação de risco ou de impacto no lote (RDC 658/2022, arts. 320 e 334; mapa de conformidade 04).</li>
 <li>Cancelamento sem exigência no servidor e sem conferir a situação (RN-GQ-D02-011). Ao contrário do Relatório de Desvios, aqui o cancelamento tem histórico (RN-GQ-022); a justificativa fica vazia na coluna do histórico.</li>
 <li>Filtro de situação incompleto: não há opção para os desvios em Pendente Pré Avaliação, que a lista mostra (RN-GQ-D02-002).</li>
 <li>Mensagens trocadas: pergunta de inclusão e sucesso "Alteração efetuada" ao registrar uma ação (RN-GQ-D02-014).</li>
 <li>Tela alcançada mal: o arquivo Incluir.cshtml não tem ação no controlador (RN-GQ-D02-003).</li>
-<li>Se a lista tiver um desvio em Pendente Registro Ação Corretiva e o usuário não tiver acesso, o código de permissão tenta ler o grupo vazio (HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAcaoCorretivaImediataRDIndex.cs:20) e a pesquisa pode falhar com "Ocorreu um erro interno não esperado." (Inferência; a confirmar no teste).</li>
+<li>Se a lista tiver um desvio em Pendente Registro Ação Corretiva e o usuário não tiver acesso, o código de conferência de acesso tenta ler o grupo vazio (HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAcaoCorretivaImediataRDIndex.cs:20) e a pesquisa pode falhar com "Ocorreu um erro interno não esperado." (Inferência; a confirmar no teste).</li>
 <li>Regra de área do responsável: a conferência compara a área do desvio com um número que, pelo código, é o identificador da tarefa de consulta, e não a área do usuário (detalhe no documento interno). Inferência a confirmar no teste.</li>
 <li>Textos com erro: "minímo" nas mensagens de busca; "Responsavel" sem acento.</li>
 <li>Defeitos DV-GQ confirmados em teste para esta tela: nenhum até agora (a tela não teve caso próprio executado). O desvio passou por ela nas rodadas de 12 e 16/10/2026 (RD 006/26 e 009/26) como etapa de preparação, sem registro de falha.</li>
@@ -115,6 +116,14 @@
 <li>Mensagens trocadas: pergunta de inclusão e sucesso "Alteração efetuada com sucesso." ao registrar uma ação (RN-GQ-D02-014).</li>
 </ul>
 <p>Pontos de atenção não confirmados (não foram testados na rodada 1): relatório do desvio alterável por quem registra a ação, e a mudança aparecer no histórico (RN-GQ-D02-007; CT-GQ-N02-006 e N02-015); justificativa exigida mesmo no primeiro registro (RN-GQ-D02-004; CT-GQ-N02-007); o desvio sumir da opção de situação depois de salvar (CT-GQ-N02-009, sem conferência); cancelamento sem justificativa aceito pelo servidor (RN-GQ-D02-011); busca de item do tipo Produto (RN-GQ-D02-012; CT-GQ-N02-022); duas janelas com o mesmo desvio (CT-GQ-N02-025); botão Limpar.</p>
+<h4 id="confirmado-na-rodada-2-22-10-2026">Confirmado na rodada 2 (22/10/2026)</h4>
+<p>Rodada de testes de tela de 22/10/2026 (resultado completo em execucao/2026-10-22-desvios-rodada-2/resultado.md). Casos desta tela: CT-GQ-N02-016 (Passou) e CT-GQ-N02-020 (Passou). Defeito novo desta rodada que diga respeito a esta tela: nenhum.</p>
+<ul>
+<li><strong>Histórico do cancelamento por esta tela:</strong> confirmado o que o código previa (RN-GQ-022 e RN-GQ-D02-011): situação, nome, data e justificativa como valor do campo, com a coluna Justificativa vazia. É melhor do que o Relatório de Desvios, onde o cancelamento fica fora do histórico (DV-GQ-001); a justificativa vazia na coluna própria continua um ponto de atenção.</li>
+<li><strong>Lápis e lixeira não aparecem para todos os usuários</strong> (RN-GQ-D02-020). O ponto de atenção da "regra de área do responsável" (Inferência) tem relação com isso; a análise está no documento interno.</li>
+<li>Defeitos desta tela da rodada 1 que seguem valendo: DV-GQ-035 (responsável do RD trocado) e DV-GQ-036 (histórico sem o texto da ação imediata), citados nas rodadas seguintes sem novo teste aqui.</li>
+<li>Continuam sem teste nesta tela: relatório do desvio alterável por quem registra a ação (RN-GQ-D02-007), justificativa exigida no primeiro registro (RN-GQ-D02-004), cancelamento sem justificativa aceito pelo servidor, busca de item do tipo Produto, duas janelas com o mesmo desvio e botão Limpar.</li>
+</ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <div class="tabela"><table>
 <thead>
@@ -187,6 +196,38 @@
 <td>O histórico do registro da ação traz as mudanças</td>
 <td>Não traz o texto da ação imediata (DV-GQ-036)</td>
 <td>Registrado na seção de falhas</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Divergências entre a documentação desta página (ou o roteiro) e o que a tela mostrou:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lista, lápis e lixeira (roteiro, passo 2.3)</td>
+<td>O responsável de área registra a ação do desvio da sua área</td>
+<td>O lápis e a lixeira não aparecem para todos os usuários; a lupa aparece no lugar (as regras de acesso estão no documento interno)</td>
+<td>Roteiro e página a corrigir; ponto para validar com a área</td>
+</tr>
+<tr>
+<td>Manual, cancelar por esta tela, passo 4 (ponto aberto da rodada 1)</td>
+<td>Não foi verificado se o texto da justificativa cai na coluna Justificativa</td>
+<td>O texto aparece como valor novo do campo JustificativaCancelamento; a coluna Justificativa fica vazia (CT-GQ-N02-020)</td>
+<td>Resolvida: RN-GQ-022 e RN-GQ-D02-011 atualizadas</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-012 e telas 1 e 2</td>
+<td>Um desvio já pré-avaliado pode voltar a Pendente Pré Avaliação</td>
+<td>Desvios já pré-avaliados só têm Visualizar nesta tela e na tela Relatório de Desvios; nenhum volta</td>
+<td>Em aberto: a situação não pode ser criada por nenhuma tela (CT-GQ-N03-021, Bloqueado)</td>
 </tr>
 </tbody>
 </table></div>

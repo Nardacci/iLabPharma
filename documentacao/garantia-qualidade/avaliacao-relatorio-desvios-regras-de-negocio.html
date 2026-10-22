@@ -75,19 +75,19 @@
 <td>RN-GQ-036</td>
 <td>A avaliação grava a marcação <strong>necessário abrir CAPA</strong>. A marcação de <strong>controle de mudança</strong> é lida pelo servidor, mas <strong>a tela não tem essa caixa</strong>: o valor gravado é sempre "Não". (Redação corrigida: ver Divergências)</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:291</code> e <code>:293</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRelatorioDesvio.cshtml:464</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:354</code></td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-016): a tela não tem a caixa de controle de mudança. O valor gravado ser sempre "Não": A confirmar no teste</td>
+<td>Validada no teste (21/10/2026, CT-GQ-016; 22/10/2026, CT-GQ-N05-08 e CT-GQ-N05-12): a tela não tem a caixa de controle de mudança e o histórico da avaliação registra "Abertura Controle Mudança: Não"</td>
 </tr>
 <tr>
 <td>RN-GQ-037</td>
 <td><strong>Sem CAPA</strong>: a observação de abertura de CAPA é obrigatória e o desvio termina como Finalizado sem Relatório CAPA</td>
 <td><code>HSolutions.GQ.Domain/Service/AvaliacaoRNCValidator.cs:48-55</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:197</code> e <code>:300</code></td>
-<td>Validada no teste (21/10/2026, CT-GQ-015): sem CAPA e sem a observação de abertura a tela recusou; com ela, o desvio terminou em Finalizado sem Relatório CAPA</td>
+<td>Validada no teste (21/10/2026, CT-GQ-015): sem CAPA e sem a observação de abertura a tela recusou; com ela, o desvio terminou em Finalizado sem Relatório CAPA. Em 22/10/2026 (CT-GQ-N05-07, 032/26): com as duas observações, Finalizado sem Relatório CAPA e o desvio saiu da tela Relatório de CAPA. A observação de abertura só com espaços também foi aceita (CT-GQ-N05-06, 033/26, DV-GQ-044)</td>
 </tr>
 <tr>
 <td>RN-GQ-038</td>
 <td><strong>Com CAPA</strong>: o desvio vai para Pendente Relatório de CAPA</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:294-297</code></td>
-<td>Validada no teste (21/10/2026, CT-GQ-016): com a caixa marcada, o desvio foi para Pendente Relatório de CAPA; antes, observado nos desvios RD 006/26 e 009/26</td>
+<td>Validada no teste (21/10/2026, CT-GQ-016): com a caixa marcada, o desvio foi para Pendente Relatório de CAPA; antes, observado nos desvios RD 006/26 e 009/26. Repetida em 22/10/2026 (CT-GQ-N05-05, 031/26): caixa marcada, observação de abertura desabilitada e vazia, "Alteração efetuada com sucesso." e Pendente Relatório de CAPA</td>
 </tr>
 <tr>
 <td>RN-GQ-039</td>
@@ -123,13 +123,13 @@
 <td>RN-GQ-D05-05</td>
 <td>A tabela de áreas mostra todas as áreas do desvio, com a data em que foram envolvidas e a situação; a lupa leva à avaliação da área. O código passa o número do registro da área e não o número da área</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:393-405</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRelatorioDesvio.cshtml:658</code>, <code>:666</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:961-967</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:329</code></td>
-<td>A confirmar no teste</td>
+<td>Validada em parte e contradita em parte (22/10/2026, CT-GQ-N05-09, 032/26): a tabela mostra as duas áreas com a situação Finalizado (confirmado); a lupa não leva à avaliação da área clicada, abre uma página com área e observação em branco (contradita; DV-GQ-043)</td>
 </tr>
 <tr>
 <td>RN-GQ-D05-06</td>
 <td>Marcar "Necessário abertura de CAPA?" desabilita e apaga a observação de abertura</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:969-978</code></td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-05): marcada a caixa, a observação de abertura fica desabilitada e vazia</td>
 </tr>
 <tr>
 <td>RN-GQ-D05-07</td>
@@ -141,7 +141,7 @@
 <td>RN-GQ-D05-08</td>
 <td>A <strong>data</strong> da avaliação é a do servidor, no momento de salvar. A situação da avaliação (campo próprio) não é preenchida</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:205</code></td>
-<td>Extraída</td>
+<td>Validada em parte (22/10/2026, CT-GQ-N05-11): o histórico gravado depois de salvar traz data e hora reais. A data gravada na própria avaliação e a situação própria da avaliação não aparecem em nenhuma tela</td>
 </tr>
 <tr>
 <td>RN-GQ-D05-09</td>
@@ -153,13 +153,13 @@
 <td>RN-GQ-D05-10</td>
 <td>O campo Justificativa da tela não é lido; o histórico recebe justificativa vazia</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:333</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:375</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-13, 068/26 e 069/26): a Justificativa apagada ou digitada não foi pedida nem guardada; a coluna Justificativa do histórico fica vazia (DV-GQ-045)</td>
 </tr>
 <tr>
 <td>RN-GQ-D05-11</td>
 <td>Na primeira avaliação, o código grava manualmente no histórico quatro registros (responsável, observação, necessário controle de mudança, necessário CAPA), mais um quinto (justificativa de abertura de CAPA) quando não há CAPA. Só com valor novo, sem valor antigo</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoRNCController.cs:201-285</code>, <code>:302-323</code>, <code>:333</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-12): com CAPA o histórico ganhou cinco registros (a mudança de situação, Abertura Capa Sim, Abertura Controle Mudança Não, observação e responsável); sem CAPA, seis (mais a observação de CAPA). Nenhum tem valor antigo e a justificativa fica vazia (DV-GQ-036)</td>
 </tr>
 <tr>
 <td>RN-GQ-D05-12</td>
@@ -177,7 +177,7 @@
 <td>RN-GQ-D05-14</td>
 <td>Os dois blocos chamados "Chefe da SDGQ" (pré-avaliação e avaliação) mostram data de agora; o responsável mostrado é o usuário que abriu a tela, exceto quando a avaliação já existe</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:407-424</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-11, 032/26): a data e a hora dos dois blocos "Chefe da SDGQ" e do "Preenchido por" são as do momento da consulta, e o responsável da pré-avaliação mostrado é o usuário que abriu a tela (DV-GQ-040)</td>
 </tr>
 <tr>
 <td>RN-GQ-D05-15</td>
@@ -190,6 +190,30 @@
 <td>Data inválida no filtro (por exemplo 31/02/2026) é ignorada sem mensagem: a lista sai completa</td>
 <td>Comportamento visto na tela; <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>, CT-GQ-N05-01 e CT-GQ-F09</td>
 <td>Validada no teste (21/10/2026, CT-GQ-N05-01; DV-GQ-027)</td>
+</tr>
+<tr>
+<td>RN-GQ-D05-17</td>
+<td>Sem CAPA, a observação de abertura contendo só espaços é aceita: a tela salva, o desvio termina em Finalizado sem Relatório CAPA e a decisão fica sem justificativa escrita</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N05-06; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-06, 033/26; DV-GQ-044)</td>
+</tr>
+<tr>
+<td>RN-GQ-D05-18</td>
+<td>A Justificativa, com asterisco de obrigatória, pode ser apagada e a tela salva do mesmo jeito; o texto digitado também não vai ao histórico</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N05-13; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-13, 068/26 e 069/26; DV-GQ-045)</td>
+</tr>
+<tr>
+<td>RN-GQ-D05-19</td>
+<td>A caixa Justificativa já vem preenchida com o texto de uma etapa anterior, em vez de vazia para o usuário digitar</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N05-13 e tabela de divergências; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-13)</td>
+</tr>
+<tr>
+<td>RN-GQ-D05-20</td>
+<td>Depois de salvar, o histórico mostra usuário, data e hora reais do momento da gravação, ao contrário das datas e nomes mostrados na tela aberta</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N05-11; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N05-11, 032/26)</td>
 </tr>
 </tbody>
 </table></div>
@@ -242,27 +266,27 @@
 <tr>
 <td>CT-GQ-N05-05</td>
 <td>Alta. Com CAPA. Fazer: marcar a caixa; conferir que a observação de abertura fica desabilitada e vazia; escrever a observação do chefe; salvar. Esperado: "Alteração efetuada com sucesso."; Pendente Relatório de CAPA (RN-GQ-038)</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (031/26): observação de abertura desabilitada e vazia com a caixa marcada; "Alteração efetuada com sucesso."; Pendente Relatório de CAPA</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-06</td>
 <td>Alta. Sem CAPA, observação só com espaços. Fazer: desmarcar a caixa, digitar só espaços na observação de abertura e salvar. Esperado: pela norma, recusa; registrar se grava</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-044, 033/26): a observação de abertura só com espaços foi aceita; o desvio ficou em Finalizado sem Relatório CAPA</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-07</td>
 <td>Alta. Sem CAPA com observação. Fazer: desmarcar, preencher as duas observações e salvar. Esperado: Finalizado sem Relatório CAPA; o desvio não aparece na tela Relatório de CAPA; consultar o histórico (RN-GQ-037)</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (032/26): Finalizado sem Relatório CAPA; o desvio deixou de aparecer na tela Relatório de CAPA</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-08</td>
 <td>Alta. Controle de mudança. Fazer: procurar na tela a marcação "Necessário abertura de Controle de Mudança?"; depois conferir, na tela Relatório de CAPA, o estado dessa caixa. Esperado: registrar que não existe na Avaliação e que na CAPA aparece desmarcada (RN-GQ-036)</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (031/26 e 036/26): a tela de avaliação não tem a caixa; na tela Relatório de CAPA ela existe e vem desmarcada; o histórico registra "Abertura Controle Mudança: Não"</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-09</td>
 <td>Alta. Lupa da tabela de áreas. Preparação: desvio com duas áreas já avaliadas. Fazer: clicar a lupa de cada área. Esperado: abre a avaliação da área clicada (observação correta); registrar se abre outra área (RN-GQ-D05-05)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-043, 032/26): as duas lupas abrem uma página com área e observação em branco</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-10</td>
@@ -272,17 +296,17 @@
 <tr>
 <td>CT-GQ-N05-11</td>
 <td>Alta. Quem avaliou e quando. Preparação: desvio pré-avaliado em dia anterior. Fazer: abrir Editar, ler "Data da abertura", "Preenchido por" e os dois blocos "Chefe da SDGQ"; salvar; consultar o histórico e o relatório impresso. Esperado: datas e nomes reais; registrar o que aparece (RN-GQ-D05-07, D05-08, D05-14)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-040, 032/26): datas e responsável da pré-avaliação mostram o momento da consulta; o histórico depois de salvar traz usuário, data e hora reais; o relatório impresso não foi conferido (DV-GQ-018)</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-12</td>
 <td>Alta. Histórico da avaliação. Fazer: após salvar com CAPA, abrir o Log; repetir em outro desvio sem CAPA. Esperado: registrar os quatro (ou cinco) registros, a ausência de valor antigo e a justificativa vazia (RN-GQ-D05-11)</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (031/26 com CAPA, 032/26 sem CAPA): cinco e seis registros, sem valor antigo e sem justificativa (DV-GQ-036, reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-13</td>
 <td>Alta. Edição com e sem justificativa. Fazer: salvar com o campo Justificativa vazio, e em outro desvio com texto; consultar o Log. Esperado: registrar se a justificativa aparece (RN-GQ-D05-10)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-045, DV-GQ-036; 068/26 sem justificativa e 069/26 com justificativa): salvou nos dois e a justificativa não aparece no histórico</td>
 </tr>
 <tr>
 <td>CT-GQ-N05-14</td>

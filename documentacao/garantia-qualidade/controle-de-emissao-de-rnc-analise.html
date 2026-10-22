@@ -73,7 +73,6 @@
 <li>O gerador de número procura o maior número como texto (HSolutions.GQ.Infrastructure/Repository/RegistroNaoConformidadeRepository.cs:22) e pode repetir ou pular números a partir do desvio 1000 do ano (inferência: "999" é maior que "1000" na ordem de texto). Só aparece nesta planilha se a numeração falhar. Detalhe fora desta tela; A confirmar no teste do Relatório de Desvios.</li>
 <li>A coluna DATA mostra data e hora no formato do servidor, e não só a data (RN-GQ-D14-06). O filtro usa o ano do registro (RN-GQ-D14-02); o ano do número é gravado no mesmo momento (Bloco2/Controllers/RegistroNaoConformidadeController.cs:281), então a diferença só apareceria se alguém mudasse a data.</li>
 <li>A área vem do usuário que registrou, pelo cadastro atual: se a pessoa mudou de área depois, o relatório mostra a área de hoje e não a da época (inferência, Reports/DadosRNCFactory.cs:241). O controle perde o "como era".</li>
-<li>A tela de filtros pode abrir sem login, como o Acompanhamento RD (RN-GQ-060; A confirmar nesta tela).</li>
 <li>O erro de impressão usa o nome desta tela (o do Acompanhamento RD copiou deste texto); sem efeito para o usuário.</li>
 <li>Cada desvio faz uma consulta separada ao Principal para achar a área: com muitos desvios a impressão fica lenta (inferência, Reports/DadosRNCFactory.cs:239-245).</li>
 <li>Defeitos confirmados em teste para esta tela: nenhum registrado.</li>
@@ -97,12 +96,20 @@
 <li>Numeração que repete ou pula números a partir do desvio 1000 do ano: não exercitada (a massa vai até 059/26).</li>
 <li>Área do criador pelo cadastro de hoje e lentidão com muitos desvios: não exercitadas.</li>
 </ul>
+<h4 id="confirmado-na-rodada-2-22-10-2026">Confirmado na rodada 2 (22/10/2026)</h4>
+<p>Fonte: execucao/2026-10-22-desvios-rodada-2/resultado.md. Nenhum caso desta tela foi executado nesta rodada. Defeitos novos ou reconfirmados para esta tela: nenhum (DV-GQ-030 e DV-GQ-034 não foram repetidos).</p>
+<p>O que a rodada trouxe de outras telas e interessa a esta:</p>
+<ul>
+<li>Cancelamento (CT-GQ-N02-020): o desvio 018/26, que não aparecia no controle na rodada 1, foi cancelado pela tela 2 a partir de Pendente Registro Ação Corretiva, ou seja, antes da pré-avaliação. Isso concorda com RN-GQ-D14-03 e D14-12 (cancelado antes da pré-avaliação não entra no controle). O CT-GQ-N03-021 ficou bloqueado porque nenhuma tela faz um desvio já pré-avaliado voltar a Pendente Pré Avaliação.</li>
+<li>A rodada criou os desvios 066/26 a 073/26. Os que forem pré-avaliados entram neste controle; o PDF não foi reaberto para conferir.</li>
+<li>Ponto em aberto (c) do Acompanhamento RD: o filtro daquela tela olha a data de criação do desvio. Pelo código, este controle filtra pelo ano da data de criação (RN-GQ-D14-02); a inferência é que um período curto não esconde desvios aqui, mas isso não foi testado nesta tela.</li>
+</ul>
+<p>Pontos de atenção que continuam não testados: todos os listados na subseção da rodada 1.</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>RN-GQ-059 (01-regras-de-negocio.md): diz que o Controle de Emissão "imprime os relatórios emitidos". Na verdade imprime por ano, só os desvios que já passaram pela pré-avaliação (ControleEmissaoController.cs:36-38). Corrigido nesta página.</li>
 <li>Documento completo do menu (desvios/controle-de-desvios-documento-completo.md), Tela 14: "O que preencher: Período" e "Botões: Pesquisar e Imprimir". O campo é só o Ano e a tela só tem Limpar e Imprimir (Index.cshtml:21-30). Corrigir o documento.</li>
 <li>Roteiro roteiros/desvios-capa.md, passo 13.2: manda fazer o Controle de Emissão "do mesmo período". A tela pede só o ano. Atualizar.</li>
-<li>Roteiro, passo 14.1, e plano de testes 08, CT-GQ-026: o caso só foi executado no Acompanhamento RD. O Controle de Emissão ainda não foi testado sem login.</li>
 <li>04-conformidade-regulatoria.md e 11-inventario-de-telas.md: sem divergência de conteúdo; o inventário lista a tela como "Controle de Emissão de RNC (relatório)" e o título na tela é "CONTROLE EMISSÃO RNC" (Index.cshtml:3).</li>
 </ul>
 <h4 id="rodada-1-21-10-2026">Rodada 1 (21/10/2026)</h4>
@@ -114,6 +121,8 @@
 <li>O resultado.md não informa em quais desvios a coluna aparece vazia nem se os criadores têm área cadastrada.</li>
 <li>Fora isso, o campo Ano, a faixa de erro, as colunas e o cabeçalho conferem com a tela nos casos executados.</li>
 </ul>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>A tabela de divergências do resultado.md não traz nenhum item desta tela, e a rodada não executou casos dela. As divergências em aberto da rodada 1 continuam em aberto: a coluna DIVISÃO/SEÇÃO vazia para vários desvios sem dizer o motivo, e a falta da lista de desvios em que a coluna fica vazia. Do que a rodada mostrou de outras telas: o cancelamento do 018/26 pela tela 2 (CT-GQ-N02-020) é consistente com a regra RN-GQ-D14-12. Nenhuma correção foi necessária nesta página.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="acompanhamento-rd-anvisa.html"><small>← Anterior</small><strong>Acompanhamento RD: Anvisa</strong></a><a class="ap ap-prox" href="controle-de-emissao-de-rnc-manual-do-usuario.html"><small>Próximo →</small><strong>Controle de Emissão de RNC: Manual do usuário</strong></a></nav>
   </main>

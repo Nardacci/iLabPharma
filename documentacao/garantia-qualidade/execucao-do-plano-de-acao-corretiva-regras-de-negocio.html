@@ -64,7 +64,7 @@
 <td>RN-GQ-D08-001</td>
 <td>A lista mostra só as ações em que o usuário conectado é o responsável e que não estão na lixeira.</td>
 <td>AvaliacaoPlanoAcaoCorretivaRNCController.cs:104 e 135</td>
-<td>Extraída</td>
+<td>Validada em parte (22/10/2026): a lista mostrou a ação a quem é responsável por ela, e ações de desvios antigos, de responsável anterior, não apareceram para os usuários novos da rodada 2. Na rodada 1 a ação tinha aparecido para outro usuário: ponto a investigar, descrito no documento interno</td>
 </tr>
 <tr>
 <td>RN-GQ-D08-002</td>
@@ -142,7 +142,7 @@
 <td>RN-GQ-D08-014</td>
 <td>A execução grava histórico: inclusão da avaliação; alteração dela nas próximas vezes; e um registro manual da troca da situação da ação (valor antigo e novo) quando ela passa a Finalizado.</td>
 <td>AvaliacaoPlanoAcaoCorretivaRNCController.cs:294, 301 e 304-326</td>
-<td>Validada no teste em parte (21/10/2026, CT-GQ-N08-06): ao regravar a ação, o histórico mostra o valor antigo e o novo (evidência N08-06-historico-da-acao). Inclusão da primeira avaliação e registro manual da troca de situação: não conferidos (CT-GQ-N08-07 não executado)</td>
+<td>Validada (22/10/2026, CT-GQ-N08-07, ação 2 do desvio 041/26): depois de concluir, o histórico mostra a inclusão da avaliação, a mudança de situação da ação de Pendente para Finalizado, o usuário e a data; a inclusão não traz valor antigo (evidências N08-07-antes-de-concluir, N08-07-apos-concluir e N08-07-historico-depois). Antes: validada no teste em parte (21/10/2026, CT-GQ-N08-06): ao regravar a ação, o histórico mostra o valor antigo e o novo (evidência N08-06-historico-da-acao). Inclusão da primeira avaliação e registro manual da troca de situação: não conferidos (CT-GQ-N08-07 não executado)</td>
 </tr>
 <tr>
 <td>RN-GQ-D08-015</td>
@@ -161,6 +161,18 @@
 <td>A execução não exige anexo nem descrição do que foi feito: só a data de conclusão.</td>
 <td>AvaliacaoPlanoAcaoCorretivaValidator.cs:26-38</td>
 <td>Extraída</td>
+</tr>
+<tr>
+<td>RN-GQ-D08-018</td>
+<td>O ícone Histórico da ação, antes de a ação ter a primeira execução, abre sem nenhum registro ("A pesquisa não retornou nenhum resultado.").</td>
+<td>AvaliacaoPlanoAcaoCorretivaIndexModel.cs:67 (o número da avaliação é zero antes da execução); execucao/2026-10-22-desvios-rodada-2/resultado.md</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N08-07; evidência N08-07-historico-antes)</td>
+</tr>
+<tr>
+<td>RN-GQ-D08-019</td>
+<td>No histórico da ação concluída, a situação nova aparece como "Finalizado" (e não "Concluido"); o histórico guarda usuário e data da gravação, sem valor antigo na inclusão.</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N08-07; evidência N08-07-historico-depois). Se a data é a do servidor: não conferido</td>
 </tr>
 </tbody>
 </table></div>
@@ -213,7 +225,7 @@
 <tr>
 <td>CT-GQ-N08-07 (Alta)</td>
 <td>Tela: Execução e janela Histórico. Preparação: ação Pendente. Fazer: abrir o Histórico antes e depois de concluir. Esperado: depois, aparecem a inclusão da avaliação, a troca de situação de Pendente para Concluido, usuário e data do servidor; antes, nada</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 041/26, ação 2): antes de concluir, o histórico abre vazio; depois, mostra a inclusão da avaliação, a mudança de Pendente para Finalizado (o caso esperava o texto "Concluido"), o usuário e a data. Sem valor antigo na inclusão (RN-GQ-D08-014, D08-018 e D08-019)</td>
 </tr>
 <tr>
 <td>CT-GQ-N08-08 (Média)</td>

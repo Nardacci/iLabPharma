@@ -117,7 +117,7 @@
 <td>RN-GQ-D04-07</td>
 <td>A observação é recusada se estiver vazia. Um texto só com espaços não é tratado como vazio</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:351</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N04-06, desvio 027/26): a observação só com espaços foi aceita, o desvio avançou para Pendente Avaliação Relatório de Desvios (DV-GQ-041)</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-08</td>
@@ -141,13 +141,13 @@
 <td>RN-GQ-D04-11</td>
 <td>O campo Justificativa da tela não é lido pelo servidor. O histórico recebe justificativa vazia</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:279-286</code>; <code>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:375</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N04-09, desvios 028/26 e 030/26): o campo Justificativa, com asterisco, aceita ser apagado e a avaliação salva; a justificativa digitada não aparece no histórico (DV-GQ-045 e DV-GQ-042)</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-12</td>
 <td>O histórico da gravação registra a mudança de situação do desvio e a ligação da nova avaliação à área, mas <strong>não</strong> registra o texto da observação nem quem avaliou (esses dados ficam só na própria avaliação)</td>
 <td><code>HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:100-106</code>, <code>:389-390</code></td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-F04): o histórico do desvio não traz o texto das observações das áreas (DV-GQ-036). Quem avaliou: A confirmar no teste</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-F04): o histórico do desvio não traz o texto das observações das áreas (DV-GQ-036). Quem avaliou: A confirmar no teste Em 22/10/2026 (caso CT-GQ-N04-10, desvios 028/26 e 030/26): confirmado que a observação e quem avaliou não entram no histórico. Contradita em parte: a ligação da avaliação à área não apareceu; o histórico do 028/26 (a avaliação que fechou a etapa) trouxe só a mudança de situação, com usuário e data, e o do 030/26 (avaliação de uma área quando faltava outra) não ganhou nenhum registro (DV-GQ-042)</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-13</td>
@@ -165,7 +165,7 @@
 <td>RN-GQ-D04-15</td>
 <td>Na tela de avaliação, os campos "Data da abertura", "Data/Hora" de Relatado por e os dados do bloco "Chefe da SDGQ" (data e responsável) são montados com a data atual e o usuário que abriu a tela</td>
 <td><code>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:138</code>, <code>:407-408</code></td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N04-11, desvio 029/26): Data da abertura, data e hora da pré-avaliação e da avaliação da área mostram o momento da consulta, e o responsável da pré-avaliação é o usuário que abre a tela (DV-GQ-040)</td>
 </tr>
 <tr>
 <td>RN-GQ-D04-16</td>
@@ -190,6 +190,18 @@
 <td>Data inválida no filtro (por exemplo 31/02/2026) é ignorada sem mensagem: a lista sai completa, como se a data não tivesse sido digitada</td>
 <td>Comportamento visto na tela; <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>, CT-GQ-F09</td>
 <td>Validada no teste (21/10/2026, CT-GQ-F09; DV-GQ-027)</td>
+</tr>
+<tr>
+<td>RN-GQ-D04-20</td>
+<td>A avaliação de uma área quando falta outra não deixa nenhum registro no histórico do desvio; a avaliação que fecha a etapa deixa só a mudança de situação, com usuário e data, sem a observação nem a área avaliada</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, caso CT-GQ-N04-10 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N04-10; DV-GQ-042)</td>
+</tr>
+<tr>
+<td>RN-GQ-D04-21</td>
+<td>A caixa Justificativa vem preenchida com o texto de uma etapa anterior e, embora tenha asterisco de obrigatório, pode ser apagada: a avaliação salva sem justificativa, e a digitada, quando existe, não vai ao histórico</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, casos CT-GQ-N04-09 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N04-09; DV-GQ-045)</td>
 </tr>
 </tbody>
 </table></div>
@@ -242,7 +254,7 @@
 <tr>
 <td>CT-GQ-N04-06</td>
 <td>Alta. Observação só com espaços. Fazer: digitar apenas espaços e salvar. Esperado: pela norma, recusa; registrar se grava (RN-GQ-D04-07)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 027/26, usuário da área A): observação só com espaços; "Confirma a inclusão do item?" e "Alteração efetuada com sucesso."; o desvio foi para Pendente Avaliação Relatório de Desvios. Gravou (DV-GQ-041).</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-07</td>
@@ -257,17 +269,17 @@
 <tr>
 <td>CT-GQ-N04-09</td>
 <td>Alta. Edição com e sem justificativa. Fazer: salvar com o campo Justificativa vazio e com outro texto; consultar o Log. Esperado: registrar se a justificativa digitada aparece no histórico (RN-GQ-D04-11)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvios 028/26, área B, sem justificativa, e 030/26, área A, com justificativa): com a justificativa apagada, salvou ("Alteração efetuada com sucesso."; 028/26 foi para Pendente Avaliação Relatório de Desvios), embora o campo traga asterisco de obrigatório (DV-GQ-045). A caixa já vem preenchida com o texto de uma etapa anterior. Com justificativa nova também salvou. Nos dois casos a justificativa não aparece no histórico (DV-GQ-042).</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-10</td>
 <td>Alta. Conteúdo do histórico. Fazer: após a avaliação, abrir o Log do desvio. Esperado: registrar o que aparece (situação, ligação da avaliação) e o que falta (observação, usuário) (RN-GQ-D04-12)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvios 028/26 e 030/26): o histórico de 028/26 tem um só registro novo, a mudança de situação, com usuário e data; faltam a observação da área e a área avaliada. O histórico de 030/26 (duas áreas, só a A avaliou) não ganhou nenhum registro: a avaliação da área A, com observação e justificativa, não deixou rastro (DV-GQ-042).</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-11</td>
 <td>Alta. Datas e responsável mostrados. Preparação: desvio aberto em dia anterior, pré-avaliado por outro usuário. Fazer: abrir Editar. Esperado: "Data da abertura" igual à data de criação; bloco Chefe da SDGQ com a data e o responsável da pré-avaliação. Registrar se mostra a data atual (RN-GQ-D04-15)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 029/26, aberto e pré-avaliado em 21/10 e consultado em 22/10): Data da abertura, data e hora da pré-avaliação e da avaliação da área mostram o momento da consulta (22/10/2026), e o responsável da pré-avaliação mostra o usuário que abre a tela, não quem pré-avaliou (DV-GQ-040).</td>
 </tr>
 <tr>
 <td>CT-GQ-N04-12</td>

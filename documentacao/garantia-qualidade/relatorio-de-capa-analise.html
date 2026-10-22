@@ -94,6 +94,9 @@
 <p><strong>Avaliação de impacto não é obrigatória</strong> (<code>HSolutions.GQ.Domain/Service/RelatorioCapaValidator.cs:23-47</code>). Para a análise de causa raiz em nível apropriado (RDC 658/2022, art. 339), a ausência do impacto enfraquece o registro. Ponto para validar com a área.</p>
 </li>
 <li>
+<p><strong>Responsável e data da CAPA vêm do navegador.</strong> O nome (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RelatorioCapaController.cs:171</code>) e a data (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RelatorioCapaController.cs:173</code>, <code>:178</code>) são lidos dos campos travados; o código do usuário responsável não é gravado. Fere o registro atribuível e contemporâneo (RDC 658/2022, art. 125; Guia 33, ALCOA). O padrão semelhante e a regra de acesso estão no documento interno.</p>
+</li>
+<li>
 <p><strong>Nenhum conteúdo da CAPA no histórico.</strong> Só a situação e o vínculo (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RelatorioCapaController.cs:228</code>; <code>HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:389-390</code>). Justificativa sempre vazia. RDC 658/2022, art. 125.</p>
 </li>
 <li>
@@ -141,6 +144,20 @@
 <li><strong>Confirmados:</strong> 2 (duas recusas, uma mensagem; DV-GQ-033), 3 (criticidade já vem como Crítico), 6 (o conteúdo da CAPA não aparece no histórico; DV-GQ-036), 8 em parte (a caixa de controle de mudança existe aqui e não tem efeito) e 16 (sem campo para erro humano).</li>
 <li><strong>Não confirmado:</strong> 10 (mensagem de impressão trocada). A tela não mostrou essa mensagem; mostrou a página de erro do servidor (DV-GQ-018).</li>
 <li><strong>Não confirmados porque não foram testados nesta tela:</strong> 1 (Adicionar sem responsável não avisa), 4 (impacto não obrigatório), 5 (nome e data da CAPA vindos do navegador), 7 (Justificativa ignorada), 9 (lupa sem destino), 11 a 15 e 17.</li>
+</ul>
+<h4 id="confirmado-na-rodada-2-22-10-2026">Confirmado na rodada 2 (22/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>. Nenhum defeito novo nasceu nesta tela. Reconfirmados:</p>
+<ul>
+<li><strong>DV-GQ-036 (Alta, histórico em geral).</strong> O histórico da CAPA gravada tem um único registro, a mudança de situação. Faltam o diagrama, a criticidade, as divisões, o impacto, a observação e a justificativa (CT-GQ-N06-16, 036/26 e 037/26).</li>
+<li><strong>DV-GQ-031 (Média, Acompanhamento).</strong> A criticidade escolhida (Crítico, Maior ou Menor) não aparece na coluna Grau de Criticidade do relatório de Acompanhamento, que sai em branco; somado ao erro de impressão da CAPA (DV-GQ-018), não há onde conferir o valor gravado (CT-GQ-N06-10).</li>
+<li><strong>DV-GQ-018 (Média).</strong> Continua valendo: a impressão da CAPA dá erro, por isso o relatório impresso não foi conferido.</li>
+</ul>
+<p>Pontos de atenção do código, lidos contra o resultado:</p>
+<ul>
+<li><strong>Confirmados de novo:</strong> 3 (a criticidade já vem como Crítico; CT-GQ-N06-10), 6 (o conteúdo da CAPA não vai ao histórico, que só traz a mudança de situação; CT-GQ-N06-16) e 16 (sem campo para erro humano, visto na tela).</li>
+<li><strong>Confirmado em parte:</strong> 8 (a caixa de controle de mudança existe aqui, vem desmarcada e não tem efeito; CT-GQ-N05-08).</li>
+<li><strong>Não testados nesta rodada:</strong> 1, 4, 5, 7, 9 a 15 e 17. O ponto 5 (nome e data da CAPA vindos do navegador) não foi alterado pelo navegador nesta tela.</li>
+<li><strong>O que a tela mostrou de bom:</strong> as sete caixas do diagrama são cobradas uma a uma, e a falta de divisão é recusada (CT-GQ-N06-05 e N06-06).</li>
 </ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <div class="tabela"><table>
@@ -213,6 +230,43 @@
 <td>Não documentado</td>
 <td>Ignorada sem mensagem</td>
 <td>Resolvida: acrescentada a RN-GQ-D06-20 (DV-GQ-027)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-D06-15; "O que grava na trilha de auditoria"</td>
+<td>O histórico registra a mudança de situação e a ligação da nova CAPA ao desvio</td>
+<td>Só a mudança de situação; a ligação da CAPA não aparece (DV-GQ-036)</td>
+<td>Resolvida nas Regras (RN-GQ-D06-15 e D06-22). O texto "O que grava na trilha de auditoria" ainda cita a ligação como inferência</td>
+</tr>
+<tr>
+<td>Plano de testes, CT-GQ-N06-10</td>
+<td>A criticidade escolhida pode ser conferida no relatório impresso</td>
+<td>A impressão da CAPA dá erro (DV-GQ-018) e a coluna do Acompanhamento sai em branco (DV-GQ-031)</td>
+<td>Em aberto: sem tela que mostre o valor gravado</td>
+</tr>
+<tr>
+<td>RN-GQ-D06-09; Botões</td>
+<td>A caixa de controle de mudança pode ser marcada, sem efeito</td>
+<td>Vem desmarcada; sem efeito (CT-GQ-N05-08)</td>
+<td>Resolvida</td>
+</tr>
+<tr>
+<td>RN-GQ-040 (caixa a caixa)</td>
+<td>As sete caixas são obrigatórias, a confirmar</td>
+<td>Confirmado, uma por uma (CT-GQ-N06-05)</td>
+<td>Resolvida</td>
 </tr>
 </tbody>
 </table></div>

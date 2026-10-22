@@ -92,6 +92,7 @@
 <li>O código do item não é gravado (só o texto), e o lote só por texto (RN-GQ-D01-005). Isso impede cruzar o desvio com o cadastro do item.</li>
 <li>Asteriscos que não valem. Nº Lote, Nº Tag e Registro de entrada aparecem como obrigatórios, mas o servidor não exige (RN-GQ-D01-006).</li>
 <li>Tela oferece 3 dos 14 tipos de item. Os demais (processo, formulação, instalações, utilidades e outros) não podem ser escolhidos (HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:145-158).</li>
+<li>Data de abertura vinda da tela. O código grava a data enviada pelo navegador (RN-GQ-015); o teste foi repetido em 22/10/2026 (ver a rodada 2 abaixo).</li>
 <li>A edição não confere a situação e sempre devolve o desvio ao início (RN-GQ-D01-009).</li>
 <li>Edição sem rastro de justificativa: se só a justificativa mudar, nada é gravado no histórico (RN-GQ-D01-010).</li>
 <li>Mensagens perdidas. A função que mostra os erros guarda só o último (RN-GQ-D01-015). Os erros "A Data de criação é obrigatória." e "O Responsavel é obrigatório." não aparecem na tela.</li>
@@ -124,6 +125,16 @@
 <li>Aviso novo, fora da lista do código: o apóstrofo na descrição quebra a lista (DV-GQ-017).</li>
 </ul>
 <p>Pontos de atenção não confirmados (não foram testados na rodada 1): botão Limpar que não limpa a lista (RN-GQ-D01-018); duas inclusões ao mesmo tempo com o mesmo número e repetição depois de 999 (a sequência de 001 a 059 não teve falha); data de abertura vinda do navegador nesta tela (CT-GQ-N01-013); código do item e do lote gravados como zero (RN-GQ-D01-005); servidor que não confere situação ao editar e ao cancelar (RN-GQ-D01-009 e D01-011); textos "minímo" e "Responsavel" sem acento (não apareceram nas mensagens exibidas).</p>
+<h4 id="confirmado-na-rodada-2-22-10-2026">Confirmado na rodada 2 (22/10/2026)</h4>
+<p>Rodada de testes de tela de 22/10/2026 (resultado completo em execucao/2026-10-22-desvios-rodada-2/resultado.md). Casos desta tela: CT-GQ-003 (Falhou), CT-GQ-006 (Falhou, resultado de 21/10/2026 citado sem repetir), CT-GQ-N01-008 (Passou com ressalva) e CT-GQ-N01-013 (Falhou).</p>
+<ul>
+<li><strong>Data de abertura vinda da tela: confirmado em teste (gravidade Alta).</strong> O ponto de atenção "Data de abertura vinda da tela" (RN-GQ-015) deixa de ser hipótese. O defeito e o resultado estão no documento interno. A conclusão de 12/10/2026 ("data do servidor") veio de um teste que alterou o campo errado. Fere o registro contemporâneo e atribuível (RDC 658/2022, art. 124).</li>
+<li><strong>Duas datas para o mesmo desvio</strong> (RN-GQ-D01-014 e RN-GQ-D01-024): a lista mostra a gravada e a consulta mostra a de agora. Confirmado.</li>
+<li><strong>Cancelamento sem rastro</strong> (RN-GQ-017): reconfirmado, DV-GQ-001, sem repetir o teste nesta rodada.</li>
+<li><strong>Desvio salvo sem item, tipo ou lote</strong> (RN-GQ-D01-006): reconfirmado (CT-GQ-N01-008; DV-GQ-010 relacionado).</li>
+<li>Defeitos novos desta rodada que dizem respeito a esta tela: um, de gravidade Alta, descrito no documento interno.</li>
+<li>Continuam sem teste nesta tela: botão Limpar, duas inclusões ao mesmo tempo, código do item e do lote gravados como zero (RN-GQ-D01-005), servidor que não confere a situação ao editar e ao cancelar (RN-GQ-D01-009 e RN-GQ-D01-011).</li>
+</ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <div class="tabela"><table>
 <thead>
@@ -202,6 +213,38 @@
 <td>Incluir mostra nnn/AAAA e a lista nnn/aa</td>
 <td>Confirmado como estava documentado</td>
 <td>Sem divergência; mantido como característica do sistema</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Divergências entre a documentação desta página e o que a tela mostrou:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RN-GQ-015 e CT-GQ-003 (12/10/2026)</td>
+<td>A conclusão de 12/10/2026 foi "data do servidor", com ressalva de que o campo podia ser o errado</td>
+<td>Com o campo certo, o resultado foi outro (detalhe no documento interno)</td>
+<td>Resolvida: regra validada; o CT-GQ-003 passou a Falhou</td>
+</tr>
+<tr>
+<td>Campos, Data da abertura</td>
+<td>A coluna da lista e o campo da consulta mostram a mesma data (suposição)</td>
+<td>A lista mostra a data gravada e a consulta mostra a de agora (RN-GQ-D01-014 e RN-GQ-D01-024)</td>
+<td>Regra acrescentada</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-012 e telas 1 e 2</td>
+<td>Um desvio já pré-avaliado pode voltar a Pendente Pré Avaliação (editado nesta tela e com nova ação)</td>
+<td>Desvios já pré-avaliados só têm Visualizar nesta tela e na tela Registro Ação Corretiva Imediata; nenhum volta a Pendente Pré Avaliação</td>
+<td>Em aberto: a situação não pode ser criada por nenhuma tela (CT-GQ-N03-021, Bloqueado)</td>
 </tr>
 </tbody>
 </table></div>

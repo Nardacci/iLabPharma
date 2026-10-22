@@ -56,7 +56,7 @@
 - Trecho comum "Resumo do RNC": HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRegistroNC.cshtml
 - Scripts: HSolutions.GQ.UI/Areas/Bloco2/Script/AvaliacaoPlanoAcaoPreventivaIndex.js e AvaliacaoPlanoAcaoPreventivaSalvar.js</p>
 <p>Como ler as fontes: "Bloco2/" é HSolutions.GQ.UI/Areas/Bloco2/; "UI/" é HSolutions.GQ.UI/; "Domain/" é HSolutions.GQ.Domain/; "DB/" é Hsolutions.GQ.DB/Tables/; "Infra/" é HSolutions.GQ.Infrastructure/. Quando só aparece o nome do controlador, é AvaliacaoPlanoAcaoPreventivaRNCController.cs.</p>
-<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 057/26 (massa do caso N11). Foram executados cinco casos próprios (CT-GQ-N11-05, N11-06, N11-07, N11-10 e N11-11) e quatro casos de volume e consulta (CT-GQ-F05, F06, F08 e F09). Resultado: 4 passaram, 1 passou com ressalva e 4 falharam. Antes disso, nas rodadas de 15 e 16/10 o desvio RD 006/26 chegou ao monitoramento preventivo, o que indica que a ação foi tratada, mas o passo não está descrito (execucao/2026-10-15/resultado.md).</p>
+<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 057/26 (massa do caso N11). Foram executados cinco casos próprios (CT-GQ-N11-05, N11-06, N11-07, N11-10 e N11-11) e quatro casos de volume e consulta (CT-GQ-F05, F06, F08 e F09). Resultado: 4 passaram, 1 passou com ressalva e 4 falharam. Antes disso, nas rodadas de 15 e 16/10 o desvio RD 006/26 chegou ao monitoramento preventivo, o que indica que a ação foi tratada, mas o passo não está descrito (execucao/2026-10-15/resultado.md). Rodada 2 (22/10/2026; execucao/2026-10-22-desvios-rodada-2/resultado.md): um caso, o CT-GQ-N11-12 (histórico da conclusão, ação preventiva do desvio 043/26), passou com ressalva.</p>
 <h2 id="importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</h2>
 <h4 id="em-uma-frase">Em uma frase</h4>
 <p>É a tela onde cada responsável diz que fez a sua ação preventiva, e é a única prova, dentro do sistema, de que o plano saiu do papel.</p>
@@ -72,10 +72,12 @@
 <li>Concluir todas as ações não avisa a GQ nem muda o desvio: a GQ precisa abrir o monitoramento por conta própria. Não há aviso de prazo nem de conclusão (RN-GQ-009). Pela RDC 658/2022 e pelo Guia 33/2020, o acompanhamento da CAPA deve ter prazo e responsável rastreáveis; aqui o prazo é só informativo.</li>
 <li>Concluir depois do prazo é aceito sem aviso nem justificativa (RN-GQ-D11-07).</li>
 <li>A ação concluída pode ser regravada por quem é o responsável, a qualquer momento, até depois de o desvio estar Finalizado, porque o servidor não confere a situação do desvio (RN-GQ-D11-09). A alteração entra no histórico sem motivo. Pelo princípio do registro contemporâneo e rastreável (RDC 658/2022, art. 125; Guia 33/2020, ALCOA+), a alteração de um dado já aprovado deveria exigir justificativa.</li>
+<li>A data da avaliação vem do navegador, não do servidor (RN-GQ-D11-06). Ver o documento interno.</li>
 <li>O campo Responsável mostra sempre o usuário conectado, e não quem executou (RN-GQ-D11-10): numa consulta posterior, a tela induz a erro sobre quem concluiu a ação.</li>
 <li>O filtro Responsável da lista não faz nada (RN-GQ-D11-11).</li>
 <li>A lista só traz as ações do próprio usuário. Quem acompanha a execução (a GQ) não tem lista geral nesta tela; precisa abrir o monitoramento.</li>
 <li>O histórico da conclusão guarda o novo valor como "Concluido" (nome interno) e não guarda o valor antigo (RN-GQ-D11-08), e a tela mostra "Finalizado". A confirmar no teste como o histórico aparece ao usuário.</li>
+<li>Não há assinatura eletrônica nem separação de funções: quem escreveu o plano pode executar a ação e quem executa pode ser o próprio aprovador do monitoramento (ver o documento interno; CT-GQ-024).</li>
 <li>O responsável escolhido no plano que não tenha acesso à GQ nunca verá a ação; o desvio fica parado sem aviso (inferência, AvaliacaoPlanoAcaoPreventivaRNCController.cs:121-122).</li>
 <li>Defeitos confirmados em teste para esta tela: nenhum registrado até 16/10/2026. Na etapa seguinte da cadeia, DV-GQ-012 (monitoramento sem botão Reprovar).</li>
 </ul>
@@ -101,6 +103,16 @@
 <li>Formatos de data (CT-GQ-N11-08) e texto longo (N11-09): não executados.</li>
 <li>Data da avaliação que vem do navegador (RN-GQ-D11-06): não exercitada.</li>
 </ul>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>. Caso desta tela: CT-GQ-N11-12 (passou com ressalva).</p>
+<p>Defeitos novos que dizem respeito a esta tela: nenhum.</p>
+<p>Confirmado na rodada 2:</p>
+<ul>
+<li>Histórico da conclusão (RN-GQ-D11-08): existe, com inclusão da avaliação, situação, usuário e data. A suspeita da página ("Concluido" no histórico) não se confirmou: a tela mostra "Finalizado". Sem valor antigo, como o código previa.</li>
+<li>Histórico vazio antes da primeira conclusão: confirmado (RN-GQ-D11-17).</li>
+<li>Seguem valendo para esta tela, sem repetição: DV-GQ-025, DV-GQ-026 e DV-GQ-027 (rodada 1).</li>
+</ul>
+<p>Não exercitado nesta rodada: responsável exibido (CT-GQ-N11-13), anexos (N11-15), impressão (N11-16) e os demais casos. A impressão do relatório de CAPA dá erro de servidor no ambiente (DV-GQ-018).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>Documento completo do menu (desvios/controle-de-desvios-documento-completo.md), Tela 11: diz "Botões: Concluir ação" e "Ao salvar, o desvio vai para: Ações concluídas". No código o botão é Salvar e o desvio não muda de situação (AvaliacaoPlanoAcaoPreventivaRNCController.cs:242-247). Corrigir o documento.</li>
@@ -113,6 +125,12 @@
 <li>Nenhuma divergência nova entre o texto desta página e a tela nos casos executados: as duas mensagens de data, a situação do desvio que não muda e a regravação sem justificativa conferem.</li>
 <li>Ponto em aberto: RN-GQ-D11-07 fala em concluir depois do prazo e antes da criação do plano; a rodada 1 testou apenas uma data anterior à abertura do desvio. A parte "depois do prazo" desta tela não foi exercitada. Fica para uma nova rodada.</li>
 <li>As divergências desta página registradas antes da rodada (documento completo do menu e RN-GQ-055) não dependiam da tela e continuam como estavam.</li>
+</ul>
+<h4 id="rodada-2-22-10-2026_1">Rodada 2 (22/10/2026)</h4>
+<p>A tabela de divergências do resultado.md traz um item que vale para esta tela (e para a tela 8). Comparação com esta página:</p>
+<ul>
+<li>Situação da ação concluída: o caso CT-GQ-N11-12 esperava "Concluido"; a tela mostra "Finalizado". A página já registrava que a tela mostra "Finalizado" e que "Concluido" é o nome interno; a dúvida sobre o texto no histórico ("a confirmar no teste") foi resolvida: aparece "Finalizado". O caso deve ser ajustado.</li>
+<li>A página dizia que o histórico não guarda o valor antigo da situação. A tela confirmou (sem valor antigo). Resolvida.</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-acao-preventiva-anvisa.html"><small>← Anterior</small><strong>Plano de Ação Preventiva: Anvisa</strong></a><a class="ap ap-prox" href="execucao-plano-de-acao-preventiva-manual-do-usuario.html"><small>Próximo →</small><strong>Execução Plano de Ação Preventiva: Manual do usuário</strong></a></nav>

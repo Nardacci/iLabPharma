@@ -39,7 +39,7 @@
     <header class="doc-cabecalho">
       <h1>Monitoramento do Plano de Ação Corretiva: Regras de negócio</h1>
       <div class="doc-acoes"><a class="botao" href="../arquivos/garantia-qualidade/LabMedSys - Modulo Garantia da Qualidade - Controle de Desvios - Tela 09 Monitoramento do Plano de Ação Corretiva - Regras de negócio.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
-      <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
+      
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="monitoramento-do-plano-de-acao-corretiva-analise.html">Análise</a><a href="monitoramento-do-plano-de-acao-corretiva-manual-do-usuario.html">Manual do usuário</a><a href="monitoramento-do-plano-de-acao-corretiva-fluxos.html">Fluxos</a><a href="monitoramento-do-plano-de-acao-corretiva-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="monitoramento-do-plano-de-acao-corretiva-anvisa.html">Anvisa</a></nav>
     <article class="texto texto-largo">
@@ -58,19 +58,19 @@
 <td>RN-GQ-049</td>
 <td>Obrigatórios para aprovar: a observação da verificação final e o resultado da implementação das ações. O código exige ao menos uma linha de resultado, e cada linha precisa de Ação Nº e Observação. Não exige um resultado por ação do plano.</td>
 <td>LiberacaoPlanoAcaoCorretivaValidator.cs:25-50</td>
-<td>Validada no teste (21/10/2026, CT-GQ-N09-01, N09-02 e N09-03, RD 055/26): verificação final vazia, nenhum resultado, e resultado sem número ou sem observação são recusados com as mensagens do código. Não exige um resultado por ação do plano: confirmado em N09-05. (Corrigida: ver Divergências)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N09-01, N09-02 e N09-03, RD 055/26): verificação final vazia, nenhum resultado, e resultado sem número ou sem observação são recusados com as mensagens do código. Não exige um resultado por ação do plano: confirmado em N09-05. (Corrigida: ver Divergências). Reconfirmada em 22/10/2026 (aprovar com tudo vazio no desvio 040/26): a tela recusou com as mensagens do código e nada foi gravado. A tela 12, com a mesma regra, finalizou vazio (DV-GQ-022, tela 12)</td>
 </tr>
 <tr>
 <td>RN-GQ-050</td>
 <td>A tela só mostra o botão Aprovar quando nenhuma ação ativa está Pendente. O servidor não confere isso: se a chamada vier sem o botão, o plano é aprovado com ação pendente.</td>
 <td>RegistroNaoConformidadeEditarModel.cs:195; Editar.cshtml:206; LiberacaoPlanoAcaoCorretivaRNCController.cs:205-286</td>
-<td>Validada no teste (12/10/2026, CT-GQ-021, DV-GQ-002)</td>
+<td>Validada no teste (12/10/2026, CT-GQ-021, DV-GQ-002). Em 22/10/2026 (CT-GQ-021) o resultado de 12/10 foi mantido, sem repetir o teste; com as duas ações Finalizado a aprovação funcionou (CT-GQ-N09-09)</td>
 </tr>
 <tr>
 <td>RN-GQ-051</td>
 <td>Aprovado: o plano fica Aprovada e o desvio vai para Aprovado Plano Ação Corretiva. Qualquer coisa diferente de "a" vira Reprovado Plano Ação Corretiva; a tela não tem botão para isso, e esse estado não tem saída.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:234-243; Editar.cshtml:203-209</td>
-<td>Validada no teste em parte (16/10/2026, CT-GQ-022, DV-GQ-016): falta de botão Reprovar; reconfirmada em 21/10/2026 (passo P9.3: a tela só tem Aprovar). Aprovar leva o desvio a Aprovado Plano Ação Corretiva (CT-GQ-N09-05). Que o servidor trate tudo que não é "a" como reprovação continua A confirmar no teste</td>
+<td>Validada no teste em parte (16/10/2026, CT-GQ-022, DV-GQ-016): falta de botão Reprovar; reconfirmada em 21/10/2026 (passo P9.3: a tela só tem Aprovar). Aprovar leva o desvio a Aprovado Plano Ação Corretiva (CT-GQ-N09-05). Que o servidor trate tudo que não é "a" como reprovação continua A confirmar no teste. Reconfirmada em 22/10/2026: continua sem botão Reprovar (DV-GQ-016) e Aprovar levou o desvio a Aprovado Plano Ação Corretiva (CT-GQ-N09-09 e N09-11)</td>
 </tr>
 <tr>
 <td>RN-GQ-052</td>
@@ -100,7 +100,7 @@
 <td>RN-GQ-D09-004</td>
 <td>Salvar (parcial) grava verificação, resultados, observação e anexos sem mudar a situação e pede justificativa só no navegador.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:289-358; LiberacaoPlanoAcaoCorretivaSalvar.js:104-108</td>
-<td>Extraída</td>
+<td>Validada no teste em parte (22/10/2026, CT-GQ-N09-06, desvio 042/26): Salvar, SIM, OK sem justificativa mostra "A justificativa é obrigatória!"; com justificativa, "Alteração efetuada com sucesso." e a situação não muda. Que o servidor não confere a justificativa: não verificado</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-005</td>
@@ -118,19 +118,19 @@
 <td>RN-GQ-D09-007</td>
 <td>"Ações Corretivas Implementadas" (Sim ou Não) não é conferido na aprovação: o plano pode ser aprovado com a resposta Não.</td>
 <td>LiberacaoPlanoAcaoCorretivaValidator.cs:25-50; LiberacaoPlanoAcaoCorretivaRNCController.cs:232</td>
-<td>Validada no teste em parte (21/10/2026): o plano foi aprovado com um resultado "Implementada = Não" (RD 052/26, passo P9.3, DV-GQ-021). A caixa "Ações Corretivas Implementadas = Não" da verificação final não foi isolada no teste (CT-GQ-N09-11 não executado)</td>
+<td>Validada (22/10/2026, CT-GQ-N09-11, desvio 040/26, DV-GQ-021, Alta): com "Ações Corretivas Implementadas" = Não e resultado "Implementada" = Não, a aprovação foi aceita ("Alteração efetuada com sucesso.") e o desvio foi a Aprovado Plano Ação Corretiva (evidências N09-11-antes-de-aprovar-Nao e N09-11-apos-aprovar). Antes: validada em parte em 21/10/2026 (RD 052/26, resultado "Implementada = Não")</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-008</td>
 <td>Cada Salvar ou Aprovar acrescenta de novo os resultados que estão na memória da tela, sem checar se já foram gravados: resultados podem ficar duplicados.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:428-447; LiberacaoPlanoAcaoCorretivaSalvar.js:287-302</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N09-07, DV-GQ-048, Média): com um resultado novo, Salvar duas vezes seguidas sem recarregar e depois recarregar deixou o resultado duplicado na grade (evidências N09-07-apos-segundo-salvar e N09-07-grade-apos-recarregar)</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-009</td>
 <td>Os resultados já gravados não podem ser editados nem excluídos pela tela e somem da grade quando um novo é adicionado (a grade é refeita só com os resultados novos).</td>
 <td>LiberacaoPlanoAcaoCorretivaSalvar.js:190-214 e 223-247</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte e contradita em parte (22/10/2026, CT-GQ-N09-08, DV-GQ-049, Média): ao adicionar um segundo resultado, a grade passou a mostrar só o novo, e os antigos voltaram depois de salvar e reabrir (confirmado). Contradita: depois de recarregar, o resultado já gravado mostra lápis e lixeira (a regra dizia que não responderiam; se respondem ao clique não foi registrado). Os dados não se perdem (evidências N09-08-apos-adicionar-segundo e N09-08-apos-salvar-e-reabrir)</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-010</td>
@@ -166,7 +166,7 @@
 <td>RN-GQ-D09-015</td>
 <td>Ao aprovar, o desvio vai a Aprovado Plano Ação Corretiva, a aprovação grava histórico, a tela trava e o botão "Plano de Ação Preventiva" aparece.</td>
 <td>LiberacaoPlanoAcaoCorretivaSalvar.js:267-275; LiberacaoPlanoAcaoCorretivaRNCController.cs:236-237 e 263</td>
-<td>Validada no teste em parte (16/10/2026, rodada 3: o RD 009/26 chegou a Aprovado Plano Ação Corretiva) e em 21/10/2026 (CT-GQ-N09-05: o desvio foi a Aprovado Plano Ação Corretiva). Histórico e botão do preventivo: A confirmar no teste</td>
+<td>Validada em parte (22/10/2026, CT-GQ-N09-09, desvio 066/26): Aprovar levou o desvio a Aprovado Plano Ação Corretiva, a tela travou (só Imprimir e Voltar), o desvio apareceu na tela Plano de Ação Preventiva e o histórico trouxe a mudança de situação (de "Pendente Aprovação" para "Aceito"). Contradita no botão: "Plano de Ação Preventiva" não aparece na tela reaberta. Antes: validada no teste em parte (16/10/2026, rodada 3: o RD 009/26 chegou a Aprovado Plano Ação Corretiva) e em 21/10/2026 (CT-GQ-N09-05: o desvio foi a Aprovado Plano Ação Corretiva). Histórico e botão do preventivo: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-016</td>
@@ -179,6 +179,24 @@
 <td>A aprovação aceita um plano que não tem nenhuma ação: o desvio com plano salvo sem ações (ver tela 7, DV-GQ-020) foi aprovado com um resultado qualquer.</td>
 <td>LiberacaoPlanoAcaoCorretivaValidator.cs:31-52 (Extraída do código); tela em CT-GQ-N09-05</td>
 <td>Validada no teste (21/10/2026, CT-GQ-N09-05, RD 053/26, DV-GQ-021; evidência N09-05-apos-aprovar)</td>
+</tr>
+<tr>
+<td>RN-GQ-D09-018</td>
+<td>Aprovar e clicar NÃO na confirmação não grava nada e não muda a situação do desvio.</td>
+<td>LiberacaoPlanoAcaoCorretivaSalvar.js:94-120 (confirmação); execucao/2026-10-22-desvios-rodada-2/resultado.md</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N09-10, desvio 040/26; evidências N09-10-confirmacao-aprovar e N09-10-apos-NAO)</td>
+</tr>
+<tr>
+<td>RN-GQ-D09-019</td>
+<td>O histórico da aprovação registra a mudança de situação ("Pendente Aprovação" para "Aceito"), mas não o conteúdo dos resultados nem da verificação final.</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N09-09, desvio 066/26, DV-GQ-036; evidência N09-09-historico-066)</td>
+</tr>
+<tr>
+<td>RN-GQ-D09-020</td>
+<td>A aprovação do plano é aceita sem segunda pessoa e sem assinatura eletrônica: quem escreveu o plano na tela 7 pôde aprová-lo, sem aviso, e o histórico mostra o mesmo nome nas duas etapas. As regras de acesso estão no documento interno.</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N09-19, desvio 066/26, DV-GQ-023; evidência N09-09-historico-066)</td>
 </tr>
 </tbody>
 </table></div>
@@ -196,7 +214,7 @@
 <tr>
 <td>CT-GQ-021 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: plano com duas ações, uma ainda Pendente. Fazer: preencher verificação e resultado e procurar o botão Aprovar; depois enviar a operação sem o botão. Esperado pela norma: não aprovar</td>
-<td>Falhou (norma), 12/10/2026, DV-GQ-002: o botão não aparece, mas a chamada sem o botão aprovou o plano com ação pendente</td>
+<td>Falhou (norma) em 12/10/2026, DV-GQ-002; em 22/10/2026 o resultado foi mantido, sem repetir o teste (a parte de enviar a operação sem o botão é segurança e ficou fora do escopo). Antes: falhou (norma), 12/10/2026, DV-GQ-002: o botão não aparece, mas a chamada sem o botão aprovou o plano com ação pendente</td>
 </tr>
 <tr>
 <td>CT-GQ-022 (Alta)</td>
@@ -231,32 +249,32 @@
 <tr>
 <td>CT-GQ-N09-06 (Alta)</td>
 <td>Tela: Monitoramento, Salvar. Preparação: plano aberto, resultados e verificação preenchidos. Fazer: clicar em Salvar, SIM, OK sem justificativa; depois com justificativa. Esperado: "A justificativa é obrigatória!"; depois "Alteração efetuada com sucesso."; situação do desvio igual; histórico gravado</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 042/26): sem justificativa, "A justificativa é obrigatória!"; com justificativa, "Alteração efetuada com sucesso."; situação igual (Pendente Monitoramento)</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-07 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: plano aberto, um resultado novo na grade. Fazer: clicar em Salvar duas vezes seguidas sem recarregar a tela e depois recarregar. Esperado pela norma: um só resultado; verificar duplicação (RN-GQ-D09-008)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-048, desvio 042/26): Salvar duas vezes seguidas e recarregar deixou o resultado duplicado na grade</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-08 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: um resultado já salvo. Fazer: recarregar; clicar no lápis e na lixeira do resultado antigo; adicionar um segundo resultado. Esperado: resultado antigo editável e visível; verificar se não responde e se some da grade (RN-GQ-D09-009)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-049, desvio 042/26): depois de recarregar, o resultado antigo tem lápis e lixeira; ao adicionar um segundo, a grade mostra só o novo; depois de salvar e reabrir, voltam todos</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-09 (Alta)</td>
 <td>Tela: Monitoramento, Aprovar. Preparação: desvio com todas as ações Finalizado, resultado e verificação preenchidos. Fazer: Aprovar e confirmar SIM. Esperado: "Alteração efetuada com sucesso."; Aprovado Plano Ação Corretiva; campos travados; botão Plano de Ação Preventiva; desvio listado no plano preventivo; histórico gravado</td>
-<td>Não executado como caso individual; cadeia percorrida em 16/10 (RD 009/26) e aprovação vista em 21/10/2026 no CT-GQ-N09-05</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 066/26): "Alteração efetuada com sucesso."; Aprovado Plano Ação Corretiva; campos travados; desvio listado no plano preventivo; histórico com a mudança de situação. Ressalvas: o botão "Plano de Ação Preventiva" não aparece na tela reaberta; o histórico não traz o conteúdo dos resultados nem da verificação final (DV-GQ-036, reconfirmado). Antes: não executado como caso individual; cadeia percorrida em 16/10 (RD 009/26) e aprovação vista em 21/10/2026 no CT-GQ-N09-05</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-10 (Alta)</td>
 <td>Tela: Monitoramento, Aprovar. Preparação: tela pronta para aprovar. Fazer: clicar em Aprovar e NÃO na confirmação. Esperado: nada gravado; situação igual</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 040/26): Aprovar e NÃO na confirmação; nada gravado e situação igual</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-11 (Alta)</td>
 <td>Tela: Monitoramento. Preparação: ações Finalizado. Fazer: marcar "Ações Corretivas Implementadas" Não, resultado "Implementada Não" e aprovar. Esperado pela norma: não aprovar; verificar se aprova (RN-GQ-D09-007)</td>
-<td>Não executado como escrito; a aprovação com um resultado "Implementada = Não" foi vista no CT-GQ-N09-05</td>
+<td>Falhou em 22/10/2026 (DV-GQ-021, reconfirmado, desvio 040/26): com "Ações Corretivas Implementadas" Não e resultado "Implementada Não", aprovou ("Alteração efetuada com sucesso.") e o desvio foi a Aprovado Plano Ação Corretiva</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-12 (Média)</td>
@@ -292,6 +310,11 @@
 <td>CT-GQ-N09-18 (Média)</td>
 <td>Tela: Monitoramento, anexos. Preparação: plano aberto. Fazer: enviar anexo sem arquivo, sem descrição e completo; salvar e abrir o plano. Esperado: mensagens de anexo; anexo ligado ao desvio</td>
 <td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-N09-19 (Alta)</td>
+<td>Tela: Plano e Monitoramento. Preparação: um único usuário que possa usar as duas telas (ver o documento interno). Fazer: escrever o plano e depois aprová-lo. Esperado pela norma: separação de funções e assinatura eletrônica; registrar se aceitou sem elas</td>
+<td>Falhou em 22/10/2026 (DV-GQ-023, estendido à tela 9, desvio 066/26): quem escreveu o plano também o aprovou, sem aviso, sem outra pessoa e sem assinatura eletrônica; o histórico mostra o mesmo nome nas duas etapas</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-20 (Média)</td>

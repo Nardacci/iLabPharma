@@ -47,6 +47,7 @@
 <h3 id="execucao-do-plano-de-acao-corretiva">Execução do Plano de Ação Corretiva</h3>
 <p>Menu: Controle de Desvios › Execução do Plano de Ação Corretiva. Versão legado (código entregue pelo fornecedor). Rascunho de 21/10/2026, feito só pela leitura do código; o que não foi testado está marcado como "A confirmar no teste".</p>
 <p>Atualizado em 22/10/2026 com o resultado da rodada 1 de testes de tela (21/10/2026; <code>execucao/2026-10-21-desvios-rodada-1/resultado.md</code>). O que a tela mostrou está marcado como "rodada 1" ou "21/10/2026"; o que o teste não exercitou continua como estava.</p>
+<p>Rodada 2 (22/10/2026; <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>): um caso desta tela, o CT-GQ-N08-07 (histórico da ação), passou com ressalva. O que a rodada 2 mostrou está nas subseções "Rodada 2" de cada seção.</p>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>É a tela em que cada responsável informa que cumpriu a sua ação do plano corretivo: registra a data de conclusão e, se quiser, uma observação e anexos. Quando salva, a ação passa a "Finalizado". A tela trabalha ação por ação, não desvio por desvio.</p>
 <h4 id="quem-usa">Quem usa</h4>
@@ -96,9 +97,11 @@
 <li>O filtro Responsável não funciona como parece: só mostra ações do usuário conectado (AvaliacaoPlanoAcaoCorretivaRNCController.cs:132-135).</li>
 <li>A regra do ícone Editar usa o resultado de uma consulta assíncrona sem esperar o retorno e lê o ".Id" dela (GerenciadorAcessoTelaAvaliacaoPlanoAcaoCorretivaIndex.cs:18-20): o ".Id" de uma tarefa é o número interno da tarefa, não a área do usuário. Além disso, a divisão escolhida no plano não é gravada na ação (PlanoAcaoCorretivaRNCController.cs:346-354), então a comparação nunca é verdadeira. Inferência, a confirmar com o desenvolvimento. Consequência prática: a regra de área não tem efeito. Também, para cada ação de cada desvio, a lista chama o Principal antes dos filtros, o que pode deixar a lista lenta.</li>
 <li>Se a regra acima falhar (por exemplo, o Principal não responde), a pesquisa inteira falha com "Não foi possível obter as solicitações mudanças" (texto de outra tela; AvaliacaoPlanoAcaoCorretivaRNCController.cs:157-161). A confirmar no teste.</li>
+<li>A Data/Hora da execução vem do navegador (AvaliacaoPlanoAcaoCorretivaRNCController.cs:269), e a data de conclusão também é informada por quem executa (:268). A data da avaliação não é a do servidor. As regras de acesso e de segurança estão no documento interno.</li>
 <li>A execução fica registrada no desvio como anexo e histórico, mas o Histórico do ícone da linha usa o número da avaliação, que é zero antes da primeira execução (AvaliacaoPlanoAcaoCorretivaIndexModel.cs:67): Inferência: o ícone Histórico antes da primeira execução não mostra nada.</li>
 <li>A coluna Justificativa nunca é usada e a coluna Situacao da avaliação fica sempre zero (RN-GQ-D08-011 e 012).</li>
 <li>Textos: mensagem "solicitações mudanças" na tela de desvios (AvaliacaoPlanoAcaoCorretivaRNCController.cs:160); controle "Limpar" é chamado no carregamento mas não existe na tela (Editar.cshtml:12); Incluir.cshtml vazio.</li>
+<li>Como na tela do plano, quem executa e quem aprova pode ser a mesma pessoa, sem assinatura eletrônica (ver o documento interno).</li>
 </ul>
 <h4 id="defeitos-ja-confirmados-em-teste-ligados-a-esta-tela">Defeitos já confirmados em teste, ligados a esta tela</h4>
 <ul>
@@ -121,6 +124,16 @@
 </ul>
 <p>Pontos de atenção que o teste não exercitou (continuam "A confirmar no teste"): uma linha por desvio quando há duas ações do mesmo responsável (RN-GQ-D08-002); filtro Responsável sem efeito (RN-GQ-D08-005); regra do ícone Editar com defeito de código; falha da pesquisa com a mensagem de "solicitações mudanças"; o Responsável mostrado no Visualizar; o Histórico antes da primeira execução; anexos; impressão.</p>
 <p>O que a tela fez como esperado: recusa de data vazia e de data futura; desvio permanece em Pendente Monitoramento depois da execução (CT-GQ-020, CT-GQ-N08-01).</p>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>. Caso desta tela: CT-GQ-N08-07 (passou com ressalva).</p>
+<p>Defeitos novos que dizem respeito a esta tela: nenhum.</p>
+<p>Confirmado na rodada 2:</p>
+<ul>
+<li>O histórico da ação concluída existe e traz inclusão da avaliação, troca de situação, usuário e data (RN-GQ-D08-014). A ressalva: o texto é "Finalizado" e não há valor antigo na inclusão.</li>
+<li>Histórico vazio antes da primeira execução (suspeita do código, RN-GQ-D08-018): confirmado.</li>
+<li>Seguem valendo para esta tela, sem repetição: DV-GQ-024, DV-GQ-025, DV-GQ-026 e DV-GQ-027 (rodada 1).</li>
+</ul>
+<p>Não exercitado nesta rodada (continua "A confirmar no teste"): uma linha por desvio com duas ações do mesmo responsável (RN-GQ-D08-002), filtro Responsável sem efeito (RN-GQ-D08-005), anexos e impressão. A impressão do relatório de CAPA dá erro de servidor no ambiente (DV-GQ-018).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>11-inventario-de-telas.md (linha 121) lista a Execução do Plano de Ação Corretiva entre as telas "em que a leitura do código não encontrou falha própria". A leitura desta página encontrou: observação lida da coluna errada, responsável do Visualizar errado, lista com uma linha por desvio, filtro Responsável sem efeito e regra de ícone com defeito. Sugere-se corrigir o inventário e a contagem de 9 telas "sem falha apontada".</li>
@@ -137,6 +150,13 @@
 <li>O filtro RD/Nº com o ano não acha (DV-GQ-026) e o filtro de datas falha com início e fim no mesmo dia (DV-GQ-027). A página já avisava que podia ocorrer; agora é fato. Resolvida.</li>
 <li>A frase "não há defeito DV-GQ registrado específico desta tela" estava desatualizada; corrigida na seção Falhas e pontos de atenção. Resolvida.</li>
 <li>Item 11-inventario-de-telas.md (linha 121), que lista esta tela entre as "sem falha própria": a rodada 1 mostra falhas (DV-GQ-024 e DV-GQ-025). Não resolvida aqui, porque o inventário está fora do lote desta atualização.</li>
+</ul>
+<h4 id="rodada-2-22-10-2026_1">Rodada 2 (22/10/2026)</h4>
+<p>Comparação entre o que esta página (ou o plano de testes) dizia e o que a tela mostrou. Resolvidas nesta atualização, salvo onde indicado.</p>
+<ul>
+<li>O caso CT-GQ-N08-07 esperava o texto "Concluido" no histórico. A tela mostra "Finalizado", como esta página já dizia na seção Situações. Sem correção na página; o caso deve ser ajustado.</li>
+<li>A página dizia que o histórico da ação, antes da primeira execução, não mostra nada (inferência). A tela confirmou. Resolvida.</li>
+<li>Quem enxerga a ação na lista: a rodada 2 não repetiu o que a rodada 1 viu. Em aberto (ponto a investigar, descrito no documento interno).</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-acao-corretiva-anvisa.html"><small>← Anterior</small><strong>Plano de Ação Corretiva: Anvisa</strong></a><a class="ap ap-prox" href="execucao-do-plano-de-acao-corretiva-manual-do-usuario.html"><small>Próximo →</small><strong>Execução do Plano de Ação Corretiva: Manual do usuário</strong></a></nav>
