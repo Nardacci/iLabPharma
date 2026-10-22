@@ -43,7 +43,7 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="pre-avaliacao-relatorio-desvios-analise.html">Análise</a><a href="pre-avaliacao-relatorio-desvios-manual-do-usuario.html">Manual do usuário</a><a href="pre-avaliacao-relatorio-desvios-fluxos.html">Fluxos</a><a href="pre-avaliacao-relatorio-desvios-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="pre-avaliacao-relatorio-desvios-anvisa.html">Anvisa</a></nav>
     <article class="texto texto-largo">
-<p>Situação: Extraída (do código), Validada no teste (está nos resultados das rodadas) ou A confirmar no teste. Regras de acesso por nível não entram aqui (detalhe no documento interno).</p>
+<p>Situação: Extraída (do código), Validada no teste (está nos resultados das rodadas) ou A confirmar no teste. As regras de acesso não entram aqui (estão no documento interno).</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -136,13 +136,13 @@
 <td>RN-GQ-D03-008</td>
 <td>Salvar sempre leva o desvio a uma das duas situações seguintes (17 ou 27), qualquer que seja a situação dele; o servidor não confere a situação de entrada</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:226, 250</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N03-017): o desvio 016/26 foi de Pendente Pré Avaliação para Pendente Responsável Área. O caminho sem áreas e a não conferência da situação de entrada: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-009</td>
 <td>Ao salvar, o responsável do desvio passa a ser o usuário que fez a pré-avaliação (nome e código). A área do relator não muda</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:216-217</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-017): o histórico mostra o responsável do desvio trocado de quem registrou para quem pré-avaliou (DV-GQ-035). A área do relator não foi conferida</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-010</td>
@@ -160,7 +160,7 @@
 <td>RN-GQ-D03-012</td>
 <td>A consulta (Visualizar) usa uma tela antiga que mostra o meio de detecção com rótulos que não correspondem aos do sistema e deixa vazios os campos Descrição Não Conformidade, ação imediata, setores, criticidade e reunião. Não mostra local, item nem áreas envolvidas</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Visualizar.cshtml:63-405; HSolutions.GQ.UI/Areas/Bloco2/Models/PreAvaliacaoRNCEditarModel.cs:69-131</td>
-<td>A confirmar no teste</td>
+<td>Não alcançada em 22/10/2026 (caso CT-GQ-N03-021, Bloqueado): a premissa de como chegar à tela antiga (desvio que já teve pré-avaliação e voltou a Pendente Pré Avaliação) foi contrariada pela tela; ver RN-GQ-D03-021. O conteúdo da tela antiga segue A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-013</td>
@@ -203,6 +203,18 @@
 <td>Nos filtros de data desta lista: só Data Início acha o dia; início e fim no mesmo dia devolve o dia; só Data Fim é ignorada; uma data inválida (31/02/2026) é ignorada em silêncio e a lista sai completa</td>
 <td>Observada na tela, sem trecho de código analisado (execucao/2026-10-21-desvios-rodada-1/resultado.md), casos CT-GQ-F07, F08 e F09</td>
 <td>Validada no teste (21/10/2026; DV-GQ-027)</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-020</td>
+<td>O histórico da pré-avaliação mostra a mudança de situação, a troca do responsável do desvio e o meio de detecção, com valor antigo e novo, usuário e data, e a justificativa vazia. A justificativa digitada não aparece</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, caso CT-GQ-N03-017 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-017; DV-GQ-035 e DV-GQ-036)</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-021</td>
+<td>A lupa não aparece na lista desta tela: a lista só mostra desvios em Pendente Pré Avaliação, sempre com o lápis. Desvios já pré-avaliados só têm Visualizar nas telas 1 e 2 e não voltam a esta situação, então a tela de consulta antiga (RN-GQ-D03-012) não é alcançada</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, caso CT-GQ-N03-021 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-021, Bloqueado por esta razão)</td>
 </tr>
 </tbody>
 </table></div>
@@ -298,9 +310,14 @@
 <td>Não executado</td>
 </tr>
 <tr>
+<td>CT-GQ-N03-016</td>
+<td>Tela Pré Avaliação. Fazer: alterar, pelas ferramentas do navegador, o valor do campo Data/Hora do Chefe da SDGQ para uma data antiga e salvar. Esperado pela norma: data do servidor. Registrar se gravar a data alterada (RN-GQ-026). Prioridade Alta</td>
+<td>Bloqueado em 21/10/2026: a data alterada foi salva sem erro, mas nenhuma tela mostra o valor gravado</td>
+</tr>
+<tr>
 <td>CT-GQ-N03-017</td>
 <td>Histórico. Fazer: depois de salvar, abrir o histórico. Esperado pelo código: mudança de Situacao e do meio de detecção, com valor antigo e novo; justificativa vazia (RN-GQ-D03-004). Prioridade Alta</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 016/26): depois de salvar, o histórico mostra a mudança de situação (de Pendente Pré Avaliação para Pendente Responsável Área), a troca do responsável do desvio (de quem registrou para quem pré-avaliou) e o meio de detecção (de Nenhum para Controle da Qualidade), com valor antigo e novo e a justificativa vazia, como o código previa. Ressalva: a justificativa digitada não aparece e o responsável do desvio é trocado por quem pré-avalia (DV-GQ-035 e DV-GQ-036, reconfirmados).</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-018</td>
@@ -320,7 +337,7 @@
 <tr>
 <td>CT-GQ-N03-021</td>
 <td>Consulta (lupa). Prep.: desvio que já teve pré-avaliação e voltou a Pendente Pré Avaliação (editado no Relatório de Desvios e com nova ação). Fazer: abrir a lupa. Esperado pelo código: tela antiga com campos vazios e rótulos do meio de detecção diferentes (RN-GQ-D03-012). Prioridade Alta</td>
-<td>Não executado</td>
+<td>Bloqueado em 22/10/2026 (desvios 071/26, 016/26 e 048/26): não há como preparar o caso. Os desvios já pré-avaliados só têm Visualizar nas telas Relatório de Desvios e Registro Ação Corretiva Imediata, então nenhum volta a Pendente Pré Avaliação; e nesta tela a lupa não aparece, porque a lista só mostra desvios em Pendente Pré Avaliação, sempre com o lápis.</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-022</td>

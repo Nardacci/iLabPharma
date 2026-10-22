@@ -86,7 +86,9 @@
 <h2 id="falhas-e-pontos-de-atencao">Falhas e pontos de atenção</h2>
 <h4 id="o-que-o-codigo-mostra-que-foge-do-esperado-ou-da-norma">O que o código mostra que foge do esperado ou da norma</h4>
 <ul>
+<li>Não há aprovação do plano antes da execução e a mesma pessoa que escreve o plano pode aprová-lo no Monitoramento, sem assinatura. Contraria o princípio de que mudanças e ações de CAPA sejam revisadas e aprovadas por quem não as fez (RDC 658/2022, arts. 8º e 341; Guia 33/2020, integridade e rastreabilidade). As regras de acesso estão no documento interno.</li>
 <li>A edição do plano, inclusive depois de enviado ao monitoramento, não pede justificativa (PlanoAcaoCorretivaRNCController.cs:209 e 244). Alteração de registro crítico sem motivo registrado fere o princípio de rastreabilidade (RDC 658/2022, art. 125; Guia 33).</li>
+<li>Abrir a tela de um desvio sem plano grava um plano vazio (PlanoAcaoCorretivaRNCController.cs:154-164). Uma consulta que grava e que deixa registro de plano mesmo sem a pessoa ter salvado nada. O padrão e a regra de acesso estão no documento interno.</li>
 <li>O plano pode ser salvo sem nenhuma ação ativa se as ações forem removidas antes (Inferência: PlanoAcaoCorretivaValidator.cs:45 e 59 olham também as ações removidas).</li>
 <li>A divisão/seção escolhida para cada ação não é gravada (PlanoAcaoCorretivaRNCController.cs:346-354). Depois, a tela de Execução tem a coluna de área no modelo, mas sem dado.</li>
 <li>Remover ação ou anexo não exige justificativa e o plano não impede remover uma ação que já foi executada.</li>
@@ -124,6 +126,23 @@
 </ul>
 <p>Pontos de atenção que o teste não exercitou (continuam "A confirmar no teste"): plano vazio gravado só por abrir a tela (RN-GQ-D07-002); plano regravado depois do envio ao monitoramento (RN-GQ-D07-011); observação apagada ao enviar anexo (CT-GQ-N07-10); responsável apagado ao corrigir uma ação (CT-GQ-N07-22); erro de script ao voltar a divisão para "SELECIONE" (CT-GQ-N07-05); divisão sem responsáveis (CT-GQ-N07-04); prazos impossíveis (CT-GQ-N07-03); anexos; impressão do CAPA a partir desta tela (o defeito DV-GQ-018, de impressão com erro, foi visto nas telas 1, 2 e 6, não aqui).</p>
 <p>O que a tela mostrou de bom: as cinco mensagens de campo obrigatório aparecem todas, em duas faixas (CT-GQ-N07-01).</p>
+<h4 id="confirmado-na-rodada-2-22-10-2026">Confirmado na rodada 2 (22/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>. Defeito novo que diz respeito a esta tela (gravidade entre parênteses):</p>
+<ul>
+<li><strong>DV-GQ-050 (Média).</strong> Ao editar uma ação do plano pelo lápis, a divisão e o responsável voltam em branco; sem escolhê-los de novo, o plano é recusado (CT-GQ-N07-07, 041/26). O pior caso previsto, o responsável apagado em silêncio (CT-GQ-N07-22), não ocorreu: a tela recusou.</li>
+</ul>
+<p>Reconfirmados:</p>
+<ul>
+<li><strong>DV-GQ-035 (Média).</strong> O responsável do desvio é trocado para quem editou o plano (CT-GQ-N07-07).</li>
+<li><strong>DV-GQ-036 (Alta, histórico em geral).</strong> A janela Histórico mostra o plano, mas não as ações, e a justificativa fica vazia (CT-GQ-N07-08).</li>
+</ul>
+<p>Pontos de atenção do código, lidos contra o resultado:</p>
+<ul>
+<li><strong>Confirmados:</strong> a edição do plano, inclusive depois de enviado ao monitoramento, não pede justificativa (RN-GQ-D07-013); o plano pode ser regravado em Pendente Monitoramento, com uma ação já concluída (RN-GQ-D07-011); ao corrigir uma ação (lápis), a divisão e o responsável não voltam preenchidos (DV-GQ-050).</li>
+<li><strong>Confirmado em parte:</strong> a divisão não é gravada (RN-GQ-D07-007): ao reabrir a ação ela volta em branco.</li>
+<li><strong>Não testados nesta rodada:</strong> observação apagada ao enviar anexo (CT-GQ-N07-10), plano vazio gravado só por abrir a tela (CT-GQ-N07-15), impressão do CAPA (CT-GQ-N07-16), anexos, divisão sem responsáveis, prazos impossíveis e erro de script ao voltar a divisão para "SELECIONE".</li>
+<li><strong>O que a tela mostrou de bom:</strong> a ação já concluída não foi alterada pela edição, e o histórico guardou o prazo e o responsável antigos e novos (CT-GQ-N07-07).</li>
+</ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>11-inventario-de-telas.md ainda marca esta tela como "Não testada". Nas rodadas de 12/10 e 16/10 o plano corretivo foi preenchido e salvo como parte da cadeia (RD 006/26 e RD 009/26). Sugere-se atualizar o inventário para "Funciona com falhas, a confirmar" depois dos casos desta página.</li>
@@ -143,6 +162,50 @@
 <p>Item 11-inventario-de-telas.md ("Não testada"): a rodada 1 dá base para marcar a tela como "Funciona com falhas". Não resolvida aqui, porque o inventário está fora do lote desta atualização.</p>
 </li>
 </ul>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Comparação entre o que esta página (ou o roteiro) dizia e o que a tela mostrou.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Roteiro, lista da tela</td>
+<td>Só os desvios em Pendente Plano Ação Corretiva</td>
+<td>Também os em Pendente Monitoramento, com o lápis (a página já dizia, RN-GQ-D07-001)</td>
+<td>Resolvida nesta página; o roteiro segue a corrigir fora desta atualização</td>
+</tr>
+<tr>
+<td>Falhas, "Ao tentar corrigir uma ação (lápis)"</td>
+<td>Inferência: o responsável da ação pode ser apagado</td>
+<td>A divisão e o responsável voltam em branco e, sem escolher de novo, Salvar recusa (DV-GQ-050)</td>
+<td>Resolvida (RN-GQ-D07-018)</td>
+</tr>
+<tr>
+<td>Situações e histórico, "O que grava na trilha de auditoria"</td>
+<td>O histórico inclui o plano, as ações e os anexos, campo a campo</td>
+<td>As mudanças de uma ação existente aparecem com valor antigo e novo; a janela Histórico não mostra as ações do plano salvo (DV-GQ-036)</td>
+<td>Resolvida (RN-GQ-D07-019 e D07-021)</td>
+</tr>
+<tr>
+<td>Plano de testes, CT-GQ-N07-07</td>
+<td>O responsável da ação seria mantido</td>
+<td>O responsável da ação precisa ser escolhido de novo; o do desvio é trocado para quem editou (DV-GQ-050, DV-GQ-035)</td>
+<td>Resolvida</td>
+</tr>
+<tr>
+<td><code>11-inventario-de-telas.md</code></td>
+<td>Tela "Não testada"</td>
+<td>Duas rodadas de teste, com falhas</td>
+<td>Segue a corrigir fora desta atualização</td>
+</tr>
+</tbody>
+</table></div>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="relatorio-de-capa-anvisa.html"><small>← Anterior</small><strong>Relatório de CAPA: Anvisa</strong></a><a class="ap ap-prox" href="plano-de-acao-corretiva-manual-do-usuario.html"><small>Próximo →</small><strong>Plano de Ação Corretiva: Manual do usuário</strong></a></nav>
   </main>

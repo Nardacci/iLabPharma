@@ -56,7 +56,7 @@
 - Trecho comum "Resumo do RNC": HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRegistroNC.cshtml
 - Scripts: HSolutions.GQ.UI/Areas/Bloco2/Script/PlanoAcaoPreventivaIndex.js e PlanoAcaoPreventivaSalvar.js</p>
 <p>Como ler as fontes nas tabelas: "Bloco2/" é HSolutions.GQ.UI/Areas/Bloco2/; "UI/" é HSolutions.GQ.UI/; "Domain/" é HSolutions.GQ.Domain/; "Reports/" é HSolutions.GQ.Reports/Bloco2/; "DB/" é Hsolutions.GQ.DB/Tables/; "Infra/" é HSolutions.GQ.Infrastructure/. Quando só aparece o nome do controlador, é PlanoAcaoPreventivaRNCController.cs.</p>
-<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 056/26 e a massa de dados. Foram executados cinco casos próprios (CT-GQ-N10-05, N10-06, N10-10, N10-12 e N10-13) e cinco casos de volume e consulta (CT-GQ-F05, F06, F08, F09 e F11). Resultado: 3 passaram, 4 passaram com ressalva e 3 falharam. Antes disso, o desvio RD 006/26 passou por esta tela e chegou a Pendente Monitoramento do Plano Ação Preventiva (execucao/2026-10-15/resultado.md, CT-GQ-023), sem descrição do passo.</p>
+<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 056/26 e a massa de dados. Foram executados cinco casos próprios (CT-GQ-N10-05, N10-06, N10-10, N10-12 e N10-13) e cinco casos de volume e consulta (CT-GQ-F05, F06, F08, F09 e F11). Resultado: 3 passaram, 4 passaram com ressalva e 3 falharam. Antes disso, o desvio RD 006/26 passou por esta tela e chegou a Pendente Monitoramento do Plano Ação Preventiva (execucao/2026-10-15/resultado.md, CT-GQ-023), sem descrição do passo. Rodada 2 (22/10/2026; execucao/2026-10-22-desvios-rodada-2/resultado.md): o CT-GQ-023 foi refeito com o desvio 043/26; o passo desta tela funcionou e o caso falhou na etapa seguinte (DV-GQ-012).</p>
 <h2 id="importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</h2>
 <h4 id="em-uma-frase">Em uma frase</h4>
 <p>É a tela onde a Garantia da Qualidade escreve o que será feito para o desvio não voltar, e sem ela o desvio com CAPA não chega ao fim.</p>
@@ -70,6 +70,7 @@
 <h2 id="falhas-e-pontos-de-atencao">Falhas e pontos de atenção</h2>
 <ul>
 <li>Não há aprovação do plano antes da execução: o plano vai direto para a execução (ponto de atenção 7 do fluxo; RN-GQ-054). Pela RDC 658/2022, art. 341, as ações corretivas e preventivas devem ser identificadas e implementadas; o fluxo de aprovação do plano é boa prática do Guia 33/2020 e da independência de funções, e aqui não existe.</li>
+<li>Só abrir a tela grava: o plano vazio é criado e salvo no desvio na primeira abertura (PlanoAcaoPreventivaRNCController.cs:125-135). Uma consulta que grava dados vai contra a rastreabilidade limpa (ver o documento interno).</li>
 <li>O desvio some da lista depois de salvo e não há ícone de Visualizar: a GQ não tem como rever o plano salvo pela lista (só pela Execução ou pela impressão).</li>
 <li>Não é possível corrigir o plano depois de salvo pela tela normal: o botão Salvar fica oculto quando o desvio está em Pendente Monitoramento (Editar.cshtml:146), e o desvio sai da lista. Se o plano estiver errado, não há caminho de correção com justificativa.</li>
 <li>O responsável da ação pode ser de qualquer área e não há conferência de que a pessoa ainda está ativa ou tem acesso à tela de Execução. Se o responsável escolhido não tiver acesso à GQ, a ação não será concluída por ninguém (inferência, com base em AvaliacaoPlanoAcaoPreventivaRNCController.cs:121-122).</li>
@@ -104,6 +105,11 @@
 <li>Botão Limpar da lista que não esvazia a tabela: não testado.</li>
 <li>Prazo com data passada aceito (RN-GQ-D10-03): não exercitado nesta tela; o plano corretivo com prazo no passado foi aceito na tela 8 (CT-GQ-N08-04).</li>
 </ul>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-2/resultado.md</code>. Caso desta tela: CT-GQ-023 (falhou, mas por causa da etapa seguinte; o passo desta tela funcionou).</p>
+<p>Defeitos novos que dizem respeito a esta tela: nenhum.</p>
+<p>Reconfirmado: DV-GQ-012 (telas 10 e 12): plano com ação "não implementada" encerra o desvio; não há botão Reprovar. O defeito está no Monitoramento do Plano de Ação Preventiva; esta tela entra só como primeiro passo da cadeia. Seguem valendo, sem repetição: DV-GQ-026, DV-GQ-027, DV-GQ-028 e DV-GQ-036 (rodada 1).</p>
+<p>Não exercitado nesta rodada: os demais casos desta tela (CT-GQ-N10-01 a N10-17), inclusive prazo com data passada, anexos e impressão. A impressão do relatório de CAPA dá erro de servidor no ambiente (DV-GQ-018).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>RN-GQ-053 (01-regras-de-negocio.md): a linha :100 está correta, mas a regra mistura acesso e lista; separei o acesso para a seção de segurança.</li>
@@ -116,6 +122,12 @@
 <li>O resultado dos casos de volume diz que o filtro de situação "Reprovado" devolve 0 em todas as telas; esta página documenta, para esta lista, só as opções TODAS e Aprovado Plano Ação Corretiva. O resultado.md não diz se a opção Reprovado existe aqui. Em aberto: conferir na tela.</li>
 <li>RN-GQ-D10-09 diz que o código do responsável fica fora do histórico; o histórico mostrou "o responsável" sem indicar se é o nome ou o código. Em aberto.</li>
 <li>Fora isso, as mensagens, os campos e os botões descritos conferem com a tela nos casos executados.</li>
+</ul>
+<h4 id="rodada-2-22-10-2026_1">Rodada 2 (22/10/2026)</h4>
+<p>A tabela de divergências do resultado.md não traz nenhum item desta tela. Comparação com esta página:</p>
+<ul>
+<li>O passo desta tela funcionou como a página descreve (plano salvo, desvio em Pendente Monitoramento do Plano Ação Preventiva). Sem divergência.</li>
+<li>O ponto em aberto da rodada 1 (se a opção de situação "Reprovado" existe nesta lista) não foi retomado na rodada 2. Segue em aberto.</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="monitoramento-do-plano-de-acao-corretiva-anvisa.html"><small>← Anterior</small><strong>Monitoramento do Plano de Ação Corretiva: Anvisa</strong></a><a class="ap ap-prox" href="plano-de-acao-preventiva-manual-do-usuario.html"><small>Próximo →</small><strong>Plano de Ação Preventiva: Manual do usuário</strong></a></nav>

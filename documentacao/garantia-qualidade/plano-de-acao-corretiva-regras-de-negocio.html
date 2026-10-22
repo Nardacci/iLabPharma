@@ -70,7 +70,7 @@
 <td>RN-GQ-D07-001</td>
 <td>A lista mostra desvios em Pendente Plano Ação Corretiva e em Pendente Monitoramento do Plano Ação Corretiva.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:65</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-07, 041/26): a lista mostrou o desvio em Pendente Monitoramento do Plano Ação Corretiva, com o lápis</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-002</td>
@@ -106,13 +106,13 @@
 <td>RN-GQ-D07-007</td>
 <td>A divisão/seção só serve para filtrar o responsável na tela; o código que grava a ação não guarda a divisão (IdAreaResponsavel e NomeAreaResponsavel ficam sem preenchimento).</td>
 <td>PlanoAcaoCorretivaRNCController.cs:346-354 e 358-365; AcaoCorretiva.cs:15-16</td>
-<td>Extraída</td>
+<td>Validada em parte (22/10/2026, CT-GQ-N07-07): ao reabrir a ação a divisão volta em branco, coerente com o código não guardá-la (DV-GQ-050). A ausência dos campos de área na ação gravada não foi verificada no banco</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-008</td>
 <td>Ação nova nasce com situação Pendente. Ação já gravada mantém a situação que tinha.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:352 e 358-365</td>
-<td>Extraída</td>
+<td>Validada em parte (22/10/2026, CT-GQ-N07-07): a ação que já estava concluída ficou como estava. A situação Pendente da ação nova não foi conferida no banco</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-009</td>
@@ -130,7 +130,7 @@
 <td>RN-GQ-D07-011</td>
 <td>Salvar leva o desvio para Pendente Monitoramento do Plano Ação Corretiva sem olhar a situação atual: o plano pode ser regravado depois do envio ao monitoramento e até depois da execução já ter começado.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:65 e 224</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-07, 041/26): o plano foi reaberto em Pendente Monitoramento, com uma ação já concluída, e a alteração foi aceita</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-012</td>
@@ -142,7 +142,7 @@
 <td>RN-GQ-D07-013</td>
 <td>A edição do plano não pede justificativa. O parâmetro de justificativa da função de salvar não é usado e o histórico é gravado com justificativa vazia.</td>
 <td>PlanoAcaoCorretivaRNCController.cs:209 e 244</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-07 e N07-08, 041/26): a alteração do plano foi aceita sem pedir justificativa e a coluna Justificativa do histórico ficou vazia</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-014</td>
@@ -167,6 +167,30 @@
 <td>Ao Adicionar uma ação, a tela cobra descrição e prazo; o responsável só é cobrado depois que a divisão/seção é escolhida, e a divisão em si não é exigida. Nada entra na grade enquanto faltar dado.</td>
 <td>PlanoAcaoCorretivaSalvar.js:255-277 (Extraída do código); tela em CT-GQ-N07-02</td>
 <td>Validada no teste (21/10/2026, CT-GQ-N07-02, RD 053/26; evidências N07-02-adicionar-vazio, P7.2-acao-sem-prazo)</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-018</td>
+<td>Ao editar uma ação da grade pelo lápis, a descrição e o prazo voltam aos campos, mas a divisão e o responsável voltam em branco; sem escolhê-los de novo, Salvar recusa com "Responsável na Ação Corretiva número N é obrigatório." (a ação não é apagada)</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N07-07; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-07, 041/26; DV-GQ-050)</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-019</td>
+<td>Num plano já enviado ao monitoramento, o prazo de uma ação pendente pode ser trocado; o histórico traz o prazo antigo e o novo e o responsável antigo e o novo da ação</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N07-07; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-07, 041/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-020</td>
+<td>Ao salvar a alteração do plano, o responsável do desvio é trocado para quem editou o plano</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N07-07; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-07; DV-GQ-035, reconfirmado)</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-021</td>
+<td>A janela Histórico do desvio mostra o plano (título, responsável, observação, data, hora e usuário), mas não as ações (descrição, prazo, responsável); a justificativa fica vazia. Contradiz em parte "O que grava na trilha de auditoria", que citava as ações: as mudanças de uma ação existente aparecem (RN-GQ-D07-019), a inclusão das ações no primeiro Salvar não aparece</td>
+<td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N07-08; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-08, 041/26; DV-GQ-036)</td>
 </tr>
 </tbody>
 </table></div>
@@ -219,12 +243,12 @@
 <tr>
 <td>CT-GQ-N07-07 (Alta)</td>
 <td>Tela: Plano. Preparação: desvio em Pendente Monitoramento com plano e duas ações, uma já concluída. Fazer: reabrir o plano, trocar o prazo da ação pendente, adicionar e salvar sem justificativa. Esperado: o plano é aceito; conferir no histórico o valor antigo e novo, e se o responsável da ação foi mantido (RN-GQ-D07-011 e 013)</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (041/26, duas ações, uma concluída): o plano foi reaberto em Pendente Monitoramento e a alteração do prazo foi aceita sem justificativa; o histórico traz prazo e responsável antigos e novos; a divisão e o responsável da ação voltam em branco ao editar (DV-GQ-050); o responsável do desvio foi trocado (DV-GQ-035, reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-08 (Alta)</td>
 <td>Tela: Plano e janela Histórico. Preparação: plano salvo. Fazer: abrir o Histórico da linha. Esperado: título, descrição, ações, responsável do plano, data e hora do servidor e usuário; verificar se há justificativa</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (041/26): a janela mostra o título do plano, o responsável, a observação, a data, a hora e o usuário, mas não as ações; justificativa vazia (DV-GQ-036, reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-09 (Média)</td>

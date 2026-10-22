@@ -117,7 +117,7 @@
 <p><strong>Área excluída pode travar o desvio.</strong> A conferência de "todas avaliaram" inclui áreas excluídas (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:273-275</code>).</p>
 </li>
 <li>
-<p><strong>Usuário sem acesso.</strong> A lista consulta o nível do grupo do usuário sem checar se ele tem grupo (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:120</code>; <code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAvaliacaoAreaRDIndex.cs:17</code>). Inferência: dá erro ("Não foi possível obter as relatórios de desvios") em vez de lista vazia.</p>
+<p><strong>Usuário sem acesso.</strong> A lista consulta a regra de acesso do usuário sem checar se ele tem grupo (<code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:120</code>; <code>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaAvaliacaoAreaRDIndex.cs:17</code>). Inferência: dá erro ("Não foi possível obter as relatórios de desvios") em vez de lista vazia.</p>
 </li>
 <li>
 <p><strong>Telas sem uso:</strong> <code>Incluir</code> e <code>Cancelar</code> (cópias de outras telas) estão no projeto; o menu não leva a elas (<code>HSolutions.GQ.UI/Areas/Bloco2/Views/AvaliacaoAreaRD/Incluir.cshtml</code>, <code>HSolutions.GQ.UI/Areas/Bloco2/Views/AvaliacaoAreaRD/Cancelar.cshtml</code>, <code>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AvaliacaoAreaRDController.cs:152-162</code>).</p>
@@ -147,6 +147,20 @@
 <li><strong>Não confirmados porque não foram testados nesta tela:</strong> 2 (Justificativa ignorada), 3 (datas e responsável mostrados como "de agora"), 4 (observação só com espaços), 5 (reenvio da avaliação), 6 (mais de uma recusa; o caso CT-GQ-N04-15 pede um desvio montado com o DBA), 8 (botão Limpar), 9 (clique no tipo de item), 10 (área excluída), 12 (telas Incluir e Cancelar), 13 (concorrência) e 14 (TAG do equipamento).</li>
 <li><strong>Inferência, não testada:</strong> o erro de impressão visto em outras telas (DV-GQ-018: "Server Error ... The device is not ready") pode ocorrer também no ícone de impressora desta tela, que usa o mesmo modelo de relatório (RN-GQ-D04-17). A confirmar no teste.</li>
 </ul>
+<h4 id="confirmado-na-rodada-2-22-10-2026">Confirmado na rodada 2 (22/10/2026)</h4>
+<p>Fonte: execucao/2026-10-22-desvios-rodada-2/resultado.md. Casos desta tela: CT-GQ-N04-06, CT-GQ-N04-09, CT-GQ-N04-10 e CT-GQ-N04-11, todos Falhou. Defeitos novos que dizem respeito a esta tela (gravidade entre parênteses):</p>
+<ul>
+<li><strong>DV-GQ-040 (Alta).</strong> Data da abertura, data e hora da pré-avaliação e da avaliação da área mostram o momento da consulta, e o responsável da pré-avaliação é o usuário que abre a tela (desvio 029/26; também na tela Avaliação Relatório Desvios).</li>
+<li><strong>DV-GQ-041 (Alta).</strong> Observação da área só com espaços é aceita e o desvio avança (desvio 027/26).</li>
+<li><strong>DV-GQ-042 (Alta).</strong> A avaliação de uma área quando falta outra não deixa registro no histórico (030/26); a que fecha a etapa deixa só a mudança de situação, sem a observação nem a área (028/26).</li>
+<li><strong>DV-GQ-045 (Média).</strong> A Justificativa, com asterisco, pode ser apagada e a avaliação salva; a digitada não aparece no histórico (028/26 e 030/26; também na tela Avaliação Relatório Desvios).</li>
+</ul>
+<p>Pontos de atenção do código, lidos contra a rodada 2:</p>
+<ul>
+<li><strong>Confirmados:</strong> 1 (trilha sem o conteúdo da avaliação, pior do que o previsto: às vezes sem nenhum registro), 2 (Justificativa ignorada: confirmado que a digitada não vai ao histórico), 3 (datas e responsável mostrados como "de agora") e 4 (observação só de espaços é aceita).</li>
+<li><strong>Continuam sem teste:</strong> 5 (reenvio da avaliação), 6 (mais de uma recusa), 8 (botão Limpar), 9 (clique no tipo de item), 10 (área excluída), 12 (telas Incluir e Cancelar), 13 (concorrência) e 14 (TAG do equipamento).</li>
+<li>A lista de pontos já confirmados em teste, no começo desta seção ("Nenhum defeito DV-GQ está registrado para esta tela até 16/10/2026"), vale para antes da rodada 1.</li>
+</ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <div class="tabela"><table>
 <thead>
@@ -159,9 +173,9 @@
 </thead>
 <tbody>
 <tr>
-<td><code>02-matriz-de-permissoes.md</code>, linha "Avaliação Área"</td>
+<td>Documento interno de acesso, linha "Avaliação Área"</td>
 <td>Regra de acesso da lista</td>
-<td>A lista só traz a linha da área do próprio usuário. Detalhe por nível na documento interno.</td>
+<td>A lista só traz a linha da área do próprio usuário. Detalhe no documento interno.</td>
 <td></td>
 </tr>
 <tr>
@@ -212,6 +226,44 @@
 <td>O texto da observação não entra no histórico (A confirmar)</td>
 <td>Confirmado no histórico do desvio 048/26 (DV-GQ-036)</td>
 <td>Resolvida: regra validada em parte; "quem avaliou" segue a confirmar</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<p>Divergências entre a documentação desta página e o que a tela mostrou:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Onde</th>
+<th>O que a documentação dizia</th>
+<th>O que a tela mostrou</th>
+<th>Situação nesta atualização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Roteiro e RN-GQ-D04-15, datas e responsável mostrados</td>
+<td>Os dados do momento em que foram feitos (data da abertura, pré-avaliação)</td>
+<td>Data da abertura, data e hora da pré-avaliação e da avaliação da área mostram o momento da consulta, e o responsável da pré-avaliação é o usuário que abre a tela (DV-GQ-040)</td>
+<td>Resolvida: previsão do código confirmada (RN-GQ-D04-15); pela norma, a tela deveria mostrar os dados originais</td>
+</tr>
+<tr>
+<td>Roteiro e caso CT-GQ-N04-09, Justificativa</td>
+<td>Campo em branco para o usuário digitar</td>
+<td>Já vem preenchido com o texto de uma etapa anterior e o asterisco não é obedecido: apagado, salva do mesmo jeito (DV-GQ-045). O manual (passo 12) já descrevia o preenchimento</td>
+<td>Resolvida: RN-GQ-D04-11 validada; RN-GQ-D04-21 acrescentada</td>
+</tr>
+<tr>
+<td>RN-GQ-D04-12</td>
+<td>O histórico registra a mudança de situação e a ligação da nova avaliação à área</td>
+<td>A ligação não apareceu; a avaliação de uma área quando falta outra não deixa registro nenhum (DV-GQ-042)</td>
+<td>Contradita em parte; RN-GQ-D04-20 acrescentada</td>
+</tr>
+<tr>
+<td>RN-GQ-D04-07</td>
+<td>A observação só com espaços não é tratada como vazia (A confirmar)</td>
+<td>Confirmado: foi aceita (DV-GQ-041)</td>
+<td>Resolvida: regra validada</td>
 </tr>
 </tbody>
 </table></div>

@@ -57,7 +57,7 @@
 <td>RN-GQ-059</td>
 <td>O Acompanhamento RD imprime os desvios de um período, por situação. Não agrupa por causa, área ou produto, o que seria preciso para a análise de tendência (art. 342 da RDC 658/2022). Obs.: a parte sobre o Controle de Emissão de RNC está na página da tela 14.</td>
 <td>AcompanhamentoRNCController.cs:36-71; Reports/DadosRNCFactory.cs:259-295</td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-025): o PDF lista por período e situação e não agrupa por causa ou área. A coluna de criticidade sai em branco (DV-GQ-031)</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-025): o PDF lista por período e situação e não agrupa por causa ou área. A coluna de criticidade sai em branco (DV-GQ-031). Rodada 2 (22/10/2026): o PDF do período amplo trouxe todos os desvios do sistema (65 de 65)</td>
 </tr>
 <tr>
 <td>RN-GQ-060</td>
@@ -75,7 +75,7 @@
 <td>RN-GQ-D13-02</td>
 <td>O período filtra pela data de criação do desvio e inclui o dia final inteiro (o servidor soma um dia e usa "menor que").</td>
 <td>AcompanhamentoRNCController.cs:40,46</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, ponto em aberto (c)): o relatório filtra pela data de criação do desvio; 001/26 (criado em 02/06/2026), 002/26 e 003/26 (07/09/2026) ficaram fora do período de 01/10 a 22/10. A soma de um dia ao fim (dia final inteiro) não foi exercitada (CT-GQ-N13-03)</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-03</td>
@@ -99,7 +99,7 @@
 <td>RN-GQ-D13-06</td>
 <td>Com a situação em TODAS, o relatório traz todos os desvios do período, inclusive os cancelados; o código não os exclui.</td>
 <td>AcompanhamentoRNCController.cs:46,48-52</td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-F12; DV-GQ-037): o desvio 018/26, cancelado na tela, aparece no PDF de todas as situações, mas com a situação Pendente Registro Ação Corretiva. Que cancelados entram sem marca não foi conferido para os demais</td>
+<td>Validada em parte no teste (22/10/2026, ponto em aberto (c)): o desvio 018/26, cancelado pela tela 2 (CT-GQ-N02-020), aparece no PDF de todas as situações, com a situação Cancelado. A leitura da rodada 1, que dava "Pendente Registro Ação Corretiva" (DV-GQ-037), não se reproduziu. Que não há outra marca de cancelamento no PDF, e como ficam os demais cancelados, não foi conferido</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-07</td>
@@ -159,19 +159,25 @@
 <td>RN-GQ-D13-16</td>
 <td>Na impressão de todas as situações, a situação do PDF difere da situação da tela em 2 de 51 desvios lidos (018/26 e 026/26). Não foi reconferido de qual lado está a diferença.</td>
 <td>Observado na tela (resultado.md, CT-GQ-F12)</td>
-<td>Validada no teste (21/10/2026, CT-GQ-F12; DV-GQ-037)</td>
+<td>Contradita pelo teste (22/10/2026, ponto em aberto (c)): em 59 de 65 desvios a situação do PDF coincide com a da tela, inclusive 018/26 e 026/26; nos outros 6 a leitura não permite concluir, mas nenhum contradiz. A divergência da rodada 1 foi, provavelmente, erro do programa que lia o texto do PDF. DV-GQ-037 não confirmado</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-17</td>
 <td>A data e a hora impressas no PDF saem no formato americano (mm/dd/aaaa hh:mm:ss AM/PM); o endereço de impressão também leva as datas em mm/dd/aaaa.</td>
 <td>Observado na tela (resultado.md, CT-GQ-025); linha do código a localizar</td>
-<td>Validada no teste (21/10/2026, CT-GQ-025; DV-GQ-034)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-025; DV-GQ-034). Rodada 2 (22/10/2026): o PDF foi baixado pela mesma chamada que o botão Imprimir faz, com as datas em mm/dd/aaaa</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-18</td>
 <td>Uma linha de descrição muito longa (quase 3.000 caracteres) atravessa a quebra de página do PDF: o texto continua na página seguinte, mas a linha é partida.</td>
 <td>Observado na tela (resultado.md, CT-GQ-F14)</td>
 <td>Validada no teste (21/10/2026, CT-GQ-F14)</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-19</td>
+<td>Com o período amplo (01/01/2026 a 22/10/2026) o PDF traz todos os desvios do sistema (65 de 65, em 8 páginas); com 01/10/2026 a 22/10/2026 traz 62 de 65, porque o período olha a data de criação.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-2/resultado.md, ponto em aberto (c)); linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, ponto em aberto (c))</td>
 </tr>
 </tbody>
 </table></div>
@@ -199,7 +205,7 @@
 <tr>
 <td>CT-GQ-N13-02 (Alta)</td>
 <td>Cada situação do filtro. Preparação: um desvio em cada uma das seis situações oferecidas. Fazer: Imprimir seis vezes, uma por situação. Esperado: só desvios daquela situação. Registrar a de "Aprovado Plano Ação Preventiva" (pelo código, vazia, RN-GQ-D13-05)</td>
-<td>Passou com ressalva em 21/10/2026: o filtro não oferece todas as situações, "Aprovado Plano Ação Preventiva" devolve vazio (DV-GQ-028) e a situação do PDF difere da tela em 2 desvios (DV-GQ-037)</td>
+<td>Passou com ressalva em 21/10/2026: o filtro não oferece todas as situações, "Aprovado Plano Ação Preventiva" devolve vazio (DV-GQ-028) e a situação do PDF difere da tela em 2 desvios (DV-GQ-037). Reconferido em 22/10/2026: a diferença de situação não se reproduziu (DV-GQ-037 não confirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-03 (Média)</td>
@@ -254,7 +260,7 @@
 <tr>
 <td>CT-GQ-F12 (volume e consulta)</td>
 <td>Acompanhamento: todos os desvios da massa aparecem e a situação do PDF confere com a da tela</td>
-<td>Falhou em 21/10/2026 (DV-GQ-037)</td>
+<td>Falhou em 21/10/2026 (DV-GQ-037). Reconferido em 22/10/2026: a diferença não se reproduziu (DV-GQ-037 não confirmado); o resultado deste caso fica para decisão do responsável</td>
 </tr>
 <tr>
 <td>CT-GQ-F13 (volume e consulta)</td>
@@ -265,6 +271,11 @@
 <td>CT-GQ-F14 (volume e consulta)</td>
 <td>Acompanhamento: quebra de página do PDF com uma linha de descrição muito longa (quase 3.000 caracteres)</td>
 <td>Passou com ressalva em 21/10/2026: a linha atravessa a quebra da página 1 para a 2; o texto continua, mas a linha é partida</td>
+</tr>
+<tr>
+<td>Ponto em aberto (c) da rodada 1 (CT-GQ-N13-02 e F12 repetidos)</td>
+<td>Conferir o PDF desvio a desvio: todos os desvios do período aparecem e a situação confere com a da tela. Períodos 01/01 a 22/10 e 01/10 a 22/10</td>
+<td>Passou com ressalva em 22/10/2026: período amplo, 65 de 65; período de outubro, 62 de 65 (faltam 001, 002 e 003 por terem sido criados antes); situação igual à da tela em 59 desvios, sem leitura segura em 6, nenhuma contradição</td>
 </tr>
 </tbody>
 </table></div>
