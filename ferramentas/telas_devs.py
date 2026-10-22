@@ -13,7 +13,8 @@ import unicodedata
 from pathlib import Path
 
 DOCS = [("manual", "Manual"), ("regras", "Regras de negócio"), ("fluxos", "Fluxos"), ("analise", "Análise"), ("anvisa", "Anvisa")]
-DIRS = {"principal": "1.principal", "estoque": "3.estoque", "controle-qualidade": "4.controle_qualidade", "garantia-qualidade": "5.garantia_qualidade"}
+DIRS = {"principal": "1.principal", "producao": "2.producao", "estoque": "3.estoque", "controle-qualidade": "4.controle_qualidade", "garantia-qualidade": "5.garantia_qualidade",
+        "controle-documentos": "6.controle_documento", "comercial": "7.comercial", "rastreabilidade": "8.rastreabilidade", "ope": "9.ope"}
 # página do módulo que serve de documento "do módulo" quando a tela não tem o dela
 DO_MODULO = {
     "manual": ["manual-do-usuario"],
@@ -41,7 +42,7 @@ def ler_inventario(arq):
     while i < len(L):
         m = re.match(r"^##+ (.+?)\s*$", L[i])
         if m:
-            menu = re.sub(r"\s*\(\d+ telas?\)", "", m.group(1)).strip()
+            menu = re.sub(r"\s*\([^)]*\)\s*$", "", m.group(1)).strip()
             i += 1
             continue
         if L[i].startswith("|") and i + 1 < len(L) and re.match(r"^\|[\s:|-]+\|$", L[i + 1]):
@@ -54,10 +55,12 @@ def ler_inventario(arq):
             if ("Situação" in cols and menu and not menu.startswith(("Como ler", "Resultado", "Testes de tela", "Outros", "Próximos"))
                     and cols[0].startswith(("Tela", "Cadastro", "Relatório"))):
                 for c in rows:
+                    if len(c) != len(cols):
+                        c = c[:len(cols) - 1] + [" | ".join(c[len(cols) - 1:])] if len(c) > len(cols) else c
                     if len(c) == len(cols):
                         sit = re.sub(r"\*\*|`", "", c[cols.index("Situação")])
                         sit = next((s for s in SITUACOES if sit.startswith(s)), sit.split(".")[0][:30])
-                        out.append((menu, re.sub(r"\*\*|`", "", c[0]), sit))
+                        out.append((menu, re.sub(r"\*+|`", "", c[0]).strip(), sit))
             continue
         i += 1
     return out
