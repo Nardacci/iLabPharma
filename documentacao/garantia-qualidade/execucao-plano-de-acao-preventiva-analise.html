@@ -56,7 +56,7 @@
 - Trecho comum "Resumo do RNC": HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRegistroNC.cshtml
 - Scripts: HSolutions.GQ.UI/Areas/Bloco2/Script/AvaliacaoPlanoAcaoPreventivaIndex.js e AvaliacaoPlanoAcaoPreventivaSalvar.js</p>
 <p>Como ler as fontes: "Bloco2/" é HSolutions.GQ.UI/Areas/Bloco2/; "UI/" é HSolutions.GQ.UI/; "Domain/" é HSolutions.GQ.Domain/; "DB/" é Hsolutions.GQ.DB/Tables/; "Infra/" é HSolutions.GQ.Infrastructure/. Quando só aparece o nome do controlador, é AvaliacaoPlanoAcaoPreventivaRNCController.cs.</p>
-<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 057/26 (massa do caso N11). Foram executados cinco casos próprios (CT-GQ-N11-05, N11-06, N11-07, N11-10 e N11-11) e quatro casos de volume e consulta (CT-GQ-F05, F06, F08 e F09). Resultado: 4 passaram, 1 passou com ressalva e 4 falharam. Antes disso, nas rodadas de 15 e 16/10 o desvio RD 006/26 chegou ao monitoramento preventivo, o que indica que a ação foi tratada, mas o passo não está descrito (execucao/2026-10-15/resultado.md). Rodada 2 (22/10/2026; execucao/2026-10-22-desvios-rodada-2/resultado.md): um caso, o CT-GQ-N11-12 (histórico da conclusão, ação preventiva do desvio 043/26), passou com ressalva.</p>
+<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 057/26 (massa do caso N11). Foram executados cinco casos próprios (CT-GQ-N11-05, N11-06, N11-07, N11-10 e N11-11) e quatro casos de volume e consulta (CT-GQ-F05, F06, F08 e F09). Resultado: 4 passaram, 1 passou com ressalva e 4 falharam. Antes disso, nas rodadas de 15 e 16/10 o desvio RD 006/26 chegou ao monitoramento preventivo, o que indica que a ação foi tratada, mas o passo não está descrito (execucao/2026-10-15/resultado.md). Rodada 2 (22/10/2026; execucao/2026-10-22-desvios-rodada-2/resultado.md): um caso, o CT-GQ-N11-12 (histórico da conclusão, ação preventiva do desvio 043/26), passou com ressalva. Rodada 4 (22/10/2026; execucao/2026-10-22-desvios-rodada-4/resultado.md): três casos, o CT-GQ-N11-03 (filtro Responsável) falhou (DV-GQ-089) e o CT-GQ-N11-04 (filtro Descrição) e o CT-GQ-N11-16 (impressão, DV-GQ-086) passaram com ressalva.</p>
 <h2 id="importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</h2>
 <h4 id="em-uma-frase">Em uma frase</h4>
 <p>É a tela onde cada responsável diz que fez a sua ação preventiva, e é a única prova, dentro do sistema, de que o plano saiu do papel.</p>
@@ -120,6 +120,16 @@
 <p>Diferença em relação à tela 8: aqui o anexo enviado com a conclusão aparece no Monitoramento do plano preventivo (CT-GQ-N11-15); na tela 8 isso falha (DV-GQ-074).</p>
 <p>Não verificável: o campo Responsável quando outra pessoa abre a ação já concluída (RN-GQ-D11-10, CT-GQ-N11-13): não há como abrir a ação de outra pessoa pelas telas.</p>
 <p>Seguem valendo, sem repetição: DV-GQ-025, DV-GQ-026 e DV-GQ-027 (rodada 1).</p>
+<h4 id="confirmado-na-rodada-4">Confirmado na rodada 4</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-4/resultado.md</code>. Casos desta tela: CT-GQ-N11-03, N11-04 e N11-16 (um falhou, dois passaram com ressalva).</p>
+<p>Defeitos novos que dizem respeito a esta tela:</p>
+<ul>
+<li>DV-GQ-089 (Baixa): o filtro Responsável é ignorado (CT-GQ-N11-03). Confirma RN-GQ-D11-11.</li>
+<li>DV-GQ-086 (Alta, telas 7 a 12): o Relatório de CAPA impresso traz uma mensagem de erro do relatório no lugar da avaliação (CT-GQ-N11-16, desvio 044/26).</li>
+</ul>
+<p>Pontos de atenção do código que a tela confirmou: filtro Responsável ignorado (RN-GQ-D11-11); filtro Descrição só procura o texto da ação (RN-GQ-D11-12).</p>
+<p>O que a tela fez como esperado: o PDF traz a data de conclusão e a observação da ação.</p>
+<p>Não ocorreu como a página previa: o relatório de CAPA impresso não sai limpo.</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>Documento completo do menu (desvios/controle-de-desvios-documento-completo.md), Tela 11: diz "Botões: Concluir ação" e "Ao salvar, o desvio vai para: Ações concluídas". No código o botão é Salvar e o desvio não muda de situação (AvaliacaoPlanoAcaoPreventivaRNCController.cs:242-247). Corrigir o documento.</li>
@@ -145,6 +155,13 @@
 <li>Data de Conclusão fora do padrão: o caso previa "recusa com mensagem clara"; a tela recusa, mas com a mensagem genérica "A Data de Conclusão é obrigatória.", sem dizer que a data é inválida.</li>
 <li>Anexo: a página dizia que o anexo fica no desvio; confirmado, e ele aparece no Monitoramento do plano preventivo (diferente da tela 8, DV-GQ-074).</li>
 <li>Responsável exibido (RN-GQ-D11-10): continua "a confirmar", sem como testar pelas telas.</li>
+</ul>
+<h4 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h4>
+<p>Comparação entre o que esta página dizia e o que a tela mostrou. Fonte: <code>execucao/2026-10-22-desvios-rodada-4/resultado.md</code>.</p>
+<ul>
+<li>Filtro Responsável: a página já dizia, pelo código, que o filtro é ignorado; a tela confirmou (DV-GQ-089). O caso previa "filtrar por responsável", que não acontece.</li>
+<li>Filtro Descrição: a página dizia que procura só o texto da ação; a tela confirmou (o texto do desvio não acha nada).</li>
+<li>Relatório de CAPA impresso: a página dizia que o PDF traz a data de conclusão e a observação da ação; traz, mas com uma mensagem de erro do relatório no lugar da avaliação (DV-GQ-086).</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-acao-preventiva-anvisa.html"><small>← Anterior</small><strong>Plano de Ação Preventiva: Anvisa</strong></a><a class="ap ap-prox" href="execucao-plano-de-acao-preventiva-manual-do-usuario.html"><small>Próximo →</small><strong>Execução Plano de Ação Preventiva: Manual do usuário</strong></a></nav>

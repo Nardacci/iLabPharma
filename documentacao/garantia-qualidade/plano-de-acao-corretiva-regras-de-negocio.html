@@ -172,7 +172,7 @@
 <td>RN-GQ-D07-018</td>
 <td>Ao editar uma ação da grade pelo lápis, a descrição e o prazo voltam aos campos, mas a divisão e o responsável voltam em branco; sem escolhê-los de novo, Salvar recusa com "Responsável na Ação Corretiva número N é obrigatório." (a ação não é apagada)</td>
 <td>execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N07-07; linha do código a localizar</td>
-<td>Validada no teste (22/10/2026, CT-GQ-N07-07, 041/26; DV-GQ-050)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-07, 041/26; DV-GQ-050) Rodada 4 (22/10/2026, CT-GQ-N07-22, 039/26; DV-GQ-085): clicar no lápis da ação, mudar só o prazo e Adicionar deixa o responsável em branco na grade (confirmado o pior caso previsto; na rodada 2 a tela tinha recusado ao Salvar). O que acontece ao Salvar depois não foi registrado</td>
 </tr>
 <tr>
 <td>RN-GQ-D07-019</td>
@@ -222,6 +222,42 @@
 <td>execucao/2026-10-22-desvios-rodada-3b/resultado.md, DV-GQ-072 (evidência N08-03-passo-2-historico); linha do código a localizar</td>
 <td>Validada no teste (22/10/2026, visto no histórico do 078/26; DV-GQ-072)</td>
 </tr>
+<tr>
+<td>RN-GQ-D07-027</td>
+<td>O ícone Imprimir (lista e tela) abre o PDF "RELATÓRIO DE CAPA" com o desvio, a ação imediata e as ações, mas com uma mensagem de erro do relatório no lugar da avaliação</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md, CT-GQ-N07-16; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-16, 038/26 e 078/26; DV-GQ-086, Alta). Contradiz a expectativa de relatório completo</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-028</td>
+<td>O PDF do plano corretivo traz só as ações: o título, a descrição e a observação do plano não saem (o plano preventivo traz título e descrição)</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md, CT-GQ-N07-21; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-21, 038/26; DV-GQ-087). Contradiz a expectativa de título, descrição e ações</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-029</td>
+<td>Ao corrigir uma ação pelo lápis e mudar só o prazo, Adicionar apaga o responsável da ação na grade</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md, CT-GQ-N07-22; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-22, 039/26; DV-GQ-085)</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-030</td>
+<td>O título do plano, a descrição e a observação aceitam 5.000 caracteres cada um e são gravados; não há limite de tamanho na tela</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md, CT-GQ-N07-21; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-21, 038/26): "Alteração efetuada com sucesso." Não saem no PDF (RN-GQ-D07-028)</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-031</td>
+<td>Voltar o campo Divisão/Seção para SELECIONE deixa os responsáveis desabilitados e vazios, mas dispara um erro de script, que só aparece no console do navegador</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md, CT-GQ-N07-05; PlanoAcaoCorretivaSalvar.js:626 (linha citada na seção Falhas, não reconferida nesta rodada)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-05, 031/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D07-032</td>
+<td>O filtro Meios de Detecção traz só os desvios do meio escolhido; a Descrição acha em minúsculas, maiúsculas e mistura; Limpar esvazia filtros e lista</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md, CT-GQ-N07-14; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N07-14): os sete meios somaram os 13 desvios da lista (1, 1, 1, 2, 8, 0 e 0)</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -263,7 +299,7 @@
 <tr>
 <td>CT-GQ-N07-05 (Baixa)</td>
 <td>Tela: Plano, Divisão/Seção. Preparação: divisão já escolhida. Fazer: voltar o campo para "SELECIONE". Esperado: lista de responsáveis desabilitada sem erro de tela; verificar se há erro de script</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (031/26): ao voltar a SELECIONE, os responsáveis ficam desabilitados e vazios; o console do navegador registra um erro de script (RN-GQ-D07-031)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-06 (Alta)</td>
@@ -308,7 +344,7 @@
 <tr>
 <td>CT-GQ-N07-14 (Baixa)</td>
 <td>Tela: Plano, lista. Preparação: desvios com meios de detecção variados. Fazer: filtrar por cada um dos sete meios e por Descrição parcial e em maiúsculas; clicar em Limpar. Esperado: só os desvios do meio escolhido; Limpar esvazia tudo</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: cada um dos sete meios traz só os seus desvios (1, 1, 1, 2, 8, 0 e 0, somando os 13); a Descrição acha em minúsculas, maiúsculas e mistura; Limpar esvazia filtros e lista</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-15 (Média)</td>
@@ -318,7 +354,7 @@
 <tr>
 <td>CT-GQ-N07-16 (Baixa)</td>
 <td>Tela: Plano, Imprimir. Preparação: plano salvo; e outro desvio sem item (DV-GQ-010). Fazer: Imprimir pela lista e pela tela. Esperado: PDF do CAPA com título, descrição e ações; verificar o desvio sem item</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-086, 038/26 e 078/26): Imprimir pela lista e pela tela abre o PDF "RELATÓRIO DE CAPA" com o desvio, a ação imediata e as ações, mas com uma mensagem de erro do relatório no lugar da avaliação. O desvio sem item (DV-GQ-010) não foi verificado</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-17 a N07-20 (Alta e Média)</td>
@@ -328,12 +364,12 @@
 <tr>
 <td>CT-GQ-N07-21 (Baixa)</td>
 <td>Tela: Plano. Preparação: plano aberto. Fazer: texto de 5.000 caracteres no título, na descrição e na observação; salvar e imprimir. Esperado: aceita (sem limite no código) e imprime sem cortar</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-087, 038/26): 5.000 caracteres no título, na descrição e na observação gravam; no PDF o título, a descrição e a observação do plano não saem (só as ações)</td>
 </tr>
 <tr>
 <td>CT-GQ-N07-22 (Baixa)</td>
 <td>Tela: Plano, ação existente. Preparação: plano salvo com uma ação. Fazer: clicar no lápis da ação, mudar só o prazo, Adicionar e Salvar. Esperado: o responsável da ação é mantido; verificar se ele foi apagado (Inferência)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-085, 039/26): lápis da ação, mudar só o prazo, Adicionar: o prazo muda, mas o responsável da ação some da grade</td>
 </tr>
 <tr>
 <td>CT-GQ-F05 (volume)</td>

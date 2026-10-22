@@ -123,13 +123,13 @@
 <td>RN-GQ-D11-11</td>
 <td>O filtro Responsável da lista não funciona: o servidor ignora o valor.</td>
 <td>AvaliacaoPlanoAcaoPreventivaRNCController.cs:76; AvaliacaoPlanoAcaoPreventivaIndex.js:99</td>
-<td>Extraída</td>
+<td>Validada no teste, como falha (22/10/2026, CT-GQ-N11-03, DV-GQ-089, Baixa): com outro usuário no filtro Responsável, a lista devolve as mesmas 9 linhas de TODOS. Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-12</td>
 <td>O filtro Descrição da lista pesquisa o texto da ação, e a coluna DESCRIÇÃO mostra o texto da ação. Os filtros de data usam a data de criação do desvio.</td>
 <td>AvaliacaoPlanoAcaoPreventivaRNCController.cs:109-116; AvaliacaoPlanoAcaoPreventivaIndexModel.cs:62-63</td>
-<td>Extraída</td>
+<td>Validada em parte (22/10/2026, CT-GQ-N11-04): o texto da ação ("prazo passado") acha o desvio, e o texto da descrição do desvio não acha nada. Os filtros de data (data de criação do desvio) não foram conferidos neste caso; já têm resultado das rodadas anteriores (DV-GQ-027). Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-13</td>
@@ -179,6 +179,12 @@
 <td>execucao/2026-10-22-desvios-rodada-3c/resultado.md; linha do código a localizar</td>
 <td>Validada no teste (22/10/2026, CT-GQ-N11-02): com 1 ação Pendente e 7 Finalizado, TODAS trouxe 8, Pendente 1 e Finalizado 7</td>
 </tr>
+<tr>
+<td>RN-GQ-D11-21</td>
+<td>Imprimir, pela lista e pela tela, abre o PDF "RELATÓRIO DE CAPA" com a data de conclusão e a observação da ação, mas com uma mensagem de erro do relatório no lugar da avaliação.</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md; linha do código a localizar</td>
+<td>Validada em parte e contradita em parte (22/10/2026, CT-GQ-N11-16, desvio 044/26, DV-GQ-086, Alta): o PDF traz a data de conclusão (22/10/2026) e a observação da ação, e o bloco da avaliação sai com a mensagem de erro do relatório. O relatório não sai completo.</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -210,12 +216,12 @@
 <tr>
 <td>CT-GQ-N11-03 (Baixa)</td>
 <td>Filtro Responsável. Fazer: escolher outro usuário no filtro Responsável e Pesquisar. Esperado pela tela: filtrar por responsável. Pelo código, o filtro é ignorado (RN-GQ-D11-11)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-089): escolher outro usuário no filtro Responsável devolve as mesmas 9 linhas de TODOS; o filtro é ignorado</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-04 (Baixa)</td>
 <td>Filtro Descrição e datas. Fazer: pesquisar por parte do texto da ação e, em outra pesquisa, por parte do texto do desvio. Esperado pelo código: só o texto da ação acha</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026: o texto da ação ("prazo passado") acha o desvio; o texto da descrição do desvio não acha nada (como o código previa). Ressalva: quem procura pelo texto do desvio não é avisado de que o filtro só olha a ação</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-05 (Alta)</td>
@@ -275,7 +281,7 @@
 <tr>
 <td>CT-GQ-N11-16 (Baixa)</td>
 <td>Impressão. Fazer: Imprimir na lista e na tela. Esperado: PDF Relatório de CAPA com a data de conclusão e a observação da ação</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (DV-GQ-086, desvio 044/26): o PDF mostra a data de conclusão (22/10/2026) e a observação da ação, mas com uma mensagem de erro do relatório no lugar da avaliação</td>
 </tr>
 <tr>
 <td>CT-GQ-F05 (volume e consulta)</td>
