@@ -33,6 +33,7 @@ import markdown
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import biblioteca  # noqa: E402
 import higiene  # noqa: E402
+import menus_gq  # noqa: E402
 import telas_devs  # noqa: E402
 
 HOJE = datetime.date.today().strftime("%d/%m/%Y")
@@ -89,7 +90,7 @@ CAMINHO = ["visao-geral", "principal", "estoque", "producao", "ope", "controle-q
 PASSOS = [
     ("resumo", "Resumo do módulo", "O que é o módulo, em que situação está e o que decidir. Vale para o sistema entregue e para a versão nova."),
     ("fluxos", "Siga o processo", "Como o trabalho anda, etapa por etapa, na ordem em que acontece. Onde há roteiro, ele vem logo depois do fluxo."),
-    ("desvios", "Controle de Desvios: tela a tela", "Uma página por tela do menu Controle de Desvios (14 telas): manual do usuário, campos, botões, mensagens, regras de negócio, fluxo, falhas e casos de teste, cada uma com o Word para baixar."),
+    ("desvios", "Menus do sistema, tela a tela", "Uma página por tela dos menus Controle de Desvios e Controle de Mudanças: manual do usuário, campos, botões, mensagens, regras de negócio, fluxo, falhas e casos de teste, cada uma com o Word para baixar."),
     ("ideal", "O ideal: como deve funcionar", "Como o módulo deve trabalhar para atender à ANVISA: funções, comportamento, integrações com os outros módulos e papéis. Mostra o que manter, corrigir e acrescentar."),
     ("norma", "ANVISA: norma e risco", "O que a ANVISA exige e onde está o risco."),
     ("dados", "Dados e integrações", "Para a equipe de desenvolvimento: modelo de dados e integrações do sistema entregue."),
@@ -175,6 +176,8 @@ def docs_com_telas(mod, hom):
     """As telas da versão nova (por menu) vêm de manifestos gerados em homologacao/: no Principal, as telas testadas;
     na Garantia da Qualidade, as telas a criar (Controle de Desvios e de Mudanças)."""
     docs = list(mod["docs"])
+    if mod["id"] == "garantia-qualidade":
+        docs += menus_gq.entradas(hom)
     fontes = {"principal": "versao-nova/1.principal/telas/manifest.json",
               "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json"}
     if mod["id"] not in fontes:
@@ -892,7 +895,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             pagina = {"titulo": titulo, "slug": s, "cat": cat, "arq": arq, "toc": toc, "corpo": corpo,
                       "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo,
                       "roteiro_de": ROTEIROS.get(arq) or extra.get("roteiro_de"), "ordem": ordem,
-                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"), "aba": extra.get("aba"), "resumo_tela": extra.get("resumo"), "tela_n": extra.get("tela_n"), "intro": extra.get("intro"),
+                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"), "menu": extra.get("menu"), "aba": extra.get("aba"), "resumo_tela": extra.get("resumo"), "tela_n": extra.get("tela_n"), "intro": extra.get("intro"),
                       "situacao_tela": extra.get("situacao")}
             m = re.search(r'<img src="(\.\./img/[^"]+fluxograma[^"]*)"', corpo)
             if m:
@@ -942,7 +945,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             (pasta / f"{p['slug']}.html").write_text(pagina_documento(mod, p), encoding="utf-8")
         # Endereços antigos das telas do Controle de Desvios (uma página por tela): levam à página de análise da tela
         for p in mod["paginas"]:
-            if p.get("tela_n") and p.get("aba") == "analise":
+            if p.get("tela_n") and p.get("aba") == "analise" and p.get("grupo") == "Controle de Desvios":
                 antigo = slug(f"Tela {p['tela_n']} · {p['tela']}")
                 if antigo != p["slug"]:
                     (pasta / f"{antigo}.html").write_text(
@@ -1085,7 +1088,7 @@ def pagina_documento(mod, p):
         prox = _cartao_ap("Fim do roteiro", "Voltar ao início do portal", f"{raiz}index.html", "prox")
     abas = ""
     if p.get("tela_n") and p.get("aba"):
-        irmas = sorted([x for x in mod["paginas"] if x.get("tela_n") == p["tela_n"] and x.get("aba")], key=lambda x: ABAS_DESVIOS.index(x["aba"]))
+        irmas = sorted([x for x in mod["paginas"] if x.get("tela_n") == p["tela_n"] and x.get("grupo") == p.get("grupo") and x.get("aba")], key=lambda x: ABAS_DESVIOS.index(x["aba"]))
         abas = ('<nav class="abas-tela" aria-label="Páginas desta tela">'
                 + "".join(f'<a href="{x["slug"]}.html"{" aria-current=page" if x is p else ""}>{E(x["rotulo"])}</a>' for x in irmas) + '</nav>')
     pct = round(p["n"] / p["total"] * 100)
@@ -1171,11 +1174,18 @@ def intro_modulo(mod):
     return m.group(1) if m else t
 
 
+MENUS_GQ_DESC = {
+    "Controle de Desvios": "Onde a Garantia da Qualidade registra o que saiu do combinado na fábrica, investiga a causa, corrige e confere. É o processo que a ANVISA mais olha numa inspeção.",
+    "Controle de Mudanças": "Onde a empresa pede, avalia, aprova, executa e confere qualquer mudança que possa afetar a qualidade do medicamento: processo, equipamento, material, documento, sistema.",
+}
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
 
 
-def cartoes_desvios(pags):
-    """Cartões do menu Controle de Desvios: as páginas de apoio e uma por tela, com o que cada tela faz e as cinco páginas dela."""
+def _menu_de(p):
+    return p.get("grupo") or p.get("menu") or "Controle de Desvios"
+
+
+def _cartoes_um_menu(pags):
     apoio = [p for p in pags if p.get("intro")]
     h = '<div class="doc-cards">' + "".join(
         f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo">{E(p["titulo"])}</span><span class="doc-card-meta">Comece por aqui</span></a>' for p in apoio) + "</div>"
@@ -1187,6 +1197,15 @@ def cartoes_desvios(pags):
         cart += (f'<div class="doc-card tela-card"><a class="doc-card-titulo" href="{pa["slug"]}.html"><span class="doc-n">{n}</span>{E(pa["tela"])}</a>'
                  f'<span class="doc-card-meta">{E(pa.get("resumo_tela") or "")}</span><span class="tela-links">{links}</span></div>')
     return h + f'<div class="doc-cards">{cart}</div>'
+
+
+def cartoes_desvios(pags):
+    """Cartões dos menus tela a tela (Controle de Desvios e Controle de Mudanças): as páginas de apoio e uma por tela, com o que cada tela faz e as cinco páginas dela.
+    Com mais de um menu, cada um ganha o seu título."""
+    menus = list(dict.fromkeys(_menu_de(p) for p in pags))
+    if len(menus) <= 1:
+        return _cartoes_um_menu(pags)
+    return "".join(f'<h3 class="novo-menu">{E(m)}</h3>' + _cartoes_um_menu([p for p in pags if _menu_de(p) == m]) for m in menus)
 
 
 
@@ -1225,12 +1244,15 @@ def pagina_modulo(mod, sit="index"):
         dv = [p for g in mod["roteiro"] for p in g[3] if p.get("desvios")]
         bloco_menus = ""
         if dv:
-            entenda = next(p for p in dv if p.get("intro"))
             bloco_menus = ('<h2 class="secao-titulo">Menus do sistema, tela a tela</h2>'
-                           '<p class="secao-desc">Cada menu do sistema entregue tem uma página por tela, com o manual do usuário, os campos, as regras, o fluxo e os casos de teste, e o Word para baixar.</p>'
-                           '<h3 class="novo-menu">Controle de Desvios (14 telas)</h3>'
-                           '<p class="secao-desc">Onde a Garantia da Qualidade registra o que saiu do combinado na fábrica, investiga a causa, corrige e confere. É o processo que a ANVISA mais olha numa inspeção. '
-                           f'<a href="{entenda["slug"]}.html">Entenda o menu: o que faz e por que importa</a>.</p>' + cartoes_desvios(dv))
+                           '<p class="secao-desc">Cada menu do sistema entregue tem uma página por tela, com o manual do usuário, os campos, as regras, o fluxo e os casos de teste, e o Word para baixar.</p>')
+            for m in dict.fromkeys(_menu_de(p) for p in dv):
+                pm = [p for p in dv if _menu_de(p) == m]
+                entenda = next(p for p in pm if p.get("intro"))
+                n_telas = len({p["tela_n"] for p in pm if p.get("tela_n")})
+                bloco_menus += (f'<h3 class="novo-menu">{E(m)} ({n_telas} telas)</h3>'
+                                f'<p class="secao-desc">{MENUS_GQ_DESC.get(m, "")} '
+                                f'<a href="{entenda["slug"]}.html">Entenda o menu: o que faz e por que importa</a>.</p>' + _cartoes_um_menu(pm))
         return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
 <main class="pagina-modulo" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
