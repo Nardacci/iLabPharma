@@ -33,6 +33,7 @@ import markdown
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import biblioteca  # noqa: E402
 import higiene  # noqa: E402
+import telas_devs  # noqa: E402
 
 HOJE = datetime.date.today().strftime("%d/%m/%Y")
 
@@ -772,7 +773,7 @@ def cabecalho(titulo, raiz, ativo=""):
   <nav class="topo-nav" aria-label="Principal">
     <a href="{raiz}index.html#modulos"{' aria-current="page"' if ativo == 'modulos' else ''}>Módulos</a>
     <a href="{raiz}biblioteca.html"{' aria-current="page"' if ativo == 'biblioteca' else ''}>Biblioteca</a>
-    <a href="{raiz}index.html#diretoria">Diretoria</a>
+    <a href="{raiz}telas.html"{' aria-current="page"' if ativo == 'telas' else ''}>Devs/QA</a>
     <a href="{raiz}index.html#publicos">Por público</a>
     <a href="{raiz}anvisa.html"{' aria-current="page"' if ativo == 'anvisa' else ''}>ANVISA</a>
     <a href="{raiz}cronograma.html"{' aria-current="page"' if ativo == 'cronograma' else ''}>Cronograma</a>
@@ -967,6 +968,11 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
         print(f"AVISO: {len(rel_bib['linhas_sobrando'])} linha(s) do arquivo de metadados sem documento no portal (removido ou renomeado). Nada foi apagado; confira e remova à mão se for o caso:")
         for c in rel_bib["linhas_sobrando"]:
             print(f"  - {c}")
+    # Devs/QA: as telas por módulo e menu, com os cinco documentos de cada tela
+    dados_telas = telas_devs.montar(MODULOS, origem, destino)
+    (destino / "telas.html").write_text(telas_devs.pagina(dados_telas, cabecalho, rodape), encoding="utf-8")
+    (destino / "portal/telas.css").write_text(telas_devs.CSS, encoding="utf-8")
+    print(f"Devs/QA: {sum(len(ts) for m in dados_telas for _, ts in m['menus'])} telas em {sum(1 for m in dados_telas if m['menus'])} módulos com inventário.")
     cron = pagina_cronograma(origem)
     if cron:
         (destino / "cronograma.html").write_text(cron, encoding="utf-8")
