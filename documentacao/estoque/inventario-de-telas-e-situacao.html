@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=20df228b">
+<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -41,8 +41,9 @@
       <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
       <p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>
     </header>
+    
     <article class="texto">
-<p><strong>Data:</strong> 12/10/2026 · <strong>Base:</strong> o roteiro do menu (<code>Hsolutions.Estoque.DB/dml.sql:1839</code> em diante), as telas do código (<code>LaboSys_UI</code>), os dez fluxos (<code>fluxos/</code>), os cadastros de apoio (<code>01-cadastros-de-apoio.md</code>) e o relatório de testes (<code>entregaveis/fonte/relatorio-de-testes.md</code>, rodadas de 07, 08 e 12/10/2026).</p>
+<p><strong>Data:</strong> 12/10/2026 (atualizado em 22/10/2026, rodadas 8 e 9) · <strong>Base:</strong> o roteiro do menu (<code>Hsolutions.Estoque.DB/dml.sql:1839</code> em diante), as telas do código (<code>LaboSys_UI</code>), os dez fluxos (<code>fluxos/</code>), os cadastros de apoio (<code>01-cadastros-de-apoio.md</code>) e o relatório de testes (<code>entregaveis/fonte/relatorio-de-testes.md</code>, rodadas de 07, 08, 12, 13 e 22/10/2026, esta com as rodadas 8 e 9).</p>
 <p>Os nomes são os do menu, que é o que o usuário vê. O detalhe de cada tela está no fluxo indicado.</p>
 <h3 id="como-ler">Como ler</h3>
 <div class="tabela"><table>
@@ -63,7 +64,7 @@
 </tr>
 <tr>
 <td><strong>Falha grave</strong></td>
-<td>Testada; tem desvio de gravidade alta</td>
+<td>Testada; tem desvio de gravidade alta ou a tela não grava o que promete</td>
 </tr>
 <tr>
 <td><strong>Não testada</strong></td>
@@ -86,27 +87,23 @@
 <tbody>
 <tr>
 <td>Funciona</td>
-<td>10</td>
+<td>14</td>
 </tr>
 <tr>
 <td>Funciona com falhas</td>
-<td>17</td>
+<td>30</td>
 </tr>
 <tr>
 <td>Falha grave</td>
-<td>9</td>
+<td>12</td>
 </tr>
 <tr>
 <td>Bloqueada no teste</td>
-<td>5</td>
-</tr>
-<tr>
-<td>Protótipo</td>
-<td>1</td>
+<td>7</td>
 </tr>
 <tr>
 <td>Não testada</td>
-<td>56</td>
+<td>35</td>
 </tr>
 <tr>
 <td><strong>Total no menu</strong></td>
@@ -114,9 +111,12 @@
 </tr>
 </tbody>
 </table></div>
+<p>Fora do menu há ainda 1 protótipo (Liberação pelo CQ), que não entra no total. <em>Contagem refeita em 22/10/2026, depois da rodada 8 (e ajustada pela rodada 9: Local de Armazenagem e Central de Pesagem mudaram de situação), linha a linha pelas tabelas abaixo (a tela "Agenda de Reanálise" aparece em duas seções e conta uma vez). A tabela anterior, de 13/10, somava 98 incluindo o protótipo e estava 2 telas fora da soma das linhas.</em></p>
 <p><strong>O que isso quer dizer:</strong> os testes de 07 e 08/10 cobriram os cadastros de apoio e a entrada de material, até o Endereçamento. O Endereçamento não grava (DV-EST-016), então nenhum lote ganha saldo, e as telas seguintes (quarentena, CQ, movimentação, separação, remessa) <strong>não puderam ser testadas</strong>. A causa está no banco e depende do DBA, que não respondeu: fica <strong>pendente</strong>.</p>
 <p><strong>Um caminho para destravar (confirmado no teste de 12/10/2026):</strong> as telas <strong>Entrada de Material - Outras</strong> e <strong>Entrada de Material - Produção</strong> gravam a entrada por outra rotina (<code>LaboSys_UI/estoque/entrada_material_ed.aspx.cs:316-322</code>, <code>entrada_producao_ed.aspx.cs:156-166</code>: inclusão da movimentação, volumes e abertura da análise no CQ), sem passar pelo Endereçamento. Se funcionarem, criam um lote com saldo em quarentena e permitem testar a quarentena, a análise do CQ e o que vem depois.</p>
 <p><strong>Rodada 3 (12/10/2026):</strong> o ciclo da quarentena e do CQ foi executado com os lotes <code>TESTEPA001</code>, <code>TESTELOTE003</code> e <code>TESTEPA998</code>. Oito telas do Estoque passaram a ter situação (Controle da Qualidade, Movimentação de Quarentena, Separação, Atendimento, Movimentação de Material, Disponibilidade do Lote, Histórico do Lote e Solicitação de Material - Consumo). A <strong>Central de Pesagem</strong> continua não testada: a amostra do CQ não gerou pesagem. As telas do CQ têm o inventário próprio em <code>../4.controle_qualidade/11-inventario-de-telas.md</code>.</p>
+<p><strong>Rodada 8 (22/10/2026):</strong> 85 casos de 94 foram tentados (sem os de permissão). Das 58 telas "não testadas", <strong>22 passaram a ter situação</strong> (cadastros de apoio, Saída de Material, Devolução, Entrada de Produção, Aprovação de Solicitação, kits e relatórios de kit e de quarentena). <strong>8 mudaram de situação:</strong> o <strong>Atendimento de Solicitação</strong> passou a <strong>falha grave</strong> (não ordena os lotes por validade e aceita o que vence depois, DV-EST-048); a <strong>Movimentação de Material</strong>, a <strong>Entrada de Material - Outras</strong> e a <strong>Estoque Coluna</strong> passaram a "funciona com falhas"; e as quatro telas do <strong>Inventário</strong> saíram de "bloqueada no teste" depois que um almoxarifado sem pendências abriu o inventário (uma funciona, três funcionam com falhas, DV-EST-049 e 050). A <strong>Análise do Planejamento de Kits</strong> entrou como falha grave (diz "gerada" e não grava, DV-EST-054) e a tela <strong>Banco</strong> (fora do menu: não grava e mostra erro técnico, DV-EST-052) aparece em "Fora do menu".</p>
+<p><strong>Rodada 9 (22/10/2026):</strong> 27 casos que a rodada 8 deixou bloqueados ou não executados (sem os de segurança): 1 passou, 24 seguem bloqueados e 2 não se aplicam à tela. Duas telas mudaram de situação: a <strong>Central de Pesagem</strong> (de não testada para <strong>falha grave</strong>, DV-EST-067) e o <strong>Local de Armazenagem</strong> (de funciona para <strong>funciona com falhas</strong>, DV-EST-066). As demais ficam como estavam; a Remessa de Material não tem data de embarque, data da guia nem chave de nota fiscal (CT-EST-117 e 118).</p>
 <h3 id="cadastros-28-telas">Cadastros (28 telas)</h3>
 <div class="tabela"><table>
 <thead>
@@ -130,15 +130,15 @@
 <tbody>
 <tr>
 <td>Grupo do Item</td>
-<td>Não testada</td>
+<td>Funciona</td>
 <td>Cadastros de apoio</td>
-<td></td>
+<td>Rodada 8 (22/10): excluir grupo com subgrupo é recusado; o grupo é salvo sem o Tipo do Item (CT-EST-008, 011)</td>
 </tr>
 <tr>
 <td>Subgrupo do Item</td>
-<td>Não testada</td>
+<td>Funciona</td>
 <td>Cadastros de apoio</td>
-<td></td>
+<td>Rodada 8 (22/10): subgrupo sem grupo é recusado (CT-EST-011)</td>
 </tr>
 <tr>
 <td>Unidade de Medida</td>
@@ -156,13 +156,13 @@
 <td>Estoque Rua</td>
 <td>Funciona</td>
 <td>Cadastros de apoio</td>
-<td>CT-EST-001</td>
+<td>CT-EST-001. Rodada 8 (22/10): recusa código zero ("O Código não pode ser nulo.", CT-EST-013)</td>
 </tr>
 <tr>
 <td>Estoque Coluna</td>
-<td>Funciona</td>
+<td>Funciona com falhas</td>
 <td>Cadastros de apoio</td>
-<td>CT-EST-001</td>
+<td>CT-EST-001. Rodada 8 (22/10): aceita código zero (DV-EST-059, CT-EST-013)</td>
 </tr>
 <tr>
 <td>Estoque Andar</td>
@@ -178,15 +178,15 @@
 </tr>
 <tr>
 <td>Local de Armazenagem</td>
-<td>Funciona</td>
+<td>Funciona com falhas</td>
 <td>Cadastros de apoio</td>
-<td>4 locais <code>TESTE</code> (CT-EST-001)</td>
+<td>4 locais <code>TESTE</code> (CT-EST-001). Rodada 8 (22/10): recusa vazio e código 000; exige almoxarifado (CT-EST-012). Rodada 9 (22/10): a lista Almoxarifado do Incluir oferece só 6 dos almoxarifados ativos, então não dá criar local de Retenção ou Estabilidade (DV-EST-066)</td>
 </tr>
 <tr>
 <td>Centro de Custo</td>
-<td>Não testada</td>
+<td>Funciona</td>
 <td>Cadastros de apoio</td>
-<td></td>
+<td>Rodada 8 (22/10): inclui com sucesso; é um cadastro separado do Centro de Custo do Principal (mesmo nome de tela, outros registros); a confirmação diz "item" (CT-EST-022)</td>
 </tr>
 <tr>
 <td>Natureza da Operação</td>
@@ -198,7 +198,7 @@
 <td>Item</td>
 <td>Funciona com falhas</td>
 <td>Cadastros de apoio</td>
-<td>Botões apagam números digitados (DV-EST-006); almoxarifado padrão travado depois de salvo (DV-EST-010); <strong>campo da classificação de reanálise não aparece na tela</strong>, mesmo com Lote, Validade e CQ marcados (DV-EST-043, 13/10)</td>
+<td>Botões apagam números digitados (DV-EST-006); almoxarifado padrão travado depois de salvo (DV-EST-010); <strong>campo da classificação de reanálise não aparece na tela</strong>, mesmo com Lote, Validade e CQ marcados (DV-EST-043, 13/10). Rodada 8 (22/10): aceita estoque mínimo maior que o máximo (DV-EST-051); pesquisa não acha texto sem acento (DV-EST-053); item controlado exige o tipo de substância (CT-EST-015, 016, 024)</td>
 </tr>
 <tr>
 <td>Substância Controlada</td>
@@ -250,9 +250,9 @@
 </tr>
 <tr>
 <td>Motivo da Movimentação</td>
-<td>Não testada</td>
+<td>Funciona</td>
 <td>Cadastros de apoio</td>
-<td></td>
+<td>Rodada 8 (22/10): motivo criado e usado na Saída de Material (CT-EST-081)</td>
 </tr>
 <tr>
 <td>Parâmetros do Estoque</td>
@@ -274,9 +274,9 @@
 </tr>
 <tr>
 <td>Condição de Armazenagem</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>Cadastros de apoio</td>
-<td></td>
+<td>Rodada 8 (22/10): aceita códigos 0, 000 e 0000 (DV-EST-059); descrição repetida com outro código é aceita; alterar e excluir pedem justificativa e o histórico mostra a alteração (CT-EST-002 a 008, 019)</td>
 </tr>
 <tr>
 <td>Nível de Segurança</td>
@@ -292,9 +292,9 @@
 </tr>
 <tr>
 <td>Tipo de Movimentação</td>
-<td>Não testada</td>
+<td>Funciona</td>
 <td>Cadastros de apoio</td>
-<td></td>
+<td>Rodada 8 (22/10): tipos de entrada e de saída criados e oferecidos nas telas de entrada e de saída conforme o sentido (CT-EST-020)</td>
 </tr>
 </tbody>
 </table></div>
@@ -309,12 +309,6 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Solicitação de Material (Produção)</td>
-<td>Não testada</td>
-<td>Solicitação e atendimento à produção</td>
-<td></td>
-</tr>
 <tr>
 <td>Recebimento de Material</td>
 <td>Falha grave</td>
@@ -341,9 +335,9 @@
 </tr>
 <tr>
 <td>Central de Pesagem</td>
-<td>Não testada</td>
+<td>Falha grave</td>
 <td>Solicitação e atendimento à produção</td>
-<td></td>
+<td>Rodada 9 (22/10): finalizar uma pesagem em que nada foi pesado é recusado, com duas confirmações antes ('Existem itens que não foram pesados!', CT-EST-076). Abrir o volume para informar peso, tara, tag e lacre dá erro de servidor e a pesagem não pode ser feita (DV-EST-067, Alta; CT-EST-077)</td>
 </tr>
 <tr>
 <td>Conferência de Recebimento</td>
@@ -359,9 +353,9 @@
 </tr>
 <tr>
 <td>Devolução</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>Devolução e entrada da produção</td>
-<td></td>
+<td>Rodada 8 (22/10): lote inexistente e endereço maior que o devolvido são recusados; item com controle de qualidade não acha o lote existente (DV-EST-064, CT-EST-092 a 094)</td>
 </tr>
 <tr>
 <td>Disponibilidade de Estoque</td>
@@ -377,9 +371,9 @@
 </tr>
 <tr>
 <td>Entrada de Material - Outras</td>
-<td>Funciona</td>
+<td>Funciona com falhas</td>
 <td>Devolução e entrada da produção</td>
-<td>Cria saldo em quarentena e abre a análise no CQ (12/10, CT-EST-210); recusa item repetido</td>
+<td>Cria saldo em quarentena e abre a análise no CQ (12/10, CT-EST-210); recusa item repetido. Rodada 8 (22/10): usada para montar os lotes de teste; aceitou o lote vencido TESTEVENC sem aviso (CT-EST-062)</td>
 </tr>
 <tr>
 <td>Solicitação de Material (Consumo)</td>
@@ -407,9 +401,9 @@
 </tr>
 <tr>
 <td>Entrada de Produção</td>
-<td>Não testada</td>
+<td>Bloqueada no teste</td>
 <td>Devolução e entrada da produção</td>
-<td></td>
+<td>Rodada 8 (22/10): lista vazia, sem botão Incluir; depende da Ordem de Produção (CT-EST-100)</td>
 </tr>
 <tr>
 <td>Reanálise - Avulsa</td>
@@ -421,19 +415,19 @@
 <td>Revalidação de Lote</td>
 <td>Funciona com falhas</td>
 <td>Reprovado, reanálise e revalidação</td>
-<td>13/10: só lista lote vencido, que nunca aparece (DV-EST-014/025); linha fantasma (DV-EST-040)</td>
+<td>13/10: só lista lote vencido, que nunca aparece (DV-EST-014/025); linha fantasma (DV-EST-040). Rodada 8 (22/10): com o lote vencido TESTEVENC a tela abre a análise de revalidação no CQ (CT-EST-061)</td>
 </tr>
 <tr>
 <td>Saída de Material</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>Solicitação e atendimento à produção</td>
-<td></td>
+<td>Rodada 8 (22/10): recusa campos vazios, mas a justificativa não é obrigatória, os textos têm erros de digitação e o custo da saída sai 0,00 (DV-EST-060, CT-EST-081)</td>
 </tr>
 <tr>
 <td>Aprovação de Solicitação</td>
-<td>Não testada</td>
+<td>Bloqueada no teste</td>
 <td>Solicitação e atendimento à produção</td>
-<td></td>
+<td>Rodada 8 (22/10): lista vazia; as solicitações de consumo vão a Concluída sem passar por aprovação (CT-EST-071, 072)</td>
 </tr>
 <tr>
 <td>Consulta Endereço Item</td>
@@ -474,27 +468,27 @@
 <tbody>
 <tr>
 <td>Inventário</td>
-<td>Bloqueada no teste</td>
+<td>Funciona</td>
 <td>Inventário</td>
-<td>Rodada 7 (13/10): não deixa abrir com solicitações pendentes no ambiente (recebimentos 00013 a 00018). Mensagem exata: "Existem solicitações não finalizadas para os parâmetros informados!" Cancelar/encerrar os recebimentos para forçar não foi feito</td>
+<td>Rodada 7 (13/10): não deixa abrir com solicitações pendentes no ambiente (recebimentos 00013 a 00018). Mensagem exata: "Existem solicitações não finalizadas para os parâmetros informados!" Cancelar/encerrar os recebimentos para forçar não foi feito. Rodada 8 (22/10): recusa com solicitações pendentes; abriu com outro almoxarifado de teste, sem pendências; trava os endereços e tira o saldo do disponível (CT-EST-130 a 133). O <code>TESTE ALMOX</code> segue recusando por recebimentos pendentes</td>
 </tr>
 <tr>
 <td>Inventário - Contagem</td>
-<td>Bloqueada no teste</td>
+<td>Funciona com falhas</td>
 <td>Inventário</td>
-<td>Depende do CT-EST-137 (Inventário), bloqueado</td>
+<td>Depende do CT-EST-137 (Inventário), bloqueado. Rodada 8 (22/10): exige finalizar cada contagem e justificar a divergência; a mesma pessoa pode fazer as três contagens (DV-EST-049; CT-EST-134 a 136, 140)</td>
 </tr>
 <tr>
 <td>Inventário - Auditoria/justificativa</td>
-<td>Bloqueada no teste</td>
+<td>Funciona com falhas</td>
 <td>Inventário</td>
-<td>Depende do CT-EST-137 (Inventário), bloqueado</td>
+<td>Depende do CT-EST-137 (Inventário), bloqueado. Rodada 8 (22/10): exige justificar item a item; a mesma pessoa conta e justifica (DV-EST-049; CT-EST-135, 140)</td>
 </tr>
 <tr>
 <td>Inventário - Apuração</td>
-<td>Bloqueada no teste</td>
+<td>Funciona com falhas</td>
 <td>Inventário</td>
-<td>Depende do CT-EST-137 (Inventário), bloqueado</td>
+<td>Depende do CT-EST-137 (Inventário), bloqueado. Rodada 8 (22/10): apurou e ajustou o saldo (75 para 72; CT-EST-137); recusa apurar antes de finalizar a contagem; cancelar o inventário não pede justificativa (DV-EST-050); o histórico do lote mostra o ajuste sem usuário e sem justificativa (DV-EST-034)</td>
 </tr>
 </tbody>
 </table></div>
@@ -542,9 +536,9 @@
 <tbody>
 <tr>
 <td>Insumos Reprovados (RM36)</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>—</td>
-<td>Relatório; sem fluxo documentado</td>
+<td>Rodada 8 (22/10): volta vazio mesmo com lote reprovado (DV-EST-062, CT-EST-063)</td>
 </tr>
 <tr>
 <td>Quarentena de Produto Acabado (RM18)</td>
@@ -566,9 +560,9 @@
 </tr>
 <tr>
 <td>Material em Quarentena (RM17)</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>Reprovado, reanálise e revalidação</td>
-<td></td>
+<td>Rodada 8 (22/10): lista os lotes certos, mas com as descrições trocadas de linha (DV-EST-062, CT-EST-063)</td>
 </tr>
 <tr>
 <td>Material Reservado (RM10)</td>
@@ -620,9 +614,9 @@
 </tr>
 <tr>
 <td>Relatório - Listagem de Lotes (Kits)</td>
-<td>Não testada</td>
+<td>Bloqueada no teste</td>
 <td>—</td>
-<td>Relatório; sem fluxo documentado</td>
+<td>Rodada 8 (22/10): abre vazio porque nenhum kit foi remetido (CT-EST-157)</td>
 </tr>
 <tr>
 <td>Mapa de Movimentação de Material</td>
@@ -650,9 +644,9 @@
 </tr>
 <tr>
 <td>Reposição de Itens a Vencer (Kit)</td>
-<td>Não testada</td>
+<td>Bloqueada no teste</td>
 <td>Kits</td>
-<td></td>
+<td>Rodada 8 (22/10): abre vazio porque nenhum kit foi remetido (remessa travada, DV-EST-046; CT-EST-156, 157)</td>
 </tr>
 <tr>
 <td>Planejamento de Kits</td>
@@ -662,15 +656,15 @@
 </tr>
 <tr>
 <td>Análise de Componentes (Kit)</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>—</td>
-<td>Relatório; sem fluxo documentado</td>
+<td>Rodada 8 (22/10): mostra o planejado (15 = 3 kits x 5), com data em formato americano (DV-EST-057, CT-EST-157)</td>
 </tr>
 <tr>
 <td>Reposição de Componentes do Kit</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>Kits</td>
-<td></td>
+<td>Rodada 8 (22/10): mostra o planejado para o cliente, com data em formato americano (DV-EST-057, CT-EST-157)</td>
 </tr>
 <tr>
 <td>Entrada de Material</td>
@@ -699,21 +693,21 @@
 <tbody>
 <tr>
 <td>Cadastro de Kits</td>
-<td>Não testada</td>
+<td>Funciona com falhas</td>
 <td>Kits</td>
-<td></td>
+<td>Rodada 8 (22/10): exige tipo e almoxarifado; o kit nasce vazio e os componentes entram ao editar, com justificativa; o filtro Nome é ignorado (DV-EST-055, CT-EST-150)</td>
 </tr>
 <tr>
 <td>Solicitação de Kits</td>
-<td>Não testada</td>
+<td>Funciona</td>
 <td>Kits</td>
-<td></td>
+<td>Rodada 8 (22/10): gera a solicitação de estoque e a guia do kit (00050 e 00051); a remessa gerada nasce sem Origem e Responsável (DV-EST-058, na Remessa de Material; CT-EST-153)</td>
 </tr>
 <tr>
 <td>Controle de Kits</td>
-<td>Não testada</td>
+<td>Bloqueada no teste</td>
 <td>Kits</td>
-<td></td>
+<td>Rodada 8 (22/10): lista vazia porque nada foi remetido (DV-EST-046; CT-EST-155)</td>
 </tr>
 <tr>
 <td>Parâmetros de Configuração (Kit)</td>
@@ -723,15 +717,15 @@
 </tr>
 <tr>
 <td>Planejamento de Kits</td>
-<td>Não testada</td>
+<td>Funciona</td>
 <td>Kits</td>
-<td></td>
+<td>Rodada 8 (22/10): exige cliente e filial; criado o planejamento 00001 com validade mínima de 180 dias; não repete o mesmo kit (CT-EST-151)</td>
 </tr>
 <tr>
 <td>Análise do Planejamento de Kits</td>
-<td>Não testada</td>
+<td>Falha grave</td>
 <td>Kits</td>
-<td></td>
+<td>Rodada 8 (22/10): diz "Analise gerada!", mas não grava nem mostra a necessidade (DV-EST-054; CT-EST-152)</td>
 </tr>
 </tbody>
 </table></div>
@@ -802,6 +796,16 @@
 <td>Repetidas com o Principal (<code>transversal/01-telas-repetidas.md</code>, seção 1)</td>
 </tr>
 <tr>
+<td>Banco (<code>banco_lst</code>, <code>banco_ed</code>)</td>
+<td><strong>Falha grave</strong></td>
+<td>Rodada 8 (22/10): não está no menu, abre pelo endereço, a lista não tem Incluir e salvar mostra erro técnico do banco de dados sem gravar (DV-EST-052, CT-EST-021)</td>
+</tr>
+<tr>
+<td>Classificação de Reanálise e formulário Solicitação de Material (Produção)</td>
+<td>Ver as telas do menu</td>
+<td>Abrem pelo endereço; ver Classificação de Reanálise (Cadastros) e Solicitação de Material (Produção) (Estoque)</td>
+</tr>
+<tr>
 <td>Gerador de telas (<code>gerador_tela</code>, 3 telas)</td>
 <td>Não testadas</td>
 <td>Ferramenta do fornecedor, sem uso no processo</td>
@@ -819,7 +823,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#como-ler">Como ler</a></li><li><a href="#resultado">Resultado</a></li><li><a href="#cadastros-28-telas">Cadastros (28 telas)</a></li><li><a href="#estoque-29-telas">Estoque (29 telas)</a></li><li><a href="#inventario-4-telas">Inventário (4 telas)</a></li><li><a href="#gestao-analitica-3-telas">Gestão analítica (3 telas)</a></li><li><a href="#relatorios-25-telas">Relatórios (25 telas)</a></li><li><a href="#kits-6-telas">Kits (6 telas)</a></li><li><a href="#regulatorio-3-telas">Regulatório (3 telas)</a></li><li><a href="#fora-do-menu">Fora do menu</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

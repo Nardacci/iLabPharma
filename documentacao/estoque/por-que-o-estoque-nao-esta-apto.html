@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=20df228b">
+<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -41,6 +41,7 @@
       <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Por que nao esta apto.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
       
     </header>
+    
     <article class="texto">
 <p><strong>Em uma frase:</strong> o Estoque (versão 3.5.1, como foi entregue pelo fornecedor) <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. Por isso o parecer é <strong>"não apto para uso em ambiente regulado"</strong>, até as dez correções obrigatórias abaixo. Os mecanismos essenciais existem, então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
 <h2 id="1-os-numeros">1. Os números</h2>
@@ -58,15 +59,15 @@
 </tr>
 <tr>
 <td>Casos de teste com resultado</td>
-<td><strong>78 de 162</strong>, em sete rodadas (07 a 13/10/2026); 37 dos 46 de prioridade alta</td>
+<td><strong>134 de 162</strong>, em nove rodadas (07 a 22/10/2026); 42 dos 46 de prioridade alta</td>
 </tr>
 <tr>
 <td>Defeitos para correção</td>
-<td><strong>39</strong>: 11 de gravidade alta, 20 média e 8 baixa</td>
+<td><strong>59</strong>: 14 de gravidade alta, 31 média e 14 baixa (18 deles da rodada 8 e 2 da rodada 9, de 22/10/2026)</td>
 </tr>
 <tr>
 <td>Telas (98 no inventário)</td>
-<td>10 funcionam; 17 funcionam com falhas; 9 com falha grave; 5 bloqueadas no teste; 1 protótipo; 56 não testadas</td>
+<td>14 funcionam; 30 funcionam com falhas; 12 com falha grave; 7 bloqueadas no teste; 35 não testadas</td>
 </tr>
 </tbody>
 </table></div>
@@ -111,9 +112,14 @@
 <td>Art. 124</td>
 </tr>
 <tr>
-<td>A <strong>remessa não pode ser finalizada</strong>: a expedição pela tela está travada</td>
-<td>Sem registro de distribuição para um recolhimento</td>
+<td>A <strong>remessa não pode ser finalizada</strong>: a expedição pela tela está travada. A remessa gerada por <strong>kit</strong> ainda nasce <strong>sem Origem e sem Responsável</strong> (DV-EST-058)</td>
+<td>Sem registro de distribuição para um recolhimento, e sem registro de quem e de onde sai o material</td>
 <td>Arts. 346 e 347</td>
+</tr>
+<tr>
+<td>A <strong>Central de Pesagem não abre o volume</strong> para informar peso, tara, tag da balança e lacre: dá erro de servidor, mesmo com uma balança de teste cadastrada (DV-EST-067)</td>
+<td>A pesagem exigida na saída do insumo não pode ser feita pela tela, e a tela de erro mostra detalhes técnicos ao usuário</td>
+<td>RDC 658/2022; Guia 33/2020</td>
 </tr>
 <tr>
 <td>A <strong>amostra de retenção</strong> gravada não aparece na consulta nem na saída</td>
@@ -124,6 +130,26 @@
 <td>O <strong>Item não mostra o prazo de reanálise</strong>; a agenda de reanálise não tem o que agendar</td>
 <td>Matéria-prima usada depois da data de reteste</td>
 <td>Art. 189</td>
+</tr>
+<tr>
+<td>O <strong>Atendimento à produção não ordena os lotes por validade</strong> e aceita o que vence depois, sem aviso nem justificativa (DV-EST-048). No atendimento de um <strong>kit</strong>, um lote com 31 dias de validade foi aceito com validade mínima de 180 dias (DV-EST-056)</td>
+<td>Material de validade curta usado depois do que vence primeiro, ou entregue ao cliente fora do mínimo combinado</td>
+<td>Art. 189</td>
+</tr>
+<tr>
+<td>No <strong>inventário, a mesma pessoa conta três vezes, justifica e apura</strong> (DV-EST-049); <strong>cancelar o inventário</strong> (DV-EST-050) e <strong>cancelar um atendimento</strong> (DV-EST-061) não pedem justificativa, e o cancelamento do atendimento nem aparece no histórico do lote</td>
+<td>Ajuste de saldo sem separação de funções e sem prova de quem fez e por quê</td>
+<td>Art. 124; Guia 33/2020</td>
+</tr>
+<tr>
+<td>Telas que <strong>dizem "sucesso" e não gravam</strong>: a <strong>Análise do Planejamento de Kits</strong> responde "Analise gerada!" e não grava nada (DV-EST-054); o cadastro de <strong>Banco</strong> mostra um erro técnico do banco de dados e não grava (DV-EST-052)</td>
+<td>O sistema afirma o que não aconteceu (mesma família do Endereçamento)</td>
+<td>Art. 124; Guia 33/2020</td>
+</tr>
+<tr>
+<td>A <strong>Devolução de Material não acha o lote</strong> de um item com controle de qualidade (DV-EST-064); sem controle, cria um item de entrada novo para o mesmo lote</td>
+<td>Material devolvido sem voltar identificado pelo lote</td>
+<td>Arts. 124 e 141</td>
 </tr>
 <tr>
 <td>O <strong>laudo só chega ao Estoque por um clique manual</strong>; o histórico do lote não mostra usuário, análise nem laudo</td>
@@ -140,28 +166,46 @@
 <li>Quarentena e reprovado ficam fora do atendimento e da remessa.</li>
 <li>A movimentação recusa saldo insuficiente, destino com outro item e peso acima da capacidade.</li>
 <li>O saldo já é separado por situação: é a base da situação única do lote.</li>
+<li>O inventário rotativo funciona: conta, justifica a divergência, apura e ajusta o saldo, e trava os endereços durante a contagem (falta a separação de funções).</li>
+<li>O item controlado exige o tipo de substância, e alterar um cadastro exige justificativa e fica no histórico.</li>
 </ul>
 <h2 id="4-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">4. O que precisa ser corrigido para uma nova homologação</h2>
 <ol>
 <li><strong>Gravar tudo ou nada:</strong> nenhuma tela mostra "sucesso" sem ter gravado; corrigir o Endereçamento.</li>
 <li><strong>Recebimento só de fornecedor qualificado</strong>, com decisão registrada da Garantia da Qualidade para a exceção.</li>
-<li><strong>Recusar validade anterior a hoje</strong> em toda entrada.</li>
+<li><strong>Recusar validade anterior a hoje</strong> em toda entrada, e <strong>atender pelo lote que vence primeiro</strong>, respeitando a validade mínima do cliente.</li>
 <li><strong>Entrada de produto acabado</strong> só a partir de uma ordem de produção liberada.</li>
 <li><strong>Situação única do lote</strong>, aplicada em toda tela e mudada só pelo CQ, pela Pessoa Delegada ou pela Garantia da Qualidade.</li>
 <li><strong>Liberação do lote pela Pessoa Delegada</strong>, com assinatura eletrônica; o laudo muda a situação na hora e reprovar exige motivo.</li>
-<li><strong>Histórico completo do lote:</strong> usuário, hora, análise, laudo, aprovador e cada movimentação.</li>
+<li><strong>Histórico completo do lote:</strong> usuário, hora, análise, laudo, aprovador e cada movimentação, ajuste de inventário e cancelamento, com justificativa.</li>
 <li><strong>Controle de acesso conferido no servidor</strong> (detalhe em arquivo confidencial, fora do portal).</li>
-<li><strong>Remessa que finaliza</strong>, baixa o saldo e informa a Rastreabilidade; <strong>Movimentação de Quarentena</strong> que exige endereço completo e grava saída e entrada juntas.</li>
+<li><strong>Remessa (inclusive a de kit) que finaliza</strong>, baixa o saldo e informa a Rastreabilidade; <strong>Movimentação de Quarentena</strong> que exige endereço completo e grava saída e entrada juntas.</li>
 <li><strong>Amostras de retenção de ponta a ponta:</strong> consulta e saída encontram o que a entrada gravou, com prazo de guarda e trava de saída.</li>
 </ol>
 <p>O modelo de como o Estoque deve funcionar está em <strong>"O Estoque ideal"</strong> (passo 4 do roteiro).</p>
 <h2 id="5-limitacoes-desta-homologacao">5. Limitações desta homologação</h2>
 <ul>
-<li><strong>9 casos de prioridade alta ficaram bloqueados</strong> por causas fora do alcance do teste pela tela: o banco de dados (seção 6), a Ordem de Produção, recebimentos de teste pendentes e defeitos do próprio sistema.</li>
-<li><strong>75 casos de prioridade média e baixa não foram executados</strong>, por decisão do responsável de fechar o módulo por risco. Eles ficam como testes de aceite da nova versão.</li>
+<li><strong>4 casos de prioridade alta ficaram sem conclusão</strong> (CT-EST-058, 091, 116 e 176) por causas fora do alcance do teste pela tela: a classificação de reanálise que não aparece no Item, a Ordem de Produção, a remessa travada e a amostra de retenção não localizada (seção 6).</li>
+<li><strong>28 casos seguem sem resultado conclusivo:</strong> os 4 de prioridade alta acima e 24 de média e baixa (no total, 24 bloqueados, 2 não executados e 2 não testados). Faltam um segundo usuário de teste, a Ordem de Produção do módulo Produção ou a correção de defeitos abertos; 2 casos não se aplicam à tela. Eles ficam como testes de aceite da nova versão. Os casos de permissão e acesso têm documento próprio, confidencial.</li>
 <li>Perguntas ainda sem resposta da área: quem é a Pessoa Delegada; o que é fornecedor aprovado; se a sobra devolvida precisa de nova análise; o prazo das amostras de retenção.</li>
 </ul>
-<h2 id="6-o-que-preciso-do-dba">6. O que preciso do DBA</h2>
+<h2 id="6-o-que-ainda-preciso-do-dba">6. O que ainda preciso do DBA</h2>
+<p><strong>Atualização de 22/10/2026:</strong> a leitura do código (<code>levantamento/causas-provaveis-pelo-codigo.md</code>) respondeu quatro dos cinco pedidos. Resta <strong>um pedido ao DBA</strong>, o primeiro: dizer qual instrução da rotina <code>pFinalizaRecebimento</code> falha. O que o código já mostra:</p>
+<ul>
+<li><strong>DV-EST-046 e 058 (remessa):</strong> a tela nunca preenche o Centro de Custo ao gerar a solicitação, e o acesso a dados falha por referência vazia; o texto genérico esconde o erro. O Responsável vazio é desenho do sistema (campo travado e gravação comentada). Causa <strong>comprovada pelo código</strong>; basta corrigir e testar.</li>
+<li><strong>DV-EST-044 (quarentena):</strong> o endereço "L905-R000-C000-A000" existe, criado por uma regra do banco para todo local; as consultas o escondem. O saldo está lá, só não aparece. Causa <strong>comprovada pelo código</strong>.</li>
+<li><strong>DV-EST-043 e 041 (reanálise):</strong> o campo de classificação está escondido na tela de Item e o item criado pela tela grava a classificação em branco; a Agenda só lista item com classificação. Causa <strong>comprovada pelo código</strong>.</li>
+<li><strong>DV-EST-047 (retenção):</strong> a consulta só lista o item marcado com retenção no cadastro, e a saída filtra por almoxarifado do local, que pode estar vazio em algum local do lote. Causa <strong>provável</strong>; o robô confere o cadastro do item e o local sem precisar do DBA.</li>
+</ul>
+<p><strong>O que a rodada 9 mostrou (22/10/2026), sem acrescentar pedido ao DBA:</strong></p>
+<ul>
+<li><strong>DV-EST-016:</strong> a tela mostrou de novo "sucesso" sem gravar, e o erro da conferência (DV-EST-015) voltou mesmo refazendo a conferência do zero. A suspeita de que o erro dos volumes antecede e causa o Endereçamento segue <strong>hipótese</strong>: só um recebimento novo, autorizado por outra pessoa, a separa. O pedido 1 continua sendo o único que depende do DBA.</li>
+<li><strong>DV-EST-046 e 058:</strong> a tela confirmou o Responsável travado e vazio, o que <strong>bate com o código</strong> (é desenho, não é a causa do erro). A suspeita de que o Responsável vazio impede a finalização <strong>não se sustenta</strong>; a causa continua sendo o Centro de Custo.</li>
+<li><strong>DV-EST-043:</strong> confirmado pela tela (13 listas no cadastro do Item e nenhuma de reanálise).</li>
+<li><strong>DV-EST-047:</strong> a Saída de Referência e a de Estabilidade dão o <strong>mesmo erro</strong> da retenção, o que é compatível com o local sem almoxarifado apontado pelo código; falta só conferir o cadastro, sem o DBA.</li>
+<li><strong>DV-EST-044:</strong> não pôde ser testado (exige o ciclo do CQ com dois usuários); a explicação do código segue sem confirmação pela tela.</li>
+<li><strong>DV-EST-066 e 067</strong> (novos) são perguntas ao desenvolvimento, não ao DBA.</li>
+</ul>
 <p>O teste pela tela não alcança estas causas. Cada pedido traz o <strong>dado do ambiente de teste</strong> e <strong>o que informar de volta</strong>. Nenhum pede alteração de dado: são consultas e uma execução em transação de teste.</p>
 <div class="tabela"><table>
 <thead>
@@ -177,7 +221,7 @@
 <tr>
 <td>1</td>
 <td>DV-EST-016: o Endereçamento mostra "sucesso" e não grava</td>
-<td>Executar a rotina <code>pFinalizaRecebimento</code> (a mesma que a tela chama) para a <strong>nota fiscal 9006</strong>, com o usuário <code>[usuário de teste]</code>, dentro de uma transação de teste. A rotina abre uma transação e <strong>desfaz tudo</strong> se algo falha, e a tela não confere o resultado</td>
+<td>Executar a rotina <code>pFinalizaRecebimento</code> (a mesma que a tela chama) para a <strong>nota fiscal 9006</strong>, com o usuário administrador de teste, dentro de uma transação de teste. A rotina abre uma transação e <strong>desfaz tudo</strong> se algo falha, e a tela não confere o resultado</td>
 <td>Recebimento <strong>00016</strong>, NF <strong>9006</strong>, item <code>TST0002</code>, lote <code>TESTELOTE002</code> (100 unidades), local <code>902 - TESTE LOCAL QUARENTENA</code>, endereço <code>L902-R901-C901-A901</code></td>
 <td>A <strong>mensagem de erro</strong> e a <strong>tabela ou restrição</strong> onde falha. Se a rotina implantada no banco de teste é <strong>igual</strong> à do pacote (<code>Hsolutions.Estoque.DB/Stored Procedures/pFinalizaRecebimento.sql</code>)</td>
 </tr>
@@ -185,7 +229,7 @@
 <td>2</td>
 <td>DV-EST-046: a remessa não finaliza ("Erro ao gerar a solicitação do material!")</td>
 <td>Capturar a <strong>exceção real</strong> durante o Finalizar: a tela troca qualquer erro por essa mensagem genérica. Pode ser o registro de erros do aplicativo ou um rastreio no banco enquanto se clica em Finalizar</td>
-<td>Remessa <strong>00002</strong> (<code>TESTE ALMOX</code> → <code>TESTE PJ MIN LTDA</code>), item <code>TST0003</code>, lote <code>TA0002/26</code>, 5 unidades, com a justificativa preenchida</td>
+<td>Remessa <strong>00002</strong> (<code>TESTE ALMOX</code> → <code>TESTE PJ MIN LTDA</code>), item <code>TST0003</code>, lote <code>TA0002/26</code>, 5 unidades, com a justificativa preenchida. Na rodada 8, as remessas <strong>00003</strong> (manual) e <strong>004</strong> (gerada por kit) deram o mesmo erro, com <strong>Origem e Responsável vazios e travados</strong></td>
 <td>A <strong>exceção e o comando SQL</strong> que falha na geração da solicitação de material</td>
 </tr>
 <tr>
@@ -211,16 +255,16 @@
 </tr>
 </tbody>
 </table></div>
-<p>Sem estas cinco respostas, os 9 casos de prioridade alta bloqueados não podem ser fechados, e as correções 1, 9 e 10 da seção 4 ficam sem causa confirmada.</p>
+<p>Sem estas cinco respostas, os 4 casos de prioridade alta sem conclusão não podem ser fechados, e as correções 1, 9 e 10 da seção 4 ficam sem causa confirmada.</p>
 <h2 id="7-como-o-modulo-passa-a-apto">7. Como o módulo passa a "apto"</h2>
-<p>Executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige <strong>100% dos casos de prioridade alta aprovados</strong> e as cinco respostas do DBA (seção 6).</p>
+<p>Executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige <strong>100% dos casos de prioridade alta aprovados</strong> e a resposta do DBA (seção 6) e a correção dos pontos já explicados pelo código.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="defeitos-para-correcao.html"><small>← Anterior</small><strong>Defeitos para correção</strong></a><a class="ap ap-prox" href="dossie-de-homologacao.html"><small>Próximo →</small><strong>Dossiê de homologação</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-os-numeros">1. Os números</a></li><li><a href="#2-por-que-nao-esta-apto">2. Por que não está apto</a></li><li><a href="#3-o-que-ja-funciona-e-vale-manter">3. O que já funciona (e vale manter)</a></li><li><a href="#4-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">4. O que precisa ser corrigido para uma nova homologação</a></li><li><a href="#5-limitacoes-desta-homologacao">5. Limitações desta homologação</a></li><li><a href="#6-o-que-preciso-do-dba">6. O que preciso do DBA</a></li><li><a href="#7-como-o-modulo-passa-a-apto">7. Como o módulo passa a &quot;apto&quot;</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-os-numeros">1. Os números</a></li><li><a href="#2-por-que-nao-esta-apto">2. Por que não está apto</a></li><li><a href="#3-o-que-ja-funciona-e-vale-manter">3. O que já funciona (e vale manter)</a></li><li><a href="#4-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">4. O que precisa ser corrigido para uma nova homologação</a></li><li><a href="#5-limitacoes-desta-homologacao">5. Limitações desta homologação</a></li><li><a href="#6-o-que-ainda-preciso-do-dba">6. O que ainda preciso do DBA</a></li><li><a href="#7-como-o-modulo-passa-a-apto">7. Como o módulo passa a &quot;apto&quot;</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
