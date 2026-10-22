@@ -58,7 +58,7 @@
 <td>RN-GQ-018</td>
 <td>Obrigatória a descrição da ação imediata</td>
 <td>HSolutions.GQ.Domain/Service/AcaoCorretivaImediataRDValidator.cs:24-28</td>
-<td>Validada no teste (21/10/2026, caso CT-GQ-008): com a ação em branco, depois de "Confirma a inclusão do item?", a tela mostrou "Descrição da ação imediata é obrigatória."</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-008): com a ação em branco, depois de "Confirma a inclusão do item?", a tela mostrou "Descrição da ação imediata é obrigatória." Em 22/10/2026 (caso CT-GQ-N02-010): a descrição da ação com um só espaço foi aceita ("Alteração efetuada com sucesso."); o servidor só barra texto vazio (DV-GQ-055).</td>
 </tr>
 <tr>
 <td>RN-GQ-019</td>
@@ -82,19 +82,19 @@
 <td>RN-GQ-022</td>
 <td>Esta tela também cancela o desvio, e aqui o cancelamento grava histórico, ao contrário da tela Relatório de Desvios</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:373-380</td>
-<td>Validada no teste (21/10/2026, caso CT-GQ-007): o histórico desta tela registra a mudança de situação para Cancelado, o responsável pelo cancelamento, o texto da justificativa e a data. Não foi verificado se o texto cai na coluna Justificativa ou só como valor do campo de cancelamento Resolvido em 22/10/2026 (caso CT-GQ-N02-020, desvio 018/26): o texto da justificativa aparece no histórico como valor novo do campo JustificativaCancelamento, e a coluna Justificativa fica vazia.</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-007): o histórico desta tela registra a mudança de situação para Cancelado, o responsável pelo cancelamento, o texto da justificativa e a data. Não foi verificado se o texto cai na coluna Justificativa ou só como valor do campo de cancelamento Resolvido em 22/10/2026 (caso CT-GQ-N02-020, desvio 018/26): o texto da justificativa aparece no histórico como valor novo do campo JustificativaCancelamento, e a coluna Justificativa fica vazia. Repetida em 22/10/2026 (caso CT-GQ-N02-019, desvio 081/26): o histórico traz Situação, o nome de quem cancelou, a justificativa e a data; o desvio some da lista da tela.</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-001</td>
 <td>A lista mostra desvios em Pendente Registro Ação Corretiva e em Pendente Pré Avaliação, de todas as áreas, sem filtro por dono</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:62-64</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, casos CT-GQ-N02-001 e N02-021): a pesquisa com TODAS trouxe desvios Pendente Registro Ação Corretiva e Pendente Pré Avaliação (077/26 a 080/26 e 082/26 a 085/26)</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-002</td>
 <td>O filtro Situação só tem a opção Pendente Registro Ação Corretiva e o filtro Meios de Detecção não tem "Outros". Não há como filtrar só os desvios em Pendente Pré Avaliação</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Models/AcaoCorretivaImediataRDIndexModel.cs:24-45</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, casos CT-GQ-N02-001, N02-005 e N02-019): o filtro oferece só TODAS e Pendente Registro Ação Corretiva e o desvio Cancelado não aparece na lista (o filtro não tem Cancelado). Os casos próprios CT-GQ-N02-002 e N02-003 (opções de Situação e de Meios de Detecção) seguem sem execução</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-003</td>
@@ -106,43 +106,43 @@
 <td>RN-GQ-D02-004</td>
 <td>Ao salvar, rodam duas validações: as do relatório (descrição, local, justificativa, anexos, data e responsável) e a da ação (descrição). Por isso a justificativa também é exigida no primeiro registro da ação</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:548-557</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N02-007): com a ação preenchida e a justificativa vazia, "Justificativa é obrigatória."; com a Não Conformidade apagada, "Descrição é obrigatória." (CT-GQ-N02-008). Que as duas validações rodam juntas (uma única mensagem por tentativa): a confirmar</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-005</td>
 <td>A justificativa digitada é guardada no desvio, mas não entra no histórico (o código passa texto vazio e o campo Justificativa não é registrado como alteração). A coluna Justificativa do histórico fica vazia</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:175, 304; HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:322</td>
-<td>Validada no teste (21/10/2026, caso CT-GQ-N02-013): o histórico do registro da ação mostra a mudança de situação com o usuário e a justificativa vazia</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-N02-013): o histórico do registro da ação mostra a mudança de situação com o usuário e a justificativa vazia Reconfirmada em 22/10/2026 (caso CT-GQ-N02-011): o histórico traz só o código da ação, não o texto (DV-GQ-036).</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-006</td>
 <td>A ação é gravada como um registro novo (TBL_ACAO_CORRETIVA_IMEDIATA): data da tela, descrição, nome do responsável vindo da tela, e código, código da área e nome da área do usuário conectado</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:190-199</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N02-025, desvio 080/26): com duas janelas, a lupa passa a mostrar só o texto da ação da segunda janela e o histórico tem uma linha de ação (código 57). Se a primeira ação continua no banco, as telas não mostram: a confirmar com o DBA (DV-GQ-057)</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-007</td>
 <td>O mesmo salvamento também grava os dados do relatório do desvio (descrição, observação, local, item, lotes e anexos). Quem registra a ação pode mudar o relatório e a tela não avisa</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:173-293</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, casos CT-GQ-N02-006 e N02-015, desvios 078/26): no lápis, local, tipo e busca de item, Não Conformidade, Observação e anexos estão editáveis; a descrição do relatório mudada junto com a ação aparece no histórico como "Rel. Desvios - Não Conformidade" (valor antigo e novo), e a tela não avisa</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-008</td>
 <td>Ao salvar, o responsável e a área do relatório passam a ser os de quem registrou a ação. O nome de quem criou o desvio continua em NomeUsuarioCriacao</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:176-179; HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:263</td>
-<td>Validada no teste (21/10/2026, caso CT-GQ-N02-013): o histórico mostra o Responsável do RD trocado para quem registrou a ação (DV-GQ-035). A área do relatório não foi conferida</td>
+<td>Validada em parte no teste (21/10/2026, caso CT-GQ-N02-013; 22/10/2026, caso CT-GQ-N02-014): o histórico mostra o "Responsável" do RD trocado para quem registrou a ação (DV-GQ-035). <strong>Contradita em parte:</strong> a lupa desta tela mostra o autor original no "Relatado por", e a lupa do Relatório de Desvios, para o mesmo desvio, mostra quem registrou a ação (DV-GQ-054); a área do relatório não foi conferida</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-009</td>
 <td>Salvar sempre leva o desvio a Pendente Pré Avaliação, qualquer que seja a situação dele; o servidor não confere</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:182</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, casos CT-GQ-N02-007, N02-010 e N02-025): salvar levou o desvio a Pendente Pré Avaliação; numa segunda janela, o servidor aceitou salvar de novo um desvio que já tinha passado da etapa ("Alteração efetuada com sucesso."). O desvio em outras situações: a confirmar</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-010</td>
 <td>A data e hora da ação só são enviadas quando o desvio ainda não tem ação (hfEAcaoImediata verdadeiro). Se a edição for enviada para um desvio que já tem ação, a data chega vazia e o servidor falha</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:310-315; HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:193</td>
-<td>A confirmar no teste</td>
+<td>A confirmar no teste. O caso CT-GQ-N02-025 (22/10/2026) abriu as duas janelas antes de qualquer salvamento, então não exercita esta regra: a segunda janela salvou com sucesso, sem falha. Falta abrir o desvio depois de a ação existir e salvar</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-011</td>
@@ -154,13 +154,13 @@
 <td>RN-GQ-D02-012</td>
 <td>A busca de item do tipo Produto consulta o Estoque e a Produção; no Relatório de Desvios só consulta a Produção</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:481-509; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:656-675</td>
-<td>A confirmar no teste</td>
+<td>Contradita em parte no teste (22/10/2026, caso CT-GQ-N02-022, desvio 083/26): a busca de item do tipo Produto devolve lista vazia, sem mensagem, embora o código consulte Estoque e Produção (DV-GQ-010 reconfirmado)</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-013</td>
 <td>Em Visualizar, o quadro da ação imediata mostra descrição, data, responsável e área gravados; o botão Salvar é removido. Em Cancelar, só o relatório aparece (sem o quadro da ação)</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/AcaoCorretivaImediataRDController.cs:331-348, 397-413</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N02-011, desvio 078/26): a lupa mostra o quadro da ação com descrição, data e hora, responsável e área, sem Salvar. Diferenças: a área do supervisor aparece entre aspas e a data do relato vem sem hora (RN-GQ-D02-026). Em Cancelar, só o relatório aparece: a confirmar</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-014</td>
@@ -172,7 +172,7 @@
 <td>RN-GQ-D02-015</td>
 <td>Os ícones Histórico e Imprimir aparecem em todas as linhas, porque a tela não define regra de acesso para eles</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Models/AcaoCorretivaImediataRDIndexResultadoModel.cs:51-53; HSolutions.GQ.UI/Scripts/HSGridApi.js:321, 345</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, casos CT-GQ-N02-001 e N02-021): histórico e impressora aparecem em todas as linhas, inclusive nas de Pendente Pré Avaliação</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-016</td>
@@ -196,13 +196,55 @@
 <td>RN-GQ-D02-019</td>
 <td>Uma data inválida (31/02/2026) nos filtros é ignorada em silêncio e a lista sai completa; só Data Início acha o dia</td>
 <td>Observada na tela, sem trecho de código analisado (execucao/2026-10-21-desvios-rodada-1/resultado.md), casos CT-GQ-F07 e CT-GQ-F09</td>
-<td>Validada no teste (21/10/2026; DV-GQ-027)</td>
+<td>Validada no teste (21/10/2026; DV-GQ-027) Em 22/10/2026 (caso CT-GQ-N02-005): só Início 22/10, 12 desvios de 22/10; Início e Fim 21/10, 11 desvios de 21/10, sem o dia seguinte; só Fim ignorada (26, todos). Com Data Fim, o dia seguinte ao fim não entra (RN-GQ-D02-027).</td>
 </tr>
 <tr>
 <td>RN-GQ-D02-020</td>
 <td>Na lista desta tela, o lápis (registrar a ação) e a lixeira (cancelar) não aparecem para todos os usuários, mesmo em desvios em Pendente Registro Ação Corretiva; no lugar fica a lupa. As regras de acesso estão no documento interno</td>
 <td>execucao/2026-10-22-desvios-rodada-2/resultado.md, caso CT-GQ-N02-016 (linha do código a localizar)</td>
 <td>Validada no teste (22/10/2026, caso CT-GQ-N02-016)</td>
+</tr>
+<tr>
+<td>RN-GQ-D02-021</td>
+<td>A descrição da ação imediata só com um espaço é aceita; o desvio avança para Pendente Pré Avaliação. O servidor só barra texto vazio</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-010 (linha do código a localizar); RN-GQ-018</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-010, desvio 079/26; DV-GQ-055)</td>
+</tr>
+<tr>
+<td>RN-GQ-D02-022</td>
+<td>Duas janelas abertas no mesmo desvio: a segunda a salvar também recebe sucesso, a lupa passa a mostrar só o texto da segunda ação e o histórico fica com uma linha de ação (código) e uma de situação. O texto da primeira ação deixa de aparecer</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-025 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-025, desvio 080/26; DV-GQ-057)</td>
+</tr>
+<tr>
+<td>RN-GQ-D02-023</td>
+<td>O desvio cancelado por esta tela some da lista: o filtro de situação não oferece Cancelado, e a lista só traz Pendente Registro e Pendente Pré Avaliação</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-019 (linha do código a localizar); RN-GQ-D02-001</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-019, desvio 081/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D02-024</td>
+<td>Na tela de registro da ação, só número, datas e responsáveis ficam travados; local, tipo, busca de item, Não Conformidade, Observação e anexos ficam editáveis, e a tela não avisa</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-006 (linha do código a localizar); RN-GQ-D02-007</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-006, desvio 078/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D02-025</td>
+<td>Depois de a ação ser registrada, o mesmo desvio mostra autores diferentes no "Relatado por": o criador nesta tela e quem registrou a ação no Relatório de Desvios</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-014 (linha do código a localizar); RN-GQ-D02-008</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-014, desvio 078/26; DV-GQ-054)</td>
+</tr>
+<tr>
+<td>RN-GQ-D02-026</td>
+<td>Na lupa, a área do supervisor aparece entre aspas e a data do relato aparece sem hora</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-011 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-011, desvio 078/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D02-027</td>
+<td>O filtro de período não inclui o dia seguinte ao fim: com Data Início e Data Fim, vêm só os desvios até o dia final informado. Contraria o texto de "Com Data Fim: período mais o dia seguinte"</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-005 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-005): Início e Fim 21/10 trouxe 11 desvios, todos de 21/10</td>
 </tr>
 </tbody>
 </table></div>
@@ -230,7 +272,7 @@
 <tr>
 <td>CT-GQ-N02-001</td>
 <td>Lista. Prep.: um desvio em Pendente Registro Ação Corretiva e outro em Pendente Pré Avaliação. Fazer: pesquisar com TODAS. Esperado: os dois aparecem; o segundo só com lupa. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: a pesquisa com TODAS trouxe desvios Pendente Registro Ação Corretiva e Pendente Pré Avaliação; os da pré-avaliação só com lupa, histórico e impressora</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-002</td>
@@ -250,22 +292,22 @@
 <tr>
 <td>CT-GQ-N02-005</td>
 <td>Lista. Fazer: pesquisar por RD/Nº, por parte da descrição, só Data Início, Início e Fim, e só Data Fim; depois Limpar. Esperado: filtros como no Relatório de Desvios; Limpar esvazia também a lista. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026: por RD/Nº e por parte da descrição acha só o certo; só Início 22/10, 12 desvios de 22/10; Início e Fim 21/10, 11 de 21/10 (sem o dia seguinte); só Fim ignorado (26); Limpar esvazia os filtros e a lista</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-006</td>
 <td>Tela de registro. Fazer: abrir o lápis e conferir se os campos do relatório (local, item, descrição, anexos) estão editáveis. Esperado pelo código: editáveis (RN-GQ-D02-007). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 078/26): local, tipo, busca de item, Não Conformidade, Observação e anexos editáveis; só número, datas e responsáveis travados; a tela não avisa</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-007</td>
 <td>Tela de registro. Fazer: preencher a ação, apagar a Justificativa e salvar. Esperado: "Justificativa é obrigatória." (RN-GQ-D02-004). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 078/26): ação preenchida e justificativa vazia, "Justificativa é obrigatória."</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-008</td>
 <td>Tela de registro. Fazer: apagar a Não Conformidade do relatório, preencher a ação e a justificativa e salvar. Esperado: "Descrição é obrigatória." Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 078/26): Não Conformidade apagada, "Descrição é obrigatória."</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-009</td>
@@ -275,12 +317,12 @@
 <tr>
 <td>CT-GQ-N02-010</td>
 <td>Tela de registro. Fazer: só com espaços na descrição da ação, salvar. Esperado pelo código: grava, pois só texto vazio é barrado. Registrar se gravar. Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 079/26): descrição da ação só com um espaço deu "Alteração efetuada com sucesso." e o desvio foi para Pendente Pré Avaliação (DV-GQ-055)</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-011</td>
 <td>Visualizar. Fazer: depois de salvar, abrir a lupa do desvio. Esperado: quadro da ação com descrição, data, responsável e área gravados; sem Salvar. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 078/26): a lupa mostra o quadro da ação com descrição, data e hora, responsável e área, sem Salvar; a área do supervisor vem entre aspas; o histórico traz só o código da ação (DV-GQ-036 reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-012</td>
@@ -295,12 +337,12 @@
 <tr>
 <td>CT-GQ-N02-014</td>
 <td>Tela de registro e Visualizar. Fazer: depois de salvar, abrir Visualizar e comparar o nome do relator e a área do relator. Esperado pelo código: nome de quem criou com a área de quem registrou a ação (RN-GQ-D02-008). Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 078/26): na lupa desta tela o "Relatado por" é o criador do desvio; na lupa do Relatório de Desvios é quem registrou a ação; o histórico registra "Responsável" trocado (DV-GQ-054)</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-015</td>
 <td>Tela de registro. Fazer: mudar a descrição do relatório do desvio junto com a ação e salvar; abrir o histórico. Esperado: a mudança aparece no histórico com valor antigo e novo; a tela não avisa (RN-GQ-D02-007). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 078/26): a descrição do relatório mudada junto com a ação aparece no histórico como "Rel. Desvios - Não Conformidade" (valor antigo e novo), com "Situação" e "Responsável"; a tela não avisa</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-016</td>
@@ -320,7 +362,7 @@
 <tr>
 <td>CT-GQ-N02-019</td>
 <td>Tela de cancelamento. Fazer: cancelar com justificativa. Esperado: "Cancelamento efetuado com sucesso."; Cancelado; sem lápis nem lixeira na lista. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 081/26): "Confirmar o cancelamento do item?", "Informe a justificativa" e "Cancelamento efetuado com sucesso."; Cancelado, sem lápis nem lixeira; o histórico traz Situação, quem cancelou, a justificativa e a data; o desvio some da lista da tela</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-020</td>
@@ -330,12 +372,12 @@
 <tr>
 <td>CT-GQ-N02-021</td>
 <td>Lista e Visualizar. Prep.: desvio em Pendente Pré Avaliação. Fazer: procurar o lápis e a lixeira. Esperado: só lupa, histórico e impressora. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvios 079/26 e 080/26): em Pendente Pré Avaliação, só lupa, histórico e impressora, sem lápis nem lixeira</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-022</td>
 <td>Tela de registro. Fazer: buscar um item do tipo Produto. Esperado pelo código: a busca consulta Estoque e Produção. Registrar o que aparece (hoje a busca de produto não devolveu nada no Relatório de Desvios, DV-GQ-010). Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 083/26): a busca de item do tipo Produto devolve lista vazia (DV-GQ-010 reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N02-023</td>
@@ -350,7 +392,7 @@
 <tr>
 <td>CT-GQ-N02-025</td>
 <td>Tela de registro. Prep.: duas janelas abertas com o mesmo desvio. Fazer: salvar a ação nas duas, uma depois da outra. Esperado: observar se a segunda grava outra ação por cima da primeira (a ação é sempre um registro novo). Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 080/26): a segunda janela também deu "Alteração efetuada com sucesso."; a lupa mostra só o texto da segunda; o histórico tem uma linha de ação e uma de situação (DV-GQ-057)</td>
 </tr>
 <tr>
 <td>CT-GQ-F05</td>

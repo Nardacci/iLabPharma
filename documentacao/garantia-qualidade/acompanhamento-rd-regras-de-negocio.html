@@ -69,13 +69,13 @@
 <td>RN-GQ-D13-01</td>
 <td>O período é obrigatório (as duas datas), conferido só no navegador. O servidor não confere.</td>
 <td>Bloco2/Script/AcompanhamentoRNCIndex.js:19-22; AcompanhamentoRNCController.cs:36-46</td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-N13-01): sem datas, só início ou só fim, o navegador mostra "Preencha o Período." e não abre janela. Que o servidor não confere não foi exercitado</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N13-01): sem datas, só início ou só fim, o navegador mostra "Preencha o Período." e não abre janela. Rodada 3 (22/10/2026, CT-GQ-N13-04): o servidor também não confere a validade das datas nem a ordem: início maior que o fim e 01/01/1900 passam sem aviso, e data impossível abre uma página de erro do sistema. Que o servidor não confere a falta de data (campo vazio) não foi exercitado</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-02</td>
 <td>O período filtra pela data de criação do desvio e inclui o dia final inteiro (o servidor soma um dia e usa "menor que").</td>
 <td>AcompanhamentoRNCController.cs:40,46</td>
-<td>Validada em parte no teste (22/10/2026, ponto em aberto (c)): o relatório filtra pela data de criação do desvio; 001/26 (criado em 02/06/2026), 002/26 e 003/26 (07/09/2026) ficaram fora do período de 01/10 a 22/10. A soma de um dia ao fim (dia final inteiro) não foi exercitada (CT-GQ-N13-03)</td>
+<td>Validada em parte no teste (22/10/2026, ponto em aberto (c)): o relatório filtra pela data de criação do desvio; 001/26 (criado em 02/06/2026), 002/26 e 003/26 (07/09/2026) ficaram fora do período de 01/10 a 22/10. Rodada 3 (22/10/2026, CT-GQ-N13-03): validada a soma de um dia ao fim: início e fim iguais a 22/10/2026 trazem os 25 desvios do dia, inclusive o criado às 14h, iguais aos 25 da lista da tela 1</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-03</td>
@@ -99,7 +99,7 @@
 <td>RN-GQ-D13-06</td>
 <td>Com a situação em TODAS, o relatório traz todos os desvios do período, inclusive os cancelados; o código não os exclui.</td>
 <td>AcompanhamentoRNCController.cs:46,48-52</td>
-<td>Validada em parte no teste (22/10/2026, ponto em aberto (c)): o desvio 018/26, cancelado pela tela 2 (CT-GQ-N02-020), aparece no PDF de todas as situações, com a situação Cancelado. A leitura da rodada 1, que dava "Pendente Registro Ação Corretiva" (DV-GQ-037), não se reproduziu. Que não há outra marca de cancelamento no PDF, e como ficam os demais cancelados, não foi conferido</td>
+<td>Validada em parte no teste (22/10/2026, ponto em aberto (c)): o desvio 018/26, cancelado pela tela 2 (CT-GQ-N02-020), aparece no PDF de todas as situações, com a situação Cancelado. A leitura da rodada 1, que dava "Pendente Registro Ação Corretiva" (DV-GQ-037), não se reproduziu. Que não há outra marca de cancelamento no PDF, e como ficam os demais cancelados, não foi conferido. Rodada 3 (22/10/2026, CT-GQ-N13-05): com TODAS entram os 18 Finalizado e os 9 Cancelado do sistema, e a lista de Situação (7 opções) não oferece nenhum dos dois. Validada em parte: a coluna STATUS DO RNC mostra a situação, mas não há filtro por Finalizado nem Cancelado</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-07</td>
@@ -117,19 +117,19 @@
 <td>RN-GQ-D13-09</td>
 <td>STATUS DAS AÇÕES das corretivas: com monitoramento gravado, é "Implementadas Integralmente" quando o monitoramento diz que as ações foram implementadas, senão "Não Implementadas"; sem monitoramento, é "Não Iniciadas" (nenhuma ação com avaliação), "Implementadas Integralmente" (todas concluídas), "Não Implementadas" (nenhuma concluída) ou "Implementadas Parcialmente".</td>
 <td>Reports/DadosRNCFactory.cs:303-347</td>
-<td>Extraída</td>
+<td>Contradita em parte pelo teste (22/10/2026, CT-GQ-N13-07): os quatro textos existem, mas o resultado não bate com a regra como descrita. O 078/26 (2 de 3 ações concluídas) saiu "Não Implementadas"; o 079/26 e o 084/26 (todas concluídas, monitoramento pendente) saíram "Implementadas Parcialmente". A causa não foi investigada: ponto para validar com a área e conferir o código (a descrição desta regra pode estar incompleta)</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-10</td>
 <td>STATUS DAS AÇÕES das preventivas segue a mesma lógica, e só aparece quando o desvio já tem plano preventivo.</td>
 <td>Reports/DadosRNCFactory.cs:349-394</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, CT-GQ-N13-07 e N13-08): a linha de Ações Preventivas só aparece quando há plano preventivo, inclusive o plano vazio criado ao abrir a tela 10 (080/26, DV-GQ-077). Que a lógica seja "a mesma" das corretivas não se confirmou: ver a RN-GQ-D13-09</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-11</td>
 <td>A contagem das ações usa todas as ações do plano, inclusive as removidas (lixeira): uma ação removida pode manter o status como "Parcialmente".</td>
 <td>Reports/DadosRNCFactory.cs:324,371</td>
-<td>A confirmar no teste</td>
+<td>Contradita em parte pelo teste (22/10/2026, CT-GQ-N13-08): no plano preventivo do 053/26, com a segunda ação excluída antes de salvar e as outras duas concluídas e aprovadas, saiu "Implementadas Integralmente"; a ação excluída não contou. Ressalva: a ação foi excluída antes de salvar; uma ação já gravada e depois removida não foi testada</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-12</td>
@@ -179,6 +179,30 @@
 <td>Observado na tela (execucao/2026-10-22-desvios-rodada-2/resultado.md, ponto em aberto (c)); linha do código a localizar</td>
 <td>Validada no teste (22/10/2026, ponto em aberto (c))</td>
 </tr>
+<tr>
+<td>RN-GQ-D13-20</td>
+<td>Início maior que o fim não é recusado nem avisado: o PDF sai sem linhas. Data de início em 01/01/1900 também não é recusada: o PDF traz todos os desvios (85 em 22/10/2026).</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N13-04); linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-04)</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-21</td>
+<td>Data impossível (31/02/2026 ou 00/00/0000) chega ao servidor e abre uma página de erro do sistema na janela do PDF, em vez de um aviso claro.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N13-04); linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-04). O texto do erro está no documento interno</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-22</td>
+<td>Período sem desvios gera um PDF só com o cabeçalho "Período: dd/mm/aaaa até dd/mm/aaaa", sem linhas e sem aviso.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N13-12); linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-12): ano de 2024, sem desvios</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-23</td>
+<td>A lista de Situação tem 7 opções (TODAS e seis); Finalizado e Cancelado não são oferecidos, mas entram no PDF com TODAS (18 e 9 desvios em 22/10/2026).</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N13-05); linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-05). Confirma a RN-GQ-D13-04 e a D13-06</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -210,17 +234,17 @@
 <tr>
 <td>CT-GQ-N13-03 (Média)</td>
 <td>Dia final do período. Preparação: desvio criado hoje às 15h. Fazer: início e fim iguais a hoje. Esperado: o desvio aparece (o código soma um dia ao fim)</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: início e fim iguais a 22/10/2026 trazem os 25 desvios do dia (iguais aos 25 da lista da tela 1), inclusive o criado às 14h</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-04 (Média)</td>
 <td>Datas fora do comum. Fazer: início maior que o fim; 31/02/2026; 00/00/0000; ano 1900. Esperado: aviso claro. Registrar o que acontece (PDF vazio, erro técnico ou outra mensagem)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (defeito de datas inválidas, registrado no documento interno): início 22/10 e fim 01/10 dá PDF sem linhas e sem aviso; 31/02/2026 e 00/00/0000 abrem uma página de erro do sistema; início em 01/01/1900 dá o PDF com os 85 desvios</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-05 (Média)</td>
 <td>Situações que não podem ser escolhidas. Preparação: um desvio Finalizado e um Cancelado. Fazer: Imprimir com TODAS. Esperado: registrar se os dois aparecem (pelo código sim, RN-GQ-D13-06) e que não existe filtro por Finalizado nem Cancelado</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: com TODAS aparecem os 18 Finalizado e os 9 Cancelado; a lista de Situação tem 7 opções e nenhuma é Finalizado ou Cancelado</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-06 (Alta)</td>
@@ -230,12 +254,12 @@
 <tr>
 <td>CT-GQ-N13-07 (Média)</td>
 <td>Coluna STATUS DAS AÇÕES. Preparação: desvios sem plano, com plano corretivo sem ação concluída, com uma de duas ações concluídas, com todas concluídas e com monitoramento aprovado. Fazer: Imprimir. Esperado: Não Iniciadas, Não Implementadas, Implementadas Parcialmente e Implementadas Integralmente, e a linha de Ações Preventivas só quando há plano preventivo</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026: os quatro textos existem e a linha de Ações Preventivas só aparece com plano preventivo (inclusive o plano vazio criado ao abrir a tela 10, DV-GQ-077). Mas o 078/26 (2 de 3 ações concluídas) sai "Não Implementadas" e o 079/26 e o 084/26 (todas concluídas, monitoramento pendente) saem "Implementadas Parcialmente"; ponto para validar com a área. Desvios vistos: 078, 079, 080, 083, 084, 085, 044, 052 e 053</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-08 (Média)</td>
 <td>Ação removida. Preparação: plano com duas ações, uma removida antes de salvar e a outra concluída. Fazer: Imprimir. Esperado pela lógica: Integralmente. Pelo código, a ação removida pode contar (RN-GQ-D13-11)</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (053/26): com a segunda ação excluída antes de salvar e as outras duas concluídas e aprovadas, sai "Ações Preventivas: Implementadas Integralmente". A ação já gravada e depois removida não foi testada</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-09 (Baixa)</td>
@@ -255,7 +279,7 @@
 <tr>
 <td>CT-GQ-N13-12 (Média)</td>
 <td>Período sem desvios. Fazer: período de um ano sem desvios, Imprimir. Esperado: relatório sem linhas ou aviso; registrar o que mostra</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: período de 2024 (sem desvios) dá PDF só com o cabeçalho "Período: 01/01/2024 até 31/12/2024", sem linhas e sem aviso</td>
 </tr>
 <tr>
 <td>CT-GQ-F12 (volume e consulta)</td>

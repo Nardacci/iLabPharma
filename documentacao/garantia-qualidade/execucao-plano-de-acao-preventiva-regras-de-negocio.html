@@ -57,7 +57,7 @@
 <td>RN-GQ-055</td>
 <td>Cada responsável informa a conclusão da sua ação, com data de conclusão obrigatória e não futura.</td>
 <td>Domain/Service/AvaliacaoPlanoAcaoPreventivaValidator.cs:25-37</td>
-<td>Validada no teste (21/10/2026, CT-GQ-N11-05 e N11-06): a data vazia e a data futura são recusadas com as mensagens previstas</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N11-05 e N11-06): a data vazia e a data futura são recusadas com as mensagens previstas. Reconfirmada em 22/10/2026 (CT-GQ-N11-08): datas impossíveis ou fora do padrão são recusadas com "A Data de Conclusão é obrigatória.", sem dizer que a data é inválida.</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-01</td>
@@ -69,7 +69,7 @@
 <td>RN-GQ-D11-02</td>
 <td>A lista mostra a cada usuário apenas as ações em que ele é o responsável, qualquer que seja o seu nível.</td>
 <td>AvaliacaoPlanoAcaoPreventivaRNCController.cs:121-125</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N11-01, desvios 044/26 e 052/26): cada responsável vê só as suas ações (o detalhe por usuário está no documento interno). Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-03</td>
@@ -81,7 +81,7 @@
 <td>RN-GQ-D11-04</td>
 <td>O lápis de Editar só aparece na lista enquanto o desvio está em Pendente Monitoramento do Plano Ação Preventiva; depois aparece Visualizar.</td>
 <td>UI/Helpers/GerenciadorAcessoTelaAvaliacaoPlanoAcaoPreventivaIndex.cs:12-20</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N11-14, desvios 043/26, 073/26 e 072/26): desvio em monitoramento tem o lápis; desvio Finalizado tem a lupa e a tela abre travada, só com Imprimir e Voltar. Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-05</td>
@@ -135,7 +135,7 @@
 <td>RN-GQ-D11-13</td>
 <td>Os anexos da tela são do desvio, não da ação, e entram na gravação junto com a conclusão.</td>
 <td>AvaliacaoPlanoAcaoPreventivaRNCController.cs:384-414</td>
-<td>Extraída</td>
+<td>Validada em parte (22/10/2026, CT-GQ-N11-15, desvio 044/26): as mensagens de anexo funcionam e, depois de salvar a conclusão, o anexo aparece no Monitoramento do plano preventivo (diferente da tela 8, DV-GQ-074). Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D11-14</td>
@@ -161,6 +161,24 @@
 <td>execucao/2026-10-22-desvios-rodada-2/resultado.md; linha do código a localizar</td>
 <td>Validada no teste (22/10/2026, CT-GQ-N11-12; evidência N11-12-antes-de-concluir)</td>
 </tr>
+<tr>
+<td>RN-GQ-D11-18</td>
+<td>Data de Conclusão impossível ou fora do padrão (31/02/2026, 00/00/0000, "2026-10-21", que vira "20/26/1021", e "1/1/2026", que vira "11/20/26") é recusada com "A Data de Conclusão é obrigatória.", sem dizer que a data é inválida; letras não entram no campo.</td>
+<td>execucao/2026-10-22-desvios-rodada-3c/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N11-08, desvio 044/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D11-19</td>
+<td>A observação da conclusão é opcional: sem texto grava; com 5 000 caracteres grava inteira.</td>
+<td>execucao/2026-10-22-desvios-rodada-3c/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N11-09, desvio 052/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D11-20</td>
+<td>O filtro Situação da lista filtra pela situação da ação (TODAS, Pendente, Finalizado).</td>
+<td>execucao/2026-10-22-desvios-rodada-3c/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N11-02): com 1 ação Pendente e 7 Finalizado, TODAS trouxe 8, Pendente 1 e Finalizado 7</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -182,12 +200,12 @@
 <tr>
 <td>CT-GQ-N11-01 (Média)</td>
 <td>Lista só das ações do usuário. Preparação: duas ações com responsáveis diferentes. Fazer: com cada responsável, Pesquisar sem filtros. Esperado: cada um vê só a sua ação</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvios 044/26 e 052/26): cada responsável vê só as suas ações (o detalhe por usuário está no documento interno)</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-02 (Média)</td>
 <td>Filtro Situação. Preparação: uma ação Pendente e uma Finalizado do mesmo responsável. Fazer: Pesquisar com TODAS, Pendente e Finalizado. Esperado: filtra por situação da ação</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: com 1 ação Pendente e 7 Finalizado, TODAS trouxe 8, Pendente 1 e Finalizado 7</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-03 (Baixa)</td>
@@ -217,12 +235,12 @@
 <tr>
 <td>CT-GQ-N11-08 (Média)</td>
 <td>Formatos de data. Fazer: 31/02/2026, 00/00/0000, 2026-10-21, texto, data com um dígito. Esperado: recusa com mensagem clara. Registrar a mensagem exata (pode ser "A Data de Conclusão é obrigatória." ou erro genérico)</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 044/26): 31/02/2026, 00/00/0000, 2026-10-21 (vira "20/26/1021"), letras (o campo fica vazio) e 1/1/2026 (vira "11/20/26") foram recusados com "A Data de Conclusão é obrigatória."; a mensagem não diz que a data é inválida</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-09 (Média)</td>
 <td>Observação e tamanho. Fazer: salvar sem observação; salvar com 5 000 caracteres. Esperado: observação é opcional; texto longo aceito ou recusado com mensagem</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 052/26): sem observação, grava; com 5 000 caracteres, grava inteiro (5 000 na tela depois)</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-10 (Alta)</td>
@@ -242,17 +260,17 @@
 <tr>
 <td>CT-GQ-N11-13 (Média)</td>
 <td>Responsável exibido. Preparação: ação concluída por um usuário A. Fazer: abrir a mesma ação com o usuário B (por exemplo, por Visualizar depois de o desvio Finalizado). Esperado: a tela mostra A como quem executou. Pelo código, mostra B (RN-GQ-D11-10)</td>
-<td>Não executado</td>
+<td>Bloqueado em 22/10/2026: a lista só mostra as ações do próprio usuário e nenhuma tela abre a ação de outra pessoa; não há como um segundo usuário ver a ação concluída pelo primeiro</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-14 (Média)</td>
 <td>Lápis e Visualizar. Preparação: um desvio em monitoramento e um já Finalizado, ambos com ação do mesmo usuário. Fazer: Pesquisar. Esperado: lápis no primeiro; ícone Visualizar no segundo, e a tela do segundo abre travada sem Salvar</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvios 043/26, 073/26 e 072/26): desvio em monitoramento tem o lápis; desvio Finalizado tem a lupa e a tela abre travada, só com Imprimir e Voltar</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-15 (Média)</td>
 <td>Anexos. Fazer: Enviar anexo sem arquivo; sem descrição; completo; Salvar a conclusão. Esperado: mensagens "O arquivo não foi informado." e "A descrição não foi informada."; anexo fica no desvio</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 044/26): mensagens de anexo como nas outras telas; depois de salvar a conclusão com anexo, o anexo aparece no Monitoramento do plano preventivo (diferente da tela 8, DV-GQ-074)</td>
 </tr>
 <tr>
 <td>CT-GQ-N11-16 (Baixa)</td>

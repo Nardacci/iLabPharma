@@ -58,13 +58,13 @@
 <td>RN-GQ-010</td>
 <td>Obrigatórios: descrição (Não Conformidade) e local da ocorrência. O responsável e a data de criação também são exigidos, mas vêm preenchidos</td>
 <td>HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:26, 32, 72, 78</td>
-<td>Validada no teste (21/10/2026, caso CT-GQ-001): sem descrição, a tela mostrou "Descrição é obrigatória."; sem local, "Local de Ocorrência é obrigatório.". Cada tentativa mostra uma mensagem só (DV-GQ-033). Responsável e data de criação não foram exercitados</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-001): sem descrição, a tela mostrou "Descrição é obrigatória."; sem local, "Local de Ocorrência é obrigatório.". Cada tentativa mostra uma mensagem só (DV-GQ-033). Responsável e data de criação não foram exercitados Reconfirmada em 22/10/2026 (casos CT-GQ-N01-001 a N01-004): só descrição, só local escolhido pela janela e local digitado sem busca deram as mesmas mensagens e nada foi gravado. Um espaço na descrição passa (CT-GQ-N01-029; DV-GQ-051).</td>
 </tr>
 <tr>
 <td>RN-GQ-011</td>
 <td>O desvio pode ser ligado a um item. A tela oferece só três tipos (Produto, Equipamento e Material), apesar de o enumerador ter 14. Produto vem da Produção, Material do Estoque (consulta feita na API da Produção) e Equipamento do Principal</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:145-158; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:656-700; HSolutions.GQ.Services/Estoque/EstoqueService.cs:19-21</td>
-<td>Diferente do código no sistema testado (CT-GQ-003 e 014, 12/10/2026). Reconfirmado em 21/10/2026 (casos CT-GQ-002 e CT-GQ-014): a busca de produto abre a janela vazia, sem mensagem; a de material "TESTE" mostra "Ocorreu um erro interno não esperado."; só a de equipamento devolveu itens (DV-GQ-010)</td>
+<td>Diferente do código no sistema testado (CT-GQ-003 e 014, 12/10/2026). Reconfirmado em 21/10/2026 (casos CT-GQ-002 e CT-GQ-014): a busca de produto abre a janela vazia, sem mensagem; a de material "TESTE" mostra "Ocorreu um erro interno não esperado."; só a de equipamento devolveu itens (DV-GQ-010) Em 22/10/2026 (casos CT-GQ-N01-007 e N01-009): a busca de equipamento devolve itens e mostra o Nº Tag; a busca de produto e de material continua sem resultado ("A pesquisa não retornou nenhum resultado."), e o caso do mesmo lote duas vezes ficou Bloqueado (DV-GQ-010 reconfirmado).</td>
 </tr>
 <tr>
 <td>RN-GQ-012</td>
@@ -76,7 +76,7 @@
 <td>RN-GQ-013</td>
 <td>Anexo é opcional; se houver, arquivo e descrição são obrigatórios</td>
 <td>HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:54-67</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N01-011): enviar sem nada, só com arquivo e com os dois deu as mensagens do envio ("Nenhuma informação foi enviada.", "A descrição não foi informada." e "Arquivo enviado com sucesso."). A mensagem do validador ("O Anexo é obrigatório.") não apareceu, porque o envio recusa antes</td>
 </tr>
 <tr>
 <td>RN-GQ-014</td>
@@ -94,13 +94,13 @@
 <td>RN-GQ-016</td>
 <td>Os ícones Editar e Cancelar só aparecem em Pendente Registro Ação Corretiva e para quem a regra de acesso permite. A edição exige justificativa e grava histórico. O servidor não repete a conferência de situação nem de quem edita</td>
 <td>HSolutions.GQ.UI/Helpers/GerenciadorAcessoTelaRelatorioNaoConformidadeIndex.cs:13-34; HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:36-43; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:340-359, 470</td>
-<td>Validada em parte no teste (21/10/2026, caso CT-GQ-004): sem justificativa, "Justificativa é obrigatória."; com ela, o histórico traz o valor antigo e o novo da descrição, a hora, o usuário e a justificativa. A conferência de situação e de quem edita, no servidor, não foi exercitada</td>
+<td>Validada em parte no teste (21/10/2026, caso CT-GQ-004; 22/10/2026, casos CT-GQ-N01-016 e N01-018): sem justificativa, "Justificativa é obrigatória." e nada gravado; com ela, o histórico traz o valor antigo e o novo, a hora, o usuário e a justificativa. A conferência de situação e de quem edita, no servidor, não foi exercitada</td>
 </tr>
 <tr>
 <td>RN-GQ-017</td>
 <td>Cancelamento: justificativa obrigatória. O sistema guarda quem cancelou, quando e o motivo no próprio desvio, mas não grava na trilha de auditoria (alteração sem histórico)</td>
 <td>HSolutions.GQ.Domain/Service/RelatorioNaoConformidadeValidator.cs:46-51; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:537-549; HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:94-98</td>
-<td>Validada no teste (12/10/2026, CT-GQ-006): justificativa obrigatória e cancelamento fora do histórico (DV-GQ-001); Reconfirmada em 21/10/2026 (passo 1.8, RD 050/26 cancelado por esta tela): o cancelamento não aparece no histórico (DV-GQ-001). Citada em 22/10/2026 (CT-GQ-006) com o resultado de 21/10/2026, sem repetir o teste: o cancelamento por esta tela segue fora do histórico (DV-GQ-001).</td>
+<td>Validada no teste (12/10/2026, CT-GQ-006): justificativa obrigatória e cancelamento fora do histórico (DV-GQ-001); Reconfirmada em 21/10/2026 (passo 1.8, RD 050/26 cancelado por esta tela): o cancelamento não aparece no histórico (DV-GQ-001). Citada em 22/10/2026 (CT-GQ-006) com o resultado de 21/10/2026, sem repetir o teste: o cancelamento por esta tela segue fora do histórico (DV-GQ-001). Repetida em 22/10/2026 (casos CT-GQ-N01-021 e N01-028, desvio 074/26): "Confirmar o cancelamento do item?", "Informe a justificativa" e "Cancelamento efetuado com sucesso."; o desvio ficou Cancelado e o histórico tem só a inclusão (DV-GQ-001 reconfirmado).</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-001</td>
@@ -112,7 +112,7 @@
 <td>RN-GQ-D01-002</td>
 <td>Filtros: RD/Nº (número contém e ano 20aa), Descrição (contém), Data Início sozinha (um dia), Data Início com Data Fim (período, com o dia seguinte ao fim incluído), Data Fim sozinha (ignorada), Situação e Meios de Detecção</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:75-114</td>
-<td>Validada em parte no teste (21/10/2026, casos CT-GQ-F05, F07, F08, F09 e F16): o número puro e o número com ano acham o desvio; só Data Início acha o dia; início e fim no mesmo dia devolve o dia; só Data Fim é ignorada; data inválida (31/02/2026) é ignorada em silêncio, sem mensagem (DV-GQ-027). Descrição e Meios de Detecção não foram exercitados nesta tela</td>
+<td>Validada em parte no teste (21/10/2026, casos CT-GQ-F05, F07, F08, F09 e F16; 22/10/2026, casos CT-GQ-N01-022 e N01-023) e contradita em um ponto. Confirmado: número puro e número com ano acham o desvio; descrição (parte do texto), situação (Cancelado) e meio de detecção (Garantia da Qualidade) devolvem só os que combinam; só Data Início acha o dia; só Data Fim é ignorada; data inválida é ignorada em silêncio (DV-GQ-027). <strong>Contradita:</strong> com Data Início e Data Fim a lista traz só até o dia final informado, o dia seguinte ao fim não entra (RN-GQ-D01-028)</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-004</td>
@@ -124,7 +124,7 @@
 <td>RN-GQ-D01-005</td>
 <td>O desvio é gravado com o item só pelo texto da descrição. O script envia o código do item com o nome itemRD, que o servidor não lê (ele lê idItemRD); por isso o código do item é gravado como zero. O lote é gravado por número e descrição, e o código do lote (IdLote) não é preenchido</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:748; HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:35; HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:228, 244</td>
-<td>A confirmar no teste (Inferência: depende da forma como a tela monta o envio)</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N01-010, desvios 075/26 e 078/26): o item aparece na tela só como texto (o nome do equipamento) e o código do item não aparece. O relatório impresso não abre (DV-GQ-018), então o gravado como zero e o lote por texto seguem a confirmar com o DBA</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-006</td>
@@ -142,19 +142,19 @@
 <td>RN-GQ-D01-008</td>
 <td>O responsável, o código e a área do relator vêm do usuário conectado, não do formulário, no Incluir. No Editar, o responsável (nome e código) passa a ser o de quem editou; a área do relator não muda</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:209-219, 355-356</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-018, desvio 075/26): depois da edição, o histórico mostra "Responsável" trocado de quem criou o desvio para quem editou</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-009</td>
 <td>Salvar a edição sempre devolve o desvio a Pendente Registro Ação Corretiva, qualquer que seja a situação em que ele estava. O servidor não confere a situação</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/RegistroNaoConformidadeController.cs:359</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N01-018): depois de salvar a edição, o desvio continuou em Pendente Registro Ação Corretiva. Que o servidor devolve ao início um desvio em outra situação: A confirmar no teste</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-010</td>
 <td>O histórico da edição grava só os campos que mudaram (valor antigo e novo), com a justificativa digitada. O campo Justificativa em si não é registrado como campo alterado; se nada mais mudar, a edição não deixa registro. A inclusão grava só "INCLUSÃO DO REGISTRO"</td>
 <td>HSolutions.GQ.Infrastructure/Repository/RepositoryBase.cs:272-391, 322, 131-156</td>
-<td>Validada em parte no teste (21/10/2026, casos CT-GQ-004 e CT-GQ-F04): a edição grava o valor antigo e o novo, com hora, usuário e justificativa. O histórico do RD 048/26 (25 entradas) registra situação, responsável, meios de detecção, observação, abertura de CAPA, título das ações e a descrição do relatório, mas omite parte do conteúdo (DV-GQ-036). Edição que muda só a justificativa não foi testada</td>
+<td>Validada no teste (21/10/2026, casos CT-GQ-004 e CT-GQ-F04; 22/10/2026, casos CT-GQ-N01-017 e N01-018): a edição grava o valor antigo e o novo, com hora, usuário e justificativa. Mudar só o texto da justificativa: "Alteração efetuada com sucesso." e o histórico continua com as mesmas linhas, sem registro da justificativa nova (DV-GQ-053). O histórico do RD 048/26 (25 entradas) omite parte do conteúdo das etapas seguintes (DV-GQ-036)</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-011</td>
@@ -166,7 +166,7 @@
 <td>RN-GQ-D01-012</td>
 <td>O anexo é gravado no servidor no momento do envio, antes de salvar o desvio. A lista de anexos fica na sessão do usuário. Excluir só marca o anexo como removido</td>
 <td>HSolutions.GQ.UI/Controllers/AnexoController.cs:20-47, 80-106, 228-238; HSolutions.GQ.UI/Controllers/UploadController.cs:41-60</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, casos CT-GQ-N01-011 e N01-012, desvio 076/26): o anexo é enviado na hora, com as mensagens do envio; excluir o anexo na edição e salvar grava "Exclusão de anexo" no histórico, com o nome do arquivo e a justificativa. O que fica na sessão do usuário não foi observado</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-013</td>
@@ -178,19 +178,19 @@
 <td>RN-GQ-D01-014</td>
 <td>Em Editar, Visualizar e Cancelar, o campo Data da abertura mostra a data e hora de agora, e não a data de criação do desvio</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Models/PartialRelatorioDesvioModel.cs:138, 264, 302</td>
-<td>Validada no teste (22/10/2026, caso CT-GQ-N01-013): ao abrir de novo o desvio salvo, o campo Data da abertura mostrou a data e a hora do momento da abertura, e não a gravada.</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-013): ao abrir de novo o desvio salvo, o campo Data da abertura mostrou a data e a hora do momento da abertura, e não a gravada. Reconfirmada em 22/10/2026 (caso CT-GQ-N01-015): o desvio 015/26, aberto em 21/10/2026, mostrou 22/10/2026 13:55:08 em Editar e Visualizar; o 016/26, também de 21/10, mostrou 14:02:51 (DV-GQ-052).</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-015</td>
 <td>Quando há mais de um erro de validação, a tela mostra só o último, porque a função que monta as mensagens apaga as anteriores a cada erro</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:473-521</td>
-<td>Validada no teste (21/10/2026, caso CT-GQ-001): salvar com campos faltando mostrou só uma mensagem por tentativa (DV-GQ-033)</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-001): salvar com campos faltando mostrou só uma mensagem por tentativa (DV-GQ-033) Reconfirmada em 22/10/2026 (caso CT-GQ-N01-001): com tudo vazio, só "Local de Ocorrência é obrigatório."; a descrição não é cobrada junto (DV-GQ-033).</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-016</td>
 <td>A confirmação da edição pergunta "Confirma a inclusão do item?" (texto de inclusão também em Editar)</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:377</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, parte A da rodada 3, casos de edição como CT-GQ-N01-018): a pergunta "Confirma a inclusão do item?" aparece também ao salvar uma edição</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-017</td>
@@ -220,7 +220,7 @@
 <td>RN-GQ-D01-021</td>
 <td>Imprimir o RD (ícone da impressora) abre página de erro "Server Error ... The device is not ready (System.IO.IOException)" em todos os RDs testados. Os relatórios das telas Acompanhamento RD e Controle de Emissão de RNC imprimem normalmente</td>
 <td>Observada na tela, sem trecho de código analisado (execucao/2026-10-21-desvios-rodada-1/resultado.md), defeito DV-GQ-018</td>
-<td>Validada no teste (21/10/2026, DV-GQ-018); a confirmar se o problema é do ambiente</td>
+<td>Validada no teste (21/10/2026, DV-GQ-018); a confirmar se o problema é do ambiente Reconfirmada em 22/10/2026 (caso CT-GQ-N01-027, desvio 075/26): Imprimir abre outra janela com a página de erro do servidor (DV-GQ-018).</td>
 </tr>
 <tr>
 <td>RN-GQ-D01-022</td>
@@ -238,7 +238,49 @@
 <td>RN-GQ-D01-024</td>
 <td>A coluna DATA ABERTURA da lista mostra a data gravada com o desvio, e o campo Data da abertura da consulta (Editar, Visualizar e Cancelar) mostra a data de agora. O mesmo desvio aparece com duas datas diferentes</td>
 <td>execucao/2026-10-22-desvios-rodada-2/resultado.md, caso CT-GQ-N01-013 (linha do código a localizar)</td>
-<td>Validada no teste (22/10/2026, caso CT-GQ-N01-013)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-013) Reconfirmada em 22/10/2026 (caso CT-GQ-N01-015; DV-GQ-052).</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-025</td>
+<td>A tela Visualizar não mostra o Nº Tag do equipamento; o Editar mostra (a TAG volta ao abrir). O dado está gravado</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N01-007 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-007; DV-GQ-056)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-026</td>
+<td>Uma descrição (Não Conformidade) só com um espaço é aceita: "Inclusão efetuada com sucesso." e o desvio fica na lista com a descrição em branco. O servidor só barra texto vazio</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N01-029 (linha do código a localizar); RN-GQ-010</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-029, desvio 074/26; DV-GQ-051)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-027</td>
+<td>No Editar, trocar o tipo de item esconde o botão Salvar. Ele continua escondido ao voltar ao tipo anterior e só volta quando se escolhe um item na busca</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N01-031 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-031, desvio 075/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-028</td>
+<td>O filtro de período da lista não inclui o dia seguinte ao fim: com Data Início e Data Fim, vêm só os desvios até o dia final informado. Só Data Fim é ignorada. Contraria a regra RN-GQ-D01-002 como estava escrita</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N01-023 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-023): Início 20/10 e Fim 21/10 trouxe os mesmos 48 desvios de 21/10</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-029</td>
+<td>Excluir um anexo na edição grava no histórico "Exclusão de anexo", com o nome do arquivo e a justificativa</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N01-012 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N01-012, desvio 076/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-030</td>
+<td>Um desvio Cancelado na tela Relatório de Desvios fica na lista com a situação Cancelado, só com lupa, histórico e impressora; o histórico dele tem só a inclusão</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, casos CT-GQ-N01-021 e N01-028 (linha do código a localizar)</td>
+<td>Validada no teste (22/10/2026, desvio 074/26; DV-GQ-001)</td>
+</tr>
+<tr>
+<td>RN-GQ-D01-031</td>
+<td>Quem registra a ação imediata (tela 2) passa a constar como "Relatado por" nesta tela, mesmo não sendo quem relatou o desvio; a tela 2 ainda mostra o autor original</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N02-014 (linha do código a localizar); RN-GQ-D02-008</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N02-014, desvio 078/26; DV-GQ-054)</td>
 </tr>
 </tbody>
 </table></div>
@@ -291,22 +333,22 @@
 <tr>
 <td>CT-GQ-N01-001</td>
 <td>Tela Incluir. Prep.: nenhuma. Fazer: Salvar com tudo vazio. Esperado: "Descrição é obrigatória." e "Local de Ocorrência é obrigatório."; registrar se aparece só uma delas (RN-GQ-D01-015). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (tela Incluir): só "Local de Ocorrência é obrigatório."; a descrição não é cobrada junto (DV-GQ-033 reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-002</td>
 <td>Tela Incluir. Fazer: preencher só a Não Conformidade e salvar. Esperado: "Local de Ocorrência é obrigatório." Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: só a descrição, "Local de Ocorrência é obrigatório."</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-003</td>
 <td>Tela Incluir. Fazer: escolher o local pela janela e salvar sem descrição. Esperado: "Descrição é obrigatória." Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: local pela janela e sem descrição, "Descrição é obrigatória."</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-004</td>
 <td>Tela Incluir. Fazer: digitar o nome do local sem usar buscar e salvar. Esperado: "Local de Ocorrência é obrigatório." (código do local zero). Registrar se gravar (RN-GQ-D01-007). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: nome do local digitado sem buscar, "Local de Ocorrência é obrigatório." e nada gravado</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-005</td>
@@ -321,7 +363,7 @@
 <tr>
 <td>CT-GQ-N01-007</td>
 <td>Tela Incluir. Prep.: equipamento TESTE no Principal. Fazer: tipo Equipamento, buscar o equipamento, ver o Nº Tag, salvar; abrir Visualizar. Esperado: grava; a TAG aparece de novo na visualização. Prioridade Média</td>
-<td>Não executado (a busca de equipamento funcionou em 12/10/2026)</td>
+<td>Falhou em 22/10/2026 (desvios 075/26 e 078/26): o Nº Tag aparece e grava, e volta no Editar, mas a tela Visualizar não tem o campo Nº Tag (DV-GQ-056)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-008</td>
@@ -331,22 +373,22 @@
 <tr>
 <td>CT-GQ-N01-009</td>
 <td>Tela Incluir. Prep.: produto e lote disponíveis (hoje bloqueado pela DV-GQ-010). Fazer: Adicionar o mesmo lote duas vezes. Esperado: só um aparece na grade. Prioridade Média</td>
-<td>Bloqueado (DV-GQ-010)</td>
+<td>Bloqueado em 22/10/2026: a busca de produto e de material devolve "A pesquisa não retornou nenhum resultado.", sem lote para repetir (DV-GQ-010 reconfirmado). Antes: Bloqueado (DV-GQ-010)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-010</td>
 <td>Tela Incluir. Prep.: equipamento TESTE. Fazer: escolher o item e salvar; depois conferir, no desvio salvo, se o item é identificado só por texto (RN-GQ-D01-005), olhando o relatório impresso e a visualização. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvios 075/26 e 078/26): o item aparece só como texto (nome do equipamento) e o código do item não aparece; o relatório impresso não abre (DV-GQ-018), então essa parte não foi conferida</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-011</td>
 <td>Tela Incluir. Fazer: Enviar anexo sem arquivo; depois com arquivo e sem descrição; depois com os dois. Esperado: "Nenhuma informação foi enviada." ou "O arquivo não foi informado."; "A descrição não foi informada."; "Arquivo enviado com sucesso." Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (tela Incluir e desvio 076/26): sem nada, "Nenhuma informação foi enviada. O arquivo não foi informado. A descrição não foi informada."; arquivo sem descrição, "A descrição não foi informada."; os dois, "Arquivo enviado com sucesso."</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-012</td>
 <td>Tela Editar. Prep.: desvio com anexo. Fazer: excluir o anexo, informar justificativa e salvar; abrir o histórico. Esperado: "Alteração efetuada com sucesso." e registro "Exclusão de anexo". Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 076/26): excluir anexo, justificativa e salvar deram "Alteração efetuada com sucesso."; o histórico traz "Exclusão de anexo" com o nome do arquivo e a justificativa</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-013</td>
@@ -361,22 +403,22 @@
 <tr>
 <td>CT-GQ-N01-015</td>
 <td>Tela Editar e Visualizar. Prep.: desvio criado em outro dia. Fazer: abrir Editar e Visualizar e comparar o campo Data da abertura com a coluna DATA ABERTURA da lista. Esperado pelo código: mostra a data e hora de agora (RN-GQ-D01-014). Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvios 015/26 e 016/26): Editar e Visualizar mostram a data e a hora de agora (22/10/2026 13:55:08 e 14:02:51), embora os desvios sejam de 21/10/2026 (DV-GQ-052)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-016</td>
 <td>Tela Editar. Fazer: apagar a justificativa e salvar. Esperado: "Justificativa é obrigatória." Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 076/26): sem justificativa, "Justificativa é obrigatória." e nada gravado</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-017</td>
 <td>Tela Editar. Fazer: mudar só o texto da Justificativa e salvar; abrir o histórico. Esperado pelo código: grava, mas sem nova linha no histórico (RN-GQ-D01-010). Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 075/26): mudar só o texto da justificativa deu "Alteração efetuada com sucesso.", mas o histórico continuou com as mesmas 3 linhas (DV-GQ-053)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-018</td>
 <td>Tela Editar. Fazer: mudar a descrição, justificar e salvar; abrir Visualizar. Esperado: situação continua Pendente Registro Ação Corretiva; o responsável passa a ser quem editou (RN-GQ-D01-008, D01-009). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 075/26): continua Pendente Registro Ação Corretiva; o histórico mostra a descrição (valor antigo e novo) e "Responsável" de quem criou para quem editou</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-019</td>
@@ -391,17 +433,17 @@
 <tr>
 <td>CT-GQ-N01-021</td>
 <td>Tela Cancelar. Fazer: cancelar com justificativa; voltar à lista. Esperado: "Cancelamento efetuado com sucesso."; situação Cancelado; sem lápis nem lixeira (só lupa). Prioridade Média</td>
-<td>Observado em 12/10/2026 (RD 004/26 cancelado), sem conferir os ícones</td>
+<td>Passou em 22/10/2026 (desvio 074/26): "Confirmar o cancelamento do item?", "Informe a justificativa", "Cancelamento efetuado com sucesso."; na lista, Cancelado, só lupa, histórico e impressora; o histórico não traz o cancelamento (DV-GQ-001 reconfirmado). Antes: Observado em 12/10/2026 (RD 004/26 cancelado), sem conferir os ícones</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-022</td>
 <td>Lista. Fazer: pesquisar por RD/Nº (nnn/aa), por parte da descrição, por situação e por meio de detecção, um de cada vez. Esperado: só os desvios que combinam. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: por RD/Nº, por parte da descrição, por situação Cancelado (9 desvios) e por meio Garantia da Qualidade (26 desvios) só vêm os que combinam</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-023</td>
 <td>Lista. Fazer: pesquisar só com Data Início; depois com Início e Fim; depois só com Data Fim. Esperado: um dia; o período (mais o dia seguinte ao fim); filtro ignorado (RN-GQ-D01-002). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026: só Início 21/10, 48 desvios; Início e Fim 21/10, os mesmos 48; Início 20/10 e Fim 21/10, os mesmos 48; só Fim, ignorado (85). O dia seguinte ao fim não entra, ao contrário do que o código previa (RN-GQ-D01-028)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-024</td>
@@ -421,17 +463,17 @@
 <tr>
 <td>CT-GQ-N01-027</td>
 <td>Lista. Fazer: Imprimir um desvio com número. Esperado: relatório do RD abre em outra janela com a descrição e o local. Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 075/26): Imprimir abre outra janela com a página de erro do servidor, não o relatório do RD (DV-GQ-018 reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-028</td>
 <td>Lista. Fazer: abrir o histórico de um desvio recém-incluído e de um editado. Esperado: "INCLUSÃO DO REGISTRO" na inclusão; valores antigo e novo na edição. Prioridade Média</td>
-<td>Observado em 12/10/2026 (inclusão como "INCLUSÃO DO REGISTRO")</td>
+<td>Passou em 22/10/2026 (desvios 075/26, 076/26 e 074/26): inclusão como "INCLUSÃO DO REGISTRO"; edição com valor antigo e novo (descrição, responsável, exclusão de anexo); o desvio cancelado tem só a inclusão (DV-GQ-001). Antes: Observado em 12/10/2026 (inclusão como "INCLUSÃO DO REGISTRO")</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-029</td>
 <td>Tela Incluir. Fazer: escrever só um espaço na Não Conformidade e salvar. Esperado pelo código: grava, porque a regra só barra texto vazio (RN-GQ-010). Registrar se gravar. Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 074/26): descrição com um espaço deu "Inclusão efetuada com sucesso." e o desvio aparece na lista com a descrição em branco (DV-GQ-051)</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-030</td>
@@ -441,12 +483,17 @@
 <tr>
 <td>CT-GQ-N01-031</td>
 <td>Tela Editar. Prep.: desvio com item produto ou equipamento. Fazer: trocar o tipo de item; ver se o botão Salvar some; escolher novo item (e lote) e ver se Salvar volta. Esperado pelo código: Salvar some até nova escolha. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 075/26): trocar o tipo de item esconde o botão Salvar; volta só ao escolher um item na busca; salvou com "Alteração efetuada com sucesso."</td>
 </tr>
 <tr>
 <td>CT-GQ-N01-032</td>
 <td>Tela Editar. Fazer: salvar e conferir o texto da pergunta de confirmação. Esperado pelo código: "Confirma a inclusão do item?" também na edição (RN-GQ-D01-016). Prioridade Baixa</td>
 <td>Não executado</td>
+</tr>
+<tr>
+<td>CT-GQ-N01-033</td>
+<td>Lista. Fazer: abrir a lista com o usuário descrito no documento interno e conferir o botão Incluir e os ícones das linhas (RN-GQ-D01-003). Prioridade Média</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 075/26); o resultado está no documento interno</td>
 </tr>
 <tr>
 <td>CT-GQ-F01</td>

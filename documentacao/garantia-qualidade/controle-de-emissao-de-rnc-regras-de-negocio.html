@@ -57,7 +57,7 @@
 <td>RN-GQ-059</td>
 <td>O Controle de Emissão de RNC imprime os relatórios emitidos. CORREÇÃO: imprime por ano (não por período) e só os desvios que já passaram pela pré-avaliação. Também não agrupa por causa, área ou produto (art. 342 da RDC 658/2022). Obs.: a parte do Acompanhamento RD está na página da tela 13.</td>
 <td>ControleEmissaoController.cs:30-46</td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-06 e N14-07; DV-GQ-030): o PDF é do ano e traz só os desvios que passaram pela pré-avaliação</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-06 e N14-07; DV-GQ-030): o PDF é do ano e traz só os desvios que passaram pela pré-avaliação. Rodada 3 (22/10/2026, CT-GQ-N14-12; DV-GQ-082): com 85 desvios no sistema, o controle traz 58</td>
 </tr>
 <tr>
 <td>RN-GQ-060</td>
@@ -75,7 +75,7 @@
 <td>RN-GQ-D14-03</td>
 <td>Só entram desvios que têm pré-avaliação e cuja pré-avaliação não está pendente. Desvios ainda sem pré-avaliação, e os cancelados antes dela, ficam fora. Inferência: um controle de emissão deveria mostrar todos os números emitidos, inclusive os cancelados, para provar que não há lacuna.</td>
 <td>ControleEmissaoController.cs:36-38</td>
-<td>Validada no teste (21/10/2026, CT-GQ-N14-06, N14-07 e F15; DV-GQ-030): ficam fora os desvios sem pré-avaliação e os cancelados antes dela (004, 011, 017 e 018, entre outros)</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N14-06, N14-07 e F15; DV-GQ-030): ficam fora os desvios sem pré-avaliação e os cancelados antes dela (004, 011, 017 e 018, entre outros). Reconfirmada em 22/10/2026 (CT-GQ-N14-12; DV-GQ-082): faltam os 9 cancelados e todos os que estão em Pendente Registro ou Pendente Pré Avaliação</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-04</td>
@@ -87,19 +87,19 @@
 <td>RN-GQ-D14-05</td>
 <td>A coluna DIVISÃO/SEÇÃO é a área da pessoa que criou o desvio, consultada no Principal desvio a desvio; sem área, fica em branco.</td>
 <td>Reports/DadosRNCFactory.cs:239-245</td>
-<td>Extraída. Rodada 1 (21/10/2026, CT-GQ-F15): a coluna fica vazia para vários desvios; o resultado não diz se os criadores não têm área, como a regra prevê</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N14-08 e N14-09): a coluna mostra a área de quem registrou (028/26: TESTE AREA B; 029/26: TESTE ESTRUTURA FUNCIONAL II) e fica vazia, sem erro, para o desvio de usuário sem área (030/26). Rodada 1 (21/10/2026, CT-GQ-F15): a coluna ficava vazia para vários desvios; o resultado não dizia se os criadores não tinham área, e a rodada 3 não refez essa conferência desvio a desvio</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-06</td>
 <td>A coluna DATA mostra data e hora do registro, e não só a data.</td>
 <td>Reports/DadosRNCFactory.cs:250</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N14-08): a coluna mostra data e hora (02/06/2026 11:23:56)</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-07</td>
 <td>Não há ordenação definida (a ordem é a do banco) nem verificação de lacunas na numeração.</td>
 <td>ControleEmissaoController.cs:36-38</td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-07 e F15; DV-GQ-030): a sequência sai com buracos e sem nenhum aviso de lacuna. A ordenação das linhas não foi conferida</td>
+<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-07 e F15; DV-GQ-030): a sequência sai com buracos e sem nenhum aviso de lacuna. Rodada 3 (22/10/2026, CT-GQ-N14-12; DV-GQ-082): confirmado com 080, 081 e 082 (o 081 falta e não há marca de lacuna entre 080 e 083). A ordenação das linhas não foi conferida</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-08</td>
@@ -117,7 +117,7 @@
 <td>RN-GQ-D14-10</td>
 <td>O campo Ano vem preenchido com o ano atual do servidor; Limpar o deixa vazio.</td>
 <td>Index.cshtml:23; ControleEmissaoRNCIndex.js:1-4</td>
-<td>Validada em parte no teste (21/10/2026, CT-GQ-N14-01): o campo mostra o ano atual (2026). O botão Limpar não foi testado</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N14-01; 22/10/2026, CT-GQ-N14-04): o campo mostra o ano atual (2026) e Limpar o esvazia</td>
 </tr>
 <tr>
 <td>RN-GQ-D14-11</td>
@@ -129,7 +129,13 @@
 <td>RN-GQ-D14-12</td>
 <td>Os desvios cancelados antes da pré-avaliação não aparecem no controle e não há marca de cancelado; os números deles viram buracos na sequência, sem aviso.</td>
 <td>Observado na tela (resultado.md, CT-GQ-N14-07 e F15)</td>
-<td>Validada no teste (21/10/2026, CT-GQ-N14-07; DV-GQ-030). Rodada 2 (CT-GQ-N02-020): o 018/26, um dos que sumiram do controle na rodada 1, saiu do fluxo por cancelamento na tela 2, em Pendente Registro Ação Corretiva (antes da pré-avaliação), de acordo com a regra</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N14-07; DV-GQ-030). Rodada 2 (CT-GQ-N02-020): o 018/26, um dos que sumiram do controle na rodada 1, saiu do fluxo por cancelamento na tela 2, em Pendente Registro Ação Corretiva (antes da pré-avaliação), de acordo com a regra. Rodada 3 (22/10/2026, CT-GQ-N14-12; DV-GQ-082): o 081/26, cancelado antes da pré-avaliação, também não aparece</td>
+</tr>
+<tr>
+<td>RN-GQ-D14-13</td>
+<td>Em 22/10/2026 o controle mostrou 58 dos 85 desvios do sistema: faltam os 9 cancelados e todos os que ainda estão em Pendente Registro ou Pendente Pré Avaliação. Não há marca de lacuna.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N14-12); linha do código a localizar (a regra RN-GQ-D14-03 cita ControleEmissaoController.cs:36-38)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N14-12; DV-GQ-082, Alta). Mesmo tema do DV-GQ-030 da rodada 1, agora com a contagem sobre os 85 desvios</td>
 </tr>
 </tbody>
 </table></div>
@@ -162,12 +168,12 @@
 <tr>
 <td>CT-GQ-N14-03 (Média)</td>
 <td>Limite de dez anos. Fazer: Imprimir com o ano atual menos dez; depois com menos onze. Esperado: o primeiro abre o PDF (sem linhas, se não houver desvios); o segundo mostra a faixa de erro</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: ano 2016 (atual menos dez) abre o PDF; ano 2015 mostra a faixa "Informe um Ano entre o atual até 10 anos anteriores!"</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-04 (Média)</td>
 <td>Ano vazio e Limpar. Fazer: Limpar, depois Imprimir. Esperado: campo vazio e a faixa de erro</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: Limpar esvazia o campo Ano; Imprimir com o campo vazio mostra a mesma faixa de erro</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-05 (Baixa)</td>
@@ -187,12 +193,12 @@
 <tr>
 <td>CT-GQ-N14-08 (Média)</td>
 <td>Colunas. Fazer: Imprimir e conferir uma linha. Esperado: Nº RNC com ano (006/26), DATA com data e hora, descrição completa, DIVISÃO/SEÇÃO igual à área de quem registrou</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (028/26 e 029/26): Nº RNC com ano (001/26), DATA com data e hora (02/06/2026 11:23:56), descrição completa (inclusive a de 150 caracteres) e DIVISÃO/SEÇÃO com a área de quem registrou (028/26: TESTE AREA B; 029/26: TESTE ESTRUTURA FUNCIONAL II)</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-09 (Média)</td>
 <td>Área em branco. Preparação: desvio registrado por usuário sem área. Fazer: Imprimir. Esperado: DIVISÃO/SEÇÃO vazia, sem erro</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (030/26): o desvio de usuário sem área sai com DIVISÃO/SEÇÃO vazia, sem erro</td>
 </tr>
 <tr>
 <td>CT-GQ-N14-10 (Baixa)</td>
@@ -207,7 +213,7 @@
 <tr>
 <td>CT-GQ-N14-12 (Média)</td>
 <td>Lacunas. Preparação: três desvios consecutivos, o do meio cancelado antes da pré-avaliação. Fazer: Imprimir. Esperado: o controle mostra os três números. Pelo código, o do meio falta, e a lacuna não é sinalizada</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-082, Alta; desvios 080/26, 081/26 e 082/26): o 081 (cancelado antes da pré-avaliação) não está no controle; o controle mostra 58 de 85 desvios, sem os 9 cancelados e sem os que estão em Pendente Registro ou Pendente Pré Avaliação; não há marca de lacuna entre 080 e 083</td>
 </tr>
 <tr>
 <td>CT-GQ-F15 (volume e consulta)</td>
