@@ -931,6 +931,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
     for mod in MODULOS:
         organizar_roteiro(mod)
     hom_ = Path(origem) / "homologacao"
+    SITUACAO_TELAS.update(telas_devs.situacoes(hom_))
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
         DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads(higiene.redigir((hom_ / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}
@@ -1091,6 +1092,9 @@ def pagina_documento(mod, p):
         irmas = sorted([x for x in mod["paginas"] if x.get("tela_n") == p["tela_n"] and x.get("grupo") == p.get("grupo") and x.get("aba")], key=lambda x: ABAS_DESVIOS.index(x["aba"]))
         abas = ('<nav class="abas-tela" aria-label="Páginas desta tela">'
                 + "".join(f'<a href="{x["slug"]}.html"{" aria-current=page" if x is p else ""}>{E(x["rotulo"])}</a>' for x in irmas) + '</nav>')
+        _s = SITUACAO_TELAS.get((mod["id"], telas_devs._norm(re.sub(r"\s*\(.*?\)", "", p.get("tela") or ""))))
+        if _s and p.get("desvios"):
+            abas += telas_devs.selo_situacao(_s)
     pct = round(p["n"] / p["total"] * 100)
     unico = p["passo_total"] == 1
     sec = p.get("secao_nome") or ""
@@ -1179,6 +1183,7 @@ MENUS_GQ_DESC = {
     "Assuntos Regulatórios": "Onde a empresa acompanha os processos regulatórios dos seus produtos junto à ANVISA: o que foi pedido, o que está programado e o que está em andamento.",
     "Controle de Mudanças": "Onde a empresa pede, avalia, aprova, executa e confere qualquer mudança que possa afetar a qualidade do medicamento: processo, equipamento, material, documento, sistema.",
 }
+SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
 
 
