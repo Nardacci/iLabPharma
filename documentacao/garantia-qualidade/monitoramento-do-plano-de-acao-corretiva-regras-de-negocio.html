@@ -88,13 +88,13 @@
 <td>RN-GQ-D09-002</td>
 <td>O ícone Editar só existe com o desvio em Pendente Monitoramento; nas outras, Visualizar.</td>
 <td>GerenciadorAcessoTelaLiberacaoPlanoAcaoCorretiva.cs:15-23; HSGridApi.js:269-290</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N09-17, desvio 066/26): com o desvio em Aprovado Plano Ação Corretiva a linha oferece o Visualizar, que abre a tela travada. Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-003</td>
 <td>A tela abre travada (sem Salvar e Aprovar) quando o plano já tem liberação e está Aprovado ou Reprovado.</td>
 <td>LiberacaoPlanoAcaoCorretivaRNCController.cs:139-146; Editar.cshtml:203</td>
-<td>Extraída</td>
+<td>Validada em parte (22/10/2026, CT-GQ-N09-17, desvio 066/26): desvio Aprovado abre a tela toda travada, só com Imprimir e Voltar. O estado Reprovado não pôde ser visto, porque a tela não tem como reprovar (DV-GQ-016). Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D09-004</td>
@@ -216,6 +216,24 @@
 <td>execucao/2026-10-22-desvios-rodada-3b/resultado.md (caso CT-GQ-N08-12); linha do código a localizar</td>
 <td>Validada no teste (22/10/2026, CT-GQ-N08-12, desvio 080/26, DV-GQ-074; visto desta tela)</td>
 </tr>
+<tr>
+<td>RN-GQ-D09-024</td>
+<td>Imprimir, pela lista e pela tela, abre o PDF "RELATÓRIO DE CAPA" do desvio aprovado com o plano, os resultados e a verificação final, mas com uma mensagem de erro do relatório no lugar da avaliação.</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md; linha do código a localizar</td>
+<td>Validada no teste, como falha (22/10/2026, CT-GQ-N09-17 e N09-26, desvio 066/26, DV-GQ-086, Alta): o PDF traz os resultados e a verificação final, e o bloco da avaliação sai com a mensagem de erro do relatório. A página previa o PDF completo (contradita).</td>
+</tr>
+<tr>
+<td>RN-GQ-D09-025</td>
+<td>O PDF de um desvio que ainda não foi aprovado sai sem os resultados, embora eles estejam salvos na tela.</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md; linha do código a localizar</td>
+<td>Validada no teste, com ressalva (22/10/2026, CT-GQ-N09-25, desvio 084/26): os resultados salvos aparecem na tela e não aparecem no PDF antes da aprovação. A confirmar com a área se isso é intencional.</td>
+</tr>
+<tr>
+<td>RN-GQ-D09-026</td>
+<td>A verificação final e os resultados aceitam 5 000 caracteres com aspas, sinais de menor e maior e "e" comercial, e voltam iguais na tela.</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N09-25, desvio 084/26): salvam e voltam iguais na tela (a impressão do desvio ainda não aprovado não traz os resultados, RN-GQ-D09-025).</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -322,7 +340,7 @@
 <tr>
 <td>CT-GQ-N09-17 (Baixa)</td>
 <td>Tela: Monitoramento, Visualizar. Preparação: desvio em Aprovado Plano Ação Corretiva. Fazer: abrir pelo ícone Visualizar; Imprimir. Esperado: tudo travado; só Imprimir e Voltar; PDF de CAPA com o plano e os resultados</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-086, desvio 066/26): Visualizar de desvio aprovado abre toda travada, só com Imprimir e Voltar; o PDF mostra o plano, os resultados e a verificação final, mas com uma mensagem de erro do relatório no lugar da avaliação</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-18 (Média)</td>
@@ -347,12 +365,12 @@
 <tr>
 <td>CT-GQ-N09-25 (Baixa)</td>
 <td>Tela: Monitoramento. Preparação: plano aberto. Fazer: Observação da verificação final e dos resultados com 5.000 caracteres e com aspas, menor e e comercial; salvar e reabrir. Esperado: aceita; texto íntegro nas grades e na impressão</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 084/26): resultado e verificação final de 5 000 caracteres com aspas, menor, maior e "e" comercial salvam e voltam iguais na tela. Ressalva: o PDF do desvio ainda não aprovado sai sem os resultados</td>
 </tr>
 <tr>
 <td>CT-GQ-N09-26 (Baixa)</td>
 <td>Tela: Monitoramento, Imprimir. Preparação: desvio aprovado. Fazer: Imprimir pela lista e pela tela. Esperado: PDF de CAPA com resultados e verificação final</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-086, desvio 066/26): Imprimir pela lista e pela tela abre o PDF do desvio aprovado com os resultados e a verificação final, mais a mensagem de erro do relatório no lugar da avaliação</td>
 </tr>
 <tr>
 <td>CT-GQ-F05 (volume)</td>

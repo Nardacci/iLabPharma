@@ -56,7 +56,7 @@
 - Trecho comum "Resumo do RNC": HSolutions.GQ.UI/Areas/Bloco2/Views/Shared/_PartialRegistroNC.cshtml
 - Scripts: HSolutions.GQ.UI/Areas/Bloco2/Script/PlanoAcaoPreventivaIndex.js e PlanoAcaoPreventivaSalvar.js</p>
 <p>Como ler as fontes nas tabelas: "Bloco2/" é HSolutions.GQ.UI/Areas/Bloco2/; "UI/" é HSolutions.GQ.UI/; "Domain/" é HSolutions.GQ.Domain/; "Reports/" é HSolutions.GQ.Reports/Bloco2/; "DB/" é Hsolutions.GQ.DB/Tables/; "Infra/" é HSolutions.GQ.Infrastructure/. Quando só aparece o nome do controlador, é PlanoAcaoPreventivaRNCController.cs.</p>
-<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 056/26 e a massa de dados. Foram executados cinco casos próprios (CT-GQ-N10-05, N10-06, N10-10, N10-12 e N10-13) e cinco casos de volume e consulta (CT-GQ-F05, F06, F08, F09 e F11). Resultado: 3 passaram, 4 passaram com ressalva e 3 falharam. Antes disso, o desvio RD 006/26 passou por esta tela e chegou a Pendente Monitoramento do Plano Ação Preventiva (execucao/2026-10-15/resultado.md, CT-GQ-023), sem descrição do passo. Rodada 2 (22/10/2026; execucao/2026-10-22-desvios-rodada-2/resultado.md): o CT-GQ-023 foi refeito com o desvio 043/26; o passo desta tela funcionou e o caso falhou na etapa seguinte (DV-GQ-012).</p>
+<p>Estado nos testes: rodada 1 de 21/10/2026 (execucao/2026-10-21-desvios-rodada-1/resultado.md), com o desvio RD 056/26 e a massa de dados. Foram executados cinco casos próprios (CT-GQ-N10-05, N10-06, N10-10, N10-12 e N10-13) e cinco casos de volume e consulta (CT-GQ-F05, F06, F08, F09 e F11). Resultado: 3 passaram, 4 passaram com ressalva e 3 falharam. Antes disso, o desvio RD 006/26 passou por esta tela e chegou a Pendente Monitoramento do Plano Ação Preventiva (execucao/2026-10-15/resultado.md, CT-GQ-023), sem descrição do passo. Rodada 2 (22/10/2026; execucao/2026-10-22-desvios-rodada-2/resultado.md): o CT-GQ-023 foi refeito com o desvio 043/26; o passo desta tela funcionou e o caso falhou na etapa seguinte (DV-GQ-012). Rodada 4 (22/10/2026; execucao/2026-10-22-desvios-rodada-4/resultado.md): dois casos, o CT-GQ-N10-03 (datas) e o CT-GQ-N10-16 (impressão), ambos falharam (DV-GQ-067 estendido e DV-GQ-086).</p>
 <h2 id="importancia-no-modulo-garantia-da-qualidade">Importância no módulo Garantia da Qualidade</h2>
 <h4 id="em-uma-frase">Em uma frase</h4>
 <p>É a tela onde a Garantia da Qualidade escreve o que será feito para o desvio não voltar, e sem ela o desvio com CAPA não chega ao fim.</p>
@@ -120,6 +120,15 @@
 <p>Pontos de atenção do código que a tela confirmou: plano vazio criado só de abrir a tela (RN-GQ-D10-01); filtro de situação só com planos já abertos (RN-GQ-D10-10); filtro RD/Nº sem o ano (RN-GQ-D10-12); erro técnico com data impossível.</p>
 <p>Ressalva sobre o fechamento da tela: depois de salvar, Enviar, Limpar e Adicionar continuam visíveis (CT-GQ-N10-17). A página previa só campos travados e Salvar escondido.</p>
 <p>Não verificável: o texto impresso da CAPA com 5 000 caracteres e a impressão do plano com as ações (a impressão da CAPA não abre, DV-GQ-018).</p>
+<h4 id="confirmado-na-rodada-4">Confirmado na rodada 4</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-4/resultado.md</code>. Casos desta tela: CT-GQ-N10-03 e N10-16 (os dois falharam).</p>
+<p>Defeito novo que diz respeito a esta tela:</p>
+<ul>
+<li>DV-GQ-086 (Alta, telas 7 a 12): o Relatório de CAPA impresso traz uma mensagem de erro do relatório no lugar da avaliação (CT-GQ-N10-16, desvio 040/26).</li>
+</ul>
+<p>Estendido a esta tela: DV-GQ-067 (Data Fim exclusiva: Início e até iguais a hoje dão lista vazia, CT-GQ-N10-03). Confirma RN-GQ-D10-11.</p>
+<p>Pontos de atenção do código que a tela confirmou: data "até" sem o dia final (RN-GQ-D10-11).</p>
+<p>Não ocorreu como a página previa: o PDF mostra a data e hora do Salvar, e não a da primeira abertura (a suspeita registrada em Falhas e pontos de atenção, sobre Reports/DadosRNC.cs:321, não se confirmou; RN-GQ-D10-22). O relatório de CAPA não sai limpo.</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>RN-GQ-053 (01-regras-de-negocio.md): a linha :100 está correta, mas a regra mistura acesso e lista; separei o acesso para a seção de segurança.</li>
@@ -169,6 +178,34 @@
 <td>Prazo</td>
 <td>Data impossível dá erro técnico (código)</td>
 <td>Confirmado: "Ocorreu um erro inesperado."; 1900 dá "O Prazo na Ação Preventiva número 1 é obrigatório."</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h4>
+<p>Comparação entre o que esta página dizia e o que a tela mostrou. Fonte: <code>execucao/2026-10-22-desvios-rodada-4/resultado.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo ou ponto</th>
+<th>A página dizia</th>
+<th>A tela mostrou</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filtro de datas</td>
+<td>O desvio de hoje aparece (caso); pelo código, com "até" igual a hoje pode não aparecer</td>
+<td>Não aparece: Início e até iguais a hoje dão lista vazia (DV-GQ-067). A suspeita do código se confirmou</td>
+</tr>
+<tr>
+<td>Data do plano no PDF</td>
+<td>A data da primeira abertura da tela (inferência do código)</td>
+<td>A data e hora do Salvar (17:25:58). Esta página (Falhas e pontos de atenção e a ficha da norma, Art. 124) ainda traz a inferência antiga</td>
+</tr>
+<tr>
+<td>Relatório de CAPA impresso</td>
+<td>PDF completo com o plano, as ações e o responsável</td>
+<td>Traz o plano, mas com uma mensagem de erro do relatório no lugar da avaliação (DV-GQ-086)</td>
 </tr>
 </tbody>
 </table></div>

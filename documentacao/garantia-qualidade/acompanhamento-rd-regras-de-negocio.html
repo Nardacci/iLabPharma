@@ -111,7 +111,7 @@
 <td>RN-GQ-D13-08</td>
 <td>A coluna SETOR SOLICITANTE mostra a área do responsável do desvio. Os setores envolvidos escolhidos na pré-avaliação não são mostrados.</td>
 <td>Reports/DadosRNCFactory.cs:266-273,287</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-09): o setor vem da área do responsável e fica vazio quando o responsável não tem área (029/26 e 054/26); as duas áreas envolvidas do 029/26 não aparecem</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-09</td>
@@ -147,7 +147,7 @@
 <td>RN-GQ-D13-14</td>
 <td>O PDF sai em folha A4 deitada (29,7 x 21,0 cm) com margens de 0,5 cm nas laterais.</td>
 <td>Reports/RNCAcompanhamentoRelatorio.cs:23-27</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, CT-GQ-N13-10): o PDF sai em A4 deitada. As margens de 0,5 cm não foram medidas</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-15</td>
@@ -165,7 +165,7 @@
 <td>RN-GQ-D13-17</td>
 <td>A data e a hora impressas no PDF saem no formato americano (mm/dd/aaaa hh:mm:ss AM/PM); o endereço de impressão também leva as datas em mm/dd/aaaa.</td>
 <td>Observado na tela (resultado.md, CT-GQ-025); linha do código a localizar</td>
-<td>Validada no teste (21/10/2026, CT-GQ-025; DV-GQ-034). Rodada 2 (22/10/2026): o PDF foi baixado pela mesma chamada que o botão Imprimir faz, com as datas em mm/dd/aaaa</td>
+<td>Validada no teste (21/10/2026, CT-GQ-025; DV-GQ-034). Rodada 2 (22/10/2026): o PDF foi baixado pela mesma chamada que o botão Imprimir faz, com as datas em mm/dd/aaaa. Rodada 4 (22/10/2026, CT-GQ-N13-10): reconfirmada, "10/22/2026 4:27:11 PM", com a data situada no cabeçalho pelo resultado</td>
 </tr>
 <tr>
 <td>RN-GQ-D13-18</td>
@@ -202,6 +202,24 @@
 <td>A lista de Situação tem 7 opções (TODAS e seis); Finalizado e Cancelado não são oferecidos, mas entram no PDF com TODAS (18 e 9 desvios em 22/10/2026).</td>
 <td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N13-05); linha do código a localizar</td>
 <td>Validada no teste (22/10/2026, CT-GQ-N13-05). Confirma a RN-GQ-D13-04 e a D13-06</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-24</td>
+<td>Limpar esvazia as duas datas, volta a Situação para TODAS e esconde a faixa de erro.</td>
+<td>Bloco2/Script/AcompanhamentoRNCIndex.js:8-13 (citada em Botões e ações)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-11): datas vazias, Situação TODAS e sem faixa de erro</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-25</td>
+<td>O PDF traz no alto o cliente, o título, o período e o logotipo (uma imagem) e, na folha, o usuário que imprimiu e a página ("Página 1/10"), em A4 deitada. A data e a hora saem em formato americano com AM/PM.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-4/resultado.md, CT-GQ-N13-10); linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-10). Ressalva: o formato da data (DV-GQ-034, já registrado) e a posição da data na folha (cabeçalho, segundo o resultado; rodapé, segundo o desenho do relatório)</td>
+</tr>
+<tr>
+<td>RN-GQ-D13-26</td>
+<td>O meio de detecção "Processo / Produção" sai no PDF com a barra separada por espaços (" / ").</td>
+<td>Reports/DadosRNCFactory.cs:285 (citada em Campos do relatório)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N13-09)</td>
 </tr>
 </tbody>
 </table></div>
@@ -264,17 +282,17 @@
 <tr>
 <td>CT-GQ-N13-09 (Baixa)</td>
 <td>Colunas SETOR SOLICITANTE e MEIO DETECÇÃO. Preparação: desvio com meio "Processo/Produção" e com mais de uma área envolvida. Fazer: Imprimir. Esperado: meio com " / "; setor é a área do responsável, e as áreas envolvidas não aparecem (RN-GQ-D13-08)</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvios 054/26, 029/26 e 083/26): o meio "Processo / Produção" sai com barra; o setor vem da área do responsável e fica vazio quando ele não tem área (029/26 e 054/26); as duas áreas envolvidas do 029/26 não aparecem</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-10 (Baixa)</td>
 <td>Cabeçalho e rodapé. Fazer: Imprimir e conferir cliente, logotipo, período, data, usuário e página. Esperado: dados corretos; A3 não, A4 deitada</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026: cliente, título, período, usuário, página ("Página 1/10") e logotipo (uma imagem) no PDF, em A4 deitada. A data sai em formato americano com AM/PM ("10/22/2026 4:27:11 PM"; DV-GQ-034)</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-11 (Baixa)</td>
 <td>Limpar. Fazer: preencher datas e situação, clicar em Limpar. Esperado: datas vazias, Situação TODAS, faixa de erro escondida</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: datas vazias, Situação TODAS, sem faixa de erro</td>
 </tr>
 <tr>
 <td>CT-GQ-N13-12 (Média)</td>

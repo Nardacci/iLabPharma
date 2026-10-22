@@ -129,7 +129,7 @@
 <td>RN-GQ-D10-11</td>
 <td>A data "até" do filtro não inclui o dia final inteiro (compara com a meia-noite do dia).</td>
 <td>PlanoAcaoPreventivaRNCController.cs:66-67</td>
-<td>Validada no teste (21/10/2026, CT-GQ-F08; DV-GQ-027): com Data Início e até iguais a hoje a lista devolveu 0 linhas, embora só com a Data Início de hoje apareçam 5; só com a data até também devolveu 0</td>
+<td>Validada no teste (21/10/2026, CT-GQ-F08; DV-GQ-027): com Data Início e até iguais a hoje a lista devolveu 0 linhas, embora só com a Data Início de hoje apareçam 5; só com a data até também devolveu 0 Reconfirmada em 22/10/2026 (CT-GQ-N10-03, desvios 066/26 e 080/26, DV-GQ-067 estendido a esta tela): Início e até iguais a hoje, lista vazia; só Início 22/10, aparecem o 066 e o 080.</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-12</td>
@@ -141,7 +141,7 @@
 <td>RN-GQ-D10-13</td>
 <td>O PDF impresso é sempre o Relatório de CAPA completo, mesmo na tela do plano preventivo. O tipo de relatório informado pelo controlador não é usado.</td>
 <td>PlanoAcaoPreventivaRNCController.cs:233-242; Reports/CAPARelatorio.cs:19,54</td>
-<td>Extraída</td>
+<td>Validada em parte e contradita em parte (22/10/2026, CT-GQ-N10-16, desvio 040/26, DV-GQ-086, Alta): o PDF é o "RELATÓRIO DE CAPA" e traz o plano preventivo (título, descrição, ação, responsável e observação), mas o bloco da avaliação sai com uma mensagem de erro do relatório; o relatório não sai completo. Antes: extraída.</td>
 </tr>
 <tr>
 <td>RN-GQ-D10-14</td>
@@ -191,6 +191,12 @@
 <td>execucao/2026-10-22-desvios-rodada-3c/resultado.md; linha do código a localizar</td>
 <td>Validada no teste (22/10/2026, CT-GQ-N10-11, desvio 055/26)</td>
 </tr>
+<tr>
+<td>RN-GQ-D10-22</td>
+<td>A data e hora que o PDF mostra para o plano são as do Salvar, e não as da primeira abertura da tela.</td>
+<td>execucao/2026-10-22-desvios-rodada-4/resultado.md; linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N10-16, desvio 040/26): o PDF mostra a data e hora do Salvar (17:25:58). Contradiz a suspeita do código registrada em Falhas e pontos de atenção (a data do plano no PDF seria a da primeira abertura, Reports/DadosRNC.cs:321).</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="casos-de-teste">Casos de teste</h2>
@@ -222,7 +228,7 @@
 <tr>
 <td>CT-GQ-N10-03 (Baixa)</td>
 <td>Filtro de datas. Preparação: desvio criado hoje. Fazer: Data Início e até iguais a hoje; depois só Data Início. Esperado: o desvio de hoje aparece. Pelo código, com "até" igual a hoje ele pode não aparecer (RN-GQ-D10-11)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-067 estendido a esta tela; desvios 066/26 e 080/26): Data Início e até iguais a hoje deixam a lista vazia, e o desvio de hoje não aparece; só com a Data Início de 22/10 aparecem o 066 e o 080</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-04 (Média)</td>
@@ -287,7 +293,7 @@
 <tr>
 <td>CT-GQ-N10-16 (Baixa)</td>
 <td>Impressão. Preparação: plano salvo. Fazer: Imprimir na tela e na lista. Esperado: PDF "RELATÓRIO DE CAPA" com o plano, as ações e o responsável. Registrar a data e hora que o PDF mostra para o plano (se é a da abertura ou a do Salvar)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-086, desvio 040/26): o PDF "RELATÓRIO DE CAPA" traz o plano preventivo (título, descrição, ação, responsável, observação e a data e hora do Salvar, 17:25:58), mas com uma mensagem de erro do relatório no lugar da avaliação</td>
 </tr>
 <tr>
 <td>CT-GQ-N10-17 (Média)</td>
