@@ -75,7 +75,7 @@
 <td>RN-GQ-D12-01</td>
 <td>A lista traz os desvios em Pendente Monitoramento do Plano Ação Preventiva e os já Finalizados, sem distinguir os com plano Aceito dos com plano Não Aceito.</td>
 <td>LiberacaoPlanoAcaoPreventivaRNCController.cs:61-63; LiberacaoPlanoAcaoPreventivaIndexResultadoModel.cs:69-74</td>
-<td>Validada no teste (21/10/2026, CT-GQ-N12-03): todos os encerrados aparecem como Finalizado, sem distinguir plano aceito de não aceito</td>
+<td>Validada no teste (21/10/2026, CT-GQ-N12-03): todos os encerrados aparecem como Finalizado, sem distinguir plano aceito de não aceito. Rodada 3 (22/10/2026, CT-GQ-N12-01): os desvios em monitoramento (043, 044, 052, 053 e 073) aparecem com o lápis e os Finalizados com a lupa</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-02</td>
@@ -87,7 +87,7 @@
 <td>RN-GQ-D12-03</td>
 <td>Aprovar pede duas confirmações no navegador e avisa que depois não será possível alterar o desvio.</td>
 <td>Bloco2/Script/LiberacaoPlanoAcaoPreventivaSalvar.js:91-104</td>
-<td>Validada no teste (16/10/2026, CT-GQ-023)</td>
+<td>Validada em parte no teste (16/10/2026, CT-GQ-023; 22/10/2026, CT-GQ-N12-12): as duas perguntas aparecem e o aviso está lá. Mas responder NÃO à segunda não cancela (RN-GQ-D12-22; DV-GQ-078), então a confirmação não protege contra o encerramento</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-04</td>
@@ -99,13 +99,13 @@
 <td>RN-GQ-D12-05</td>
 <td>Não é exigido que as ações do plano estejam Finalizadas, nem que "Ações Preventivas Implementadas" seja Sim, nem que o resultado de cada ação seja coerente com a situação dela.</td>
 <td>Domain/Service/LiberacaoPlanoAcaoPreventivaValidator.cs:22-62; Bloco2/Views/LiberacaoPlanoAcaoPreventivaRNC/Editar.cshtml:197-200</td>
-<td>Validada no teste (22/10/2026, CT-GQ-N12-10 e N12-11; DV-GQ-046 e DV-GQ-012): o desvio 059/26, com uma ação ainda Pendente, foi finalizado; o 057/26, com o resultado da ação marcado "Não", também. Antes: validada em parte em 21/10/2026 (CT-GQ-N12-06; massa M30, desvio 045/26). A parte "Ações Preventivas Implementadas = Sim" não se aplica: a tela não mostra o campo (RN-GQ-D12-21). Caso parecido do corretivo: DV-GQ-002; na tela 9: DV-GQ-021</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N12-10 e N12-11; DV-GQ-046 e DV-GQ-012): o desvio 059/26, com uma ação ainda Pendente, foi finalizado; o 057/26, com o resultado da ação marcado "Não", também. Antes: validada em parte em 21/10/2026 (CT-GQ-N12-06; massa M30, desvio 045/26). A parte "Ações Preventivas Implementadas = Sim" não se aplicava na rodada 2 (RN-GQ-D12-21); a rodada 3 diz que o campo existe, então volta a ser pergunta em aberto Caso parecido do corretivo: DV-GQ-002; na tela 9: DV-GQ-021</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-06</td>
 <td>O campo Ações Nº é texto livre, sem ligação com as ações do plano. O sistema não confere se cada ação do plano recebeu resultado.</td>
 <td>Editar.cshtml:91-93; LiberacaoPlanoAcaoPreventivaValidator.cs:38-58</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N12-16; DV-GQ-079): resultados com Ações Nº "999" e com texto de 160 caracteres entraram na grade sem mensagem e Aprovar gravou ("Alteração efetuada com sucesso.")</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-07</td>
@@ -117,13 +117,13 @@
 <td>RN-GQ-D12-08</td>
 <td>As linhas de resultado já gravadas aparecem na tabela, mas não podem ser alteradas nem excluídas pela tela.</td>
 <td>LiberacaoPlanoAcaoPreventivaSalvar.js:39,193-218; _GridAcoesResultados.cshtml:37-46</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, CT-GQ-N12-09): depois de Salvar e reabrir, a linha de resultado reaparece, com os ícones de alterar e excluir. Que os ícones não tenham efeito sobre a linha gravada não foi exercitado</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-09</td>
 <td>A justificativa digitada no Salvar vai para o histórico, mas não é gravada no próprio registro de monitoramento: o campo Justificativa do registro é sempre sobrescrito com vazio.</td>
 <td>LiberacaoPlanoAcaoPreventivaRNCController.cs:234,269-272; LiberacaoPlanoAcaoPreventivaSalvar.js:117 (linha comentada)</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, CT-GQ-N12-09): ao reabrir depois do Salvar parcial, a justificativa não volta (campo vazio). O histórico não registra o Salvar (RN-GQ-D12-20), então não se pôde conferir que ela foi para lá</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-10</td>
@@ -147,13 +147,13 @@
 <td>RN-GQ-D12-13</td>
 <td>O filtro Situação "Aprovado Plano Ação Preventiva" não filtra: a consulta trata a situação Finalizado, que não é oferecida na lista.</td>
 <td>LiberacaoPlanoAcaoPreventivaRNCController.cs:77-87; LiberacaoPlanoAcaoPreventivaRNCIndexModel.cs:21-31</td>
-<td>Validada no teste (22/10/2026, ponto em aberto (b); DV-GQ-028): com 14 desvios na lista (5 pendentes e 9 finalizados), TODAS e "Aprovado Plano Ação Preventiva" devolvem os mesmos 14, e "Reprovado Plano Ação Preventiva" devolve 0. As 9 e 10 linhas da rodada 1 (CT-GQ-N12-03 e F11) eram a lista inteira em dois momentos, com um desvio a mais entre eles; não foi possível refazer aquelas contagens</td>
+<td>Validada no teste (22/10/2026, ponto em aberto (b); DV-GQ-028): com 14 desvios na lista (5 pendentes e 9 finalizados), TODAS e "Aprovado Plano Ação Preventiva" devolvem os mesmos 14, e "Reprovado Plano Ação Preventiva" devolve 0. As 9 e 10 linhas da rodada 1 (CT-GQ-N12-03 e F11) eram a lista inteira em dois momentos, com um desvio a mais entre eles; não foi possível refazer aquelas contagens. Rodada 3 (22/10/2026, CT-GQ-N12-02; DV-GQ-060 estendido): Pendente traz 5, "Aprovado" traz 20 (a lista toda, inclusive os 5 pendentes) e "Reprovado" traz 0; a regra segue validada</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-14</td>
 <td>O campo Responsável da tela mostra o responsável do desvio, e não o usuário que está monitorando.</td>
 <td>Bloco2/Models/RegistroNaoConformidadeEditarModel.cs:174; Editar.cshtml:176</td>
-<td>Extraída</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N12-15; DV-GQ-076): o bloco Responsável Pela Liberação do 043/26 mostra o mesmo nome da tela 1, e não o usuário conectado</td>
 </tr>
 <tr>
 <td>RN-GQ-D12-15</td>
@@ -195,7 +195,31 @@
 <td>RN-GQ-D12-21</td>
 <td>A tela de monitoramento não mostra o campo "Ações Preventivas Implementadas" (Sim ou Não). O encerramento não depende dele, e não há esse campo para registrar o plano como não implementado.</td>
 <td>Observado na tela (execucao/2026-10-22-desvios-rodada-2/resultado.md, CT-GQ-N12-11); linha do código a localizar (a página descrevia o campo em Editar.cshtml:132-152)</td>
-<td>Validada no teste (22/10/2026, CT-GQ-N12-11). Contradiz a descrição do campo e a parte da RN-GQ-D12-05 escritas pela leitura do código</td>
+<td>Contradita pelo teste (22/10/2026, rodada 3). Na rodada 2 (CT-GQ-N12-11) a tela aberta não mostrava o campo. O resultado da rodada 3 diz que "na tela 12 existe o campo 'Ações Preventivas Implementadas' (a rodada 2 não o tinha achado)", na seção de pontos de atenção, sem caso próprio nem captura citada. Ponto para validar: reabrir a tela e conferir onde o campo aparece e se Aprovar depende dele. Enquanto isso, a descrição do código (Editar.cshtml:132-152) e a parte da RN-GQ-D12-05 que fala dele voltam a valer</td>
+</tr>
+<tr>
+<td>RN-GQ-D12-22</td>
+<td>A segunda confirmação do Aprovar ("Deseja realmente finalizar? A partir da finalização não será possível alterar o Desvio.") tem SIM e NÃO, mas o NÃO não cancela: o desvio é finalizado do mesmo modo, com os campos travados.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N12-12); linha do código a localizar (a rodada 2 já apontava que as duas perguntas só valem no navegador, LiberacaoPlanoAcaoPreventivaSalvar.js:91-104)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N12-12; DV-GQ-078, Alta): repetido nos desvios 073/26 e 052/26. Contradiz o passo 12 do Manual e a RN-GQ-D12-03</td>
+</tr>
+<tr>
+<td>RN-GQ-D12-23</td>
+<td>Uma linha de resultado adicionada com Implementada em SELECIONE entra sem mensagem e é gravada como "Não", e continua assim depois de Salvar e reabrir.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N12-05); linha do código a localizar (Campos da tela: LiberacaoPlanoAcaoPreventivaSalvar.js:172-191)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N12-05; DV-GQ-075 estendido): desvio 073/26</td>
+</tr>
+<tr>
+<td>RN-GQ-D12-24</td>
+<td>Enviar e excluir anexo na tela de monitoramento funciona (o anexo salvo reaparece ao reabrir e, excluído e salvo, some), mas não deixa nenhuma linha no histórico do desvio.</td>
+<td>Observado na tela (execucao/2026-10-22-desvios-rodada-3c/resultado.md, CT-GQ-N12-18); linha do código a localizar</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N12-18; DV-GQ-080): desvio 043/26. A leitura do código previa linhas manuais de anexo no histórico (seção Situações e histórico)</td>
+</tr>
+<tr>
+<td>RN-GQ-D12-25</td>
+<td>Adicionar uma linha de resultado exige Ações Nº e Observação (conferido no navegador); sem um dos dois, aparece a mensagem e a linha não entra.</td>
+<td>Bloco2/Script/LiberacaoPlanoAcaoPreventivaSalvar.js:176-181 (citada em Campos da tela)</td>
+<td>Validada no teste (22/10/2026, CT-GQ-N12-04): "Ação Nº é obrigatória." e "Observação é obrigatória." no desvio 073/26</td>
 </tr>
 </tbody>
 </table></div>
@@ -223,27 +247,27 @@
 <tr>
 <td>CT-GQ-N12-01 (Média)</td>
 <td>Lista e situações. Preparação: um desvio em monitoramento e um Finalizado. Fazer: Pesquisar sem filtros. Esperado: os dois aparecem, o primeiro com lápis e o segundo com Visualizar</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026: os desvios em monitoramento (043, 044, 052, 053 e 073) aparecem com o lápis e os Finalizados com a lupa</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-02 (Média)</td>
 <td>Filtro por situação. Fazer: Pesquisar com Pendente Monitoramento do Plano Ação Preventiva, depois Aprovado Plano Ação Preventiva, depois Reprovado Plano Ação Preventiva. Esperado: cada um traz só os seus desvios. Pelo código, "Aprovado" traz o mesmo que TODAS (RN-GQ-D12-13)</td>
-<td>Falhou em 22/10/2026 (DV-GQ-028), só nos filtros TODAS, "Aprovado" e "Reprovado" (ponto em aberto (b)): 14, 14 e 0 desvios; o filtro Pendente Monitoramento não foi anotado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-028), só nos filtros TODAS, "Aprovado" e "Reprovado" (ponto em aberto (b)): 14, 14 e 0 desvios; o filtro Pendente Monitoramento não foi anotado. Repetido em 22/10/2026 (rodada 3; DV-GQ-060 estendido): Pendente 5 desvios (certo), "Aprovado" 20 (a lista toda, inclusive os 5 pendentes) e "Reprovado" 0</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-03 (Alta)</td>
 <td>Aprovado e reprovado na lista. Preparação: um desvio encerrado e outro encerrado antes com plano Não Aceito. Fazer: Pesquisar sem filtro. Esperado: dá para distinguir os dois. Pelo código, os dois aparecem "Finalizado" (RN-GQ-D12-01)</td>
-<td>Falhou em 21/10/2026 (DV-GQ-016, DV-GQ-028). Reconferido em 22/10/2026: o filtro "Aprovado" devolveu a lista inteira (14 desvios), como TODAS</td>
+<td>Falhou em 21/10/2026 (DV-GQ-016, DV-GQ-028). Reconferido em 22/10/2026: o filtro "Aprovado" devolveu a lista inteira (14 desvios), como TODAS. Reconferido em 22/10/2026 (rodada 3, CT-GQ-N12-02): 20 desvios, a lista toda</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-04 (Média)</td>
 <td>Linha de resultado incompleta. Preparação: tela aberta. Fazer: Adicionar sem Ações Nº, depois sem Observação. Esperado: "Ação Nº é obrigatória." e "Observação é obrigatória."; a linha só entra completa</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 073/26): sem Ações Nº, "Ação Nº é obrigatória."; sem Observação, "Observação é obrigatória."; a linha não entra</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-05 (Média)</td>
 <td>Implementada não escolhida. Fazer: Adicionar com Implementada = SELECIONE, com Ações Nº e Observação; Salvar. Esperado: recusa ou aviso. Registrar como a linha fica (Sim, Não ou outro valor) na tabela e depois de recarregar</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-075 estendido; desvio 073/26): Implementada em SELECIONE, com Ações Nº e Observação, entra sem mensagem; a linha fica "Não" e continua assim depois de Salvar e reabrir</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-06 (Alta)</td>
@@ -263,7 +287,7 @@
 <tr>
 <td>CT-GQ-N12-09 (Média)</td>
 <td>Reabrir depois do Salvar. Fazer: Voltar, abrir de novo. Esperado: os dados do Salvar aparecem (verificação, resultado, observação). Registrar se as linhas de resultado aparecem e se é possível excluir ou alterar uma delas (RN-GQ-D12-08)</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 073/26): depois do Salvar parcial e de reabrir, a observação final e a linha de resultado estão lá, com os ícones de alterar e excluir; a justificativa do Salvar não volta (campo vazio). O efeito dos ícones não foi conferido</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-10 (Alta)</td>
@@ -278,7 +302,7 @@
 <tr>
 <td>CT-GQ-N12-12 (Média)</td>
 <td>Segunda confirmação. Fazer: Aprovar, confirmar a primeira pergunta e responder NÃO à segunda. Esperado: nada gravado e a tela continua editável</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-078, Alta; desvios 073/26 e 052/26): responder NÃO à segunda pergunta não cancela; o desvio fica Finalizado, com campos travados e Salvar escondido</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-13 (Alta)</td>
@@ -293,12 +317,12 @@
 <tr>
 <td>CT-GQ-N12-15 (Média)</td>
 <td>Responsável exibido. Fazer: abrir a tela com um usuário diferente de quem registrou o desvio. Esperado: Responsável Pela Liberação mostra quem está monitorando. Pelo código, mostra o responsável do desvio (RN-GQ-D12-14)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-076 estendido; desvio 043/26): o bloco Responsável Pela Liberação mostra o responsável do desvio (o mesmo nome da tela 1), e não o usuário conectado</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-16 (Média)</td>
 <td>Ações Nº livre. Fazer: adicionar resultado com "999" e outro com texto longo; Aprovar. Esperado pelo código: aceita, sem ligação com as ações (RN-GQ-D12-06)</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-079; desvio 053/26): resultados com Ações Nº "999" e com texto de 160 caracteres entram na grade sem mensagem; Aprovar: "Alteração efetuada com sucesso."; o número não tem ligação com as ações do plano</td>
 </tr>
 <tr>
 <td>CT-GQ-N12-17 (Baixa)</td>
@@ -308,7 +332,7 @@
 <tr>
 <td>CT-GQ-N12-18 (Média)</td>
 <td>Anexos. Fazer: enviar anexo na tela de monitoramento, Salvar, abrir o clipe; excluir o anexo e Salvar. Esperado: anexo guardado no desvio; exclusão registrada</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (DV-GQ-080; desvio 043/26): anexo enviado, Salvar parcial e reabrir: o anexo está lá; excluir e Salvar: o anexo some; o histórico do desvio não traz nenhuma linha de anexo, nem de envio nem de exclusão</td>
 </tr>
 <tr>
 <td>CT-GQ-F05 (volume e consulta)</td>

@@ -149,6 +149,18 @@
 <p>Pontos de atenção do código que a tela confirmou: salvar duas vezes duplica o resultado (RN-GQ-D09-008); resultado antigo some da grade ao adicionar outro (RN-GQ-D09-009, com a diferença de que o lápis e a lixeira aparecem); aprovar com "Não" (RN-GQ-D09-007).</p>
 <p>Observação importante: a tela 9 recusa a aprovação com tudo vazio, enquanto a tela 12 finaliza o desvio vazio (DV-GQ-022). A regra é a mesma nas duas telas; o comportamento observado difere. Causa provável (não comprovada em teste): na tela 12 o serviço que roda as validações descarta qualquer erro interno sem avisar e devolve "sem erros" (RelatorioNaoConformidadeService.cs:22-25). Fica como pergunta ao desenvolvimento.</p>
 <p>Não exercitado nesta rodada (continua "A confirmar no teste"): Aprovar apaga a justificativa do Salvar (RN-GQ-D09-005, CT-GQ-N09-12), Responsável mostrado no bloco de liberação (RN-GQ-D09-012), anexos e impressão. A impressão do relatório de CAPA dá erro de servidor no ambiente (DV-GQ-018).</p>
+<h4 id="confirmado-na-rodada-3">Confirmado na rodada 3</h4>
+<p>Fonte: <code>execucao/2026-10-22-desvios-rodada-3b/resultado.md</code>. Casos desta tela: CT-GQ-N09-04, N09-12, N09-13, N09-14, N09-15, N09-16, N09-18 e N09-20. O CT-GQ-N09-21 não foi executado nesta rodada.</p>
+<p>Defeitos novos que dizem respeito a esta tela:</p>
+<ul>
+<li>DV-GQ-060 (Média, telas 4 e 9): o filtro Situação "Aprovado" devolve a lista inteira (CT-GQ-N09-13). É o mesmo comportamento já visto na rodada 1 (DV-GQ-028).</li>
+<li>DV-GQ-067 (Média, telas 7, 8 e 9): na Data Fim o próprio dia não entra; só Início 22/10 deu 5 linhas (só as de 22/10), só Fim 21/10 deu 1 (só o de 13/10), Início e Fim 22/10 deu 0 (CT-GQ-N09-14).</li>
+<li>DV-GQ-075 (Média): resultado adicionado sem Sim ou Não é gravado como "Não" (CT-GQ-N09-04).</li>
+<li>DV-GQ-076 (Média): o bloco Responsável Pela Liberação mostra o responsável do desvio (CT-GQ-N09-16). Confirma RN-GQ-D09-012.</li>
+</ul>
+<p>Estendido a esta tela: DV-GQ-045 (a justificativa do Salvar parcial não fica gravada em lugar nenhum, CT-GQ-N09-12). Reconfirmado: DV-GQ-026 (CT-GQ-N09-15). Relacionado: DV-GQ-074 (o anexo enviado na Execução não aparece aqui, tela 8).</p>
+<p>Pontos de atenção do código que a tela confirmou: justificativa do parcial não preservada (RN-GQ-D09-005); responsável da liberação é o do desvio (RN-GQ-D09-012); filtro Aprovado devolve tudo (RN-GQ-D09-013); resultado sem Sim ou Não vira Não.</p>
+<p>O que a tela fez como esperado: o botão Aprovar só aparece depois da última ação finalizada (CT-GQ-N09-20); as mensagens e a gravação de anexos (CT-GQ-N09-18).</p>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
 <li>RN-GQ-049 (01-regras-de-negocio.md) diz "um resultado por ação (número e observação)". O validador exige ao menos uma linha de resultado, cada uma com número e observação, e não exige um resultado por ação do plano (LiberacaoPlanoAcaoCorretivaValidator.cs:31-52). Corrigido nesta página.</li>
@@ -180,6 +192,44 @@
 <li>A mensagem "A justificativa é obrigatória!" saiu como o código previa. Sem divergência.</li>
 <li>A página dizia que a mesma regra de validação vale nas telas 9 e 12. A tela 9 recusa a aprovação vazia; a tela 12 finaliza. Em aberto (pergunta ao desenvolvimento, DV-GQ-022).</li>
 </ul>
+<h4 id="rodada-3-22-10-2026">Rodada 3 (22/10/2026)</h4>
+<p>Comparação entre o que esta página dizia e o que a tela mostrou. Fonte: <code>execucao/2026-10-22-desvios-rodada-3b/resultado.md</code>.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo ou ponto</th>
+<th>A página dizia</th>
+<th>A tela mostrou</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filtro Situação</td>
+<td>"Aprovado" mostra só os aprovados (norma interna); o código previa que mostraria as três situações</td>
+<td>Mostra a lista toda, inclusive os pendentes (14 na massa). A suspeita do código se confirmou</td>
+</tr>
+<tr>
+<td>Responsável Pela Liberação</td>
+<td>Nome de quem libera</td>
+<td>Nome do responsável do desvio</td>
+</tr>
+<tr>
+<td>Justificativa do Salvar parcial</td>
+<td>Preservada ao aprovar</td>
+<td>Não fica gravada em lugar nenhum: vem vazia ao reabrir e fica vazia no histórico</td>
+</tr>
+<tr>
+<td>Implementada sem Sim ou Não</td>
+<td>Recusa</td>
+<td>Grava "Não", sem mensagem</td>
+</tr>
+<tr>
+<td>Filtros de data</td>
+<td>Início e Fim trazem o período</td>
+<td>Fim exclui o próprio dia (DV-GQ-067)</td>
+</tr>
+</tbody>
+</table></div>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="execucao-do-plano-de-acao-corretiva-anvisa.html"><small>← Anterior</small><strong>Execução do Plano de Ação Corretiva: Anvisa</strong></a><a class="ap ap-prox" href="monitoramento-do-plano-de-acao-corretiva-manual-do-usuario.html"><small>Próximo →</small><strong>Monitoramento do Plano de Ação Corretiva: Manual do usuário</strong></a></nav>
   </main>

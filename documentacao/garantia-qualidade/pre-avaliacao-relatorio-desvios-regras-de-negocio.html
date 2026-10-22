@@ -58,19 +58,19 @@
 <td>RN-GQ-023</td>
 <td>Obrigatório o meio de detecção (processo/produção, auditoria interna, inspeção sanitária, Controle da Qualidade, Garantia da Qualidade, SAC/Fármaco ou outros). Se for Outros, o texto do campo Outros é obrigatório</td>
 <td>HSolutions.GQ.Domain/Service/PreAvaliacaoRNCValidator.cs:25-38</td>
-<td>Validada em parte no teste (21/10/2026, caso CT-GQ-009): o meio Outros sem texto foi recusado com "É obrigatório informar um Meio de Detecção da não conformidade no campo Outros.". A recusa por não escolher nenhum meio não foi exercitada</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-009; 22/10/2026, casos CT-GQ-N03-008 e N03-009): sem meio de detecção, "Meio de Detecção da não conformidade é obrigatório."; Outros sem texto, "É obrigatório informar um Meio de Detecção da não conformidade no campo Outros."</td>
 </tr>
 <tr>
 <td>RN-GQ-024</td>
 <td>Registra a observação do chefe da GQ (o código chama o campo de Chefe da SDGQ). O responsável gravado é o usuário conectado</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:239-241</td>
-<td>Extraída</td>
+<td>Validada em parte no teste (22/10/2026, casos CT-GQ-N03-013 e N03-015): a observação do chefe da GQ vazia grava; o responsável gravado é o usuário conectado (o histórico mostra o "Responsável" trocado). O texto da observação preenchida: a confirmar</td>
 </tr>
 <tr>
 <td>RN-GQ-025</td>
 <td>Sem áreas envolvidas, o desvio vai direto para Pendente Avaliação Relatório de Desvios. Com áreas, vai para Pendente Responsável Área</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:226, 248-250</td>
-<td>Validada no teste (12/10/2026, descoberta da rodada 1: caminho sem áreas; RD 005/26 ficou em Pendente Responsável Área). Reconfirmada em 21/10/2026 (casos CT-GQ-010 e CT-GQ-N03-014): duas áreas marcadas levaram a Pendente Responsável Área e cada área viu o desvio na sua lista de Avaliação Área</td>
+<td>Validada no teste (12/10/2026, descoberta da rodada 1: caminho sem áreas; RD 005/26 ficou em Pendente Responsável Área). Reconfirmada em 21/10/2026 (casos CT-GQ-010 e CT-GQ-N03-014): duas áreas marcadas levaram a Pendente Responsável Área e cada área viu o desvio na sua lista de Avaliação Área Reconfirmada em 22/10/2026 (caso CT-GQ-N03-013, desvio 079/26): sem áreas, o desvio foi a Pendente Avaliação Relatório de Desvios, saiu da lista desta tela e entrou na da tela 5.</td>
 </tr>
 <tr>
 <td>RN-GQ-026</td>
@@ -100,7 +100,7 @@
 <td>RN-GQ-D03-002</td>
 <td>O filtro RD/Nº procura o texto digitado dentro do número guardado (sem ano). Digitar com o ano não encontra. A tela não tem máscara neste campo</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:63-64; HSolutions.GQ.UI/Areas/Bloco2/Views/PreAvaliacaoRNC/Index.cshtml:28</td>
-<td>Validada no teste (21/10/2026, caso CT-GQ-F06): o filtro acha o desvio com o número puro e não acha com número e ano (por exemplo 030/26), sem erro, só "A pesquisa não retornou nenhum resultado." (DV-GQ-026)</td>
+<td>Validada no teste (21/10/2026, caso CT-GQ-F06): o filtro acha o desvio com o número puro e não acha com número e ano (por exemplo 030/26), sem erro, só "A pesquisa não retornou nenhum resultado." (DV-GQ-026) Reconfirmada em 22/10/2026 (caso CT-GQ-N03-002): "083" acha o desvio; "083/26" dá lista vazia, sem mensagem (DV-GQ-026).</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-003</td>
@@ -112,7 +112,7 @@
 <td>RN-GQ-D03-004</td>
 <td>Ao salvar, rodam três validações: as do relatório (descrição, local, justificativa, anexos, data e responsável), as da ação imediata e as da pré-avaliação (meio de detecção, texto de Outros, data e responsável). A justificativa é exigida também na primeira pré-avaliação</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:446-457</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N03-012, desvio 082/26): com a justificativa apagada, "Justificativa é obrigatória."; a justificativa já vem preenchida com a da etapa anterior. As validações do relatório e da ação imediata rodando juntas: a confirmar</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-005</td>
@@ -124,31 +124,25 @@
 <td>RN-GQ-D03-006</td>
 <td>O meio de detecção e o texto de Outros são gravados no próprio desvio (TBL_REGISTRO_RNC). O texto de Outros é gravado mesmo quando o meio escolhido não é Outros</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:227, 230</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-011, desvio 078/26): com Outros preenchido e o meio trocado para Controle da Qualidade, grava e o histórico traz o meio novo e também o campo do texto de Outros com o texto antigo (DV-GQ-059)</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-007</td>
 <td>Cada área marcada vira um registro novo em TBL_AREA_ENVOLVIDA, com o código da área e o nome enviados pela tela. Salvar de novo (outra aba, duplo envio) acrescenta as mesmas áreas outra vez; o código não confere duplicidade</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:245-262</td>
-<td>A confirmar no teste</td>
-</tr>
-<tr>
-<td>RN-GQ-D03-008</td>
-<td>Salvar sempre leva o desvio a uma das duas situações seguintes (17 ou 27), qualquer que seja a situação dele; o servidor não confere a situação de entrada</td>
-<td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:226, 250</td>
-<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N03-017): o desvio 016/26 foi de Pendente Pré Avaliação para Pendente Responsável Área. O caminho sem áreas e a não conferência da situação de entrada: A confirmar no teste</td>
+<td>A confirmar no teste. O caso CT-GQ-N03-024 (22/10/2026, desvio 083/26) salvou a mesma área em duas janelas e as duas deram "Alteração efetuada com sucesso.", mas as telas não mostram as áreas marcadas (a lista da tela Avaliação Área traz uma só linha do desvio), então não deu para saber se a área ficou duplicada. Pedir a conferência ao DBA</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-009</td>
 <td>Ao salvar, o responsável do desvio passa a ser o usuário que fez a pré-avaliação (nome e código). A área do relator não muda</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:216-217</td>
-<td>Validada no teste (22/10/2026, caso CT-GQ-N03-017): o histórico mostra o responsável do desvio trocado de quem registrou para quem pré-avaliou (DV-GQ-035). A área do relator não foi conferida</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-017): o histórico mostra o responsável do desvio trocado de quem registrou para quem pré-avaliou (DV-GQ-035). A área do relator não foi conferida Reconfirmada em 22/10/2026 (caso CT-GQ-N03-019, desvio 025/26): o histórico mostra "Responsável" do usuário da etapa anterior para quem pré-avaliou.</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-010</td>
 <td>O mesmo salvamento regrava os dados do relatório (descrição, observação, local, item, lotes, anexos) e a descrição da ação imediata (quando não vazia). Quem pré-avalia pode mudar o relato original e a tela não avisa</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:213-234, 267-359</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-018, desvio 080/26): descrição e observação do relatório mudadas na pré-avaliação aparecem no histórico como "Rel. Desvios - Não Conformidade" e "Observação", com valor antigo e novo, e a tela não avisa. O local não foi trocado</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-011</td>
@@ -166,7 +160,7 @@
 <td>RN-GQ-D03-013</td>
 <td>O campo Outros só é habilitado quando o meio Outros está marcado. Marcar outro meio o desabilita, mas o texto já digitado continua e é enviado</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:323, 980-986</td>
-<td>A confirmar no teste</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-011, desvio 078/26): trocado o meio para Controle da Qualidade, o texto já digitado em Outros continuou gravado (DV-GQ-059)</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-014</td>
@@ -184,13 +178,13 @@
 <td>RN-GQ-D03-016</td>
 <td>Confirmação e sucesso falam em "inclusão" e "alteração" de forma trocada: a pergunta é "Confirma a inclusão do item?" e o sucesso "Alteração efetuada com sucesso."</td>
 <td>HSolutions.GQ.UI/Areas/Bloco2/Script/PartialRelatorioDesvio.js:377; HSolutions.GQ.UI/Areas/Bloco2/Controllers/PreAvaliacaoRNCController.cs:371</td>
-<td>A confirmar no teste</td>
+<td>Validada em parte no teste (22/10/2026, caso CT-GQ-N03-013): o sucesso é "Alteração efetuada com sucesso.". A pergunta "Confirma a inclusão do item?" aparece também nas edições das outras telas; o caso próprio CT-GQ-N03-026 não foi executado</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-017</td>
 <td>O texto do meio Outros com 150 caracteres é aceito e gravado (limite do banco). Com 151 caracteres não foi testado</td>
 <td>Hsolutions.GQ.DB/Tables/TBL_REGISTRO_RNC.sql (MetodoDeteccaoNCOutros); massa de dados, RD 027/26</td>
-<td>Validada em parte no teste (21/10/2026): 150 caracteres aceitos. A confirmar no teste: 151 caracteres</td>
+<td>Validada no teste (21/10/2026, 150 caracteres aceitos, RD 027/26; 22/10/2026, caso CT-GQ-N03-010, desvio 082/26): com 151 caracteres a tela mostra "Ocorreu um erro inesperado.", nada é gravado e o limite não é informado (DV-GQ-058)</td>
 </tr>
 <tr>
 <td>RN-GQ-D03-018</td>
@@ -214,7 +208,37 @@
 <td>RN-GQ-D03-021</td>
 <td>A lupa não aparece na lista desta tela: a lista só mostra desvios em Pendente Pré Avaliação, sempre com o lápis. Desvios já pré-avaliados só têm Visualizar nas telas 1 e 2 e não voltam a esta situação, então a tela de consulta antiga (RN-GQ-D03-012) não é alcançada</td>
 <td>execucao/2026-10-22-desvios-rodada-2/resultado.md, caso CT-GQ-N03-021 (linha do código a localizar)</td>
-<td>Validada no teste (22/10/2026, caso CT-GQ-N03-021, Bloqueado por esta razão)</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-021, Bloqueado por esta razão) Reconfirmada em 22/10/2026 (caso CT-GQ-N03-022, Bloqueado): os desvios 084/26 (Inspeção Sanitária) e 085/26 (Garantia da Qualidade) foram pré-avaliados, saíram da lista e a lupa nunca aparece; a consulta antiga continua inalcançável.</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-022</td>
+<td>A justificativa vem preenchida com a da etapa anterior e é obrigatória: apagada, a tela recusa com "Justificativa é obrigatória."</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N03-012 (linha do código a localizar); RN-GQ-D03-004</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-012, desvio 082/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-023</td>
+<td>Outros com 151 caracteres: "Ocorreu um erro inesperado.", nada é gravado e o limite de 150 não é informado. Com 150 caracteres grava</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N03-010 (linha do código a localizar); RN-GQ-D03-017</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-010; DV-GQ-058)</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-024</td>
+<td>A observação do chefe da GQ não é obrigatória: vazia, o salvamento é aceito</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N03-015 (linha do código a localizar); RN-GQ-024</td>
+<td>Validada no teste (22/10/2026, casos CT-GQ-N03-015 e N03-013, desvio 079/26)</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-025</td>
+<td>O histórico mostra o texto de Outros (campo MetodoDeteccaoNCOutros) junto com o meio novo quando se troca o meio de Outros para outro: o texto antigo continua gravado</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N03-011 (linha do código a localizar); RN-GQ-D03-006</td>
+<td>Validada no teste (22/10/2026, caso CT-GQ-N03-011, desvio 078/26; DV-GQ-059)</td>
+</tr>
+<tr>
+<td>RN-GQ-D03-026</td>
+<td>Desvios pré-avaliados com meio Inspeção Sanitária ou Garantia da Qualidade saem da lista desta tela e a lupa nunca aparece; a consulta antiga não pode ser aberta para comparar o que ela marca</td>
+<td>execucao/2026-10-22-desvios-rodada-3a/resultado.md, caso CT-GQ-N03-022 (linha do código a localizar); RN-GQ-D03-012 e D03-021</td>
+<td>Bloqueado no teste (22/10/2026, caso CT-GQ-N03-022, desvios 084/26 e 085/26)</td>
 </tr>
 </tbody>
 </table></div>
@@ -247,7 +271,7 @@
 <tr>
 <td>CT-GQ-N03-002</td>
 <td>Lista. Fazer: pesquisar por RD/Nº só com o número (por exemplo 007) e depois com o ano (007/26). Esperado pelo código: o primeiro acha, o segundo não (RN-GQ-D03-002). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 083/26): só o número "083" acha o desvio; com o ano "083/26" a lista vem vazia, sem mensagem (DV-GQ-026 reconfirmado)</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-003</td>
@@ -267,37 +291,37 @@
 <tr>
 <td>CT-GQ-N03-007</td>
 <td>Lista. Prep.: usuário sem acesso na GQ. Fazer: abrir a lista. Esperado pelo código: o lápis aparece e histórico e impressora somem. Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 083/26); o resultado está no documento interno</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-008</td>
 <td>Tela Pré Avaliação. Fazer: salvar sem escolher o meio de detecção. Esperado: "Meio de Detecção da não conformidade é obrigatório." Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 082/26): sem meio de detecção, "Meio de Detecção da não conformidade é obrigatório."</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-009</td>
 <td>Tela Pré Avaliação. Fazer: escolher Outros, deixar o campo vazio e salvar. Esperado: "É obrigatório informar um Meio de Detecção da não conformidade no campo Outros." Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 082/26): Outros com o campo vazio, "É obrigatório informar um Meio de Detecção da não conformidade no campo Outros."</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-010</td>
 <td>Tela Pré Avaliação. Fazer: escolher Outros, digitar 151 caracteres e salvar. Esperado: gravar ou falhar; registrar a mensagem (limite de 150 só no banco). Prioridade Média</td>
-<td>Não executado</td>
+<td>Falhou em 22/10/2026 (desvio 082/26): Outros com 151 caracteres deu "Ocorreu um erro inesperado.", nada gravado e sem dizer o limite (DV-GQ-058)</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-011</td>
 <td>Tela Pré Avaliação. Fazer: escolher Outros, digitar texto, trocar para outro meio e salvar; abrir o histórico. Esperado pelo código: o texto de Outros continua gravado (RN-GQ-D03-006). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 078/26): Outros com texto, trocado para Controle da Qualidade, grava; o histórico traz o meio novo e o campo do texto de Outros com o texto antigo (DV-GQ-059)</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-012</td>
 <td>Tela Pré Avaliação. Fazer: escolher o meio, apagar a Justificativa e salvar. Esperado: "Justificativa é obrigatória." (RN-GQ-D03-004). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 082/26): justificativa apagada, "Justificativa é obrigatória."; ela já vem preenchida com a da etapa anterior</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-013</td>
 <td>Tela Pré Avaliação. Fazer: escolher o meio, não marcar áreas, preencher a justificativa e salvar. Esperado: "Alteração efetuada com sucesso." e Pendente Avaliação Relatório de Desvios. Prioridade Média</td>
-<td>Observado em 12/10/2026 (caminho sem áreas, descoberta da rodada 1); sem captura própria</td>
+<td>Passou em 22/10/2026 (desvio 079/26): sem áreas e com justificativa, "Alteração efetuada com sucesso."; Pendente Avaliação Relatório de Desvios; sai da lista desta tela e entra na da tela 5. Antes: Observado em 12/10/2026 (caminho sem áreas, descoberta da rodada 1); sem captura própria</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-014</td>
@@ -307,7 +331,7 @@
 <tr>
 <td>CT-GQ-N03-015</td>
 <td>Tela Pré Avaliação. Fazer: deixar a Observação do chefe da GQ vazia e salvar. Esperado pelo código: grava (a observação não é obrigatória). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 079/26): a observação do chefe da GQ vazia grava normalmente</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-016</td>
@@ -322,12 +346,12 @@
 <tr>
 <td>CT-GQ-N03-018</td>
 <td>Tela Pré Avaliação. Fazer: alterar o local ou a descrição do relatório junto com a pré-avaliação e salvar; abrir o histórico. Esperado: a mudança aparece no histórico; a tela não avisa (RN-GQ-D03-010). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 080/26): descrição e observação do relatório mudadas na pré-avaliação aparecem no histórico como "Rel. Desvios - Não Conformidade" e "Observação" (valor antigo e novo); a tela não avisa; o local não foi trocado</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-019</td>
 <td>Tela Pré Avaliação e Visualizar do Relatório de Desvios. Fazer: depois de salvar, conferir o responsável do desvio. Esperado pelo código: passa a ser quem pré-avaliou (RN-GQ-D03-009). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou em 22/10/2026 (desvio 025/26): o histórico mostra "Responsável" do usuário da etapa anterior para quem pré-avaliou</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-020</td>
@@ -342,7 +366,7 @@
 <tr>
 <td>CT-GQ-N03-022</td>
 <td>Consulta (lupa). Fazer: com um desvio de meio Inspeção Sanitária e outro Garantia da Qualidade, comparar o que a consulta marca. Esperado pelo código: o primeiro aparece como Controle de qualidade e o segundo sem marca (RN-GQ-D03-012). Prioridade Média</td>
-<td>Não executado</td>
+<td>Bloqueado em 22/10/2026 (desvios 084/26 e 085/26): os dois foram pré-avaliados, saem da lista e a lupa nunca aparece; não há como abrir a consulta</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-023</td>
@@ -352,7 +376,7 @@
 <tr>
 <td>CT-GQ-N03-024</td>
 <td>Tela Pré Avaliação. Prep.: duas janelas abertas com o mesmo desvio. Fazer: marcar a mesma área nas duas e salvar uma depois da outra. Esperado: observar se a área fica duplicada (RN-GQ-D03-007). Prioridade Média</td>
-<td>Não executado</td>
+<td>Passou com ressalva em 22/10/2026 (desvio 083/26): as duas janelas deram "Alteração efetuada com sucesso."; as telas não mostram as áreas, então não deu para saber se a área ficou duplicada (RN-GQ-D03-007, a confirmar com o DBA)</td>
 </tr>
 <tr>
 <td>CT-GQ-N03-026</td>
