@@ -82,6 +82,22 @@ def ancoras(arq):
     return [(_norm(re.sub(r"<[^>]+>", "", x[2])), x[1]) for x in re.findall(r'<h([23]) id="([^"]+)">(.*?)</h', t, re.S)]
 
 
+def situacoes(hom):
+    """{(módulo, nome da tela normalizado): situação}, lida dos inventários de telas (para mostrar a situação na página da própria tela)."""
+    out = {}
+    for mid, d in DIRS.items():
+        for menu, nome, sit in ler_inventario(Path(hom) / d / "11-inventario-de-telas.md"):
+            out[(mid, _norm(re.sub(r"\s*\(.*?\)", "", nome)))] = sit
+    return out
+
+
+def selo_situacao(sit):
+    """Linha "Situação da tela" para a página de documento da tela (estilo embutido, para não mexer no CSS do portal)."""
+    cor = {"Funciona": "#2e7d32", "Funciona com falhas": "#b26a00", "Falha grave": "#b3261e", "Não testada": "#6b7785", "Protótipo": "#3f6aa0", "Não abre": "#b3261e"}.get(sit, "#6b7785")
+    return (f'<p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:{cor};margin-right:6px"></span>'
+            f'Situação da tela: <strong>{html.escape(sit)}</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>')
+
+
 def montar(modulos, origem, destino):
     """[{id, nome, menus: [(menu, [tela])]}], com tela = {nome, situacao, docs: {chave: (estado, url)}}.
     Estado: "tela" (documento da própria tela), "modulo" (só o do módulo) ou "falta"."""
@@ -121,7 +137,9 @@ def montar(modulos, origem, destino):
                         docs[k] = ("tela", f"documentacao/{mid}/manual-do-usuario.html#{hit}")
                         continue
                 docs[k] = ("falta", "")
-            menus.setdefault(menu, []).append({"nome": nome, "situacao": sit, "docs": docs})
+            propria = next((docs[k][1] for k in ("analise", "manual", "regras", "fluxos", "anvisa") if docs[k][0] == "tela"), "")
+            inv_url = f"documentacao/{mid}/inventario-de-telas-e-situacao.html" if (pasta / "inventario-de-telas-e-situacao.html").exists() else ""
+            menus.setdefault(menu, []).append({"nome": nome, "situacao": sit, "docs": docs, "href": propria or inv_url, "propria": bool(propria)})
         doc_modulo = []
         for rot, slugs in DOCS_MODULO:
             for s in slugs:
@@ -137,65 +155,42 @@ COR_SIT = {"Funciona": "ok", "Funciona com falhas": "falhas", "Falha grave": "gr
 
 def pagina(dados, cabecalho, rodape):
     E = html.escape
-    cards, corpo = [], []
+    corpo = []
     for m in dados:
         telas = [t for _, ts in m["menus"] for t in ts]
-        n = len(telas)
-        proprio = sum(1 for t in telas if any(v[0] == "tela" for v in t["docs"].values()))
-        cont = {}
-        for t in telas:
-            cont[t["situacao"]] = cont.get(t["situacao"], 0) + 1
-        ordem_sit = ["Funciona", "Funciona com falhas", "Falha grave", "Não testada", "Protótipo", "Não abre"]
-        barra = "".join(f'<i class="td-b td-{COR_SIT.get(s, "nao")}" style="flex:{cont[s]}" title="{E(s)}: {cont[s]}"></i>' for s in ordem_sit if s in cont)
-        legenda = " · ".join(f"{cont[s]} {E(s.lower())}" for s in ordem_sit if s in cont)
-        if n:
-            cards.append(f'<a class="td-card" href="#m-{m["id"]}"><span class="td-card-nome">{E(m["nome"])}</span>'
-                         f'<span class="td-card-n">{n} telas · {proprio} com documento próprio</span><span class="td-barra" aria-hidden="true">{barra}</span>'
-                         f'<span class="td-card-leg">{legenda}</span></a>')
-        else:
-            cards.append(f'<a class="td-card td-card-vazio" href="#m-{m["id"]}"><span class="td-card-nome">{E(m["nome"])}</span>'
-                         f'<span class="td-card-n">inventário de telas ainda não feito</span></a>')
-        docs_mod = "".join(f'<a href="{E(u)}">{E(r)}</a>' for r, u in m["doc_modulo"])
-        h = [f'<section class="td-mod" id="m-{m["id"]}" data-modulo="{m["id"]}"><header class="td-mod-cab"><h2>{E(m["nome"])}</h2>'
-             f'<span class="td-mod-n">{n} telas</span></header>'
-             f'<div class="td-docmod"><span>Documentos do módulo inteiro:</span> {docs_mod or "nenhum ainda"} '
-             f'<a class="td-todos" href="documentacao/{m["id"]}/index.html">Página do módulo →</a></div>']
+        dossie = next((u for r, u in m["doc_modulo"] if r.startswith("Dossiê")), "")
+        link_d = (f'<ul class="td-lista td-dossie"><li class="td-item"><span class="td-ico td-i-tela" aria-hidden="true"></span>'
+                  f'<a href="{E(dossie)}">Dossiê de homologação</a></li></ul>') if dossie else ""
+        h = [f'<details class="td-mod" id="m-{m["id"]}" data-modulo="{m["id"]}"><summary><span class="td-ico td-i-mod" aria-hidden="true"></span>'
+             f'<span class="td-mod-nome">{E(m["nome"])}</span><span class="td-mod-n">{len(telas)} telas</span></summary>{link_d}']
         if not telas:
             h.append('<p class="td-vazio">Este módulo ainda não tem o inventário de telas.</p>')
         for menu, ts in m["menus"]:
-            h.append(f'<details class="td-menu" open><summary>{E(menu)} <span class="td-mod-n">{len(ts)} telas</span></summary>')
-            h.append('<div class="td-tab" role="table"><div class="td-row td-cab" role="row"><span role="columnheader">Tela</span><span role="columnheader">Situação</span>'
-                     + "".join(f'<span role="columnheader">{r}</span>' for _, r in DOCS) + '</div>')
+            h.append(f'<details class="td-menu"><summary><span class="td-ico td-i-pasta" aria-hidden="true"></span>{E(menu)} <span class="td-mod-n">{len(ts)}</span></summary><ul class="td-lista">')
             for t in ts:
-                cel = []
-                for k, rot in DOCS:
-                    est, url = t["docs"][k]
-                    if est == "tela":
-                        cel.append(f'<a class="td-c td-sim" role="cell" data-rot="{rot}" href="{E(url)}" aria-label="{rot} de {E(t["nome"])}" title="{rot}">✓</a>')
-                    else:
-                        cel.append(f'<span class="td-c td-nao" role="cell" data-rot="{rot}" aria-label="{rot}: ainda não feito">—</span>')
                 tem = any(v[0] == "tela" for v in t["docs"].values())
-                cs = COR_SIT.get(t["situacao"], "nao")
-                h.append(f'<div class="td-row td-tela" role="row" data-nome="{E(_norm(t["nome"]))}" data-tem="{"1" if tem else "0"}" data-sit="{E(t["situacao"])}">'
-                         f'<span class="td-nome" role="cell">{E(t["nome"])}</span><span class="td-sit td-s-{cs}" role="cell">{E(t["situacao"])}</span>{"".join(cel)}</div>')
-            h.append("</div></details>")
-        h.append("</section>")
+                dica = "" if t["propria"] else ' title="Ainda sem página própria: abre o inventário de telas do módulo"'
+                nome = E(t["nome"])
+                alvo = f'<a href="{E(t["href"])}"{dica}>{nome}</a>' if t["href"] else f'<span>{nome}</span>'
+                h.append(f'<li class="td-tela{"" if t["propria"] else " td-sem"}" data-nome="{E(_norm(t["nome"]))}" data-tem="{"1" if tem else "0"}" data-sit="{E(t["situacao"])}">'
+                         f'<span class="td-ico td-i-tela" aria-hidden="true"></span>{alvo}</li>')
+            h.append("</ul></details>")
+        h.append("</details>")
         corpo.append("".join(h))
     opcoes_mod = "".join(f'<option value="{m["id"]}">{E(m["nome"])}</option>' for m in dados if m["menus"])
     opcoes_sit = "".join(f'<option>{s}</option>' for s in ["Funciona", "Funciona com falhas", "Falha grave", "Não testada", "Protótipo", "Não abre"])
-    return (cabecalho("Devs/QA: telas por módulo · iLabMedSys", "", "telas").replace("</head>", '<link rel="stylesheet" href="portal/telas.css"></head>', 1) + f"""
+    return (cabecalho("Documentação por módulo · iLabMedSys", "", "telas").replace("</head>", '<link rel="stylesheet" href="portal/telas.css"></head>', 1) + f"""
 <main class="td-pagina">
-  <h1>Devs/QA: as telas por módulo</h1>
-  <p class="td-intro">Ache o que existe de cada tela. Escolha o módulo e o menu: cada tela mostra a situação e os cinco documentos <strong>da própria tela</strong> (manual, regras de negócio, fluxos, análise e Anvisa). Traço (—) quer dizer que o documento da tela ainda não foi feito. Os documentos que valem para o módulo inteiro ficam numa faixa no alto de cada módulo, uma vez só.</p>
-  <div class="td-cards">{"".join(cards)}</div>
+  <h1>Documentação por módulo</h1>
   <div class="td-filtros" role="search">
     <label class="td-f"><span>Buscar tela</span><input id="td-busca" type="search" placeholder="Nome da tela" autocomplete="off"></label>
     <label class="td-f"><span>Módulo</span><select id="td-mod"><option value="">Todos</option>{opcoes_mod}</select></label>
     <label class="td-f"><span>Situação</span><select id="td-sit"><option value="">Todas</option>{opcoes_sit}</select></label>
-    <label class="td-so"><input id="td-so" type="checkbox"> Só telas com documento próprio</label>
+    <label class="td-so"><input id="td-so" type="checkbox"> Só telas com página própria</label>
+    <span class="td-acoes"><button type="button" id="td-abrir">Abrir tudo</button><button type="button" id="td-fechar">Fechar tudo</button></span>
   </div>
   <p id="td-nada" hidden>Nenhuma tela encontrada com esses filtros.</p>
-  {"".join(corpo)}
+  <div class="td-arvore">{"".join(corpo)}</div>
 </main>
 <script>
 (function(){{
@@ -207,94 +202,70 @@ def pagina(dados, cabecalho, rodape):
       var ok=(!q||li.dataset.nome.indexOf(q)>=0)&&(!so||li.dataset.tem==='1')&&(!sit||li.dataset.sit===sit)&&(!mod||li.closest('.td-mod').dataset.modulo===mod);
       li.hidden=!ok; if(ok)total++;
     }});
-    document.querySelectorAll('.td-menu').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis;}});
-    document.querySelectorAll('.td-mod').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis&&(mod||q||so||sit);}});
+    document.querySelectorAll('.td-menu').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis; if(filtro&&vis)d.open=true;}});
+    document.querySelectorAll('.td-mod').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis; if(filtro&&vis)d.open=true;}});
     nada.hidden=!filtro||total>0;
   }}
   [b,sm,ss].forEach(function(e){{e.addEventListener('input',filtrar);}}); s.addEventListener('change',filtrar);
+  function todos(v){{document.querySelectorAll('.td-mod,.td-menu').forEach(function(d){{if(!d.hidden)d.open=v;}});}}
+  document.getElementById('td-abrir').addEventListener('click',function(){{todos(true);}});
+  document.getElementById('td-fechar').addEventListener('click',function(){{todos(false);}});
+  if(location.hash){{var a=document.querySelector(location.hash); if(a&&a.tagName==='DETAILS')a.open=true;}}
 }})();
 </script>
 """ + rodape(""))
 
 
-CSS = """/* Página Devs/QA (telas por módulo). */
-.td-pagina{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
-.td-pagina h1{font-family:Manrope,Inter,sans-serif;margin:0 0 8px}
-.td-intro{max-width:78ch;margin:0 0 18px}
-.td-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:0 0 22px}
-.td-card{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border:1px solid #c7ced6;border-radius:12px;text-decoration:none;color:inherit}
-.td-card:hover,.td-card:focus-visible{border-color:#1f5f8b}
-.td-card-nome{font-weight:700}
-.td-card-n,.td-card-leg{font-size:.8rem;opacity:.8}
-.td-card-vazio{opacity:.65}
-.td-barra{display:flex;height:8px;border-radius:4px;overflow:hidden;background:#e5e9ee}
-.td-b{display:block;min-width:3px}
-.td-b.td-ok,.td-s-ok{--c:#2e7d32}.td-b.td-falhas,.td-s-falhas{--c:#b26a00}.td-b.td-grave,.td-s-grave{--c:#b3261e}.td-b.td-nao,.td-s-nao{--c:#6b7785}.td-b.td-proto,.td-s-proto{--c:#3f6aa0}
-.td-b{background:var(--c)}
-.td-filtros{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin:0 0 18px;position:sticky;top:0;z-index:5;padding:10px 0;background:var(--fundo,#f4f6f9)}
+ICO_MOD = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'/%3E%3Cpath d='M8.5 12l2.5 2.5 4.5-5'/%3E%3C/svg%3E\")"
+ICO_PASTA = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3C/svg%3E\")"
+ICO_TELA = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3h8l4 4v14H6z'/%3E%3Cpath d='M14 3v4h4M9 12h6M9 16h6'/%3E%3C/svg%3E\")"
+
+CSS = """/* Página Documentação por módulo (telas por módulo). */
+.td-pagina{max-width:900px;margin:0 auto;padding:24px 16px 64px}
+.td-pagina h1{font-family:Manrope,Inter,sans-serif;margin:0 0 14px}
+.td-filtros{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin:0 0 16px;position:sticky;top:0;z-index:5;padding:10px 0;background:var(--fundo,#f4f6f9)}
 .td-f span{display:block;font-size:.8rem;margin-bottom:3px}
 .td-f input,.td-f select{min-width:200px;padding:8px 10px;border:1px solid #c7ced6;border-radius:8px;background:transparent;color:inherit;font:inherit}
 .td-so{display:flex;gap:6px;align-items:center;padding-bottom:8px}
-.td-mod{margin:0 0 30px;scroll-margin-top:90px}
-.td-mod-cab{display:flex;gap:12px;align-items:baseline;border-bottom:2px solid #1f5f8b;padding-bottom:4px}
-.td-mod-cab h2{margin:0;font-size:1.3rem}
-.td-mod-n{font-weight:400;font-size:.85rem;opacity:.75}
-.td-docmod{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:10px 0 12px;font-size:.88rem}
-.td-docmod span{font-weight:600}
-.td-docmod a{color:#1f5f8b}
-.td-docmod .td-todos{margin-left:auto;font-weight:600}
-.td-menu{margin:0 0 14px}
-.td-menu>summary{cursor:pointer;font-weight:700;padding:6px 0}
-.td-tab{border:1px solid #d9dee4;border-radius:10px;overflow:hidden}
-.td-row{display:grid;grid-template-columns:minmax(200px,1.8fr) 150px repeat(5,minmax(70px,.7fr));align-items:stretch;gap:0;padding:0}
-.td-row>*{padding:9px 10px;border-top:1px solid #e3e7ec;display:flex;align-items:center}
-.td-cab{background:#eef1f5;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
-.td-cab>*:nth-child(n+3){justify-content:center;text-align:center}
-.td-cab>*{border-top:0}
+.td-acoes{display:flex;gap:6px;margin-left:auto;padding-bottom:4px}
+.td-acoes button{font:inherit;font-size:.85rem;padding:6px 10px;border:1px solid #c7ced6;border-radius:8px;background:transparent;color:inherit;cursor:pointer}
+.td-acoes button:hover{border-color:#1f5f8b}
+.td-arvore{border:1px solid #d9dee4;border-radius:12px;padding:6px 8px}
+.td-mod,.td-menu{margin:0}
+.td-mod>summary,.td-menu>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;padding:9px 8px;border-radius:8px}
+.td-mod>summary::-webkit-details-marker,.td-menu>summary::-webkit-details-marker{display:none}
+.td-mod>summary::after,.td-menu>summary::after{content:"▸";margin-left:auto;font-size:.8em;transition:transform .15s;opacity:.6}
+.td-mod[open]>summary::after,.td-menu[open]>summary::after{transform:rotate(90deg)}
+.td-mod>summary:hover,.td-menu>summary:hover{background:rgba(128,128,128,.12)}
+.td-mod>summary{font-weight:700;font-size:1.02rem}
+.td-menu>summary{font-weight:600}
+.td-mod-n{font-weight:400;font-size:.8rem;opacity:.7}
+.td-mod>.td-dossie{margin:0 0 4px 14px}
+.td-mod>.td-menu,.td-mod>.td-vazio{margin-left:14px;border-left:1px solid #d9dee4;padding-left:8px}
+.td-lista{list-style:none;margin:0 0 4px 12px;padding:0 0 0 8px;border-left:1px solid #d9dee4}
+.td-tela,.td-item{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:8px}
 .td-tela[hidden],.td-menu[hidden],.td-mod[hidden]{display:none}
-.td-nome{font-weight:600}
-.td-sit{font-size:.82rem;font-weight:600;color:var(--c)}
-.td-sit::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:6px}
-.td-c{justify-content:center;font-size:1.05rem;text-decoration:none}
-.td-sim{color:#1f5f8b;font-weight:700}
-.td-sim:hover,.td-sim:focus-visible{background:#e6f0f7}
-.td-nao{color:#8a96a3}
-.td-vazio{opacity:.85}
-@media (max-width:760px){
- .td-cab{display:none}
- .td-row{grid-template-columns:1fr 1fr;padding:6px 0}
- .td-nome{grid-column:1/-1;border-top:0}
- .td-sit{grid-column:1/-1}
- .td-row>.td-c{justify-content:space-between;font-size:.9rem}
- .td-row>.td-c::before{content:attr(data-rot);font-size:.78rem;opacity:.8;margin-right:6px;font-weight:400}
- .td-docmod .td-todos{margin-left:0}
-}
-:root[data-theme="dark"] .td-card,:root[data-theme="dark"] .td-f input,:root[data-theme="dark"] .td-f select{border-color:#3b4655}
-:root[data-theme="dark"] .td-tab{border-color:#323c49}
-:root[data-theme="dark"] .td-row>*{border-top-color:#2c3541}
-:root[data-theme="dark"] .td-cab{background:#222b36}
-:root[data-theme="dark"] .td-barra{background:#2c3541}
+.td-tela a,.td-item a,.td-tela span:not(.td-ico){color:inherit;text-decoration:none;font-size:.93rem}
+.td-tela a,.td-item a{color:#1f5f8b;font-weight:600}
+.td-tela a:hover,.td-tela a:focus-visible,.td-item a:hover{text-decoration:underline}
+.td-sem a{color:inherit;font-weight:400;opacity:.8}
+.td-ico{display:inline-block;width:18px;height:18px;flex:none;background-color:currentColor;-webkit-mask:var(--ico) center/contain no-repeat;mask:var(--ico) center/contain no-repeat;opacity:.8}
+.td-i-mod{--ico:__MOD__;width:20px;height:20px;color:#1f5f8b;opacity:1}
+.td-i-pasta{--ico:__PASTA__}
+.td-i-tela{--ico:__TELA__;width:16px;height:16px}
+.td-vazio{opacity:.85;padding:4px 8px}
+@media (max-width:640px){.td-acoes{margin-left:0}}
+:root[data-theme="dark"] .td-f input,:root[data-theme="dark"] .td-f select,:root[data-theme="dark"] .td-acoes button{border-color:#3b4655}
+:root[data-theme="dark"] .td-arvore{border-color:#323c49}
+:root[data-theme="dark"] .td-mod>.td-menu,:root[data-theme="dark"] .td-mod>.td-vazio,:root[data-theme="dark"] .td-lista{border-left-color:#323c49}
 :root[data-theme="dark"] .td-filtros{background:var(--fundo,#101418)}
-:root[data-theme="dark"] .td-sim,:root[data-theme="dark"] .td-docmod a{color:#7cbfe6}
-:root[data-theme="dark"] .td-sim:hover{background:#1d2d3a}
-:root[data-theme="dark"] .td-mod-cab{border-bottom-color:#4a9fd4}
-:root[data-theme="dark"] .td-b.td-ok,:root[data-theme="dark"] .td-s-ok{--c:#66bb6a}
-:root[data-theme="dark"] .td-b.td-falhas,:root[data-theme="dark"] .td-s-falhas{--c:#ffb74d}
-:root[data-theme="dark"] .td-b.td-grave,:root[data-theme="dark"] .td-s-grave{--c:#ef7b73}
-:root[data-theme="dark"] .td-b.td-nao,:root[data-theme="dark"] .td-s-nao{--c:#9aa6b3}
-:root[data-theme="dark"] .td-b.td-proto,:root[data-theme="dark"] .td-s-proto{--c:#7ea6d9}
+:root[data-theme="dark"] .td-tela a,:root[data-theme="dark"] .td-item a{color:#7cbfe6}
+:root[data-theme="dark"] .td-i-mod{color:#7cbfe6}
 @media (prefers-color-scheme:dark){
-:root:not([data-theme="light"]) .td-card,:root:not([data-theme="light"]) .td-f input,:root:not([data-theme="light"]) .td-f select{border-color:#3b4655}
-:root:not([data-theme="light"]) .td-tab{border-color:#323c49}
-:root:not([data-theme="light"]) .td-row>*{border-top-color:#2c3541}
-:root:not([data-theme="light"]) .td-cab{background:#222b36}
-:root:not([data-theme="light"]) .td-barra{background:#2c3541}
+:root:not([data-theme="light"]) .td-f input,:root:not([data-theme="light"]) .td-f select,:root:not([data-theme="light"]) .td-acoes button{border-color:#3b4655}
+:root:not([data-theme="light"]) .td-arvore{border-color:#323c49}
+:root:not([data-theme="light"]) .td-mod>.td-menu,:root:not([data-theme="light"]) .td-mod>.td-vazio,:root:not([data-theme="light"]) .td-lista{border-left-color:#323c49}
 :root:not([data-theme="light"]) .td-filtros{background:var(--fundo,#101418)}
-:root:not([data-theme="light"]) .td-sim,:root:not([data-theme="light"]) .td-docmod a{color:#7cbfe6}
-:root:not([data-theme="light"]) .td-mod-cab{border-bottom-color:#4a9fd4}
-:root:not([data-theme="light"]) .td-b.td-ok,:root:not([data-theme="light"]) .td-s-ok{--c:#66bb6a}
-:root:not([data-theme="light"]) .td-b.td-falhas,:root:not([data-theme="light"]) .td-s-falhas{--c:#ffb74d}
-:root:not([data-theme="light"]) .td-b.td-grave,:root:not([data-theme="light"]) .td-s-grave{--c:#ef7b73}
-:root:not([data-theme="light"]) .td-b.td-nao,:root:not([data-theme="light"]) .td-s-nao{--c:#9aa6b3}
-:root:not([data-theme="light"]) .td-b.td-proto,:root:not([data-theme="light"]) .td-s-proto{--c:#7ea6d9}}
-"""
+:root:not([data-theme="light"]) .td-tela a,:root:not([data-theme="light"]) .td-item a{color:#7cbfe6}
+:root:not([data-theme="light"]) .td-i-mod{color:#7cbfe6}}
+""".replace("__MOD__", ICO_MOD).replace("__PASTA__", ICO_PASTA).replace("__TELA__", ICO_TELA)
