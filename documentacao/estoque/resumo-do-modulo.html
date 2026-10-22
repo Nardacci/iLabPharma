@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=20df228b">
+<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -41,10 +41,11 @@
       <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Resumo Executivo.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
       
     </header>
+    
     <article class="texto">
-<p><strong>Uso interno.</strong> Resumo para a diretoria, fechado em 14/10/2026 com o fim dos testes por risco (sete rodadas, 07 a 13/10/2026). O detalhe está no Relatório de Testes, na Conformidade Regulatória e nos Defeitos para Correção do módulo Estoque.</p>
+<p><strong>Uso interno.</strong> Resumo para a diretoria, atualizado em 22/10/2026 (nove rodadas de testes, 07 a 22/10). O detalhe está no Relatório de Testes, na Conformidade Regulatória e nos Defeitos para Correção.</p>
 <h2 id="conclusao">Conclusão</h2>
-<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado, e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram três falhas graves que o código não previa: a remessa não pode ser finalizada, a amostra de retenção gravada não é encontrada pela consulta nem pela saída, e a Movimentação de Quarentena aceita um destino incompleto e perde o saldo do lote.</p>
+<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado, e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram falhas graves que o código não previa: a remessa (também a de kit) não pode ser finalizada, a amostra de retenção não é encontrada, a Movimentação de Quarentena perde o saldo do lote, a Central de Pesagem dá erro ao abrir o volume e o atendimento não usa primeiro o lote que vence primeiro.</p>
 <p><strong>Dos 14 temas da norma avaliados, nenhum é atendido por completo</strong>: 5 em parte, 8 não atendidos e 1 não verificado. <strong>Parecer: o módulo não está apto para uso em ambiente regulado</strong> até as dez correções obrigatórias abaixo. Os mecanismos essenciais existem (quarentena, saldo por situação, histórico), então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
 <h2 id="o-que-foi-feito">O que foi feito</h2>
 <div class="tabela"><table>
@@ -61,15 +62,11 @@
 </tr>
 <tr>
 <td>Testes no ambiente de teste</td>
-<td>162 casos planejados; <strong>78 com resultado</strong> em sete rodadas, cobrindo 37 dos 46 de prioridade alta. Os 9 de prioridade alta restantes estão bloqueados por causas fora do teste (DBA, Ordem de Produção, recebimentos pendentes e defeitos do próprio sistema). Os 75 de prioridade média e baixa ficam para a nova versão</td>
+<td>162 casos planejados; <strong>134 com resultado</strong> em nove rodadas, cobrindo 42 dos 46 de prioridade alta. Os 4 de prioridade alta restantes estão bloqueados por causas fora do teste (Ordem de Produção, reanálise, remessa e amostra de retenção). Os 24 de média e baixa sem resultado ficam para a nova versão</td>
 </tr>
 <tr>
 <td>Desvios encontrados</td>
-<td><strong>47</strong>: 39 no documento de defeitos (11 de gravidade alta, 20 média, 8 baixa) e 8 de acesso, no documento confidencial</td>
-</tr>
-<tr>
-<td>Situação das 98 telas</td>
-<td>10 funcionam; 17 funcionam com falhas; 9 com falha grave; 5 bloqueadas no teste; 1 protótipo; 56 não testadas</td>
+<td><strong>67</strong>: 59 no documento de defeitos (14 de gravidade alta, 31 média, 14 baixa) e 8 de acesso, no documento confidencial</td>
 </tr>
 </tbody>
 </table></div>
@@ -91,12 +88,8 @@
 <td>Material de fonte não qualificada entra na fábrica (art. 8º, VI)</td>
 </tr>
 <tr>
-<td>Lote vencido é aceito no recebimento e na entrada de produto acabado</td>
-<td>Material fora da validade no estoque (art. 189)</td>
-</tr>
-<tr>
-<td>A entrada de produto acabado aceita lote inventado, sem ordem de produção</td>
-<td>Lote sem origem rastreável (arts. 124 e 164)</td>
+<td>Lote vencido é aceito na entrada; a entrada de produto acabado aceita lote inventado, sem ordem de produção</td>
+<td>Material fora da validade e lote sem origem rastreável (arts. 124, 164 e 189)</td>
 </tr>
 <tr>
 <td>A liberação do lote é a aprovação do laudo, por qualquer usuário; reprovar não exige motivo</td>
@@ -119,6 +112,10 @@
 <td>Matéria-prima usada depois da data de reteste (art. 189)</td>
 </tr>
 <tr>
+<td>O atendimento à produção não ordena os lotes por validade e aceita o que vence depois; no inventário, a mesma pessoa conta e apura, e cancelar não pede justificativa</td>
+<td>Lote de validade curta passado adiante; ajuste de saldo sem separação de funções nem rastro (arts. 124 e 189)</td>
+</tr>
+<tr>
 <td>O laudo só chega ao Estoque por um clique manual; o histórico do lote não mostra usuário, análise nem laudo</td>
 <td>Lote preso ou liberado sem rastro; trilha incompleta (art. 125)</td>
 </tr>
@@ -126,19 +123,19 @@
 </table></div>
 <div class="callout">
 <p class="callout-titulo">O que já funciona bem</p>
-<p>Quem cadastra o recebimento não o autoriza; as entradas de material criam a quarentena e abrem a análise no CQ; o lote reprovado só vai para o refugo; o lote em quarentena só vai a local de quarentena; quarentena e reprovado ficam fora do atendimento e da remessa; a movimentação recusa saldo insuficiente, destino com outro item e peso acima da capacidade; o saldo já é separado por situação, base para a situação única do lote.</p>
+<p>Quem cadastra o recebimento não o autoriza; as entradas criam a quarentena e abrem a análise no CQ; reprovado e quarentena ficam fora do atendimento e da remessa; a movimentação recusa saldo insuficiente; o inventário rotativo ajusta o saldo.</p>
 </div>
 <h2 id="dez-correcoes-obrigatorias">Dez correções obrigatórias</h2>
 <ol>
 <li>Gravar tudo ou nada: nenhuma tela mostra "sucesso" sem ter gravado; corrigir o Endereçamento.</li>
 <li>Recebimento só de fornecedor qualificado, com decisão registrada da Garantia da Qualidade para a exceção.</li>
-<li>Recusar validade anterior a hoje em toda entrada.</li>
+<li>Recusar validade anterior a hoje em toda entrada e atender pelo lote que vence primeiro.</li>
 <li>Entrada de produto acabado só a partir de uma ordem de produção liberada.</li>
 <li>Situação única do lote, aplicada em toda tela e mudada só pelo CQ, pela Pessoa Delegada ou pela Garantia da Qualidade.</li>
 <li>Liberação do lote pela Pessoa Delegada, com assinatura eletrônica; o laudo muda a situação na hora e reprovar exige motivo.</li>
-<li>Histórico completo do lote: usuário, hora, análise, laudo, aprovador e cada movimentação.</li>
+<li>Histórico completo do lote: usuário, hora, análise, laudo, aprovador e cada movimentação, ajuste e cancelamento.</li>
 <li>Conferir a permissão em toda tela e toda gravação, no servidor.</li>
-<li>Remessa que finaliza, baixa o saldo e informa a Rastreabilidade; Movimentação de Quarentena que exige endereço completo e grava saída e entrada juntas.</li>
+<li>Remessa (inclusive a de kit) que finaliza, baixa o saldo e informa a Rastreabilidade; Movimentação de Quarentena que exige endereço completo e grava saída e entrada juntas.</li>
 <li>Amostras de retenção de ponta a ponta: consulta e saída encontram o que a entrada gravou, com prazo de guarda e trava de saída.</li>
 </ol>
 <h2 id="decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</h2>
@@ -158,8 +155,8 @@
 </tr>
 <tr>
 <td>2</td>
-<td>Cobrar do DBA quatro verificações no banco: Endereçamento, erro da remessa, reserva da amostra de retenção e a movimentação que perdeu saldo</td>
-<td>O teste pela tela não alcança essas causas</td>
+<td>Cobrar do DBA a verificação do Endereçamento (qual instrução da rotina falha); as outras causas foram explicadas pela leitura do código</td>
+<td>O teste pela tela não alcança essa causa</td>
 </tr>
 <tr>
 <td>3</td>
@@ -173,8 +170,8 @@
 </tr>
 <tr>
 <td>5</td>
-<td>Autorizar o encerramento dos recebimentos de teste pendentes e decidir se devolução e inventário são testados depois do módulo Produção</td>
-<td>Sem isso o Inventário não abre e a devolução depende de uma Ordem de Produção</td>
+<td>Decidir se a devolução e a pesagem esperam o módulo Produção e como criar a Ordem de Produção de teste</td>
+<td>Sem ela a devolução fica sem Ordem de Produção; o Inventário do almoxarifado de teste segue travado por solicitações pendentes</td>
 </tr>
 </tbody>
 </table></div>
@@ -184,7 +181,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#conclusao">Conclusão</a></li><li><a href="#o-que-foi-feito">O que foi feito</a></li><li><a href="#principais-problemas">Principais problemas</a></li><li><a href="#dez-correcoes-obrigatorias">Dez correções obrigatórias</a></li><li><a href="#decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
