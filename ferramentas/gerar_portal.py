@@ -3,9 +3,11 @@
 
 O que faz:
   1. Lê os documentos em Markdown de <origem>/homologacao, conforme o CATÁLOGO abaixo.
-  2. Retira o conteúdo de segurança (o site é público): arquivos 03-achados-de-seguranca, seções com
-     "segurança" no título, blocos confidenciais, linhas com achados SEG-XXX-nn e frases que descrevem
-     como explorar uma falha. Tudo o que foi retirado vai para um relatório local (fora do site).
+  2. Segurança: por decisão do responsável (23/10/2026) o portal publica TODOS os defeitos, inclusive os de acesso e
+     segurança (documentos 03-achados-de-seguranca, seções de segurança e os registros completos de defeitos).
+     Continuam fora senhas, logins, endereços e IPs de servidor e strings de conexão (a higiene redige e o verificador
+     bloqueia). Com --sem-seguranca volta o comportamento antigo: retira arquivos 03-achados-de-seguranca, seções com
+     "segurança" no título, blocos confidenciais e linhas com achados SEG-XXX-nn; o que sai vai para um relatório local.
   3. Converte para HTML no visual do portal, copia fluxogramas e capturas usadas, e publica os Word.
      Quando um documento foi limpo, o Word é gerado de novo a partir do texto limpo.
   4. Monta a página inicial, as páginas de módulo e o índice de busca.
@@ -172,10 +174,36 @@ def passo_de(p):
     return "dados"
 
 
+def _com_seguranca(mod, docs, hom):
+    """Com a segurança pública: troca a lista de defeitos pelo registro completo (se existir) e acrescenta os achados de segurança."""
+    saida = []
+    pasta = None
+    for d in docs:
+        arq = d[0]
+        if arq.endswith("/defeitos/defeitos.md"):
+            pasta = arq.rsplit("/defeitos/", 1)[0]
+            if (hom / pasta / "defeitos" / "defeitos-completo.md").exists():
+                d = (f"{pasta}/defeitos/defeitos-completo.md",) + tuple(d[1:])
+        saida.append(d)
+    if pasta is None:
+        for sub in sorted(p.name for p in hom.iterdir() if p.is_dir()):
+            if mod["id"] == "garantia-qualidade" and sub == "5.garantia_qualidade":
+                pasta = sub
+        if pasta and (hom / pasta / "defeitos" / "defeitos-completo.md").exists():
+            saida.append((f"{pasta}/defeitos/defeitos-completo.md", "Defeitos para correção", "defeitos",
+                          f"{pasta}/defeitos/LabMedSys - Modulo Garantia da Qualidade - Defeitos para Correcao.docx"))
+    base = next((d[0].split("/")[0] for d in saida if "/" in d[0] and d[0][0].isdigit()), None)
+    if base and (hom / base / "03-achados-de-seguranca.md").exists() and not any(d[0].endswith("03-achados-de-seguranca.md") for d in saida):
+        saida.append((f"{base}/03-achados-de-seguranca.md", "Achados de segurança", "defeitos", None))
+    return saida
+
+
 def docs_com_telas(mod, hom):
     """As telas da versão nova (por menu) vêm de manifestos gerados em homologacao/: no Principal, as telas testadas;
     na Garantia da Qualidade, as telas a criar (Controle de Desvios e de Mudanças)."""
     docs = list(mod["docs"])
+    if SEGURANCA_PUBLICA:
+        docs = _com_seguranca(mod, docs, hom)
     if mod["id"] == "garantia-qualidade":
         docs += menus_gq.entradas(hom)
     fontes = {"principal": "versao-nova/1.principal/telas/manifest.json",
@@ -618,9 +646,15 @@ def bloco_diretoria(origem):
 NOMES_REAIS = re.compile(r"\b(?:FELIPE SILVA|BERTIN|Jean Song|JO[ÃA]O MARCOS(?:\.ADM)?(?: VALERIO)?|MARCOS\.ADM|VALERIO)\b", re.I)
 
 
+SEGURANCA_PUBLICA = True  # decisão do responsável (23/10/2026); --sem-seguranca volta a retirar o conteúdo de segurança
+
+
 def limpar(md, nome, retirado):
-    """Retira o conteúdo de segurança. Devolve o texto limpo; anota o que saiu em `retirado`."""
+    """Retira o conteúdo de segurança (se SEGURANCA_PUBLICA for falso). Devolve o texto limpo; anota o que saiu em `retirado`.
+    Em qualquer caso, nomes reais, logins e IPs são redigidos."""
     linhas = md.splitlines()
+    if SEGURANCA_PUBLICA:
+        return "\n".join(higiene.redigir(NOMES_REAIS.sub("(profissional do ambiente)", l)) for l in linhas) + "\n"
     saida = []
     pulando_nivel = None   # nível do título da seção que está sendo retirada
     em_callout = False
@@ -794,7 +828,7 @@ def cabecalho(titulo, raiz, ativo=""):
 def rodape(raiz):
     return f"""<footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em {HOJE}</div>
-  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="{raiz}portal/portal.js"></script>
 </body></html>
@@ -901,18 +935,18 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             if m:
                 pagina["fluxograma"] = m.group(1)
             # Word
-            if word and (hom / word).exists():
+            if word and ((hom / word).exists() or arq.endswith("defeitos-completo.md")):
                 pasta = doc_dir / "arquivos" / mod["id"]
                 pasta.mkdir(parents=True, exist_ok=True)
                 nome = Path(word).name
                 alvo = pasta / nome
-                if foi_limpo:
+                if foi_limpo or arq.endswith("defeitos-completo.md"):
                     tmp = destino / f".tmp-{s}.md"
                     tmp.write_text(limpo, encoding="utf-8")
                     titulo_doc = f"Fluxo – {titulo}" if cat == "fluxos" else titulo
                     r = subprocess.run([sys.executable, str(gerar_docx), "--modelo", str(conv.modelo_docx), "--fonte", str(tmp),
                                         "--saida", str(alvo), "--titulo", titulo_doc, "--data", HOJE,
-                                        "--descricao", "Versão publicada no portal, sem os achados de segurança",
+                                        "--descricao", "Versão publicada no portal" + ("" if SEGURANCA_PUBLICA else ", sem os achados de segurança"),
                                         "--modulo", f"Módulo {mod['nome']}"], capture_output=True, text=True)
                     tmp.unlink()
                     if r.returncode != 0:
@@ -2025,8 +2059,11 @@ def main():
     ap.add_argument("--origem", required=True, help="Pasta do repositório LabMedsys_homol")
     ap.add_argument("--destino", default=".", help="Pasta do repositório iLabPharma")
     ap.add_argument("--relatorio", help="Arquivo (fora do site) para listar o que foi retirado")
+    ap.add_argument("--sem-seguranca", action="store_true", help="Volta ao comportamento antigo: retira do portal o conteúdo de segurança")
     ap.add_argument("--atualizar-metadados", action="store_true", help="Acrescenta ao arquivo de metadados da Biblioteca as linhas que faltam (não altera as existentes)")
     a = ap.parse_args()
+    global SEGURANCA_PUBLICA
+    SEGURANCA_PUBLICA = not a.sem_seguranca
     gerar(Path(a.origem).resolve(), Path(a.destino).resolve(), a.relatorio, a.atualizar_metadados)
 
 
