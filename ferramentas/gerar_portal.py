@@ -1081,8 +1081,8 @@ def nav_lateral(mod, atual):
                     continue
                 li += f'<li><a href="{p["slug"]}.html"{" aria-current=page" if p is atual else ""}>{E(p["titulo"])}</a>'
                 r = roteiros.get(p["arq"])
-                if r:
-                    li += f'<ul class="lat-sub"><li><a href="{r["slug"]}.html"{" aria-current=page" if r is atual else ""}>Passo a passo para testar</a></li></ul>'
+                if r is not None and r is atual:  # o passo a passo agora é um botão na página de cada tela; no menu só aparece quando está aberto
+                    li += f'<ul class="lat-sub"><li><a href="{r["slug"]}.html" aria-current=page>Passo a passo para testar</a></li></ul>'
                 li += "</li>"
         aberto = " lat-atual" if atual and atual.get("passo_nome") == nome else ""
         sk, sn, _sd = _secao_de(chave)
@@ -1110,6 +1110,46 @@ def _cartao_ap(rotulo, titulo, href, lado):
     return f'<a class="ap ap-{lado}" href="{href}"><small>{E(rotulo)}</small><strong>{E(titulo)}</strong></a>'
 
 
+# Menu do sistema (grupo das páginas por tela) -> roteiro de execução (passo a passo para testar)
+GRUPO_ROTEIRO = {
+    "Controle de Desvios": "5.garantia_qualidade/roteiros/desvios-capa.md",
+    "Controle de Mudanças": "5.garantia_qualidade/roteiros/controle-mudancas.md",
+    "Assuntos Regulatórios": "5.garantia_qualidade/roteiros/assuntos-regulatorios.md",
+    "Autoinspeção e Auditoria": "5.garantia_qualidade/roteiros/autoinspecao-auditoria.md",
+}
+
+
+def _abas_extras(mod, p):
+    """Dois botões ao lado das abas da tela: 'Passo a passo' (roteiro de execução, na seção desta tela) e 'Ideal' (ficha e layout
+    da tela a criar). Onde a página ainda não existe, o botão aparece apagado."""
+    nome = telas_devs._norm(re.sub(r"\s*\(.*?\)", "", p.get("tela") or ""))
+    # Passo a passo
+    href = None
+    arq_roteiro = GRUPO_ROTEIRO.get(p.get("grupo"))
+    rot = next((x for x in mod["paginas"] if x.get("arq") == arq_roteiro), None) if arq_roteiro else None
+    if rot:
+        href = f'{rot["slug"]}.html'
+        melhor = None
+        for tn, ancora in telas_do_roteiro(rot):
+            n = telas_devs._norm(tn)
+            if n == nome or (n and nome and (n in nome or nome in n)):
+                melhor = ancora
+                if n == nome:
+                    break
+        if melhor:
+            href += f"#{melhor}"
+    # Ideal
+    ideal = next((x for x in mod["paginas"] if x.get("cat") == "novo" and x.get("grupo") == p.get("grupo")
+                  and telas_devs._norm(re.sub(r"\s*\(.*?\)", "", x.get("tela") or "")) == nome), None)
+    def botao(rotulo, destino, dica):
+        if destino:
+            return f'<a class="aba-extra" href="{destino}">{rotulo}</a>'
+        return f'<span class="aba-extra aba-apagada" aria-disabled="true" title="{dica}">{rotulo}</span>'
+    return ('<span class="aba-sep" aria-hidden="true"></span>'
+            + botao("Passo a passo", href, "O roteiro de execução desta tela ainda não foi escrito")
+            + botao("Ideal", f'{ideal["slug"]}.html' if ideal else None, "A ficha da tela ideal ainda não foi escrita"))
+
+
 def pagina_documento(mod, p):
     raiz = "../../"
     word = f'<a class="botao" href="{p["word"]}" download>⤓ Baixar em Word</a>' if p["word"] else ""
@@ -1130,8 +1170,9 @@ def pagina_documento(mod, p):
     abas = ""
     if p.get("tela_n") and p.get("aba"):
         irmas = sorted([x for x in mod["paginas"] if x.get("tela_n") == p["tela_n"] and x.get("grupo") == p.get("grupo") and x.get("aba")], key=lambda x: ABAS_DESVIOS.index(x["aba"]))
+        extras = _abas_extras(mod, p)
         abas = ('<nav class="abas-tela" aria-label="Páginas desta tela">'
-                + "".join(f'<a href="{x["slug"]}.html"{" aria-current=page" if x is p else ""}>{E(x["rotulo"])}</a>' for x in irmas) + '</nav>')
+                + "".join(f'<a href="{x["slug"]}.html"{" aria-current=page" if x is p else ""}>{E(x["rotulo"])}</a>' for x in irmas) + extras + '</nav>')
         _s = SITUACAO_TELAS.get((mod["id"], telas_devs._norm(re.sub(r"\s*\(.*?\)", "", p.get("tela") or ""))))
         if _s and p.get("desvios"):
             abas += telas_devs.selo_situacao(_s)
