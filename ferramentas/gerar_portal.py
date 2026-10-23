@@ -64,7 +64,18 @@ ROTEIROS = {
     "5.garantia_qualidade/roteiros/controle-mudancas.md": "5.garantia_qualidade/fluxos/controle-mudancas.md",
     "5.garantia_qualidade/roteiros/treinamento.md": "5.garantia_qualidade/fluxos/treinamento.md",
     "5.garantia_qualidade/roteiros/assuntos-regulatorios.md": "5.garantia_qualidade/fluxos/assuntos-regulatorios.md",
+    "3.estoque/roteiros/recebimento-quarentena-conferencia.md": "3.estoque/fluxos/recebimento-quarentena-conferencia.md",
+    "3.estoque/roteiros/movimentacao-interna.md": "3.estoque/fluxos/movimentacao-interna.md",
+    "3.estoque/roteiros/reprovado-reanalise-revalidacao.md": "3.estoque/fluxos/reprovado-reanalise-revalidacao.md",
+    "3.estoque/roteiros/solicitacao-atendimento-producao.md": "3.estoque/fluxos/solicitacao-atendimento-producao.md",
+    "3.estoque/roteiros/devolucao-entrada-producao.md": "3.estoque/fluxos/devolucao-entrada-producao.md",
+    "3.estoque/roteiros/remessa-expedicao.md": "3.estoque/fluxos/remessa-expedicao.md",
+    "3.estoque/roteiros/inventario.md": "3.estoque/fluxos/inventario.md",
+    "3.estoque/roteiros/kits.md": "3.estoque/fluxos/kits.md",
+    "3.estoque/roteiros/compras-fornecedor.md": "3.estoque/fluxos/compras-fornecedor.md",
+    "3.estoque/roteiros/almoxarifado-cq.md": "3.estoque/fluxos/almoxarifado-cq.md",
 }
+ROTEIROS_EXTRA = ["3.estoque/roteiros/relatorios.md", "3.estoque/roteiros/cadastros-de-apoio.md"]  # roteiros sem fluxo próprio
 RE_TELA = re.compile(r"^(?:Telas?\s+[\d, e]+|Fora da \w+|Fechamento)\s*·\s*(.+)$")
 
 
@@ -356,6 +367,18 @@ MODULOS = [
             ("3.estoque/fluxos/kits.md", "Kits", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Kits.docx"),
             ("3.estoque/fluxos/compras-fornecedor.md", "Compras e avaliação do fornecedor", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Compras e Avaliacao do Fornecedor.docx"),
             ("3.estoque/fluxos/almoxarifado-cq.md", "Almoxarifado do Controle da Qualidade", "fluxos", "3.estoque/fluxos/LabMedSys - Modulo Estoque - Fluxo Almoxarifado do Controle da Qualidade.docx"),
+            ("3.estoque/roteiros/recebimento-quarentena-conferencia.md", "Roteiro de execução: Recebimento, quarentena e conferência (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Recebimento e Quarentena.docx"),
+            ("3.estoque/roteiros/movimentacao-interna.md", "Roteiro de execução: Movimentação interna (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Movimentacao Interna.docx"),
+            ("3.estoque/roteiros/reprovado-reanalise-revalidacao.md", "Roteiro de execução: Reprovado, reanálise e revalidação (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Reprovado, Reanalise e Revalidacao.docx"),
+            ("3.estoque/roteiros/solicitacao-atendimento-producao.md", "Roteiro de execução: Solicitação e atendimento à produção (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Solicitacao, Separacao e Atendimento.docx"),
+            ("3.estoque/roteiros/devolucao-entrada-producao.md", "Roteiro de execução: Devolução e entradas da produção (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Devolucao e Entradas.docx"),
+            ("3.estoque/roteiros/remessa-expedicao.md", "Roteiro de execução: Remessa e expedição (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Remessa e Expedicao.docx"),
+            ("3.estoque/roteiros/inventario.md", "Roteiro de execução: Inventário (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Inventario.docx"),
+            ("3.estoque/roteiros/kits.md", "Roteiro de execução: Kits (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Kits.docx"),
+            ("3.estoque/roteiros/compras-fornecedor.md", "Roteiro de execução: Compras e avaliação do fornecedor (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Compras e Avaliacao do Fornecedor.docx"),
+            ("3.estoque/roteiros/almoxarifado-cq.md", "Roteiro de execução: Almoxarifado do Controle da Qualidade (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Almoxarifado do Controle da Qualidade.docx"),
+            ("3.estoque/roteiros/cadastros-de-apoio.md", "Roteiro de execução: Cadastros de apoio (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Cadastros de Apoio.docx"),
+            ("3.estoque/roteiros/relatorios.md", "Roteiro de execução: Relatórios (passo a passo)", "fluxos", "3.estoque/roteiros/LabMedSys - Modulo Estoque - Roteiro de Testes Relatorios.docx"),
             ("3.estoque/01-cadastros-de-apoio.md", "Cadastros de apoio", "negocio", None),
             ("3.estoque/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "3.estoque/defeitos/LabMedSys - Modulo Estoque - Defeitos para Correcao.docx"),
         ],
@@ -1138,6 +1161,18 @@ def _abas_extras(mod, p):
                     break
         if melhor:
             href += f"#{melhor}"
+    if not href:  # menu sem roteiro próprio (Estoque): procura a tela em qualquer roteiro do módulo
+        for r in mod["paginas"]:
+            if r.get("arq") in ROTEIROS or r.get("arq") in ROTEIROS_EXTRA:
+                achou = None
+                for tn, ancora in telas_do_roteiro(r):
+                    n = telas_devs._norm(tn)
+                    if n == nome:
+                        achou = ancora
+                        break
+                if achou:
+                    href = f'{r["slug"]}.html#{achou}'
+                    break
     if not href and p.get("fluxo"):  # sem roteiro de execução: o fluxo do processo a que a tela pertence
         fl = telas_devs._norm({"Almoxarifado do CQ": "Almoxarifado do Controle da Qualidade"}.get(p["fluxo"], p["fluxo"]))
         pf = None if not fl else next((x for x in mod["paginas"] if x.get("cat") == "fluxos" and not x.get("roteiro_de")
