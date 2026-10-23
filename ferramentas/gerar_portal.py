@@ -74,9 +74,8 @@ ROTEIROS = {
     "3.estoque/roteiros/kits.md": "3.estoque/fluxos/kits.md",
     "3.estoque/roteiros/compras-fornecedor.md": "3.estoque/fluxos/compras-fornecedor.md",
     "3.estoque/roteiros/almoxarifado-cq.md": "3.estoque/fluxos/almoxarifado-cq.md",
-    "3.estoque/roteiros/cadastros-de-apoio.md": "3.estoque/01-cadastros-de-apoio.md",
 }
-ROTEIROS_EXTRA = ["3.estoque/roteiros/relatorios.md"]  # roteiros sem fluxo próprio
+ROTEIROS_EXTRA = ["3.estoque/roteiros/relatorios.md", "3.estoque/roteiros/cadastros-de-apoio.md"]  # roteiros sem fluxo próprio
 RE_TELA = re.compile(r"^(?:Telas?\s+[\d, e]+|Fora da \w+|Fechamento)\s*·\s*(.+)$")
 
 
