@@ -876,7 +876,7 @@
 <td>Solicitação de produção vinda do módulo Produção (se houver ordem de teste)</td>
 <td>Aparece no Estoque com o tipo produção e segue o mesmo fluxo</td>
 <td>Baixa</td>
-<td>Bloqueado (22/10, rodada 10): a solicitação de produção vem da ordem de produção, que não pôde ser criada.</td>
+<td>Bloqueado, DV-EST-076 (22/10, rodada 11): a solicitação de produção só nasce da Solicitação de Autorizações da Produção, que não abre sem lote padrão aprovado; a Solicitação (Produção) do Estoque e a Solicitação Avulsa só têm Pesquisar e Limpar. Antes: Bloqueado (rodada 10), sem causa. Rodada 10: a ordem de produção não pôde ser criada.</td>
 </tr>
 <tr>
 <td>CT-EST-083</td>
@@ -905,14 +905,14 @@
 <td>Devolução da Produção: devolver parte do <code>TESTELOTE001</code> atendido, com justificativa</td>
 <td>Saldo volta ao endereço escolhido; aparece no histórico do lote</td>
 <td>Baixa</td>
-<td>Bloqueado, DV-EST-063 (22/10, rodada 10): a Devolução da Produção só reconhece lotes saídos por solicitação do tipo Produção.</td>
+<td>Bloqueado, DV-EST-063 e 076 (22/10, rodada 11): a Devolução da Produção só reconhece lotes saídos por solicitação do tipo Produção, e essa solicitação depende do lote padrão aprovado.</td>
 </tr>
 <tr>
 <td>CT-EST-091</td>
 <td>Ver se a devolução da produção abriu análise no CQ ou deixou o saldo disponível direto</td>
 <td>Registrar o comportamento (RN003) para a Garantia da Qualidade decidir</td>
 <td>Alta</td>
-<td>Bloqueado, DV-EST-063 (22/10, rodada 10): a Solicitação de Material (Produção) segue sem Incluir e a ordem de produção não nasce: na Produção, a Solicitação de Autorizações aceita o produto, mas a lista de Lote Padrão volta vazia (há um lote padrão cadastrado). Pergunta à área de Produção.</td>
+<td>Bloqueado, DV-EST-076 (22/10, rodada 11): sem lote padrão aprovado não há Solicitação de Autorizações. A lista de Lote Padrão volta vazia porque o lote padrão do produto 26 está ativo, mas sem aprovador; o botão Aprovar só aparece para função profissional ligada à configuração 19, e nenhuma tela de nenhum módulo faz essa ligação (testado com as 46 funções profissionais). Para destravar: o DBA ligar uma função à configuração 19 (e à 28 e 29) e alguém, que não seja quem elaborou, aprovar o lote padrão.</td>
 </tr>
 <tr>
 <td>CT-EST-092</td>
@@ -975,7 +975,7 @@
 <td>Entrada de Produção (serviços) com custos <code>TESTE</code></td>
 <td>Registrar o comportamento e os campos pedidos</td>
 <td>Média</td>
-<td>Bloqueado (22/10, rodada 10): a Entrada de Produção (serviços) segue sem Incluir; depende da ordem de produção, que não pôde ser criada.</td>
+<td>Bloqueado, DV-EST-076 (22/10, rodada 11): a Entrada de Produção (serviços) depende da ordem de produção, que não nasce sem lote padrão aprovado.</td>
 </tr>
 <tr>
 <td>CT-EST-101</td>
@@ -1131,7 +1131,7 @@
 <td>Receber o pedido pelo fluxo de Recebimento e baixar no Recebimento do Item</td>
 <td>Pedido baixado; ver se a baixa foi automática ou manual</td>
 <td>Baixa</td>
-<td>Bloqueado (22/10, rodada 10): os pedidos de compra 000001 a 000008 (todos ABERTO) não têm ícone de editar nem de baixar na lista (só Excluir), então não dá para abrir o pedido. Pelo código (inferência): o ícone de baixar só aparece com o pedido finalizado ou em recebimento, e hoje ninguém consegue finalizar um pedido.</td>
+<td>Bloqueado, DV-EST-077 (22/10, rodada 11): os pedidos de compra 000001 a 000008 (todos ABERTO) só têm o ícone Excluir. A árvore de funções do perfil (aba Estoque, 361 funções) não tem nó de Pedido de Compra nem de baixa de pedido; sem a permissão Alterar, Incluir e BAIXAR_PEDIDO nenhum ícone aparece e não há como finalizar ou baixar um pedido.</td>
 </tr>
 <tr>
 <td>CT-EST-165</td>
@@ -1365,21 +1365,21 @@
 <td>Entrada de amostra de retenção do <code>TESTEPA001</code></td>
 <td>Amostra reservada e endereçada; aparece na consulta</td>
 <td>Baixa</td>
-<td>Passou em parte (13/10): a entrada foi gravada e o saldo foi corretamente reservado (5 un. em endereço próprio, <code>TESTE RETENCAO</code>), mas a amostra <strong>não aparece na "Consulta Disponibilidade (Referência-Retenção-Estabilidade)"</strong> nem é localizada depois pela tela de Saída (ver CT-EST-176, DV-EST-047). Foi preciso criar o almoxarifado, o local e o endereço <code>TESTE RETENCAO</code> (nenhum cadastro do tipo existia no ambiente)</td>
+<td>Passou (22/10, rodada 11, complemento na tela certa): na Entrada de Material do Regulatório, a entrada pendente de Retenção do lote <code>TESTEPA013</code> (2 un.) abriu pelo ícone Movimentar (que só aparece depois da Movimentação de Quarentena do lote), foi enviada para o almoxarifado de retenção e finalizada ("Movimentação finalizada!"); a Saída - Retenção do lote lista o endereço, sem erro. Antes: passou em parte (13/10): entrada gravada e saldo reservado, mas a amostra não aparecia na consulta (DV-EST-047, explicado na rodada 10: faltava a marca Retenção no Item).</td>
 </tr>
 <tr>
 <td>CT-EST-172</td>
 <td>Entrada de amostra de estabilidade sem tipo de estabilidade</td>
 <td>Recusa: "É necessário informar um tipo de estabilidade!"</td>
 <td>Baixa</td>
-<td>Falhou, DV-EST-071 (22/10, rodada 10): Entrada - Estabilidade de 3 un. do TESTEPA010 para L908-R001-C001-A001: a tela não tem campo de tipo de estabilidade e aceitou ('Movimentação finalizada!'); esperava-se 'É necessário informar um tipo de estabilidade!'. Antes: Bloqueado.</td>
+<td>Bloqueado (22/10, rodada 11, revisão): a rodada 10 (Falhou, DV-EST-071) testou a tela Movimentações. A tela que pede o tipo de estabilidade ("É necessário informar um tipo de estabilidade!") é a Entrada de Material, e nela só chegam entradas pendentes que nenhum caminho cria (DV-EST-074); não dá para executar o caso na tela certa. O que se viu em Movimentações continua verdadeiro (DV-EST-071, corrigido).</td>
 </tr>
 <tr>
 <td>CT-EST-173</td>
 <td>Entrada de estabilidade com tipo</td>
 <td>Acompanhamento de estabilidade aberto no CQ (conferir no módulo CQ)</td>
 <td>Baixa</td>
-<td>Bloqueado, DV-EST-071 (22/10, rodada 10): o Acompanhamento de Estabilidade do CQ continua vazio depois da entrada; o CQ não tem Regra de Estabilidade e a tela de regra não aceitou o item ('Selecione um item.').</td>
+<td>Falhou, DV-EST-074 e 075 (22/10, rodada 11): com a Regra de Estabilidade criada (só foi possível com item de código numérico, DV-EST-075) e o ciclo do CQ completo de um lote novo, a Entrada de Material mostra só a entrada pendente de Retenção, nenhuma de Estabilidade (o campo "Qtd. Estabilidade" não aparece no Registro de Amostragem); a entrada manual em Movimentações é aceita e o Acompanhamento Estabilidade do CQ continua vazio. Antes: Bloqueado (rodada 10).</td>
 </tr>
 <tr>
 <td>CT-EST-174</td>
@@ -1425,7 +1425,7 @@
 <tr>
 <th>Prioridade</th>
 <th>Casos</th>
-<th>Já executados (rodadas de 07, 08, 12, 13 e 22/10, esta última com as rodadas 8, 9 e 10)</th>
+<th>Já executados (rodadas de 07, 08, 12, 13 e 22/10, esta última com as rodadas 8, 9, 10 e 11)</th>
 <th>A executar</th>
 </tr>
 </thead>
@@ -1459,6 +1459,7 @@
 <p>Na rodada 8 (22/10/2026) entraram 55 casos novos neste quadro (de 78 para 133). Dos 94 casos da rodada, 58 deram resultado conclusivo; três deles (CT-EST-018, 040 e 195) já estavam contados como parciais. As 4 Alta que restam são CT-EST-058, 091, 116 e 176.</p>
 <p>Na rodada 9 (22/10/2026) entrou mais 1 caso (de 133 para 134): o CT-EST-076 (pesagem sem pesar) passou. Dos 27 casos da rodada, 24 seguem bloqueados, 2 (CT-EST-117 e 118) não se aplicam à tela e 1 passou; nenhum caso Alta mudou de situação, então as Alta pendentes continuam 4.</p>
 <p>Na rodada 10 (22/10/2026) entraram mais 15 casos (de 134 para 149): 5 passaram (CT-EST-054, 072, 155, 174 e 175), 5 passaram com ressalva (041, 071, 154, 156 e 177) e 5 falharam (101, 116, 119, 172 e 176). Dos 27 casos da rodada, 10 seguem bloqueados (058, 091, 192, 100, 077, 055, 082, 090, 164 e 173) e 2 (CT-EST-117 e 118) não se aplicam à tela. Das 4 Alta pendentes, duas foram resolvidas (CT-EST-116 e 176, ambas Falhou); <strong>ficam 2 Alta bloqueadas</strong> (CT-EST-058 e 091). Sem resultado conclusivo ficam 13 casos: 10 bloqueados, 2 que não se aplicam e o CT-EST-023 (acesso pelo endereço, fora do escopo).</p>
+<p>Na rodada 11 (22/10/2026) o total <strong>não mudou (149)</strong>: o CT-EST-173 virou conclusivo (Falhou, DV-EST-074 e 075) e o CT-EST-172 deixou de ser (voltou a Bloqueado, porque a rodada 10 tinha testado a tela errada). O CT-EST-171 passou (era "passou em parte"). Seguem bloqueados 10 casos (055, 058, 077, 082, 090, 091, 100, 164, 172 e 192) e 2 não se aplicam (117 e 118); o CT-EST-023 fica fora do escopo. <strong>Ficam 2 Alta bloqueadas</strong> (CT-EST-058 e 091). Dos 8 casos da rodada: 1 passou, 1 falhou e 6 bloqueados.</p>
 <h3 id="8-ordem-sugerida-das-proximas-rodadas">8. Ordem sugerida das próximas rodadas</h3>
 <div class="tabela"><table>
 <thead>
@@ -1508,6 +1509,11 @@
 <td>~~10~~</td>
 <td>~~Os casos Bloqueado e Não executado da rodada 9 que não são de acesso, mais o CT-EST-116~~ <strong>Feita em 22/10/2026</strong> (com usuários de teste de outros grupos, recebimento novo autorizado por outra pessoa, ciclo do CQ com duas pessoas, Movimentação de Quarentena, retenção, estabilidade, remessas e kits): 5 passaram, 5 com ressalva, 5 falharam, 10 bloqueados e 2 não se aplicam; 5 defeitos novos públicos (DV-EST-068 a 073, sem o de acesso). Reproduzidos pela tela: DV-EST-016 (com recebimento novo), 043, 044, 046 (causa confirmada: falta o centro de custo na tela genérica) e 047 (em parte); DV-EST-066 explicado</td>
 <td>Destravar o que faltava (outros usuários e lote novo)</td>
+</tr>
+<tr>
+<td>~~11~~</td>
+<td>~~Destravar a Produção, criar a Regra de Estabilidade e investigar o Pedido de Compra (CT-EST-091, 082, 090, 100, 164, 171 a 173)~~ <strong>Feita em 22/10/2026:</strong> 1 passou (CT-EST-171), 1 falhou (CT-EST-173) e 6 bloqueados (091, 082, 090, 100, 164 e 172, esta revisada); 4 defeitos novos (DV-EST-074 a 077, entre eles 2 de acesso) e o DV-EST-071 corrigido. A ordem de produção não nasceu: ninguém consegue aprovar o lote padrão (DV-EST-076)</td>
+<td>Destravar a Produção</td>
 </tr>
 </tbody>
 </table></div>

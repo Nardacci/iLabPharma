@@ -50,7 +50,7 @@
 <ul>
 <li>Módulo Estoque: cadastros de apoio; recebimento, inspeção do veículo, conferência e endereçamento; quarentena, análise do Controle da Qualidade e liberação; movimentação interna; reprovado, reanálise e revalidação; solicitação, separação e atendimento à produção; devolução e entradas da produção; remessa e expedição; compras e avaliação do fornecedor; inventário; kits; almoxarifado do Controle da Qualidade (amostras de referência, retenção e estabilidade).</li>
 <li>O Controle da Qualidade entra onde o ciclo do lote exige (solicitação de análise, laudo, "Atualizar resultado"). A Produção e o Comercial entram só onde um caso de teste pede.</li>
-<li>Fora deste ciclo: as cópias das telas do Principal (usuários, perfis, local), que se testam no Principal; o acesso e a segurança da aplicação, que têm documento próprio, confidencial.</li>
+<li>Fora deste ciclo: as cópias das telas do Principal (usuários, perfis, local), que se testam no Principal; o acesso e a segurança da aplicação, que têm documento próprio (Achados de Segurança).</li>
 </ul>
 <h3 id="documentos-deste-pacote">Documentos deste pacote</h3>
 <div class="tabela"><table>
@@ -107,7 +107,7 @@
 <h2 id="estrategia-de-homologacao">Estratégia de homologação</h2>
 <p>A homologação seguiu as etapas do Guia nº 33/2020:</p>
 <ul>
-<li><strong>Engenharia reversa do código-fonte:</strong> extração das regras (283), da matriz de permissões, do modelo de dados (165 tabelas, 268 relacionamentos, 11 gatilhos) e dos achados restritos à TI (documento confidencial).</li>
+<li><strong>Engenharia reversa do código-fonte:</strong> extração das regras (283), da matriz de permissões, do modelo de dados (165 tabelas, 268 relacionamentos, 11 gatilhos) e dos achados de segurança e acesso.</li>
 <li><strong>Documentação dos dez fluxos</strong>, com fluxograma, regras e casos de teste, no mesmo formato dos fluxos da equipe.</li>
 <li><strong>Análise de risco</strong> das funções do módulo (24 riscos), para definir a prioridade dos testes.</li>
 <li><strong>Plano de testes</strong> com 162 casos, que servem também de testes de aceite da nova versão.</li>
@@ -118,9 +118,9 @@
 <p class="callout-titulo">Condições da execução</p>
 <ul>
 <li>Ambiente de teste da empresa (não produção), com dados fictícios identificados pelo prefixo TESTE, acessado pela VPN com automação no navegador (Claude Code com Playwright, no computador da equipe).</li>
-<li>Dez rodadas, de 07 a 22/10/2026: cadastros de apoio e recebimento (07 e 08/10); entradas de material (12/10); quarentena e laudo do CQ (12/10); movimentação interna, reprovado e reanálise (13/10); reanálise concluída e trava da quarentena (13/10); atendimento à produção e remessa (13/10); devolução, inventário, amostras de retenção e repetições (13/10); cadastros de apoio, atendimento, inventário, kits, remessa e relatórios, com massa de dados variada (22/10); casos bloqueados ou não executados da rodada 8, com o ambiente de teste preparado (22/10); casos bloqueados da rodada 9, já com mais de um usuário de teste: recebimento novo autorizado por outra pessoa, ciclo do CQ com duas pessoas, retenção, estabilidade, remessas e kits (22/10).</li>
+<li>Onze rodadas, de 07 a 22/10/2026: cadastros de apoio e recebimento (07 e 08/10); entradas de material (12/10); quarentena e laudo do CQ (12/10); movimentação interna, reprovado e reanálise (13/10); reanálise concluída e trava da quarentena (13/10); atendimento à produção e remessa (13/10); devolução, inventário, amostras de retenção e repetições (13/10); cadastros de apoio, atendimento, inventário, kits, remessa e relatórios, com massa de dados variada (22/10); casos bloqueados ou não executados da rodada 8, com o ambiente de teste preparado (22/10); casos bloqueados da rodada 9, já com mais de um usuário de teste: recebimento novo autorizado por outra pessoa, ciclo do CQ com duas pessoas, retenção, estabilidade, remessas e kits (22/10); casos bloqueados da rodada 10, para destravar a Produção, criar a Regra de Estabilidade e investigar o Pedido de Compra, com uma leitura de Auditoria sem alterar dados (22/10).</li>
 <li>Nenhuma senha foi gravada em arquivo ou evidência. Os registros de teste permanecem no ambiente, por decisão do responsável.</li>
-<li>Os casos de permissão pelo endereço da tela foram executados, e o resultado fica só no documento confidencial.</li>
+<li>Os casos de permissão pelo endereço da tela foram executados, e o resultado está no documento Achados de Segurança e nos defeitos de acesso.</li>
 </ul>
 </div>
 <h3 id="correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</h3>
@@ -217,13 +217,14 @@
 </tr>
 </tbody>
 </table></div>
-<p>Fora do menu há ainda 1 protótipo (Liberação pelo CQ), que não entra no total. <em>Contagem refeita em 22/10/2026, depois da rodada 8 (e ajustada pelas rodadas 9 e 10: Local de Armazenagem e Central de Pesagem mudaram de situação na 9; Aprovação de Solicitação, Controle de Kits e Consulta Disponibilidade, na 10), linha a linha pelas tabelas abaixo (a tela "Agenda de Reanálise" aparece em duas seções e conta uma vez). A tabela anterior, de 13/10, somava 98 incluindo o protótipo e estava 2 telas fora da soma das linhas.</em></p>
+<p>Fora do menu há ainda 1 protótipo (Liberação pelo CQ), que não entra no total. <em>Contagem refeita em 22/10/2026, depois da rodada 8 (e ajustada pelas rodadas 9 e 10: Local de Armazenagem e Central de Pesagem mudaram de situação na 9; Aprovação de Solicitação, Controle de Kits e Consulta Disponibilidade, na 10; na 11 nenhuma tela mudou de situação), linha a linha pelas tabelas abaixo (a tela "Agenda de Reanálise" aparece em duas seções e conta uma vez). A tabela anterior, de 13/10, somava 98 incluindo o protótipo e estava 2 telas fora da soma das linhas.</em></p>
 <p><strong>O que isso quer dizer:</strong> os testes de 07 e 08/10 cobriram os cadastros de apoio e a entrada de material, até o Endereçamento. O Endereçamento não grava (DV-EST-016), então nenhum lote ganha saldo, e as telas seguintes (quarentena, CQ, movimentação, separação, remessa) <strong>não puderam ser testadas</strong>. A causa está no banco e depende do DBA, que não respondeu: fica <strong>pendente</strong>.</p>
 <p><strong>Um caminho para destravar (confirmado no teste de 12/10/2026):</strong> as telas <strong>Entrada de Material - Outras</strong> e <strong>Entrada de Material - Produção</strong> gravam a entrada por outra rotina (<code>LaboSys_UI/estoque/entrada_material_ed.aspx.cs:316-322</code>, <code>entrada_producao_ed.aspx.cs:156-166</code>: inclusão da movimentação, volumes e abertura da análise no CQ), sem passar pelo Endereçamento. Se funcionarem, criam um lote com saldo em quarentena e permitem testar a quarentena, a análise do CQ e o que vem depois.</p>
 <p><strong>Rodada 3 (12/10/2026):</strong> o ciclo da quarentena e do CQ foi executado com os lotes <code>TESTEPA001</code>, <code>TESTELOTE003</code> e <code>TESTEPA998</code>. Oito telas do Estoque passaram a ter situação (Controle da Qualidade, Movimentação de Quarentena, Separação, Atendimento, Movimentação de Material, Disponibilidade do Lote, Histórico do Lote e Solicitação de Material - Consumo). A <strong>Central de Pesagem</strong> continua não testada: a amostra do CQ não gerou pesagem. As telas do CQ têm o inventário próprio em <code>../4.controle_qualidade/11-inventario-de-telas.md</code>.</p>
 <p><strong>Rodada 8 (22/10/2026):</strong> 85 casos de 94 foram tentados (sem os de permissão). Das 58 telas "não testadas", <strong>22 passaram a ter situação</strong> (cadastros de apoio, Saída de Material, Devolução, Entrada de Produção, Aprovação de Solicitação, kits e relatórios de kit e de quarentena). <strong>8 mudaram de situação:</strong> o <strong>Atendimento de Solicitação</strong> passou a <strong>falha grave</strong> (não ordena os lotes por validade e aceita o que vence depois, DV-EST-048); a <strong>Movimentação de Material</strong>, a <strong>Entrada de Material - Outras</strong> e a <strong>Estoque Coluna</strong> passaram a "funciona com falhas"; e as quatro telas do <strong>Inventário</strong> saíram de "bloqueada no teste" depois que um almoxarifado sem pendências abriu o inventário (uma funciona, três funcionam com falhas, DV-EST-049 e 050). A <strong>Análise do Planejamento de Kits</strong> entrou como falha grave (diz "gerada" e não grava, DV-EST-054) e a tela <strong>Banco</strong> (fora do menu: não grava e mostra erro técnico, DV-EST-052) aparece em "Fora do menu".</p>
 <p><strong>Rodada 9 (22/10/2026):</strong> 27 casos que a rodada 8 deixou bloqueados ou não executados (sem os de segurança): 1 passou, 24 seguem bloqueados e 2 não se aplicam à tela. Duas telas mudaram de situação: a <strong>Central de Pesagem</strong> (de não testada para <strong>falha grave</strong>, DV-EST-067) e o <strong>Local de Armazenagem</strong> (de funciona para <strong>funciona com falhas</strong>, DV-EST-066). As demais ficam como estavam; a Remessa de Material não tem data de embarque, data da guia nem chave de nota fiscal (CT-EST-117 e 118).</p>
 <p><strong>Rodada 10 (22/10/2026):</strong> 27 casos que a rodada 9 deixou bloqueados ou não executados (sem os de segurança e acesso), mais o CT-EST-116: 5 passaram, 5 passaram com ressalva, 5 falharam, 10 seguem bloqueados e 2 não se aplicam à tela. Três telas mudaram de situação: a <strong>Aprovação de Solicitação</strong> (de bloqueada para <strong>funciona com falhas</strong>: aprova, mas aceita quem criou a solicitação, DV-EST-070), o <strong>Controle de Kits</strong> (de bloqueada para <strong>funciona</strong>: mostra guia, lote, validade e remessa do componente enviado) e a <strong>Consulta Disponibilidade (Referência-Retenção-Estabilidade)</strong> (de falha grave para <strong>funciona com falhas</strong>: a lista vazia era a marca de Retenção que faltava no cadastro do Item; depois de marcada, lista o saldo). A <strong>Movimentações</strong> segue <strong>falha grave</strong>: aceita a saída de retenção antes do vencimento sem aviso (DV-EST-068) e a entrada de estabilidade sem tipo (DV-EST-071).</p>
+<p><strong>Rodada 11 (22/10/2026):</strong> 8 linhas (1 passou, 1 falhou, 6 bloqueadas), para destravar a Produção, criar a Regra de Estabilidade e investigar o Pedido de Compra. <strong>Nenhuma tela do Estoque mudou de situação</strong>; entram só observações. O <strong>Pedido de Compra</strong> continua "funciona com falhas": sem nó na árvore de funções do perfil, a lista só mostra o ícone Excluir (DV-EST-077, acesso). A <strong>Entrada de Material (Referência-Retenção-Estabilidade)</strong> só recebe entradas pendentes de retenção: o campo "Qtd. Estabilidade" da amostragem do CQ está desligado, então não chega nenhuma de estabilidade (DV-EST-074); o ícone Movimentar só aparece depois da Movimentação de Quarentena do lote (regra da tela). A <strong>Solicitação de Material (Produção)</strong> e a <strong>Solicitação Avulsa</strong> seguem só com Pesquisar e Limpar, porque a ordem de produção não nasce: o lote padrão do produto 26 está sem aprovação e nenhuma tela liga a função de aprovar à configuração 19 (DV-EST-076, Alta, acesso). Na Consulta de Disponibilidade, o lote vencido mostra o saldo em "Bloqueado / Inventário" e a coluna "Vencido / Reanálise" em 0.</p>
 <h2 id="analise-de-risco">Análise de risco</h2>
 <p>Método: Guia nº 33/2020, item 6 (gerenciamento do risco à qualidade, com base no ICH Q9 e no GAMP 5), com as mesmas escalas dos outros módulos. Neste módulo, a probabilidade de vários riscos vem de falha confirmada em tela (T), e não só do código (C).</p>
 <h3 id="avaliacao-inicial">Avaliação inicial</h3>
@@ -963,7 +964,7 @@
 <li>A análise do produto acabado deve abrir como tipo próprio? (DV-EST-026)</li>
 </ol>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
-<p>Os achados de segurança do Estoque (14 achados: acesso por endereço, autorização de recebimento, funções procuradas por número fixo, telas de erro que mostram detalhes técnicos, entre outros) e os 9 desvios de acesso dos testes estão no documento <strong>Achados de Segurança</strong>, de distribuição restrita à Garantia da Qualidade, à TI e à equipe de desenvolvimento. Este dossiê registra apenas que eles existem, foram testados nas rodadas de teste e entram nas correções obrigatórias (conferir a permissão em toda tela e toda gravação, no servidor).</p>
+<p>Os achados de segurança do Estoque (14 achados: acesso por endereço, autorização de recebimento, funções procuradas por número fixo, telas de erro que mostram detalhes técnicos, entre outros) e os 10 desvios de acesso dos testes estão no documento <strong>Achados de Segurança</strong> (e os desvios de acesso, no registro de defeitos). Este dossiê registra que eles existem, foram testados nas rodadas de teste e entram nas correções obrigatórias (conferir a permissão em toda tela e toda gravação, no servidor).</p>
 <h2 id="plano-de-testes">Plano de testes</h2>
 <h3 id="objetivo">Objetivo</h3>
 <p>Confirmar nas telas o que a leitura do código encontrou no Estoque:
@@ -1044,7 +1045,7 @@
 <tr>
 <th>Prioridade</th>
 <th>Casos</th>
-<th>Já executados (rodadas de 07, 08, 12, 13 e 22/10, esta última com as rodadas 8, 9 e 10)</th>
+<th>Já executados (rodadas de 07, 08, 12, 13 e 22/10, esta última com as rodadas 8, 9, 10 e 11)</th>
 <th>A executar</th>
 </tr>
 </thead>
@@ -1078,9 +1079,10 @@
 <p>Na rodada 8 (22/10/2026) entraram 55 casos novos neste quadro (de 78 para 133). Dos 94 casos da rodada, 58 deram resultado conclusivo; três deles (CT-EST-018, 040 e 195) já estavam contados como parciais. As 4 Alta que restam são CT-EST-058, 091, 116 e 176.</p>
 <p>Na rodada 9 (22/10/2026) entrou mais 1 caso (de 133 para 134): o CT-EST-076 (pesagem sem pesar) passou. Dos 27 casos da rodada, 24 seguem bloqueados, 2 (CT-EST-117 e 118) não se aplicam à tela e 1 passou; nenhum caso Alta mudou de situação, então as Alta pendentes continuam 4.</p>
 <p>Na rodada 10 (22/10/2026) entraram mais 15 casos (de 134 para 149): 5 passaram (CT-EST-054, 072, 155, 174 e 175), 5 passaram com ressalva (041, 071, 154, 156 e 177) e 5 falharam (101, 116, 119, 172 e 176). Dos 27 casos da rodada, 10 seguem bloqueados (058, 091, 192, 100, 077, 055, 082, 090, 164 e 173) e 2 (CT-EST-117 e 118) não se aplicam à tela. Das 4 Alta pendentes, duas foram resolvidas (CT-EST-116 e 176, ambas Falhou); <strong>ficam 2 Alta bloqueadas</strong> (CT-EST-058 e 091). Sem resultado conclusivo ficam 13 casos: 10 bloqueados, 2 que não se aplicam e o CT-EST-023 (acesso pelo endereço, fora do escopo).</p>
+<p>Na rodada 11 (22/10/2026) o total <strong>não mudou (149)</strong>: o CT-EST-173 virou conclusivo (Falhou, DV-EST-074 e 075) e o CT-EST-172 deixou de ser (voltou a Bloqueado, porque a rodada 10 tinha testado a tela errada). O CT-EST-171 passou (era "passou em parte"). Seguem bloqueados 10 casos (055, 058, 077, 082, 090, 091, 100, 164, 172 e 192) e 2 não se aplicam (117 e 118); o CT-EST-023 fica fora do escopo. <strong>Ficam 2 Alta bloqueadas</strong> (CT-EST-058 e 091). Dos 8 casos da rodada: 1 passou, 1 falhou e 6 bloqueados.</p>
 <h2 id="resultados-dos-testes">Resultados dos testes</h2>
 <h3 id="resumo-das-rodadas">Resumo das rodadas</h3>
-<p><strong>Situação em 22/10/2026, depois da rodada 10.</strong> Dos <strong>162 casos</strong> do plano, <strong>149 têm resultado conclusivo</strong> (eram 78 antes da rodada 8, 133 antes da 9 e 134 antes da 10). Entre os <strong>46 de prioridade Alta</strong>, 44 têm resultado e <strong>2 seguem sem conclusão</strong> (CT-EST-058 e 091): o primeiro pela classificação de reanálise que não aparece no Item (DV-EST-043) e o segundo pela Ordem de Produção, que não nasce (a lista de Lote Padrão da Produção volta vazia). A rodada 8 registrou <strong>18 defeitos novos (DV-EST-048 a 065)</strong>, a rodada 9 mais <strong>2 (DV-EST-066 e 067)</strong> e a rodada 10 mais <strong>5 de funcionamento (DV-EST-068, 070, 071, 072 e 073; o DV-EST-068, da saída da amostra de retenção, é de gravidade Alta)</strong>. O módulo continua <strong>não apto</strong> para uso em ambiente regulado.</p>
+<p><strong>Situação em 22/10/2026, depois da rodada 11.</strong> Dos <strong>162 casos</strong> do plano, <strong>149 têm resultado conclusivo</strong> (eram 78 antes da rodada 8, 133 antes da 9 e 134 antes da 10; a rodada 11 trocou um conclusivo por outro, ver abaixo). Entre os <strong>46 de prioridade Alta</strong>, 44 têm resultado e <strong>2 seguem sem conclusão</strong> (CT-EST-058 e 091): o primeiro pela classificação de reanálise que não aparece no Item (DV-EST-043) e o segundo pela Ordem de Produção, que não nasce: <strong>o lote padrão do produto não está aprovado e ninguém consegue aprová-lo</strong> (DV-EST-076). A rodada 8 registrou <strong>18 defeitos novos (DV-EST-048 a 065)</strong>, a rodada 9 mais <strong>2 (DV-EST-066 e 067)</strong> a rodada 10 mais <strong>5 de funcionamento (DV-EST-068, 070, 071, 072 e 073; o DV-EST-068, da saída da amostra de retenção, é de gravidade Alta)</strong> e a rodada 11 mais <strong>4 (DV-EST-074 a 077; o DV-EST-076, do lote padrão que ninguém aprova, é de gravidade Alta)</strong>. O registro completo do módulo tem agora <strong>76 defeitos</strong>, com os de acesso e segurança. O módulo continua <strong>não apto</strong> para uso em ambiente regulado.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1093,7 +1095,7 @@
 <tr>
 <td>Passaram</td>
 <td>(todas as rodadas)</td>
-<td>59</td>
+<td>60</td>
 </tr>
 <tr>
 <td>Passaram com ressalvas</td>
@@ -1103,7 +1105,7 @@
 <tr>
 <td>Passaram em parte, parcial ou com outra mensagem</td>
 <td>(todas as rodadas)</td>
-<td>13</td>
+<td>12</td>
 </tr>
 <tr>
 <td>Falharam</td>
@@ -1111,7 +1113,7 @@
 <td>41</td>
 </tr>
 <tr>
-<td>Segurança e acesso feitos no documento confidencial</td>
+<td>Segurança e acesso (detalhe em Achados de Segurança)</td>
 <td>CT-EST-083, 102, 120, 141, 158, 168 e 178</td>
 <td>7</td>
 </tr>
@@ -1122,7 +1124,7 @@
 </tr>
 <tr>
 <td>Bloqueados</td>
-<td>CT-EST-055, 058, 077, 082, 090, 091, 100, 164, 173 e 192</td>
+<td>CT-EST-055, 058, 077, 082, 090, 091, 100, 164, 172 e 192</td>
 <td>10</td>
 </tr>
 <tr>
@@ -1137,7 +1139,15 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>O que a rodada 10 acrescentou, em poucas linhas</strong> (detalhes na seção "Rodada 10" mais abaixo; os totais da tabela acima já incluem as rodadas 9 e 10):</p>
+<p><strong>O que a rodada 11 acrescentou, em poucas linhas</strong> (detalhes na seção "Rodada 11" mais abaixo; os totais da tabela acima já a incluem):</p>
+<ul>
+<li><strong>Ninguém consegue aprovar o Lote Padrão (DV-EST-076, Alta).</strong> O lote padrão do produto 26 existe e está ativo, mas sem aprovação; o botão <strong>Aprovar</strong> só aparece para quem tem uma função profissional ligada à configuração 19, e <strong>nenhuma tela de nenhum módulo faz essa ligação</strong> (testado com as 46 funções profissionais). Sem lote padrão aprovado, a Produção não pede a ordem de produção, e a solicitação de material do tipo Produção, a devolução da produção e a entrada de produção de serviços não saem do lugar (CT-EST-091, 082, 090 e 100 seguem bloqueados). Quem ligar a função no banco destrava a Produção; a causa no banco é dedução do código, que só o DBA confirma.</li>
+<li><strong>O Pedido de Compra não tem função no perfil (DV-EST-077):</strong> a árvore de funções do Estoque (361 funções) não tem nó de Pedido de Compra, então a lista mostra só o ícone Excluir e nenhum pedido pode ser alterado, finalizado ou baixado (CT-EST-164 segue bloqueado).</li>
+<li><strong>A estabilidade não anda de ponta a ponta (DV-EST-074 e 075):</strong> o campo "Qtd. Estabilidade" do Registro de Amostragem está comentado no código, então nenhuma entrada de estabilidade pendente nasce e a entrada manual não abre o acompanhamento no CQ (<strong>CT-EST-173 passou de Bloqueado a Falhou</strong>); e a Regra de Estabilidade só aceita item de código numérico. <strong>Correção:</strong> o DV-EST-071 descrevia a tela Movimentações; a tela que pede o tipo de estabilidade é a Entrada de Material, e o <strong>CT-EST-172 voltou a Bloqueado</strong>.</li>
+<li><strong>O CT-EST-171 passou</strong> na tela certa (Entrada de Material): a entrada pendente de Retenção foi enviada ao almoxarifado de retenção e finalizada.</li>
+<li><strong>Olhar da Auditoria (só leitura):</strong> lote vencido mostra o saldo em "Bloqueado / Inventário" e a coluna "Vencido / Reanálise" em 0; lote reprovado não mostra no Histórico do Lote o motivo nem quem decidiu; a RM36 não lista o lote reprovado; a Rastreabilidade não recebe nada do Estoque por lote.</li>
+</ul>
+<p><strong>O que a rodada 10 acrescentou, em poucas linhas</strong> (detalhes na seção "Rodada 10" mais abaixo; os totais da tabela acima já incluem as rodadas 9, 10 e 11):</p>
 <ul>
 <li><strong>Pela primeira vez houve mais de um usuário de teste</strong>, o que permitiu um recebimento novo autorizado por outra pessoa, o ciclo do CQ com duas pessoas (quem digita o resultado não é quem aprova) e a conferência com outro usuário. <strong>Quinze casos passaram a ter resultado:</strong> 5 passaram, 5 passaram com ressalva e 5 falharam.</li>
 <li><strong>Saída da amostra de retenção antes do vencimento é aceita sem aviso</strong> (DV-EST-068, Alta): a saída de 1 unidade de um lote com quase um ano de validade foi finalizada sem impedimento nem justificativa. A norma pede o contrário.</li>
@@ -2407,8 +2417,28 @@
 </tr>
 <tr>
 <td>DV-EST-071</td>
-<td>A Entrada de estabilidade não pede o tipo de estabilidade e não abre o acompanhamento no CQ</td>
 <td>Média</td>
+<td>Regulatório: Movimentações (Entrada - Estabilidade) e CQ: Acompanhamento</td>
+</tr>
+<tr>
+<td>DV-EST-074</td>
+<td>Média</td>
+<td>CQ: Registro de Amostragem; Regulatório: Entrada de Material</td>
+</tr>
+<tr>
+<td>DV-EST-075</td>
+<td>Média</td>
+<td>CQ: Regra de Estabilidade</td>
+</tr>
+<tr>
+<td>DV-EST-077</td>
+<td>Média</td>
+<td>Pedido de Compra e Perfil</td>
+</tr>
+<tr>
+<td>DV-EST-069</td>
+<td>Média</td>
+<td>Solicitação de Material (Consumo)</td>
 </tr>
 <tr>
 <td>DV-EST-072</td>
@@ -2434,6 +2464,141 @@
 <li><strong>Produção (fora do Estoque):</strong> a lista de Lote Padrão da Solicitação de Autorizações volta vazia mesmo existindo um lote padrão para o produto. Pode ser falta de uma ficha técnica liberada; é pergunta à área de Produção (bloqueia os casos 082, 090, 091 e 100).</li>
 </ul>
 <p>Detalhes e capturas: <code>execucao/2026-10-22-rodada-10/resultado.md</code>.</p>
+<h4 id="rodada-11-22-10-2026">Rodada 11 (22/10/2026)</h4>
+<p>Rodada para <strong>destravar a Produção</strong> (criar a ordem de produção para a Solicitação de Material do tipo Produção), <strong>criar a Regra de Estabilidade</strong> do CQ e <strong>investigar o Pedido de Compra</strong>. Feita no legado (versão 3.5.1). O registro detalhado, com as capturas, está em <code>execucao/2026-10-22-rodada-11/</code> (<code>resultado.md</code>, <code>preparacao.md</code> e <code>massa-de-dados.md</code>).</p>
+<p><strong>Resultado das 8 linhas:</strong> 1 passou, <strong>1 falhou</strong> e <strong>6 ficaram bloqueadas</strong> (duas delas são revisões de casos da rodada 10). O quadro do plano não mudou: <strong>149 conclusivos de 162</strong>, porque o CT-EST-173 virou conclusivo (Falhou) e o CT-EST-172 deixou de ser (voltou a Bloqueado). Das 4 Alta, seguem bloqueadas a CT-EST-058 e a 091. Defeitos novos: <strong>DV-EST-074 e 075 (Média, funcionais), DV-EST-076 (Alta, acesso) e DV-EST-077 (Média, acesso)</strong>; o DV-EST-071 foi corrigido.</p>
+<p><strong>A ordem de produção não nasceu.</strong> O campo Lote Padrão da Solicitação de Autorizações volta vazio porque o lote padrão do produto 26 está <strong>sem aprovação</strong> ("Aprovado por" em branco) e a lista só devolve lote padrão aprovado. Não é falta de ficha técnica, de fórmula, de ativação nem de ligação do produto. Ninguém consegue aprová-lo: o botão Aprovar exige uma função profissional ligada à configuração 19, e <strong>não há tela que faça essa ligação</strong> (nem a Função Profissional do Principal). O usuário de teste recebeu a função 19 e depois todas as 46 funções profissionais, e o botão não apareceu.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Prior.</th>
+<th>Resultado</th>
+<th>O que a tela mostrou</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-091</td>
+<td>Alta</td>
+<td>Bloqueado</td>
+<td>Sem lote padrão aprovado não há Solicitação de Autorizações, nem solicitação de material do tipo Produção, nem devolução da produção. A lista de Lote Padrão volta vazia; o lote padrão 26 está ativo, sem aprovador</td>
+<td>DV-EST-076</td>
+</tr>
+<tr>
+<td>CT-EST-082</td>
+<td>Baixa</td>
+<td>Bloqueado</td>
+<td>Mesma causa: a Solicitação (Produção) do Estoque e a Solicitação Avulsa só têm Pesquisar e Limpar</td>
+<td>DV-EST-076</td>
+</tr>
+<tr>
+<td>CT-EST-090</td>
+<td>Baixa</td>
+<td>Bloqueado</td>
+<td>A Devolução da Produção só reconhece lotes saídos por solicitação do tipo Produção</td>
+<td>DV-EST-063, 076</td>
+</tr>
+<tr>
+<td>CT-EST-100</td>
+<td>Média</td>
+<td>Bloqueado</td>
+<td>A Entrada de Produção (serviços) depende da ordem de produção</td>
+<td>DV-EST-076</td>
+</tr>
+<tr>
+<td>CT-EST-173</td>
+<td>Baixa</td>
+<td><strong>Falhou</strong> (era Bloqueado)</td>
+<td>Com a Regra de Estabilidade criada (só com item de código numérico, DV-EST-075) e o ciclo do CQ completo de um lote novo, a Entrada de Material do Regulatório mostra só a entrada pendente de Retenção; nenhuma de Estabilidade. A entrada manual de estabilidade em Movimentações é aceita e o Acompanhamento Estabilidade do CQ continua vazio</td>
+<td>DV-EST-074, 075</td>
+</tr>
+<tr>
+<td>CT-EST-164</td>
+<td>Baixa</td>
+<td>Bloqueado</td>
+<td>Pedidos 000001 a 000008 só com o ícone Excluir: a árvore de funções do perfil não tem nó de Pedido de Compra nem de baixa de pedido</td>
+<td>DV-EST-077</td>
+</tr>
+<tr>
+<td>CT-EST-172 (revisão)</td>
+<td>Baixa</td>
+<td><strong>Bloqueado</strong> (era Falhou)</td>
+<td>A rodada 10 testou a tela Movimentações. A tela que pede o tipo de estabilidade é a Entrada de Material, e nela só chegam entradas pendentes que nenhum caminho cria. Não dá para executar o caso na tela certa</td>
+<td>DV-EST-071 (corrigido), 074</td>
+</tr>
+<tr>
+<td>CT-EST-171 (complemento)</td>
+<td>Baixa</td>
+<td><strong>Passou</strong> (era Passou em parte)</td>
+<td>Na Entrada de Material, a entrada pendente de Retenção do lote <code>TESTEPA013</code> (2 un) foi aberta pelo ícone Movimentar, enviada ao almoxarifado de retenção e finalizada; a Saída - Retenção do lote lista o endereço, sem erro</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Descobertas da rodada</strong></p>
+<ul>
+<li><strong>Entrada de Material (Regulatório):</strong> o ícone para movimentar a entrada pendente só aparece depois que o lote foi movimentado fora da quarentena. Antes disso a linha não tem ícone nenhum, o que parece falha, mas é regra da tela (pelo código; o nome da condição é inferência).</li>
+<li><strong>Regra de Estabilidade:</strong> não é erro de uso. A sugestão de item devolve o código (<code>TST0001</code>) no lugar do identificador numérico e a tela responde "Selecione um item."; o item <code>20011</code>, de código numérico, funciona (DV-EST-075).</li>
+<li><strong>Pedido de Compra:</strong> a tela não está no cadastro de funções do perfil (DV-EST-077).</li>
+</ul>
+<p><strong>Exploratório do que a Auditoria consultaria (só leitura)</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>O que se vê</th>
+<th>Onde</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lote <strong>vencido</strong> (<code>TESTEVENC</code>, validade 20/10/2026, 5 un)</td>
+<td>Disponibilidade do Lote</td>
+<td>O saldo aparece em <strong>"Bloqueado / Inventário"</strong> (5) e a coluna <strong>"Vencido / Reanálise" mostra 0</strong>: quem consulta não vê que o motivo é o vencimento</td>
+</tr>
+<tr>
+<td>O mesmo lote</td>
+<td>Histórico do Lote</td>
+<td>Só a entrada. Nada sobre o vencimento nem sobre o pedido de revalidação aberto no CQ</td>
+</tr>
+<tr>
+<td>Lote <strong>reprovado e bloqueado</strong> (<code>TESTEPA998</code>, 90 un)</td>
+<td>Disponibilidade do Lote</td>
+<td>Reprovado 90 e Bloqueado 90 ao mesmo tempo, com saldo total 90 (já no DV-EST-029)</td>
+</tr>
+<tr>
+<td>O mesmo lote</td>
+<td>Histórico do Lote</td>
+<td>Mostra a movimentação para o refugo, <strong>sem a reprovação</strong>: nem o motivo, nem quem decidiu, nem o laudo (DV-EST-034)</td>
+</tr>
+<tr>
+<td>O mesmo lote</td>
+<td>RM36 - Insumos Reprovados</td>
+<td>Uma só linha de zeros; o lote reprovado <strong>não aparece</strong> (DV-EST-062 reconfirmado)</td>
+</tr>
+<tr>
+<td>Lotes em quarentena</td>
+<td>RM17 - Material em Quarentena</td>
+<td>Lista também um lote <strong>já vencido</strong> (<code>TA0007/26</code>, validade 16/10/2026), sem marcar o vencimento</td>
+</tr>
+<tr>
+<td>Qualquer lote</td>
+<td>Rastreabilidade</td>
+<td>A pesquisa IUM por lote não recebe nada do Estoque (DV-EST-072)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Nada disso gerou defeito novo, exceto o ponto abaixo, que fica para decisão.</p>
+<p><strong>Inferências e pontos para validar</strong> (não é o que a tela mostrou)</p>
+<ul>
+<li><strong>DV-EST-076:</strong> a falta da ligação no banco é dedução do código e do teste com todas as funções; só o DBA confirma se existe alguma linha ligando função e configuração 19 (e 28 e 29, de autorizar e cancelar produção).</li>
+<li><strong>DV-EST-077:</strong> as permissões do Pedido de Compra podem existir em outra carga do banco do cliente; neste ambiente a árvore do perfil não as tem.</li>
+<li><strong>DV-EST-074:</strong> o bloco comentado do campo "Qtd. Estabilidade" é leitura do código; talvez desligado de propósito (ponto para a área).</li>
+<li><strong>Coluna "Vencido / Reanálise" em zero para lote vencido:</strong> decidir com a Garantia da Qualidade se vira defeito novo ou é parte do DV-EST-014 (lote vencido sem tratamento) e do DV-EST-034 (histórico sem motivo). Proposta: registrar como defeito novo de gravidade Baixa se a área confirmar que a coluna deveria mostrar o vencido.</li>
+</ul>
+<p>Detalhes e capturas: <code>execucao/2026-10-22-rodada-11/resultado.md</code>.</p>
 <h4 id="permissoes-e-acesso">Permissões e acesso</h4>
 <div class="tabela"><table>
 <thead>
@@ -2467,6 +2632,7 @@
 </table></div>
 <p>As evidências (capturas de tela) estão no repositório de homologação, na pasta de execução de cada rodada.</p>
 <h2 id="desvios">Desvios</h2>
+<p>O registro completo, com os de acesso e segurança, está em <code>defeitos/defeitos-completo.md</code> (76 defeitos: 21 de gravidade alta, 40 média e 15 baixa). A tabela abaixo traz os principais.</p>
 <p>Gravidade: <strong>Alta</strong> impede o uso seguro ou fere a norma diretamente; <strong>Média</strong> prejudica o controle ou a prova do que foi feito; <strong>Baixa</strong> atrapalha o usuário, sem efeito na qualidade.</p>
 <div class="tabela"><table>
 <thead>
@@ -2479,6 +2645,13 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>DV-EST-076</td>
+<td><strong>Alta</strong></td>
+<td>Produção: Lote Padrão e Solicitação de Autorizações (reflexo no Estoque)</td>
+<td>Ninguém consegue aprovar um Lote Padrão: a permissão exigida (configuração 19) não pode ser dada por nenhuma tela, e sem lote padrão aprovado a Produção não pede a ordem de produção. <em>Rodada 11 (acesso)</em></td>
+<td>Fórmula e lote padrão aprovados antes da produção (RDC 658/2022, arts. 133 a 135)</td>
+</tr>
 <tr>
 <td>DV-EST-068</td>
 <td><strong>Alta</strong></td>
@@ -2979,7 +3152,7 @@
 </tbody>
 </table></div>
 <p><strong>Ponto positivo confirmado:</strong> a mesma pessoa não consegue cadastrar e autorizar o mesmo recebimento (CT-EST-189). É a separação de funções que a norma espera.</p>
-<p>O detalhe de cada desvio (passo a passo, capturas, trecho do código e sugestão de correção) está no documento <strong>Defeitos para Correção</strong> (64 defeitos: 15 de gravidade alta, 34 média e 15 baixa). Os 9 desvios de acesso estão no documento confidencial.</p>
+<p>O detalhe de cada desvio (passo a passo, capturas, trecho do código e sugestão de correção) está no documento <strong>Defeitos para Correção</strong> (76 defeitos: 21 de gravidade alta, 40 média e 15 baixa, inclusive 10 de acesso e segurança).</p>
 <h2 id="como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</h2>
 <div class="tabela"><table>
 <thead>
@@ -3079,6 +3252,16 @@
 <td>Aprovação de solicitação</td>
 <td>Aceita quem criou a solicitação (DV-EST-070)</td>
 <td>Quem pede não aprova</td>
+</tr>
+<tr>
+<td>Lote padrão e ordem de produção</td>
+<td>O lote padrão não tem como ser aprovado (nenhuma tela liga a função de revisor à configuração 19); sem ele a Produção não pede a ordem de produção (DV-EST-076)</td>
+<td>Lote padrão aprovado por quem tem a função de revisor de Garantia da Qualidade, antes da produção</td>
+</tr>
+<tr>
+<td>Estabilidade</td>
+<td>O campo da quantidade de estabilidade está desligado na amostragem; a Regra de Estabilidade só aceita item de código numérico (DV-EST-074, 075)</td>
+<td>Amostragem com a quantidade de estabilidade, entrada pendente de estabilidade, tipo obrigatório e acompanhamento aberto no CQ</td>
 </tr>
 </tbody>
 </table></div>
@@ -3299,8 +3482,12 @@
 <td>Área</td>
 </tr>
 <tr>
-<td>Ordem de Produção de teste (CT-EST-082, 090, 091 e 100): a lista de Lote Padrão da Solicitação de Autorizações da Produção volta vazia, mesmo com um lote padrão cadastrado; explicar se falta ficha técnica liberada</td>
-<td>Área de Produção, depois Homologação</td>
+<td>Ordem de Produção de teste (CT-EST-082, 090, 091 e 100): ligar uma função profissional à configuração 19 (e à 28 e 29) para que o lote padrão do produto 26 possa ser aprovado (DV-EST-076); depois refazer a Solicitação de Autorizações</td>
+<td>DBA e área de Produção, depois Homologação</td>
+</tr>
+<tr>
+<td>Cadastrar o Pedido de Compra no menu e nas funções do perfil (DV-EST-077); religar o campo "Qtd. Estabilidade" da amostragem e corrigir a Regra de Estabilidade (DV-EST-074 e 075); decidir se a coluna "Vencido / Reanálise" em zero para lote vencido vira defeito</td>
+<td>Desenvolvimento e Garantia da Qualidade</td>
 </tr>
 <tr>
 <td>Prazo de guarda da amostra de retenção e trava de saída antes do vencimento (DV-EST-068, Alta); se a Rastreabilidade deve receber a remessa, ou só o produto acabado (DV-EST-072)</td>
@@ -3311,7 +3498,7 @@
 <td>DBA</td>
 </tr>
 <tr>
-<td>Pesagem pela tela (DV-EST-067); lista de almoxarifados do cadastro de Local filtrada pelo grupo (DV-EST-066); aprovação de solicitação por quem criou (DV-EST-070); tipo de estabilidade na entrada (DV-EST-071); remessa e destino no histórico do lote (DV-EST-073)</td>
+<td>Pesagem pela tela (DV-EST-067); lista de almoxarifados do cadastro de Local filtrada pelo grupo (DV-EST-066); aprovação de solicitação por quem criou (DV-EST-070); tipo de estabilidade na entrada (DV-EST-071 e 074); remessa e destino no histórico do lote (DV-EST-073)</td>
 <td>Desenvolvimento</td>
 </tr>
 <tr>
@@ -3330,7 +3517,7 @@
 </table></div>
 <h2 id="parecer-da-homologacao">Parecer da homologação</h2>
 <p>Com base nos 149 casos com resultado (44 dos 46 de prioridade alta), nas evidências registradas e nos achados do código-fonte:</p>
-<p><strong>1. O módulo Estoque na versão 3.5.1 não está apto para uso em ambiente regulado pelas Boas Práticas de Fabricação.</strong> Dos 14 temas da RDC 658/2022 avaliados, nenhum é atendido por completo: 5 em parte, 8 não atendidos e 1 não verificado. Os motivos principais: o Endereçamento mostra sucesso e não grava; o recebimento aceita fornecedor reprovado e lote vencido; a entrada de produto acabado aceita lote inventado; a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada; a Movimentação de Quarentena aceita destino incompleto e perde o saldo; a remessa da tela comum não finaliza; a amostra de retenção pode sair antes do vencimento do lote, sem aviso; o histórico do lote não mostra usuário, análise nem laudo; o atendimento à produção não ordena os lotes por validade e aceita o que vence depois; no inventário, a mesma pessoa conta, justifica e apura; algumas telas dizem "sucesso" ou "gerada" e não gravam (Banco, Análise do Planejamento de Kits).</p>
+<p><strong>1. O módulo Estoque na versão 3.5.1 não está apto para uso em ambiente regulado pelas Boas Práticas de Fabricação.</strong> Dos 14 temas da RDC 658/2022 avaliados, nenhum é atendido por completo: 5 em parte, 8 não atendidos e 1 não verificado. Os motivos principais: o Endereçamento mostra sucesso e não grava; o recebimento aceita fornecedor reprovado e lote vencido; a entrada de produto acabado aceita lote inventado; a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada; a Movimentação de Quarentena aceita destino incompleto e perde o saldo; a remessa da tela comum não finaliza; a amostra de retenção pode sair antes do vencimento do lote, sem aviso; o histórico do lote não mostra usuário, análise nem laudo; o atendimento à produção não ordena os lotes por validade e aceita o que vence depois; no inventário, a mesma pessoa conta, justifica e apura; algumas telas dizem "sucesso" ou "gerada" e não gravam (Banco, Análise do Planejamento de Kits); ninguém consegue aprovar o lote padrão, o que impede a Produção de pedir a ordem de produção (DV-EST-076).</p>
 <p><strong>2. O módulo é uma base adequada para a nova versão.</strong> Os mecanismos essenciais existem e funcionam: quarentena e análise criadas pelas entradas de material, laudo do CQ, saldo separado por situação, lote reprovado e em quarentena fora das listas de uso, recusas corretas na movimentação, separação de funções no recebimento, inventário rotativo que conta, justifica e ajusta o saldo.</p>
 <p><strong>3. Correções obrigatórias antes de uma nova homologação:</strong> as dez do Resumo Executivo, que cobrem gravação tudo ou nada, fornecedor qualificado, validade, ordem de produção, situação única do lote, liberação pela Pessoa Delegada com assinatura eletrônica, histórico completo do lote, permissão no servidor, remessa e quarentena, e amostras de retenção (a de validade inclui atender pelo lote que vence primeiro; a de remessa inclui a gerada por kit).</p>
 <p><strong>4. Limitações desta homologação:</strong> 2 casos de prioridade alta ficaram sem conclusão (CT-EST-058 e 091) por causas fora do alcance do teste pela tela (listadas em Pendências); 11 casos de prioridade média e baixa seguem sem resultado (bloqueados pela Ordem de Produção, por defeitos abertos ou por dependerem de outro módulo), além de 2 que não se aplicam à tela. Eles ficam como testes de aceite da nova versão.</p>
