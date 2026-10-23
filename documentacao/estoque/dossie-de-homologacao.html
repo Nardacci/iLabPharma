@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
+<link rel="stylesheet" href="../../portal/portal.css?v=b13e23c7">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -67,7 +67,19 @@
 </tr>
 <tr>
 <td>Regras de Negócio</td>
-<td>Regras gerais e por fluxo, com a situação de cada uma depois dos testes</td>
+<td>Regras gerais e por fluxo, com a situação de cada uma depois dos testes (Extraída, Validada em parte, Validada ou Contradita)</td>
+</tr>
+<tr>
+<td>Análise de Requisitos</td>
+<td>O que a nova versão deve fazer: cada defeito virou um requisito corrigido</td>
+</tr>
+<tr>
+<td>Manual do Usuário</td>
+<td>Como usar as telas hoje, com os cuidados que cada defeito pede e as limitações conhecidas</td>
+</tr>
+<tr>
+<td>Por que o Estoque não está apto</td>
+<td>Explicação, para quem não é da área, do veredito</td>
 </tr>
 <tr>
 <td>Relatório de Testes</td>
@@ -107,7 +119,7 @@
 <h2 id="estrategia-de-homologacao">Estratégia de homologação</h2>
 <p>A homologação seguiu as etapas do Guia nº 33/2020:</p>
 <ul>
-<li><strong>Engenharia reversa do código-fonte:</strong> extração das regras (283), da matriz de permissões, do modelo de dados (165 tabelas, 268 relacionamentos, 11 gatilhos) e dos achados de segurança e acesso.</li>
+<li><strong>Engenharia reversa do código-fonte:</strong> extração das regras (171), da matriz de permissões, do modelo de dados (165 tabelas, 268 relacionamentos, 11 gatilhos) e dos achados de segurança e acesso.</li>
 <li><strong>Documentação dos dez fluxos</strong>, com fluxograma, regras e casos de teste, no mesmo formato dos fluxos da equipe.</li>
 <li><strong>Análise de risco</strong> das funções do módulo (24 riscos), para definir a prioridade dos testes.</li>
 <li><strong>Plano de testes</strong> com 162 casos, que servem também de testes de aceite da nova versão.</li>
@@ -141,7 +153,7 @@
 <tr>
 <td>Especificação dos Requisitos do Usuário (ERU)</td>
 <td>9.3</td>
-<td>A fazer para o Estoque: os controles exigidos da análise de risco e as correções dos defeitos são a base</td>
+<td>Análise de Requisitos do Estoque: os controles exigidos da análise de risco e as correções dos 76 defeitos são a base</td>
 </tr>
 <tr>
 <td>Especificação Funcional</td>
@@ -176,7 +188,7 @@
 <tr>
 <td>Procedimentos e treinamento</td>
 <td>11</td>
-<td>Manual do usuário: a fazer</td>
+<td>Manual do Usuário do Estoque (entregue), com as limitações conhecidas</td>
 </tr>
 </tbody>
 </table></div>
@@ -982,12 +994,12 @@
 <h3 id="ambiente-e-preparacao">Ambiente e preparação</h3>
 <h4 id="antes-de-qualquer-caso">Antes de qualquer caso</h4>
 <ol>
-<li>Conferir que o Estoque abre com <code>[usuário de teste]</code> e que o almoxarifado <code>TESTE ALMOX</code> aparece (grupo do usuário ligado a ele).</li>
+<li>Conferir que o Estoque abre com o usuário administrador de teste e que o almoxarifado <code>TESTE ALMOX</code> aparece (grupo do usuário ligado a ele).</li>
 <li><strong>Conferir quem mais usa o ambiente.</strong> Na rodada 2 apareceu um recebimento (00017, de 11/10) que o teste não criou. Se outra pessoa mexe nos lotes <code>TESTE</code>, os saldos podem mudar sem aviso.</li>
 <li>Nas listas com duas páginas (recebimento), conferir <strong>a página</strong> antes de gravar a nota (houve nota gravada no recebimento errado, em 08 e 12/10).</li>
 </ol>
 <h4 id="usuarios">Usuários</h4>
-<p>Usar os usuários que já existem (<code>[usuário de teste]</code>, <code>[usuário de teste]</code>, <code>[usuário de teste]</code>, <code>[usuário de teste]</code>, com os perfis <code>TESTE*</code>). <strong>Não guardar senhas neste repositório.</strong></p>
+<p>Usar os usuários que já existem (administrador, de cadastro, de consulta e sem administração, com os perfis <code>TESTE*</code>). <strong>Não guardar senhas neste repositório.</strong></p>
 <h4 id="dados-ja-existentes-no-ambiente-reaproveitar">Dados já existentes no ambiente (reaproveitar)</h4>
 <div class="tabela"><table>
 <thead>
@@ -3509,10 +3521,6 @@
 <td>Quem é a Pessoa Delegada; o que é fornecedor aprovado; se a sobra devolvida precisa de nova análise; prazo das amostras de retenção</td>
 <td>Garantia da Qualidade e área</td>
 </tr>
-<tr>
-<td>Especificação de requisitos (ERU) e manual do usuário do Estoque</td>
-<td>Homologação</td>
-</tr>
 </tbody>
 </table></div>
 <h2 id="parecer-da-homologacao">Parecer da homologação</h2>
@@ -3520,8 +3528,199 @@
 <p><strong>1. O módulo Estoque na versão 3.5.1 não está apto para uso em ambiente regulado pelas Boas Práticas de Fabricação.</strong> Dos 14 temas da RDC 658/2022 avaliados, nenhum é atendido por completo: 5 em parte, 8 não atendidos e 1 não verificado. Os motivos principais: o Endereçamento mostra sucesso e não grava; o recebimento aceita fornecedor reprovado e lote vencido; a entrada de produto acabado aceita lote inventado; a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada; a Movimentação de Quarentena aceita destino incompleto e perde o saldo; a remessa da tela comum não finaliza; a amostra de retenção pode sair antes do vencimento do lote, sem aviso; o histórico do lote não mostra usuário, análise nem laudo; o atendimento à produção não ordena os lotes por validade e aceita o que vence depois; no inventário, a mesma pessoa conta, justifica e apura; algumas telas dizem "sucesso" ou "gerada" e não gravam (Banco, Análise do Planejamento de Kits); ninguém consegue aprovar o lote padrão, o que impede a Produção de pedir a ordem de produção (DV-EST-076).</p>
 <p><strong>2. O módulo é uma base adequada para a nova versão.</strong> Os mecanismos essenciais existem e funcionam: quarentena e análise criadas pelas entradas de material, laudo do CQ, saldo separado por situação, lote reprovado e em quarentena fora das listas de uso, recusas corretas na movimentação, separação de funções no recebimento, inventário rotativo que conta, justifica e ajusta o saldo.</p>
 <p><strong>3. Correções obrigatórias antes de uma nova homologação:</strong> as dez do Resumo Executivo, que cobrem gravação tudo ou nada, fornecedor qualificado, validade, ordem de produção, situação única do lote, liberação pela Pessoa Delegada com assinatura eletrônica, histórico completo do lote, permissão no servidor, remessa e quarentena, e amostras de retenção (a de validade inclui atender pelo lote que vence primeiro; a de remessa inclui a gerada por kit).</p>
-<p><strong>4. Limitações desta homologação:</strong> 2 casos de prioridade alta ficaram sem conclusão (CT-EST-058 e 091) por causas fora do alcance do teste pela tela (listadas em Pendências); 11 casos de prioridade média e baixa seguem sem resultado (bloqueados pela Ordem de Produção, por defeitos abertos ou por dependerem de outro módulo), além de 2 que não se aplicam à tela. Eles ficam como testes de aceite da nova versão.</p>
+<p><strong>4. Limitações desta homologação:</strong> 2 casos de prioridade alta ficaram sem conclusão (CT-EST-058 e 091) por causas fora do alcance do teste pela tela (listadas em Pendências); 11 casos de prioridade média e baixa seguem sem resultado: 8 bloqueados (pela Ordem de Produção, por defeitos abertos ou por dependerem de outro módulo), 2 que não se aplicam à tela e o CT-EST-023, fora do escopo. Os 13 casos e a lista de reabertura estão na seção "Encerramento do módulo"; os que dependem de correção ficam como testes de aceite da nova versão.</p>
 <p><strong>5. Recomendação:</strong> executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige 100% dos casos de prioridade alta aprovados e as pendências do DBA respondidas.</p>
+<h2 id="encerramento-do-modulo-23-10-2026">Encerramento do módulo (23/10/2026)</h2>
+<p>O módulo Estoque do legado (versão 3.5.1) é encerrado nesta data, dentro do que o ambiente de teste permite: a análise do código, os documentos e as onze rodadas de testes estão feitos. O que ficou sem teste tem causa conhecida e está na lista de reabertura abaixo.</p>
+<h3 id="veredito">Veredito</h3>
+<p><strong>O módulo Estoque não está apto para uso em ambiente regulado.</strong></p>
+<p>O critério de "apto" ainda não foi escrito com a Garantia da Qualidade. Por isso o "não apto" se apoia <strong>só em dois fatos</strong>, que não dependem desse critério: (1) <strong>21 defeitos de gravidade alta</strong> abertos, entre eles o Endereçamento que mostra sucesso e não grava, o lote vencido e o produto acabado sem ordem de produção aceitos na entrada, a remessa que não finaliza, a amostra de retenção que sai antes do prazo, o atendimento que aceita o lote que vence depois e o lote padrão que ninguém consegue aprovar; (2) <strong>nenhum dos 14 temas da RDC 658/2022 é atendido por completo</strong>: 5 atendidos em parte, 8 não atendidos e 1 a verificar. O tema "ajuste de saldo no inventário" está como "a verificar" na matriz porque foi avaliado antes da rodada 8; os testes mostram que o ajuste funciona, mas que a mesma pessoa conta e apura (DV-EST-049) e que o histórico não mostra o usuário (DV-EST-034), e a Garantia da Qualidade deve reclassificá-lo.</p>
+<h3 id="numeros-do-encerramento">Números do encerramento</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rodadas de teste</td>
+<td>11, de 07 a 22/10/2026</td>
+</tr>
+<tr>
+<td>Casos do plano</td>
+<td>162</td>
+</tr>
+<tr>
+<td>Casos com resultado conclusivo</td>
+<td><strong>149</strong> (92%): 60 passaram, 29 com ressalvas, 12 em parte, 41 falharam e 7 de acesso e segurança</td>
+</tr>
+<tr>
+<td>Casos de prioridade alta com resultado</td>
+<td>44 de 46</td>
+</tr>
+<tr>
+<td>Casos sem resultado conclusivo</td>
+<td>13 (lista abaixo)</td>
+</tr>
+<tr>
+<td>Defeitos no registro completo</td>
+<td><strong>76</strong>: 21 de gravidade alta, 40 média e 15 baixa; 10 de acesso e segurança</td>
+</tr>
+<tr>
+<td>Regras de negócio</td>
+<td><strong>171</strong>: 56 validadas, 46 validadas com falha, 32 validadas em parte, 8 contraditas pelo teste e 29 só extraídas do código (8 com teste bloqueado)</td>
+</tr>
+<tr>
+<td>Requisitos da nova versão</td>
+<td><strong>113</strong>: 90 funcionais e 23 não funcionais; cada um dos 76 defeitos tem pelo menos um requisito que o corrige</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-ficou-sem-teste-13-casos">O que ficou sem teste (13 casos)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Prioridade</th>
+<th>O que era</th>
+<th>Por que ficou sem resultado</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-EST-058</td>
+<td>Alta</td>
+<td>Reanálise vencida sem agendamento</td>
+<td>O cadastro do Item não tem a classificação de reanálise, então não há como criar o cenário</td>
+<td>DV-EST-043</td>
+</tr>
+<tr>
+<td>CT-EST-091</td>
+<td>Alta</td>
+<td>Devolução da produção: abre análise no CQ?</td>
+<td>Sem Lote Padrão aprovado não há Solicitação de Autorizações nem solicitação do tipo Produção</td>
+<td>DV-EST-076</td>
+</tr>
+<tr>
+<td>CT-EST-055</td>
+<td>Baixa</td>
+<td>Agenda de Reanálise: agendar com justificativa</td>
+<td>Mesma causa do CT-EST-058</td>
+<td>DV-EST-043</td>
+</tr>
+<tr>
+<td>CT-EST-077</td>
+<td>Baixa</td>
+<td>Pesagem sem tag, sem lacre ou com tara inválida</td>
+<td>Abrir o volume da pesagem dá erro de servidor</td>
+<td>DV-EST-067</td>
+</tr>
+<tr>
+<td>CT-EST-082</td>
+<td>Baixa</td>
+<td>Solicitação de produção vinda da Produção</td>
+<td>A ordem de produção não nasce</td>
+<td>DV-EST-076</td>
+</tr>
+<tr>
+<td>CT-EST-090</td>
+<td>Baixa</td>
+<td>Devolução da Produção de parte do lote atendido</td>
+<td>Só reconhece lote saído por solicitação do tipo Produção</td>
+<td>DV-EST-063, 076</td>
+</tr>
+<tr>
+<td>CT-EST-100</td>
+<td>Média</td>
+<td>Entrada de Produção (serviços)</td>
+<td>Depende da ordem de produção</td>
+<td>DV-EST-076</td>
+</tr>
+<tr>
+<td>CT-EST-164</td>
+<td>Baixa</td>
+<td>Receber o pedido de compra e baixar no Recebimento do Item</td>
+<td>O perfil não tem as funções do Pedido de Compra</td>
+<td>DV-EST-077</td>
+</tr>
+<tr>
+<td>CT-EST-172</td>
+<td>Baixa</td>
+<td>Entrada de estabilidade sem tipo de estabilidade</td>
+<td>A tela que pede o tipo só recebe entradas pendentes, e nenhum caminho as cria</td>
+<td>DV-EST-074</td>
+</tr>
+<tr>
+<td>CT-EST-192</td>
+<td>Média</td>
+<td>Conferência assinada por usuário sem a função</td>
+<td>Um perfil novo não abre o Estoque, então o usuário do caso não pôde ser montado</td>
+<td>DV-EST-005</td>
+</tr>
+<tr>
+<td>CT-EST-117</td>
+<td>Baixa</td>
+<td>Remessa com data de embarque anterior à data da guia</td>
+<td>Não se aplica: a Remessa não tem esses campos</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-EST-118</td>
+<td>Baixa</td>
+<td>Saída por nota fiscal sem a chave</td>
+<td>Não se aplica: a Remessa não tem a chave da nota</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-EST-023</td>
+<td>Baixa</td>
+<td>Acesso aos cadastros de apoio pelo endereço</td>
+<td>Fora do escopo, por decisão do responsável</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="lista-de-reabertura">Lista de reabertura</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Quem</th>
+<th>O que fazer</th>
+<th>O que destrava</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>DBA</td>
+<td>Dizer <strong>qual instrução da rotina <code>pFinalizaRecebimento</code> falha</strong> (DV-EST-016): executá-la para uma nota recebida e informar o erro. Dizer <strong>o que há de diferente no lote TESTEPA001</strong> (DV-EST-047): olhar o cadastro dos endereços e almoxarifados desse lote, que dá erro na Saída da amostra enquanto o lote novo funciona</td>
+<td>Refazer o Endereçamento do recebimento (CT-EST-033, 194 e 197) e a Saída de amostra desse lote (CT-EST-171 e 176)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Produção</td>
+<td><strong>Ligar uma função profissional à configuração 19</strong> (e à 28 e à 29) para que o Lote Padrão do produto 26 possa ser aprovado por uma pessoa que não seja quem o elaborou (DV-EST-076). Pela análise, a ligação só se faz no banco, com o DBA. Depois, refazer a Solicitação de Autorizações e atender no Estoque</td>
+<td>CT-EST-091 (prioridade alta), 082, 090 e 100</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Desenvolvimento</td>
+<td><strong>DV-EST-043:</strong> mostrar a classificação de reanálise no cadastro do Item. <strong>DV-EST-005:</strong> fazer um perfil novo abrir o Estoque. <strong>DV-EST-067:</strong> corrigir a Central de Pesagem. <strong>DV-EST-077:</strong> dar ao Pedido de Compra as funções do perfil. <strong>DV-EST-074 e 075:</strong> religar o campo "Qtd. Estabilidade" e corrigir a Regra de Estabilidade</td>
+<td>CT-EST-055 e 058 (prioridade alta); CT-EST-192; CT-EST-077; CT-EST-164; CT-EST-172 e 173</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Responsável pelo projeto</td>
+<td>Decidir se o acesso pelo endereço (CT-EST-023) volta ao escopo</td>
+<td>CT-EST-023</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ao reabrir, repetir só os casos da coluna "O que destrava"; os demais ficam com o resultado atual. Os registros TESTE continuam no ambiente (lista na seção "Dados de teste deixados no ambiente" do Relatório de Testes); o usuário de teste da rodada 11 ficou com todas as funções profissionais e pode ser reduzido. Os CT-EST-117 e 118 não reabrem: não se aplicam à tela.</p>
 <h2 id="aprovacoes">Aprovações</h2>
 <div class="tabela"><table>
 <thead>
@@ -3560,7 +3759,7 @@
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="por-que-o-estoque-nao-esta-apto.html"><small>← Anterior</small><strong>Por que o Estoque não está apto</strong></a><a class="ap ap-prox" href="situacao-na-versao-nova.html"><small>Próximo →</small><strong>Situação na versão nova</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#inventario-de-telas-e-situacao">Inventário de telas e situação</a></li><li class="sub"><a href="#resultado-por-situacao">Resultado por situação</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#conformidade-com-a-rdc-658-2022">Conformidade com a RDC 658/2022</a></li><li class="sub"><a href="#mapa-dos-temas">Mapa dos temas</a></li><li class="sub"><a href="#o-que-o-codigo-e-os-testes-mostram-tema-a-tema">O que o código e os testes mostram, tema a tema</a></li><li class="sub"><a href="#pontos-para-validar-com-a-garantia-da-qualidade-e-a-area">Pontos para validar com a Garantia da Qualidade e a área</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-e-situacao">Quantidade de casos e situação</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#o-que-foi-testado-e-o-resultado-rodada-a-rodada">O que foi testado e o resultado, rodada a rodada</a></li><li><a href="#desvios">Desvios</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#inventario-de-telas-e-situacao">Inventário de telas e situação</a></li><li class="sub"><a href="#resultado-por-situacao">Resultado por situação</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#conformidade-com-a-rdc-658-2022">Conformidade com a RDC 658/2022</a></li><li class="sub"><a href="#mapa-dos-temas">Mapa dos temas</a></li><li class="sub"><a href="#o-que-o-codigo-e-os-testes-mostram-tema-a-tema">O que o código e os testes mostram, tema a tema</a></li><li class="sub"><a href="#pontos-para-validar-com-a-garantia-da-qualidade-e-a-area">Pontos para validar com a Garantia da Qualidade e a área</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-e-situacao">Quantidade de casos e situação</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#o-que-foi-testado-e-o-resultado-rodada-a-rodada">O que foi testado e o resultado, rodada a rodada</a></li><li><a href="#desvios">Desvios</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#encerramento-do-modulo-23-10-2026">Encerramento do módulo (23/10/2026)</a></li><li class="sub"><a href="#veredito">Veredito</a></li><li class="sub"><a href="#numeros-do-encerramento">Números do encerramento</a></li><li class="sub"><a href="#o-que-ficou-sem-teste-13-casos">O que ficou sem teste (13 casos)</a></li><li class="sub"><a href="#lista-de-reabertura">Lista de reabertura</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>

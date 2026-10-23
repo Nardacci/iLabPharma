@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
+<link rel="stylesheet" href="../../portal/portal.css?v=b13e23c7">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -45,7 +45,11 @@
     <article class="texto">
 <h2 id="introducao">Introdução</h2>
 <p>Este manual orienta o uso do <strong>módulo Estoque</strong> do LabMedSys (versão 3.5.1). O Estoque registra a entrada dos materiais (recebimento, entradas da produção e avulsas), a guarda (endereços, quarentena, movimentações), o uso (solicitação, separação e atendimento à produção), a saída (remessa, devoluções), a reanálise e a revalidação dos lotes, o inventário, os kits e as amostras de referência, retenção e estabilidade.</p>
-<p>O manual foi escrito a partir das telas do sistema e dos testes realizados no ambiente de teste em sete rodadas, de 07 a 13/10/2026. Descreve <strong>como o sistema funciona hoje</strong>. Onde o teste encontrou uma falha que afeta o uso, há um quadro <strong>Atenção</strong> com o cuidado a tomar e o número do desvio registrado no documento Defeitos para Correção. Telas não testadas estão indicadas; o que é dito sobre elas vem do código.</p>
+<p>O manual foi escrito a partir das telas do sistema e dos testes realizados no ambiente de teste em onze rodadas, de 07 a 22/10/2026 (149 dos 162 casos do plano com resultado). Descreve <strong>como o sistema funciona hoje</strong>. Onde o teste encontrou uma falha que afeta o uso, há um quadro <strong>Atenção</strong> com o cuidado a tomar e o número do desvio registrado no documento Defeitos para Correção. Telas não testadas estão indicadas; o que é dito sobre elas vem do código. No fim há a seção <strong>Limitações conhecidas</strong>, com o que não abre ou não funciona hoje e do que isso depende (banco de dados, módulo Produção, correção no sistema).</p>
+<div class="callout">
+<p class="callout-titulo">Situação do módulo</p>
+<p>No encerramento dos testes (23/10/2026) o módulo Estoque <strong>não está apto para uso em ambiente regulado</strong>: há 76 defeitos registrados, 21 de gravidade alta. Este manual ensina a usar o sistema como ele é, com os cuidados que cada defeito pede; ele não torna o módulo apto.</p>
+</div>
 <div class="callout">
 <p class="callout-titulo">A quem se destina</p>
 <ul>
@@ -67,7 +71,8 @@
 <h2 id="acesso-ao-estoque">Acesso ao Estoque</h2>
 <p><strong>1.</strong> Entre no LabMedSys pelo Principal (usuário e senha) e, na tela inicial, clique em <strong>Estoque</strong>.</p>
 <p><strong>2.</strong> O menu do Estoque mostra só as telas liberadas para o seu perfil no Principal. Se o sistema recusar a tela com a mensagem sobre o seu perfil, peça ao administrador para marcar no seu perfil as funções do Estoque que você usa. A mensagem não diz qual função falta.</p>
-<p><strong>3.</strong> Você só vê os <strong>almoxarifados ligados ao seu grupo de usuário</strong> (tela <strong>Grupo Usuário - Almoxarifado</strong>). Se um almoxarifado não aparece numa lista, é porque o seu grupo não está ligado a ele.</p>
+<p><strong>3.</strong> Você só vê os <strong>almoxarifados ligados ao seu grupo de usuário</strong> (tela <strong>Grupo Usuário - Almoxarifado</strong>). Se um almoxarifado não aparece numa lista, é porque o seu grupo não está ligado a ele. Isso vale para as telas de movimentação, as consultas de disponibilidade e a <strong>Aprovação de Solicitação</strong>; mas <strong>não vale em todas</strong>: o cadastro de <strong>Local de Armazenagem</strong> só oferece os almoxarifados do seu grupo (um almoxarifado novo não aparece para quem não o tem ligado, DV-EST-066), e a <strong>Solicitação de Material (Consumo)</strong> oferece todos os almoxarifados e grava em um que não é do seu grupo (DV-EST-069).</p>
+<p><strong>4.</strong> Um <strong>perfil novo</strong> criado no Principal com as funções do Estoque marcadas <strong>pode continuar sem abrir o módulo</strong>: nos testes só o perfil administrador abriu o Estoque (DV-EST-005). Se isso acontecer, peça ao responsável pelo cadastro de perfis que confira com a área de TI.</p>
 <p>O menu tem sete partes: <strong>Cadastros</strong>, <strong>Estoque</strong>, <strong>Gestão Analítica</strong>, <strong>Inventário</strong>, <strong>Kits</strong>, <strong>Regulatório</strong> e <strong>Relatórios</strong>.</p>
 <h2 id="padrao-de-uso-das-telas">Padrão de uso das telas</h2>
 <h3 id="pesquisar">Pesquisar</h3>
@@ -98,9 +103,9 @@
 <h3 id="almoxarifado-local-de-armazenagem-rua-coluna-e-andar">Almoxarifado, Local de Armazenagem, Rua, Coluna e Andar</h3>
 <p><strong>1.</strong> <strong>Almoxarifado</strong>: código, descrição e <strong>tipo</strong> (comum, referência, retenção ou estabilidade). O tipo decide em que telas o almoxarifado aparece: só um almoxarifado do tipo Retenção recebe amostras de retenção.</p>
 <p><strong>2.</strong> <strong>Grupo Usuário - Almoxarifado</strong>: ligue o almoxarifado aos grupos de usuário que vão usá-lo. Sem essa ligação, ninguém o vê.</p>
-<p><strong>3.</strong> <strong>Local de Armazenagem</strong>: dentro do almoxarifado, com a marcação de <strong>quarentena</strong>, <strong>refugo</strong>, <strong>refrigerado</strong> ou <strong>controlado</strong>. Os locais de quarentena e de refugo são os únicos destinos possíveis para lotes em quarentena e reprovados.</p>
+<p><strong>3.</strong> <strong>Local de Armazenagem</strong>: dentro do almoxarifado, com a marcação de <strong>quarentena</strong>, <strong>refugo</strong>, <strong>refrigerado</strong> ou <strong>controlado</strong>. Os locais de quarentena e de refugo são os únicos destinos possíveis para lotes em quarentena e reprovados. A lista de almoxarifados desta tela <strong>depende do seu grupo de usuário</strong>: se o almoxarifado que você acabou de criar (por exemplo, de Retenção ou de Estabilidade) não aparece, ligue-o primeiro ao seu grupo na tela <strong>Grupo Usuário - Almoxarifado</strong> (DV-EST-066).</p>
 <p><strong>4.</strong> <strong>Estoque Rua</strong>, <strong>Estoque Coluna</strong> e <strong>Estoque Andar</strong>: as três divisões do local.</p>
-<p><strong>5.</strong> <strong>Endereço do Estoque</strong> (menu Estoque): combine local, rua, coluna e andar, com altura, largura, profundidade e <strong>peso máximo</strong>. Um endereço com saldo não pode ser excluído. A exclusão não pede justificativa (DV-EST-018).</p>
+<p><strong>5.</strong> <strong>Endereço do Estoque</strong> (menu Estoque): combine local, rua, coluna e andar, com altura, largura, profundidade e <strong>peso máximo</strong>. Um endereço com saldo não pode ser excluído. A exclusão não pede justificativa (DV-EST-018). <strong>Código zero:</strong> a Rua recusa o código zero, o Andar também (se o zero já existir), mas a <strong>Coluna aceita</strong> (DV-EST-059); evite criar códigos zero.</p>
 <h3 id="unidade-de-medida">Unidade de Medida</h3>
 <p>Código e descrição. Ao salvar, o sistema cria sozinho a apresentação com a mesma unidade.</p>
 <h3 id="item">Item</h3>
@@ -109,13 +114,22 @@
 <p class="callout-titulo">Atenção</p>
 <ul>
 <li>Preencha o <strong>Almoxarifado de Identificação</strong>. Sem ele, o item salva, mas o recebimento falha depois com "Erro ao Finalizar Recebimento!" (DV-EST-010).</li>
+<li>O cadastro aceita <strong>estoque mínimo maior que o máximo</strong> sem avisar (DV-EST-051). Confira os dois campos. Ao marcar controle da Polícia Federal, do Exército ou substância controlada, o sistema pede o <strong>tipo de substância controlada</strong>: escolha na lista.</li>
 <li>O campo da <strong>classificação de reanálise</strong> (prazo da primeira reanálise) <strong>não aparece na tela</strong>, em nenhuma combinação de controles (DV-EST-043). Hoje não é possível ligar um item novo a uma classificação pela tela, e por isso a Agenda de Reanálise não lista os lotes desse item (DV-EST-041).</li>
 </ul>
 </div>
 <h3 id="classificacao-de-reanalise">Classificação de Reanálise</h3>
-<p>Código, descrição e o percentual da validade em que a primeira reanálise vence (por exemplo, 50%). A tela funciona; o que não funciona é ligá-la ao item (acima).</p>
+<p>Código, descrição e o percentual da validade em que a primeira reanálise vence (por exemplo, 50%). A tela inclui, altera e inativa; vazia, recusa com as três mensagens (código, descrição e primeira reanálise). Na rodada 22/10 a lista aberta pelo endereço não mostrou o botão Incluir. O que não funciona é ligar a classificação ao item (acima, DV-EST-043).</p>
 <h3 id="demais-cadastros">Demais cadastros</h3>
-<p>Grupo e Subgrupo do Item, NCM, Centro de Custo, Natureza da Operação, Substância Controlada, Conta Financeira, Conversão de Unidade e de Fornecedor, SJB, Tipo de Referência, Motivo da Movimentação, Parâmetros do Estoque, Classe, Classificação e Condição de Armazenagem do Item, Nível de Segurança, Conta Corrente, Tipo de Movimentação: cadastros simples de código e descrição, <strong>não testados</strong> nesta homologação. Seguem o padrão de uso das telas.</p>
+<p>Grupo e Subgrupo do Item, NCM, Centro de Custo, Natureza da Operação, Substância Controlada, Conta Financeira, Conversão de Unidade e de Fornecedor, SJB, Tipo de Referência, Motivo da Movimentação, Parâmetros do Estoque, Classe, Classificação e Condição de Armazenagem do Item, Nível de Segurança, Conta Corrente, Tipo de Movimentação: cadastros simples de código e descrição. Seguem o padrão de uso das telas. Foram testados: <strong>Condição de Armazenagem</strong> (descrição obrigatória; código repetido recusado; o código em branco gera sozinho o 00001; os códigos 0, 000 e 0000 são aceitos como três registros, DV-EST-059), <strong>Grupo e Subgrupo do Item</strong> (o subgrupo exige o grupo; grupo com subgrupo não é excluído; o grupo salva sem o tipo do item), <strong>Tipo e Motivo da Movimentação</strong> (os tipos de entrada e de saída que você cria aparecem na Entrada de Material - Outras e na Saída de Material), <strong>Apresentação do Fornecedor</strong> (os quatro campos são obrigatórios) e <strong>Centro de Custo</strong> (o do Estoque é <strong>outro cadastro</strong>, separado do centro de custo do Principal). A tela <strong>Banco</strong> não está no menu, abre pelo endereço e <strong>não grava</strong>: ao incluir mostra "Erro na inclusão do registro." com um detalhe técnico (DV-EST-052); não use.</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li><strong>Pesquisa:</strong> a busca de item não acha o texto sem acento ("DIOXIDO" não acha "DIÓXIDO") nem um trecho da palavra (DV-EST-053). Digite com acento, como no cadastro.</li>
+<li><strong>Mensagem de confirmação:</strong> em todos os cadastros a pergunta diz "Confirma a inclusão do item?", mesmo quando não é item. Pode confirmar.</li>
+<li><strong>Alterar e excluir:</strong> sem justificativa a tela recusa ("A Justificativa é obrigatória!"). A exclusão de cadastro em uso é recusada ("Exclusão inválida, existem referências com outras tabelas."), sem dizer qual tabela nem qual registro. A tela não mostra o histórico de um registro já excluído.</li>
+</ul>
+</div>
 <h2 id="recebimento-de-material">Recebimento de material</h2>
 <p>Menu <strong>Estoque</strong>. O caminho completo é: inspeção do veículo → recebimento → autorização → conferência → endereçamento → quarentena e análise no CQ.</p>
 <h3 id="checklist-de-inspecao-veicular">Checklist de Inspeção Veicular</h3>
@@ -171,10 +185,18 @@
 </ul>
 </div>
 <h3 id="devolucao-e-devolucao-da-producao">Devolução e Devolução da Produção</h3>
-<p><strong>Devolução</strong> (material que volta de uma saída): exige lote já existente com o mesmo item, validade e fabricante, e abre análise no CQ. <strong>Devolução da Produção</strong> (sobra de uma ordem): só aceita lotes que saíram por uma solicitação do tipo Produção, ligada a uma Ordem de Produção; a sobra volta direto ao saldo, sem análise. Telas <strong>não testadas</strong> (a segunda ficou bloqueada por falta de Ordem de Produção no ambiente).</p>
+<p><strong>Devolução de Material</strong> (material que volta de uma saída): o lote informado precisa <strong>já existir</strong>, com o mesmo item, validade e fabricante. Um lote que não existe é recusado ("Lote, validade, fabricante não localizado!"). O total endereçado não pode passar da quantidade devolvida.</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li>Para o item <strong>com controle de qualidade</strong>, a tela recusa até o lote que existe, com a mesma mensagem, e o fluxo de devolver o material para a quarentena e abrir análise no CQ <strong>não pôde ser concluído</strong> (DV-EST-064). Para o item <strong>sem</strong> controle de qualidade, a devolução grava, mas cria um novo item de entrada para o mesmo lote, que passa a aparecer em <strong>duas linhas</strong> na Disponibilidade do Lote. Confira o saldo depois de gravar.</li>
+<li>Ao finalizar, o relatório (etiqueta em PDF) abre em janela própria; feche-o antes de continuar.</li>
+</ul>
+<p><strong>Devolução da Produção</strong> (sobra de uma ordem): só aceita lotes que saíram por uma solicitação do tipo <strong>Produção</strong>, ligada a uma Ordem de Produção; a sobra volta direto ao saldo, sem análise. A tela <strong>não pôde ser testada</strong>: a solicitação do tipo Produção só nasce da Solicitação de Autorizações da Produção, e esta exige um <strong>Lote Padrão aprovado</strong> que ninguém consegue aprovar hoje (DV-EST-076). Ver <strong>Limitações conhecidas</strong>.</p>
+</div>
 <h2 id="quarentena-analise-e-liberacao">Quarentena, análise e liberação</h2>
 <h3 id="controle-da-qualidade-tela-do-estoque">Controle da Qualidade (tela do Estoque)</h3>
-<p>Lista as análises abertas pelas entradas, com a situação (aguardando análise, em análise, laudo emitido). O ciclo da análise (programação da coleta, amostragem, programação da análise, digitação dos resultados, aprovação e emissão do laudo) é feito no <strong>módulo Controle da Qualidade</strong>. Durante a amostragem, o CQ pede ao Estoque a <strong>Separação de Material</strong> da amostra (abaixo).</p>
+<p>Lista as análises abertas pelas entradas, com a situação (aguardando análise, em análise, laudo emitido). O ciclo da análise (programação da coleta, amostragem, programação da análise, digitação dos resultados, aprovação e emissão do laudo) é feito no <strong>módulo Controle da Qualidade</strong>. Durante a amostragem, o CQ pede ao Estoque a <strong>Separação de Material</strong> da amostra (abaixo). No laudo, a validade tem de ser hoje ou depois; <strong>reprovar não exige motivo</strong> e o campo "Responsável" mostra quem vê a tela, não quem aprovou (DV-EST-027 e 030).</p>
 <p><strong>Atualizar resultado:</strong> depois de o laudo ser emitido no CQ, abra a análise nesta tela e clique em <strong>Atualizar resultado</strong>. Só então o Estoque fica sabendo do laudo.</p>
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
@@ -216,79 +238,267 @@
 <p><strong>2.</strong> O CQ faz a análise e emite o laudo. No Estoque, abra a análise na tela <strong>Controle da Qualidade</strong> e clique em <strong>Atualizar resultado</strong>: o lote volta ao disponível.</p>
 <p>O sistema recusa lote bloqueado e lote com análise em aberto, com uma mensagem genérica nos dois casos (DV-EST-039).</p>
 <h3 id="revalidacao-de-lote">Revalidação de Lote</h3>
-<p>Pede ao CQ uma análise de revalidação; a validade só muda com o laudo. A lista só mostra lotes <strong>vencidos</strong> e, quando vazia, mostra uma linha com zeros e o botão Editar, que não faz nada (DV-EST-040).</p>
+<p>Pede ao CQ uma análise de revalidação; a validade só muda com o laudo. A lista só mostra lotes <strong>vencidos</strong>: ao clicar no ícone da linha, o sistema pergunta "Confirma a revalidação do lote?" e, com SIM, o lote sai da lista e a análise de tipo <strong>REVALIDAÇÃO</strong> aparece no CQ como "Aguardando análise". <strong>A tela não pede justificativa.</strong> Quando a lista está vazia, ela mostra uma linha com zeros e o botão Editar, que não faz nada (DV-EST-040).</p>
 <h2 id="solicitacao-separacao-e-atendimento-a-producao">Solicitação, separação e atendimento à produção</h2>
 <h3 id="solicitacao-de-material-consumo-e-producao">Solicitação de Material (Consumo e Produção)</h3>
-<p><strong>1.</strong> <strong>Incluir</strong>: tipo, prioridade, <strong>centro de custo</strong> (ou cliente), itens e quantidades. Salvar: a solicitação nasce aberta.</p>
-<p><strong>2.</strong> <strong>Aprovação de Solicitação</strong> (tela própria, testada na rodada 10): só recebe solicitações de um almoxarifado cadastrado com <strong>Obriga aprovação</strong>, e só mostra a solicitação a quem é do grupo ligado a esse almoxarifado. O ícone de aprovar pede confirmação, e a lista passa a mostrar a data da aprovação e quem aprovou.</p>
+<p><strong>1.</strong> <strong>Incluir</strong>: tipo, prioridade, <strong>centro de custo</strong> (ou cliente), itens e quantidades. Salvar: a solicitação nasce aberta; ao encerrar ("Solicitação encerrada com sucesso!") ela fica <strong>concluída</strong>. O cabeçalho vazio é recusado (data, centro de custo, almoxarifado), o item sem quantidade também, e encerrar sem item ("A Solicitação não possui nenhum item!").</p>
+<p><strong>2.</strong> Na tela de <strong>Consumo</strong>, a quantidade não tem máscara: digitar 3000 grava 3.000,000.</p>
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
 <ul>
-<li><strong>A tela aceita que a mesma pessoa que criou e concluiu a solicitação a aprove</strong> (DV-EST-070). Peça a aprovação a outra pessoa.</li>
+<li><strong>A Solicitação (Consumo) oferece todos os almoxarifados e grava em um que não é do seu grupo</strong> (DV-EST-069). Escolha só um almoxarifado do seu grupo.</li>
+<li>A <strong>Solicitação de Material (Produção)</strong> do Estoque só tem <strong>Pesquisar</strong> e <strong>Limpar</strong>: não há Incluir, e a busca de item do formulário não acha nenhum item (DV-EST-063). A solicitação do tipo Produção deveria nascer da Solicitação de Autorizações da Produção, que está parada (DV-EST-076). Ver <strong>Limitações conhecidas</strong>.</li>
+</ul>
+</div>
+<h3 id="aprovacao-de-solicitacao">Aprovação de Solicitação</h3>
+<p>Tela própria (menu <strong>Estoque</strong>), testada na rodada 10.</p>
+<p><strong>1.</strong> A solicitação só chega aqui se foi feita num almoxarifado cadastrado com <strong>Obriga aprovação</strong>. Quem não tem esse almoxarifado no grupo <strong>não vê a solicitação</strong> ("A pesquisa não retornou nenhum resultado."): quem limita é o grupo e o almoxarifado.</p>
+<p><strong>2.</strong> Clique no ícone de aprovar e confirme ("Confirma a aprovação ?"): aparece "Aprovação confirmada!", e a lista passa a mostrar a data e quem aprovou. A tela <strong>não pede justificativa</strong>.</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li><strong>A tela aceita que a mesma pessoa que criou e concluiu a solicitação a aprove</strong> (DV-EST-070). Peça a aprovação a outra pessoa; o sistema não impede.</li>
 </ul>
 </div>
 <h3 id="separacao-de-material">Separação de Material</h3>
-<p>Separa os lotes para uma solicitação aprovada ou para a amostra do CQ. A lista de lotes mostra só lotes <strong>disponíveis</strong>: fora de quarentena, não reprovados, não bloqueados, não em reanálise e dentro da validade. A lista <strong>não é ordenada pela validade</strong>: escolha você o lote que vence antes. <strong>Confirmar</strong>: "Separação confirmada!". O cancelamento exige justificativa.</p>
+<p>Separa os lotes para uma solicitação aprovada ou para a amostra do CQ. A lista de lotes mostra só lotes <strong>disponíveis</strong>: fora de quarentena, não reprovados, não bloqueados, não em reanálise, dentro da validade e <strong>sem a amostra de retenção e de estabilidade</strong> (que não contam como saldo disponível). Um lote vencido não aparece. <strong>Confirmar</strong>: "Separação confirmada!".</p>
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
-<p>A amostra do CQ sai do estoque <strong>sem passar pela Central de Pesagem</strong> (DV-EST-032). Pese e registre por fora, se o procedimento exigir.</p>
+<ul>
+<li>A lista <strong>não é ordenada pela validade</strong>: escolha você o lote que vence antes (DV-EST-048, ver Atendimento abaixo).</li>
+<li>A amostra do CQ sai do estoque <strong>sem passar pela Central de Pesagem</strong> (DV-EST-032). Pese e registre por fora, se o procedimento exigir.</li>
+</ul>
+</div>
+<h3 id="central-de-pesagem">Central de Pesagem</h3>
+<p>Menu <strong>Estoque</strong>. Registra a pesagem da separação para produção: balança, lacre, peso e tara por volume.</p>
+<p><strong>1.</strong> Abra a pesagem e clique em <strong>Finalizar Pesagem</strong>. Se nada foi pesado, o sistema pergunta "Deseja finalizar a Pesagem?", depois "Pesagem com divergências no total. Deseja continuar?" e, com SIM, recusa: "Existem itens que não foram pesados!".</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li><strong>Abrir o volume para informar peso bruto, tara, tag da balança e lacre dá erro de servidor</strong> ("Erro na consulta do Equipamento."), mesmo com uma balança cadastrada (DV-EST-067). Por isso a pesagem <strong>não pode ser feita pela tela</strong>. A tela de erro mostra detalhes técnicos: não copie nem encaminhe a captura para fora da equipe. Pese e registre por fora, se o procedimento exigir.</li>
+</ul>
 </div>
 <h3 id="atendimento-de-solicitacao">Atendimento de Solicitação</h3>
-<p><strong>1.</strong> Abra a solicitação pendente, escolha o lote e a quantidade (não pode passar da solicitada nem do saldo: "Saldo insuficiente para atender o item!").</p>
-<p><strong>2.</strong> <strong>Atender</strong> e <strong>Salvar</strong>: "Atendimento finalizado!". O saldo do lote e do endereço baixam, e a quantidade vai para "Solicitação" no saldo.</p>
+<p><strong>1.</strong> Abra a solicitação pendente, escolha o lote e a quantidade (não pode passar da solicitada: "Quantidade atendida não pode ser superior a solicitada!", nem do saldo: "Saldo insuficiente para atender o item!").</p>
+<p><strong>2.</strong> <strong>Atender</strong> e <strong>Salvar</strong>: "Atendimento confirmado!". O saldo do lote e do endereço baixam, e a quantidade vai para "Solicitação" no saldo.</p>
+<p><strong>3.</strong> Para <strong>cancelar</strong> um atendimento, use o ícone de cancelar do item (a tela de Separação não tem esse botão): o sistema pergunta "Deseja cancelar o atendimento?" e, com SIM, o atendido volta a zero.</p>
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
-<p>A tela <strong>não tem campo de justificativa</strong> (DV-EST-045). Se atender quantidade ou lote diferentes do previsto, registre o motivo por fora.</p>
+<ul>
+<li><strong>A lista de lotes não é ordenada pela validade e a tela aceita o lote que vence depois</strong> sem aviso, mesmo havendo outro que vence antes (DV-EST-048). <strong>Escolha sempre o lote de validade mais curta.</strong></li>
+<li>A tela <strong>não tem campo de justificativa</strong> (DV-EST-045). Se atender quantidade ou lote diferentes do previsto, registre o motivo por fora.</li>
+<li><strong>O cancelamento não pede justificativa</strong> e não deixa rastro no Histórico do Lote (DV-EST-061). Registre por fora quem cancelou e por quê.</li>
+</ul>
 </div>
 <h2 id="remessa-e-expedicao">Remessa e expedição</h2>
+<p>Menu <strong>Estoque</strong>.</p>
 <h3 id="remessa-de-material">Remessa de Material</h3>
-<p><strong>1.</strong> <strong>Incluir</strong>: origem, local de entrega (cliente), almoxarifado, transportadora, romaneio, volumes, pesos, valores, <strong>evento</strong>, referência e contato. <strong>Salvar Remessa</strong>.</p>
-<p><strong>2.</strong> Em <strong>Itens / Lotes</strong>, busque o item, escolha o <strong>Item Entrada</strong> (lote), quantidade e valor, e <strong>Incluir</strong>. A lista de lotes já exclui lotes em quarentena, reprovados, bloqueados e em reanálise.</p>
+<p><strong>1.</strong> <strong>Incluir</strong>: origem, local de entrega (cliente), almoxarifado, transportadora, romaneio, volumes, pesos, valores, <strong>evento</strong>, referência e contato. <strong>Salvar Remessa</strong>. Sem os campos obrigatórios o sistema recusa: "Local de entrega não informado! O Almoxarifado não foi informado! O Motivo da Remessa não foi informado!".</p>
+<p><strong>2.</strong> Em <strong>Itens / Lotes</strong>, busque o item, escolha o <strong>Item Entrada</strong> (lote), quantidade e valor, e <strong>Incluir</strong>. A lista de lotes já exclui lotes em quarentena, reprovados, bloqueados e em reanálise; o lote vencido pode aparecer, mas com saldo zero, e a quantidade é recusada ("Quantidade superior ao saldo do Lote!"). O mesmo lote duas vezes é recusado ("O Lote informado já existe na Remessa!").</p>
 <p><strong>3.</strong> Preencha a <strong>Justificativa</strong> e clique em <strong>Finalizar</strong>.</p>
 <figure><a href="../img/estoque/ct-est-115-pos-finalizar-etapa2.png" target="_blank" rel="noopener"><img src="../img/estoque/ct-est-115-pos-finalizar-etapa2.png" alt="Remessa de Material: Finalizar termina em &quot;Erro ao gerar a solicitação do material!&quot; mesmo com a justificativa preenchida" loading="lazy"></a><figcaption>Remessa de Material: Finalizar termina em &quot;Erro ao gerar a solicitação do material!&quot; mesmo com a justificativa preenchida · clique para ampliar</figcaption></figure>
 
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
-<p><strong>Finalizar a remessa não funciona:</strong> termina sempre em "Erro ao gerar a solicitação do material!", com ou sem justificativa (DV-EST-046). A remessa fica sem data de liberação, sem baixa de saldo e sem aviso à Rastreabilidade. Até a correção, a expedição precisa ser registrada por outro meio e a baixa feita por <strong>Saída de Material</strong> (não testada), com a Qualidade ciente.</p>
+<ul>
+<li><strong>Na tela comum, Finalizar a remessa não funciona:</strong> termina em "Erro ao gerar a solicitação do material!", com ou sem justificativa (DV-EST-046). Com o <strong>Tipo de Remessa em GMM</strong>, a remessa finaliza ("Remessa finalizada com sucesso!") e o embarque é liberado ("Embarque liberado!"). Até a correção, use o tipo GMM; a causa provável é o centro de custo que a tela comum não informa à solicitação do material.</li>
+<li>A <strong>remessa gerada pela solicitação de kit</strong> nasce <strong>sem Origem e sem Responsável</strong> (campos travados) (DV-EST-058). O Responsável é gravado na liberação.</li>
+<li><strong>A remessa confirmada não aparece no módulo Rastreabilidade</strong> (DV-EST-072, a validar com a área). Registre o envio por outro meio.</li>
+<li>Digitar 999 na quantidade grava 0,999 (DV-EST-002). Confira o valor.</li>
+<li>O <strong>Histórico do Lote</strong> mostra a saída da remessa como "atendimento de solicitação" do tipo Cliente, <strong>sem a remessa e sem o destino</strong> (DV-EST-073).</li>
+<li>A Remessa <strong>não tem</strong> data de embarque, data da guia nem chave de nota fiscal.</li>
+</ul>
 </div>
 <h3 id="saida-de-material-e-saida-por-nota-fiscal">Saída de Material e Saída por Nota Fiscal</h3>
-<p>Saída avulsa (data, tipo e motivo, item, lote, endereço, quantidade, justificativa) e saída por nota (cliente, chave da nota, justificativa). <strong>Não testadas.</strong></p>
-<h2 id="amostras-de-referencia-retencao-e-estabilidade">Amostras de referência, retenção e estabilidade</h2>
-<p>Menu <strong>Regulatório</strong>.</p>
-<h3 id="entrada-de-material-regulatorio">Entrada de Material (Regulatório)</h3>
-<p><strong>1.</strong> Tipo "ENTRADA - RETENÇÃO" (ou referência, estabilidade), item, lote, quantidade e o endereço de um almoxarifado <strong>do tipo correspondente</strong> (retenção, referência ou estabilidade), ligado ao seu grupo. <strong>Finalizar</strong>: "Movimentação finalizada!". O saldo do lote passa para a coluna de retenção.</p>
+<p><strong>Saída de Material (outras):</strong> data da saída, tipo e motivo da movimentação, item, lote de entrada, almoxarifado, local, rua, coluna e andar, quantidade e justificativa. Com tudo vazio, o sistema lista os campos que faltam.</p>
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
 <ul>
-<li>Se nenhum almoxarifado aparecer no destino, não existe almoxarifado desse tipo ligado ao seu grupo. Cadastre (Almoxarifado, tipo Retenção; Grupo Usuário - Almoxarifado; Local; Endereço).</li>
-<li>Depois de gravada, a amostra <strong>não aparece</strong> na <strong>Consulta Disponibilidade</strong> nem na <strong>Saída</strong> (DV-EST-047): hoje não é possível localizar nem dar saída numa amostra pela tela. Controle as amostras por fora até a correção.</li>
+<li><strong>A justificativa não é obrigatória</strong>: a saída grava sem ela (DV-EST-060). Preencha sempre.</li>
+<li>O movimento fica com <strong>custo unitário 0,00</strong> no histórico, e algumas mensagens têm erro de digitação (DV-EST-060).</li>
+</ul>
+<p><strong>Saída por Nota Fiscal</strong> (cliente, chave da nota, justificativa): <strong>não testada</strong>.</p>
+</div>
+<h2 id="amostras-de-referencia-retencao-e-estabilidade">Amostras de referência, retenção e estabilidade</h2>
+<p>Menu <strong>Regulatório</strong>. Foram testadas as telas <strong>Entrada de Material</strong>, <strong>Movimentações</strong> (saída) e <strong>Consulta Disponibilidade</strong>, na rodada 10 e na 11.</p>
+<h3 id="entrada-de-material-regulatorio">Entrada de Material (Regulatório)</h3>
+<p><strong>1.</strong> A tela lista as <strong>entradas pendentes</strong> de amostra de retenção, referência ou estabilidade de lotes que já passaram pela análise. Cada linha só ganha o ícone <strong>Movimentar</strong> <strong>depois que o lote foi movimentado fora da quarentena</strong> (Movimentação de Quarentena). Antes disso a linha fica <strong>sem ícone nenhum</strong>: isso é regra da tela, não é erro; faça primeiro a Movimentação de Quarentena do lote.</p>
+<p><strong>2.</strong> Clique em <strong>Movimentar</strong>, escolha o almoxarifado <strong>do tipo correspondente</strong> (retenção, referência ou estabilidade, ligado ao seu grupo), o local, a rua, a coluna e o andar, e <strong>Finalizar</strong>: "Movimentação finalizada!". O saldo do lote passa para a coluna de retenção (ou de estabilidade). A quantidade maior que a disponível é recusada ("Quantidade movimentada não pode ser superior a quantidade disponível!").</p>
+<p><strong>3. Confira:</strong> a amostra <strong>não é saldo disponível</strong>: a Disponibilidade do Lote mostra o saldo total maior que o disponível, e o Atendimento de Solicitação não oferece os endereços de retenção. O Histórico do Lote mostra "ENTRADA - RETENÇÃO", "SAÍDA - RETENÇÃO" e "ENTRADA - ESTABILIDADE" com endereço, quantidade e data, <strong>sem usuário e sem hora</strong>.</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li>Se nenhum almoxarifado aparecer no destino, não existe almoxarifado desse tipo ligado ao seu grupo. Cadastre (Almoxarifado, tipo Retenção ou Estabilidade; Grupo Usuário - Almoxarifado; Local; Endereço). O Local só oferece o almoxarifado se ele estiver ligado ao seu grupo (DV-EST-066).</li>
+<li><strong>Estabilidade:</strong> a entrada de estabilidade pendente <strong>não nasce</strong>: o campo "Qtd. Estabilidade" do Registro de Amostragem do CQ está desligado no sistema (DV-EST-074). A entrada feita pela tela <strong>Movimentações</strong> grava sem pedir o tipo de estabilidade e sem abrir o acompanhamento no CQ (DV-EST-071). E a <strong>Regra de Estabilidade</strong> do CQ só aceita item de <strong>código numérico</strong> ("Selecione um item." para os demais, DV-EST-075).</li>
+<li>A <strong>Consulta Disponibilidade</strong> só lista a amostra de itens que têm a <strong>marca Retenção</strong> no cadastro do Item; item sem a marca fica fora da consulta, sem aviso.</li>
 </ul>
 </div>
 <h3 id="movimentacoes-saida-e-consulta-disponibilidade">Movimentações (saída) e Consulta Disponibilidade</h3>
-<p>Saída da amostra, com justificativa, e consulta por item e lote. <strong>Não funcionam</strong> para amostras gravadas pela entrada (DV-EST-047).</p>
-<h2 id="inventario">Inventário</h2>
-<p>Menu <strong>Inventário</strong>: <strong>Inventário</strong> (abertura), <strong>Contagem</strong>, <strong>Auditoria/justificativa</strong> e <strong>Apuração</strong>. O inventário trava os endereços escolhidos, aceita até três contagens (a terceira divergente com justificativa) e a apuração ajusta os saldos.</p>
+<p><strong>Saída - Retenção, Referência e Estabilidade:</strong> escolha o lote, o endereço de origem e a quantidade, e finalize.</p>
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
-<p>O inventário <strong>não abre</strong> enquanto houver recebimentos ou solicitações pendentes nos parâmetros informados: "Existem solicitações não finalizadas para os parâmetros informados!". Encerre as pendências antes. As telas ficaram <strong>bloqueadas no teste</strong> por esse motivo.</p>
+<ul>
+<li><strong>A saída da amostra de retenção, antes do vencimento do lote, é aceita sem aviso, sem impedimento e sem justificativa</strong> (DV-EST-068). A norma pede guarda pelo prazo (art. 14, VIII); o sistema não controla o prazo. Só dê saída com decisão da Garantia da Qualidade, registrada por fora.</li>
+<li>Para o lote <code>TESTEPA001</code> a origem não lista nenhum endereço e a tela mostra "Object reference not set to an instance of an object." (DV-EST-047); com lotes novos a saída funciona. A causa está no cadastro desse lote, com o DBA.</li>
+</ul>
+</div>
+<h2 id="inventario">Inventário</h2>
+<p>Menu <strong>Inventário</strong>: <strong>Inventário</strong> (abertura), <strong>Contagem</strong>, <strong>Auditoria/justificativa</strong> e <strong>Apuração</strong>. Testado nas rodadas 8 e 10.</p>
+<p><strong>1. Abrir:</strong> escolha tipo (rotativo), almoxarifado, local, grupo e subgrupo. A <strong>data é travada</strong> e grava o dia de hoje. "Inventário gerado com sucesso!" e o endereço passa a <strong>Inventário = SIM</strong>: o saldo vai para a coluna "Bloqueado / Inventário" e o Atendimento só oferece o que está fora do inventário.</p>
+<p><strong>2. Contar:</strong> até <strong>três contagens</strong> por endereço. A terceira contagem divergente exige justificativa ("Informe a justificativa para a contagem divergente!").</p>
+<p><strong>3. Apurar:</strong> só depois de finalizar a contagem e justificar; o sistema processa os itens e ajusta o saldo ("Processamento concluído! Foram processados: 1 item(ns)."; o saldo do lote foi de 75 para 72). Apurar antes de finalizar a contagem é recusado.</p>
+<p><strong>4. Reabrir contagem e cancelar</strong> o inventário também são possíveis; o endereço volta a Inventário = NÃO.</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li><strong>O inventário não abre enquanto houver solicitações ou recebimentos pendentes</strong> nos parâmetros do almoxarifado: "O Inventário não pode ser gerado com solicitações pendentes!". Encerre as pendências antes (no ambiente de teste, um almoxarifado sem pendências abriu).</li>
+<li><strong>A mesma pessoa pode contar três vezes, justificar e apurar</strong>, sem nenhuma restrição (DV-EST-049). Combine com a Qualidade quem conta e quem apura.</li>
+<li><strong>Cancelar o inventário não pede justificativa</strong>, e a lista de contagens a reabrir oferece primeira, segunda e terceira mesmo com uma só feita (DV-EST-050).</li>
+<li>O ajuste aparece no Histórico do Lote como "INVENTÁRIO" e saída, <strong>sem usuário e sem justificativa</strong> (DV-EST-034).</li>
+</ul>
 </div>
 <h2 id="consultas-e-relatorios">Consultas e relatórios</h2>
 <ul>
-<li><strong>Disponibilidade do Lote</strong>, <strong>Disponibilidade de Estoque</strong> e <strong>Disponibilidade por Local</strong>: saldo por item, lote e local, separado por situação (disponível, quarentena, vencido ou reanálise, bloqueado, reprovado, inventário, retenção, referência, estabilidade, solicitação, separação). Use-as para <strong>conferir</strong> toda gravação.</li>
+<li><strong>Disponibilidade do Lote</strong>, <strong>Disponibilidade de Estoque</strong> e <strong>Disponibilidade por Local</strong>: saldo por item, lote e local, separado por situação (disponível, quarentena, vencido ou reanálise, bloqueado, reprovado, inventário, retenção, referência, estabilidade, solicitação, separação). Use-as para <strong>conferir</strong> toda gravação. O usuário de um grupo sem o almoxarifado vê as três vazias. O lote vencido sai do disponível, mas o saldo cai ora em "Vencido / Reanálise", ora em "Bloqueado / Inventário" (quando há pedido de revalidação aberto); quem consulta nem sempre vê que o motivo é o vencimento.</li>
 <li><strong>Consulta Endereço Item</strong>: o que há em cada endereço.</li>
-<li><strong>Histórico do Lote</strong>: movimentações, solicitações, análises e notas ligadas ao lote. <strong>Não mostra</strong> quem fez cada movimentação, a hora, o laudo, quem aprovou nem a reprovação (DV-EST-034).</li>
-<li><strong>Relatórios</strong> (menu Relatórios): 25 relatórios de movimentação, quarentena, reanálise, kits e inventário, <strong>não testados</strong>.</li>
+<li><strong>Histórico do Lote</strong>: movimentações, solicitações, análises e notas ligadas ao lote, com o laudo e a data da análise. <strong>Não mostra</strong> quem fez cada movimentação, a hora, quem aprovou nem a reprovação (DV-EST-034), nem a remessa e o destino da saída (DV-EST-073).</li>
+<li><strong>Relatórios</strong> (menu Relatórios): testados o de Condição de Armazenagem (imprime e exporta), <strong>RM17 - Material em Quarentena</strong>, <strong>RM36 - Insumos Reprovados na Quarentena</strong>, <strong>RM18 - Produto Acabado</strong> (gera o PDF sem linhas), a Relação de Lotes - Reanálise e os relatórios de kit. O <strong>RM36 volta vazio</strong> mesmo com lote reprovado e o <strong>RM17 sai com as descrições deslocadas uma linha</strong> (DV-EST-062); o RM17 também lista lote já vencido sem marcar o vencimento. Os relatórios mostram a <strong>data em formato americano</strong> e o nome do usuário cortado (DV-EST-057). Os demais relatórios do menu não foram testados.</li>
 </ul>
 <h2 id="compras-e-avaliacao-do-fornecedor">Compras e avaliação do fornecedor</h2>
 <p>Menu <strong>Gestão Analítica</strong>.</p>
 <ul>
 <li><strong>Análise de Estoque</strong>: necessidade de compra por grupo e período. Aceita período maior que 12 meses (DV-EST-020).</li>
 <li><strong>Curva ABC</strong>: aceita período no futuro (DV-EST-019).</li>
-<li><strong>Pedido de Compra</strong>: itens, quantidades e custos; pode ser gerado da análise. Quantidade "100" vira 0,100; pedido aberto não reabre pela lista; falta de fornecedor não avisa (DV-EST-021).</li>
+<li><strong>Pedido de Compra</strong>: itens, quantidades e custos; pode ser <strong>gerado a partir da análise</strong>. Quantidade "100" vira 0,100 e falta de fornecedor não avisa (DV-EST-021). <strong>Hoje a lista de pedidos só mostra o ícone Excluir</strong>: o perfil não tem as funções de Alterar, Incluir e Baixar o Pedido de Compra, e ninguém consegue finalizar nem baixar um pedido (DV-EST-077). O <strong>Recebimento do Item</strong> (baixa do pedido) não pôde ser testado.</li>
 <li><strong>Avaliação do Fornecedor</strong>: avaliação por entrega (nota fiscal e lote), com pontuação. <strong>Não qualifica nem bloqueia</strong> o fornecedor no recebimento (DV-EST-022) e, depois de gravada, não pode ser alterada nem tem histórico (DV-EST-023).</li>
 </ul>
 <h2 id="kits">Kits</h2>
-<p>Menu <strong>Kits</strong>: Cadastro, Solicitação, Controle, Parâmetros, Planejamento e Análise do Planejamento de Kits. <strong>Não testados.</strong></p>
+<p>Menu <strong>Kits</strong>: Cadastro, Solicitação, Controle, Parâmetros, Planejamento e Análise do Planejamento de Kits. Testados na rodada 8 e na 10 (os <strong>Parâmetros de Configuração (Kit)</strong> não foram testados).</p>
+<h3 id="cadastro-de-kits">Cadastro de Kits</h3>
+<p><strong>1.</strong> Informe o nome, o <strong>tipo de kit</strong> e o <strong>almoxarifado</strong> (sem eles: "Tipo de Kit não foi informado! Almoxarifado não foi informado!"). O kit <strong>sem componente é aceito</strong> ("Kit criado com sucesso!").</p>
+<p><strong>2.</strong> Para incluir os componentes, abra o kit para editar, informe item e quantidade e preencha a <strong>Justificativa</strong> (sem ela: "A Justificativa é obrigatória!"): "Kit alterado com sucesso!".</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li>O filtro <strong>Nome</strong> da lista é ignorado (DV-EST-055).</li>
+</ul>
+</div>
+<h3 id="planejamento-de-kits-e-analise-do-planejamento">Planejamento de Kits e Análise do Planejamento</h3>
+<p><strong>1. Planejamento:</strong> cliente e <strong>filial</strong> (só o cliente que tem filial cadastrada aparece), kit, quantidade e <strong>validade mínima</strong> em dias (por exemplo, 180). Sem cliente e filial o sistema recusa. O mesmo kit <strong>não é oferecido de novo</strong> na lista, o que impede o repetido.</p>
+<p><strong>2. Análise do Planejamento:</strong> exige o período ("Período não foi informado!").</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li><strong>Com o período preenchido, a tela diz "Analise gerada!" mas não grava nem mostra nada</strong> (DV-EST-054). Não use a Análise do Planejamento; o relatório Análise de Componentes (Kit) mostra a necessidade planejada.</li>
+</ul>
+</div>
+<h3 id="solicitacao-de-kit-e-remessa">Solicitação de Kit e remessa</h3>
+<p><strong>1.</strong> <strong>Solicitação de kit:</strong> tipo, cliente, centro de custo, <strong>local de entrega</strong> ("Local de Entrega não foi informado!"), kit, componentes e quantidade. A solicitação gera uma solicitação de estoque comum, que você atende pela separação e pelo atendimento.</p>
+<p><strong>2.</strong> Gere a guia/remessa: "Solicitação/GMM gerada!". Na <strong>Remessa de Material</strong>, use o <strong>Tipo de Remessa GMM</strong> para finalizar. Depois de gerada a guia, a tela <strong>não oferece mais "Reabrir solicitação"</strong>.</p>
+<div class="callout">
+<p class="callout-titulo">Atenção</p>
+<ul>
+<li><strong>O atendimento do kit aceita lote que vence antes da validade mínima do planejamento</strong> (por exemplo, lote de 31 dias para um planejamento de 180), sem aviso (DV-EST-056). Confira a validade do lote antes de atender.</li>
+<li>A remessa do kit nasce sem Origem e sem Responsável (DV-EST-058); a remessa na tela comum não finaliza (DV-EST-046). Ver <strong>Remessa de Material</strong>.</li>
+</ul>
+</div>
+<h3 id="controle-de-kits">Controle de Kits</h3>
+<p>Mostra os kits enviados. No detalhe de um kit: a guia (GMM), o cliente, a data do embarque e se está vencido. A <strong>lupa do componente</strong> mostra a remessa, o <strong>lote</strong>, o <strong>item de entrada</strong>, a validade, a quantidade e os dias que faltam para vencer. A tela não mostra justificativa nem histórico.</p>
+<p><strong>Repor o lote que está vencendo:</strong> a solicitação de reposição exige justificativa e o local de entrega e gera uma solicitação de estoque e uma remessa. <strong>Ressalva:</strong> a coluna "Reposição" continua em NÃO e o botão de repor lote vencido fica desabilitado; nada indica que a nova solicitação é a reposição do lote.</p>
+<h3 id="relatorios-de-kit">Relatórios de kit</h3>
+<p><strong>Análise de Componentes (Kit)</strong> e <strong>Reposição de Componentes</strong> mostram a necessidade planejada (por exemplo, 3 kits x 5). <strong>Reposição de Itens a Vencer</strong> e <strong>Listagem de Lotes</strong> abrem vazios enquanto nenhum kit for remetido. Os relatórios saem com a data em formato americano (DV-EST-057).</p>
+<h2 id="limitacoes-conhecidas">Limitações conhecidas</h2>
+<p>O que <strong>não abre, não grava ou não pôde ser testado</strong> hoje, e do que isso depende. Enquanto não houver correção, o procedimento do dia a dia precisa de um controle por fora (planilha, papel ou outro sistema), com a Garantia da Qualidade ciente.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela ou função</th>
+<th>O que acontece hoje</th>
+<th>Depende de</th>
+<th>Desvio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Endereçamento de Material</td>
+<td>Mostra "sucesso" e não grava; o lote recebido pela nota não ganha saldo nem análise no CQ</td>
+<td><strong>DBA</strong>: dizer qual instrução da rotina de finalização do recebimento falha</td>
+<td>DV-EST-016</td>
+</tr>
+<tr>
+<td>Conferência de Recebimento</td>
+<td>Dá erro e deixa a nota como conferida</td>
+<td>DBA e desenvolvimento</td>
+<td>DV-EST-015</td>
+</tr>
+<tr>
+<td>Saída de amostra do lote <code>TESTEPA001</code></td>
+<td>Origem sem endereço e mensagem técnica</td>
+<td><strong>DBA</strong>: ver o que há de diferente no cadastro desse lote</td>
+<td>DV-EST-047</td>
+</tr>
+<tr>
+<td>Solicitação de Autorizações, Solicitação de Material (Produção), Devolução da Produção, Entrada de Produção (serviços), Lote Padrão</td>
+<td>Não nascem: o lote padrão do produto não pode ser aprovado</td>
+<td><strong>Produção</strong>: ligar uma função profissional à configuração 19 (e 28 e 29) para quem aprova o Lote Padrão; depois aprovar o lote com outra pessoa</td>
+<td>DV-EST-076</td>
+</tr>
+<tr>
+<td>Item: classificação de reanálise e Agenda de Reanálise</td>
+<td>O campo não aparece; a agenda fica vazia</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-043, 041</td>
+</tr>
+<tr>
+<td>Perfil novo com funções do Estoque</td>
+<td>Não abre o módulo</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-005</td>
+</tr>
+<tr>
+<td>Central de Pesagem</td>
+<td>Abrir o volume dá erro de servidor</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-067</td>
+</tr>
+<tr>
+<td>Pedido de Compra (alterar, incluir, finalizar, baixar)</td>
+<td>A lista só mostra Excluir; o Recebimento do Item não abre</td>
+<td><strong>Desenvolvimento</strong> (funções do perfil)</td>
+<td>DV-EST-077</td>
+</tr>
+<tr>
+<td>Regra de Estabilidade e entrada de estabilidade pendente</td>
+<td>Só item de código numérico; a entrada pendente não nasce</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-074, 075</td>
+</tr>
+<tr>
+<td>Remessa de Material (tela comum)</td>
+<td>Finalizar dá erro; só o tipo GMM finaliza</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-046, 058</td>
+</tr>
+<tr>
+<td>Banco</td>
+<td>Não grava e mostra erro técnico</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-052</td>
+</tr>
+<tr>
+<td>Análise do Planejamento de Kits</td>
+<td>Diz que gerou e não grava</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-054</td>
+</tr>
+<tr>
+<td>Acesso aos cadastros de apoio pelo endereço</td>
+<td>O caso CT-EST-023 ficou fora do escopo dos testes; os demais casos de permissão estão nos Defeitos e no documento de Achados de Segurança</td>
+<td>Decisão do responsável</td>
+<td>CT-EST-023, DV-EST-008</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="cuidados-que-resumem-os-testes">Cuidados que resumem os testes</h2>
 <div class="tabela"><table>
 <thead>
@@ -305,6 +515,16 @@
 <td>DV-EST-002, 021, 046</td>
 </tr>
 <tr>
+<td>Cadastros</td>
+<td>Evitar código zero; conferir mínimo e máximo do item; pesquisar com acento; não usar a tela Banco</td>
+<td>DV-EST-059, 051, 053, 052</td>
+</tr>
+<tr>
+<td>Local de Armazenagem</td>
+<td>Ligar o almoxarifado novo ao seu grupo antes de criar o local</td>
+<td>DV-EST-066</td>
+</tr>
+<tr>
 <td>Recebimento</td>
 <td>Conferir validade e código do lote; responder todo o checklist; consultar a avaliação do fornecedor</td>
 <td>DV-EST-001, 004, 011, 014, 022</td>
@@ -316,8 +536,8 @@
 </tr>
 <tr>
 <td>Laudo do CQ</td>
-<td>Clicar em Atualizar resultado na tela Controle da Qualidade a cada laudo</td>
-<td>DV-EST-029</td>
+<td>Clicar em Atualizar resultado na tela Controle da Qualidade a cada laudo; dar motivo ao reprovar</td>
+<td>DV-EST-029, 027</td>
 </tr>
 <tr>
 <td>Movimentação de Quarentena</td>
@@ -330,26 +550,51 @@
 <td>DV-EST-041, 043</td>
 </tr>
 <tr>
-<td>Remessa</td>
-<td>Finalizar não conclui; registrar a expedição por outro meio até a correção</td>
-<td>DV-EST-046</td>
+<td>Solicitação (Consumo)</td>
+<td>Escolher só almoxarifado do seu grupo; a aprovação deve ser de outra pessoa</td>
+<td>DV-EST-069, 070</td>
 </tr>
 <tr>
-<td>Amostras de retenção</td>
-<td>A entrada grava, mas a consulta e a saída não encontram a amostra; controlar por fora</td>
-<td>DV-EST-047</td>
+<td>Atendimento</td>
+<td>Escolher o lote de validade mais curta; registrar por fora justificativa e cancelamento</td>
+<td>DV-EST-048, 045, 061</td>
+</tr>
+<tr>
+<td>Pesagem</td>
+<td>Não é possível pela tela; registrar por fora</td>
+<td>DV-EST-067</td>
+</tr>
+<tr>
+<td>Remessa</td>
+<td>Usar o Tipo de Remessa GMM para finalizar; avisar a Rastreabilidade por outro meio</td>
+<td>DV-EST-046, 072</td>
+</tr>
+<tr>
+<td>Kits</td>
+<td>Conferir a validade mínima antes de atender; não usar a Análise do Planejamento</td>
+<td>DV-EST-056, 054</td>
+</tr>
+<tr>
+<td>Amostras de retenção e estabilidade</td>
+<td>Fazer antes a Movimentação de Quarentena; saída só com decisão da GQ; controlar o prazo de guarda por fora</td>
+<td>DV-EST-068, 074, 071</td>
 </tr>
 <tr>
 <td>Inventário</td>
-<td>Encerrar recebimentos e solicitações pendentes antes de abrir</td>
-<td>—</td>
+<td>Encerrar pendências antes de abrir; quem conta não deve apurar; justificar o cancelamento</td>
+<td>DV-EST-049, 050</td>
+</tr>
+<tr>
+<td>Relatórios</td>
+<td>Não confiar no RM36 e conferir as descrições do RM17</td>
+<td>DV-EST-062</td>
 </tr>
 </tbody>
 </table></div>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="matriz-de-permissoes.html"><small>← Anterior</small><strong>Matriz de permissões</strong></a><a class="ap ap-prox" href="cadastros-de-apoio.html"><small>Próximo →</small><strong>Cadastros de apoio</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#acesso-ao-estoque">Acesso ao Estoque</a></li><li><a href="#padrao-de-uso-das-telas">Padrão de uso das telas</a></li><li class="sub"><a href="#pesquisar">Pesquisar</a></li><li class="sub"><a href="#incluir-e-alterar">Incluir e alterar</a></li><li class="sub"><a href="#quantidades">Quantidades</a></li><li class="sub"><a href="#enderecos">Endereços</a></li><li class="sub"><a href="#consultar-o-historico-log">Consultar o histórico (log)</a></li><li class="sub"><a href="#mensagens">Mensagens</a></li><li><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#almoxarifado-local-de-armazenagem-rua-coluna-e-andar">Almoxarifado, Local de Armazenagem, Rua, Coluna e Andar</a></li><li class="sub"><a href="#unidade-de-medida">Unidade de Medida</a></li><li class="sub"><a href="#item">Item</a></li><li class="sub"><a href="#classificacao-de-reanalise">Classificação de Reanálise</a></li><li class="sub"><a href="#demais-cadastros">Demais cadastros</a></li><li><a href="#recebimento-de-material">Recebimento de material</a></li><li class="sub"><a href="#checklist-de-inspecao-veicular">Checklist de Inspeção Veicular</a></li><li class="sub"><a href="#recebimento-de-material_1">Recebimento de Material</a></li><li class="sub"><a href="#conferencia-de-recebimento">Conferência de Recebimento</a></li><li class="sub"><a href="#enderecamento-de-material">Endereçamento de Material</a></li><li><a href="#entradas-de-material">Entradas de material</a></li><li class="sub"><a href="#entrada-de-material-outras">Entrada de Material - Outras</a></li><li class="sub"><a href="#entrada-de-material-producao">Entrada de Material - Produção</a></li><li class="sub"><a href="#devolucao-e-devolucao-da-producao">Devolução e Devolução da Produção</a></li><li><a href="#quarentena-analise-e-liberacao">Quarentena, análise e liberação</a></li><li class="sub"><a href="#controle-da-qualidade-tela-do-estoque">Controle da Qualidade (tela do Estoque)</a></li><li class="sub"><a href="#movimentacao-de-quarentena">Movimentação de Quarentena</a></li><li class="sub"><a href="#movimentacao-de-material">Movimentação de Material</a></li><li><a href="#reanalise-e-revalidacao">Reanálise e revalidação</a></li><li class="sub"><a href="#agenda-de-reanalise">Agenda de Reanálise</a></li><li class="sub"><a href="#reanalise-avulsa">Reanálise - Avulsa</a></li><li class="sub"><a href="#revalidacao-de-lote">Revalidação de Lote</a></li><li><a href="#solicitacao-separacao-e-atendimento-a-producao">Solicitação, separação e atendimento à produção</a></li><li class="sub"><a href="#solicitacao-de-material-consumo-e-producao">Solicitação de Material (Consumo e Produção)</a></li><li class="sub"><a href="#separacao-de-material">Separação de Material</a></li><li class="sub"><a href="#atendimento-de-solicitacao">Atendimento de Solicitação</a></li><li><a href="#remessa-e-expedicao">Remessa e expedição</a></li><li class="sub"><a href="#remessa-de-material">Remessa de Material</a></li><li class="sub"><a href="#saida-de-material-e-saida-por-nota-fiscal">Saída de Material e Saída por Nota Fiscal</a></li><li><a href="#amostras-de-referencia-retencao-e-estabilidade">Amostras de referência, retenção e estabilidade</a></li><li class="sub"><a href="#entrada-de-material-regulatorio">Entrada de Material (Regulatório)</a></li><li class="sub"><a href="#movimentacoes-saida-e-consulta-disponibilidade">Movimentações (saída) e Consulta Disponibilidade</a></li><li><a href="#inventario">Inventário</a></li><li><a href="#consultas-e-relatorios">Consultas e relatórios</a></li><li><a href="#compras-e-avaliacao-do-fornecedor">Compras e avaliação do fornecedor</a></li><li><a href="#kits">Kits</a></li><li><a href="#cuidados-que-resumem-os-testes">Cuidados que resumem os testes</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#acesso-ao-estoque">Acesso ao Estoque</a></li><li><a href="#padrao-de-uso-das-telas">Padrão de uso das telas</a></li><li class="sub"><a href="#pesquisar">Pesquisar</a></li><li class="sub"><a href="#incluir-e-alterar">Incluir e alterar</a></li><li class="sub"><a href="#quantidades">Quantidades</a></li><li class="sub"><a href="#enderecos">Endereços</a></li><li class="sub"><a href="#consultar-o-historico-log">Consultar o histórico (log)</a></li><li class="sub"><a href="#mensagens">Mensagens</a></li><li><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#almoxarifado-local-de-armazenagem-rua-coluna-e-andar">Almoxarifado, Local de Armazenagem, Rua, Coluna e Andar</a></li><li class="sub"><a href="#unidade-de-medida">Unidade de Medida</a></li><li class="sub"><a href="#item">Item</a></li><li class="sub"><a href="#classificacao-de-reanalise">Classificação de Reanálise</a></li><li class="sub"><a href="#demais-cadastros">Demais cadastros</a></li><li><a href="#recebimento-de-material">Recebimento de material</a></li><li class="sub"><a href="#checklist-de-inspecao-veicular">Checklist de Inspeção Veicular</a></li><li class="sub"><a href="#recebimento-de-material_1">Recebimento de Material</a></li><li class="sub"><a href="#conferencia-de-recebimento">Conferência de Recebimento</a></li><li class="sub"><a href="#enderecamento-de-material">Endereçamento de Material</a></li><li><a href="#entradas-de-material">Entradas de material</a></li><li class="sub"><a href="#entrada-de-material-outras">Entrada de Material - Outras</a></li><li class="sub"><a href="#entrada-de-material-producao">Entrada de Material - Produção</a></li><li class="sub"><a href="#devolucao-e-devolucao-da-producao">Devolução e Devolução da Produção</a></li><li><a href="#quarentena-analise-e-liberacao">Quarentena, análise e liberação</a></li><li class="sub"><a href="#controle-da-qualidade-tela-do-estoque">Controle da Qualidade (tela do Estoque)</a></li><li class="sub"><a href="#movimentacao-de-quarentena">Movimentação de Quarentena</a></li><li class="sub"><a href="#movimentacao-de-material">Movimentação de Material</a></li><li><a href="#reanalise-e-revalidacao">Reanálise e revalidação</a></li><li class="sub"><a href="#agenda-de-reanalise">Agenda de Reanálise</a></li><li class="sub"><a href="#reanalise-avulsa">Reanálise - Avulsa</a></li><li class="sub"><a href="#revalidacao-de-lote">Revalidação de Lote</a></li><li><a href="#solicitacao-separacao-e-atendimento-a-producao">Solicitação, separação e atendimento à produção</a></li><li class="sub"><a href="#solicitacao-de-material-consumo-e-producao">Solicitação de Material (Consumo e Produção)</a></li><li class="sub"><a href="#aprovacao-de-solicitacao">Aprovação de Solicitação</a></li><li class="sub"><a href="#separacao-de-material">Separação de Material</a></li><li class="sub"><a href="#central-de-pesagem">Central de Pesagem</a></li><li class="sub"><a href="#atendimento-de-solicitacao">Atendimento de Solicitação</a></li><li><a href="#remessa-e-expedicao">Remessa e expedição</a></li><li class="sub"><a href="#remessa-de-material">Remessa de Material</a></li><li class="sub"><a href="#saida-de-material-e-saida-por-nota-fiscal">Saída de Material e Saída por Nota Fiscal</a></li><li><a href="#amostras-de-referencia-retencao-e-estabilidade">Amostras de referência, retenção e estabilidade</a></li><li class="sub"><a href="#entrada-de-material-regulatorio">Entrada de Material (Regulatório)</a></li><li class="sub"><a href="#movimentacoes-saida-e-consulta-disponibilidade">Movimentações (saída) e Consulta Disponibilidade</a></li><li><a href="#inventario">Inventário</a></li><li><a href="#consultas-e-relatorios">Consultas e relatórios</a></li><li><a href="#compras-e-avaliacao-do-fornecedor">Compras e avaliação do fornecedor</a></li><li><a href="#kits">Kits</a></li><li class="sub"><a href="#cadastro-de-kits">Cadastro de Kits</a></li><li class="sub"><a href="#planejamento-de-kits-e-analise-do-planejamento">Planejamento de Kits e Análise do Planejamento</a></li><li class="sub"><a href="#solicitacao-de-kit-e-remessa">Solicitação de Kit e remessa</a></li><li class="sub"><a href="#controle-de-kits">Controle de Kits</a></li><li class="sub"><a href="#relatorios-de-kit">Relatórios de kit</a></li><li><a href="#limitacoes-conhecidas">Limitações conhecidas</a></li><li><a href="#cuidados-que-resumem-os-testes">Cuidados que resumem os testes</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>
