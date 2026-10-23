@@ -204,8 +204,7 @@ def docs_com_telas(mod, hom):
     docs = list(mod["docs"])
     if SEGURANCA_PUBLICA:
         docs = _com_seguranca(mod, docs, hom)
-    if mod["id"] == "garantia-qualidade":
-        docs += menus_gq.entradas(hom)
+    docs += menus_gq.entradas(hom, mod["id"])
     fontes = {"principal": "versao-nova/1.principal/telas/manifest.json",
               "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json"}
     if mod["id"] not in fontes:
@@ -936,7 +935,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             pagina = {"titulo": titulo, "slug": s, "cat": cat, "arq": arq, "toc": toc, "corpo": corpo,
                       "contagem": contar(limpo), "word": None, "fluxograma": None, "limpo": foi_limpo,
                       "roteiro_de": ROTEIROS.get(arq) or extra.get("roteiro_de"), "ordem": ordem,
-                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"), "menu": extra.get("menu"), "aba": extra.get("aba"), "resumo_tela": extra.get("resumo"), "tela_n": extra.get("tela_n"), "intro": extra.get("intro"),
+                      "grupo": extra.get("grupo"), "tela": extra.get("tela"), "rotulo": extra.get("rotulo"), "desvios": extra.get("desvios"), "menu": extra.get("menu"), "aba": extra.get("aba"), "fluxo": extra.get("fluxo"), "resumo_tela": extra.get("resumo"), "tela_n": extra.get("tela_n"), "intro": extra.get("intro"),
                       "situacao_tela": extra.get("situacao")}
             m = re.search(r'<img src="(\.\./img/[^"]+fluxograma[^"]*)"', corpo)
             if m:
@@ -1139,9 +1138,17 @@ def _abas_extras(mod, p):
                     break
         if melhor:
             href += f"#{melhor}"
+    if not href and p.get("fluxo"):  # sem roteiro de execução: o fluxo do processo a que a tela pertence
+        fl = telas_devs._norm(p["fluxo"])
+        pf = None if not fl else next((x for x in mod["paginas"] if x.get("cat") == "fluxos" and not x.get("roteiro_de")
+                   and (fl in telas_devs._norm(x["titulo"]) or telas_devs._norm(x["titulo"]) in fl)), None)
+        if pf:
+            href = f'{pf["slug"]}.html'
     # Ideal
     ideal = next((x for x in mod["paginas"] if x.get("cat") == "novo" and x.get("grupo") == p.get("grupo")
                   and telas_devs._norm(re.sub(r"\s*\(.*?\)", "", x.get("tela") or "")) == nome), None)
+    if not ideal:  # sem ficha da tela ideal: o documento "O módulo ideal" (visão do módulo inteiro)
+        ideal = next((x for x in mod["paginas"] if x.get("cat") == "ideal" and "entre os m" not in x["titulo"].lower()), None)
     def botao(rotulo, destino, dica):
         if destino:
             return f'<a class="aba-extra" href="{destino}">{rotulo}</a>'
@@ -1264,6 +1271,7 @@ MENUS_GQ_DESC = {
     "Controle de Desvios": "Onde a Garantia da Qualidade registra o que saiu do combinado na fábrica, investiga a causa, corrige e confere. É o processo que a ANVISA mais olha numa inspeção.",
     "Assuntos Regulatórios": "Onde a empresa acompanha os processos regulatórios dos seus produtos junto à ANVISA: o que foi pedido, o que está programado e o que está em andamento.",
     "Controle de Mudanças": "Onde a empresa pede, avalia, aprova, executa e confere qualquer mudança que possa afetar a qualidade do medicamento: processo, equipamento, material, documento, sistema.",
+    "Menu Estoque": "Onde o material entra, fica guardado, é movimentado, atendido à produção, devolvido, remetido e reanalisado: do recebimento na doca à saída do lote, passando pela quarentena e pelo laudo do Controle da Qualidade.",
     "Autoinspeção e Auditoria": "Onde a empresa confere, por conta própria, se cumpre as Boas Práticas: escreve os roteiros de perguntas, programa a verificação, registra o que encontrou e avalia o resultado.",
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
