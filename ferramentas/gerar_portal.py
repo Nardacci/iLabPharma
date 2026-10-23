@@ -493,8 +493,8 @@ MODULOS = [
          ("2.producao/fluxos/preparacao.md", "Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente", "fluxos", "2.producao/fluxos/LabMedSys - Modulo Producao - Fluxo Preparacao.docx"),
          ("2.producao/fluxos/terceirizacao-validade.md", "Terceirização e validade da OPE", "fluxos", "2.producao/fluxos/LabMedSys - Modulo Producao - Fluxo Terceirizacao e Validade da OPE.docx"),
      ]},
-    {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#2e9b4f", "situacao": "Pronto para testes", "nivel": 2,
-     "resumo": "Solicitação de análise, amostragem, análise, laudo, etiqueta e estabilidade. Reconhecimento e conformidade com a RDC 658/2022 feitos: 25 telas (22 com lógica, 3 protótipos); dos 16 temas da norma, 8 atendidos em parte e 8 não atendidos. Os quatro fluxos prontos (solicitação ao laudo, regras de amostragem e de análise, estabilidade, água e ambiente), as 119 regras de negócio, o inventário das telas, as permissões, o modelo de dados, a análise de risco e o plano de testes (61 casos). Análise pelo código concluída.",
+    {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#2e9b4f", "situacao": "Em testes", "nivel": 2,
+     "resumo": "Solicitação de análise, amostragem, análise, laudo, etiqueta e estabilidade. Reconhecimento e conformidade com a RDC 658/2022 feitos: 25 telas (22 com lógica, 3 protótipos); dos 16 temas da norma, 8 atendidos em parte e 8 não atendidos. Os quatro fluxos prontos (solicitação ao laudo, regras de amostragem e de análise, estabilidade, água e ambiente), as 119 regras de negócio, o inventário das telas, as permissões, o modelo de dados, a análise de risco e o plano de testes (61 casos). Análise pelo código concluída. Rodada 1 de testes em tela em 23/10/2026 (legado, com massa de dados): dos 61 casos do plano, 17 passaram, 10 com ressalva, 21 falharam e 13 ficaram bloqueados (estabilidade, pelo DV-EST-074 do Estoque, e água, pela falta de uma tabela no banco); 26 defeitos registrados (8 Alta), entre eles qualquer usuário aprova o laudo, o laudo reprovado vale sem ser emitido e aprovar, emitir e corrigir resultado não deixam histórico.",
      "docs": [
          ("4.controle_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("4.controle_qualidade/ideal/cq-ideal.md", "O Controle da Qualidade ideal", "ideal", "4.controle_qualidade/ideal/LabMedSys - Modulo Controle da Qualidade - O Ideal.docx"),
@@ -504,6 +504,7 @@ MODULOS = [
          ("4.controle_qualidade/02-matriz-de-permissoes.md", "Matriz de permissões", "negocio", None),
          ("4.controle_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
          ("versao-nova/4.controle_qualidade/resumo-versao-nova.md", "Situação na versão nova", "novo", None),
+         ("4.controle_qualidade/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "4.controle_qualidade/entregaveis/LabMedSys - Modulo Controle da Qualidade - Relatorio de Testes.docx"),
          ("4.controle_qualidade/defeitos/defeitos.md", "Defeitos para correção", "defeitos", "4.controle_qualidade/defeitos/LabMedSys - Modulo Controle da Qualidade - Defeitos para Correcao.docx"),
          ("4.controle_qualidade/04-conformidade-regulatoria.md", "Conformidade com a RDC 658/2022", "qualidade", None),
          ("4.controle_qualidade/07-analise-de-risco.md", "Análise de risco", "qualidade", None),
