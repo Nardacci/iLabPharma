@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achados de segurança · Rastreabilidade · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../biblioteca.html">Biblioteca</a>
+    <a href="../../telas.html">Devs/QA</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../cronograma.html">Cronograma</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Roteiro do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#475569"><span class="icone">⟲</span>Rastreabilidade</a>
+    <div class="lat-secao">Legado</div><div class="lat-grupo"><div class="lat-titulo">Telas e situação</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Siga o processo</div><ul><li><a href="geracao-de-ium-e-agregacao.html">Geração de IUM e agregação</a></li><li><a href="eventos-e-declaracao-a-anvisa.html">Eventos e declaração à ANVISA</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">ANVISA: norma e risco</div><ul><li><a href="conformidade-regulatoria-sncm-e-rdc-658-2022.html">Conformidade regulatória (SNCM e RDC 658/2022)</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Dados e integrações</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo lat-atual"><div class="lat-titulo">Testes e defeitos</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li><li><a href="achados-de-seguranca.html" aria-current=page>Achados de segurança</a></li></ul></div><div class="lat-secao">Ideal</div><div class="lat-grupo"><div class="lat-titulo">O ideal: como deve funcionar</div><ul><li><a href="a-rastreabilidade-ideal.html">A Rastreabilidade ideal</a></li><li><a href="a-rastreabilidade-entre-os-modulos-as-travas.html">A Rastreabilidade entre os módulos: as travas</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Rastreabilidade</a> › <a class="sit-trilha" href="legado.html" style="--cor:#6b7a8c">Legado</a> › <span>Testes e defeitos</span></nav>
+    <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Legado · Testes e defeitos</span><span>documento 11 de 13</span><div class="prog-doc"><i style="width:85%"></i></div></div>
+    <header class="doc-cabecalho">
+      <h1>Achados de segurança</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    
+    <article class="texto">
+<p><strong>Documento confidencial.</strong> Descreve fragilidades do sistema. Não compartilhar fora da equipe responsável. <strong>Não vai para o portal iLabMedSys.</strong></p>
+<p><strong>Data:</strong> 12/10/2026 · Análise feita só pelo código. Cada achado indica como confirmá-lo no ambiente de teste. Caminhos relativos a <code>8.rastreabilidade/app/</code>. Nenhum segredo nem dado pessoal foi copiado para este documento: só se cita o arquivo onde ele está.</p>
+<h3 id="gravidade">Gravidade</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Nível</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Crítica</strong></td>
+<td>Permite obter credenciais ou dados de todos os usuários, ou alterar o banco. Corrigir antes de liberar.</td>
+</tr>
+<tr>
+<td><strong>Alta</strong></td>
+<td>Permite acesso ou alteração indevida, expõe segredos ou compromete a prova dos registros (trilha de auditoria, assinatura).</td>
+</tr>
+<tr>
+<td><strong>Média</strong></td>
+<td>Facilita um ataque ou enfraquece um controle.</td>
+</tr>
+<tr>
+<td><strong>Baixa</strong></td>
+<td>Boa prática não seguida, com impacto pequeno.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resumo">Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Achado</th>
+<th>Descrição</th>
+<th>Gravidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SEG-RAS-01</td>
+<td>O microsserviço gera IUM e grava eventos sem autenticação, para qualquer origem</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>SEG-RAS-02</td>
+<td>As telas não mostram conferência de função</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>SEG-RAS-03</td>
+<td>A geração de IUM aceita o lote, a validade, o registro e o GTIN enviados pelo navegador</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>SEG-RAS-04</td>
+<td>Senhas do banco no arquivo de configuração</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>SEG-RAS-05</td>
+<td>Dados pessoais de terceiro fixados no código (farmacêutico responsável)</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>SEG-RAS-06</td>
+<td>Uma consulta da tela de finalização cria registros</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>SEG-RAS-07</td>
+<td>Telas e serviços de teste deixados no sistema</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="seg-ras-01-microsservico-aberto-gera-ium-e-grava-eventos-alta">SEG-RAS-01: microsserviço aberto gera IUM e grava eventos (Alta)</h3>
+<p><strong>O que o código mostra.</strong>
+- Os controladores do microsserviço aceitam chamadas de <strong>qualquer origem</strong> (<code>EnableCors("*", "*", "*", "*")</code>, <code>HSolutions.Rastreabilidade.Microservice/Controllers/IumController.cs:19</code>, <code>AgregacoesController.cs:14</code>) e <strong>não pedem autenticação</strong>.
+- Entre os serviços abertos:
+  - <code>PostGerarIUM</code> e <code>PostGuardarIUMsExternos</code> (<code>IumController.cs:167, 217</code>), que <strong>criam IUM</strong>;
+  - <code>PostGuardarAgregacoesExternas</code> (<code>AgregacoesController.cs:49</code>);
+  - os 14 serviços de evento do <code>AnvisaController.cs</code>, que gravam entregas e recebimentos (<code>HSolutions.Rastreabilidade.Domain.Services/AnvisaService.cs:71, 120, 175, 226</code>);
+  - consultas de IUM por lote.</p>
+<p><strong>Risco.</strong> Qualquer um que alcance o servidor cria IUM e registra entregas e recebimentos em nome de qualquer usuário. A rastreabilidade das embalagens, que serve ao recolhimento, deixa de ser confiável.</p>
+<p><strong>Como confirmar.</strong> Com a TI, chamar a consulta de IUM por lote de um lote <code>TESTE</code> sem estar logado. <strong>Não</strong> chamar os serviços que gravam.</p>
+<p><strong>Correção.</strong> Autenticação de serviço entre os módulos, origens limitadas e o usuário tirado da credencial.</p>
+<h3 id="seg-ras-02-telas-sem-conferencia-de-funcao-visivel-alta">SEG-RAS-02: telas sem conferência de função visível (Alta)</h3>
+<p><strong>O que o código mostra.</strong> Nenhum dos controladores das telas tem a marcação de conferência de função usada nos outros módulos (<code>[AutorizacaoHandler]</code>). O controlador-base é de uma biblioteca compilada (<code>HSolutions.Rastreabilidade.UI/Controllers/RastreabilidadeControllerBase.cs:18</code>, herda de <code>HSControllerBase</code>).</p>
+<p><strong>Risco.</strong> Se o controlador-base só confere o login, qualquer usuário logado gera IUM, registra e retifica eventos.</p>
+<p><strong>Como confirmar.</strong> CT-RAS-030 e 031 (matriz de permissões).</p>
+<p><strong>Correção.</strong> Conferir a função em todas as telas e em cada gravação.</p>
+<h3 id="seg-ras-03-geracao-de-ium-com-dados-do-lote-vindos-do-navegador-alta">SEG-RAS-03: geração de IUM com dados do lote vindos do navegador (Alta)</h3>
+<p><strong>O que o código mostra.</strong> Na gravação, a geração de IUM recebe do navegador o lote, a validade, o registro, o GTIN, a produção e os textos do produto (<code>HSolutions.Rastreabilidade.UI/Controllers/IUMController.cs:160-175</code>). Esses dados não são relidos da Produção.</p>
+<p><strong>Risco.</strong> Com uma ferramenta do navegador, gera-se IUM com lote ou validade que não existem, ou para uma produção não liberada.</p>
+<p><strong>Como confirmar.</strong> Com a TI, alterar o número do lote no envio da geração de um IUM <code>TESTE</code> e ver o que foi gravado.</p>
+<p><strong>Correção.</strong> Receber só o número da produção e a quantidade; ler o resto da Produção no servidor.</p>
+<h3 id="seg-ras-04-senhas-do-banco-no-arquivo-de-configuracao-alta">SEG-RAS-04: senhas do banco no arquivo de configuração (Alta)</h3>
+<p><strong>O que o código mostra.</strong> <code>HSolutions.Rastreabilidade.UI/Web.config</code> traz <strong>cinco</strong> cadeias de conexão com senha. Os valores não foram copiados para este documento.</p>
+<p><strong>Risco.</strong> Quem tem acesso ao código ou ao servidor acessa o banco direto, fora do sistema e sem trilha.</p>
+<p><strong>Correção.</strong> Trocar a senha e guardá-la fora do código.</p>
+<h3 id="seg-ras-05-dados-pessoais-de-terceiro-no-codigo-media">SEG-RAS-05: dados pessoais de terceiro no código (Média)</h3>
+<p><strong>O que o código mostra.</strong> A etiqueta do IUM tem, escritos no programa, o nome e o registro no conselho de um farmacêutico responsável, além do endereço, do CNPJ e do SAC de outra empresa (<code>IUMController.cs:282-285, 288, 314</code>). Os valores não foram copiados para este documento.</p>
+<p><strong>Risco.</strong> Dado pessoal de terceiro guardado e impresso sem finalidade (Lei Geral de Proteção de Dados). Etiquetas com responsável técnico errado.</p>
+<p><strong>Correção.</strong> Remover do código; ler os dados da empresa e do responsável técnico de um cadastro.</p>
+<h3 id="seg-ras-06-consulta-que-cria-registros-media">SEG-RAS-06: consulta que cria registros (Média)</h3>
+<p><strong>O que o código mostra.</strong> A consulta de IUM da tela de finalização <strong>cria</strong> um IUM quando o código digitado não existe (<code>HSolutions.Rastreabilidade.UI/Controllers/EventoController.cs:1665-1687</code>).</p>
+<p><strong>Risco.</strong> Digitar ou enviar códigos em série enche a base de IUM falsos.</p>
+<p><strong>Correção.</strong> A consulta não grava; IUM externo só por função própria, com conferência.</p>
+<h3 id="seg-ras-07-telas-e-servicos-de-teste-no-sistema-baixa">SEG-RAS-07: telas e serviços de teste no sistema (Baixa)</h3>
+<p><strong>O que o código mostra.</strong> Tela de teste de QR Code (<code>HSolutions.Rastreabilidade.UI/Views/Test/GenerateQrCode.cshtml</code>, <code>Controllers/TestController.cs</code>), controlador de teste no microsserviço e no serviço do Windows.</p>
+<p><strong>Risco.</strong> Pontos de entrada sem uso, que ninguém vigia.</p>
+<p><strong>Correção.</strong> Remover do pacote entregue.</p>
+    </article>
+    <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-testes.html"><small>← Anterior</small><strong>Plano de testes</strong></a><a class="ap ap-prox" href="a-rastreabilidade-ideal.html"><small>Próximo →</small><strong>A Rastreabilidade ideal</strong></a></nav>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#gravidade">Gravidade</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#seg-ras-01-microsservico-aberto-gera-ium-e-grava-eventos-alta">SEG-RAS-01: microsserviço aberto gera IUM e grava eventos (Alta)</a></li><li><a href="#seg-ras-02-telas-sem-conferencia-de-funcao-visivel-alta">SEG-RAS-02: telas sem conferência de função visível (Alta)</a></li><li><a href="#seg-ras-03-geracao-de-ium-com-dados-do-lote-vindos-do-navegador-alta">SEG-RAS-03: geração de IUM com dados do lote vindos do navegador (Alta)</a></li><li><a href="#seg-ras-04-senhas-do-banco-no-arquivo-de-configuracao-alta">SEG-RAS-04: senhas do banco no arquivo de configuração (Alta)</a></li><li><a href="#seg-ras-05-dados-pessoais-de-terceiro-no-codigo-media">SEG-RAS-05: dados pessoais de terceiro no código (Média)</a></li><li><a href="#seg-ras-06-consulta-que-cria-registros-media">SEG-RAS-06: consulta que cria registros (Média)</a></li><li><a href="#seg-ras-07-telas-e-servicos-de-teste-no-sistema-baixa">SEG-RAS-07: telas e serviços de teste no sistema (Baixa)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>

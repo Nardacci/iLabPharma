@@ -33,7 +33,7 @@ python3 ferramentas/gerar_portal.py --origem ../LabMedsys_homol --destino . --re
 
 Para incluir um documento ou um módulo novo, edite o catálogo `MODULOS` no início do gerador.
 
-**O site é público.** O gerador retira o conteúdo de segurança: os arquivos `03-achados-de-seguranca`, as seções com "segurança" no título, os blocos confidenciais, as linhas com achados `SEG-` e as frases que descrevem como explorar uma falha. Os Word dos documentos limpos são gerados de novo a partir do texto limpo. O relatório indicado em `--relatorio` lista tudo o que foi retirado e **não deve ser publicado**.
+**O site é público, mas não é divulgado, e vai sair do ar quando for para o git da empresa.** Por decisão do responsável (23/10/2026), o portal publica **todos os defeitos**, inclusive os de acesso e segurança: os arquivos `03-achados-de-seguranca`, as seções "Segurança e acesso" e os registros completos de defeitos (`defeitos-completo.md`). **Continuam fora:** senhas, logins, endereços e IPs de servidor, strings de conexão e chaves; a higiene redige o que aparecer e o verificador (`verificar_portal.py`, que roda no workflow do Pages) bloqueia a publicação. O gerador tem a chave `--sem-seguranca`, que volta ao comportamento antigo (retira o conteúdo de segurança, e o relatório de `--relatorio` lista o que saiu e **não deve ser publicado**).
 
 ---
 

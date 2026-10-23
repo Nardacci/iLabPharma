@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achados de segurança · OPE (Gerador de OPE) · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../biblioteca.html">Biblioteca</a>
+    <a href="../../telas.html">Devs/QA</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../cronograma.html">Cronograma</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Roteiro do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#7c3aed"><span class="icone">⚒</span>OPE (Gerador de OPE)</a>
+    <div class="lat-secao">Legado</div><div class="lat-grupo"><div class="lat-titulo">Telas e situação</div><ul><li><a href="reconhecimento-do-modulo.html">Reconhecimento do módulo</a></li><li><a href="inventario-de-telas-e-situacao.html">Inventário de telas e situação</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Siga o processo</div><ul><li><a href="montagem-do-modelo-do-registro-de-lote.html">Montagem do modelo do registro de lote</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Regras e uso</div><ul><li><a href="regras-de-negocio.html">Regras de negócio</a></li><li><a href="matriz-de-permissoes.html">Matriz de permissões</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">ANVISA: norma e risco</div><ul><li><a href="conformidade-com-a-rdc-658-2022.html">Conformidade com a RDC 658/2022</a></li><li><a href="analise-de-risco.html">Análise de risco</a></li></ul></div><div class="lat-grupo"><div class="lat-titulo">Dados e integrações</div><ul><li><a href="modelo-de-dados-e-integracoes.html">Modelo de dados e integrações</a></li></ul></div><div class="lat-grupo lat-atual"><div class="lat-titulo">Testes e defeitos</div><ul><li><a href="plano-de-testes.html">Plano de testes</a></li><li><a href="achados-de-seguranca.html" aria-current=page>Achados de segurança</a></li></ul></div><div class="lat-secao">Ideal</div><div class="lat-grupo"><div class="lat-titulo">O ideal: como deve funcionar</div><ul><li><a href="o-gerador-de-ope-ideal.html">O Gerador de OPE ideal</a></li><li><a href="o-gerador-de-ope-entre-os-modulos-as-travas.html">O Gerador de OPE entre os módulos: as travas</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">OPE (Gerador de OPE)</a> › <a class="sit-trilha" href="legado.html" style="--cor:#6b7a8c">Legado</a> › <span>Testes e defeitos</span></nav>
+    <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Legado · Testes e defeitos</span><span>documento 10 de 12</span><div class="prog-doc"><i style="width:83%"></i></div></div>
+    <header class="doc-cabecalho">
+      <h1>Achados de segurança</h1>
+      <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    
+    <article class="texto">
+<p><strong>Documento confidencial.</strong> Descreve fragilidades do sistema. Não compartilhar fora da equipe responsável. <strong>Não vai para o portal iLabMedSys.</strong></p>
+<p><strong>Data:</strong> 12/10/2026 · Análise feita só pelo código. Cada achado indica como confirmá-lo no ambiente de teste. Caminhos relativos a <code>9.ope/app/</code>. Nenhum segredo foi copiado para este documento: só se cita o arquivo onde ele está.</p>
+<h3 id="gravidade">Gravidade</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Nível</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Crítica</strong></td>
+<td>Permite obter credenciais ou dados de todos os usuários, ou alterar o banco. Corrigir antes de liberar.</td>
+</tr>
+<tr>
+<td><strong>Alta</strong></td>
+<td>Permite acesso ou alteração indevida, expõe segredos ou compromete a prova dos registros (trilha de auditoria, assinatura).</td>
+</tr>
+<tr>
+<td><strong>Média</strong></td>
+<td>Facilita um ataque ou enfraquece um controle.</td>
+</tr>
+<tr>
+<td><strong>Baixa</strong></td>
+<td>Boa prática não seguida, com impacto pequeno.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resumo">Resumo</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Achado</th>
+<th>Descrição</th>
+<th>Gravidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SEG-OPE-01</td>
+<td>O texto do modelo aceita código de página, que roda no Registro da Produção de todos os operadores</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>SEG-OPE-02</td>
+<td>Telas e gravações do editor sem conferência de função</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>SEG-OPE-03</td>
+<td>Senhas do banco no arquivo de configuração e em configurações antigas entregues</td>
+<td>Alta</td>
+</tr>
+<tr>
+<td>SEG-OPE-04</td>
+<td>Alterações por endereço simples, sem confirmação de origem</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>SEG-OPE-05</td>
+<td>Código de acesso do usuário no endereço dos links entre módulos</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>SEG-OPE-06</td>
+<td>Controle de acesso e login em biblioteca sem código-fonte</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>SEG-OPE-07</td>
+<td>Rotinas copiadas que montam comandos SQL com texto (sem uso no módulo)</td>
+<td>Baixa</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h3 id="seg-ope-01-o-texto-do-modelo-aceita-codigo-de-pagina-que-roda-no-registro-da-producao-alta">SEG-OPE-01: o texto do modelo aceita código de página, que roda no Registro da Produção (Alta)</h3>
+<p><strong>O que o código mostra.</strong>
+- A gravação do texto da instrução <strong>desliga a proteção</strong> do servidor contra código de página (<code>[ValidateInput(false)]</code>, <code>HSolutions.GeradorXML.UI/Controllers/SubEtapaController.cs:112-116</code>). O texto é gravado como veio.
+- O botão de código-fonte do editor só aparece para quem tem a função <code>BTNCODIGOFONTE</code>, mas isso é só a <strong>tela</strong>. O servidor aceita qualquer conteúdo enviado por quem pode salvar o texto.
+- O envio de arquivo (tela Upload) também grava qualquer conteúdo no modelo (<code>Repo/GeradorXMLRepository.cs:273-284</code>).
+- O texto é exibido <strong>sem filtro</strong>:
+  - no próprio Gerador (<code>Views/GerarXML/Imprimir.cshtml:14</code>; <code>Views/SubEtapa/Visualizar.cshtml:173</code>);
+  - no <strong>Registro da Produção</strong>, que junta o texto da subetapa à página do operador (<code>2.producao/app/LaboSys_UI/producao/XML/Class_Producao/SubEtapaProducao.cs:94-101</code>).</p>
+<p><strong>Risco.</strong>
+- Quem edita um modelo pode incluir um comando escondido que roda no navegador de <strong>cada operador</strong> que abrir aquela subetapa.
+- Junto com o SEG-PRO-02 (o usuário gravado no registro de lote vem do navegador), o comando pode gravar respostas e assinaturas em nome do operador, sem que ele perceba.
+- O registro de lote perde o valor de prova (RDC 658/2022, arts. 124 e 125; Guia 33/2020, 9.3.2.3).</p>
+<p><strong>Como confirmar.</strong> Com a TI, num modelo <code>TESTE</code>, incluir pelo código-fonte um trecho inofensivo que só mostre um aviso; enviar o modelo na ordem <code>TESTE</code> e abrir a subetapa no Registro da Produção. Não usar comandos que gravem dados.</p>
+<p><strong>Correção.</strong>
+- Guardar o texto da instrução sem código ativo, com uma lista fechada de formatações permitidas.
+- Filtrar o texto também ao exibir.
+- Conferir o conteúdo do arquivo enviado.
+- Exigir aprovação do modelo antes do uso (achado de conformidade).</p>
+<h3 id="seg-ope-02-telas-e-gravacoes-do-editor-sem-conferencia-de-funcao-alta">SEG-OPE-02: telas e gravações do editor sem conferência de função (Alta)</h3>
+<p><strong>O que o código mostra.</strong>
+- Cinco controladores <strong>não têm</strong> nenhuma conferência de função (<code>[AutorizacaoHandler]</code> ausente):
+  - <code>Controllers/ControleProcessoController.cs</code>: grava e exclui o controle em processo (linhas 23 e 32);
+  - <code>Controllers/ParametrosEntradaController.cs</code>: exclui parâmetros de entrada (linha 34);
+  - <code>Controllers/SelecionarCampoController.cs</code>, <code>InsumoController.cs</code> e <code>VisualizarXMLController.cs</code>: consultas.
+- Nos controladores que têm a conferência, ela fica marcada no controlador inteiro e nas telas de consultar, incluir e alterar. As <strong>gravações</strong> (por exemplo <code>SalvarGeradorXML</code>, <code>SalvarXML</code>, <code>ExcluirEtapa</code> em <code>Controllers/GerarXMLController.cs:54-103</code>; <code>Salvar</code> em <code>ModeloController.cs:46-50</code>) não indicam qual ação conferir. <em>A confirmar:</em> se a conferência do controlador, sem a ação, só exige estar logado.</p>
+<p><strong>Risco.</strong>
+- Um usuário logado sem a função do OPE pode alterar o controle em processo de um modelo, o que muda o que trava cada etapa do lote na Produção.
+- Um usuário com permissão só de consulta pode gravar alterações.</p>
+<p><strong>Como confirmar.</strong> Com um perfil sem funções do OPE e outro só de consulta: abrir um modelo <code>TESTE</code> (o editor guarda o modelo na sessão) e chamar a gravação do controle em processo pelo endereço.</p>
+<p><strong>Correção.</strong>
+- Conferir a função em todas as telas e em cada gravação, com a ação correspondente (incluir, alterar, excluir).
+- Exigir que o modelo aberto pertença ao que o usuário pode editar.</p>
+<h3 id="seg-ope-03-senhas-do-banco-no-arquivo-de-configuracao-e-em-configuracoes-antigas-alta">SEG-OPE-03: senhas do banco no arquivo de configuração e em configurações antigas (Alta)</h3>
+<p><strong>O que o código mostra.</strong>
+- O arquivo de configuração das telas (<code>HSolutions.GeradorXML.UI/Web.config</code>) traz <strong>seis</strong> cadeias de conexão com senha.
+- Também há credenciais em arquivos de configuração entregues junto das bibliotecas antigas: <code>Library_Ope_old/HSolutions.Test.dll.config</code>, <code>Library_Ope_old/HSolutions.ServiceHub.Configuration.config</code> e <code>Library_Ope_old/LaboSys.Producao.BLL.dll.config</code>.
+- Os valores não foram copiados para este documento.</p>
+<p><strong>Risco.</strong> Quem tem acesso ao código ou ao servidor acessa o banco direto, fora do sistema e sem trilha.</p>
+<p><strong>Como confirmar.</strong> Com a TI: verificar se as senhas ainda valem e se são as mesmas dos outros módulos.</p>
+<p><strong>Correção.</strong>
+- Trocar as senhas.
+- Guardá-las fora do código.
+- Remover do pacote as configurações antigas.</p>
+<h3 id="seg-ope-04-alteracoes-por-endereco-simples-sem-confirmacao-de-origem-media">SEG-OPE-04: alterações por endereço simples, sem confirmação de origem (Média)</h3>
+<p><strong>O que o código mostra.</strong>
+- A gravação e a exclusão do controle em processo <strong>não exigem envio de formulário</strong>: aceitam um endereço simples (sem <code>[HttpPost]</code>, <code>Controllers/ControleProcessoController.cs:23, 32</code>).
+- Nenhuma gravação do módulo confere se o pedido veio da própria tela (<code>ValidateAntiForgeryToken</code> não aparece no código).</p>
+<p><strong>Risco.</strong> Um link preparado, aberto por quem está com um modelo em edição, pode alterar ou excluir um controle em processo sem que a pessoa perceba.</p>
+<p><strong>Correção.</strong> Aceitar alterações só por envio de formulário, com conferência de origem.</p>
+<h3 id="seg-ope-05-codigo-de-acesso-do-usuario-no-endereco-dos-links-entre-modulos-media">SEG-OPE-05: código de acesso do usuário no endereço dos links entre módulos (Média)</h3>
+<p><strong>O que o código mostra.</strong> A lista "Módulos" monta os links para os outros módulos com o <strong>código de acesso do usuário no endereço</strong> (<code>?token=</code>, <code>HSolutions.GeradorXML.UI/Views/Shared/_Modules.cshtml:7</code>).</p>
+<p><strong>Risco.</strong> O código fica no histórico do navegador, nos registros do servidor e em capturas de tela. Quem o obtém pode entrar como o usuário enquanto ele valer.</p>
+<p><strong>Como confirmar.</strong> Com a TI: verificar quanto tempo o código vale e se pode ser reutilizado.</p>
+<p><strong>Correção.</strong> Passar a sessão entre módulos sem expor o código no endereço (login único com troca no servidor).</p>
+<h3 id="seg-ope-06-controle-de-acesso-e-login-em-biblioteca-sem-codigo-fonte-media">SEG-OPE-06: controle de acesso e login em biblioteca sem código-fonte (Média)</h3>
+<p><strong>O que o código mostra.</strong>
+- A conferência de acesso (<code>AutorizacaoHandler</code>), o tratamento de erros e o login (<code>CustomAuthManager</code>; a rota inicial aponta para um controlador <code>Login</code> que não está no código) vêm de bibliotecas compiladas (<code>Library_Ope_old</code>, 61 arquivos <code>.dll</code>).
+- O projeto também aponta para bibliotecas numa pasta de outra versão do fornecedor, que não veio no pacote (<code>HSolutions.GeradorXML.UI.csproj</code>).</p>
+<p><strong>Risco.</strong>
+- Não é possível revisar nem corrigir o controle de acesso sem o código-fonte.
+- A empresa depende de um fornecedor que faliu.</p>
+<p><strong>Correção.</strong> Na nova versão, reescrever o acesso com código próprio. Até lá, tratar a conferência de acesso como <strong>não verificada</strong>.</p>
+<h3 id="seg-ope-07-rotinas-copiadas-que-montam-comandos-sql-com-texto-baixa">SEG-OPE-07: rotinas copiadas que montam comandos SQL com texto (Baixa)</h3>
+<p><strong>O que o código mostra.</strong> O repositório comum traz rotinas que montam comandos de inclusão e alteração juntando texto (<code>HSolutions.GeradorXML.ORM/Infra/Repository.cs:104-175</code>), copiadas da Produção. <strong>O OPE não as chama.</strong></p>
+<p><strong>Risco.</strong> Baixo hoje. Vira injeção de SQL (mesmo padrão do SEG-PRO-01) se alguém passar a usá-las.</p>
+<p><strong>Correção.</strong> Remover o código sem uso.</p>
+    </article>
+    <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="plano-de-testes.html"><small>← Anterior</small><strong>Plano de testes</strong></a><a class="ap ap-prox" href="o-gerador-de-ope-ideal.html"><small>Próximo →</small><strong>O Gerador de OPE ideal</strong></a></nav>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#gravidade">Gravidade</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#seg-ope-01-o-texto-do-modelo-aceita-codigo-de-pagina-que-roda-no-registro-da-producao-alta">SEG-OPE-01: o texto do modelo aceita código de página, que roda no Registro da Produção (Alta)</a></li><li><a href="#seg-ope-02-telas-e-gravacoes-do-editor-sem-conferencia-de-funcao-alta">SEG-OPE-02: telas e gravações do editor sem conferência de função (Alta)</a></li><li><a href="#seg-ope-03-senhas-do-banco-no-arquivo-de-configuracao-e-em-configuracoes-antigas-alta">SEG-OPE-03: senhas do banco no arquivo de configuração e em configurações antigas (Alta)</a></li><li><a href="#seg-ope-04-alteracoes-por-endereco-simples-sem-confirmacao-de-origem-media">SEG-OPE-04: alterações por endereço simples, sem confirmação de origem (Média)</a></li><li><a href="#seg-ope-05-codigo-de-acesso-do-usuario-no-endereco-dos-links-entre-modulos-media">SEG-OPE-05: código de acesso do usuário no endereço dos links entre módulos (Média)</a></li><li><a href="#seg-ope-06-controle-de-acesso-e-login-em-biblioteca-sem-codigo-fonte-media">SEG-OPE-06: controle de acesso e login em biblioteca sem código-fonte (Média)</a></li><li><a href="#seg-ope-07-rotinas-copiadas-que-montam-comandos-sql-com-texto-baixa">SEG-OPE-07: rotinas copiadas que montam comandos SQL com texto (Baixa)</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
