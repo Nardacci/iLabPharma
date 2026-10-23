@@ -1139,9 +1139,11 @@ def _abas_extras(mod, p):
         if melhor:
             href += f"#{melhor}"
     if not href and p.get("fluxo"):  # sem roteiro de execução: o fluxo do processo a que a tela pertence
-        fl = telas_devs._norm(p["fluxo"])
+        fl = telas_devs._norm({"Almoxarifado do CQ": "Almoxarifado do Controle da Qualidade"}.get(p["fluxo"], p["fluxo"]))
         pf = None if not fl else next((x for x in mod["paginas"] if x.get("cat") == "fluxos" and not x.get("roteiro_de")
                    and (fl in telas_devs._norm(x["titulo"]) or telas_devs._norm(x["titulo"]) in fl)), None)
+        if not pf and fl:  # fluxo escrito como documento de negócio (ex.: Cadastros de apoio): só o título igual
+            pf = next((x for x in mod["paginas"] if not x.get("aba") and telas_devs._norm(x["titulo"]) == fl), None)
         if pf:
             href = f'{pf["slug"]}.html'
     # Ideal

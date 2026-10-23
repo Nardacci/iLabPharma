@@ -53,6 +53,6 @@ def entradas(hom, modulo="garantia-qualidade"):
                 if not (pasta / f"{aba}.md").exists():
                     continue
                 out.append((f"{rel}/paginas/{pasta.name}/{aba}.md", f"{nome}: {rot}", "negocio",
-                            f"{rel}/paginas/{pasta.name}/{m['prefixo_word']} - Tela {n:02d} {nome} - {rot}.docx",
+                            f"{rel}/paginas/{pasta.name}/{m['prefixo_word']} - Tela {n:02d} {nome.replace('/', '-')} - {rot}.docx",
                             {"desvios": True, "grupo": m["grupo"], "tela": nome, "rotulo": rot, "tela_n": n, "aba": aba, "resumo": resumos.get(f"{n:02d}", ""), "fluxo": ordem.get(f"{n:02d}", {}).get("fluxo")}))
     return out
