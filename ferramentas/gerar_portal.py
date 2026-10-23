@@ -1272,6 +1272,12 @@ MENUS_GQ_DESC = {
     "Assuntos Regulatórios": "Onde a empresa acompanha os processos regulatórios dos seus produtos junto à ANVISA: o que foi pedido, o que está programado e o que está em andamento.",
     "Controle de Mudanças": "Onde a empresa pede, avalia, aprova, executa e confere qualquer mudança que possa afetar a qualidade do medicamento: processo, equipamento, material, documento, sistema.",
     "Menu Estoque": "Onde o material entra, fica guardado, é movimentado, atendido à produção, devolvido, remetido e reanalisado: do recebimento na doca à saída do lote, passando pela quarentena e pelo laudo do Controle da Qualidade.",
+    "Menu Cadastros": "Os cadastros que sustentam todo o Estoque: grupos e itens, unidades, locais e endereços, almoxarifados, tipos de movimentação e parâmetros. Se um cadastro está errado, o erro se repete em todas as telas que o usam.",
+    "Menu Inventário": "Onde a empresa conta o que tem no estoque, compara com o sistema, justifica as diferenças e ajusta o saldo.",
+    "Menu Gestão Analítica": "Onde o estoque vira decisão de compra: análise de estoque, curva ABC e pedido de compra.",
+    "Menu Relatórios": "Os relatórios do Estoque: o que está em quarentena, o que foi reprovado, o que foi movimentado, consumido ou adquirido, e os relatórios dos kits.",
+    "Menu Kits": "Onde a empresa monta, planeja, solicita e controla os kits enviados a clientes e repõe os componentes que vencem.",
+    "Menu Regulatório": "As telas do almoxarifado do Controle da Qualidade: entrada, movimentação e consulta das amostras de retenção, referência e estabilidade.",
     "Autoinspeção e Auditoria": "Onde a empresa confere, por conta própria, se cumpre as Boas Práticas: escreve os roteiros de perguntas, programa a verificação, registra o que encontrou e avalia o resultado.",
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas

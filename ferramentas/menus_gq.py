@@ -11,6 +11,12 @@ from pathlib import Path
 ABAS = [("analise", "Análise"), ("manual", "Manual do usuário"), ("fluxos", "Fluxos"), ("regras", "Regras de negócio"), ("anvisa", "Anvisa")]
 MENUS = [
     {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-estoque", "grupo": "Menu Estoque", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Estoque"},
+    {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-cadastros", "grupo": "Menu Cadastros", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Cadastros"},
+    {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-inventario", "grupo": "Menu Inventário", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Inventário"},
+    {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-gestao-analitica", "grupo": "Menu Gestão Analítica", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Gestão Analítica"},
+    {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-relatorios", "grupo": "Menu Relatórios", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Relatórios"},
+    {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-kits", "grupo": "Menu Kits", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Kits"},
+    {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-regulatorio", "grupo": "Menu Regulatório", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Regulatório"},
     {"pasta": "assuntos-regulatorios", "grupo": "Assuntos Regulatórios", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Assuntos Regulatórios"},
     {"pasta": "mudancas", "grupo": "Controle de Mudanças", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Controle de Mudanças"},
     {"pasta": "autoinspecao", "grupo": "Autoinspeção e Auditoria", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Autoinspeção e Auditoria"},
