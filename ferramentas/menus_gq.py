@@ -1,4 +1,4 @@
-"""Catálogo dos menus da Garantia da Qualidade documentados tela a tela (Assuntos Regulatórios e Controle de Mudanças).
+"""Catálogo dos menus da Garantia da Qualidade documentados tela a tela (Assuntos Regulatórios, Controle de Mudanças e Autoinspeção e Auditoria).
 
 Lê homologacao/5.garantia_qualidade/<pasta>/paginas/NN-<slug>/<aba>.md, que a ferramenta dividir_telas.py gera a partir de telas/NN-*.md,
 e monta as entradas do catálogo do portal no mesmo formato das do Controle de Desvios (que continuam escritas à mão em gerar_portal.py).
@@ -12,6 +12,7 @@ ABAS = [("analise", "Análise"), ("manual", "Manual do usuário"), ("fluxos", "F
 MENUS = [
     {"pasta": "assuntos-regulatorios", "grupo": "Assuntos Regulatórios", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Assuntos Regulatórios"},
     {"pasta": "mudancas", "grupo": "Controle de Mudanças", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Controle de Mudanças"},
+    {"pasta": "autoinspecao", "grupo": "Autoinspeção e Auditoria", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Autoinspeção e Auditoria"},
 ]
 
 

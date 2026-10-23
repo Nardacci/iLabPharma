@@ -1182,6 +1182,7 @@ MENUS_GQ_DESC = {
     "Controle de Desvios": "Onde a Garantia da Qualidade registra o que saiu do combinado na fábrica, investiga a causa, corrige e confere. É o processo que a ANVISA mais olha numa inspeção.",
     "Assuntos Regulatórios": "Onde a empresa acompanha os processos regulatórios dos seus produtos junto à ANVISA: o que foi pedido, o que está programado e o que está em andamento.",
     "Controle de Mudanças": "Onde a empresa pede, avalia, aprova, executa e confere qualquer mudança que possa afetar a qualidade do medicamento: processo, equipamento, material, documento, sistema.",
+    "Autoinspeção e Auditoria": "Onde a empresa confere, por conta própria, se cumpre as Boas Práticas: escreve os roteiros de perguntas, programa a verificação, registra o que encontrou e avalia o resultado.",
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
