@@ -43,9 +43,9 @@
     </header>
     
     <article class="texto">
-<p><strong>Uso interno.</strong> Resumo para a diretoria, atualizado em 23/10/2026 (dez rodadas de testes, 07 a 22/10). O detalhe está no Relatório de Testes, na Conformidade Regulatória e nos Defeitos para Correção.</p>
+<p><strong>Uso interno.</strong> Resumo para a diretoria, atualizado em 23/10/2026 (onze rodadas de testes, 07 a 22/10). O detalhe está no Relatório de Testes, na Conformidade Regulatória e nos Defeitos para Correção.</p>
 <h2 id="conclusao">Conclusão</h2>
-<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado, e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram falhas graves que o código não previa: a remessa da tela comum (também a de kit) não finaliza, a amostra de retenção sai antes do vencimento do lote sem aviso, a Movimentação de Quarentena perde o saldo do lote, a Central de Pesagem dá erro ao abrir o volume e o atendimento não usa primeiro o lote que vence primeiro.</p>
+<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado, e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram falhas graves que o código não previa: a remessa da tela comum (também a de kit) não finaliza, a amostra de retenção sai antes do vencimento do lote sem aviso, a Movimentação de Quarentena perde o saldo do lote, a Central de Pesagem dá erro ao abrir o volume o atendimento não usa primeiro o lote que vence primeiro e <strong>ninguém consegue aprovar o lote padrão</strong>, o que impede a Produção de pedir a primeira ordem de produção.</p>
 <p><strong>Dos 14 temas da norma avaliados, nenhum é atendido por completo</strong>: 5 em parte, 8 não atendidos e 1 não verificado. <strong>Parecer: o módulo não está apto para uso em ambiente regulado</strong> até as dez correções obrigatórias abaixo. Os mecanismos essenciais existem (quarentena, saldo por situação, histórico), então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
 <h2 id="o-que-foi-feito">O que foi feito</h2>
 <div class="tabela"><table>
@@ -58,15 +58,15 @@
 <tbody>
 <tr>
 <td>Análise do código</td>
-<td>Dez fluxos, 283 regras de negócio, inventário de 98 telas, modelo de dados, 24 riscos (18 de prioridade alta), 12 achados restritos à TI (documento confidencial) e "O ideal" (o Estoque como dono da situação única do lote)</td>
+<td>Dez fluxos, 283 regras de negócio, inventário de 98 telas, modelo de dados, 24 riscos (18 de prioridade alta), 12 achados de segurança e acesso e "O ideal" (o Estoque como dono da situação única do lote)</td>
 </tr>
 <tr>
 <td>Testes no ambiente de teste</td>
-<td>162 casos planejados; <strong>149 com resultado</strong> em dez rodadas, cobrindo 44 dos 46 de prioridade alta. Os 2 de prioridade alta restantes estão bloqueados por causas fora do teste (Ordem de Produção e reanálise). Os 11 de média e baixa sem resultado ficam para a nova versão</td>
+<td>162 casos planejados; <strong>149 com resultado</strong> em onze rodadas, cobrindo 44 dos 46 de prioridade alta. Os 2 de prioridade alta restantes estão bloqueados (reanálise no Item e lote padrão sem aprovação). Os 11 de média e baixa sem resultado ficam para a nova versão</td>
 </tr>
 <tr>
 <td>Desvios encontrados</td>
-<td><strong>73</strong>: 64 no documento de defeitos (15 de gravidade alta, 34 média, 15 baixa) e 9 de acesso, no documento confidencial</td>
+<td><strong>76</strong>: 21 de gravidade alta, 40 média e 15 baixa; 10 são de acesso e segurança</td>
 </tr>
 </tbody>
 </table></div>
@@ -90,6 +90,10 @@
 <tr>
 <td>Lote vencido é aceito na entrada; a entrada de produto acabado aceita lote inventado, sem ordem de produção</td>
 <td>Material fora da validade e lote sem origem rastreável (arts. 124, 164 e 189)</td>
+</tr>
+<tr>
+<td>Ninguém aprova o lote padrão; sem ele a Produção não pede ordem de produção</td>
+<td>Lote padrão sem aprovação (arts. 133 a 135)</td>
 </tr>
 <tr>
 <td>A liberação do lote é a aprovação do laudo, por qualquer usuário; reprovar não exige motivo</td>
@@ -134,7 +138,7 @@
 <li>Situação única do lote, aplicada em toda tela e mudada só pelo CQ, pela Pessoa Delegada ou pela Garantia da Qualidade.</li>
 <li>Liberação do lote pela Pessoa Delegada, com assinatura eletrônica; o laudo muda a situação na hora e reprovar exige motivo.</li>
 <li>Histórico completo do lote: usuário, hora, análise, laudo, aprovador e cada movimentação, ajuste e cancelamento.</li>
-<li>Conferir a permissão em toda tela e toda gravação, no servidor.</li>
+<li>Conferir a permissão em toda tela e toda gravação, no servidor, e dar tela à permissão de aprovar o lote padrão.</li>
 <li>Remessa (inclusive a de kit) que finaliza em qualquer modo, baixa o saldo e informa a Rastreabilidade; Movimentação de Quarentena que exige endereço completo e grava saída e entrada juntas.</li>
 <li>Amostras de retenção de ponta a ponta: consulta e saída encontram o que a entrada gravou, com prazo de guarda e trava de saída antes do vencimento.</li>
 </ol>
@@ -155,8 +159,8 @@
 </tr>
 <tr>
 <td>2</td>
-<td>Cobrar do DBA a verificação do Endereçamento (qual instrução da rotina falha); as outras causas foram explicadas pela leitura do código</td>
-<td>O teste pela tela não alcança essa causa</td>
+<td>Pedir ao DBA: qual instrução do Endereçamento falha, e ligar uma função profissional à configuração 19 (destrava a Produção)</td>
+<td>O teste pela tela não alcança essas causas</td>
 </tr>
 <tr>
 <td>3</td>
@@ -171,7 +175,7 @@
 <tr>
 <td>5</td>
 <td>Decidir se a devolução e a pesagem esperam o módulo Produção e como criar a Ordem de Produção de teste</td>
-<td>Sem ela a devolução fica sem Ordem de Produção; o Inventário do almoxarifado de teste segue travado por solicitações pendentes</td>
+<td>Sem ela a devolução fica sem Ordem de Produção</td>
 </tr>
 </tbody>
 </table></div>
