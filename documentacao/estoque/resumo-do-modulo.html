@@ -43,9 +43,9 @@
     </header>
     
     <article class="texto">
-<p><strong>Uso interno.</strong> Resumo para a diretoria, atualizado em 22/10/2026 (nove rodadas de testes, 07 a 22/10). O detalhe está no Relatório de Testes, na Conformidade Regulatória e nos Defeitos para Correção.</p>
+<p><strong>Uso interno.</strong> Resumo para a diretoria, atualizado em 23/10/2026 (dez rodadas de testes, 07 a 22/10). O detalhe está no Relatório de Testes, na Conformidade Regulatória e nos Defeitos para Correção.</p>
 <h2 id="conclusao">Conclusão</h2>
-<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado, e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram falhas graves que o código não previa: a remessa (também a de kit) não pode ser finalizada, a amostra de retenção não é encontrada, a Movimentação de Quarentena perde o saldo do lote, a Central de Pesagem dá erro ao abrir o volume e o atendimento não usa primeiro o lote que vence primeiro.</p>
+<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado, e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram falhas graves que o código não previa: a remessa da tela comum (também a de kit) não finaliza, a amostra de retenção sai antes do vencimento do lote sem aviso, a Movimentação de Quarentena perde o saldo do lote, a Central de Pesagem dá erro ao abrir o volume e o atendimento não usa primeiro o lote que vence primeiro.</p>
 <p><strong>Dos 14 temas da norma avaliados, nenhum é atendido por completo</strong>: 5 em parte, 8 não atendidos e 1 não verificado. <strong>Parecer: o módulo não está apto para uso em ambiente regulado</strong> até as dez correções obrigatórias abaixo. Os mecanismos essenciais existem (quarentena, saldo por situação, histórico), então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
 <h2 id="o-que-foi-feito">O que foi feito</h2>
 <div class="tabela"><table>
@@ -62,11 +62,11 @@
 </tr>
 <tr>
 <td>Testes no ambiente de teste</td>
-<td>162 casos planejados; <strong>134 com resultado</strong> em nove rodadas, cobrindo 42 dos 46 de prioridade alta. Os 4 de prioridade alta restantes estão bloqueados por causas fora do teste (Ordem de Produção, reanálise, remessa e amostra de retenção). Os 24 de média e baixa sem resultado ficam para a nova versão</td>
+<td>162 casos planejados; <strong>149 com resultado</strong> em dez rodadas, cobrindo 44 dos 46 de prioridade alta. Os 2 de prioridade alta restantes estão bloqueados por causas fora do teste (Ordem de Produção e reanálise). Os 11 de média e baixa sem resultado ficam para a nova versão</td>
 </tr>
 <tr>
 <td>Desvios encontrados</td>
-<td><strong>67</strong>: 59 no documento de defeitos (14 de gravidade alta, 31 média, 14 baixa) e 8 de acesso, no documento confidencial</td>
+<td><strong>73</strong>: 64 no documento de defeitos (15 de gravidade alta, 34 média, 15 baixa) e 9 de acesso, no documento confidencial</td>
 </tr>
 </tbody>
 </table></div>
@@ -100,11 +100,11 @@
 <td>Material aprovado some do controle (art. 124)</td>
 </tr>
 <tr>
-<td>A remessa não pode ser finalizada: a expedição pela tela está travada</td>
+<td>A remessa da tela comum não finaliza (só finaliza com o modo GMM): a expedição fica travada</td>
 <td>Sem registro de distribuição para um recolhimento (arts. 346 e 347)</td>
 </tr>
 <tr>
-<td>A amostra de retenção gravada não aparece na consulta nem na saída</td>
+<td>A amostra de retenção pode sair antes do vencimento do lote, sem aviso nem justificativa</td>
 <td>Amostras sem controle pelo prazo (art. 14, VIII)</td>
 </tr>
 <tr>
@@ -135,8 +135,8 @@
 <li>Liberação do lote pela Pessoa Delegada, com assinatura eletrônica; o laudo muda a situação na hora e reprovar exige motivo.</li>
 <li>Histórico completo do lote: usuário, hora, análise, laudo, aprovador e cada movimentação, ajuste e cancelamento.</li>
 <li>Conferir a permissão em toda tela e toda gravação, no servidor.</li>
-<li>Remessa (inclusive a de kit) que finaliza, baixa o saldo e informa a Rastreabilidade; Movimentação de Quarentena que exige endereço completo e grava saída e entrada juntas.</li>
-<li>Amostras de retenção de ponta a ponta: consulta e saída encontram o que a entrada gravou, com prazo de guarda e trava de saída.</li>
+<li>Remessa (inclusive a de kit) que finaliza em qualquer modo, baixa o saldo e informa a Rastreabilidade; Movimentação de Quarentena que exige endereço completo e grava saída e entrada juntas.</li>
+<li>Amostras de retenção de ponta a ponta: consulta e saída encontram o que a entrada gravou, com prazo de guarda e trava de saída antes do vencimento.</li>
 </ol>
 <h2 id="decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</h2>
 <div class="tabela"><table>
@@ -181,7 +181,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#conclusao">Conclusão</a></li><li><a href="#o-que-foi-feito">O que foi feito</a></li><li><a href="#principais-problemas">Principais problemas</a></li><li><a href="#dez-correcoes-obrigatorias">Dez correções obrigatórias</a></li><li><a href="#decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 22/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor. Achados de segurança não são publicados aqui.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
