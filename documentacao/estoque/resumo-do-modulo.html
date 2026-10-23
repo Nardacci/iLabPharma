@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
+<link rel="stylesheet" href="../../portal/portal.css?v=b13e23c7">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -45,8 +45,8 @@
     <article class="texto">
 <p><strong>Uso interno.</strong> Resumo para a diretoria, atualizado em 23/10/2026 (onze rodadas de testes, 07 a 22/10). O detalhe está no Relatório de Testes, na Conformidade Regulatória e nos Defeitos para Correção.</p>
 <h2 id="conclusao">Conclusão</h2>
-<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>registra a entrada, a guarda e a saída dos materiais, mas não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado, e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram falhas graves que o código não previa: a remessa da tela comum (também a de kit) não finaliza, a amostra de retenção sai antes do vencimento do lote sem aviso, a Movimentação de Quarentena perde o saldo do lote, a Central de Pesagem dá erro ao abrir o volume o atendimento não usa primeiro o lote que vence primeiro e <strong>ninguém consegue aprovar o lote padrão</strong>, o que impede a Produção de pedir a primeira ordem de produção.</p>
-<p><strong>Dos 14 temas da norma avaliados, nenhum é atendido por completo</strong>: 5 em parte, 8 não atendidos e 1 não verificado. <strong>Parecer: o módulo não está apto para uso em ambiente regulado</strong> até as dez correções obrigatórias abaixo. Os mecanismos essenciais existem (quarentena, saldo por situação, histórico), então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
+<p>O módulo Estoque do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, registra a entrada, a guarda e a saída dos materiais, mas <strong>não controla o que a ANVISA exige controlar</strong>. O lote passa pela quarentena e pelo laudo do Controle da Qualidade, e isso funciona. Mas o recebimento aceita fornecedor reprovado e lote vencido, a entrada de produto acabado aceita lote inventado e a liberação do lote é feita por qualquer usuário, sem a Pessoa Delegada. Os testes acrescentaram falhas graves: a remessa da tela comum não finaliza, a amostra de retenção sai antes do vencimento sem aviso, a Movimentação de Quarentena perde o saldo, a Central de Pesagem dá erro, o atendimento aceita o lote que vence depois e <strong>ninguém consegue aprovar o lote padrão</strong>, o que impede a Produção de pedir a primeira ordem.</p>
+<p><strong>Dos 14 temas da norma avaliados, nenhum é atendido por completo</strong>: 5 em parte, 8 não atendidos e 1 não verificado. Os mecanismos essenciais existem (quarentena, saldo por situação, histórico), então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
 <h2 id="o-que-foi-feito">O que foi feito</h2>
 <div class="tabela"><table>
 <thead>
@@ -58,11 +58,11 @@
 <tbody>
 <tr>
 <td>Análise do código</td>
-<td>Dez fluxos, 283 regras de negócio, inventário de 98 telas, modelo de dados, 24 riscos (18 de prioridade alta), 12 achados de segurança e acesso e "O ideal" (o Estoque como dono da situação única do lote)</td>
+<td>Dez fluxos, 171 regras de negócio, 98 telas, modelo de dados, 24 riscos (18 de prioridade alta), 12 achados de segurança e o modelo ideal</td>
 </tr>
 <tr>
 <td>Testes no ambiente de teste</td>
-<td>162 casos planejados; <strong>149 com resultado</strong> em onze rodadas, cobrindo 44 dos 46 de prioridade alta. Os 2 de prioridade alta restantes estão bloqueados (reanálise no Item e lote padrão sem aprovação). Os 11 de média e baixa sem resultado ficam para a nova versão</td>
+<td>162 casos; <strong>149 com resultado</strong> em onze rodadas, 44 dos 46 de prioridade alta; os 2 restantes estão bloqueados (reanálise no Item e lote padrão sem aprovação)</td>
 </tr>
 <tr>
 <td>Desvios encontrados</td>
@@ -84,12 +84,8 @@
 <td>O sistema afirma o que não aconteceu (art. 124); causa no banco, depende do DBA</td>
 </tr>
 <tr>
-<td>A avaliação do fornecedor não aprova nem bloqueia ninguém</td>
-<td>Material de fonte não qualificada entra na fábrica (art. 8º, VI)</td>
-</tr>
-<tr>
-<td>Lote vencido é aceito na entrada; a entrada de produto acabado aceita lote inventado, sem ordem de produção</td>
-<td>Material fora da validade e lote sem origem rastreável (arts. 124, 164 e 189)</td>
+<td>Fornecedor reprovado e lote vencido são aceitos; a entrada de produto acabado aceita lote inventado, sem ordem de produção</td>
+<td>Material de fonte não qualificada, fora da validade ou sem origem rastreável (arts. 8º VI, 124, 164 e 189)</td>
 </tr>
 <tr>
 <td>Ninguém aprova o lote padrão; sem ele a Produção não pede ordem de produção</td>
@@ -100,24 +96,16 @@
 <td>Decisão crítica sem a pessoa designada e sem prova (art. 8º, XV)</td>
 </tr>
 <tr>
-<td>A Movimentação de Quarentena aceita destino incompleto e o saldo do lote aprovado desaparece</td>
-<td>Material aprovado some do controle (art. 124)</td>
-</tr>
-<tr>
-<td>A remessa da tela comum não finaliza (só finaliza com o modo GMM): a expedição fica travada</td>
-<td>Sem registro de distribuição para um recolhimento (arts. 346 e 347)</td>
+<td>A Movimentação de Quarentena aceita destino incompleto e o saldo do lote some; a remessa da tela comum não finaliza (só com o modo GMM)</td>
+<td>Material aprovado some do controle; sem registro de distribuição para recolhimento (arts. 124, 346 e 347)</td>
 </tr>
 <tr>
 <td>A amostra de retenção pode sair antes do vencimento do lote, sem aviso nem justificativa</td>
 <td>Amostras sem controle pelo prazo (art. 14, VIII)</td>
 </tr>
 <tr>
-<td>O Item não mostra o campo do prazo de reanálise; a agenda não tem o que agendar</td>
-<td>Matéria-prima usada depois da data de reteste (art. 189)</td>
-</tr>
-<tr>
-<td>O atendimento à produção não ordena os lotes por validade e aceita o que vence depois; no inventário, a mesma pessoa conta e apura, e cancelar não pede justificativa</td>
-<td>Lote de validade curta passado adiante; ajuste de saldo sem separação de funções nem rastro (arts. 124 e 189)</td>
+<td>O Item não mostra o prazo de reanálise; o atendimento não ordena os lotes por validade; no inventário, a mesma pessoa conta e apura</td>
+<td>Matéria-prima usada depois do reteste; lote de validade curta passado adiante; ajuste sem separação de funções (arts. 124 e 189)</td>
 </tr>
 <tr>
 <td>O laudo só chega ao Estoque por um clique manual; o histórico do lote não mostra usuário, análise nem laudo</td>
@@ -142,47 +130,46 @@
 <li>Remessa (inclusive a de kit) que finaliza em qualquer modo, baixa o saldo e informa a Rastreabilidade; Movimentação de Quarentena que exige endereço completo e grava saída e entrada juntas.</li>
 <li>Amostras de retenção de ponta a ponta: consulta e saída encontram o que a entrada gravou, com prazo de guarda e trava de saída antes do vencimento.</li>
 </ol>
-<h2 id="decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</h2>
+<h2 id="encerramento-do-modulo-23-10-2026">Encerramento do módulo (23/10/2026)</h2>
+<p><strong>Veredito: o Estoque (legado, versão 3.5.1) não está apto para uso em ambiente regulado.</strong> O critério de "apto" ainda não foi escrito com a Qualidade; o "não apto" vem só dos 21 defeitos de gravidade alta e de nenhum dos 14 temas da norma ser atendido por completo. <strong>149 de 162 casos</strong> com resultado (44 de 46 de prioridade alta) e <strong>76 defeitos</strong>.</p>
+<p><strong>Sem teste (13 casos):</strong> CT-EST-058 e 091 (prioridade alta) e 055, 077, 082, 090, 100, 164, 172 e 192 (bloqueados); 117 e 118 (não se aplicam à tela); 023 (acesso pelo endereço, fora do escopo).</p>
+<p><strong>Lista de reabertura</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>#</th>
-<th>Pedido</th>
-<th>Por quê</th>
+<th>Quem</th>
+<th>O que fazer</th>
+<th>Destrava</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1</td>
-<td>Aprovar as dez correções como condição para o sistema entrar em uso</td>
-<td>Sem elas, o módulo não passa numa inspeção da ANVISA</td>
+<td>DBA</td>
+<td>Dizer qual instrução da rotina de finalização do recebimento falha (DV-EST-016) e o que há de diferente no lote TESTEPA001 (DV-EST-047)</td>
+<td>Endereçamento do recebimento; saída da amostra desse lote</td>
 </tr>
 <tr>
-<td>2</td>
-<td>Pedir ao DBA: qual instrução do Endereçamento falha, e ligar uma função profissional à configuração 19 (destrava a Produção)</td>
-<td>O teste pela tela não alcança essas causas</td>
+<td>Produção</td>
+<td>Ligar uma função profissional à configuração 19 (e 28 e 29) para aprovar o Lote Padrão (DV-EST-076)</td>
+<td>CT-EST-091 (alta), 082, 090 e 100</td>
 </tr>
 <tr>
-<td>3</td>
-<td>Definir quem é a Pessoa Delegada e se a liberação do lote é a aprovação do laudo ou uma etapa a mais</td>
-<td>Define a correção mais importante do módulo</td>
+<td>Desenvolvimento</td>
+<td>DV-EST-043 (reanálise no Item), 005 (perfil novo não abre o Estoque), 067 (Central de Pesagem), 077 (Pedido de Compra sem funções), 074 e 075 (Regra de Estabilidade)</td>
+<td>CT-EST-055 e 058 (alta), 192, 077, 164, 172 e 173</td>
 </tr>
 <tr>
-<td>4</td>
-<td>Decidir com a Garantia da Qualidade: o que é fornecedor aprovado; se a sobra devolvida precisa de nova análise; o prazo das amostras de retenção</td>
-<td>Perguntas que o sistema não responde e a norma exige</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Decidir se a devolução e a pesagem esperam o módulo Produção e como criar a Ordem de Produção de teste</td>
-<td>Sem ela a devolução fica sem Ordem de Produção</td>
+<td>Responsável</td>
+<td>Decidir se o CT-EST-023 volta ao escopo</td>
+<td>CT-EST-023</td>
 </tr>
 </tbody>
 </table></div>
+<p><strong>Decisões pedidas à diretoria:</strong> (1) aprovar as dez correções como condição para o sistema entrar em uso; (2) definir quem é a Pessoa Delegada e se a liberação do lote é a aprovação do laudo ou uma etapa a mais; (3) decidir com a Garantia da Qualidade o que é fornecedor aprovado, se a sobra devolvida precisa de nova análise e o prazo das amostras de retenção.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="../principal/index.html"><small>← Módulo anterior</small><strong>Principal</strong></a><a class="ap ap-prox" href="reconhecimento-do-modulo.html"><small>Próximo →</small><strong>Reconhecimento do módulo</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#conclusao">Conclusão</a></li><li><a href="#o-que-foi-feito">O que foi feito</a></li><li><a href="#principais-problemas">Principais problemas</a></li><li><a href="#dez-correcoes-obrigatorias">Dez correções obrigatórias</a></li><li><a href="#decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#conclusao">Conclusão</a></li><li><a href="#o-que-foi-feito">O que foi feito</a></li><li><a href="#principais-problemas">Principais problemas</a></li><li><a href="#dez-correcoes-obrigatorias">Dez correções obrigatórias</a></li><li><a href="#encerramento-do-modulo-23-10-2026">Encerramento do módulo (23/10/2026)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>

@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=3f9cfc53">
+<link rel="stylesheet" href="../../portal/portal.css?v=b13e23c7">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -44,13 +44,13 @@
     
     <article class="texto">
 <p><strong>Para quem:</strong> desenvolvedores da nova versão do LabMedSys.
-<strong>Base:</strong> o comportamento atual extraído do código (Regras de Negócio, <code>01-cadastros-de-apoio.md</code>, fluxos), as falhas confirmadas nos testes das sete rodadas de 07 a 13/10/2026 (<code>defeitos/defeitos.md</code>, 39 defeitos; o documento confidencial de achados de acesso), os controles exigidos da análise de risco (<code>07-analise-de-risco.md</code>), a conformidade (<code>04-conformidade-regulatoria.md</code>) e o modelo ideal (<code>ideal/est-ideal.md</code>, <code>ideal/est-entre-modulos.md</code>).
-<strong>Situação:</strong> rascunho para validação com o negócio e a Garantia da Qualidade. Data: 14/10/2026.</p>
+<strong>Base:</strong> o comportamento atual extraído do código (Regras de Negócio, <code>01-cadastros-de-apoio.md</code>, fluxos), as falhas confirmadas nos testes das onze rodadas de 07 a 22/10/2026 (<code>defeitos/defeitos-completo.md</code>, 76 defeitos, 21 de gravidade alta, dos quais 10 de acesso e segurança, hoje publicados com os demais), os controles exigidos da análise de risco (<code>07-analise-de-risco.md</code>), a conformidade (<code>04-conformidade-regulatoria.md</code>) e o modelo ideal (<code>ideal/est-ideal.md</code>, <code>ideal/est-entre-modulos.md</code>).
+<strong>Situação:</strong> rascunho para validação com o negócio e a Garantia da Qualidade. Data: 14/10/2026; atualizada em 23/10/2026 no encerramento do módulo (rodadas 8 a 11).</p>
 <h3 id="como-ler">Como ler</h3>
 <ul>
 <li><strong>RF</strong>: requisito funcional (o que o sistema faz). <strong>RNF</strong>: requisito não funcional (como faz: segurança, auditoria, integração, dados).</li>
 <li><strong>Prioridade:</strong> <strong>E</strong> = Essencial (sem ele o módulo não entra em uso regulado), <strong>I</strong> = Importante, <strong>D</strong> = Desejável.</li>
-<li><strong>Origem:</strong> de onde o requisito veio. <code>RN-EST-</code> = regra atual mantida; <code>DV-EST-</code> = defeito que a nova versão corrige; <code>R-EST-</code> = risco da análise de risco; <code>SEG-EST-</code> = achado de segurança (documento confidencial); <code>Trava n</code> = trava do modelo ideal entre módulos; artigo da RDC 658/2022 ou item do Guia 33/2020.</li>
+<li><strong>Origem:</strong> de onde o requisito veio. <code>RN-EST-</code> = regra atual mantida; <code>DV-EST-</code> = defeito que a nova versão corrige; <code>R-EST-</code> = risco da análise de risco; <code>SEG-EST-</code> = achado de segurança (documento de Achados de Segurança); <code>Trava n</code> = trava do modelo ideal entre módulos; artigo da RDC 658/2022 ou item do Guia 33/2020.</li>
 <li><strong>Muda em relação ao atual?</strong> "Igual" (mantém o que funciona), "Corrige" (existe, mas falha) ou "Novo" (não existe).</li>
 <li>Falha do sistema atual não foi copiada: virou requisito <strong>corrigido</strong>, com o defeito de origem.</li>
 </ul>
@@ -142,6 +142,41 @@
 <td>DV-EST-023</td>
 <td>Corrige</td>
 </tr>
+<tr>
+<td>RF-EST-023</td>
+<td>O código zero (0, 000, 0000) é recusado do mesmo jeito, com a mesma mensagem, em todos os cadastros de apoio (condição de armazenagem, rua, coluna e andar); o código em branco é recusado ou gerado com aviso.</td>
+<td>I</td>
+<td>DV-EST-059</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-024</td>
+<td>O cadastro de Item recusa estoque mínimo maior que o máximo, com mensagem que diz os dois campos.</td>
+<td>I</td>
+<td>DV-EST-051</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-025</td>
+<td>A pesquisa das listas encontra o texto sem acento, em minúsculas e por trecho da palavra ("DIOXIDO" acha "DIÓXIDO").</td>
+<td>I</td>
+<td>DV-EST-053 (repete o DV-PRI-008)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-026</td>
+<td>Toda tela de cadastro que existe no sistema grava ou sai do sistema: a tela Banco, que hoje não grava e mostra o erro técnico do banco, ou funciona, ou é retirada.</td>
+<td>I</td>
+<td>DV-EST-052, SEG-EST-13</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-027</td>
+<td>O cadastro de Local e de endereço oferece a quem administra a estrutura física <strong>todos</strong> os almoxarifados (inclusive os de Retenção e Estabilidade); se a regra for por grupo de usuário, a tela diz por que um almoxarifado não aparece e o cadastro do almoxarifado já o liga ao grupo de quem o criou.</td>
+<td>I</td>
+<td>DV-EST-066 (a lista depende do grupo do usuário), RN-EST-003</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <h4 id="2-2-recebimento-inspecao-e-conferencia">2.2 Recebimento, inspeção e conferência</h4>
@@ -174,7 +209,7 @@
 <td>RF-EST-012</td>
 <td>A autorização do recebimento só aceita usuário com a função de autorizar, conferida no servidor.</td>
 <td>E</td>
-<td>achado de acesso (documento confidencial), R-EST, art. 12</td>
+<td>DV-EST-009, SEG-EST-04, R-EST, art. 12</td>
 <td>Corrige</td>
 </tr>
 <tr>
@@ -380,6 +415,20 @@
 <td>DV-EST-040</td>
 <td>Corrige</td>
 </tr>
+<tr>
+<td>RF-EST-045</td>
+<td>O resultado de conformidade da análise <strong>não vem pré-selecionado</strong>: o analista escolhe "conforme" ou "não conforme" a cada resultado.</td>
+<td>I</td>
+<td>DV-EST-038, art. 183</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-046</td>
+<td><strong>Reprovar o laudo exige motivo</strong> e registra quem reprovou e quando; o campo "Responsável" do laudo mostra quem aprovou ou reprovou, e não quem está vendo a tela.</td>
+<td>E</td>
+<td>DV-EST-027, 030, R-EST-09, art. 125</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <h4 id="2-5-movimentacao-interna-historico-e-consultas">2.5 Movimentação interna, histórico e consultas</h4>
@@ -419,7 +468,7 @@
 <td>RF-EST-053</td>
 <td>O <strong>Histórico do Lote</strong> mostra toda movimentação e mudança de situação com usuário, data e hora, e inclui a análise, o laudo, quem aprovou ou reprovou, a retenção e o ajuste de inventário.</td>
 <td>E</td>
-<td>DV-EST-034, R-EST-23, art. 124 e 125</td>
+<td>DV-EST-034, 061, 073, R-EST-23, art. 124 e 125</td>
 <td>Corrige</td>
 </tr>
 <tr>
@@ -428,6 +477,34 @@
 <td>E</td>
 <td>RN-EST-075, 078, 093</td>
 <td>Igual</td>
+</tr>
+<tr>
+<td>RF-EST-055</td>
+<td>O mesmo endereço não entra em duas movimentações ao mesmo tempo, nem em duas abas do mesmo usuário: o endereço é reservado na primeira e a segunda é recusada.</td>
+<td>I</td>
+<td>RN-EST-072, DV-EST-065</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-056</td>
+<td>Os relatórios de quarentena e de reprovados (RM17, RM18, RM36) listam todo lote que está nessa situação, com a descrição certa de cada item e sem linha em branco.</td>
+<td>I</td>
+<td>DV-EST-062</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-057</td>
+<td>Os relatórios saem com data no formato brasileiro e com o nome do usuário inteiro.</td>
+<td>D</td>
+<td>DV-EST-057</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-058</td>
+<td>A Saída de Material (outras) exige justificativa, grava o custo do movimento (pelo custo médio, nunca 0,00) e tem mensagens sem erro de digitação.</td>
+<td>I</td>
+<td>RN-EST-111, DV-EST-060</td>
+<td>Corrige</td>
 </tr>
 </tbody>
 </table></div>
@@ -454,7 +531,7 @@
 <td>RF-EST-061</td>
 <td>A lista de lotes para separar mostra só lotes <strong>disponíveis</strong> (situação única), dentro da validade e da data de reanálise, <strong>ordenada pela validade mais curta</strong>, sugerindo ou impondo esse lote; usar outro exige justificativa.</td>
 <td>E</td>
-<td>RN-EST-102, 103 (CT-EST-075), R-EST-12, art. 189</td>
+<td>RN-EST-102, 103 (CT-EST-075), DV-EST-048, R-EST-12, art. 189</td>
 <td>Corrige</td>
 </tr>
 <tr>
@@ -466,9 +543,9 @@
 </tr>
 <tr>
 <td>RF-EST-063</td>
-<td>A pesagem para produção exige balança, lacre, peso e tara, e não finaliza com divergência; o cancelamento da separação exige justificativa.</td>
+<td>A pesagem para produção exige balança, lacre, peso e tara, e não finaliza com divergência.</td>
 <td>E</td>
-<td>RN-EST-104 a 106</td>
+<td>RN-EST-105, 106 (CT-EST-076)</td>
 <td>Igual</td>
 </tr>
 <tr>
@@ -476,6 +553,41 @@
 <td>A conclusão da separação de uma solicitação do tipo produção atualiza a Produção pela API do Estoque.</td>
 <td>E</td>
 <td>RN-EST-098, R-EST-19, Trava 16</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-065</td>
+<td>Cancelar um atendimento exige justificativa, devolve o saldo ao lote e ao endereço e deixa o rastro no Histórico do Lote (quem, quando, motivo).</td>
+<td>E</td>
+<td>RN-EST-104, DV-EST-061, art. 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-066</td>
+<td>A Solicitação de Material, de qualquer tipo, oferece e grava <strong>só os almoxarifados do grupo do usuário</strong>.</td>
+<td>E</td>
+<td>RN-EST-003, DV-EST-069, SEG-EST-14</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-067</td>
+<td>A aprovação da solicitação é feita por <strong>outra pessoa</strong> que não criou nem concluiu a solicitação, com o tipo liberado, e registra quem aprovou e quando.</td>
+<td>E</td>
+<td>RN-EST-100, 101, DV-EST-070</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-068</td>
+<td>A Solicitação de Material (Produção) nasce da ordem de produção ou tem Incluir, e a busca de item do formulário encontra os itens ativos. A área define qual dos dois caminhos vale.</td>
+<td>I</td>
+<td>DV-EST-063 (a validar com a área)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-069</td>
+<td>A Central de Pesagem abre o volume e permite informar peso bruto, tara, tag da balança e lacre; erro de balança ou de equipamento aparece em mensagem clara, sem detalhe técnico.</td>
+<td>E</td>
+<td>RN-EST-054, 105, DV-EST-067, SEG-EST-13</td>
 <td>Corrige</td>
 </tr>
 </tbody>
@@ -515,10 +627,17 @@
 </tr>
 <tr>
 <td>RF-EST-073</td>
-<td>A devolução de material exige lote já existente com o mesmo item, validade e fabricante, e abre análise no CQ.</td>
+<td>A devolução de material exige lote já existente com o mesmo item, validade e fabricante, <strong>encontra esse lote também para o item com controle de qualidade</strong>, reaproveita o item de entrada do lote (sem criar linha duplicada na disponibilidade) e abre análise no CQ.</td>
 <td>E</td>
-<td>RN-EST-117, 119</td>
-<td>Igual</td>
+<td>RN-EST-117, 119, DV-EST-064</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-074</td>
+<td>O <strong>Lote Padrão</strong> pode ser aprovado por uma pessoa com a função de revisor da Garantia da Qualidade (diferente de quem o elaborou), por tela de configuração das funções (configurações 19, 28 e 29); sem lote padrão aprovado a Produção avisa o motivo.</td>
+<td>E</td>
+<td>DV-EST-076, SEG-EST-15, arts. 133 a 135</td>
+<td>Corrige</td>
 </tr>
 </tbody>
 </table></div>
@@ -552,7 +671,7 @@
 <td>RF-EST-082</td>
 <td>Toda saída (remessa, venda, devolução ao fornecedor) guarda lote, quantidade, destinatário e endereço da data, nunca é apagada e informa a <strong>Rastreabilidade</strong> e a GQ com um só registro de evento.</td>
 <td>E</td>
-<td>RN-EST-132, R-EST-15, Trava 11, arts. 346 e 347</td>
+<td>RN-EST-132, DV-EST-072, 073, R-EST-15, Trava 11, arts. 346 e 347</td>
 <td>Corrige</td>
 </tr>
 <tr>
@@ -561,6 +680,13 @@
 <td>I</td>
 <td>RN-EST-126, 127</td>
 <td>Igual</td>
+</tr>
+<tr>
+<td>RF-EST-084</td>
+<td>A remessa gerada pela solicitação de kit nasce com a Origem e o Responsável preenchidos e pode ser finalizada, em qualquer modo de remessa (comum ou guia GMM).</td>
+<td>E</td>
+<td>RN-EST-124, 131, DV-EST-058, 046</td>
+<td>Corrige</td>
 </tr>
 </tbody>
 </table></div>
@@ -587,14 +713,21 @@
 <td>RF-EST-091</td>
 <td>Os endereços em inventário ficam travados e fora do disponível; até três contagens, a terceira divergente com justificativa; contagens por pessoas diferentes, se a GQ exigir.</td>
 <td>E</td>
-<td>RN-EST-137 a 140</td>
-<td>Igual (a validar)</td>
+<td>RN-EST-137 a 140, DV-EST-049</td>
+<td>Corrige (a validar com a GQ)</td>
 </tr>
 <tr>
 <td>RF-EST-092</td>
 <td>A apuração ajusta o saldo com usuário, justificativa e <strong>aprovação</strong> de outra pessoa; o ajuste aparece no histórico do lote.</td>
 <td>E</td>
 <td>RN-EST-141 a 144, R-EST-20, art. 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-093</td>
+<td>Cancelar o inventário e reabrir uma contagem exigem justificativa e ficam no histórico; a lista de contagens a reabrir mostra só as que existem.</td>
+<td>I</td>
+<td>RN-EST-143, DV-EST-050</td>
 <td>Corrige</td>
 </tr>
 </tbody>
@@ -632,6 +765,34 @@
 <td>RN-EST-145 a 156</td>
 <td>Igual (histórico novo)</td>
 </tr>
+<tr>
+<td>RF-EST-103</td>
+<td>O cadastro de kits filtra pelo Nome.</td>
+<td>D</td>
+<td>DV-EST-055</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-104</td>
+<td>A Análise do Planejamento de Kits grava o resultado e mostra a necessidade de componentes; nunca diz "Analise gerada!" sem ter gerado.</td>
+<td>I</td>
+<td>RN-EST-149, DV-EST-054</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-105</td>
+<td>O atendimento de kit só aceita componente com validade igual ou maior que a validade mínima do planejamento, ou exige decisão registrada.</td>
+<td>E</td>
+<td>RN-EST-153, DV-EST-056</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-106</td>
+<td>O Pedido de Compra tem as funções de alterar, incluir, finalizar e baixar no cadastro do perfil e no menu; sem elas, ninguém emite nem baixa pedido.</td>
+<td>I</td>
+<td>DV-EST-077, SEG-EST-16, RN-EST-161</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <h4 id="2-11-amostras-de-referencia-retencao-e-estabilidade">2.11 Amostras de referência, retenção e estabilidade</h4>
@@ -657,7 +818,7 @@
 <td>RF-EST-111</td>
 <td>Cada produto tem <strong>prazo de guarda</strong> das amostras de retenção e referência; a saída antes do prazo é recusada ou exige decisão registrada da GQ.</td>
 <td>E</td>
-<td>R-EST-17, art. 14, VIII</td>
+<td>R-EST-17, DV-EST-068, art. 14, VIII</td>
 <td>Novo</td>
 </tr>
 <tr>
@@ -671,8 +832,22 @@
 <td>RF-EST-113</td>
 <td>A amostra de estabilidade exige o tipo e abre o acompanhamento de estabilidade no CQ.</td>
 <td>I</td>
-<td>RN-EST-168</td>
-<td>Igual</td>
+<td>RN-EST-168, DV-EST-071</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-114</td>
+<td>A entrada de estabilidade pendente nasce do Registro de Amostragem do CQ (campo "Qtd. Estabilidade") e a entrada feita à mão também pede o tipo e abre o acompanhamento.</td>
+<td>I</td>
+<td>DV-EST-074, 071</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-115</td>
+<td>A Regra de Estabilidade do CQ aceita qualquer item pelo identificador, e não pelo código (hoje só item de código numérico passa).</td>
+<td>I</td>
+<td>DV-EST-075</td>
+<td>Corrige</td>
 </tr>
 </tbody>
 </table></div>
@@ -717,7 +892,7 @@
 <td>RNF-EST-005</td>
 <td>Mensagens de validação dizem o campo e o motivo; nenhuma mensagem genérica ("Ocorreu um erro inesperado", "Erro ao gerar...") sem o erro real registrado no servidor.</td>
 <td>E</td>
-<td>DV-EST-003, 013, 037, 046</td>
+<td>DV-EST-003, 013, 037, 046, 052</td>
 </tr>
 </tbody>
 </table></div>
@@ -736,25 +911,55 @@
 <td>RNF-EST-010</td>
 <td>A permissão da função é conferida <strong>no servidor, em toda tela e em toda gravação</strong>, não só no menu.</td>
 <td>E</td>
-<td>achado de acesso (documento confidencial); Guia 33, 9.3.2.3</td>
+<td>DV-EST-008, 007, SEG-EST-03; Guia 33, 9.3.2.3</td>
 </tr>
 <tr>
 <td>RNF-EST-011</td>
 <td>As funções críticas (autorizar recebimento, aprovar laudo, liberar para venda, apurar inventário) são identificadas por configuração, não por número fixo no código, e a ausência da função avisa o administrador.</td>
 <td>E</td>
-<td>achado de acesso (documento confidencial); Guia 33, 9.3.2.3</td>
+<td>DV-EST-035, 076, SEG-EST-06, 15; Guia 33, 9.3.2.3</td>
 </tr>
 <tr>
 <td>RNF-EST-012</td>
 <td>Separação de funções: quem cadastra não autoriza; quem conta não apura; quem fez a análise não aprova o laudo.</td>
 <td>E</td>
-<td>RN-EST-044, modelo ideal seção 6, art. 12</td>
+<td>RN-EST-044, DV-EST-028, 049, 070, SEG-EST-05, modelo ideal seção 6, art. 12</td>
 </tr>
 <tr>
 <td>RNF-EST-013</td>
 <td>A mensagem de acesso negado diz qual função falta.</td>
 <td>I</td>
-<td>achado de acesso (documento confidencial); usabilidade</td>
+<td>DV-EST-005, usabilidade</td>
+</tr>
+<tr>
+<td>RNF-EST-014</td>
+<td>Salvar a conta de um usuário no Principal não apaga permissões que ele já tinha no Estoque e no CQ.</td>
+<td>E</td>
+<td>DV-EST-036, SEG-EST-07</td>
+</tr>
+<tr>
+<td>RNF-EST-015</td>
+<td>Toda função que o código de um módulo exige tem tela para ser concedida (Pedido de Compra, aprovação de Lote Padrão, configurações 19, 28 e 29); um perfil novo com as funções do módulo abre o módulo.</td>
+<td>E</td>
+<td>DV-EST-005, 076, 077, SEG-EST-15, 16</td>
+</tr>
+<tr>
+<td>RNF-EST-016</td>
+<td>As telas de erro nunca mostram ao usuário detalhes técnicos do servidor ou do banco (caminhos, texto do erro); o detalhe vai para o registro do servidor.</td>
+<td>I</td>
+<td>DV-EST-052, 067, SEG-EST-13</td>
+</tr>
+<tr>
+<td>RNF-EST-017</td>
+<td>A API do Estoque exige autenticação, e as consultas ao banco usam parâmetros, nunca texto digitado concatenado ao comando.</td>
+<td>E</td>
+<td>SEG-EST-01, 02</td>
+</tr>
+<tr>
+<td>RNF-EST-018</td>
+<td>Senhas guardadas com hash, segredos fora do código e dos arquivos de configuração, e nenhum script que apague dados ou histórico no pacote entregue.</td>
+<td>E</td>
+<td>SEG-EST-08, 09, 11, 12</td>
 </tr>
 </tbody>
 </table></div>
@@ -850,6 +1055,11 @@
 <li>A separação <strong>impõe</strong> o lote de validade mais curta ou só sugere? (RF-EST-061)</li>
 <li>As contagens do inventário devem ser feitas por pessoas diferentes? (RF-EST-091)</li>
 <li>A análise do produto acabado tem tipo próprio no CQ? (RF-EST-039)</li>
+<li>Quem aprova o Lote Padrão e com qual função (configurações 19, 28 e 29)? O elaborador pode ser também o aprovador em alguma situação? (RF-EST-074)</li>
+<li>O Pedido de Compra continua no escopo do Estoque ou é do Comercial? Quem pode finalizar e baixar? (RF-EST-106)</li>
+<li>O campo "Qtd. Estabilidade" da amostragem foi desligado de propósito? Se sim, de onde nasce a entrada de estabilidade? (RF-EST-114)</li>
+<li>A solicitação de produção nasce só da ordem de produção, ou também pode ser incluída no Estoque? (RF-EST-068)</li>
+<li>A revalidação de lote pede justificativa? (RN-EST-091, contradita no teste)</li>
 </ol>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="analise-de-requisitos.html"><small>← Anterior</small><strong>Análise de requisitos</strong></a><a class="ap ap-prox" href="../producao/index.html"><small>Fim do módulo · próximo módulo →</small><strong>Produção</strong></a></nav>
