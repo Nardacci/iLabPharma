@@ -75,7 +75,7 @@ ROTEIROS = {
     "3.estoque/roteiros/compras-fornecedor.md": "3.estoque/fluxos/compras-fornecedor.md",
     "3.estoque/roteiros/almoxarifado-cq.md": "3.estoque/fluxos/almoxarifado-cq.md",
 }
-ROTEIROS_EXTRA = ["3.estoque/roteiros/relatorios.md", "3.estoque/roteiros/cadastros-de-apoio.md"]  # roteiros sem fluxo próprio
+ROTEIROS_EXTRA = ["3.estoque/roteiros/relatorios.md", "3.estoque/roteiros/cadastros-de-apoio.md", "1.principal/roteiros/acesso-ao-sistema.md", "1.principal/roteiros/administracao.md", "1.principal/roteiros/cadastros-e-tabelas-de-apoio.md"]  # roteiros sem fluxo próprio
 RE_TELA = re.compile(r"^(?:Telas?\s+[\d, e]+|Fora da \w+|Fechamento)\s*·\s*(.+)$")
 
 
@@ -309,6 +309,9 @@ MODULOS = [
         "resumo": "Porta de entrada dos nove módulos: login, usuários, perfis, permissões, cadastros gerais e a base da trilha de auditoria. Analisado, testado em duas rodadas (78 casos) e com todos os entregáveis.",
         "docs": [
             ("1.principal/entregaveis/fonte/resumo-executivo.md", "Resumo do módulo", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Resumo Executivo.docx"),
+            ("1.principal/roteiros/acesso-ao-sistema.md", "Roteiro de execução: Acesso ao sistema (passo a passo)", "fluxos", "1.principal/roteiros/LabMedSys - Modulo Principal - Roteiro de Testes Acesso ao Sistema.docx"),
+            ("1.principal/roteiros/administracao.md", "Roteiro de execução: Administração (passo a passo)", "fluxos", "1.principal/roteiros/LabMedSys - Modulo Principal - Roteiro de Testes Administracao.docx"),
+            ("1.principal/roteiros/cadastros-e-tabelas-de-apoio.md", "Roteiro de execução: Cadastros e tabelas de apoio (passo a passo)", "fluxos", "1.principal/roteiros/LabMedSys - Modulo Principal - Roteiro de Testes Cadastros e Tabelas de Apoio.docx"),
             ("1.principal/entregaveis/fonte/por-que-nao-apta.md", "Por que o Principal não está apto", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Por que nao esta apto.docx"),
             ("1.principal/entregaveis/fonte/parecer-versao-nova.md", "Parecer da versão nova do Principal", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Parecer da Versao Nova.docx"),
             ("1.principal/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "1.principal/entregaveis/LabMedSys - Modulo Principal - Dossie de Homologacao.docx"),
@@ -1141,6 +1144,10 @@ GRUPO_ROTEIRO = {
     "Controle de Mudanças": "5.garantia_qualidade/roteiros/controle-mudancas.md",
     "Assuntos Regulatórios": "5.garantia_qualidade/roteiros/assuntos-regulatorios.md",
     "Autoinspeção e Auditoria": "5.garantia_qualidade/roteiros/autoinspecao-auditoria.md",
+    "Treinamento Técnico": "5.garantia_qualidade/roteiros/treinamento.md",
+    "Acesso ao sistema": "1.principal/roteiros/acesso-ao-sistema.md",
+    "Administração": "1.principal/roteiros/administracao.md",
+    "Cadastros e tabelas de apoio": "1.principal/roteiros/cadastros-e-tabelas-de-apoio.md",
 }
 
 
@@ -1172,6 +1179,12 @@ def _abas_extras(mod, p):
                     if n == nome:
                         achou = ancora
                         break
+                if not achou:  # "Telas 1 e 2 · A e B": o nome da tela aparece dentro do título
+                    for tn, ancora in telas_do_roteiro(r):
+                        n = telas_devs._norm(tn)
+                        if n and nome and (n in nome or nome in n):
+                            achou = ancora
+                            break
                 if achou:
                     href = f'{r["slug"]}.html#{achou}'
                     break
@@ -1317,6 +1330,11 @@ MENUS_GQ_DESC = {
     "Menu Relatórios": "Os relatórios do Estoque: o que está em quarentena, o que foi reprovado, o que foi movimentado, consumido ou adquirido, e os relatórios dos kits.",
     "Menu Kits": "Onde a empresa monta, planeja, solicita e controla os kits enviados a clientes e repõe os componentes que vencem.",
     "Menu Regulatório": "As telas do almoxarifado do Controle da Qualidade: entrada, movimentação e consulta das amostras de retenção, referência e estabilidade.",
+    "Acesso ao sistema": "Como a pessoa entra no sistema, prova quem é e sai: login, troca de senha, início e menu, saída, sessão expirada, notificações e relatórios. Tudo o que o sistema grava depois leva o nome de quem entrou aqui.",
+    "Administração": "Onde se definem pessoas, contas, perfis e permissões, a configuração do sistema e as notificações. Quem tem acesso a quê, e com que função, nasce aqui.",
+    "Cadastros e tabelas de apoio": "Os cadastros que os outros módulos usam: ambientes, equipamentos, pessoas jurídicas, centros de custo, contas, instrumentos, estrutura funcional, locais, pontos de água, utensílios, utilidades e grau de contaminação.",
+    "Treinamento Técnico": "Onde a empresa treina o pessoal e prova que só quem tem treinamento vigente executa a tarefa: tipos, cadastro, solicitação, programação, matriz, conclusão e acompanhamento.",
+    "Configuração": "A configuração dos níveis de acesso da Garantia da Qualidade (Grupo Perfil): quem é Nível 1, 2 ou 3 em todo o módulo.",
     "Autoinspeção e Auditoria": "Onde a empresa confere, por conta própria, se cumpre as Boas Práticas: escreve os roteiros de perguntas, programa a verificação, registra o que encontrou e avalia o resultado.",
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
