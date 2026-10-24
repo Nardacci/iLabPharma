@@ -293,6 +293,7 @@ MODULOS = [
         "situacao": "Em andamento", "nivel": 2,
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
+            ("transversal/05-precisa-de-voce-agora.md", "O que precisa de você agora", "inicio", None),
             ("cliente-ivb/02-aderencia-ao-edital.md", "Aderência ao edital do IVB", "inicio", None),
             ("transversal/04-mapa-de-integracoes.md", "Mapa de integrações entre os módulos", "inicio", "transversal/LabMedSys - Mapa de Integracoes entre Modulos.docx"),
             ("transversal/03-diagnostico-conformidade.md", "Diagnóstico de conformidade com a ANVISA", "inicio", "transversal/LabMedSys - Diagnostico de Conformidade ANVISA.docx"),
@@ -403,6 +404,7 @@ MODULOS = [
             ("5.garantia_qualidade/entregaveis/fonte/analise-de-requisitos.md", "Análise de requisitos", "tecnico", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Analise de Requisitos.docx"),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
             ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
+            ("versao-nova/PEDIDO-AO-DESENVOLVIMENTO-GQ-ACESSO.md", "Pedido ao desenvolvimento: acesso à Garantia da Qualidade na versão nova", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Resultado da rodada 4", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-17-rodada-5/resultado.md", "Resultado da rodada 5", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-18-rodada-6/resultado.md", "Resultado da rodada 6", "novo", None),
@@ -1574,7 +1576,9 @@ def bloco_painel(origem, ordem):
                 f'<div class="pn-nums">{nums_html(numeros)}</div><p class="pn-prox"><em>Para destravar:</em> {E(dado["trava"])}</p></div>')
 
     # --- bloco de atenção
-    atencao = "".join(f'<div class="pn-k"><b>{a["n"]}</b><span>{E(a["titulo"])}<small>{E(a["sub"])}</small></span></div>' for a in pn.get("atencao", []))
+    atencao = "".join((f'<a class="pn-k pn-k-a" href="{E(a["link"])}">' if a.get("link") else '<div class="pn-k">')
+                      + f'<b>{a["n"]}</b><span>{E(a["titulo"])}<small>{E(a["sub"])}</small></span>'
+                      + ('</a>' if a.get("link") else '</div>') for a in pn.get("atencao", []))
 
     # --- roscas: uma por situação
     def rosca(partes, centro, sub):
