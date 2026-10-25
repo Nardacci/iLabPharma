@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=3e013c63">
+<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -45,10 +45,10 @@
     <article class="texto">
 <h2 id="introducao">Introdução</h2>
 <p>Este manual orienta o uso do <strong>módulo Estoque</strong> do LabMedSys (versão 3.5.1). O Estoque registra a entrada dos materiais (recebimento, entradas da produção e avulsas), a guarda (endereços, quarentena, movimentações), o uso (solicitação, separação e atendimento à produção), a saída (remessa, devoluções), a reanálise e a revalidação dos lotes, o inventário, os kits e as amostras de referência, retenção e estabilidade.</p>
-<p>O manual foi escrito a partir das telas do sistema e dos testes realizados no ambiente de teste em onze rodadas, de 07 a 22/10/2026 (149 dos 162 casos do plano com resultado). Descreve <strong>como o sistema funciona hoje</strong>. Onde o teste encontrou uma falha que afeta o uso, há um quadro <strong>Atenção</strong> com o cuidado a tomar e o número do desvio registrado no documento Defeitos para Correção. Telas não testadas estão indicadas; o que é dito sobre elas vem do código. No fim há a seção <strong>Limitações conhecidas</strong>, com o que não abre ou não funciona hoje e do que isso depende (banco de dados, módulo Produção, correção no sistema).</p>
+<p>O manual foi escrito a partir das telas do sistema e dos testes realizados no ambiente de teste em quatorze rodadas, de 07 a 24/10/2026 (149 dos 162 casos do plano com resultado nas onze primeiras; as rodadas 12A, 12B e 12C, de 24/10, percorreram os cadastros, os kits, o regulatório, os relatórios, o inventário e o caminho do lote). Cada uma das 99 telas do menu tem também uma página de manual própria, com os campos, os botões e as mensagens. Descreve <strong>como o sistema funciona hoje</strong>. Onde o teste encontrou uma falha que afeta o uso, há um quadro <strong>Atenção</strong> com o cuidado a tomar e o número do desvio registrado no documento Defeitos para Correção. Telas não testadas estão indicadas; o que é dito sobre elas vem do código. No fim há a seção <strong>Limitações conhecidas</strong>, com o que não abre ou não funciona hoje e do que isso depende (banco de dados, módulo Produção, correção no sistema).</p>
 <div class="callout">
 <p class="callout-titulo">Situação do módulo</p>
-<p>No encerramento dos testes (23/10/2026) o módulo Estoque <strong>não está apto para uso em ambiente regulado</strong>: há 76 defeitos registrados, 21 de gravidade alta. Este manual ensina a usar o sistema como ele é, com os cuidados que cada defeito pede; ele não torna o módulo apto.</p>
+<p>No fechamento do módulo (25/10/2026) o módulo Estoque <strong>não está apto para uso em ambiente regulado</strong>: há 150 defeitos registrados, todos abertos, 55 de gravidade alta. Este manual ensina a usar o sistema como ele é, com os cuidados que cada defeito pede; ele não torna o módulo apto.</p>
 </div>
 <div class="callout">
 <p class="callout-titulo">A quem se destina</p>
@@ -355,6 +355,7 @@
 <li><strong>A mesma pessoa pode contar três vezes, justificar e apurar</strong>, sem nenhuma restrição (DV-EST-049). Combine com a Qualidade quem conta e quem apura.</li>
 <li><strong>Cancelar o inventário não pede justificativa</strong>, e a lista de contagens a reabrir oferece primeira, segunda e terceira mesmo com uma só feita (DV-EST-050).</li>
 <li>O ajuste aparece no Histórico do Lote como "INVENTÁRIO" e saída, <strong>sem usuário e sem justificativa</strong> (DV-EST-034).</li>
+<li><strong>Reabrir a contagem, cancelar a justificativa e executar o ajuste não pedem motivo e não ficam no log</strong> (DV-EST-136). O texto da justificativa é <strong>cortado em 100 caracteres</strong> e a coluna Justificativa do log fica vazia (DV-EST-137). A tela de Justificativa mostra só a <strong>terceira contagem</strong>, sem o saldo do sistema nem as contagens anteriores (DV-EST-139). A Contagem aceita 0 e valores absurdos (como 99.999) sem pedir confirmação (DV-EST-138). Confira o valor antes de gravar e registre por fora quem reabriu e por quê. A reabertura da contagem está na <strong>Apuração</strong> (botão Voltar Contagem); a tela de Justificativa não tem o botão "Alterar última contagem".</li>
 </ul>
 </div>
 <h2 id="consultas-e-relatorios">Consultas e relatórios</h2>
@@ -362,18 +363,18 @@
 <li><strong>Disponibilidade do Lote</strong>, <strong>Disponibilidade de Estoque</strong> e <strong>Disponibilidade por Local</strong>: saldo por item, lote e local, separado por situação (disponível, quarentena, vencido ou reanálise, bloqueado, reprovado, inventário, retenção, referência, estabilidade, solicitação, separação). Use-as para <strong>conferir</strong> toda gravação. O usuário de um grupo sem o almoxarifado vê as três vazias. O lote vencido sai do disponível, mas o saldo cai ora em "Vencido / Reanálise", ora em "Bloqueado / Inventário" (quando há pedido de revalidação aberto); quem consulta nem sempre vê que o motivo é o vencimento.</li>
 <li><strong>Consulta Endereço Item</strong>: o que há em cada endereço.</li>
 <li><strong>Histórico do Lote</strong>: movimentações, solicitações, análises e notas ligadas ao lote, com o laudo e a data da análise. <strong>Não mostra</strong> quem fez cada movimentação, a hora, quem aprovou nem a reprovação (DV-EST-034), nem a remessa e o destino da saída (DV-EST-073).</li>
-<li><strong>Relatórios</strong> (menu Relatórios): testados o de Condição de Armazenagem (imprime e exporta), <strong>RM17 - Material em Quarentena</strong>, <strong>RM36 - Insumos Reprovados na Quarentena</strong>, <strong>RM18 - Produto Acabado</strong> (gera o PDF sem linhas), a Relação de Lotes - Reanálise e os relatórios de kit. O <strong>RM36 volta vazio</strong> mesmo com lote reprovado e o <strong>RM17 sai com as descrições deslocadas uma linha</strong> (DV-EST-062); o RM17 também lista lote já vencido sem marcar o vencimento. Os relatórios mostram a <strong>data em formato americano</strong> e o nome do usuário cortado (DV-EST-057). Os demais relatórios do menu não foram testados.</li>
+<li><strong>Relatórios</strong> (menu Relatórios, 22 itens): a rodada 12B abriu a maior parte deles. O de Condição de Armazenagem imprime e exporta; o <strong>RM36 - Insumos Reprovados volta vazio</strong> mesmo com lote reprovado e o <strong>RM17 - Material em Quarentena sai com as descrições deslocadas</strong> no PDF (DV-EST-062); o RM17 também lista lote já vencido sem marcar o vencimento. Os relatórios mostram a <strong>data em formato americano</strong> e o nome do usuário cortado (DV-EST-057). <strong>Não use como registro, até a correção:</strong> a <strong>Movimentação de Material (RC08)</strong> (valores de centenas de milhões e coluna Lançamento zerada, DV-EST-128), o <strong>Mapa de Movimentação de Material</strong> (soma transferências e ajustes em Aquisição e Consumo, DV-EST-131), o <strong>Inventário do Mês</strong> (deixa de fora o item com saldo e sem custo e declara o total, DV-EST-130), o <strong>Material Reservado (RM10)</strong> (lista lotes sem reserva e mostra reserva maior que o saldo, DV-EST-132), a <strong>Relação de Lotes - Reanálise</strong> (não marca o lote de validade vencida, DV-EST-133) e o <strong>Demonstrativo Financeiro (RC07)</strong>, o <strong>Relatório de NMM (RC03)</strong>, o <strong>RM14</strong> e o <strong>RM03</strong>, que trazem texto, declaração e assinaturas de outra organização (DV-EST-129). RM18 e RM24 ficam em branco, sem mensagem, quando não há resultado (DV-EST-126), e o PDF do RM24 desloca as descrições (DV-EST-127). Nos relatórios RC07, RC08, RM03 e RM14, uma data incompleta mostra a página de erro do servidor: preencha as duas datas por inteiro (DV-EST-140).</li>
 </ul>
 <h2 id="compras-e-avaliacao-do-fornecedor">Compras e avaliação do fornecedor</h2>
 <p>Menu <strong>Gestão Analítica</strong>.</p>
 <ul>
-<li><strong>Análise de Estoque</strong>: necessidade de compra por grupo e período. Aceita período maior que 12 meses (DV-EST-020).</li>
+<li><strong>Análise de Estoque</strong>: necessidade de compra por grupo e período. Aceita período maior que 12 meses (DV-EST-020), aceita <strong>período de CMM igual a 0</strong> e pode <strong>sugerir compra negativa</strong> (por exemplo, -490): confira a sugestão antes de gerar o pedido (DV-EST-134). A pesquisa da lista por período usa a data inicial nos dois limites e traz só as análises do primeiro dia (DV-EST-135).</li>
 <li><strong>Curva ABC</strong>: aceita período no futuro (DV-EST-019).</li>
 <li><strong>Pedido de Compra</strong>: itens, quantidades e custos; pode ser <strong>gerado a partir da análise</strong>. Quantidade "100" vira 0,100 e falta de fornecedor não avisa (DV-EST-021). <strong>Hoje a lista de pedidos só mostra o ícone Excluir</strong>: o perfil não tem as funções de Alterar, Incluir e Baixar o Pedido de Compra, e ninguém consegue finalizar nem baixar um pedido (DV-EST-077). O <strong>Recebimento do Item</strong> (baixa do pedido) não pôde ser testado.</li>
 <li><strong>Avaliação do Fornecedor</strong>: avaliação por entrega (nota fiscal e lote), com pontuação. <strong>Não qualifica nem bloqueia</strong> o fornecedor no recebimento (DV-EST-022) e, depois de gravada, não pode ser alterada nem tem histórico (DV-EST-023).</li>
 </ul>
 <h2 id="kits">Kits</h2>
-<p>Menu <strong>Kits</strong>: Cadastro, Solicitação, Controle, Parâmetros, Planejamento e Análise do Planejamento de Kits. Testados na rodada 8 e na 10 (os <strong>Parâmetros de Configuração (Kit)</strong> não foram testados).</p>
+<p>Menu <strong>Kits</strong>: Cadastro, Solicitação, Controle, Parâmetros, Planejamento e Análise do Planejamento de Kits. Testados nas rodadas 8, 10 e 12B. Os <strong>Parâmetros de Configuração (Kit)</strong> mudam a validade mínima do kit <strong>sem justificativa, sem registro de quem mudou e sem o valor anterior</strong>, e aceitam 99999 dias (DV-EST-120): só altere com autorização da Qualidade e anote por fora.</p>
 <h3 id="cadastro-de-kits">Cadastro de Kits</h3>
 <p><strong>1.</strong> Informe o nome, o <strong>tipo de kit</strong> e o <strong>almoxarifado</strong> (sem eles: "Tipo de Kit não foi informado! Almoxarifado não foi informado!"). O kit <strong>sem componente é aceito</strong> ("Kit criado com sucesso!").</p>
 <p><strong>2.</strong> Para incluir os componentes, abra o kit para editar, informe item e quantidade e preencha a <strong>Justificativa</strong> (sem ela: "A Justificativa é obrigatória!"): "Kit alterado com sucesso!".</p>
@@ -385,11 +386,13 @@
 </div>
 <h3 id="planejamento-de-kits-e-analise-do-planejamento">Planejamento de Kits e Análise do Planejamento</h3>
 <p><strong>1. Planejamento:</strong> cliente e <strong>filial</strong> (só o cliente que tem filial cadastrada aparece), kit, quantidade e <strong>validade mínima</strong> em dias (por exemplo, 180). Sem cliente e filial o sistema recusa. O mesmo kit <strong>não é oferecido de novo</strong> na lista, o que impede o repetido.</p>
-<p><strong>2. Análise do Planejamento:</strong> exige o período ("Período não foi informado!").</p>
+<p><strong>2. Análise do Planejamento:</strong> exige o período ("Período não foi informado!"). Depois de "Analise gerada!", clique em <strong>OK</strong> para ver o código, a data e o quadro de componentes; para a análise entrar na lista, clique em <strong>Salvar Análise</strong> ("Análise Salva!"). A geração sem salvar não aparece na lista.</p>
 <div class="callout">
 <p class="callout-titulo">Atenção</p>
 <ul>
-<li><strong>Com o período preenchido, a tela diz "Analise gerada!" mas não grava nem mostra nada</strong> (DV-EST-054). Não use a Análise do Planejamento; o relatório Análise de Componentes (Kit) mostra a necessidade planejada.</li>
+<li>A rodada 8 tinha registrado que a tela "não grava nem mostra nada" (DV-EST-054); a rodada 12B mostrou que <strong>a análise funciona nos dois passos</strong> (gerar e salvar), e esse defeito <strong>não se confirmou</strong>.</li>
+<li><strong>Apagar ou cancelar uma análise não deixa registro de quem fez e por quê</strong>, e cada geração consome um código (DV-EST-123). Anote por fora.</li>
+<li><strong>A Análise do Planejamento e o relatório Reposição de Componentes do Kit dão números diferentes</strong> para o mesmo item e kit (DV-EST-122): confira os dois antes de decidir a reposição.</li>
 </ul>
 </div>
 <h3 id="solicitacao-de-kit-e-remessa">Solicitação de Kit e remessa</h3>
@@ -406,7 +409,7 @@
 <p>Mostra os kits enviados. No detalhe de um kit: a guia (GMM), o cliente, a data do embarque e se está vencido. A <strong>lupa do componente</strong> mostra a remessa, o <strong>lote</strong>, o <strong>item de entrada</strong>, a validade, a quantidade e os dias que faltam para vencer. A tela não mostra justificativa nem histórico.</p>
 <p><strong>Repor o lote que está vencendo:</strong> a solicitação de reposição exige justificativa e o local de entrega e gera uma solicitação de estoque e uma remessa. <strong>Ressalva:</strong> a coluna "Reposição" continua em NÃO e o botão de repor lote vencido fica desabilitado; nada indica que a nova solicitação é a reposição do lote.</p>
 <h3 id="relatorios-de-kit">Relatórios de kit</h3>
-<p><strong>Análise de Componentes (Kit)</strong> e <strong>Reposição de Componentes</strong> mostram a necessidade planejada (por exemplo, 3 kits x 5). <strong>Reposição de Itens a Vencer</strong> e <strong>Listagem de Lotes</strong> abrem vazios enquanto nenhum kit for remetido. Os relatórios saem com a data em formato americano (DV-EST-057).</p>
+<p><strong>Análise de Componentes (Kit)</strong> e <strong>Reposição de Componentes</strong> mostram a necessidade planejada (por exemplo, 3 kits x 5). <strong>Reposição de Itens a Vencer</strong> e <strong>Listagem de Lotes</strong> abrem vazios enquanto nenhum kit for remetido; depois da remessa, a Listagem de Lotes mostra <strong>o mesmo lote em duas linhas</strong> e inclui a remessa manual que não é de kit (DV-EST-121). Os relatórios saem com a data em formato americano (DV-EST-057).</p>
 <h2 id="limitacoes-conhecidas">Limitações conhecidas</h2>
 <p>O que <strong>não abre, não grava ou não pôde ser testado</strong> hoje, e do que isso depende. Enquanto não houver correção, o procedimento do dia a dia precisa de um controle por fora (planilha, papel ou outro sistema), com a Garantia da Qualidade ciente.</p>
 <div class="tabela"><table>
@@ -487,15 +490,63 @@
 </tr>
 <tr>
 <td>Análise do Planejamento de Kits</td>
-<td>Diz que gerou e não grava</td>
+<td>Gera e salva em dois passos; apagar e cancelar não deixam rastro, e o resultado difere do relatório de Reposição de Componentes (o DV-EST-054, "não grava", não se confirmou)</td>
 <td><strong>Desenvolvimento</strong></td>
-<td>DV-EST-054</td>
+<td>DV-EST-122, 123</td>
 </tr>
 <tr>
 <td>Acesso aos cadastros de apoio pelo endereço</td>
-<td>O caso CT-EST-023 ficou fora do escopo dos testes; os demais casos de permissão estão nos Defeitos e no documento de Achados de Segurança</td>
-<td>Decisão do responsável</td>
+<td>O caso CT-EST-023 ficou fora do escopo dos testes; os demais casos de permissão estão nos Defeitos e no documento de Achados de Segurança. Um usuário sem função do Estoque abriu pelo endereço as 27 telas de cadastro e os Parâmetros do Estoque (28 telas) e 14 telas operacionais, com o botão de gravar visível</td>
+<td>Decisão do responsável; <strong>Desenvolvimento</strong></td>
 <td>CT-EST-023, DV-EST-008</td>
+</tr>
+<tr>
+<td><strong>Relatórios que não servem de registro hoje</strong>: Movimentação de Material (RC08), Mapa de Movimentação, Inventário do Mês, Material Reservado (RM10), Relação de Lotes - Reanálise, Demonstrativo Financeiro (RC07), Relatório de NMM (RC03), RM14 e RM03</td>
+<td>Números que não fecham com as telas; RC07, RC03, RM14 e RM03 trazem texto, declaração e assinaturas de outra organização</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-128 a 133</td>
+</tr>
+<tr>
+<td><strong>Item</strong>: marca de substância controlada (Portaria 344), altura e largura, estoque mínimo</td>
+<td>O Item novo <strong>perde a marca "Controle Portaria 344" e o tipo da substância</strong> ao ser salvo; Altura e Largura são gravadas trocadas; o estoque mínimo 0,5 vira 5. O Código NEB sai vazio</td>
+<td><strong>Desenvolvimento</strong>; até lá, conferir o item depois de salvar, marcar de novo a Portaria 344 e registrar por fora</td>
+<td>DV-EST-094, 095, 118, 114</td>
+</tr>
+<tr>
+<td><strong>Cadastros em uso</strong> (Almoxarifado, SJB, Unidade de Medida, Classe, Classificação, Nível de Segurança, Conta Corrente, Rua, Coluna, Andar, Local)</td>
+<td>O sistema deixa <strong>inativar ou excluir</strong> o cadastro que um item, um endereço ou um saldo usa, e o item perde o vínculo; o Local é inativado com saldo de lote</td>
+<td><strong>Desenvolvimento</strong>; até lá, consultar o Item e o saldo antes de inativar ou excluir</td>
+<td>DV-EST-082, 085, 112, 113, 115, 116</td>
+</tr>
+<tr>
+<td>Histórico (Log) dos cadastros e dos parâmetros</td>
+<td>Não registra a mudança de vários campos (Grupo do Item, Subgrupo, Item, Centro de Custo, Conversão Fornecedor, Parâmetros do Estoque e de Kit) nem a ligação do almoxarifado ao grupo de usuários; reabrir recebimento, cancelar conferência, endereçamento e aprovação não pedem motivo</td>
+<td><strong>Desenvolvimento</strong>; até lá, registrar por fora quem mudou, quando e por quê</td>
+<td>DV-EST-079, 087, 090, 096, 098, 108, 111, 120, 162 a 165, 170</td>
+</tr>
+<tr>
+<td>Tipo e Motivo de Movimentação em uso</td>
+<td>O sentido (Entrada ou Saída) pode ser trocado e o Log mostra o sentido ao contrário; o Motivo inativo continua sendo oferecido</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-101, 102, 103, 104</td>
+</tr>
+<tr>
+<td>Natureza da Operação</td>
+<td>Grava "Incide IPI" com o valor de "Venda"</td>
+<td><strong>Desenvolvimento</strong>; até lá, conferir o parâmetro fiscal à mão</td>
+<td>DV-EST-097</td>
+</tr>
+<tr>
+<td>Lote vencido</td>
+<td>O CQ aprova o laudo de um lote vencido se a validade do laudo for digitada no futuro; a Movimentação de Material transfere o lote vencido sem aviso</td>
+<td><strong>Desenvolvimento</strong> e decisão da Qualidade</td>
+<td>DV-EST-166, 167</td>
+</tr>
+<tr>
+<td>Cancelamento da solicitação de análise no CQ; "Reanalisar?" do laudo</td>
+<td>O Estoque não fica sabendo do cancelamento (o lote segue em "aguardando análise"); o "Reanalisar? = Sim" do laudo chega como NÃO e a Agenda de Reanálise não lista lotes</td>
+<td><strong>Desenvolvimento</strong></td>
+<td>DV-EST-169, 171, 041</td>
 </tr>
 </tbody>
 </table></div>
@@ -571,8 +622,28 @@
 </tr>
 <tr>
 <td>Kits</td>
-<td>Conferir a validade mínima antes de atender; não usar a Análise do Planejamento</td>
-<td>DV-EST-056, 054</td>
+<td>Conferir a validade mínima antes de atender; clicar em Salvar Análise para guardar a Análise do Planejamento; conferir o número contra a Reposição de Componentes</td>
+<td>DV-EST-056, 122, 123</td>
+</tr>
+<tr>
+<td>Item</td>
+<td>Depois de salvar, conferir se a marca Portaria 344 e o tipo da substância ficaram, a altura e a largura, e o estoque mínimo; não digitar 0,5 no estoque mínimo</td>
+<td>DV-EST-094, 095, 118</td>
+</tr>
+<tr>
+<td>Cadastros em uso</td>
+<td>Antes de inativar ou excluir almoxarifado, SJB, unidade, classe, rua, coluna, andar ou local, consultar o Item, o endereço e o saldo que usam; anotar por fora quem mudou parâmetros e por quê</td>
+<td>DV-EST-082, 085, 112, 113, 115, 079, 098</td>
+</tr>
+<tr>
+<td>Reverter</td>
+<td>Reabrir recebimento, cancelar conferência, endereçamento ou aprovação: registrar por fora quem fez e por quê</td>
+<td>DV-EST-162, 163, 164, 170</td>
+</tr>
+<tr>
+<td>Lote vencido</td>
+<td>Nunca aprovar o laudo nem transferir lote vencido sem decisão da Qualidade; conferir a validade do laudo</td>
+<td>DV-EST-166, 167</td>
 </tr>
 <tr>
 <td>Amostras de retenção e estabilidade</td>
@@ -581,13 +652,13 @@
 </tr>
 <tr>
 <td>Inventário</td>
-<td>Encerrar pendências antes de abrir; quem conta não deve apurar; justificar o cancelamento</td>
-<td>DV-EST-049, 050</td>
+<td>Encerrar pendências antes de abrir; quem conta não deve apurar; justificar o cancelamento; anotar por fora a reabertura de contagem, o cancelamento de justificativa e a execução; conferir o valor contado (aceita 0 e 99.999)</td>
+<td>DV-EST-049, 050, 136, 138</td>
 </tr>
 <tr>
 <td>Relatórios</td>
-<td>Não confiar no RM36 e conferir as descrições do RM17</td>
-<td>DV-EST-062</td>
+<td>Não confiar no RM36 e conferir as descrições do RM17; não usar como registro o RC08, o Mapa de Movimentação, o Inventário do Mês, o RM10, a Relação de Lotes - Reanálise, o RC07, o RC03, o RM14 e o RM03 até a correção; preencher as duas datas por inteiro</td>
+<td>DV-EST-062, 128 a 133, 140</td>
 </tr>
 </tbody>
 </table></div>
@@ -597,7 +668,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#acesso-ao-estoque">Acesso ao Estoque</a></li><li><a href="#padrao-de-uso-das-telas">Padrão de uso das telas</a></li><li class="sub"><a href="#pesquisar">Pesquisar</a></li><li class="sub"><a href="#incluir-e-alterar">Incluir e alterar</a></li><li class="sub"><a href="#quantidades">Quantidades</a></li><li class="sub"><a href="#enderecos">Endereços</a></li><li class="sub"><a href="#consultar-o-historico-log">Consultar o histórico (log)</a></li><li class="sub"><a href="#mensagens">Mensagens</a></li><li><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#almoxarifado-local-de-armazenagem-rua-coluna-e-andar">Almoxarifado, Local de Armazenagem, Rua, Coluna e Andar</a></li><li class="sub"><a href="#unidade-de-medida">Unidade de Medida</a></li><li class="sub"><a href="#item">Item</a></li><li class="sub"><a href="#classificacao-de-reanalise">Classificação de Reanálise</a></li><li class="sub"><a href="#demais-cadastros">Demais cadastros</a></li><li><a href="#recebimento-de-material">Recebimento de material</a></li><li class="sub"><a href="#checklist-de-inspecao-veicular">Checklist de Inspeção Veicular</a></li><li class="sub"><a href="#recebimento-de-material_1">Recebimento de Material</a></li><li class="sub"><a href="#conferencia-de-recebimento">Conferência de Recebimento</a></li><li class="sub"><a href="#enderecamento-de-material">Endereçamento de Material</a></li><li><a href="#entradas-de-material">Entradas de material</a></li><li class="sub"><a href="#entrada-de-material-outras">Entrada de Material - Outras</a></li><li class="sub"><a href="#entrada-de-material-producao">Entrada de Material - Produção</a></li><li class="sub"><a href="#devolucao-e-devolucao-da-producao">Devolução e Devolução da Produção</a></li><li><a href="#quarentena-analise-e-liberacao">Quarentena, análise e liberação</a></li><li class="sub"><a href="#controle-da-qualidade-tela-do-estoque">Controle da Qualidade (tela do Estoque)</a></li><li class="sub"><a href="#movimentacao-de-quarentena">Movimentação de Quarentena</a></li><li class="sub"><a href="#movimentacao-de-material">Movimentação de Material</a></li><li><a href="#reanalise-e-revalidacao">Reanálise e revalidação</a></li><li class="sub"><a href="#agenda-de-reanalise">Agenda de Reanálise</a></li><li class="sub"><a href="#reanalise-avulsa">Reanálise - Avulsa</a></li><li class="sub"><a href="#revalidacao-de-lote">Revalidação de Lote</a></li><li><a href="#solicitacao-separacao-e-atendimento-a-producao">Solicitação, separação e atendimento à produção</a></li><li class="sub"><a href="#solicitacao-de-material-consumo-e-producao">Solicitação de Material (Consumo e Produção)</a></li><li class="sub"><a href="#aprovacao-de-solicitacao">Aprovação de Solicitação</a></li><li class="sub"><a href="#separacao-de-material">Separação de Material</a></li><li class="sub"><a href="#central-de-pesagem">Central de Pesagem</a></li><li class="sub"><a href="#atendimento-de-solicitacao">Atendimento de Solicitação</a></li><li><a href="#remessa-e-expedicao">Remessa e expedição</a></li><li class="sub"><a href="#remessa-de-material">Remessa de Material</a></li><li class="sub"><a href="#saida-de-material-e-saida-por-nota-fiscal">Saída de Material e Saída por Nota Fiscal</a></li><li><a href="#amostras-de-referencia-retencao-e-estabilidade">Amostras de referência, retenção e estabilidade</a></li><li class="sub"><a href="#entrada-de-material-regulatorio">Entrada de Material (Regulatório)</a></li><li class="sub"><a href="#movimentacoes-saida-e-consulta-disponibilidade">Movimentações (saída) e Consulta Disponibilidade</a></li><li><a href="#inventario">Inventário</a></li><li><a href="#consultas-e-relatorios">Consultas e relatórios</a></li><li><a href="#compras-e-avaliacao-do-fornecedor">Compras e avaliação do fornecedor</a></li><li><a href="#kits">Kits</a></li><li class="sub"><a href="#cadastro-de-kits">Cadastro de Kits</a></li><li class="sub"><a href="#planejamento-de-kits-e-analise-do-planejamento">Planejamento de Kits e Análise do Planejamento</a></li><li class="sub"><a href="#solicitacao-de-kit-e-remessa">Solicitação de Kit e remessa</a></li><li class="sub"><a href="#controle-de-kits">Controle de Kits</a></li><li class="sub"><a href="#relatorios-de-kit">Relatórios de kit</a></li><li><a href="#limitacoes-conhecidas">Limitações conhecidas</a></li><li><a href="#cuidados-que-resumem-os-testes">Cuidados que resumem os testes</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 25/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

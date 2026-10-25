@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=3e013c63">
+<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -47,7 +47,7 @@
 <p>Este documento é a <strong>Especificação dos Requisitos do Usuário (ERU)</strong> do módulo Estoque para a nova versão do LabMedSys. Ele diz aos desenvolvedores <strong>o que a nova versão deve fazer</strong>, a partir de quatro fontes:</p>
 <ul>
 <li>o comportamento atual extraído do código-fonte (versão 3.5.1): regras de negócio, cadastros de apoio e os dez fluxos;</li>
-<li>os testes nas telas de 07 a 22/10/2026 (onze rodadas, 149 dos 162 casos com resultado conclusivo, 76 defeitos, 21 deles de gravidade alta, incluindo os de acesso e segurança);</li>
+<li>os testes nas telas de 07 a 24/10/2026 (quatorze rodadas; 149 dos 162 casos do plano com resultado conclusivo nas onze primeiras, mais as 12A, 12B e 12C, que somam 439 linhas de resultado de passos e casos; 150 defeitos, 55 deles de gravidade alta, incluindo os de acesso e segurança), e a documentação tela a tela das 99 telas do menu;</li>
 <li>as exigências da ANVISA (RDC nº 658/2022 e Guia nº 33/2020) e a análise de risco do módulo;</li>
 <li>o modelo ideal: como o Estoque deve funcionar e como se liga aos outros módulos (as travas).</li>
 </ul>
@@ -189,6 +189,97 @@
 <td>DV-EST-066 (a lista depende do grupo do usuário), RN-EST-003</td>
 <td>Corrige</td>
 </tr>
+<tr>
+<td>RF-EST-120</td>
+<td>Toda alteração de cadastro de apoio, em qualquer campo, grava no histórico (Log) o campo, o valor anterior, o valor novo, o usuário, a data e a hora do servidor e a justificativa. Vale para o tempo de armazenagem do Grupo do Item, a Diferença de Pesagem do Subgrupo, o Controle de Quarentena, as análises, o estoque mínimo e máximo e a grade de almoxarifados do Item, a troca dos itens de um Centro de Custo, o código do item no fornecedor e a apresentação criada junto com a Unidade de Medida.</td>
+<td>E</td>
+<td>DV-EST-087, 090, 092, 096, 108, 111; RNF-EST-002; art. 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-121</td>
+<td>Ligar um almoxarifado a um grupo de usuários e mudar um parâmetro de processo (Parâmetros do Estoque, Tipo de Remessa, validade mínima do kit) pedem confirmação e justificativa e gravam quem mudou, quando e o valor anterior. Se outra pessoa alterou o mesmo registro antes, a tela avisa; o último a salvar não desfaz em silêncio a mudança do outro.</td>
+<td>E</td>
+<td>DV-EST-079, 098, 100, 120; art. 125; Guia 33 (mudança de configuração controlada)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-122</td>
+<td>Cadastro de apoio em uso não pode ser inativado nem excluído: Almoxarifado, SJB, Unidade de Medida, Classe, Classificação, Nível de Segurança, Conta Corrente, Rua, Coluna, Andar e Local com endereço ativo ou com saldo de lote. A tela confere o uso, recusa com mensagem que diz onde o cadastro é usado e só deixa seguir depois de transferir o vínculo. A abreviatura de uma Unidade de Medida em uso e o Grupo de um Subgrupo que tem itens também não mudam sem essa conferência, e o Item nunca abre com o campo vazio por causa de um cadastro inativado.</td>
+<td>E</td>
+<td>DV-EST-082, 085, 112, 113, 115, 116; arts. 124 e 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-123</td>
+<td>As listas das telas de movimentação, remessa e entrada oferecem só cadastros ativos e permitidos: o almoxarifado inativo ou desligado do grupo do usuário (Remessa de Material) e o Motivo da Movimentação inativo não aparecem.</td>
+<td>E</td>
+<td>DV-EST-078, 104; arts. 124 e 125; Guia 33 (controle de acesso)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-124</td>
+<td>Código, número e nome são únicos nos cadastros de apoio, com a mesma mensagem em todos: o código de um registro inativo continua reservado (Estoque Coluna) e Conta Financeira, Tipo de Referência e Centro de Custo recusam o repetido.</td>
+<td>I</td>
+<td>DV-EST-084, 093, 106, 107; art. 124</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-125</td>
+<td>O sentido (Entrada ou Saída) de um Tipo ou de um Motivo de Movimentação já usado não pode ser trocado; o Motivo tem pelo menos um sentido marcado; e o Log mostra o sentido na ordem certa, sem invertê-lo.</td>
+<td>E</td>
+<td>DV-EST-101, 102, 103; arts. 124 e 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-126</td>
+<td>O Item de substância sujeita a controle especial guarda a marca "Controle Portaria 344" e o tipo da substância ao ser salvo, e os relatórios RM03 e RM14 passam a lê-los; a marca nunca recebe o valor de "Controle de destruição".</td>
+<td>E</td>
+<td>DV-EST-094; Portaria SVS/MS 344/1998; art. 124</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-127</td>
+<td>Cada campo do Item, da Natureza da Operação, do Local e do Centro de Custo grava no seu próprio campo e com o valor digitado: Altura e Largura não se trocam, o estoque mínimo 0,5 não vira 5, o parâmetro "Incide IPI" não recebe o valor de "Venda" e os números da descrição do Local e do nome do Centro de Custo não são descartados.</td>
+<td>E</td>
+<td>DV-EST-080, 095, 097, 107, 118; art. 124; Guia 33 (integridade dos dados mestres)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-128</td>
+<td>O código NEB do Item é gerado pela regra definida com a área (hoje descrita como SJB mais os dois últimos caracteres do grupo; a confirmar), aparece no cadastro do Item e é o mesmo que a NMM imprime.</td>
+<td>I</td>
+<td>DV-EST-114; Guia 33 (rastreabilidade do código do item)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-129</td>
+<td>O Grupo do Item exige o Tipo do Item, que define a análise do CQ, para ser salvo.</td>
+<td>I</td>
+<td>DV-EST-086; arts. 124 e 141</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-130</td>
+<td>A Conversão de Unidade só aceita fator maior que zero e grava o fator como foi digitado (a máscara não divide o valor por mil). A Conversão Fornecedor aceita o mesmo código de produto em fornecedores diferentes e recusa só a repetição para o mesmo fornecedor.</td>
+<td>E</td>
+<td>DV-EST-002, 105, 110; arts. 124 e 141</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-131</td>
+<td>O Local de Armazenagem permite definir, ao criar e depois (com justificativa e histórico), se tem acesso controlado, se é refrigerado, de quarentena, de umidade controlada ou de refugo. A marca de acesso controlado é conferida nas movimentações: item comum não entra sem decisão registrada.</td>
+<td>E</td>
+<td>DV-EST-081, 117; arts. 85, 86, 89 e 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-132</td>
+<td>A pesquisa por código encontra o registro qualquer que seja o tamanho do código (Subgrupo do Item e Classificação do Item), e a Diferença de Pesagem (%) do Subgrupo aceita só número dentro da faixa definida pela Qualidade: letras são recusadas, e não gravadas como 0,00.</td>
+<td>I</td>
+<td>DV-EST-089, 091; Guia 33 (consulta e validação de dados mestres)</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <h3 id="recebimento-inspecao-e-conferencia">Recebimento, inspeção e conferência</h3>
@@ -294,6 +385,20 @@
 <td>DV-EST-016, R-EST-07, art. 124</td>
 <td>Corrige</td>
 </tr>
+<tr>
+<td>RF-EST-133</td>
+<td>A Conferência de Recebimento lê o número digitado pelo padrão brasileiro (vírgula decimal; o ponto nunca vira milhar), recusa texto e zero sem justificativa e mostra o valor lido antes de gravar.</td>
+<td>I</td>
+<td>DV-EST-161, 002; art. 124; Guia 33 (entrada de dados)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-134</td>
+<td>Todo destino de endereçamento e de movimentação, inclusive o da quarentena, tem rua, coluna e andar completos. Destino incompleto é recusado com a mesma mensagem em todas as telas (hoje a Movimentação de Material recusa, mas o Endereçamento e a Movimentação de Quarentena aceitam e guardam no endereço padrão).</td>
+<td>E</td>
+<td>DV-EST-160, 044, 034; arts. 124 e 157</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <h3 id="quarentena-analise-e-situacao-do-lote">Quarentena, análise e situação do lote</h3>
@@ -378,6 +483,20 @@
 <td>DV-EST-026, R-EST-14</td>
 <td>Corrige</td>
 </tr>
+<tr>
+<td>RF-EST-135</td>
+<td>A validade do laudo é a do lote e não se edita; o laudo não estende a validade de um lote vencido e o lote vencido não é aprovado nem liberado. Para estender a validade existe a revalidação, com análise do CQ, decisão da Garantia da Qualidade e registro.</td>
+<td>E</td>
+<td>DV-EST-166, 014; arts. 3º XV, 121 e 189</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-136</td>
+<td>O cancelamento da solicitação de análise no CQ chega ao Estoque: a análise aparece como cancelada e o lote deixa de ser oferecido nas telas de uso até nova decisão. O CQ não mostra "Ocorreu um erro inesperado" quando a gravação deu certo.</td>
+<td>I</td>
+<td>DV-EST-169 (e DV-CQ-007); art. 124; Guia 33 (integridade entre módulos)</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <h3 id="validade-reanalise-e-revalidacao">Validade, reanálise e revalidação</h3>
@@ -439,6 +558,13 @@
 <td><strong>Reprovar o laudo exige motivo</strong> e registra quem reprovou e quando; o campo "Responsável" do laudo mostra quem aprovou ou reprovou, e não quem está vendo a tela.</td>
 <td>E</td>
 <td>DV-EST-027, 030, R-EST-09, art. 125</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-137</td>
+<td>A decisão de reanálise do laudo ("Reanálise prevista = Sim") chega ao Estoque como "Reanalisar? = Sim" e alimenta a Agenda de Reanálise, que lista os lotes com reanálise prevista.</td>
+<td>I</td>
+<td>DV-EST-171, 041, 043; art. 189</td>
 <td>Corrige</td>
 </tr>
 </tbody>
@@ -516,6 +642,41 @@
 <td>A Saída de Material (outras) exige justificativa, grava o custo do movimento (pelo custo médio, nunca 0,00) e tem mensagens sem erro de digitação.</td>
 <td>I</td>
 <td>RN-EST-111, DV-EST-060</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-138</td>
+<td>Lote vencido só se movimenta para a área de vencidos ou de refugo, com aviso, justificativa e decisão registrada da Garantia da Qualidade; a transferência comum de lote vencido entre endereços é recusada.</td>
+<td>E</td>
+<td>DV-EST-167, 014; arts. 121 e 159</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-139</td>
+<td>Os relatórios de números fecham com o Histórico do Lote e com a Disponibilidade. A Movimentação de Material (RC08) mostra quantidade vezes custo e a coluna Lançamento preenchida, sem a conta fixa. O Mapa de Movimentação soma em Aquisição e Consumo só entradas e saídas reais e põe transferências e ajustes em colunas próprias. O Inventário do Mês traz todo item com saldo, mesmo sem custo, e avisa quando o total é parcial. O Material Reservado (RM10) lista só lotes com reserva, põe cada dado na coluna certa e nunca reserva mais do que o saldo.</td>
+<td>E</td>
+<td>DV-EST-128, 130, 131, 132; art. 160</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-140</td>
+<td>Todo relatório traz o nome, o CNPJ e o logotipo da empresa que usa o sistema e as assinaturas configuradas por documento, nunca de outra organização. O Demonstrativo Financeiro só declara existência física ou inventário quando há dado para declarar.</td>
+<td>E</td>
+<td>DV-EST-129; art. 124; Guia 33 (integridade e autoria dos dados)</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-141</td>
+<td>A Relação de Lotes - Reanálise marca como vencido o lote com validade vencida, e não só o de data de reanálise vencida.</td>
+<td>E</td>
+<td>DV-EST-133; art. 189</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-142</td>
+<td>Relatório ou filtro sem resultado diz "nenhum resultado encontrado" em vez de ficar em branco, e o PDF do Relatório de Endereços mantém a descrição na linha do seu item.</td>
+<td>I</td>
+<td>DV-EST-126, 127; Guia 33 (mensagem clara; integridade da informação)</td>
 <td>Corrige</td>
 </tr>
 </tbody>
@@ -600,6 +761,13 @@
 <td>A Central de Pesagem abre o volume e permite informar peso bruto, tara, tag da balança e lacre; erro de balança ou de equipamento aparece em mensagem clara, sem detalhe técnico.</td>
 <td>E</td>
 <td>RN-EST-054, 105, DV-EST-067, SEG-EST-13</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-143</td>
+<td>Cancelar a separação desfaz a saída no Histórico do Lote (ou grava a reversão) e guarda a justificativa digitada no log.</td>
+<td>I</td>
+<td>DV-EST-165, RNF-EST-040; art. 125</td>
 <td>Corrige</td>
 </tr>
 </tbody>
@@ -742,6 +910,13 @@
 <td>RN-EST-143, DV-EST-050</td>
 <td>Corrige</td>
 </tr>
+<tr>
+<td>RF-EST-144</td>
+<td>O histórico do inventário registra cada contagem, a justificativa por inteiro (sem corte em 100 caracteres e com a coluna Justificativa do log preenchida), a reabertura da contagem, o cancelamento de justificativa e a execução do ajuste, com quem, quando e o motivo. Quem justifica vê o saldo do sistema e as contagens anteriores, e contagem zero ou muito acima do saldo pede confirmação e justificativa.</td>
+<td>E</td>
+<td>DV-EST-136, 137, 138, 139; RF-EST-092 e 093; art. 125</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <h3 id="compras-kits-e-analises">Compras, kits e análises</h3>
@@ -786,9 +961,9 @@
 </tr>
 <tr>
 <td>RF-EST-104</td>
-<td>A Análise do Planejamento de Kits grava o resultado e mostra a necessidade de componentes; nunca diz "Analise gerada!" sem ter gerado.</td>
+<td>A Análise do Planejamento de Kits gera, mostra e salva o resultado e a necessidade de componentes, com os dois passos (gerar e salvar) claros na tela, e nunca diz "gerada" sem ter gerado.</td>
 <td>I</td>
-<td>RN-EST-149, DV-EST-054</td>
+<td>RN-EST-149, DV-EST-054 (não se confirmou na rodada 12B: a análise gera e salva em dois passos; o requisito vale como regra de clareza)</td>
 <td>Corrige</td>
 </tr>
 <tr>
@@ -803,6 +978,27 @@
 <td>O Pedido de Compra tem as funções de alterar, incluir, finalizar e baixar no cadastro do perfil e no menu; sem elas, ninguém emite nem baixa pedido.</td>
 <td>I</td>
 <td>DV-EST-077, SEG-EST-16, RN-EST-161</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-145</td>
+<td>A Análise do Planejamento de Kits e a Reposição de Componentes do Kit saem da mesma conta e dão o mesmo número para o mesmo item e kit. A análise registra quem apagou ou cancelou e por quê, e não consome um código a cada geração.</td>
+<td>I</td>
+<td>DV-EST-122, 123; arts. 125 e 160</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-146</td>
+<td>A Listagem de Lotes (Kits) mostra cada lote enviado uma só vez e inclui só remessas de kit; a remessa manual que não é de kit fica de fora.</td>
+<td>I</td>
+<td>DV-EST-121; arts. 346 e 347</td>
+<td>Corrige</td>
+</tr>
+<tr>
+<td>RF-EST-147</td>
+<td>A Análise de Estoque nunca sugere compra negativa (o mínimo é zero), recusa período de CMM igual a zero, e a pesquisa por período da lista usa a data inicial e a final.</td>
+<td>E</td>
+<td>DV-EST-134, 135; Guia 33 (cálculo validado)</td>
 <td>Corrige</td>
 </tr>
 </tbody>
@@ -861,6 +1057,13 @@
 <td>DV-EST-075</td>
 <td>Corrige</td>
 </tr>
+<tr>
+<td>RF-EST-148</td>
+<td>A lista de Movimentações do Regulatório mostra as entradas e as saídas de amostra já feitas, e a Observação digitada é gravada e aparece na lista e no histórico.</td>
+<td>I</td>
+<td>DV-EST-124, 125; arts. 124 e 125</td>
+<td>Corrige</td>
+</tr>
 </tbody>
 </table></div>
 <hr />
@@ -905,6 +1108,18 @@
 <td>Mensagens de validação dizem o campo e o motivo; nenhuma mensagem genérica ("Ocorreu um erro inesperado", "Erro ao gerar...") sem o erro real registrado no servidor.</td>
 <td>E</td>
 <td>DV-EST-003, 013, 037, 046, 052</td>
+</tr>
+<tr>
+<td>RNF-EST-040</td>
+<td>Toda reversão (cancelar, reabrir, excluir, desfazer, cancelar justificativa) pede justificativa e deixa no histórico quem fez, quando e por quê. Vale para reabrir o recebimento, cancelar a conferência, o endereçamento, a aprovação da solicitação, a separação e o inventário, reabrir a contagem e apagar ou cancelar uma Análise do Planejamento de Kits, além do que já pedem as regras de exclusão (RNF-EST-003).</td>
+<td>E</td>
+<td>DV-EST-123, 136, 162, 163, 164, 165, 170; DV-EST-050 e 061; art. 125; Guia 33 (trilha de auditoria)</td>
+</tr>
+<tr>
+<td>RNF-EST-041</td>
+<td>Datas e horas aparecem em formato brasileiro e em 24 horas (17:38 é mostrado como 17:38, e nunca como 05:38) nas telas, nos logs e nos relatórios.</td>
+<td>I</td>
+<td>DV-EST-088, 057; Guia 33 (data e hora corretas nos registros)</td>
 </tr>
 </tbody>
 </table></div>
@@ -973,6 +1188,12 @@
 <td>E</td>
 <td>SEG-EST-08, 09, 11, 12</td>
 </tr>
+<tr>
+<td>RNF-EST-042</td>
+<td>Cada tela do menu tem as suas funções (listar, incluir, editar, excluir, ver histórico, imprimir e exportar) na árvore de funções e concedíveis por perfil: nenhuma tela, como a Classificação de Reanálise ou o Pedido de Compra, fica só com o que sobra.</td>
+<td>I</td>
+<td>DV-EST-109, 077; RNF-EST-015; Guia 33 (controle de acesso por função)</td>
+</tr>
 </tbody>
 </table></div>
 <h3 id="integracao-entre-modulos">Integração entre módulos</h3>
@@ -1037,9 +1258,9 @@
 </tr>
 <tr>
 <td>RNF-EST-032</td>
-<td>Os casos do plano de testes do Estoque (162) servem de testes de aceite da nova versão; aprovação exige 100% dos casos de prioridade alta.</td>
+<td>Os casos do plano de testes do Estoque (162) e os casos novos propostos tela a tela (CT-EST-E.., CAD.., KIT.., REG.., REL.., INV.. e GES..) servem de testes de aceite da nova versão; aprovação exige 100% dos casos de prioridade alta.</td>
 <td>E</td>
-<td><code>08-plano-de-testes.md</code>; Guia 33, 9.7</td>
+<td><code>08-plano-de-testes.md</code>; páginas por tela; Guia 33, 9.7</td>
 </tr>
 <tr>
 <td>RNF-EST-033</td>
@@ -1053,11 +1274,29 @@
 <td>I</td>
 <td><code>06-modelo-de-dados.md</code>, telas e tabelas repetidas</td>
 </tr>
+<tr>
+<td>RNF-EST-043</td>
+<td>Todo campo de texto declara o seu limite e recusa com mensagem o que passa dele; nenhuma tela mostra erro genérico, deixa o SALVAR sem resposta, corta ou descarta caracteres em silêncio (o código do lote da Entrada de Produção não é cortado em 10, a justificativa do inventário não é cortada em 100).</td>
+<td>I</td>
+<td>DV-EST-083, 137, 168, 080, 001; RNF-EST-005 e 031; Guia 33 (validação de dados)</td>
+</tr>
+<tr>
+<td>RNF-EST-044</td>
+<td>Todo parâmetro numérico tem faixa válida, mostrada na tela e conferida no servidor: validade mínima do kit (sem 99999 dias), Margem (10 a 80), período da Análise de Estoque e Diferença de Pesagem do Subgrupo. Valor fora da faixa é recusado com mensagem.</td>
+<td>E</td>
+<td>DV-EST-089, 099, 120, 134; RNF-EST-030; Guia 33 (validação de dados)</td>
+</tr>
+<tr>
+<td>RNF-EST-045</td>
+<td>Data incompleta ou inválida nos filtros dos relatórios (RC07, RC08, RM03 e RM14) é recusada com mensagem; a página de erro do servidor com o rastro de chamadas nunca aparece.</td>
+<td>I</td>
+<td>DV-EST-140; RNF-EST-016; Guia 33 (tratamento de erro)</td>
+</tr>
 </tbody>
 </table></div>
 <hr />
 <h2 id="defeitos-e-requisitos-que-os-corrigem">Defeitos e requisitos que os corrigem</h2>
-<p>Os testes nas telas das onze rodadas (07 a 22/10/2026) registraram <strong>76 defeitos</strong> no sistema atual (21 de gravidade alta). Nenhum foi copiado como regra: cada um virou um requisito <strong>corrigido</strong> nas seções acima, e a tabela mostra qual. O passo a passo, as capturas e a sugestão de correção de cada defeito estão no documento Defeitos para Correção. Os defeitos de acesso e segurança também entram aqui, porque a nova versão precisa corrigi-los.</p>
+<p>Os testes nas telas das quatorze rodadas (07 a 24/10/2026) registraram <strong>150 defeitos</strong> no sistema atual (55 de gravidade alta). Os 76 primeiros vieram das onze rodadas até 22/10/2026 e foram tratados na versão 1.5 deste documento; os 74 seguintes (DV-EST-078 a 118, 120 a 140 e 160 a 171, das rodadas 12A, 12B e 12C de 24/10/2026) viraram 35 requisitos novos (RF-EST-120 a 148 e RNF-EST-040 a 045), agrupados por causa comum: por exemplo, um só requisito pede que toda alteração de cadastro grave o valor antigo, o novo e a justificativa, e outro que cadastro em uso não possa ser inativado nem excluído. O DV-EST-054 consta no registro como aberto, mas não se confirmou na rodada 12B; o requisito dele (RF-EST-104) fica como regra de clareza da tela. Nenhum foi copiado como regra: cada um virou um requisito <strong>corrigido</strong> nas seções acima, e a tabela mostra qual. O passo a passo, as capturas e a sugestão de correção de cada defeito estão no documento Defeitos para Correção. Os defeitos de acesso e segurança também entram aqui, porque a nova versão precisa corrigi-los.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1072,13 +1311,13 @@
 <td>DV-EST-001</td>
 <td>Média</td>
 <td>Código do lote perde os hífens: "TESTE-LOTE-001" vira "TESTELOTE001"</td>
-<td>RF-EST-015, RNF-EST-031</td>
+<td>RF-EST-015, RNF-EST-031, RNF-EST-043</td>
 </tr>
 <tr>
 <td>DV-EST-002</td>
 <td>Média</td>
 <td>Quantidade do lote: digitar 100 grava 0,100</td>
-<td>RF-EST-017, RNF-EST-030</td>
+<td>RF-EST-130, RF-EST-017, RF-EST-133, RNF-EST-030</td>
 </tr>
 <tr>
 <td>DV-EST-003</td>
@@ -1150,7 +1389,7 @@
 <td>DV-EST-014</td>
 <td>Alta</td>
 <td>Lote com validade vencida é aceito no recebimento, sem aviso</td>
-<td>RF-EST-016</td>
+<td>RF-EST-016, RF-EST-135, RF-EST-138</td>
 </tr>
 <tr>
 <td>DV-EST-015</td>
@@ -1264,7 +1503,7 @@
 <td>DV-EST-034</td>
 <td>Média</td>
 <td>O Histórico do Lote não mostra usuário, hora, análise, laudo nem a reprovação</td>
-<td>RF-EST-053</td>
+<td>RF-EST-134, RF-EST-053</td>
 </tr>
 <tr>
 <td>DV-EST-035</td>
@@ -1306,7 +1545,7 @@
 <td>DV-EST-041</td>
 <td>Média</td>
 <td>A Agenda de Reanálise não lista lote de item que já teve movimentação (a confirmar)</td>
-<td>RF-EST-004, RF-EST-041</td>
+<td>RF-EST-004, RF-EST-041, RF-EST-137</td>
 </tr>
 <tr>
 <td>DV-EST-042</td>
@@ -1318,13 +1557,13 @@
 <td>DV-EST-043</td>
 <td>Alta</td>
 <td>O cadastro de Item não mostra o campo da classificação de reanálise</td>
-<td>RF-EST-004, RF-EST-041</td>
+<td>RF-EST-004, RF-EST-041, RF-EST-137</td>
 </tr>
 <tr>
 <td>DV-EST-044</td>
 <td>Alta</td>
 <td>Movimentação de Quarentena aceita destino incompleto e o saldo do lote desaparece</td>
-<td>RF-EST-034, RNF-EST-001</td>
+<td>RF-EST-134, RF-EST-034, RNF-EST-001</td>
 </tr>
 <tr>
 <td>DV-EST-045</td>
@@ -1360,7 +1599,7 @@
 <td>DV-EST-050</td>
 <td>Média</td>
 <td>Cancelar o inventário não pede justificativa; reabrir contagem oferece contagens que não existem</td>
-<td>RF-EST-093</td>
+<td>RF-EST-093, RNF-EST-040</td>
 </tr>
 <tr>
 <td>DV-EST-051</td>
@@ -1402,7 +1641,7 @@
 <td>DV-EST-057</td>
 <td>Baixa</td>
 <td>Relatórios mostram data em formato americano e o nome do usuário cortado</td>
-<td>RF-EST-057</td>
+<td>RF-EST-057, RNF-EST-041</td>
 </tr>
 <tr>
 <td>DV-EST-058</td>
@@ -1426,7 +1665,7 @@
 <td>DV-EST-061</td>
 <td>Média</td>
 <td>Cancelar um atendimento não pede justificativa e não deixa rastro no histórico do lote</td>
-<td>RF-EST-053, RF-EST-065</td>
+<td>RF-EST-053, RF-EST-065, RNF-EST-040</td>
 </tr>
 <tr>
 <td>DV-EST-062</td>
@@ -1522,11 +1761,455 @@
 <td>DV-EST-077</td>
 <td>Média</td>
 <td>O Pedido de Compra não existe no cadastro de funções do perfil: ninguém recebe permissão de alterar, incluir ou baixar, e a lista só mostra Excluir</td>
-<td>RF-EST-106, RNF-EST-015</td>
+<td>RF-EST-106, RNF-EST-015, RNF-EST-042</td>
+</tr>
+<tr>
+<td>DV-EST-078</td>
+<td>Média</td>
+<td>A Remessa de Material oferece o almoxarifado inativo e o almoxarifado que foi desligado do grupo do usuário</td>
+<td>RF-EST-123</td>
+</tr>
+<tr>
+<td>DV-EST-079</td>
+<td>Alta</td>
+<td>Ligar um almoxarifado a um grupo de usuários não pede confirmação nem justificativa e não deixa rastro no Log</td>
+<td>RF-EST-121</td>
+</tr>
+<tr>
+<td>DV-EST-080</td>
+<td>Baixa</td>
+<td>A descrição do Local de Armazenagem descarta os números sem avisar</td>
+<td>RF-EST-127, RNF-EST-043</td>
+</tr>
+<tr>
+<td>DV-EST-081</td>
+<td>Alta</td>
+<td>No Local de Armazenagem as cinco marcações (acesso controlado, refrigerado, quarentena, umidade, refugo) ficam travadas logo depois de criar o local</td>
+<td>RF-EST-131</td>
+</tr>
+<tr>
+<td>DV-EST-082</td>
+<td>Alta</td>
+<td>Local de Armazenagem: é excluído com endereço ativo e é inativado com saldo de lote dentro, sem aviso</td>
+<td>RF-EST-122</td>
+</tr>
+<tr>
+<td>DV-EST-083</td>
+<td>Média</td>
+<td>Campos que aceitam mais letras do que o banco guarda dão erro genérico, ou travam o SALVAR sem mensagem</td>
+<td>RNF-EST-043</td>
+</tr>
+<tr>
+<td>DV-EST-084</td>
+<td>Média</td>
+<td>Estoque Coluna aceita outro registro com o código de um registro inativo (dois códigos iguais)</td>
+<td>RF-EST-124</td>
+</tr>
+<tr>
+<td>DV-EST-085</td>
+<td>Alta</td>
+<td>Rua, Coluna e Andar podem ser inativados mesmo com endereço ativo, sem aviso</td>
+<td>RF-EST-122</td>
+</tr>
+<tr>
+<td>DV-EST-086</td>
+<td>Média</td>
+<td>O Grupo do Item é gravado sem o Tipo do Item (que define a análise do CQ)</td>
+<td>RF-EST-129</td>
+</tr>
+<tr>
+<td>DV-EST-087</td>
+<td>Alta</td>
+<td>A mudança do tempo de armazenagem do Grupo do Item não entra no Log</td>
+<td>RF-EST-120</td>
+</tr>
+<tr>
+<td>DV-EST-088</td>
+<td>Baixa</td>
+<td>Data do Cadastro mostra a hora em 12 horas, sem manhã ou tarde (17:38 aparece como 05:38)</td>
+<td>RNF-EST-041</td>
+</tr>
+<tr>
+<td>DV-EST-089</td>
+<td>Média</td>
+<td>A Diferença de Pesagem (%) do Subgrupo não tem limite: aceita até 999,99% e grava 0,00 quando digitam letras</td>
+<td>RF-EST-132, RNF-EST-044</td>
+</tr>
+<tr>
+<td>DV-EST-090</td>
+<td>Alta</td>
+<td>A mudança da Diferença de Pesagem do Subgrupo não entra no Log</td>
+<td>RF-EST-120</td>
+</tr>
+<tr>
+<td>DV-EST-091</td>
+<td>Média</td>
+<td>A pesquisa por código não acha o registro em Subgrupo do Item e em Classificação do Item (códigos que não têm o tamanho padrão)</td>
+<td>RF-EST-132</td>
+</tr>
+<tr>
+<td>DV-EST-092</td>
+<td>Média</td>
+<td>A apresentação de estoque criada sozinha ao incluir uma unidade de medida não tem histórico</td>
+<td>RF-EST-120</td>
+</tr>
+<tr>
+<td>DV-EST-093</td>
+<td>Média</td>
+<td>Conta Financeira aceita o mesmo número duas vezes</td>
+<td>RF-EST-124</td>
+</tr>
+<tr>
+<td>DV-EST-094</td>
+<td>Alta</td>
+<td>Item novo perde a marca "Controle Portaria 344" (e o tipo da substância) ao ser salvo</td>
+<td>RF-EST-126</td>
+</tr>
+<tr>
+<td>DV-EST-095</td>
+<td>Média</td>
+<td>Item: Altura e Largura são gravadas trocadas</td>
+<td>RF-EST-127</td>
+</tr>
+<tr>
+<td>DV-EST-096</td>
+<td>Alta</td>
+<td>O Log do Item não registra a mudança do Controle de Quarentena, das análises, do estoque mínimo e máximo, nem da grade de almoxarifados</td>
+<td>RF-EST-120</td>
+</tr>
+<tr>
+<td>DV-EST-097</td>
+<td>Alta</td>
+<td>Natureza da Operação grava o parâmetro "Incide IPI" com o valor de "Venda"</td>
+<td>RF-EST-127</td>
+</tr>
+<tr>
+<td>DV-EST-098</td>
+<td>Alta</td>
+<td>Parâmetros do Estoque mudam controles de processo sem justificativa e sem guardar quem mudou, quando e o valor anterior</td>
+<td>RF-EST-121</td>
+</tr>
+<tr>
+<td>DV-EST-099</td>
+<td>Média</td>
+<td>Parâmetros do Estoque: a Margem aceita valores fora da faixa "entre 10 e 80" que a própria tela informa</td>
+<td>RNF-EST-044</td>
+</tr>
+<tr>
+<td>DV-EST-100</td>
+<td>Média</td>
+<td>Parâmetros do Estoque: quem salva por último desfaz, sem aviso, a mudança feita por outro usuário (inclusive o Tipo de Remessa)</td>
+<td>RF-EST-121</td>
+</tr>
+<tr>
+<td>DV-EST-101</td>
+<td>Alta</td>
+<td>Tipo e Motivo da Movimentação já usados podem ter o sentido (Entrada/Saída) trocado, sem aviso</td>
+<td>RF-EST-125</td>
+</tr>
+<tr>
+<td>DV-EST-102</td>
+<td>Alta</td>
+<td>O Log do Tipo de Movimentação mostra o sentido ao contrário (ENTRADA: NÃO → SIM quando o tipo passa a Saída)</td>
+<td>RF-EST-125</td>
+</tr>
+<tr>
+<td>DV-EST-103</td>
+<td>Baixa</td>
+<td>Motivo da Movimentação aceita Entrada = Não e Saída = Não (fica invisível em todas as telas)</td>
+<td>RF-EST-125</td>
+</tr>
+<tr>
+<td>DV-EST-104</td>
+<td>Alta</td>
+<td>Motivo da Movimentação inativo continua sendo oferecido nas telas de movimentação</td>
+<td>RF-EST-123</td>
+</tr>
+<tr>
+<td>DV-EST-105</td>
+<td>Alta</td>
+<td>Conversão de Unidade aceita fator de conversão 0</td>
+<td>RF-EST-130</td>
+</tr>
+<tr>
+<td>DV-EST-106</td>
+<td>Média</td>
+<td>Tipo de Referência aceita o mesmo código duas vezes</td>
+<td>RF-EST-124</td>
+</tr>
+<tr>
+<td>DV-EST-107</td>
+<td>Média</td>
+<td>Centro de Custo do Estoque aceita nome repetido (e descarta os números digitados no nome)</td>
+<td>RF-EST-124, RF-EST-127</td>
+</tr>
+<tr>
+<td>DV-EST-108</td>
+<td>Alta</td>
+<td>A troca dos itens de um Centro de Custo não entra no Log</td>
+<td>RF-EST-120</td>
+</tr>
+<tr>
+<td>DV-EST-109</td>
+<td>Média</td>
+<td>Classificação de Reanálise: a lista não tem Editar, Excluir, Ver Log, Imprimir nem Excel para nenhum perfil (tela sem menu e sem funções)</td>
+<td>RNF-EST-042</td>
+</tr>
+<tr>
+<td>DV-EST-110</td>
+<td>Alta</td>
+<td>Conversão Fornecedor recusa o mesmo código de produto em fornecedores diferentes</td>
+<td>RF-EST-130</td>
+</tr>
+<tr>
+<td>DV-EST-111</td>
+<td>Média</td>
+<td>A mudança do código do item no fornecedor não entra no Log da Conversão Fornecedor</td>
+<td>RF-EST-120</td>
+</tr>
+<tr>
+<td>DV-EST-112</td>
+<td>Alta</td>
+<td>Cadastro de apoio em uso por um item pode ser inativado; o Item abre com o campo vazio e, se for salvo assim, perde o vínculo para sempre</td>
+<td>RF-EST-122</td>
+</tr>
+<tr>
+<td>DV-EST-113</td>
+<td>Alta</td>
+<td>Almoxarifado e SJB em uso por um item podem ser excluídos, e o item perde o vínculo</td>
+<td>RF-EST-122</td>
+</tr>
+<tr>
+<td>DV-EST-114</td>
+<td>Média</td>
+<td>O Código NEB do Item aparece vazio e o NEB impresso na NMM (T1000) não confere com a regra (SJB + 2 últimos caracteres do grupo)</td>
+<td>RF-EST-128</td>
+</tr>
+<tr>
+<td>DV-EST-115</td>
+<td>Alta</td>
+<td>Unidade de Medida em uso por um item pode ter a abreviatura mudada e ser inativada, sem aviso</td>
+<td>RF-EST-122</td>
+</tr>
+<tr>
+<td>DV-EST-116</td>
+<td>Alta</td>
+<td>Trocar o grupo de um subgrupo que tem itens é aceito, sem aviso</td>
+<td>RF-EST-122</td>
+</tr>
+<tr>
+<td>DV-EST-117</td>
+<td>Média</td>
+<td>A marca "Controle de Acesso" do Local de Armazenagem não faz nada: item comum é movido para ele sem aviso</td>
+<td>RF-EST-131</td>
+</tr>
+<tr>
+<td>DV-EST-118</td>
+<td>Média</td>
+<td>Item: o estoque mínimo digitado como 0,5 é gravado como 5</td>
+<td>RF-EST-127</td>
+</tr>
+<tr>
+<td>DV-EST-120</td>
+<td>Alta</td>
+<td>Parâmetros de Configuração (Kit): a validade mínima do kit muda sem justificativa, sem registro de quem mudou e sem o valor anterior, e aceita 99999 dias</td>
+<td>RF-EST-121, RNF-EST-044</td>
+</tr>
+<tr>
+<td>DV-EST-121</td>
+<td>Média</td>
+<td>A Listagem de Lotes (Kits) mostra o mesmo lote enviado em duas linhas e inclui a remessa manual que não é de kit</td>
+<td>RF-EST-146</td>
+</tr>
+<tr>
+<td>DV-EST-122</td>
+<td>Média</td>
+<td>A Análise do Planejamento de Kits e o relatório de Reposição de Componentes dão números diferentes para o mesmo item e kit</td>
+<td>RF-EST-145</td>
+</tr>
+<tr>
+<td>DV-EST-123</td>
+<td>Média</td>
+<td>A Análise do Planejamento de Kits apaga e cancela sem registro de quem fez e por quê, e cada geração consome um código</td>
+<td>RF-EST-145, RNF-EST-040</td>
+</tr>
+<tr>
+<td>DV-EST-124</td>
+<td>Média</td>
+<td>A lista de Movimentações do Regulatório vem sempre vazia, mesmo depois de entradas e saídas de amostra feitas no mesmo dia</td>
+<td>RF-EST-148</td>
+</tr>
+<tr>
+<td>DV-EST-125</td>
+<td>Média</td>
+<td>A Observação digitada na movimentação de amostra não aparece em lugar nenhum</td>
+<td>RF-EST-148</td>
+</tr>
+<tr>
+<td>DV-EST-126</td>
+<td>Média</td>
+<td>RM18 e RM24 (e o filtro de lote em geral): sem resultado, a tela fica em branco, sem a mensagem "nenhum resultado"</td>
+<td>RF-EST-142</td>
+</tr>
+<tr>
+<td>DV-EST-127</td>
+<td>Média</td>
+<td>O PDF do Relatório de Endereços (RM24) sai com as descrições dos itens deslocadas</td>
+<td>RF-EST-142</td>
+</tr>
+<tr>
+<td>DV-EST-128</td>
+<td>Alta</td>
+<td>RC08: o relatório de movimentação de material mostra valores de centenas de milhões e a coluna Lançamento zerada, com conta fixa</td>
+<td>RF-EST-139</td>
+</tr>
+<tr>
+<td>DV-EST-129</td>
+<td>Alta</td>
+<td>Relatórios de movimentação (RC07, RC03, RM14, RM03) trazem texto, declaração e assinaturas fixas de outra organização, e o RC07 declara "existência física" com todos os valores zerados</td>
+<td>RF-EST-140</td>
+</tr>
+<tr>
+<td>DV-EST-130</td>
+<td>Alta</td>
+<td>O Inventário do Mês deixa de fora os itens com saldo e sem custo, e declara o valor total sem avisar</td>
+<td>RF-EST-139</td>
+</tr>
+<tr>
+<td>DV-EST-131</td>
+<td>Alta</td>
+<td>O Mapa de Movimentação de Material soma transferências e ajustes em Aquisição e Consumo</td>
+<td>RF-EST-139</td>
+</tr>
+<tr>
+<td>DV-EST-132</td>
+<td>Alta</td>
+<td>O Material Reservado (RM10) lista os lotes sem reserva, mostra datas na coluna Solicitação e reserva maior que o saldo</td>
+<td>RF-EST-139</td>
+</tr>
+<tr>
+<td>DV-EST-133</td>
+<td>Alta</td>
+<td>A Relação de Lotes - Reanálise não marca como vencido o lote com validade vencida: só olha a data de reanálise</td>
+<td>RF-EST-141</td>
+</tr>
+<tr>
+<td>DV-EST-134</td>
+<td>Alta</td>
+<td>A Análise de Estoque sugere compra negativa (-490) e aceita período de CMM igual a 0</td>
+<td>RF-EST-147, RNF-EST-044</td>
+</tr>
+<tr>
+<td>DV-EST-135</td>
+<td>Média</td>
+<td>A pesquisa por período da lista da Análise de Estoque usa a data inicial nos dois limites e traz só as análises do primeiro dia</td>
+<td>RF-EST-147</td>
+</tr>
+<tr>
+<td>DV-EST-136</td>
+<td>Alta</td>
+<td>Inventário: reabrir a contagem e cancelar a justificativa não pedem motivo e não deixam registro; a execução também não entra no log</td>
+<td>RF-EST-144, RNF-EST-040</td>
+</tr>
+<tr>
+<td>DV-EST-137</td>
+<td>Baixa</td>
+<td>Inventário: o campo de justificativa corta em 100 caracteres sem avisar e a coluna Justificativa do log fica sempre vazia</td>
+<td>RF-EST-144, RNF-EST-043</td>
+</tr>
+<tr>
+<td>DV-EST-138</td>
+<td>Baixa</td>
+<td>Contagem do inventário aceita 99.999 e 0 sem pedir confirmação</td>
+<td>RF-EST-144</td>
+</tr>
+<tr>
+<td>DV-EST-139</td>
+<td>Média</td>
+<td>Inventário: quem justifica só vê a quantidade da 3ª contagem, sem o saldo do sistema nem as contagens anteriores</td>
+<td>RF-EST-144</td>
+</tr>
+<tr>
+<td>DV-EST-140</td>
+<td>Média</td>
+<td>Relatórios RC07, RC08, RM03 e RM14: com a data incompleta, a janela mostra a página de erro do servidor com o rastro de chamadas</td>
+<td>RNF-EST-045</td>
+</tr>
+<tr>
+<td>DV-EST-160</td>
+<td>Alta</td>
+<td>Endereçamento aceita destino sem rua, coluna e andar e guarda a quantidade no endereço padrão R000-C000-A000</td>
+<td>RF-EST-134</td>
+</tr>
+<tr>
+<td>DV-EST-161</td>
+<td>Média</td>
+<td>Conferência de Recebimento lê o ponto decimal como milhar (10.5 vira 105,000), ignora texto sem avisar e aceita zero</td>
+<td>RF-EST-133</td>
+</tr>
+<tr>
+<td>DV-EST-162</td>
+<td>Alta</td>
+<td>Reabrir Recebimento não pede justificativa e não registra a reabertura nem quem reabriu</td>
+<td>RNF-EST-040</td>
+</tr>
+<tr>
+<td>DV-EST-163</td>
+<td>Média</td>
+<td>Cancelar o endereçamento não pede justificativa e não deixa histórico</td>
+<td>RNF-EST-040</td>
+</tr>
+<tr>
+<td>DV-EST-164</td>
+<td>Alta</td>
+<td>Cancelar a aprovação de uma solicitação não pede justificativa</td>
+<td>RNF-EST-040</td>
+</tr>
+<tr>
+<td>DV-EST-165</td>
+<td>Média</td>
+<td>Cancelar a separação não grava a justificativa no log e o Histórico do Lote mantém a saída</td>
+<td>RF-EST-143, RNF-EST-040</td>
+</tr>
+<tr>
+<td>DV-EST-166</td>
+<td>Alta</td>
+<td>A validade do laudo é editável e o laudo de lote vencido é aprovado com data futura; o lote vencido é liberado</td>
+<td>RF-EST-135</td>
+</tr>
+<tr>
+<td>DV-EST-167</td>
+<td>Alta</td>
+<td>Movimentação de Material transfere lote vencido sem aviso nem justificativa</td>
+<td>RF-EST-138</td>
+</tr>
+<tr>
+<td>DV-EST-168</td>
+<td>Média</td>
+<td>O código do lote é cortado em 10 caracteres, sem aviso, na Entrada de Produção</td>
+<td>RNF-EST-043</td>
+</tr>
+<tr>
+<td>DV-EST-169</td>
+<td>Média</td>
+<td>Cancelar a solicitação de análise no CQ não chega ao Estoque: o lote fica "Aguardando análise" e continua oferecido</td>
+<td>RF-EST-136</td>
+</tr>
+<tr>
+<td>DV-EST-170</td>
+<td>Média</td>
+<td>Cancelar Conferência não pede justificativa; mensagem com erro de digitação ("cacelar")</td>
+<td>RNF-EST-040</td>
+</tr>
+<tr>
+<td>DV-EST-171</td>
+<td>Média</td>
+<td>Laudo aprovado com "Reanálise prevista = Sim" aparece no Estoque como "Reanalisar? = NÃO", e a Agenda de Reanálise nunca lista lotes</td>
+<td>RF-EST-137</td>
 </tr>
 </tbody>
 </table></div>
-<p>Os requisitos de controle de acesso e de segurança (RNF-EST-010 a 018) vêm desses defeitos e dos achados do documento de segurança (SEG-EST). Os casos do plano de testes que provam cada correção são os mesmos casos que acusaram o defeito (os de prioridade alta devem passar todos na aceite da nova versão).</p>
+<p>Os requisitos de controle de acesso e de segurança (RNF-EST-010 a 018 e RNF-EST-042) vêm desses defeitos e dos achados do documento de segurança (SEG-EST). Os casos do plano de testes que provam cada correção são os mesmos casos que acusaram o defeito (os de prioridade alta devem passar todos na aceite da nova versão).</p>
 <h2 id="como-o-estoque-deve-funcionar-modelo-ideal">Como o Estoque deve funcionar (modelo ideal)</h2>
 <p>Resumo do documento "O Estoque ideal": as funções que a nova versão deve manter, corrigir ou construir, a situação única do lote e quem faz o quê.</p>
 <h3 id="as-funcoes-do-estoque-ideal">As funções do Estoque ideal</h3>
@@ -2424,7 +3107,7 @@ erDiagram
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#papel-do-modulo-estoque">Papel do módulo Estoque</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#como-ler-os-requisitos">Como ler os requisitos</a></li><li><a href="#requisitos-funcionais">Requisitos funcionais</a></li><li class="sub"><a href="#cadastros-de-apoio">Cadastros de apoio</a></li><li class="sub"><a href="#recebimento-inspecao-e-conferencia">Recebimento, inspeção e conferência</a></li><li class="sub"><a href="#quarentena-analise-e-situacao-do-lote">Quarentena, análise e situação do lote</a></li><li class="sub"><a href="#validade-reanalise-e-revalidacao">Validade, reanálise e revalidação</a></li><li class="sub"><a href="#movimentacao-interna-historico-e-consultas">Movimentação interna, histórico e consultas</a></li><li class="sub"><a href="#solicitacao-separacao-e-atendimento-a-producao">Solicitação, separação e atendimento à produção</a></li><li class="sub"><a href="#devolucao-e-entradas-da-producao">Devolução e entradas da produção</a></li><li class="sub"><a href="#remessa-e-expedicao">Remessa e expedição</a></li><li class="sub"><a href="#inventario">Inventário</a></li><li class="sub"><a href="#compras-kits-e-analises">Compras, kits e análises</a></li><li class="sub"><a href="#amostras-de-referencia-retencao-e-estabilidade">Amostras de referência, retenção e estabilidade</a></li><li><a href="#requisitos-nao-funcionais">Requisitos não funcionais</a></li><li class="sub"><a href="#integridade-de-dados-e-auditoria">Integridade de dados e auditoria</a></li><li class="sub"><a href="#controle-de-acesso">Controle de acesso</a></li><li class="sub"><a href="#integracao-entre-modulos">Integração entre módulos</a></li><li class="sub"><a href="#dados-validacao-e-operacao">Dados, validação e operação</a></li><li><a href="#defeitos-e-requisitos-que-os-corrigem">Defeitos e requisitos que os corrigem</a></li><li><a href="#como-o-estoque-deve-funcionar-modelo-ideal">Como o Estoque deve funcionar (modelo ideal)</a></li><li class="sub"><a href="#as-funcoes-do-estoque-ideal">As funções do Estoque ideal</a></li><li class="sub"><a href="#a-situacao-do-lote-e-o-que-cada-situacao-permite">A situação do lote e o que cada situação permite</a></li><li class="sub"><a href="#quem-faz-o-que">Quem faz o quê</a></li><li><a href="#integracoes-com-os-outros-modulos">Integrações com os outros módulos</a></li><li class="sub"><a href="#o-que-o-estoque-recebe-e-envia">O que o Estoque recebe e envia</a></li><li class="sub"><a href="#as-travas-que-envolvem-o-estoque">As travas que envolvem o Estoque</a></li><li class="sub"><a href="#regras-que-valem-para-todas-as-travas">Regras que valem para todas as travas</a></li><li class="sub"><a href="#como-as-integracoes-sao-feitas-hoje">Como as integrações são feitas hoje</a></li><li><a href="#modelo-de-dados">Modelo de dados</a></li><li class="sub"><a href="#visao-geral">Visão geral</a></li><li class="sub"><a href="#o-ciclo-do-lote">O ciclo do lote</a></li><li class="sub"><a href="#situacao-do-lote-no-saldo">Situação do lote no saldo</a></li><li class="sub"><a href="#cadastros-qualidade-e-inventario">Cadastros, qualidade e inventário</a></li><li class="sub"><a href="#desencontros-entre-o-codigo-e-os-roteiros">Desencontros entre o código e os roteiros</a></li><li class="sub"><a href="#anomalias-e-pontos-para-o-dba">Anomalias e pontos para o DBA</a></li><li><a href="#conformidade-regulatoria">Conformidade regulatória</a></li><li class="sub"><a href="#mapa-dos-temas">Mapa dos temas</a></li><li class="sub"><a href="#o-que-o-codigo-e-os-testes-mostram-tema-a-tema">O que o código e os testes mostram, tema a tema</a></li><li><a href="#decisoes-pendentes">Decisões pendentes</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 25/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
