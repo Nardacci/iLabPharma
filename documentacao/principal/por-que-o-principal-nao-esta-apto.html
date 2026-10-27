@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -44,6 +44,7 @@
     
     <article class="texto">
 <p><strong>Em uma frase:</strong> o módulo Principal (versão 3.5.1, como foi entregue pelo fornecedor) <strong>funciona na maior parte das tarefas, mas não está em conformidade com as normas da ANVISA</strong>. O parecer é <strong>"não apto para uso em ambiente regulado"</strong> até as correções obrigatórias. Os mecanismos essenciais existem, então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
+<p><strong>Atualização de 26/10/2026:</strong> com a terceira rodada de testes, as 32 telas do módulo passaram a ter resultado e o módulo foi fechado (decisão do responsável). O parecer não mudou, e o registro de defeitos cresceu de 26 para 51.</p>
 <h2 id="1-por-que-o-principal-pesa-tanto-no-parecer">1. Por que o Principal pesa tanto no parecer</h2>
 <ul>
 <li><strong>É a porta de entrada dos nove módulos.</strong> O login, os usuários, os perfis e as permissões definidos nele valem para a produção, o estoque, a qualidade e os demais.</li>
@@ -60,19 +61,28 @@
 </thead>
 <tbody>
 <tr>
-<td>Testes nas telas (05 e 06/10/2026)</td>
-<td><strong>78</strong>: 48 aprovados, 25 reprovados e 5 bloqueados (dependem do DBA)</td>
+<td>Telas do módulo</td>
+<td><strong>32</strong>: 1 funciona (as páginas de erro), 11 funcionam com falhas e 20 têm falha grave. Nenhuma ficou sem teste</td>
 </tr>
 <tr>
-<td>Desvios encontrados</td>
-<td><strong>26</strong>: 5 de gravidade alta, 12 média, 8 baixa e 1 já explicado</td>
+<td>Testes nas telas</td>
+<td><strong>3 rodadas</strong> (05, 06 e 26/10/2026): 197 de 216 linhas de resultado conclusivas. A rodada 3 teve 140 passos: 48 passaram, 40 com ressalva, 33 falharam e 19 ficaram bloqueados</td>
+</tr>
+<tr>
+<td>Defeitos encontrados</td>
+<td><strong>51</strong> registrados, 50 abertos e 1 já explicado. Dos abertos, <strong>16 são de gravidade alta</strong>, 18 média e 16 baixa</td>
 </tr>
 <tr>
 <td>Requisitos corrigidos para a nova versão</td>
-<td><strong>70</strong>, com origem e prioridade</td>
+<td><strong>90</strong> do sistema atual (77 anteriores e 13 novos), com origem e prioridade</td>
+</tr>
+<tr>
+<td>Documentação por tela</td>
+<td>Cinco páginas para cada uma das 32 telas (análise, manual, fluxos, regras e Anvisa)</td>
 </tr>
 </tbody>
 </table></div>
+<p>"Falha grave" quer dizer que a tela tem defeito de gravidade alta, de segurança, de senha ou de trilha de auditoria.</p>
 <h2 id="3-por-que-nao-esta-apto">3. Por que não está apto</h2>
 <div class="tabela"><table>
 <thead>
@@ -85,46 +95,62 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Trilha de auditoria</strong></td>
-<td>Exclusões e alterações de cadastro sem justificativa; o histórico do registro excluído não pode ser consultado; o histórico de profissional não guarda o valor novo do cargo</td>
-<td>Falha na trilha de auditoria, item clássico de inspeção</td>
+<td><strong>Trilha de auditoria: sem motivo</strong></td>
+<td>Excluir um registro não pede justificativa em 10 cadastros: Ambiente, Equipamento, Grupo de usuários, Categoria de equipamento, Centro de custo, Pontos de água, Instrumentos, Utensílios, Utilidades e Estrutura funcional. Alterar e inativar também não pedem na Estrutura funcional. O Grau de contaminação mostra o jeito certo</td>
+<td>Registro sem motivo, item clássico de inspeção</td>
 <td>RDC 658/2022, art. 125</td>
 </tr>
 <tr>
-<td><strong>Segurança do sistema</strong></td>
-<td>Há desvios de gravidade alta (acesso, senhas e sessão)</td>
-<td>Autoria dos registros sem confiança</td>
+<td><strong>Trilha de auditoria: sem histórico</strong></td>
+<td>A Configuração, o Configurar notificação e as Notificações padrão gravam sem confirmação, sem justificativa e sem histórico. As alterações da Conta contábil e a troca de Grupo do profissional não entram no histórico. O histórico de um registro excluído não pode ser consultado</td>
+<td>Não se sabe quem mudou o quê</td>
+<td>Art. 125</td>
+</tr>
+<tr>
+<td><strong>Assinatura eletrônica desligada</strong></td>
+<td>Nenhuma gravação da Administração pede a senha de novo</td>
+<td>Ação crítica sem confirmação da identidade</td>
+<td>Guia 33/2020</td>
+</tr>
+<tr>
+<td><strong>Acesso ao sistema</strong></td>
+<td>As telas de edição, de configuração e de relatório abrem digitando o endereço, sem permissão. O administrador vê a senha provisória na tela. A troca obrigatória de senha pode ser pulada. O login leva o token da sessão a qualquer endereço informado em um parâmetro de desenvolvimento</td>
+<td>Uma pessoa age como outra; a autoria perde valor</td>
 <td>Guia 33/2020, itens 9.3.2.3 e 9.7.7.1.2</td>
 </tr>
 <tr>
 <td><strong>Cadastros gerais</strong></td>
-<td>Ambiente, Equipamento e Pessoa jurídica incluem, editam e excluem, mas sem justificativa na exclusão e na alteração</td>
-<td>Registro sem motivo</td>
-<td>Art. 125</td>
+<td>Incluem, editam e excluem, mas aceitam nomes e códigos repetidos em alguns cadastros, perdem letras e números digitados sem avisar e dão mensagens genéricas</td>
+<td>Dado de referência com erro</td>
+<td>Integridade de dados</td>
 </tr>
 </tbody>
 </table></div>
-<p>Os detalhes de segurança ficam em arquivo confidencial, fora deste portal.</p>
+<p>Um ponto levantado antes <strong>não se confirmou</strong>: abrir o relatório de outro profissional trocando o número no endereço. O endereço do relatório não leva número.</p>
 <h2 id="4-o-que-ja-funciona-e-vale-manter">4. O que já funciona (e vale manter)</h2>
 <ul>
 <li>Bloqueio da conta após tentativas erradas.</li>
 <li>Validade de senha e de conta.</li>
 <li>Perfis de acesso por função, com botões que respeitam as permissões.</li>
 <li>Exclusão sem apagar o dado.</li>
-<li>Histórico campo a campo na maior parte dos cadastros.</li>
+<li>Histórico campo a campo na maior parte dos cadastros, com justificativa em Conta gerencial, Local físico e Grau de contaminação (este é o modelo para os outros).</li>
 </ul>
 <h2 id="5-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">5. O que precisa ser corrigido para uma nova homologação</h2>
 <ul>
-<li><strong>Exigir justificativa</strong> em toda alteração e exclusão de cadastro, e manter consultável o histórico do registro excluído (RF-PRI-042 e 044).</li>
-<li><strong>Registrar o valor novo e o antigo</strong> em todo item do histórico.</li>
-<li><strong>Deixar somente leitura</strong> a tela de quem só tem permissão de consulta (RF-PRI-033).</li>
-<li><strong>Correções de segurança</strong> (acesso, senhas e sessão): lista no arquivo confidencial.</li>
+<li><strong>Exigir justificativa</strong> em toda alteração e exclusão de cadastro, e manter consultável o histórico do registro excluído (RF-PRI-042, 044, 096 e 097).</li>
+<li><strong>Gravar o histórico de todo campo alterado</strong>, com o valor antigo e o novo, inclusive na Configuração e nas notificações (RF-PRI-099 e 100).</li>
+<li><strong>Pedir a senha de novo</strong> nas gravações críticas da Administração (RF-PRI-101).</li>
+<li><strong>Aceitar no login só endereços do próprio sistema</strong> e nunca colocar o token no endereço (RNF-PRI-027 e 004).</li>
+<li><strong>Conferir a permissão no servidor</strong> em todas as telas e ações, e deixar somente leitura a tela de quem só consulta (RF-PRI-032 e 033).</li>
+<li><strong>Não mostrar a senha provisória</strong> ao administrador e exigir a troca antes de qualquer tela (RF-PRI-013 e 007).</li>
 </ul>
 <p>O modelo de como o Principal deve funcionar está em <strong>"O Principal ideal"</strong> (passo 4 do roteiro).</p>
 <h2 id="6-limitacoes-desta-homologacao">6. Limitações desta homologação</h2>
 <ul>
-<li><strong>5 casos bloqueados</strong> dependem do DBA (seção 7). Sem as respostas, a trilha de auditoria não pode ser dada como conforme.</li>
-<li><strong>Não testados:</strong> os demais cadastros, a segurança da aplicação e a carga de dados (próxima rodada).</li>
+<li><strong>Só o administrador foi usado na rodada 3.</strong> Entrar como outro usuário exige o Reset de senha, e a senha provisória aparece na tela e não pode ser gravada. O acesso por perfil nas telas abertas só na rodada 3 ficou sem teste.</li>
+<li><strong>Casos que dependem do DBA</strong> (CT-PRI-012, 083 e 084): sem as respostas, a trilha de auditoria não pode ser dada como conforme.</li>
+<li><strong>Não feitos:</strong> excluir e inativar registro "em uso" nos cadastros, relacionamentos com Produção e CQ, relatório Usuário × Perfil, conteúdo de Imprimir e Excel, segurança da aplicação e carga de dados.</li>
+<li>O defeito do login (DV-PRI-050) foi observado só com destino dentro do próprio sistema.</li>
 </ul>
 <h2 id="7-o-que-preciso-do-dba">7. O que preciso do DBA</h2>
 <div class="tabela"><table>
@@ -138,12 +164,12 @@
 <tbody>
 <tr>
 <td>1</td>
-<td><strong>Mostrar o registro de acessos</strong> (login, data, hora, origem e resultado) de uma tentativa recusada e de uma aceita, do usuário <code>[usuário de teste]</code></td>
+<td><strong>Mostrar o registro de acessos</strong> (login, data, hora, origem e resultado) de uma tentativa recusada e de uma aceita, do usuário administrador de teste</td>
 <td>CT-PRI-005 e CT-PRI-012</td>
 </tr>
 <tr>
 <td>2</td>
-<td><strong>Completude e proteção do histórico de alterações</strong>: consultas no banco e uma alteração em registro de teste. O roteiro exato fica em arquivo confidencial, fora do portal</td>
+<td><strong>Completude e proteção do histórico de alterações</strong>: consultas no banco e uma alteração em registro de teste. O roteiro de consultas é passado ao DBA em separado</td>
 <td>CT-PRI-083, CT-PRI-084 e DV-PRI-014</td>
 </tr>
 <tr>
@@ -154,15 +180,16 @@
 </tbody>
 </table></div>
 <p>São consultas, exceto o pedido 2 (alteração em registro de teste) e o 3 (usuário de teste).</p>
-<h2 id="8-como-o-modulo-passa-a-apto">8. Como o módulo passa a "apto"</h2>
-<p>Executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige <strong>100% dos casos de prioridade alta aprovados</strong>.</p>
+<h2 id="8-o-que-muda-na-reabertura-e-como-o-modulo-passa-a-apto">8. O que muda na reabertura e como o módulo passa a "apto"</h2>
+<p>O módulo está fechado. Ele só volta a ser testado quando houver fato novo: o DBA responder, o desenvolvimento corrigir os defeitos de gravidade alta ou houver um segundo usuário de teste. Na reabertura, repetem-se os 16 defeitos de gravidade alta, executa-se o acesso por perfil e as exclusões em uso e, por risco, os casos novos propostos por tela.</p>
+<p>Para passar a "apto": executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige <strong>100% dos casos de prioridade alta aprovados</strong>.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="achados-de-seguranca.html"><small>← Anterior</small><strong>Achados de segurança</strong></a><a class="ap ap-prox" href="dossie-de-homologacao.html"><small>Próximo →</small><strong>Dossiê de homologação</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-por-que-o-principal-pesa-tanto-no-parecer">1. Por que o Principal pesa tanto no parecer</a></li><li><a href="#2-os-numeros">2. Os números</a></li><li><a href="#3-por-que-nao-esta-apto">3. Por que não está apto</a></li><li><a href="#4-o-que-ja-funciona-e-vale-manter">4. O que já funciona (e vale manter)</a></li><li><a href="#5-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">5. O que precisa ser corrigido para uma nova homologação</a></li><li><a href="#6-limitacoes-desta-homologacao">6. Limitações desta homologação</a></li><li><a href="#7-o-que-preciso-do-dba">7. O que preciso do DBA</a></li><li><a href="#8-como-o-modulo-passa-a-apto">8. Como o módulo passa a &quot;apto&quot;</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-por-que-o-principal-pesa-tanto-no-parecer">1. Por que o Principal pesa tanto no parecer</a></li><li><a href="#2-os-numeros">2. Os números</a></li><li><a href="#3-por-que-nao-esta-apto">3. Por que não está apto</a></li><li><a href="#4-o-que-ja-funciona-e-vale-manter">4. O que já funciona (e vale manter)</a></li><li><a href="#5-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">5. O que precisa ser corrigido para uma nova homologação</a></li><li><a href="#6-limitacoes-desta-homologacao">6. Limitações desta homologação</a></li><li><a href="#7-o-que-preciso-do-dba">7. O que preciso do DBA</a></li><li><a href="#8-o-que-muda-na-reabertura-e-como-o-modulo-passa-a-apto">8. O que muda na reabertura e como o módulo passa a &quot;apto&quot;</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

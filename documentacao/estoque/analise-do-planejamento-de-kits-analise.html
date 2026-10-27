@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -45,8 +45,8 @@
     <article class="texto texto-largo">
 <h2 id="resumo-da-tela">Resumo da tela</h2>
 <h3 id="analise-do-planejamento-de-kits">Análise do Planejamento de Kits</h3>
-<p>Menu: Menu Kits › Análise do Planejamento de Kits (dml.sql:1954, função <code>AnalisePlanEstoque</code>). No alto da tela o sistema escreve "ANÁLISE DO PLANEJAMENTO DE KITS", na lista e no formulário (analise_planejamento_lst.aspx:30; analise_planejamento_op.aspx:25). Versão legado (código entregue pelo fornecedor). Documentação de 23/10/2026, feita pela leitura do código, pelos documentos já produzidos do Estoque, pelos resultados dos testes de tela de 22/10/2026 (rodada 8) e pela conferência da captura do teste. Situação no inventário de telas: <strong>Falha grave</strong> (<code>11-inventario-de-telas.md</code>; DV-EST-054, que o registro classifica como Média). Fluxo do processo: Kits (<code>fluxos/kits.md</code>).</p>
-<p><strong>O que foi visto numa tela real, e o que não foi.</strong> Em 22/10/2026 (CT-EST-152), a tela recusou o período em branco ("Período não foi informado!") e, com 30 e 90 dias, perguntou "Confirma a Geração da Análise?" e mostrou "Analise gerada!". A captura da geração de 90 dias (<code>CT-EST-152-passo-5-geracao-90-dias.png</code>) mostra a mensagem <strong>ainda aberta</strong>, com o Código e a Data de Geração em branco por trás dela. O teste não registra o clique em OK, o que a tela mostrou depois, nem o botão SALVAR ANÁLISE. A lista de análises só mostra análises <strong>salvas</strong> (veja adiante), por isso ficou vazia. <strong>Não foi visto:</strong> o resultado da análise, as três visões (por componente, por kit e por planejamento), o botão SALVAR ANÁLISE, o CANCELAR ANÁLISE, o relatório, a exclusão e o Ver log. A conclusão do DV-EST-054, "não grava nem mostra a necessidade", precisa ser repetida até o fim antes de valer como defeito confirmado (ver Divergências encontradas).</p>
+<p>Menu: Menu Kits › Análise do Planejamento de Kits (dml.sql:1954, função <code>AnalisePlanEstoque</code>). No alto da tela o sistema escreve "ANÁLISE DO PLANEJAMENTO DE KITS", na lista e no formulário (analise_planejamento_lst.aspx:30; analise_planejamento_op.aspx:25). Versão legado (código entregue pelo fornecedor). Documentação de 23/10/2026, feita pela leitura do código, pelos documentos já produzidos do Estoque, pelos resultados dos testes de tela de 22/10/2026 (rodada 8) e de 24/10/2026 (rodada 12B). Situação no inventário de telas: <strong>Funciona com falhas</strong> (<code>11-inventario-de-telas.md</code>; DV-EST-122 e 123). O DV-EST-054 ("diz gerada e não grava") foi descartado em 26/10/2026. Fluxo do processo: Kits (<code>fluxos/kits.md</code>).</p>
+<p><strong>O que foi visto numa tela real, e o que não foi.</strong> Em 22/10/2026 (CT-EST-152), a tela recusou o período em branco ("Período não foi informado!") e, com 30 e 90 dias, perguntou "Confirma a Geração da Análise?" e mostrou "Analise gerada!". A captura da geração de 90 dias (<code>CT-EST-152-passo-5-geracao-90-dias.png</code>) mostra a mensagem <strong>ainda aberta</strong>, e a leitura da rodada 8 parou aí. <strong>Na rodada 12B (24/10/2026, CT-EST-152)</strong> o caso foi repetido até o fim: depois do clique em OK a tela mostra o Código, a Data de geração e o quadro "Resultado da Análise", e a análise <strong>só entra na lista ao clicar em SALVAR ANÁLISE</strong> (a lista mostra apenas análises salvas). Por isso o DV-EST-054 foi <strong>descartado em 26/10/2026</strong>: era leitura incompleta do fluxo em dois passos. <strong>Ainda não foi visto em tela:</strong> as três visões (por componente, por kit e por planejamento) conferidas uma a uma, o CANCELAR ANÁLISE, o relatório, a exclusão e o Ver log.</p>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>Calcula, para um cliente e uma filial (ou para todos, se ficarem em branco), quanto de cada componente os kits planejados vão exigir nos próximos N dias, quanto já foi enviado, quanto está vencido ou vencendo no cliente, quanto repor, e quanto resta <strong>comprar</strong> depois de descontar o estoque utilizável (analise_planejamento_op.aspx.cs:155-196; bllAnalisePlanejamento.cs:207-330). É uma tela de dois passos (analise_planejamento_op.aspx.cs:155-267):</p>
 <ol>
@@ -86,7 +86,7 @@
 <p>É a conta que diz quanto de cada componente falta comprar ou repor para cumprir o plano de kits: se o cálculo estiver errado ou não for salvo, a empresa compra a mais, compra a menos ou envia kit com componente de pouca validade.</p>
 <h4 id="o-que-a-tela-representa">O que a tela representa</h4>
 <p>A Análise do Planejamento de Kits cruza o plano (quantos kits por cliente), o que já foi enviado, o que está vencido ou vencendo no cliente e o estoque utilizável, e devolve a reposição e a compra por componente (RN-EST-KIT06-003 a 007). Ela não grava pedido nem solicitação: é uma ferramenta de decisão. Para as Boas Práticas, o que importa é que o cálculo seja correto e que o resultado seja rastreável: quem gerou, com quais parâmetros, e o que foi decidido a partir dele.</p>
-<p>O teste de 22/10/2026 (CT-EST-152) mostrou a recusa do período em branco e a mensagem "Analise gerada!", mas não registrou o resultado: a captura mostra a mensagem ainda aberta, e a lista só mostra análises salvas. O DV-EST-054 (Média) diz que a análise "não grava nem mostra nada", e esse alcance precisa ser conferido repetindo o caso até o fim (CT-EST-KIT06-01). O que o código mostra é mais objetivo: a fórmula da compra parece abater o valor errado quando o lote tem menos do que falta (RN-EST-KIT06-006); a validade mínima do planejamento é ignorada (RN-EST-KIT06-005); a análise não guarda os parâmetros com que foi calculada; o cancelamento apaga de vez, e a exclusão descarta a justificativa (RN-EST-KIT06-008 e 009). O controle de acesso é só visual, e o ícone de excluir aparece para todos (DV-EST-008, Alta; ver a seção de segurança do documento da tela).</p>
+<p>O teste de 22/10/2026 (CT-EST-152) parou na mensagem "Analise gerada!". Na rodada 12B (24/10/2026) o caso foi repetido até o fim: depois do OK a tela mostra o código, a data e o resultado, e a análise entra na lista ao clicar em SALVAR ANÁLISE. Por isso o DV-EST-054 ("não grava nem mostra nada") foi descartado em 26/10/2026. O que o código mostra é mais objetivo: a fórmula da compra parece abater o valor errado quando o lote tem menos do que falta (RN-EST-KIT06-006); a validade mínima do planejamento é ignorada (RN-EST-KIT06-005); a análise não guarda os parâmetros com que foi calculada; o cancelamento apaga de vez, e a exclusão descarta a justificativa (RN-EST-KIT06-008 e 009). O controle de acesso é só visual, e o ícone de excluir aparece para todos (DV-EST-008, Alta; ver a seção de segurança do documento da tela).</p>
 <h4 id="o-que-muda-para-o-resto-da-fabrica">O que muda para o resto da fábrica</h4>
 <ul>
 <li><strong>Estoque:</strong> a análise lê planejamento, kits, remessas e saldo; não grava nada fora dela. A compra sugerida não vira pedido: o código não grava pedido nem solicitação a partir dela.</li>
@@ -109,9 +109,9 @@
 <tbody>
 <tr>
 <td>DV-EST-054 (CT-EST-152, 22/10/2026)</td>
-<td>Com cliente, filial e período (30 ou 90 dias), diz "Analise gerada!"; o Código e a Data de geração ficaram em branco, a necessidade não apareceu e a lista de análises seguiu vazia</td>
-<td>Análise gravada, listada e com a necessidade</td>
-<td>Média. A causa não foi investigada, e a captura mostra a mensagem ainda aberta (ver abaixo)</td>
+<td><strong>Descartado em 26/10/2026</strong> (CT-EST-152, rodada 12B). A rodada 8 leu "Analise gerada!" e parou; na 12B, depois do OK, a tela mostra código, data e resultado, e a análise entra na lista ao SALVAR ANÁLISE</td>
+<td>Análise gravada, listada e com a necessidade (é o que a tela faz)</td>
+<td>Descartado (era Média)</td>
 </tr>
 <tr>
 <td>DV-EST-008</td>
@@ -124,7 +124,7 @@
 <h4 id="o-que-o-codigo-mostra-e-o-teste-ainda-nao-exercitou-a-confirmar-no-teste">O que o código mostra e o teste ainda não exercitou (a confirmar no teste)</h4>
 <ul>
 <li><strong>Rascunho que não aparece na lista.</strong> A lista só mostra análises salvas (dalAnalisePlanejamento.cs:278-280). Duas gerações sem SALVAR ANÁLISE deixam a lista vazia, que é o que o teste viu. Cada geração gravou um rascunho que ninguém vê (RN-EST-KIT06-001): rascunhos esquecidos acumulam (CT-EST-KIT06-01).</li>
-<li><strong>Não se sabe o que a tela mostrou depois do OK.</strong> Pelo código, o OK abre o resultado (analise_planejamento_op.aspx.cs:338-339). Se isso não acontecer, é um defeito real de redirecionamento ou de leitura; se acontecer, o DV-EST-054 foi uma leitura incompleta do fluxo (CT-EST-KIT06-01).</li>
+<li><strong>O que a tela mostra depois do OK (visto na rodada 12B).</strong> O OK abre o resultado (analise_planejamento_op.aspx.cs:338-339), como o código previa; o DV-EST-054 foi uma leitura incompleta do fluxo e está descartado. Fica o ponto de clareza: a mensagem "Analise gerada!" não avisa que ainda falta SALVAR ANÁLISE.</li>
 <li><strong>Possível erro no cálculo da compra.</strong> Quando um lote tem menos estoque do que falta, o código abate da compra "o que falta menos o lote", e não o lote inteiro (bllAnalisePlanejamento.cs:290-304). Exemplo: faltam 15, o lote tem 10; o código abate 5 e a compra fica em 10, quando deveria ficar em 5. Leitura do código, a confirmar com números conhecidos (CT-EST-KIT06-06).</li>
 <li><strong>Validade mínima do planejamento ignorada.</strong> A análise usa o parâmetro geral (RN-EST-KIT06-005 e 010); o valor do planejamento é gravado e não entra na conta. Com o parâmetro em 0 (valor visto em 22/10/2026), o lote só é descartado se já tiver vencido (CT-EST-KIT06-05).</li>
 <li><strong>"Enviado" sem janela.</strong> O planejamento não tem período; tudo o que já foi enviado ao cliente reduz o que falta, para sempre (RN-EST-KIT06-004; CT-EST-KIT06-04).</li>
@@ -143,7 +143,7 @@
 </ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
-<li>O inventário de telas diz <strong>Falha grave</strong> e o registro de defeitos classifica o DV-EST-054 como <strong>Média</strong>. O DV-EST-054 diz que a tela "não grava nem mostra nada". A captura de 22/10/2026 mostra a mensagem ainda aberta; o código mostra que o resultado só aparece depois do OK e que a lista só mostra análises salvas. Antes de manter "Falha grave", repetir o caso até o fim (CT-EST-KIT06-01). Se o resultado aparecer e a lista mostrar a análise depois de salva, o DV-EST-054 vira "mensagem de sucesso sem aviso de que falta salvar", e a situação da tela sobe para "Funciona com falhas".</li>
+<li>O inventário de telas diz <strong>Funciona com falhas</strong> (DV-EST-122 e 123). O DV-EST-054 ("não grava nem mostra nada") foi descartado em 26/10/2026: a rodada 12B (CT-EST-152) mostrou que o resultado aparece depois do OK e que a análise entra na lista ao SALVAR ANÁLISE. Resta o ponto de clareza: a mensagem de sucesso não avisa que falta salvar.</li>
 <li>O fluxo <code>fluxos/kits.md</code> (RN003) diz que "A análise do planejamento exige o período". Confirmado (CT-EST-152). O fluxo não menciona o rascunho nem o SALVAR ANÁLISE.</li>
 <li>O plano (CT-EST-152) espera que, com período, a tela "mostre a necessidade". Pelo código, mostra depois do OK.</li>
 <li>O fluxo descreve "Análise do Planejamento de Kits" como "necessidade por período"; o código calcula também reposição e compra, e desconta o estoque.</li>
@@ -207,7 +207,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#analise-do-planejamento-de-kits">Análise do Planejamento de Kits</a></li><li><a href="#importancia-no-modulo-estoque">Importância no módulo Estoque</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li><li><a href="#seguranca-e-acesso">Segurança e acesso</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 25/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

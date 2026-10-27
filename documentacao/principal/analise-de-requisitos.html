@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -48,7 +48,8 @@
 <ul>
 <li>o comportamento atual extraído do código-fonte (versão 3.5.1);</li>
 <li>o documento de análise v1.0 do módulo Principal;</li>
-<li>os testes nas telas de 05 e 06/10/2026 (78 casos, 26 desvios);</li>
+<li>os testes nas telas, em três rodadas (05, 06 e 26/10/2026), e os 51 defeitos registrados (DV-PRI-001 a 051);</li>
+<li>a documentação por tela (cinco páginas para cada uma das 32 telas do módulo);</li>
 <li>as exigências da ANVISA (RDC nº 658/2022 e Guia nº 33/2020).</li>
 </ul>
 <p>Falhas do sistema atual não foram copiadas: viraram requisitos <strong>corrigidos</strong>, com a indicação do achado ou do desvio de origem. As regras detalhadas de cada tela estão no documento <strong>Regras de Negócio</strong> do módulo Principal.</p>
@@ -583,6 +584,92 @@
 </tr>
 </tbody>
 </table></div>
+<h3 id="requisitos-acrescentados-pela-rodada-3-26-10-2026">Requisitos acrescentados pela rodada 3 (26/10/2026)</h3>
+<p>A rodada 3 abriu as telas que ainda não tinham sido testadas e registrou os defeitos DV-PRI-027 a 051. Os requisitos abaixo agrupam os defeitos de mesma causa. Os defeitos que repetem os anteriores já têm requisito (por exemplo, telas que abrem pelo endereço sem permissão, DV-PRI-025, continua no RF-PRI-032). O requisito de acesso da rodada 3 (DV-PRI-050) está na seção 3.5.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-096</td>
+<td><strong>Excluir pede justificativa em todos os cadastros.</strong> Grupo de usuários, Categoria de equipamento, Centro de custo, Pontos de água, Instrumentos, Utensílios, Utilidades e Estrutura funcional passam a usar a tela de exclusão com justificativa obrigatória que o Grau de contaminação já tem, validada também no servidor. O histórico do registro excluído continua consultável. Reforça RF-PRI-042 e RF-PRI-086.</td>
+<td>E</td>
+<td>DV-PRI-036, 040, 044, 046</td>
+</tr>
+<tr>
+<td>RF-PRI-097</td>
+<td><strong>Alterar e inativar exigem justificativa também na Estrutura funcional</strong>, e a justificativa digitada aparece no histórico (Ver Log) de Funções profissionais, Grupo de usuários e Centro de custo, como já acontece no Profissional.</td>
+<td>E</td>
+<td>DV-PRI-046, 027</td>
+</tr>
+<tr>
+<td>RF-PRI-098</td>
+<td><strong>Uma só regra de justificativa para todos os cadastros</strong>, definida com a Qualidade: pede-se na alteração, na inativação e na exclusão (hoje o Grau de contaminação pede até na inclusão e os outros cadastros não). <em>Ponto para validar com a Qualidade.</em></td>
+<td>D</td>
+<td>DV-PRI-045</td>
+</tr>
+<tr>
+<td>RF-PRI-099</td>
+<td><strong>Todo campo alterado entra no histórico, com o valor antigo e o novo:</strong> Conta contábil (nome, taxa, código, tipo e conta principal), Grupo do profissional e Setor (com o valor antigo).</td>
+<td>E</td>
+<td>DV-PRI-047, 033</td>
+</tr>
+<tr>
+<td>RF-PRI-100</td>
+<td><strong>Configuração do sistema, Configurar notificação e Notificações padrão pedem confirmação e justificativa, mostram a mensagem do resultado e gravam histórico.</strong> Quem recebe os avisos e a aparência do sistema não mudam sem rastro. Prazo menor que 1 é recusado. Reforça RF-PRI-089.</td>
+<td>E</td>
+<td>DV-PRI-029, 031, 034</td>
+</tr>
+<tr>
+<td>RF-PRI-101</td>
+<td><strong>Assinatura eletrônica nas gravações críticas da Administração:</strong> as ações definidas com a Qualidade (por exemplo, alterar grupo, notificação, configuração, perfil e conta) pedem a senha de novo e registram a assinatura no histórico. A janela de assinatura existe no código e está desligada. <em>Quais ações exigem assinatura: ponto para validar com a Qualidade.</em></td>
+<td>E</td>
+<td>DV-PRI-037; RDC 658/2022; Guia 33/2020</td>
+</tr>
+<tr>
+<td>RF-PRI-102</td>
+<td><strong>Descrição, código ou nome repetido é recusado onde ele identifica o registro</strong> (a confirmar com a área): descrição em Funções profissionais; código em Grupo de usuários (com índice único no banco, porque hoje dois grupos com o mesmo código ficam impossíveis de alterar); nome em Categoria de equipamento e em Conta contábil. Reforça RF-PRI-076.</td>
+<td>I</td>
+<td>DV-PRI-028, 035, 041</td>
+</tr>
+<tr>
+<td>RF-PRI-103</td>
+<td><strong>O que se digita é o que se grava, ou o sistema avisa:</strong> o nome do profissional não perde números e o código do centro de custo não perde letras sem aviso. Definir o formato de cada campo. Reforça RF-PRI-075.</td>
+<td>I</td>
+<td>DV-PRI-032, 043</td>
+</tr>
+<tr>
+<td>RF-PRI-104</td>
+<td><strong>Recusas dizem a regra violada, sem erro técnico:</strong> Conta contábil, Conta gerencial e Local físico (hoje "Erro ao processar a informação!"), Configurar notificação (texto técnico) e edição aberta pelo endereço com número que não existe ("Registro não encontrado").</td>
+<td>I</td>
+<td>DV-PRI-030, 042, 051</td>
+</tr>
+<tr>
+<td>RF-PRI-105</td>
+<td><strong>Conta contábil: a taxa de depreciação tem faixa definida</strong> (ponto para validar com a contabilidade, por exemplo 0 a 100) <strong>e a conta do tipo Analítica grava conforme a regra definida.</strong> Equivale ao RF-PRI-092 da versão nova.</td>
+<td>I</td>
+<td>DV-PRI-048, 042</td>
+</tr>
+<tr>
+<td>RF-PRI-106</td>
+<td><strong>Notificações:</strong> incluir um profissional gera a notificação "NOVO PROFISSIONAL" para o destinatário configurado, com o contador na tela inicial; finalizar uma notificação grava a Data de Conclusão.</td>
+<td>I</td>
+<td>DV-PRI-038, 039</td>
+</tr>
+<tr>
+<td>RF-PRI-107</td>
+<td><strong>O profissional inativo pode ser excluído:</strong> o campo da justificativa da exclusão fica habilitado (hoje vem desabilitado e a exclusão não prossegue).</td>
+<td>I</td>
+<td>DV-PRI-049</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="requisitos-nao-funcionais">Requisitos não funcionais</h2>
 <h3 id="seguranca">Segurança</h3>
 <div class="tabela"><table>
@@ -750,6 +837,25 @@
 </tr>
 </tbody>
 </table></div>
+<h3 id="requisito-de-acesso-acrescentado-pela-rodada-3-26-10-2026">Requisito de acesso acrescentado pela rodada 3 (26/10/2026)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requisito</th>
+<th>Prior.</th>
+<th>Origem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RNF-PRI-027</td>
+<td><strong>O parâmetro de retorno do login só aceita endereços do próprio sistema</strong> (lista fixa por ambiente). Qualquer outro destino é ignorado e o token da sessão nunca é acrescentado ao endereço. O parâmetro de desenvolvimento não existe no ambiente de uso. Reforça RNF-PRI-004.</td>
+<td>E</td>
+<td>DV-PRI-050</td>
+</tr>
+</tbody>
+</table></div>
 <hr />
 <h2 id="confirmacao-pelos-testes">Confirmação pelos testes</h2>
 <p>Os testes nas telas confirmaram a necessidade dos requisitos corrigidos abaixo: o sistema atual apresentou exatamente a falha que o requisito corrige.</p>
@@ -845,6 +951,85 @@
 </tbody>
 </table></div>
 <p>Os requisitos acrescentados a partir dos testes (RF-PRI-073 a 079) estão na seção de requisitos funcionais.</p>
+<h3 id="rodada-3-26-10-2026">Rodada 3 (26/10/2026)</h3>
+<p>A rodada 3 acrescentou 13 requisitos corrigidos (RF-PRI-096 a 107 e RNF-PRI-027), que agrupam por causa os defeitos DV-PRI-027 a 051. Os defeitos DV-PRI-001 a 026 já tinham requisito.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>O que o teste mostrou no sistema atual</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF-PRI-096</td>
+<td>Oito cadastros excluem só com a pergunta SIM ou NÃO, sem pedir o motivo. O Grau de contaminação pede justificativa e é o modelo.</td>
+<td>DV-PRI-036, 040, 044, 046</td>
+</tr>
+<tr>
+<td>RF-PRI-097</td>
+<td>No histórico de Funções profissionais, Grupo de usuários e Centro de custo, o campo "Justificativa" fica em branco. Estrutura funcional altera e inativa sem pedir justificativa.</td>
+<td>DV-PRI-027, 046</td>
+</tr>
+<tr>
+<td>RF-PRI-098</td>
+<td>O Grau de contaminação pede justificativa até na inclusão; os outros cadastros não.</td>
+<td>DV-PRI-045</td>
+</tr>
+<tr>
+<td>RF-PRI-099</td>
+<td>Conta contábil: o Ver Log só mostra a inclusão (a taxa mudou de 10 para 12 sem registro). A troca de Grupo do profissional não aparece no histórico, e a troca de Setor aparece sem o valor antigo.</td>
+<td>DV-PRI-047, 033</td>
+</tr>
+<tr>
+<td>RF-PRI-100</td>
+<td>Configuração, Configurar notificação e Notificações padrão gravam sem confirmação, sem justificativa e sem histórico (o Ver Log responde que não existe log de alteração).</td>
+<td>DV-PRI-029, 031, 034</td>
+</tr>
+<tr>
+<td>RF-PRI-101</td>
+<td>Nenhuma gravação da Administração pede a senha de novo.</td>
+<td>DV-PRI-037</td>
+</tr>
+<tr>
+<td>RF-PRI-102</td>
+<td>Duas funções com a mesma descrição; dois grupos com o mesmo código (e depois nenhum dos dois pode ser alterado); o mesmo nome em duas categorias e em duas contas contábeis.</td>
+<td>DV-PRI-028, 035, 041</td>
+</tr>
+<tr>
+<td>RF-PRI-103</td>
+<td>O nome TESTE ADM01 foi gravado como TESTE ADM; o código TCC01 do centro de custo foi gravado como 01.</td>
+<td>DV-PRI-032, 043</td>
+</tr>
+<tr>
+<td>RF-PRI-104</td>
+<td>Erro técnico "Input string was not in a correct format." ao salvar; "Erro ao processar a informação!" em várias recusas; ficha de profissional em branco ao digitar um número que não existe no endereço.</td>
+<td>DV-PRI-030, 042, 051</td>
+</tr>
+<tr>
+<td>RF-PRI-105</td>
+<td>Conta contábil aceitou taxa 150 e taxa negativa; a conta do tipo Analítica não grava.</td>
+<td>DV-PRI-048, 042</td>
+</tr>
+<tr>
+<td>RF-PRI-106</td>
+<td>Cadastrar um profissional não gerou a notificação "NOVO PROFISSIONAL"; ao finalizar uma notificação, a Data de Conclusão ficou em branco.</td>
+<td>DV-PRI-038, 039</td>
+</tr>
+<tr>
+<td>RF-PRI-107</td>
+<td>Profissional inativo: o campo da justificativa da exclusão vem desabilitado e a exclusão não prossegue.</td>
+<td>DV-PRI-049</td>
+</tr>
+<tr>
+<td>RNF-PRI-027</td>
+<td>O Login com o parâmetro de desenvolvimento leva o token da sessão ao endereço informado (observado só com destino dentro do próprio sistema).</td>
+<td>DV-PRI-050</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os requisitos da rodada 3 estão nas seções 2.10 (funcionais) e 3.5 (não funcionais). O total do módulo é de 90 requisitos corrigidos do sistema atual (77 anteriores e 13 novos), mais os 17 da versão nova, no anexo.</p>
 <h2 id="modelo-de-dados">Modelo de dados</h2>
 <p>O banco do módulo Principal tem 83 tabelas. Esta seção descreve as entidades, os relacionamentos e as falhas de estrutura a corrigir.</p>
 <h3 id="visao-geral">Visão geral</h3>
@@ -1589,6 +1774,11 @@ Outras: <code>TBL_BANCO</code>, <code>TBL_OPERADORA_TELEFONIA</code>, <code>TBL_
 <li>A personalização de telas por cliente continua necessária? (RF-PRI-071)</li>
 <li>A empresa usa login corporativo (Active Directory / Entra ID)? (RNF-PRI-008)</li>
 <li>Qual o prazo de retenção a adotar para cada tipo de registro? (RNF-PRI-013)</li>
+<li>Quais ações da Administração exigem assinatura eletrônica (senha de novo)? (RF-PRI-101)</li>
+<li>A justificativa é pedida só na alteração, inativação e exclusão, ou também na inclusão? (RF-PRI-098)</li>
+<li>Descrição, código e nome repetidos: em quais cadastros a repetição é proibida? (RF-PRI-102)</li>
+<li>Qual a faixa da taxa de depreciação e a regra da conta contábil analítica? (RF-PRI-105)</li>
+<li>Formato do nome do profissional e do código do centro de custo? (RF-PRI-103)</li>
 </ol>
 <div class="callout">
 <p class="callout-titulo">Decisão levantada nos testes, ainda pendente</p>
@@ -1804,10 +1994,10 @@ Outras: <code>TBL_BANCO</code>, <code>TBL_OPERADORA_TELEFONIA</code>, <code>TBL_
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="o-principal-ideal-o-dono-do-que-e-global.html"><small>← Anterior</small><strong>O Principal ideal: o dono do que é global</strong></a><a class="ap ap-prox" href="requisitos-da-nova-versao-rascunho.html"><small>Próximo →</small><strong>Requisitos da nova versão (rascunho)</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#papel-do-modulo-principal">Papel do módulo Principal</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#como-ler-os-requisitos">Como ler os requisitos</a></li><li><a href="#requisitos-funcionais">Requisitos funcionais</a></li><li class="sub"><a href="#login-e-sessao">Login e sessão</a></li><li class="sub"><a href="#senha">Senha</a></li><li class="sub"><a href="#usuarios-e-contas">Usuários e contas</a></li><li class="sub"><a href="#perfis-e-permissoes">Perfis e permissões</a></li><li class="sub"><a href="#exclusao-e-historico">Exclusão e histórico</a></li><li class="sub"><a href="#cadastros-compartilhados">Cadastros compartilhados</a></li><li class="sub"><a href="#notificacoes">Notificações</a></li><li class="sub"><a href="#configuracao">Configuração</a></li><li class="sub"><a href="#requisitos-acrescentados-pelos-testes-06-10-2026">Requisitos acrescentados pelos testes (06/10/2026)</a></li><li><a href="#requisitos-nao-funcionais">Requisitos não funcionais</a></li><li class="sub"><a href="#seguranca">Segurança</a></li><li class="sub"><a href="#integridade-de-dados-e-auditoria">Integridade de dados e auditoria</a></li><li class="sub"><a href="#validacao-e-operacao">Validação e operação</a></li><li class="sub"><a href="#integracao-entre-modulos">Integração entre módulos</a></li><li><a href="#confirmacao-pelos-testes">Confirmação pelos testes</a></li><li><a href="#modelo-de-dados">Modelo de dados</a></li><li class="sub"><a href="#visao-geral">Visão geral</a></li><li class="sub"><a href="#seguranca-usuarios-perfis-e-permissoes">Segurança: usuários, perfis e permissões</a></li><li class="sub"><a href="#trilha-de-auditoria-historico-de-alteracoes">Trilha de auditoria (histórico de alterações)</a></li><li class="sub"><a href="#pessoa-juridica">Pessoa jurídica</a></li><li class="sub"><a href="#estrutura-fisica-e-equipamentos">Estrutura física e equipamentos</a></li><li class="sub"><a href="#financeiro-e-locais-fisicos">Financeiro e locais físicos</a></li><li class="sub"><a href="#notificacoes_1">Notificações</a></li><li class="sub"><a href="#tabelas-de-apoio">Tabelas de apoio</a></li><li class="sub"><a href="#sistema-e-configuracao">Sistema e configuração</a></li><li><a href="#integracoes-com-os-outros-modulos">Integrações com os outros módulos</a></li><li class="sub"><a href="#login-e-permissoes-por-servico-todos-os-modulos">Login e permissões, por serviço (todos os módulos)</a></li><li class="sub"><a href="#leitura-direta-do-banco-por-sinonimos-estoque-e-producao">Leitura direta do banco, por sinônimos (Estoque e Produção)</a></li><li class="sub"><a href="#tabelas-com-o-mesmo-nome-em-varios-modulos">Tabelas com o mesmo nome em vários módulos</a></li><li><a href="#anomalias-de-estrutura-a-corrigir">Anomalias de estrutura a corrigir</a></li><li><a href="#conformidade-regulatoria">Conformidade regulatória</a></li><li class="sub"><a href="#controle-de-acesso-e-senhas">Controle de acesso e senhas</a></li><li class="sub"><a href="#mensagens-dados-e-fase-operacional">Mensagens, dados e fase operacional</a></li><li><a href="#decisoes-pendentes">Decisões pendentes</a></li><li><a href="#versao-nova-requisitos-e-desvios-do-modulo-principal">Versão nova: requisitos e desvios do Módulo Principal</a></li><li class="sub"><a href="#resultado-em-numeros">Resultado em números</a></li><li class="sub"><a href="#desvios-da-versao-nova-que-viram-requisito">Desvios da versão nova que viram requisito</a></li><li class="sub"><a href="#melhorias-da-versao-nova">Melhorias da versão nova</a></li><li class="sub"><a href="#pendencias-desta-frente">Pendências desta frente</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li><a href="#papel-do-modulo-principal">Papel do módulo Principal</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#como-ler-os-requisitos">Como ler os requisitos</a></li><li><a href="#requisitos-funcionais">Requisitos funcionais</a></li><li class="sub"><a href="#login-e-sessao">Login e sessão</a></li><li class="sub"><a href="#senha">Senha</a></li><li class="sub"><a href="#usuarios-e-contas">Usuários e contas</a></li><li class="sub"><a href="#perfis-e-permissoes">Perfis e permissões</a></li><li class="sub"><a href="#exclusao-e-historico">Exclusão e histórico</a></li><li class="sub"><a href="#cadastros-compartilhados">Cadastros compartilhados</a></li><li class="sub"><a href="#notificacoes">Notificações</a></li><li class="sub"><a href="#configuracao">Configuração</a></li><li class="sub"><a href="#requisitos-acrescentados-pelos-testes-06-10-2026">Requisitos acrescentados pelos testes (06/10/2026)</a></li><li class="sub"><a href="#requisitos-acrescentados-pela-rodada-3-26-10-2026">Requisitos acrescentados pela rodada 3 (26/10/2026)</a></li><li><a href="#requisitos-nao-funcionais">Requisitos não funcionais</a></li><li class="sub"><a href="#seguranca">Segurança</a></li><li class="sub"><a href="#integridade-de-dados-e-auditoria">Integridade de dados e auditoria</a></li><li class="sub"><a href="#validacao-e-operacao">Validação e operação</a></li><li class="sub"><a href="#integracao-entre-modulos">Integração entre módulos</a></li><li class="sub"><a href="#requisito-de-acesso-acrescentado-pela-rodada-3-26-10-2026">Requisito de acesso acrescentado pela rodada 3 (26/10/2026)</a></li><li><a href="#confirmacao-pelos-testes">Confirmação pelos testes</a></li><li class="sub"><a href="#rodada-3-26-10-2026">Rodada 3 (26/10/2026)</a></li><li><a href="#modelo-de-dados">Modelo de dados</a></li><li class="sub"><a href="#visao-geral">Visão geral</a></li><li class="sub"><a href="#seguranca-usuarios-perfis-e-permissoes">Segurança: usuários, perfis e permissões</a></li><li class="sub"><a href="#trilha-de-auditoria-historico-de-alteracoes">Trilha de auditoria (histórico de alterações)</a></li><li class="sub"><a href="#pessoa-juridica">Pessoa jurídica</a></li><li class="sub"><a href="#estrutura-fisica-e-equipamentos">Estrutura física e equipamentos</a></li><li class="sub"><a href="#financeiro-e-locais-fisicos">Financeiro e locais físicos</a></li><li class="sub"><a href="#notificacoes_1">Notificações</a></li><li class="sub"><a href="#tabelas-de-apoio">Tabelas de apoio</a></li><li class="sub"><a href="#sistema-e-configuracao">Sistema e configuração</a></li><li><a href="#integracoes-com-os-outros-modulos">Integrações com os outros módulos</a></li><li class="sub"><a href="#login-e-permissoes-por-servico-todos-os-modulos">Login e permissões, por serviço (todos os módulos)</a></li><li class="sub"><a href="#leitura-direta-do-banco-por-sinonimos-estoque-e-producao">Leitura direta do banco, por sinônimos (Estoque e Produção)</a></li><li class="sub"><a href="#tabelas-com-o-mesmo-nome-em-varios-modulos">Tabelas com o mesmo nome em vários módulos</a></li><li><a href="#anomalias-de-estrutura-a-corrigir">Anomalias de estrutura a corrigir</a></li><li><a href="#conformidade-regulatoria">Conformidade regulatória</a></li><li class="sub"><a href="#controle-de-acesso-e-senhas">Controle de acesso e senhas</a></li><li class="sub"><a href="#mensagens-dados-e-fase-operacional">Mensagens, dados e fase operacional</a></li><li><a href="#decisoes-pendentes">Decisões pendentes</a></li><li><a href="#versao-nova-requisitos-e-desvios-do-modulo-principal">Versão nova: requisitos e desvios do Módulo Principal</a></li><li class="sub"><a href="#resultado-em-numeros">Resultado em números</a></li><li class="sub"><a href="#desvios-da-versao-nova-que-viram-requisito">Desvios da versão nova que viram requisito</a></li><li class="sub"><a href="#melhorias-da-versao-nova">Melhorias da versão nova</a></li><li class="sub"><a href="#pendencias-desta-frente">Pendências desta frente</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

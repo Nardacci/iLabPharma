@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -103,7 +103,7 @@
 <td>CT-GQ-111</td>
 <td>Inconclusivo</td>
 <td>Bloqueado (parcial)</td>
-<td>O usuário de consulta <code>[usuário de teste]</code> não vê o módulo GQ na tela de módulos, mas consegue abrir as telas da GQ digitando o endereço. As telas abrem "por fora", com a maioria dos botões desabilitados. Nas cinco telas testadas (Assuntos Regulatórios, Autoinspeção e Auditoria, Treinamento e Grupo Perfil) nenhuma gravação foi aceita: o servidor respondeu "recusado" (código 403) tanto pela tela quanto pela chamada direta. <strong>Ressalva:</strong> como <code>[usuário de teste]</code> não tem o módulo GQ, não se pode afirmar que o servidor confere as funções dentro do módulo. Ver detalhe por tela no arquivo confidencial</td>
+<td>O usuário de consulta <code>t.consulta</code> não vê o módulo GQ na tela de módulos, mas consegue abrir as telas da GQ digitando o endereço. As telas abrem "por fora", com a maioria dos botões desabilitados. Nas cinco telas testadas (Assuntos Regulatórios, Autoinspeção e Auditoria, Treinamento e Grupo Perfil) nenhuma gravação foi aceita: o servidor respondeu "recusado" (código 403) tanto pela tela quanto pela chamada direta. <strong>Ressalva:</strong> como <code>t.consulta</code> não tem o módulo GQ, não se pode afirmar que o servidor confere as funções dentro do módulo. Ver detalhe por tela no arquivo confidencial</td>
 <td>confidencial</td>
 <td>DV-GQ-N-006 (limite do teste)</td>
 </tr>
@@ -111,7 +111,7 @@
 <td>CT-GQ-112</td>
 <td>Inconclusivo</td>
 <td>Bloqueado (parcial)</td>
-<td>A tela de Grupo Perfil abriu para <code>[usuário de teste]</code> pelo endereço, mas a gravação foi recusada (pela tela e pela chamada direta). O Nível 3 não foi alterado (conferido com o administrador de teste depois). A mesma ressalva do 111 vale aqui. Ver arquivo confidencial</td>
+<td>A tela de Grupo Perfil abriu para <code>t.consulta</code> pelo endereço, mas a gravação foi recusada (pela tela e pela chamada direta). O Nível 3 não foi alterado (conferido com o administrador de teste depois). A mesma ressalva do 111 vale aqui. Ver arquivo confidencial</td>
 <td>confidencial</td>
 <td>DV-GQ-N-006</td>
 </tr>
@@ -214,7 +214,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>O usuário <code>[usuário de teste]</code> <strong>não deixou nenhum registro</strong> (todas as gravações foram recusadas; conferido na lista de grupos e na lista de Tipos de Treinamento).</p>
+<p>O usuário <code>t.consulta</code> <strong>não deixou nenhum registro</strong> (todas as gravações foram recusadas; conferido na lista de grupos e na lista de Tipos de Treinamento).</p>
 <h3 id="6-o-que-falta-e-o-que-pedir">6. O que falta e o que pedir</h3>
 <ol>
 <li><strong>Decisão do responsável:</strong> como dar acesso à GQ a um usuário de teste (inclusive de consulta). Sem isso, 057, 061/063 com outro inspetor e 111/112 completos ficam limitados.</li>
@@ -227,7 +227,7 @@
 <p><strong>CORREÇÃO (18/10/2026, rodada 6):</strong> o DV-GQ-N-006 <strong>não procede</strong>. A tela de Perfil tem uma aba por módulo, com as funções da GQ; a rodada 5 olhou só a aba Principal, e esta revisão repetiu o erro ao classificá-lo como regressão. Vale o <strong>DV-GQ-N-008</strong> (perfil novo com funções da GQ não dá acesso funcional). A parte sobre CT-GQ-111 e 112 (inconclusivos) continua valendo.</p>
 </blockquote>
 <ul>
-<li><strong>CT-GQ-111 e 112 não são "Melhoria".</strong> <code>[usuário de teste]</code> não tem o módulo GQ; o servidor recusar quem não tem acesso ao módulo é o esperado e não prova que confere as funções de quem tem acesso. O cenário que falhou no legado (DV-GQ-009: usuário com acesso de consulta à GQ gravando) <strong>não foi testado</strong>. Classe corrigida para <strong>Bloqueado (parcial / inconclusivo)</strong>, com a observação de que o servidor recusou todas as gravações de quem não tem o módulo.</li>
+<li><strong>CT-GQ-111 e 112 não são "Melhoria".</strong> <code>t.consulta</code> não tem o módulo GQ; o servidor recusar quem não tem acesso ao módulo é o esperado e não prova que confere as funções de quem tem acesso. O cenário que falhou no legado (DV-GQ-009: usuário com acesso de consulta à GQ gravando) <strong>não foi testado</strong>. Classe corrigida para <strong>Bloqueado (parcial / inconclusivo)</strong>, com a observação de que o servidor recusou todas as gravações de quem não tem o módulo.</li>
 <li><strong>DV-GQ-N-006 é regressão, não só falta de dado.</strong> No legado a tela de Perfil monta uma aba de funções <strong>por módulo</strong> (Principal, Produção, Estoque, CQ, Comercial...; <code>1.principal/app/LaboSys_UI/administracao/perfil_ed.aspx.cs:93-113</code>, <code>retornaListaCompletaFuncoesPrincipal</code> e as abas <code>TabModulo*</code>), por isso o legado permitia montar perfis de GQ. Na versão nova a árvore só traz Administração e Cadastros. Sem isso, <strong>nenhum perfil novo dá acesso a Estoque, GQ, CQ ou Controle de Documentos pela tela</strong>, o que atinge os quatro módulos do cliente IVB. Gravidade Alta.</li>
 <li><strong>Duplicidade da auditoria:</strong> aceita como "não se repetiu"; a causa na rodada 4 continua inferência (duas gravações do script).</li>
 <li><strong>DV-GQ-N-007:</strong> aceito como "a confirmar" (falta ver o histórico).</li>
@@ -239,7 +239,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-resumo">1. Resumo</a></li><li><a href="#2-resultado-por-caso">2. Resultado por caso</a></li><li><a href="#3-verificacao-extra-duplicidade-da-auditoria-passo-4">3. Verificação extra: duplicidade da auditoria (Passo 4)</a></li><li><a href="#4-desvios-novos-desta-rodada">4. Desvios novos desta rodada</a></li><li><a href="#5-registros-criados-ou-alterados-no-ambiente-novo-nao-apagados">5. Registros criados ou alterados no ambiente novo (não apagados)</a></li><li><a href="#6-o-que-falta-e-o-que-pedir">6. O que falta e o que pedir</a></li><li><a href="#7-revisao-claude-17-10-2026">7. Revisão (Claude, 17/10/2026)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

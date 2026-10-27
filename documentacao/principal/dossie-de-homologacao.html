@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -48,8 +48,8 @@
 <p>O LabMedSys foi adquirido de um fornecedor que encerrou as atividades. O objetivo da homologação é <strong>conhecer o comportamento real do sistema atual</strong>, verificar a conformidade com as Boas Práticas de Fabricação e fornecer à equipe de desenvolvimento a base para a <strong>nova versão</strong>, que parte deste mesmo código.</p>
 <h3 id="escopo">Escopo</h3>
 <ul>
-<li>Módulo Principal: acesso ao sistema, sessão, senha, usuários e contas, perfis e permissões, controle de acesso por tela, trilha de auditoria e os cadastros de Ambiente, Equipamento e Pessoa jurídica.</li>
-<li>Fora deste ciclo: notificações por e-mail, carga de dados, segurança da aplicação (injeção de SQL, HTTPS) e os demais cadastros, que entram no próximo ciclo.</li>
+<li>Módulo Principal: as 32 telas do módulo (7 de Acesso ao sistema, 11 de Administração e 14 de Cadastros e tabelas de apoio): acesso ao sistema, sessão, senha, usuários e contas, perfis e permissões, controle de acesso por tela, trilha de auditoria e todos os cadastros.</li>
+<li>Fora deste ciclo: envio de notificações por e-mail, carga de dados, segurança da aplicação (injeção de SQL, HTTPS) e os relacionamentos com os outros módulos (Produção e Controle da Qualidade).</li>
 </ul>
 <h3 id="documentos-deste-pacote">Documentos deste pacote</h3>
 <div class="tabela"><table>
@@ -62,19 +62,27 @@
 <tbody>
 <tr>
 <td>Regras de Negócio</td>
-<td>Regras gerais e por tela, com a situação de cada uma depois dos testes</td>
+<td>Regras gerais e regras por tela (as 32 telas), com a situação de cada uma depois dos testes</td>
 </tr>
 <tr>
 <td>Análise de Requisitos</td>
-<td>Requisitos da nova versão, modelo de dados, integrações e conformidade</td>
+<td>Requisitos corrigidos da nova versão, modelo de dados, integrações e conformidade</td>
 </tr>
 <tr>
 <td>Manual do Usuário</td>
-<td>Uso das telas do módulo Principal</td>
+<td>Uso das telas do módulo Principal e limitações conhecidas</td>
+</tr>
+<tr>
+<td>Por que não está apto</td>
+<td>Os motivos do parecer, em linguagem simples</td>
+</tr>
+<tr>
+<td>Resumo Executivo</td>
+<td>Duas páginas para a diretoria</td>
 </tr>
 <tr>
 <td>Dossiê de Homologação (este documento)</td>
-<td>Risco, achados, plano e resultados dos testes, desvios, rastreabilidade e parecer</td>
+<td>Risco, achados, plano e resultados dos testes, defeitos, rastreabilidade, parecer e fechamento</td>
 </tr>
 </tbody>
 </table></div>
@@ -104,8 +112,9 @@
 <p class="callout-titulo">Condições da execução</p>
 <ul>
 <li>Ambiente de teste da empresa (não produção), com dados fictícios identificados pelo prefixo TESTE.</li>
-<li>Duas rodadas: 05/10/2026 (inclusão, edição, exclusão e trilha de auditoria) e 05 e 06/10/2026 (login, sessão, senha, perfis e acesso por tela).</li>
+<li>Três rodadas: 05/10/2026 (inclusão, edição, exclusão e trilha de auditoria), 05 e 06/10/2026 (login, sessão, senha, perfis e acesso por tela) e 26/10/2026 (as 32 telas, só com o administrador das rodadas de 05/10).</li>
 <li>Nenhuma senha foi gravada em arquivo ou evidência; as capturas mostram as senhas mascaradas.</li>
+<li>Na rodada 3, os passos que exigiam outro usuário ficaram bloqueados, porque a senha provisória aparece na tela e não pode ser gravada.</li>
 <li>Registros de teste permanecem no ambiente, por decisão do responsável, para uso nos próximos módulos.</li>
 </ul>
 </div>
@@ -759,6 +768,45 @@
 <li>Botões de Imprimir, Excel e Excluir respeitam as permissões, e a soma de perfis funciona.</li>
 </ul>
 </div>
+<div class="callout">
+<p class="callout-titulo">Rodada 3 (26/10/2026): acesso e segurança</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Achado</th>
+<th>Descrição</th>
+<th>Gravidade</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-PRI-050</td>
+<td>O login leva o token da sessão a qualquer endereço informado no parâmetro de desenvolvimento</td>
+<td>Alta</td>
+<td><strong>Confirmado</strong>, observado só com destino dentro do próprio sistema</td>
+</tr>
+<tr>
+<td>DV-PRI-037</td>
+<td>Nenhuma gravação da Administração pede a senha de novo (assinatura eletrônica desligada)</td>
+<td>Alta</td>
+<td><strong>Confirmado</strong> em Grupo de usuários, Configurar notificação, Notificações padrão e Configuração</td>
+</tr>
+<tr>
+<td>DV-PRI-003</td>
+<td>Senha provisória exibida ao administrador</td>
+<td>Alta</td>
+<td><strong>Reconfirmado</strong>. É também o motivo de o teste com outro usuário ter ficado bloqueado: a senha aparece na tela e não pode ser gravada</td>
+</tr>
+<tr>
+<td>REL-03</td>
+<td>Relatório de outro profissional pelo número no endereço</td>
+<td>—</td>
+<td><strong>Não se confirmou</strong>: o endereço do relatório não leva número nem filtro</td>
+</tr>
+</tbody>
+</table></div>
+</div>
 <h2 id="plano-de-testes">Plano de testes</h2>
 <h3 id="objetivo">Objetivo</h3>
 <ol>
@@ -869,52 +917,52 @@
 </thead>
 <tbody>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.admin</code></td>
 <td>TESTE_ADMIN</td>
 <td>Ativo</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.consulta</code></td>
 <td>TESTE_CONSULTA</td>
 <td>Ativo</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.cadastro</code></td>
 <td>TESTE_CADASTRO</td>
 <td>Ativo</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.semadmin</code></td>
 <td>TESTE_SEM_ADMIN</td>
 <td>Ativo</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.inativo</code></td>
 <td>TESTE_CADASTRO</td>
 <td>Usuário inativo</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.containativa</code></td>
 <td>TESTE_CADASTRO</td>
 <td>Conta inativa</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.vencido</code></td>
 <td>TESTE_CADASTRO</td>
 <td>Validade de acesso já encerrada (data fim = ontem)</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.futuro</code></td>
 <td>TESTE_CADASTRO</td>
 <td>Validade começa amanhã</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.senhavencida</code></td>
 <td>TESTE_CADASTRO</td>
 <td>Senha vencida (validade da senha = ontem)</td>
 </tr>
 <tr>
-<td><code>[usuário de teste]</code></td>
+<td><code>t.bloqueio</code></td>
 <td>TESTE_CADASTRO</td>
 <td>Ativo; usado nos testes de bloqueio</td>
 </tr>
@@ -1231,8 +1279,9 @@
 <thead>
 <tr>
 <th>Rodada</th>
-<th>Casos</th>
+<th>Linhas de resultado</th>
 <th>Passou</th>
+<th>Com ressalva</th>
 <th>Falhou</th>
 <th>Bloqueado</th>
 </tr>
@@ -1240,198 +1289,1015 @@
 <tbody>
 <tr>
 <td>1 (05/10/2026): usuários, cadastros e trilha de auditoria</td>
-<td>35</td>
+<td>35 casos</td>
 <td>22</td>
+<td>—</td>
 <td>10</td>
 <td>3</td>
 </tr>
 <tr>
 <td>2 (05 e 06/10/2026): login, sessão, senha, perfis e acesso por tela</td>
-<td>43</td>
+<td>43 casos</td>
 <td>26</td>
+<td>—</td>
 <td>15</td>
 <td>2</td>
 </tr>
 <tr>
-<td><strong>Total</strong></td>
-<td><strong>78</strong></td>
-<td><strong>48</strong></td>
-<td><strong>25</strong></td>
-<td><strong>5</strong></td>
+<td>3 (26/10/2026): as 32 telas, com o administrador</td>
+<td>140 passos</td>
+<td>48</td>
+<td>40</td>
+<td>33</td>
+<td>19</td>
 </tr>
 </tbody>
 </table></div>
-<p>As evidências (capturas de tela) estão no repositório de homologação, na pasta de execução de cada rodada.</p>
-<h2 id="desvios">Desvios</h2>
+<p>As rodadas 1 e 2 somam 78 execuções (48 passaram, 25 falharam, 5 bloqueadas); a rodada 3 foi contada por passo do roteiro e separa o "passou com ressalva". A soma das duas unidades não é uma medida única: o quadro de cobertura abaixo usa as linhas de resultado do cronograma.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Desvio</th>
-<th>Gravidade</th>
-<th>Descrição</th>
-<th>Situação</th>
+<th>Cobertura</th>
+<th>Linhas de resultado</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>DV-PRI-001</td>
-<td>Baixa</td>
-<td>Descrição do perfil remove <code>_</code>, <code>'</code>, <code>-</code> e <code>/</code> sem aviso</td>
-<td>Aberto</td>
+<td>Planejadas (casos e passos)</td>
+<td>216</td>
 </tr>
 <tr>
-<td>DV-PRI-002</td>
-<td>Baixa</td>
-<td>Login gravado em maiúsculas</td>
-<td>Aberto (regra a definir)</td>
+<td>Conclusivas (passou, com ressalva ou falhou)</td>
+<td>197</td>
 </tr>
+<tr>
+<td>Não conclusivas (bloqueadas)</td>
+<td>19</td>
+</tr>
+</tbody>
+</table></div>
+<p>As evidências (capturas de tela) estão no repositório de homologação, na pasta de execução de cada rodada.</p>
+<h3 id="rodada-3-26-10-2026">Rodada 3 (26/10/2026)</h3>
+<p>Executada por automação no navegador, com o administrador das rodadas de 05/10, em 23 das 32 telas (as outras 9 já tinham sido testadas nas rodadas 1 e 2). Antes da rodada 3, 19 das 32 telas não tinham teste de tela no legado. Estrutura funcional, Local físico, Instrumentos, Pontos de água, Utensílios, Utilidades e Grau de contaminação foram abertas pela primeira vez, e Categoria de equipamento, Centro de custo, Conta gerencial, Conta contábil e Profissional foram completadas (alterar, inativar e excluir). Resultado: 140 passos, 48 passaram, 40 com ressalva, 33 falharam e 19 bloqueados (121 conclusivos). Foram registrados 25 defeitos novos (DV-PRI-027 a 051).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Passos</th>
+<th>Passou</th>
+<th>Com ressalva</th>
+<th>Falhou</th>
+<th>Bloqueado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Funções profissionais</td>
+<td>8</td>
+<td>4</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Configurar notificação</td>
+<td>5</td>
+<td>0</td>
+<td>2</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Notificações padrão</td>
+<td>3</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Tipo de notificação</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Profissional</td>
+<td>17</td>
+<td>5</td>
+<td>4</td>
+<td>5</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Configuração</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Microservices</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Grupo de usuários</td>
+<td>9</td>
+<td>2</td>
+<td>1</td>
+<td>5</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Notificações do sistema</td>
+<td>5</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Notificações do usuário</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Categoria de equipamento</td>
+<td>7</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Centro de custo</td>
+<td>5</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Conta gerencial</td>
+<td>6</td>
+<td>3</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Conta contábil</td>
+<td>7</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Grau de contaminação</td>
+<td>9</td>
+<td>4</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Pontos de água</td>
+<td>8</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Instrumentos</td>
+<td>10</td>
+<td>6</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Utensílios</td>
+<td>6</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Utilidades</td>
+<td>6</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Local físico</td>
+<td>8</td>
+<td>4</td>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Estrutura funcional</td>
+<td>9</td>
+<td>1</td>
+<td>4</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Visualização de relatórios</td>
+<td>3</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Login</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>140</strong></td>
+<td><strong>48</strong></td>
+<td><strong>40</strong></td>
+<td><strong>33</strong></td>
+<td><strong>19</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout">
+<p class="callout-titulo">O que a rodada 3 não confirmou</p>
+<p>O relatório de outro profissional pelo número no endereço (REL-03) <strong>não se confirmou</strong>: o endereço do relatório do Profissional não leva número nem filtro, que ficam na sessão.</p>
+</div>
+<h3 id="resultado-por-tela">Resultado por tela</h3>
+<p>Situação de cada uma das 32 telas: <strong>1 funciona</strong> (as páginas de erro), <strong>11 funcionam com falhas</strong> e <strong>20 têm falha grave</strong> (defeito de gravidade Alta, de segurança, de senha ou de trilha de auditoria); nenhuma ficou sem teste.</p>
+<h4 id="acesso-ao-sistema">Acesso ao sistema</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Situação</th>
+<th>Defeitos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login</td>
+<td>Falha grave</td>
+<td>DV-PRI-050, DV-PRI-015, DV-PRI-016</td>
+</tr>
+<tr>
+<td>Troca de senha</td>
+<td>Falha grave</td>
+<td>DV-PRI-022, DV-PRI-021</td>
+</tr>
+<tr>
+<td>Início e menu</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-018</td>
+</tr>
+<tr>
+<td>Sair</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-020</td>
+</tr>
+<tr>
+<td>Sessão expirada e acesso negado</td>
+<td>Funciona</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Notificações do usuário</td>
+<td>Funciona com falhas</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Visualização de relatórios</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-025</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="administracao">Administração</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Situação</th>
+<th>Defeitos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Profissional</td>
+<td>Falha grave</td>
+<td>DV-PRI-033, DV-PRI-049, DV-PRI-032, DV-PRI-014, DV-PRI-004, DV-PRI-006, DV-PRI-023</td>
+</tr>
+<tr>
+<td>Conta usuário</td>
+<td>Falha grave</td>
+<td>DV-PRI-003, DV-PRI-017, DV-PRI-005</td>
+</tr>
+<tr>
+<td>Perfil</td>
+<td>Falha grave</td>
+<td>DV-PRI-024, DV-PRI-025, DV-PRI-001</td>
+</tr>
+<tr>
+<td>Configuração</td>
+<td>Falha grave</td>
+<td>DV-PRI-025</td>
+</tr>
+<tr>
+<td>Microservices</td>
+<td>Falha grave</td>
+<td>DV-PRI-025</td>
+</tr>
+<tr>
+<td>Grupo de usuários</td>
+<td>Falha grave</td>
+<td>DV-PRI-036, DV-PRI-035, DV-PRI-027</td>
+</tr>
+<tr>
+<td>Funções profissionais</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-027, DV-PRI-028</td>
+</tr>
+<tr>
+<td>Notificações padrão</td>
+<td>Falha grave</td>
+<td>DV-PRI-031</td>
+</tr>
+<tr>
+<td>Configurar notificação</td>
+<td>Falha grave</td>
+<td>DV-PRI-029, DV-PRI-030</td>
+</tr>
+<tr>
+<td>Notificações do sistema</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-039, DV-PRI-038</td>
+</tr>
+<tr>
+<td>Tipo de notificação</td>
+<td>Funciona com falhas</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="cadastros-e-tabelas-de-apoio">Cadastros e tabelas de apoio</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tela</th>
+<th>Situação</th>
+<th>Defeitos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ambientes</td>
+<td>Falha grave</td>
+<td>DV-PRI-009, DV-PRI-007, DV-PRI-008, DV-PRI-011</td>
+</tr>
+<tr>
+<td>Equipamentos</td>
+<td>Falha grave</td>
+<td>DV-PRI-010, DV-PRI-009, DV-PRI-008</td>
+</tr>
+<tr>
+<td>Pessoa jurídica</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-013, DV-PRI-008</td>
+</tr>
+<tr>
+<td>Categoria de equipamento</td>
+<td>Falha grave</td>
+<td>DV-PRI-040, DV-PRI-041</td>
+</tr>
+<tr>
+<td>Centro de custo</td>
+<td>Falha grave</td>
+<td>DV-PRI-044, DV-PRI-027, DV-PRI-043</td>
+</tr>
+<tr>
+<td>Conta contábil</td>
+<td>Falha grave</td>
+<td>DV-PRI-047, DV-PRI-048, DV-PRI-042</td>
+</tr>
+<tr>
+<td>Conta gerencial</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-042</td>
+</tr>
+<tr>
+<td>Instrumentos</td>
+<td>Falha grave</td>
+<td>DV-PRI-044</td>
+</tr>
+<tr>
+<td>Estrutura funcional</td>
+<td>Falha grave</td>
+<td>DV-PRI-046</td>
+</tr>
+<tr>
+<td>Local físico</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-042</td>
+</tr>
+<tr>
+<td>Pontos de água</td>
+<td>Falha grave</td>
+<td>DV-PRI-044</td>
+</tr>
+<tr>
+<td>Utensílios</td>
+<td>Falha grave</td>
+<td>DV-PRI-044</td>
+</tr>
+<tr>
+<td>Utilidades</td>
+<td>Falha grave</td>
+<td>DV-PRI-044</td>
+</tr>
+<tr>
+<td>Grau de contaminação</td>
+<td>Funciona com falhas</td>
+<td>DV-PRI-045</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="desvios">Desvios</h2>
+<p>Registro do módulo Principal: <strong>51 defeitos</strong>. 50 estão abertos, 1 foi encerrado (DV-PRI-012, explicado pela regra de itens vinculados, RN-PRI-071). Dos abertos, <strong>16 são de gravidade alta, 18 média e 16 baixa</strong>. Por tipo: 17 de norma (trilha de auditoria e registro), 21 funcionais, 12 de acesso e segurança e 1 de ambiente e dados. A rodada 3 acrescentou 25 (11 alta, 6 média e 8 baixa).</p>
+<h3 id="defeitos-de-gravidade-alta-abertos">Defeitos de gravidade Alta (abertos)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Defeito</th>
+<th>Tela</th>
+<th>O que foi visto</th>
+<th>Tipo</th>
+<th>Requisito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-PRI-003</td>
+<td>Administração › Conta do Usuário (inclusão e Reset de senha)</td>
+<td>A senha provisória aparece na tela do administrador ao criar a conta e ao redefinir a senha</td>
+<td>acesso/segurança</td>
+<td>RF-PRI-013</td>
+</tr>
+<tr>
+<td>DV-PRI-009</td>
+<td>Cadastros › Cadastro de Ambientes e Cadastro de Equipamentos › Excluir</td>
+<td>Exclusão de Ambiente e de Equipamento é gravada sem pedir justificativa</td>
+<td>norma</td>
+<td>RF-PRI-042</td>
+</tr>
+<tr>
+<td>DV-PRI-014</td>
+<td>Cadastros › Cadastro de Ambientes (e demais cadastros) › Ver Log</td>
+<td>O histórico de um registro excluído não pode mais ser consultado pelas telas</td>
+<td>norma</td>
+<td>RF-PRI-044</td>
+</tr>
+<tr>
+<td>DV-PRI-022</td>
+<td>Troca de senha (primeiro acesso) e demais telas</td>
+<td>A troca obrigatória de senha pode ser pulada: digitando o endereço de outra tela, o usuário usa o sistema com a senha provisória</td>
+<td>acesso/segurança</td>
+<td>RF-PRI-007</td>
+</tr>
+<tr>
+<td>DV-PRI-025</td>
+<td>Administração › Profissional, Cadastro de Perfil, Configuração, Microservices, Grupo de Usuário e relatórios de Usuário e de Perfil (acesso direto)</td>
+<td>Telas administrativas abrem pelo endereço para quem não tem nenhuma permissão de Administração</td>
+<td>acesso/segurança</td>
+<td>RF-PRI-032</td>
+</tr>
+<tr>
+<td>DV-PRI-029</td>
+<td>Administração › Configurar notificação (edição do tipo)</td>
+<td>Configurar notificação grava sem confirmação, sem justificativa, sem mensagem e sem histórico</td>
+<td>norma</td>
+<td>RF-PRI-100</td>
+</tr>
+<tr>
+<td>DV-PRI-031</td>
+<td>Administração › Notificações padrão (edição) › Ver Log Alteração</td>
+<td>Notificações padrão: alterar os destinatários não pede justificativa e não deixa histórico</td>
+<td>norma</td>
+<td>RF-PRI-100</td>
+</tr>
+<tr>
+<td>DV-PRI-033</td>
+<td>Administração › Profissional (alteração) › Ver Log Alteração</td>
+<td>A troca de Grupo do profissional não aparece no histórico; a troca de Setor aparece sem o valor antigo</td>
+<td>norma</td>
+<td>RF-PRI-099</td>
+</tr>
+<tr>
+<td>DV-PRI-034</td>
+<td>Configuração (aberta pelo endereço; não está no menu)</td>
+<td>Configuração do sistema (cor do layout e logotipos) grava sem confirmação, justificativa, mensagem ou histórico</td>
+<td>norma</td>
+<td>RF-PRI-100</td>
+</tr>
+<tr>
+<td>DV-PRI-036</td>
+<td>Administração › Grupo de usuários › Excluir</td>
+<td>Grupo de usuários é excluído sem pedir justificativa</td>
+<td>norma</td>
+<td>RF-PRI-096</td>
+</tr>
+<tr>
+<td>DV-PRI-037</td>
+<td>Administração › Grupo de usuários, Configurar notificação, Notificações padrão e Configuração</td>
+<td>Nenhuma gravação da Administração pede senha de novo (assinatura eletrônica desligada)</td>
+<td>acesso/segurança</td>
+<td>RF-PRI-101</td>
+</tr>
+<tr>
+<td>DV-PRI-040</td>
+<td>Cadastros › Categoria de equipamento › Excluir</td>
+<td>Categoria de equipamento é excluída sem pedir justificativa</td>
+<td>norma</td>
+<td>RF-PRI-096</td>
+</tr>
+<tr>
+<td>DV-PRI-044</td>
+<td>Cadastros › Centro de custo, Pontos de água, Instrumentos, Utensílios e Utilidades › Excluir</td>
+<td>Centro de custo, Pontos de água, Instrumentos, Utensílios e Utilidades são excluídos sem pedir justificativa</td>
+<td>norma</td>
+<td>RF-PRI-096</td>
+</tr>
+<tr>
+<td>DV-PRI-046</td>
+<td>Cadastros › Estrutura funcional (Editar e Excluir)</td>
+<td>Estrutura funcional: alterar, inativar e excluir não pedem justificativa</td>
+<td>norma</td>
+<td>RF-PRI-096 e 097</td>
+</tr>
+<tr>
+<td>DV-PRI-047</td>
+<td>Cadastros › Conta contábil › Editar e Ver Log</td>
+<td>Conta contábil: as alterações não aparecem no histórico (Ver Log só mostra a inclusão)</td>
+<td>norma</td>
+<td>RF-PRI-099</td>
+</tr>
+<tr>
+<td>DV-PRI-050</td>
+<td>Login (parâmetro urldesenv do endereço de entrada)</td>
+<td>Login redireciona para qualquer endereço informado em "urldesenv" e acrescenta o token da sessão</td>
+<td>acesso/segurança</td>
+<td>RNF-PRI-027</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="todos-os-defeitos">Todos os defeitos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Defeito</th>
+<th>Gravidade</th>
+<th>Tipo</th>
+<th>Descrição</th>
+<th>Situação</th>
+<th>Requisito</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>DV-PRI-003</td>
 <td>Alta</td>
-<td>Senha provisória exibida na tela do administrador</td>
+<td>acesso/segurança</td>
+<td>A senha provisória aparece na tela do administrador ao criar a conta e ao redefinir a senha</td>
 <td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-004</td>
-<td>Média</td>
-<td>Histórico do profissional sem o valor novo do Cargo</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-005</td>
-<td>Baixa</td>
-<td>Linha "VALIDADE INÍCIO" sem mudança no histórico da conta</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-006</td>
-<td>Média</td>
-<td>Profissional com conta excluído sem aviso</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-007</td>
-<td>Baixa</td>
-<td>Ambiente aceita descrição repetida</td>
-<td>Aberto (regra a definir)</td>
-</tr>
-<tr>
-<td>DV-PRI-008</td>
-<td>Baixa</td>
-<td>Pesquisa não ignora acentos</td>
-<td>Aberto</td>
+<td>RF-PRI-013</td>
 </tr>
 <tr>
 <td>DV-PRI-009</td>
 <td>Alta</td>
-<td>Exclusão de Ambiente e Equipamento sem justificativa</td>
+<td>norma</td>
+<td>Exclusão de Ambiente e de Equipamento é gravada sem pedir justificativa</td>
 <td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-010</td>
-<td>Média</td>
-<td>Equipamento sem Categoria causa erro de servidor</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-011</td>
-<td>Média</td>
-<td>Recusa de exclusão com mensagem genérica</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-012</td>
-<td>—</td>
-<td>Equipamento recém-criado não excluía</td>
-<td>Encerrado: explicado pela regra de itens vinculados (RN-PRI-071)</td>
-</tr>
-<tr>
-<td>DV-PRI-013</td>
-<td>Média</td>
-<td>Pessoa jurídica altera e inativa sem justificativa</td>
-<td>Aberto</td>
+<td>RF-PRI-042</td>
 </tr>
 <tr>
 <td>DV-PRI-014</td>
 <td>Alta</td>
-<td>Histórico de registro excluído não pode ser consultado</td>
+<td>norma</td>
+<td>O histórico de um registro excluído não pode mais ser consultado pelas telas</td>
 <td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-015</td>
-<td>Média</td>
-<td>Mensagens de login revelam se o usuário existe</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-016</td>
-<td>Baixa</td>
-<td>Contagem de tentativas restantes errada</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-017</td>
-<td>Média</td>
-<td>Reset de senha e desbloqueio fora do histórico</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-018</td>
-<td>Baixa</td>
-<td>Link do módulo Patrimônio aponta para o próprio servidor</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-019</td>
-<td>Média</td>
-<td>Token no endereço permite entrar sem senha em outro navegador</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-020</td>
-<td>Média</td>
-<td>Sair no Principal não encerra os outros módulos</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-021</td>
-<td>Baixa</td>
-<td>Senha sem diferenciar maiúsculas e minúsculas</td>
-<td>Aberto</td>
+<td>RF-PRI-044</td>
 </tr>
 <tr>
 <td>DV-PRI-022</td>
 <td>Alta</td>
-<td>Troca obrigatória de senha contornada pelo endereço</td>
+<td>acesso/segurança</td>
+<td>A troca obrigatória de senha pode ser pulada: digitando o endereço de outra tela, o usuário usa o sistema com a senha provisória</td>
 <td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-023</td>
-<td>Média</td>
-<td>Tela de consulta de usuário editável</td>
-<td>Aberto</td>
-</tr>
-<tr>
-<td>DV-PRI-024</td>
-<td>Média</td>
-<td>Alteração de permissões sem justificativa</td>
-<td>Aberto</td>
+<td>RF-PRI-007</td>
 </tr>
 <tr>
 <td>DV-PRI-025</td>
 <td>Alta</td>
-<td>Telas de edição, configuração, Microservices e relatórios abrem sem permissão</td>
+<td>acesso/segurança</td>
+<td>Telas administrativas abrem pelo endereço para quem não tem nenhuma permissão de Administração</td>
 <td>Aberto</td>
+<td>RF-PRI-032</td>
+</tr>
+<tr>
+<td>DV-PRI-004</td>
+<td>Média</td>
+<td>norma</td>
+<td>Histórico do Profissional grava a alteração do Cargo sem o valor antigo e o novo, e registra o DDI como alterado sem mudança</td>
+<td>Aberto</td>
+<td>RF-PRI-043</td>
+</tr>
+<tr>
+<td>DV-PRI-006</td>
+<td>Média</td>
+<td>norma</td>
+<td>Profissional com conta de usuário e perfil é excluído sem aviso de dependência</td>
+<td>Aberto</td>
+<td>RF-PRI-077</td>
+</tr>
+<tr>
+<td>DV-PRI-010</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Salvar um equipamento sem Categoria dá erro de servidor e a tela fica parada, sem mensagem</td>
+<td>Aberto</td>
+<td>RF-PRI-074</td>
+</tr>
+<tr>
+<td>DV-PRI-011</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Exclusão recusada com mensagem genérica, sem dizer qual cadastro ou item impede</td>
+<td>Aberto</td>
+<td>RF-PRI-041</td>
+</tr>
+<tr>
+<td>DV-PRI-013</td>
+<td>Média</td>
+<td>norma</td>
+<td>Alteração e inativação de Pessoa Jurídica gravam sem pedir justificativa</td>
+<td>Aberto</td>
+<td>RF-PRI-042</td>
+</tr>
+<tr>
+<td>DV-PRI-015</td>
+<td>Média</td>
+<td>acesso/segurança</td>
+<td>As mensagens de login revelam se o usuário existe</td>
+<td>Aberto</td>
+<td>RF-PRI-003</td>
+</tr>
+<tr>
+<td>DV-PRI-017</td>
+<td>Média</td>
+<td>norma</td>
+<td>O Reset de senha feito pelo administrador não aparece no histórico da conta</td>
+<td>Aberto</td>
+<td>RF-PRI-005</td>
+</tr>
+<tr>
+<td>DV-PRI-019</td>
+<td>Média</td>
+<td>acesso/segurança</td>
+<td>O token de acesso vai no endereço da página: quem copia o endereço entra sem senha em outro navegador</td>
+<td>Aberto</td>
+<td>RNF-PRI-004</td>
+</tr>
+<tr>
+<td>DV-PRI-020</td>
+<td>Média</td>
+<td>acesso/segurança</td>
+<td>Clicar em Sair no Principal não encerra a sessão dos outros módulos</td>
+<td>Aberto</td>
+<td>RF-PRI-006</td>
+</tr>
+<tr>
+<td>DV-PRI-023</td>
+<td>Média</td>
+<td>acesso/segurança</td>
+<td>Quem só tem a consulta de Usuário vê a tela de detalhe destravada: 38 de 51 campos editáveis</td>
+<td>Aberto</td>
+<td>RF-PRI-033</td>
+</tr>
+<tr>
+<td>DV-PRI-024</td>
+<td>Média</td>
+<td>norma</td>
+<td>A alteração das permissões de um perfil não pede justificativa e o histórico não a guarda</td>
+<td>Aberto</td>
+<td>RF-PRI-042</td>
 </tr>
 <tr>
 <td>DV-PRI-026</td>
 <td>Média</td>
-<td>Erros mostram a página técnica do ASP.NET</td>
+<td>acesso/segurança</td>
+<td>Um envio inválido mostra a página de erro técnica do ASP.NET, com o rastro de chamadas e a versão do .NET</td>
 <td>Aberto</td>
+<td>RNF-PRI-006</td>
+</tr>
+<tr>
+<td>DV-PRI-001</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>O nome do perfil não aceita o caractere "_" e o sistema o apaga sem avisar</td>
+<td>Aberto</td>
+<td>RF-PRI-075</td>
+</tr>
+<tr>
+<td>DV-PRI-002</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>O login da conta é gravado sempre em maiúsculas, sem regra definida</td>
+<td>Aberto</td>
+<td>RF-PRI-075</td>
+</tr>
+<tr>
+<td>DV-PRI-005</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>O histórico da conta ganha a linha "VALIDADE INÍCIO" a cada gravação, sem que a data tenha mudado</td>
+<td>Aberto</td>
+<td>RF-PRI-078</td>
+</tr>
+<tr>
+<td>DV-PRI-007</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Cadastro de Ambientes aceita duas descrições iguais</td>
+<td>Aberto</td>
+<td>RF-PRI-076</td>
+</tr>
+<tr>
+<td>DV-PRI-008</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Pesquisa por nome não ignora acentos nos cadastros de Ambiente, Equipamento e Pessoa jurídica</td>
+<td>Aberto</td>
+<td>RF-PRI-073</td>
+</tr>
+<tr>
+<td>DV-PRI-016</td>
+<td>Baixa</td>
+<td>acesso/segurança</td>
+<td>A contagem de tentativas restantes no login está errada: o usuário é bloqueado um erro antes do que a tela anuncia</td>
+<td>Aberto</td>
+<td>RF-PRI-004</td>
+</tr>
+<tr>
+<td>DV-PRI-018</td>
+<td>Baixa</td>
+<td>ambiente/dados</td>
+<td>Na tela inicial, o link do módulo Patrimônio aponta para o próprio servidor e não abre para o usuário</td>
+<td>Aberto</td>
+<td>RF-PRI-079</td>
+</tr>
+<tr>
+<td>DV-PRI-021</td>
+<td>Baixa</td>
+<td>acesso/segurança</td>
+<td>A troca de senha compara senhas sem diferenciar maiúsculas de minúsculas</td>
+<td>Aberto</td>
+<td>RF-PRI-011</td>
+</tr>
+<tr>
+<td>DV-PRI-012</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Equipamento recém-criado não podia ser excluído (aberto por engano; explicado pela regra do item vinculado na própria tela)</td>
+<td>Encerrado (explicado pela regra de itens vinculados)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>DV-PRI-027</td>
+<td>Média</td>
+<td>norma</td>
+<td>O histórico de Funções profissionais, Grupo de usuários e Centro de custo não mostra a justificativa digitada</td>
+<td>Aberto</td>
+<td>RF-PRI-097</td>
+</tr>
+<tr>
+<td>DV-PRI-028</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Funções profissionais aceita duas funções com a mesma descrição</td>
+<td>Aberto</td>
+<td>RF-PRI-102</td>
+</tr>
+<tr>
+<td>DV-PRI-029</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Configurar notificação grava sem confirmação, sem justificativa, sem mensagem e sem histórico</td>
+<td>Aberto</td>
+<td>RF-PRI-100</td>
+</tr>
+<tr>
+<td>DV-PRI-030</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Configurar notificação: erro técnico "Input string was not in a correct format." ao salvar</td>
+<td>Aberto</td>
+<td>RF-PRI-104</td>
+</tr>
+<tr>
+<td>DV-PRI-031</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Notificações padrão: alterar os destinatários não pede justificativa e não deixa histórico</td>
+<td>Aberto</td>
+<td>RF-PRI-100</td>
+</tr>
+<tr>
+<td>DV-PRI-032</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>O nome do profissional perde os números sem aviso (TESTE ADM01 foi gravado como TESTE ADM)</td>
+<td>Aberto</td>
+<td>RF-PRI-103</td>
+</tr>
+<tr>
+<td>DV-PRI-033</td>
+<td>Alta</td>
+<td>norma</td>
+<td>A troca de Grupo do profissional não aparece no histórico; a troca de Setor aparece sem o valor antigo</td>
+<td>Aberto</td>
+<td>RF-PRI-099</td>
+</tr>
+<tr>
+<td>DV-PRI-034</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Configuração do sistema (cor do layout e logotipos) grava sem confirmação, justificativa, mensagem ou histórico</td>
+<td>Aberto</td>
+<td>RF-PRI-100</td>
+</tr>
+<tr>
+<td>DV-PRI-035</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Grupo de usuários aceita dois grupos com o mesmo código e depois não deixa alterar nenhum dos dois</td>
+<td>Aberto</td>
+<td>RF-PRI-102</td>
+</tr>
+<tr>
+<td>DV-PRI-036</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Grupo de usuários é excluído sem pedir justificativa</td>
+<td>Aberto</td>
+<td>RF-PRI-096</td>
+</tr>
+<tr>
+<td>DV-PRI-037</td>
+<td>Alta</td>
+<td>acesso/segurança</td>
+<td>Nenhuma gravação da Administração pede senha de novo (assinatura eletrônica desligada)</td>
+<td>Aberto</td>
+<td>RF-PRI-101</td>
+</tr>
+<tr>
+<td>DV-PRI-038</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Cadastrar um profissional não gerou a notificação "NOVO PROFISSIONAL" para o destinatário configurado</td>
+<td>Aberto</td>
+<td>RF-PRI-106</td>
+</tr>
+<tr>
+<td>DV-PRI-039</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Ao finalizar uma notificação, a "Data de Conclusão" continua em branco</td>
+<td>Aberto</td>
+<td>RF-PRI-106</td>
+</tr>
+<tr>
+<td>DV-PRI-040</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Categoria de equipamento é excluída sem pedir justificativa</td>
+<td>Aberto</td>
+<td>RF-PRI-096</td>
+</tr>
+<tr>
+<td>DV-PRI-041</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Categoria de equipamento e Conta contábil aceitam o mesmo nome em dois registros</td>
+<td>Aberto</td>
+<td>RF-PRI-102</td>
+</tr>
+<tr>
+<td>DV-PRI-042</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Conta contábil do tipo Analítica não grava; várias recusas só dizem "Erro ao processar a informação!"</td>
+<td>Aberto</td>
+<td>RF-PRI-104 e 105</td>
+</tr>
+<tr>
+<td>DV-PRI-043</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Centro de custo apaga as letras do código sem avisar (TCC01 vira 01)</td>
+<td>Aberto</td>
+<td>RF-PRI-103</td>
+</tr>
+<tr>
+<td>DV-PRI-044</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Centro de custo, Pontos de água, Instrumentos, Utensílios e Utilidades são excluídos sem pedir justificativa</td>
+<td>Aberto</td>
+<td>RF-PRI-096</td>
+</tr>
+<tr>
+<td>DV-PRI-045</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Grau de contaminação cobra justificativa até na inclusão; os outros cadastros não</td>
+<td>Aberto</td>
+<td>RF-PRI-098</td>
+</tr>
+<tr>
+<td>DV-PRI-046</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Estrutura funcional: alterar, inativar e excluir não pedem justificativa</td>
+<td>Aberto</td>
+<td>RF-PRI-096 e 097</td>
+</tr>
+<tr>
+<td>DV-PRI-047</td>
+<td>Alta</td>
+<td>norma</td>
+<td>Conta contábil: as alterações não aparecem no histórico (Ver Log só mostra a inclusão)</td>
+<td>Aberto</td>
+<td>RF-PRI-099</td>
+</tr>
+<tr>
+<td>DV-PRI-048</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Conta contábil aceita taxa de 150 e taxa negativa</td>
+<td>Aberto</td>
+<td>RF-PRI-105</td>
+</tr>
+<tr>
+<td>DV-PRI-049</td>
+<td>Média</td>
+<td>funcional</td>
+<td>Profissional inativo não pode ser excluído: o campo de justificativa da exclusão vem desabilitado</td>
+<td>Aberto</td>
+<td>RF-PRI-107</td>
+</tr>
+<tr>
+<td>DV-PRI-050</td>
+<td>Alta</td>
+<td>acesso/segurança</td>
+<td>Login redireciona para qualquer endereço informado em "urldesenv" e acrescenta o token da sessão</td>
+<td>Aberto</td>
+<td>RNF-PRI-027</td>
+</tr>
+<tr>
+<td>DV-PRI-051</td>
+<td>Baixa</td>
+<td>funcional</td>
+<td>Endereço de edição com número inexistente abre uma ficha de profissional em branco, sem aviso</td>
+<td>Aberto</td>
+<td>RF-PRI-104</td>
 </tr>
 </tbody>
 </table></div>
-<p>Totais: 5 de gravidade alta, 12 média, 8 baixa e 1 encerrado.</p>
 <h2 id="rastreabilidade">Rastreabilidade</h2>
 <div class="tabela"><table>
 <thead>
@@ -1471,6 +2337,10 @@
 </tr>
 </tbody>
 </table></div>
+<div class="callout">
+<p class="callout-titulo">Atualização de 26/10/2026</p>
+<p>Os números da tabela acima são da matriz de 06/10/2026 (70 requisitos). Desde então entraram os requisitos RF-PRI-073 a 079 (testes de 06/10) e RF-PRI-096 a 107 e RNF-PRI-027 (rodada 3), o que leva o módulo a 90 requisitos corrigidos do sistema atual. A coluna Requisito da tabela de defeitos (capítulo Desvios) liga cada defeito de DV-PRI-001 a 051 ao seu requisito. A verificação dos requisitos novos será feita pelos casos propostos por tela (CT-PRI-ACE, ADM e CAD) na reabertura do módulo.</p>
+</div>
 <h3 id="achado-de-seguranca-requisito-corrigido-teste">Achado de segurança → requisito corrigido → teste</h3>
 <div class="tabela"><table>
 <thead>
@@ -1733,11 +2603,31 @@
 </thead>
 <tbody>
 <tr>
-<td>Executar CT-PRI-036 (senha vencida) quando a senha de teste vencer, ou com a data ajustada pelo DBA</td>
+<td>Confirmar os registros de acesso (CT-PRI-012, SEG-PRI-02) e o evento de exclusão no histórico (DV-PRI-014, SEG-PRI-14)</td>
+<td>DBA</td>
+</tr>
+<tr>
+<td>Confirmar a permissão de escrita no histórico e a alteração direta no banco (CT-PRI-083 e 084)</td>
+<td>DBA</td>
+</tr>
+<tr>
+<td>Ajustar a validade da senha de um usuário de teste para ontem (CT-PRI-036)</td>
+<td>DBA</td>
+</tr>
+<tr>
+<td>Repetir os casos de acesso por perfil (somente leitura, sem administração, só cadastro) nas telas da rodada 3, com um segundo usuário de teste que não dependa da senha provisória na tela</td>
 <td>Homologação</td>
 </tr>
 <tr>
-<td>Executar CT-PRI-081 a 085 (trilha de auditoria), 100 a 104 (segurança da aplicação) e 110 a 113 (carga de dados)</td>
+<td>Excluir e inativar "em uso" nos cadastros (Categoria, Grau de contaminação, Centro de custo, Contas, Pontos de água, Instrumentos, Utensílios, Utilidades, Local físico, Estrutura funcional) e os relacionamentos com Produção e CQ (Lote Padrão)</td>
+<td>Homologação, com os módulos Produção e CQ</td>
+</tr>
+<tr>
+<td>Testar o relatório Usuário × Perfil e os botões Imprimir e Excel de cada cadastro</td>
+<td>Homologação</td>
+</tr>
+<tr>
+<td>Segurança da aplicação (CT-PRI-100 a 104: só uma checagem leve do apóstrofo na pesquisa do Profissional) e carga de dados (CT-PRI-110 a 113)</td>
 <td>Homologação</td>
 </tr>
 <tr>
@@ -1745,37 +2635,107 @@
 <td>Homologação</td>
 </tr>
 <tr>
-<td>Confirmar os registros de acesso (CT-PRI-012, SEG-PRI-02) e o evento de exclusão no histórico (DV-PRI-014, SEG-PRI-14)</td>
-<td>DBA</td>
-</tr>
-<tr>
 <td>Confirmar se a recusa do envio forçado (CT-PRI-070) é checagem de permissão</td>
 <td>Desenvolvimento</td>
 </tr>
 <tr>
-<td>Decidir o conteúdo do relatório de revisão de acessos</td>
+<td>Corrigir os 16 defeitos de gravidade alta e os demais, e pedir o reteste</td>
+<td>Desenvolvimento</td>
+</tr>
+<tr>
+<td>Decidir quais ações exigem assinatura eletrônica, a regra única de justificativa, a unicidade de nomes e códigos, a faixa da taxa da conta contábil e o conteúdo do relatório de revisão de acessos</td>
 <td>Negócio e Garantia da Qualidade</td>
 </tr>
 <tr>
-<td>Testar os demais cadastros do módulo Principal</td>
-<td>Homologação</td>
+<td>Indicar quem, na Garantia da Qualidade, revisa e aprova este dossiê</td>
+<td>Garantia da Qualidade</td>
 </tr>
 </tbody>
 </table></div>
 <h2 id="parecer-da-homologacao">Parecer da homologação</h2>
-<p>Com base nos 78 casos executados, nas evidências registradas e nos achados do código-fonte:</p>
-<p><strong>1. O módulo Principal na versão 3.5.1 não está apto para uso em ambiente regulado pelas Boas Práticas de Fabricação.</strong> Os motivos são os desvios de gravidade alta em controle de acesso (DV-PRI-025, DV-PRI-022), em gestão de senhas (DV-PRI-003, SEG-PRI-01) e em trilha de auditoria (DV-PRI-009, DV-PRI-014). Eles afetam diretamente a integridade dos dados exigida pela RDC nº 658/2022 (art. 125) e pelo Guia nº 33/2020.</p>
-<p><strong>2. O módulo é uma base adequada para a nova versão.</strong> Os mecanismos essenciais existem e funcionam na maior parte dos casos: login com bloqueio, validade de senha e de conta, perfis com soma de permissões, exclusão lógica e histórico campo a campo. As correções estão descritas na Análise de Requisitos, com origem e prioridade.</p>
+<p>Com base em três rodadas de teste nas telas (05, 06 e 26/10/2026; 197 das 216 linhas de resultado conclusivas), nas 32 telas do módulo, nas evidências registradas e nos achados do código-fonte:</p>
+<p><strong>1. O módulo Principal na versão 3.5.1 não está apto para uso em ambiente regulado pelas Boas Práticas de Fabricação.</strong> Dos 50 defeitos abertos, 16 são de gravidade alta, em controle de acesso (DV-PRI-025, 022, 037 e 050), em gestão de senhas (DV-PRI-003, SEG-PRI-01) e, sobretudo, em trilha de auditoria: alteração ou exclusão sem justificativa e sem histórico em quase todos os cadastros (DV-PRI-009, 014, 029, 031, 033, 034, 036, 040, 044, 046 e 047). Eles afetam a integridade dos dados exigida pela RDC nº 658/2022 (art. 125) e pelo Guia nº 33/2020. Das 32 telas, 1 funciona, 11 funcionam com falhas e 20 têm falha grave.</p>
+<p><strong>2. O módulo é uma base adequada para a nova versão.</strong> Os mecanismos essenciais existem e funcionam na maior parte dos casos: login com bloqueio, validade de senha e de conta, perfis com soma de permissões, exclusão lógica e histórico campo a campo. O Grau de contaminação já faz o que todos os cadastros deveriam fazer (justificativa e histórico em tudo). As correções estão descritas na Análise de Requisitos, com origem e prioridade.</p>
 <p><strong>3. Correções obrigatórias antes de uma nova homologação:</strong></p>
 <ul>
 <li>verificar a permissão no servidor em todas as telas e ações (RF-PRI-032);</li>
 <li>exigir a troca de senha antes de qualquer tela (RF-PRI-007);</li>
 <li>guardar senhas só como hash e não exibir a senha provisória ao administrador (RNF-PRI-001, RF-PRI-013);</li>
-<li>exigir justificativa em toda exclusão e alteração de todos os cadastros, e manter o histórico do registro excluído consultável (RF-PRI-042, RF-PRI-044);</li>
-<li>retirar o token de acesso do endereço, encerrar a sessão após 10 minutos sem uso e, ao sair, em todos os módulos (RNF-PRI-004, RF-PRI-006);</li>
+<li>exigir justificativa em toda exclusão e alteração de todos os cadastros e gravar o histórico de todo campo alterado, mantendo consultável o histórico do registro excluído (RF-PRI-042, 044, 096 a 100);</li>
+<li>pedir a senha de novo nas gravações críticas da Administração (RF-PRI-101);</li>
+<li>aceitar no login só endereços de retorno do próprio sistema e retirar o token do endereço (RNF-PRI-027, RNF-PRI-004);</li>
+<li>encerrar a sessão após 10 minutos sem uso e, ao sair, em todos os módulos (RF-PRI-006);</li>
 <li>deixar somente leitura a tela de quem só consulta (RF-PRI-033).</li>
 </ul>
 <p><strong>4. Recomendação:</strong> executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige 100% dos casos de prioridade alta aprovados.</p>
+<h2 id="fechamento-do-modulo-26-10-2026">Fechamento do módulo (26/10/2026)</h2>
+<p><strong>Decisão do responsável (26/10/2026): fechar a homologação do legado do módulo Principal.</strong> Fechar quer dizer que as 32 telas têm resultado de teste, que os cinco entregáveis foram atualizados e que o parecer é "não apto para uso em ambiente regulado". Não quer dizer que as falhas foram corrigidas.</p>
+<h3 id="o-que-foi-concluido">O que foi concluído</h3>
+<ul>
+<li>Três rodadas de teste nas telas (05, 06 e 26/10/2026), com 197 de 216 linhas de resultado conclusivas.</li>
+<li>32 telas com resultado: 1 funciona, 11 funcionam com falhas, 20 com falha grave, nenhuma sem teste.</li>
+<li>51 defeitos registrados (50 abertos): 16 de gravidade alta, 18 média e 16 baixa.</li>
+<li>Documentação por tela: cinco páginas para cada uma das 32 telas (Análise, Manual do usuário, Fluxos, Regras de negócio e Anvisa), três roteiros de execução (296 passos), 397 regras novas por tela e 370 casos novos propostos.</li>
+<li>13 requisitos corrigidos novos (RF-PRI-096 a 107 e RNF-PRI-027), que agrupam os defeitos da rodada 3 por causa.</li>
+</ul>
+<h3 id="limitacoes-o-que-o-teste-nao-cobriu">Limitações: o que o teste não cobriu</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Limitação</th>
+<th>Motivo</th>
+<th>Efeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acesso por perfil nas telas abertas só na rodada 3 (somente leitura, sem administração, só cadastro) e recusa de usuário sem permissão</td>
+<td>A rodada 3 usou só o administrador. Entrar como outro usuário exige o Reset de senha, e a senha provisória aparece na tela e não pode ser gravada em arquivo</td>
+<td>Vale o que foi visto em 05 e 06/10 (DV-PRI-023 e 025); nessas telas o acesso por perfil está só "Extraída" do código</td>
+</tr>
+<tr>
+<td>Registros de acesso e proteção do histórico (CT-PRI-012, 083 e 084)</td>
+<td>Dependem do DBA</td>
+<td>A trilha de auditoria não pode ser dada como conforme sem a resposta</td>
+</tr>
+<tr>
+<td>Excluir e inativar registro "em uso" em 11 cadastros e relacionamentos com Produção e CQ (Lote Padrão)</td>
+<td>Exigem montar equipamento, ambiente ou lote ligados ao registro</td>
+<td>Regra de dependência confirmada só em Ambiente</td>
+</tr>
+<tr>
+<td>Imprimir e Excel de cada cadastro; relatório Usuário × Perfil</td>
+<td>Só a presença dos botões foi conferida (o Imprimir do Profissional foi testado)</td>
+<td>Sem veredito sobre o conteúdo dos relatórios</td>
+</tr>
+<tr>
+<td>Segurança da aplicação e carga de dados</td>
+<td>Fora do ciclo; só uma checagem leve do apóstrofo na pesquisa</td>
+<td>Risco de injeção de SQL segue "a confirmar"</td>
+</tr>
+<tr>
+<td>Defeito de acesso do login (DV-PRI-050)</td>
+<td>Observado só com destino dentro do próprio sistema</td>
+<td>Gravidade mantida por segurança; o comportamento com destino externo não foi exercitado</td>
+</tr>
+<tr>
+<td>Casos novos propostos e regras extraídas</td>
+<td>370 casos e 348 regras extraídas aguardam execução</td>
+<td>Entram na reabertura, por risco</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="o-que-muda-na-reabertura">O que muda na reabertura</h3>
+<p>O módulo só volta a ser testado quando houver fato novo: o DBA responder, o desenvolvimento corrigir os defeitos de gravidade alta ou houver um segundo usuário de teste. A reabertura repete os 16 defeitos de gravidade alta, executa o acesso por perfil nos três roteiros, as exclusões em uso e, por risco, os casos novos propostos. O critério de aprovação não muda: 100% dos casos de prioridade alta.</p>
+<h3 id="decisoes-e-pontos-para-validar">Decisões e pontos para validar</h3>
+<ul>
+<li>Quais ações da Administração exigem assinatura eletrônica (RF-PRI-101).</li>
+<li>Regra única de justificativa: só na alteração, inativação e exclusão, ou também na inclusão (RF-PRI-098).</li>
+<li>Quais cadastros proíbem nome ou código repetido (RF-PRI-102).</li>
+<li>Faixa da taxa de depreciação e regra da conta contábil analítica (RF-PRI-105).</li>
+<li>Formato do nome do profissional e do código do centro de custo (RF-PRI-103).</li>
+<li>A classificação de "falha grave" para as telas segue a legenda do Principal (gravidade alta, segurança, senha ou trilha de auditoria); as definições de resultado de tela ainda dependem de confirmação do responsável.</li>
+</ul>
 <h2 id="versao-nova-requisitos-e-desvios-do-modulo-principal">Versão nova: requisitos e desvios do Módulo Principal</h2>
 <p>Os testes da versão nova (Angular, sobre a mesma regra de negócio) seguiram o mesmo plano do legado. Foram três rodadas (17 e 18/10/2026), 214 casos (os 17 bloqueados da rodada 1 foram refeitos na rodada 2) em 28 telas. As falhas abaixo não são cópias do legado: são regressões e problemas novos. Cada uma vira requisito corrigido. Os pontos de segurança (acesso, sessão, senha) estão no documento confidencial, só para TI e desenvolvimento.</p>
 <h3 id="resultado-em-numeros">Resultado em números</h3>
@@ -1989,7 +2949,7 @@
 <td>Elaborado por</td>
 <td>André Nardacci</td>
 <td>Análise de negócio e homologação</td>
-<td>06/10/2026</td>
+<td>26/10/2026</td>
 <td></td>
 </tr>
 <tr>
@@ -2011,10 +2971,10 @@
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="por-que-o-principal-nao-esta-apto.html"><small>← Anterior</small><strong>Por que o Principal não está apto</strong></a><a class="ap ap-prox" href="visao-geral-por-menu.html"><small>Próximo →</small><strong>Visão geral por menu</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-por-grupo">Quantidade de casos por grupo</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#cadastros-por-funcionalidade-ct-pri-090-a-097">Cadastros por funcionalidade (CT-PRI-090 a 097)</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li><a href="#desvios">Desvios</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li class="sub"><a href="#achado-de-seguranca-requisito-corrigido-teste">Achado de segurança → requisito corrigido → teste</a></li><li class="sub"><a href="#risco-requisito-teste">Risco → requisito → teste</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#versao-nova-requisitos-e-desvios-do-modulo-principal">Versão nova: requisitos e desvios do Módulo Principal</a></li><li class="sub"><a href="#resultado-em-numeros">Resultado em números</a></li><li class="sub"><a href="#desvios-da-versao-nova-que-viram-requisito">Desvios da versão nova que viram requisito</a></li><li class="sub"><a href="#melhorias-da-versao-nova">Melhorias da versão nova</a></li><li class="sub"><a href="#pendencias-desta-frente">Pendências desta frente</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-por-grupo">Quantidade de casos por grupo</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#cadastros-por-funcionalidade-ct-pri-090-a-097">Cadastros por funcionalidade (CT-PRI-090 a 097)</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#rodada-3-26-10-2026">Rodada 3 (26/10/2026)</a></li><li class="sub"><a href="#resultado-por-tela">Resultado por tela</a></li><li><a href="#desvios">Desvios</a></li><li class="sub"><a href="#defeitos-de-gravidade-alta-abertos">Defeitos de gravidade Alta (abertos)</a></li><li class="sub"><a href="#todos-os-defeitos">Todos os defeitos</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li class="sub"><a href="#achado-de-seguranca-requisito-corrigido-teste">Achado de segurança → requisito corrigido → teste</a></li><li class="sub"><a href="#risco-requisito-teste">Risco → requisito → teste</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#fechamento-do-modulo-26-10-2026">Fechamento do módulo (26/10/2026)</a></li><li class="sub"><a href="#o-que-foi-concluido">O que foi concluído</a></li><li class="sub"><a href="#limitacoes-o-que-o-teste-nao-cobriu">Limitações: o que o teste não cobriu</a></li><li class="sub"><a href="#o-que-muda-na-reabertura">O que muda na reabertura</a></li><li class="sub"><a href="#decisoes-e-pontos-para-validar">Decisões e pontos para validar</a></li><li><a href="#versao-nova-requisitos-e-desvios-do-modulo-principal">Versão nova: requisitos e desvios do Módulo Principal</a></li><li class="sub"><a href="#resultado-em-numeros">Resultado em números</a></li><li class="sub"><a href="#desvios-da-versao-nova-que-viram-requisito">Desvios da versão nova que viram requisito</a></li><li class="sub"><a href="#melhorias-da-versao-nova">Melhorias da versão nova</a></li><li class="sub"><a href="#pendencias-desta-frente">Pendências desta frente</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
