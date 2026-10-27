@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -130,7 +130,7 @@
 <h3 id="3-preparacao">3. Preparação</h3>
 <ul>
 <li><strong>Os dois ambientes têm bancos diferentes</strong> (versão nova: <code>[endereço omitido]</code>; legado: <code>[endereço omitido]</code>). Nada cadastrado em um aparece no outro.</li>
-<li>Usuários e perfis de teste: <code>[usuário de teste]</code>, <code>[usuário de teste]</code>, <code>[usuário de teste]</code>, <code>[usuário de teste]</code>, <code>[usuário de teste]</code>, <code>[usuário de teste]</code>, <code>[usuário de teste]</code> (aba <code>Usuarios_Perfis</code> da massa de dados). No <strong>legado</strong>, criá-los em Conta usuário. Na <strong>versão nova não existe a tela Conta usuário</strong>: o reconhecimento (parte A) deve dizer quais usuários de teste já existem; os que faltarem precisam ser criados pela equipe de desenvolvimento ou pelo DBA. Perfis podem ser criados nas duas versões.</li>
+<li>Usuários e perfis de teste: <code>t.admin</code>, <code>t.cadastro</code>, <code>t.consulta</code>, <code>t.semadmin</code>, <code>t.containativa</code>, <code>t.senhavencida</code>, <code>t.bloqueio</code> (aba <code>Usuarios_Perfis</code> da massa de dados). No <strong>legado</strong>, criá-los em Conta usuário. Na <strong>versão nova não existe a tela Conta usuário</strong>: o reconhecimento (parte A) deve dizer quais usuários de teste já existem; os que faltarem precisam ser criados pela equipe de desenvolvimento ou pelo DBA. Perfis podem ser criados nas duas versões.</li>
 <li>Se algum caso for rodado também no legado, os dados são criados lá, nunca reaproveitados do outro ambiente.</li>
 <li>Registros criados começam com <code>T.</code> (se o ponto não for aceito, <code>T-</code>, anotando o campo e a mensagem). Local: sigla com até 5 caracteres (<code>T.001</code>).</li>
 <li>Os cadastros são feitos só na versão nova. No legado, só sob demanda.</li>
@@ -151,7 +151,7 @@
 <tbody>
 <tr>
 <td>RG-PRI-001</td>
-<td>Entrar com <code>[usuário de teste]</code> e senha certa</td>
+<td>Entrar com <code>t.cadastro</code> e senha certa</td>
 <td>Entra na tela inicial</td>
 <td>CT-PRI-001 Passou</td>
 <td>A</td>
@@ -172,7 +172,7 @@
 </tr>
 <tr>
 <td>RG-PRI-004</td>
-<td><code>[usuário de teste]</code> e usuário inativo</td>
+<td><code>t.containativa</code> e usuário inativo</td>
 <td>Não entra, mensagem clara</td>
 <td>CT-PRI-004 e 005 Passou</td>
 <td>M</td>
@@ -186,7 +186,7 @@
 </tr>
 <tr>
 <td>RG-PRI-006</td>
-<td><code>[usuário de teste]</code>: errar a senha até bloquear. Anotar quantas tentativas e o que o contador diz</td>
+<td><code>t.bloqueio</code>: errar a senha até bloquear. Anotar quantas tentativas e o que o contador diz</td>
 <td>Bloqueia após o limite; contador correto</td>
 <td>CT-PRI-008 Falhou (DV-PRI-016, contagem)</td>
 <td>A</td>
@@ -284,14 +284,14 @@
 </tr>
 <tr>
 <td>RG-PRI-026</td>
-<td><code>[usuário de teste]</code> entra</td>
+<td><code>t.senhavencida</code> entra</td>
 <td>Vai direto à troca (pede ao DBA ajustar a validade, se preciso)</td>
 <td>CT-PRI-036 Bloqueado</td>
 <td>M</td>
 </tr>
 <tr>
 <td>RG-PRI-027</td>
-<td>Com <code>[usuário de teste]</code>, na tela de troca, digitar <code>/administracao/perfis</code></td>
+<td>Com <code>t.senhavencida</code>, na tela de troca, digitar <code>/administracao/perfis</code></td>
 <td>Volta à troca</td>
 <td>CT-PRI-037 Falhou (DV-PRI-022)</td>
 <td>A</td>
@@ -375,14 +375,14 @@
 </tr>
 <tr>
 <td>RG-PRI-037</td>
-<td>Abrir <code>/administracao/perfis</code> com <code>[usuário de teste]</code> e com <code>[usuário de teste]</code>, pelo menu e <strong>pelo endereço direto</strong></td>
+<td>Abrir <code>/administracao/perfis</code> com <code>t.consulta</code> e com <code>t.semadmin</code>, pelo menu e <strong>pelo endereço direto</strong></td>
 <td>Sem a função, não abre</td>
 <td>CT-PRI-062/063 (<code>perfil_lst</code>, <code>perfil_ed</code>) Falhou (DV-PRI-025)</td>
 <td>A</td>
 </tr>
 <tr>
 <td>RG-PRI-038</td>
-<td><code>[usuário de teste]</code> na tela de perfil: os campos ficam travados?</td>
+<td><code>t.consulta</code> na tela de perfil: os campos ficam travados?</td>
 <td>Somente leitura</td>
 <td>CT-PRI-050 Falhou (DV-PRI-023)</td>
 <td>A</td>
@@ -526,7 +526,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-escopo-o-que-existe-hoje-na-versao-nova">1. Escopo: o que existe hoje na versão nova</a></li><li><a href="#2-como-classificar-cada-caso">2. Como classificar cada caso</a></li><li><a href="#3-preparacao">3. Preparação</a></li><li><a href="#4-casos">4. Casos</a></li><li><a href="#5-ordem-de-execucao">5. Ordem de execução</a></li><li><a href="#6-tabela-de-resultados-preencher">6. Tabela de resultados (preencher)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

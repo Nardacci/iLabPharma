@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=3e013c63">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -44,7 +44,7 @@
     
     <article class="texto">
 <p><strong>Documento de achados de acesso e segurança.</strong> Descreve fragilidades do sistema. Por decisão do responsável (23/10/2026), o portal publica todos os defeitos, inclusive os de acesso e segurança (o site é público, mas não é divulgado). <strong>Continuam proibidos, em qualquer documento: senhas, logins, endereços e IPs de servidor, strings de conexão e chaves</strong> (só se cita o arquivo).</p>
-<p><strong>Data:</strong> 13/10/2026 · Base: a leitura do código (caminhos relativos a <code>3.estoque/app/</code>), os achados do Comercial que apontam para o Estoque (<code>7.comercial/03-achados-de-seguranca.md</code>) e os <strong>testes de tela</strong> de 07, 08 e 12/10/2026. Cada achado diz se foi <strong>confirmado em teste (T)</strong> ou se vem do código (C). Nenhum segredo foi copiado para este documento: só se cita o arquivo onde ele está.</p>
+<p><strong>Data:</strong> 13/10/2026 (atualizado em 26/10/2026 com os achados das rodadas 12A, 12B e 12C, de 24/10/2026) · Base: a leitura do código (caminhos relativos a <code>3.estoque/app/</code>), os achados do Comercial que apontam para o Estoque (<code>7.comercial/03-achados-de-seguranca.md</code>) e os <strong>testes de tela</strong> de 07 a 24/10/2026. Cada achado diz se foi <strong>confirmado em teste (T)</strong> ou se vem do código (C). Nenhum segredo foi copiado para este documento: só se cita o arquivo onde ele está.</p>
 <h3 id="gravidade">Gravidade</h3>
 <div class="tabela"><table>
 <thead>
@@ -97,9 +97,9 @@
 </tr>
 <tr>
 <td>SEG-EST-03</td>
-<td>As telas abrem pelo endereço, mesmo com o acesso negado no menu</td>
+<td>As telas abrem pelo endereço, mesmo com o acesso negado no menu (reconfirmado nas 28 telas do menu Cadastros na rodada 12A)</td>
 <td>Alta</td>
-<td>T (DV-EST-008)</td>
+<td>T (DV-EST-007 e DV-EST-008)</td>
 </tr>
 <tr>
 <td>SEG-EST-04</td>
@@ -159,7 +159,7 @@
 <td>SEG-EST-13</td>
 <td>As páginas de erro mostram ao usuário detalhes técnicos do servidor e do banco (caminhos do código, texto do erro do banco)</td>
 <td>Média</td>
-<td>T (DV-EST-052 e DV-EST-067)</td>
+<td>T (DV-EST-052, DV-EST-067 e DV-EST-140)</td>
 </tr>
 <tr>
 <td>SEG-EST-14</td>
@@ -178,6 +178,18 @@
 <td>O Pedido de Compra não tem nó na árvore de funções do perfil: ninguém recebe permissão de alterar, incluir ou baixar</td>
 <td>Média</td>
 <td>T (DV-EST-077)</td>
+</tr>
+<tr>
+<td>SEG-EST-17</td>
+<td>A ligação entre almoxarifado e grupo de usuários, que decide quem enxerga o quê, muda sem confirmação, sem justificativa e sem rastro, e a Remessa de Material não respeita essa ligação</td>
+<td>Alta</td>
+<td>T (DV-EST-078 e DV-EST-079)</td>
+</tr>
+<tr>
+<td>SEG-EST-18</td>
+<td>A Classificação de Reanálise não tem funções cadastradas: a tela fica sem Editar, Excluir, Ver Log, Imprimir e Excel para qualquer perfil</td>
+<td>Média</td>
+<td>T (DV-EST-109)</td>
 </tr>
 </tbody>
 </table></div>
@@ -198,6 +210,8 @@
 <h3 id="seg-est-03-telas-abrem-pelo-endereco-com-o-acesso-negado-no-menu-alta">SEG-EST-03: telas abrem pelo endereço, com o acesso negado no menu (Alta)</h3>
 <p><strong>O que o teste mostrou (T).</strong> Quem tem o acesso negado no menu abriu a Movimentação de Material digitando o endereço da página, com o botão Incluir visível (CT-EST-045, DV-EST-008). É a mesma falha do Principal (DV-PRI-025).</p>
 <p><strong>Confirmado na rodada 6 (13/10/2026, CT-EST-083, 102, 120, 141, 158, 168 e 178).</strong> Com a conta <code>TESTE SEMADMIN</code> (sem acesso ao Estoque), autenticada só no Principal, digitando direto o endereço das 7 telas no módulo Estoque (porta 10200): nenhuma delas mostrou uma recusa limpa de acesso. Seis abriram uma página de <strong>erro não tratado do servidor</strong> ("Object reference not set to an instance of an object"), com o rastro da pilha (stack trace) exposto, incluindo nomes de classes internas — Atendimento de Solicitação, Entrada de Material - Produção, Remessa de Material, Inventário - Apuração, Pedido de Compra e Entrada de Material (Referência - Retenção - Estabilidade). A sétima (Controle de Kits) caiu numa tela de "Sessão Expirada", que redireciona ao login sem expor erro, mas também não é uma mensagem de acesso negado (a sessão não estava de fato expirada; só faltava o token do módulo Estoque). Ou seja: a falta de permissão não é tratada em nenhuma das 7 telas — o problema varia entre "deixa passar" (achado original, CT-EST-045), "quebra com erro exposto" e "redireciona por engano, sem avisar o motivo". As evidências completas (URLs, usuário, mensagens de erro) ficam só neste documento, por instrução do responsável.</p>
+<p><strong>Reconfirmado na rodada 12A (24/10/2026, 28 telas do menu Cadastros).</strong> Com um usuário de teste sem nenhuma função do Estoque (o menu dele não mostra item algum do módulo), o passo de acesso pelo endereço falhou nas <strong>28 telas</strong>: a lista abriu em todas (sem o botão Incluir, mas com Pesquisar) e o formulário também abriu, com o botão SALVAR visível (DV-EST-008; passos de acesso do roteiro de cadastros, capturas <code>EST12A-*-acesso-lista.png</code> na pasta da rodada). Nada foi salvo nesse teste.</p>
+<p><strong>Antecedente (DV-EST-007, rodada de 07/10/2026).</strong> Ao digitar o endereço das telas de Usuário e de Perfil do Estoque depois de autenticar, a primeira respondeu com erro interno do servidor ("Object reference not set to an instance of an object") e a segunda com a tela de "Sessão Expirada", sem nunca dizer que o acesso não é permitido. Causa no código: a tela de Usuário chama a verificação de permissões sem conferir se o usuário existe na sessão, e o trecho que redirecionaria para o login está comentado (<code>LaboSys_UI/administracao/usuario_lst.aspx.cs</code>, linhas 34 a 45, 77 e 464; <code>LaboSys_Util/BaseController.cs</code>, linhas 18 a 25 e 93 a 112). Decidir se Usuário e Perfil devem existir no Estoque (são cópias das telas do Principal, ver SEG-EST-10).</p>
 <p><strong>Risco.</strong> A permissão do perfil só vale para o menu. Quem conhece o endereço usa a tela, ou, pelo menos, aciona um caminho de código que não deveria ser alcançável, revelando detalhes internos em alguns casos.</p>
 <p><strong>Como confirmar.</strong> CT-EST-045, 065, 083, 102, 120, 141, 158, 168 e 178 — todos feitos (um caso de permissão por fluxo).</p>
 <p><strong>Correção.</strong> Conferir a função em toda tela e em cada gravação, no servidor.</p>
@@ -242,7 +256,12 @@
 <p><strong>O que os testes mostraram (T).</strong> Duas telas do Estoque mostram ao usuário informação interna do sistema quando falham:</p>
 <ul>
 <li><strong>Banco (DV-EST-052, rodada 8, 22/10/2026).</strong> Ao salvar um banco novo, o link "Detalhe do erro (+)" abre o texto técnico devolvido pelo banco de dados: <code>Must declare the scalar variable "@CODIGO".</code> Isso revela o nome de um parâmetro do comando de gravação. Captura (só pelo nome do arquivo, guardada na pasta da rodada, não na pasta pública de defeitos): <code>execucao/2026-10-22-rodada-8/evidencias/CT-EST-021-passo-2b-erro-detalhe.png</code>.</li>
-<li><strong>Central de Pesagem (DV-EST-067, rodada 9, 22/10/2026).</strong> Clicar em editar o volume da pesagem abre a página amarela de erro do ASP.NET (<code>Server Error in '/' Application. Erro na consulta do Equipamento.</code>) com a pilha de execução completa: caminhos das pastas do código-fonte e os nomes dos arquivos <code>pesagem_ed2.aspx.cs</code>, <code>bllEquipamento.cs</code> e <code>svcEquipamentos.cs</code>. Captura (só pelo nome do arquivo): <code>execucao/2026-10-22-rodada-9/evidencias/CT-EST-077-passo-2-editar-volume.png</code>.</li>
+<li>
+<p><strong>Central de Pesagem (DV-EST-067, rodada 9, 22/10/2026).</strong> Clicar em editar o volume da pesagem abre a página amarela de erro do ASP.NET (<code>Server Error in '/' Application. Erro na consulta do Equipamento.</code>) com a pilha de execução completa: caminhos das pastas do código-fonte e os nomes dos arquivos <code>pesagem_ed2.aspx.cs</code>, <code>bllEquipamento.cs</code> e <code>svcEquipamentos.cs</code>. Captura (só pelo nome do arquivo): <code>execucao/2026-10-22-rodada-9/evidencias/CT-EST-077-passo-2-editar-volume.png</code>.</p>
+</li>
+<li>
+<p><strong>Relatórios RC07, RC08, RM03 e RM14 (DV-EST-140, rodada 12B, 24/10/2026).</strong> Com a data incompleta (máscara em branco ou ano <code>0024</code>), a janela do relatório mostra a página amarela de erro do servidor, com "String was not recognized as a valid DateTime." ou "Erro ao gerar o relatório!" e o rastro de chamadas, com nomes de classes e de arquivos do código. O campo obrigatório só confere se há texto, não se a data é válida. Correção: validar a data no clique e tratar a exceção com mensagem amigável.</p>
+</li>
 </ul>
 <p><strong>Risco.</strong> Quem não deveria ver a estrutura interna (nomes de arquivos, camadas, parâmetros e texto do banco) passa a conhecê-la, o que facilita um ataque (ver também SEG-EST-02) e fere o Guia 33/2020 (tratamento de erros sem expor detalhes técnicos). O Principal tem achado parecido (SEG-PRI-10).</p>
 <p><strong>Correção.</strong> Desligar a página de erro detalhada fora do desenvolvimento (página de erro genérica para o usuário) e guardar o detalhe só no registro de erros do servidor. No defeito funcional, tratar a falta de equipamento com mensagem clara.</p>
@@ -265,13 +284,27 @@
 <p><strong>O que os testes mostraram (T).</strong> Rodada 11 (22/10/2026, CT-EST-164; defeito DV-EST-077). A lista de Pedido de Compra mostra os pedidos 000001 a 000008 só com o ícone <strong>Excluir</strong>, para o administrador e para o usuário de Estoque. O código só mostra o ícone de editar com a permissão Alterar, o de baixar com a função BAIXAR_PEDIDO (e pedido finalizado ou em recebimento) e o Incluir com a permissão Incluir. Na árvore de funções do perfil (aba Estoque, 361 funções) <strong>não existe nó de Pedido de Compra</strong> nem de baixa de pedido; o menu do Estoque também não tem o item.</p>
 <p><strong>Risco.</strong> A tela não está sob o controle de acesso por função (Guia 33/2020): o único ícone que aparece, Excluir, funciona sem permissão cadastrável, e os pedidos gerados pela Análise de Estoque ficam sempre abertos, sem como finalizar ou baixar. As permissões podem existir em outra carga do banco do cliente (ponto para validar).</p>
 <p><strong>Correção.</strong> Cadastrar a tela e as funções (Incluir, Alterar, Excluir e BAIXAR_PEDIDO) na carga das funções do Estoque, no menu e na árvore do perfil.</p>
+<h3 id="seg-est-17-a-ligacao-almoxarifado-grupo-de-usuarios-muda-sem-rastro-e-a-remessa-nao-a-respeita-alta">SEG-EST-17: a ligação almoxarifado × grupo de usuários muda sem rastro e a Remessa não a respeita (Alta)</h3>
+<p><strong>O que os testes mostraram (T).</strong> Rodada 12A (24/10/2026, roteiro de cadastros, passos 1.8, 2.3, 2.4 e 2.8; defeitos DV-EST-079 e DV-EST-078).</p>
+<ul>
+<li><strong>DV-EST-079 (Alta).</strong> No cadastro Grupo Usuário - Almoxarifado, clicar em INCLUIR liga o almoxarifado ao grupo na hora, <strong>sem pergunta e sem justificativa</strong>. O Ver Log do grupo continua mostrando só a linha de inclusão do registro (de 23/07/2026) e nada da ligação feita no teste. Quem decide quais almoxarifados cada grupo enxerga muda sem deixar prova de quem fez, quando e por quê.</li>
+<li><strong>DV-EST-078 (Média).</strong> Item, Local e Solicitação de Material (Consumo) deixam de oferecer o almoxarifado inativo ou desligado do grupo; a <strong>Remessa de Material continua oferecendo</strong>. Com um almoxarifado desligado do grupo de teste, o usuário desse grupo ainda o via na lista da Remessa (3 opções: a de seleção e dois almoxarifados), embora o Local já não o oferecesse.</li>
+</ul>
+<p><strong>Risco.</strong> O controle por área (que almoxarifado cada grupo vê) é a base do acesso por local do Estoque; mudá-lo sem rastro fere a trilha de auditoria (RDC 658/2022, art. 125; Guia 33/2020), e a Remessa fora da regra deixa a saída de material sair de um almoxarifado a que o grupo não tem acesso (mesma família do SEG-EST-14).</p>
+<p><strong>Correção.</strong> Pedir confirmação e justificativa ao ligar e ao desligar o almoxarifado do grupo; gravar no Log o almoxarifado, o usuário, a data, a hora e a justificativa; avisar quando o desligamento atinge almoxarifado com saldo ou solicitação em andamento; na Remessa, listar só almoxarifados ativos e ligados ao grupo do usuário, como Item, Local e Solicitação já fazem.</p>
+<p><strong>Como confirmar.</strong> Roteiro de cadastros (passos 2.3, 2.4 e 1.8/2.8) e CT-EST-041 (filtro por grupo).</p>
+<h3 id="seg-est-18-a-classificacao-de-reanalise-nao-tem-funcoes-cadastradas-media">SEG-EST-18: a Classificação de Reanálise não tem funções cadastradas (Média)</h3>
+<p><strong>O que os testes mostraram (T).</strong> Rodada 12A (24/10/2026, passos 20.1, 20.6 e 20.9; defeito DV-EST-109). Mesmo com o administrador de teste, as linhas incluídas pela tela aparecem <strong>sem nenhum ícone</strong> (nem Editar, Excluir ou Ver Log) e a lista não tem Imprimir nem Excel; a tela só abre pelo caminho direto (não está no menu). Uma classificação incluída pela tela não pode ser corrigida, inativada nem auditada.</p>
+<p><strong>O que o código mostra (C).</strong> Os ícones e os botões só aparecem se o perfil tiver as funções Alterar e Imprimir da tela, e a tela não tem funções cadastradas (<code>LaboSys_UI/administracao/tabelas_apoio/classificacao_reanalise_lst.aspx.cs</code>, linhas 83 e 84 e 160 a 163). É a mesma família do SEG-EST-16 (Pedido de Compra) e do SEG-EST-15.</p>
+<p><strong>Risco.</strong> A tela está fora do controle de acesso por função (Guia 33/2020): o que ela gravar não tem como ser alterado nem auditado pela interface, e a classificação de reanálise define o prazo de reteste do item (RDC 658/2022, art. 189).</p>
+<p><strong>Correção.</strong> Cadastrar a tela e as funções (Incluir, Alterar, Excluir, Ver Log, Imprimir e Excel) na carga das funções do Estoque e no menu; decisão com a área sobre onde a tela deve ficar.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="defeitos-para-correcao.html"><small>← Anterior</small><strong>Defeitos para correção</strong></a><a class="ap ap-prox" href="por-que-o-estoque-nao-esta-apto.html"><small>Próximo →</small><strong>Por que o Estoque não está apto</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#gravidade">Gravidade</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#seg-est-01-api-do-estoque-sem-autenticacao-critica">SEG-EST-01: API do Estoque sem autenticação (Crítica)</a></li><li><a href="#seg-est-02-consultas-montadas-por-concatenacao-critica">SEG-EST-02: consultas montadas por concatenação (Crítica)</a></li><li><a href="#seg-est-03-telas-abrem-pelo-endereco-com-o-acesso-negado-no-menu-alta">SEG-EST-03: telas abrem pelo endereço, com o acesso negado no menu (Alta)</a></li><li><a href="#seg-est-04-autorizacao-do-recebimento-por-qualquer-usuario-alta">SEG-EST-04: autorização do recebimento por qualquer usuário (Alta)</a></li><li><a href="#seg-est-05-qualquer-usuario-aprova-o-laudo-do-cq-alta">SEG-EST-05: qualquer usuário aprova o laudo do CQ (Alta)</a></li><li><a href="#seg-est-06-o-cq-procura-as-funcoes-por-numero-fixo-alta">SEG-EST-06: o CQ procura as funções por número fixo (Alta)</a></li><li><a href="#seg-est-07-salvar-a-conta-apaga-permissoes-alta">SEG-EST-07: salvar a conta apaga permissões (Alta)</a></li><li><a href="#seg-est-08-conferencia-de-senha-com-a-criptografia-reversivel-do-principal-alta">SEG-EST-08: conferência de senha com a criptografia reversível do Principal (Alta)</a></li><li><a href="#seg-est-09-senhas-do-banco-no-arquivo-de-configuracao-alta">SEG-EST-09: senhas do banco no arquivo de configuração (Alta)</a></li><li><a href="#seg-est-10-copias-das-telas-do-principal-gravam-sem-historico-media">SEG-EST-10: cópias das telas do Principal gravam sem histórico (Média)</a></li><li><a href="#seg-est-11-script-que-apaga-dados-e-historico-media">SEG-EST-11: script que apaga dados e histórico (Média)</a></li><li><a href="#seg-est-12-pagina-de-teste-e-gerador-de-telas-baixa">SEG-EST-12: página de teste e gerador de telas (Baixa)</a></li><li><a href="#seg-est-13-paginas-de-erro-mostram-detalhes-tecnicos-media">SEG-EST-13: páginas de erro mostram detalhes técnicos (Média)</a></li><li><a href="#seg-est-14-a-solicitacao-de-material-consumo-oferece-e-grava-em-almoxarifado-fora-do-grupo-do-usuario-media">SEG-EST-14: a Solicitação de Material (Consumo) oferece e grava em almoxarifado fora do grupo do usuário (Média)</a></li><li><a href="#seg-est-15-ninguem-consegue-aprovar-o-lote-padrao-alta">SEG-EST-15: ninguém consegue aprovar o Lote Padrão (Alta)</a></li><li><a href="#seg-est-16-o-pedido-de-compra-nao-tem-funcoes-no-cadastro-do-perfil-media">SEG-EST-16: o Pedido de Compra não tem funções no cadastro do perfil (Média)</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#gravidade">Gravidade</a></li><li><a href="#resumo">Resumo</a></li><li><a href="#seg-est-01-api-do-estoque-sem-autenticacao-critica">SEG-EST-01: API do Estoque sem autenticação (Crítica)</a></li><li><a href="#seg-est-02-consultas-montadas-por-concatenacao-critica">SEG-EST-02: consultas montadas por concatenação (Crítica)</a></li><li><a href="#seg-est-03-telas-abrem-pelo-endereco-com-o-acesso-negado-no-menu-alta">SEG-EST-03: telas abrem pelo endereço, com o acesso negado no menu (Alta)</a></li><li><a href="#seg-est-04-autorizacao-do-recebimento-por-qualquer-usuario-alta">SEG-EST-04: autorização do recebimento por qualquer usuário (Alta)</a></li><li><a href="#seg-est-05-qualquer-usuario-aprova-o-laudo-do-cq-alta">SEG-EST-05: qualquer usuário aprova o laudo do CQ (Alta)</a></li><li><a href="#seg-est-06-o-cq-procura-as-funcoes-por-numero-fixo-alta">SEG-EST-06: o CQ procura as funções por número fixo (Alta)</a></li><li><a href="#seg-est-07-salvar-a-conta-apaga-permissoes-alta">SEG-EST-07: salvar a conta apaga permissões (Alta)</a></li><li><a href="#seg-est-08-conferencia-de-senha-com-a-criptografia-reversivel-do-principal-alta">SEG-EST-08: conferência de senha com a criptografia reversível do Principal (Alta)</a></li><li><a href="#seg-est-09-senhas-do-banco-no-arquivo-de-configuracao-alta">SEG-EST-09: senhas do banco no arquivo de configuração (Alta)</a></li><li><a href="#seg-est-10-copias-das-telas-do-principal-gravam-sem-historico-media">SEG-EST-10: cópias das telas do Principal gravam sem histórico (Média)</a></li><li><a href="#seg-est-11-script-que-apaga-dados-e-historico-media">SEG-EST-11: script que apaga dados e histórico (Média)</a></li><li><a href="#seg-est-12-pagina-de-teste-e-gerador-de-telas-baixa">SEG-EST-12: página de teste e gerador de telas (Baixa)</a></li><li><a href="#seg-est-13-paginas-de-erro-mostram-detalhes-tecnicos-media">SEG-EST-13: páginas de erro mostram detalhes técnicos (Média)</a></li><li><a href="#seg-est-14-a-solicitacao-de-material-consumo-oferece-e-grava-em-almoxarifado-fora-do-grupo-do-usuario-media">SEG-EST-14: a Solicitação de Material (Consumo) oferece e grava em almoxarifado fora do grupo do usuário (Média)</a></li><li><a href="#seg-est-15-ninguem-consegue-aprovar-o-lote-padrao-alta">SEG-EST-15: ninguém consegue aprovar o Lote Padrão (Alta)</a></li><li><a href="#seg-est-16-o-pedido-de-compra-nao-tem-funcoes-no-cadastro-do-perfil-media">SEG-EST-16: o Pedido de Compra não tem funções no cadastro do perfil (Média)</a></li><li><a href="#seg-est-17-a-ligacao-almoxarifado-grupo-de-usuarios-muda-sem-rastro-e-a-remessa-nao-a-respeita-alta">SEG-EST-17: a ligação almoxarifado × grupo de usuários muda sem rastro e a Remessa não a respeita (Alta)</a></li><li><a href="#seg-est-18-a-classificacao-de-reanalise-nao-tem-funcoes-cadastradas-media">SEG-EST-18: a Classificação de Reanálise não tem funções cadastradas (Média)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 23/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

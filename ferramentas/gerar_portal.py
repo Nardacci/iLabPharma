@@ -1823,9 +1823,13 @@ def pagina_inicial(origem):
   <section class="secao apresentacao-chamada">
     <div>
       <h2>Apresentação do iLabPharma</h2>
-      <p>A experiência visual dos processos farmacêuticos continua disponível, sem mudanças.</p>
+      <p>O pitch em roteiro, do insumo ao lote liberado, e a experiência visual dos processos farmacêuticos.</p>
+      <p class="apresentacao-links"><a class="botao botao-secundario" href="pitch/index.html">Abrir o pitch ↗</a> <a class="botao botao-secundario" href="apresentacao.html">Abrir a experiência visual ↗</a></p>
     </div>
-    <a class="botao botao-secundario" href="apresentacao.html">Abrir a apresentação ↗</a>
+    <video class="apresentacao-video" controls preload="none" playsinline poster="pitch/video/apresentacao-capa.jpg" aria-label="Vídeo da apresentação do iLabPharma, percurso completo do pitch">
+      <source src="pitch/video/apresentacao.mp4" type="video/mp4">
+      O seu navegador não toca vídeo; <a href="pitch/video/apresentacao.mp4">baixe o arquivo</a>.
+    </video>
   </section>
 </main>
 """ + rodape(raiz))

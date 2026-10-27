@@ -3,7 +3,7 @@
 Regras (decididas pelo responsável em 21/10/2026):
   R1  endereço IP privado (10.x, 172.16 a 31.x, 192.168.x), com http(s)://, porta e caminho  -> "[endereço omitido]"
   R2  a página "Usuários de teste" não entra no portal (ver o catálogo em gerar_portal.py)
-  R5  logins de teste -> "[usuário de teste]"
+  R5  (DESLIGADA em 26/10/2026, decisão do responsável: logins de teste podem aparecer; senha nunca)
 
 Os logins NÃO ficam neste arquivo: são lidos, a cada geração, da fonte privada (LOGINS_FONTE, no repositório
 da homologação). O código nunca imprime o valor encontrado, só o arquivo e a contagem.
@@ -24,8 +24,10 @@ _logins = None   # regex compilado dos logins; None = ainda não carregado
 
 
 def carregar(origem):
-    """Lê os logins de teste da fonte privada. Devolve a quantidade (0 se a fonte não existe)."""
+    """R5 desligada: os logins de teste podem aparecer no portal. Não carrega nada e devolve 0."""
     global _logins
+    _logins = None
+    return 0
     arq = Path(origem) / LOGINS_FONTE
     nomes = []
     if arq.exists():

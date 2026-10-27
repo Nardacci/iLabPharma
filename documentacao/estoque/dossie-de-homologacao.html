@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -154,7 +154,7 @@
 <tr>
 <td>Especificação dos Requisitos do Usuário (ERU)</td>
 <td>9.3</td>
-<td>Análise de Requisitos do Estoque: os controles exigidos da análise de risco e as correções dos 150 defeitos são a base (35 requisitos novos vieram dos 74 defeitos das rodadas 12A a 12C)</td>
+<td>Análise de Requisitos do Estoque: os controles exigidos da análise de risco e as correções dos 149 defeitos abertos são a base (35 requisitos novos vieram dos 74 defeitos das rodadas 12A a 12C)</td>
 </tr>
 <tr>
 <td>Especificação Funcional</td>
@@ -206,7 +206,7 @@
 <tbody>
 <tr>
 <td>Funciona</td>
-<td>4</td>
+<td>3</td>
 </tr>
 <tr>
 <td>Funciona com falhas</td>
@@ -214,7 +214,7 @@
 </tr>
 <tr>
 <td>Falha grave</td>
-<td>53</td>
+<td>54</td>
 </tr>
 <tr>
 <td>Bloqueada no teste</td>
@@ -234,7 +234,7 @@
 <p><strong>O que isso quer dizer:</strong> os testes de 07 e 08/10 cobriram os cadastros de apoio e a entrada de material, até o Endereçamento. O Endereçamento não grava (DV-EST-016), então nenhum lote ganha saldo, e as telas seguintes (quarentena, CQ, movimentação, separação, remessa) <strong>não puderam ser testadas</strong>. A causa está no banco e depende do DBA, que não respondeu: fica <strong>pendente</strong>.</p>
 <p><strong>Um caminho para destravar (confirmado no teste de 12/10/2026):</strong> as telas <strong>Entrada de Material - Outras</strong> e <strong>Entrada de Material - Produção</strong> gravam a entrada por outra rotina (<code>LaboSys_UI/estoque/entrada_material_ed.aspx.cs:316-322</code>, <code>entrada_producao_ed.aspx.cs:156-166</code>: inclusão da movimentação, volumes e abertura da análise no CQ), sem passar pelo Endereçamento. Se funcionarem, criam um lote com saldo em quarentena e permitem testar a quarentena, a análise do CQ e o que vem depois.</p>
 <p><strong>Rodada 3 (12/10/2026):</strong> o ciclo da quarentena e do CQ foi executado com os lotes <code>TESTEPA001</code>, <code>TESTELOTE003</code> e <code>TESTEPA998</code>. Oito telas do Estoque passaram a ter situação (Controle da Qualidade, Movimentação de Quarentena, Separação, Atendimento, Movimentação de Material, Disponibilidade do Lote, Histórico do Lote e Solicitação de Material - Consumo). A <strong>Central de Pesagem</strong> continua não testada: a amostra do CQ não gerou pesagem. As telas do CQ têm o inventário próprio em <code>../4.controle_qualidade/11-inventario-de-telas.md</code>.</p>
-<p><strong>Rodada 8 (22/10/2026):</strong> 85 casos de 94 foram tentados (sem os de permissão). Das 58 telas "não testadas", <strong>22 passaram a ter situação</strong> (cadastros de apoio, Saída de Material, Devolução, Entrada de Produção, Aprovação de Solicitação, kits e relatórios de kit e de quarentena). <strong>8 mudaram de situação:</strong> o <strong>Atendimento de Solicitação</strong> passou a <strong>falha grave</strong> (não ordena os lotes por validade e aceita o que vence depois, DV-EST-048); a <strong>Movimentação de Material</strong>, a <strong>Entrada de Material - Outras</strong> e a <strong>Estoque Coluna</strong> passaram a "funciona com falhas"; e as quatro telas do <strong>Inventário</strong> saíram de "bloqueada no teste" depois que um almoxarifado sem pendências abriu o inventário (uma funciona, três funcionam com falhas, DV-EST-049 e 050). A <strong>Análise do Planejamento de Kits</strong> entrou como falha grave (diz "gerada" e não grava, DV-EST-054) e a tela <strong>Banco</strong> (fora do menu: não grava e mostra erro técnico, DV-EST-052) aparece em "Fora do menu".</p>
+<p><strong>Rodada 8 (22/10/2026):</strong> 85 casos de 94 foram tentados (sem os de permissão). Das 58 telas "não testadas", <strong>22 passaram a ter situação</strong> (cadastros de apoio, Saída de Material, Devolução, Entrada de Produção, Aprovação de Solicitação, kits e relatórios de kit e de quarentena). <strong>8 mudaram de situação:</strong> o <strong>Atendimento de Solicitação</strong> passou a <strong>falha grave</strong> (não ordena os lotes por validade e aceita o que vence depois, DV-EST-048); a <strong>Movimentação de Material</strong>, a <strong>Entrada de Material - Outras</strong> e a <strong>Estoque Coluna</strong> passaram a "funciona com falhas"; e as quatro telas do <strong>Inventário</strong> saíram de "bloqueada no teste" depois que um almoxarifado sem pendências abriu o inventário (uma funciona, três funcionam com falhas, DV-EST-049 e 050). A <strong>Análise do Planejamento de Kits</strong> entrou como falha grave (diz "gerada" e não grava, DV-EST-054; <strong>descartado em 26/10/2026</strong>: a rodada 12B mostrou que a tela grava, ver a linha da tela em Kits) e a tela <strong>Banco</strong> (fora do menu: não grava e mostra erro técnico, DV-EST-052) aparece em "Fora do menu".</p>
 <p><strong>Rodada 9 (22/10/2026):</strong> 27 casos que a rodada 8 deixou bloqueados ou não executados (sem os de segurança): 1 passou, 24 seguem bloqueados e 2 não se aplicam à tela. Duas telas mudaram de situação: a <strong>Central de Pesagem</strong> (de não testada para <strong>falha grave</strong>, DV-EST-067) e o <strong>Local de Armazenagem</strong> (de funciona para <strong>funciona com falhas</strong>, DV-EST-066). As demais ficam como estavam; a Remessa de Material não tem data de embarque, data da guia nem chave de nota fiscal (CT-EST-117 e 118).</p>
 <p><strong>Rodada 10 (22/10/2026):</strong> 27 casos que a rodada 9 deixou bloqueados ou não executados (sem os de segurança e acesso), mais o CT-EST-116: 5 passaram, 5 passaram com ressalva, 5 falharam, 10 seguem bloqueados e 2 não se aplicam à tela. Três telas mudaram de situação: a <strong>Aprovação de Solicitação</strong> (de bloqueada para <strong>funciona com falhas</strong>: aprova, mas aceita quem criou a solicitação, DV-EST-070), o <strong>Controle de Kits</strong> (de bloqueada para <strong>funciona</strong>: mostra guia, lote, validade e remessa do componente enviado) e a <strong>Consulta Disponibilidade (Referência-Retenção-Estabilidade)</strong> (de falha grave para <strong>funciona com falhas</strong>: a lista vazia era a marca de Retenção que faltava no cadastro do Item; depois de marcada, lista o saldo). A <strong>Movimentações</strong> segue <strong>falha grave</strong>: aceita a saída de retenção antes do vencimento sem aviso (DV-EST-068) e a entrada de estabilidade sem tipo (DV-EST-071).</p>
 <p><strong>Rodada 11 (22/10/2026):</strong> 8 linhas (1 passou, 1 falhou, 6 bloqueadas), para destravar a Produção, criar a Regra de Estabilidade e investigar o Pedido de Compra. <strong>Nenhuma tela do Estoque mudou de situação</strong>; entram só observações. O <strong>Pedido de Compra</strong> continua "funciona com falhas": sem nó na árvore de funções do perfil, a lista só mostra o ícone Excluir (DV-EST-077, acesso). A <strong>Entrada de Material (Referência-Retenção-Estabilidade)</strong> só recebe entradas pendentes de retenção: o campo "Qtd. Estabilidade" da amostragem do CQ está desligado, então não chega nenhuma de estabilidade (DV-EST-074); o ícone Movimentar só aparece depois da Movimentação de Quarentena do lote (regra da tela). A <strong>Solicitação de Material (Produção)</strong> e a <strong>Solicitação Avulsa</strong> seguem só com Pesquisar e Limpar, porque a ordem de produção não nasce: o lote padrão do produto 26 está sem aprovação e nenhuma tela liga a função de aprovar à configuração 19 (DV-EST-076, Alta, acesso). Na Consulta de Disponibilidade, o lote vencido mostra o saldo em "Bloqueado / Inventário" e a coluna "Vencido / Reanálise" em 0.</p>
@@ -977,7 +977,7 @@
 <li>A análise do produto acabado deve abrir como tipo próprio? (DV-EST-026)</li>
 </ol>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
-<p>Os achados de segurança do Estoque (16 achados, SEG-EST-01 a 16: acesso por endereço, autorização de recebimento, funções procuradas por número fixo, telas de erro que mostram detalhes técnicos, entre outros) estão no documento <strong>Achados de Segurança</strong>, e os 14 desvios de acesso e segurança dos testes, no registro de defeitos. Este dossiê registra que eles existem, foram testados nas rodadas de teste e entram nas correções obrigatórias (conferir a permissão em toda tela e toda gravação, no servidor). As rodadas 12A a 12C reconfirmaram o DV-EST-008: um usuário sem nenhuma função do Estoque abriu pelo endereço as 27 telas de cadastro e os Parâmetros do Estoque (28 telas) e 14 telas operacionais, com o botão de gravar visível; nada foi gravado nesses passos. Acrescentaram também quatro desvios de acesso (DV-EST-078, 079, 109 e 140).</p>
+<p>Os achados de segurança do Estoque (18 achados, SEG-EST-01 a 18: acesso por endereço, autorização de recebimento, funções procuradas por número fixo, telas de erro que mostram detalhes técnicos, entre outros) estão no documento <strong>Achados de Segurança</strong>, e os 14 desvios de acesso e segurança dos testes, no registro de defeitos. Este dossiê registra que eles existem, foram testados nas rodadas de teste e entram nas correções obrigatórias (conferir a permissão em toda tela e toda gravação, no servidor). As rodadas 12A a 12C reconfirmaram o DV-EST-008: um usuário sem nenhuma função do Estoque abriu pelo endereço as 27 telas de cadastro e os Parâmetros do Estoque (28 telas) e 14 telas operacionais, com o botão de gravar visível; nada foi gravado nesses passos. Acrescentaram também quatro desvios de acesso (DV-EST-078, 079, 109 e 140).</p>
 <h2 id="plano-de-testes">Plano de testes</h2>
 <h3 id="objetivo">Objetivo</h3>
 <p>Confirmar nas telas o que a leitura do código encontrou no Estoque:
@@ -1095,8 +1095,8 @@
 <p>Na rodada 11 (22/10/2026) o total <strong>não mudou (149)</strong>: o CT-EST-173 virou conclusivo (Falhou, DV-EST-074 e 075) e o CT-EST-172 deixou de ser (voltou a Bloqueado, porque a rodada 10 tinha testado a tela errada). O CT-EST-171 passou (era "passou em parte"). Seguem bloqueados 10 casos (055, 058, 077, 082, 090, 091, 100, 164, 172 e 192) e 2 não se aplicam (117 e 118); o CT-EST-023 fica fora do escopo. <strong>Ficam 2 Alta bloqueadas</strong> (CT-EST-058 e 091). Dos 8 casos da rodada: 1 passou, 1 falhou e 6 bloqueados.</p>
 <h2 id="resultados-dos-testes">Resultados dos testes</h2>
 <h3 id="resumo-das-rodadas">Resumo das rodadas</h3>
-<p><strong>Situação em 25/10/2026, depois das rodadas 12A, 12B e 12C.</strong> O módulo foi percorrido em <strong>14 rodadas</strong> (07 a 24/10/2026). As três últimas, de 24/10/2026, mudaram a forma de medir: em vez dos 162 casos do plano, seguiram os <strong>roteiros de execução por fluxo</strong> (12 roteiros, com tela, o que preencher, o que deve aparecer e o caso coberto), e cada <strong>linha de resultado</strong> é um passo, ou um grupo de passos do mesmo caso. Somando o plano e essas linhas, o módulo tem <strong>601 linhas de resultado planejadas</strong> (162 do plano, 318 da 12A, 66 da 12B e 55 da 12C), das quais <strong>552 têm resultado conclusivo</strong> (passou, passou com ressalva ou falhou). É um número de trabalho, e não 552 casos distintos do plano. Dos 46 casos de prioridade Alta do plano, 44 têm resultado; <strong>2 seguem sem conclusão</strong> (CT-EST-058 e 091), pelas mesmas causas de antes.</p>
-<p><strong>O resultado em uma frase:</strong> o Estoque continua <strong>não apto para uso em ambiente regulado</strong>, e as três rodadas só reforçaram isso. Foram <strong>74 defeitos novos</strong> (34 de gravidade alta), e o registro do módulo passou de 76 para <strong>150 defeitos, todos abertos</strong> (55 de gravidade alta, 75 média e 20 baixa; 65 de norma, 70 funcionais, 14 de acesso e segurança e 1 de ambiente). Dos 150, o DV-EST-054 não se confirmou na rodada 12B (ver abaixo), mas ainda consta no registro como aberto.</p>
+<p><strong>Situação em 26/10/2026, depois das rodadas 12A, 12B e 12C (e do descarte do DV-EST-054).</strong> O módulo foi percorrido em <strong>14 rodadas</strong> (07 a 24/10/2026). As três últimas, de 24/10/2026, mudaram a forma de medir: em vez dos 162 casos do plano, seguiram os <strong>roteiros de execução por fluxo</strong> (12 roteiros, com tela, o que preencher, o que deve aparecer e o caso coberto), e cada <strong>linha de resultado</strong> é um passo, ou um grupo de passos do mesmo caso. Somando o plano e essas linhas, o módulo tem <strong>601 linhas de resultado planejadas</strong> (162 do plano, 318 da 12A, 66 da 12B e 55 da 12C), das quais <strong>552 têm resultado conclusivo</strong> (passou, passou com ressalva ou falhou). É um número de trabalho, e não 552 casos distintos do plano. Dos 46 casos de prioridade Alta do plano, 44 têm resultado; <strong>2 seguem sem conclusão</strong> (CT-EST-058 e 091), pelas mesmas causas de antes.</p>
+<p><strong>O resultado em uma frase:</strong> o Estoque continua <strong>não apto para uso em ambiente regulado</strong>, e as três rodadas só reforçaram isso. Foram <strong>74 defeitos novos</strong> (34 de gravidade alta), e o registro do módulo passou de 76 para <strong>150 defeitos registrados, 149 abertos</strong> (55 de gravidade alta, 74 média e 20 baixa; 65 de norma, 69 funcionais, 14 de acesso e segurança e 1 de ambiente; o DV-EST-054 foi descartado em 26/10/2026). O DV-EST-054 não se confirmou na rodada 12B (ver abaixo) e foi descartado por decisão do responsável.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1274,8 +1274,8 @@
 <li><strong>Acesso</strong>: o usuário sem nenhuma função do Estoque abriu pelo endereço as 27 telas de cadastro e os Parâmetros do Estoque (DV-EST-008, 28 telas na 12A) e 14 telas operacionais (12C), com o botão de gravar visível. Nada foi clicado nesses passos.</li>
 <li><strong>O que passou e vale manter</strong>: segundo almoxarifado de Retenção ou de Estabilidade é recusado; a justificativa é obrigatória nas alterações e exclusões dos cadastros de apoio; o custo médio é calculado certo; o item controlado exige o tipo de substância; a data do recebimento no futuro, a nota fiscal repetida, a placa com saída pendente e a quantidade pendente do lote são recusadas; autorizar o recebimento exige outra pessoa; o Atender Todos escolhe o lote que vence primeiro; reabrir uma solicitação aprovada zera a aprovação.</li>
 </ul>
-<p><strong>O que não se confirmou</strong> (a tela contrariou a leitura do código ou da rodada anterior): o <strong>DV-EST-054</strong> (Análise do Planejamento de Kits "diz gerada e não grava") era leitura incompleta da rodada 8: a análise gera e mostra o resultado depois do OK, e entra na lista depois de SALVAR ANÁLISE; o registro ainda o traz como aberto, e a proposta é fechá-lo como "não confirmado" (decisão do responsável). O botão ALTERAR ÚLTIMA CONTAGEM não existe na Justificativa do Inventário (a reabertura está na Apuração). O menu Relatórios tem <strong>22 itens, e não 25</strong>. O Atender Todos ordena pela validade (o Atender Item, não: DV-EST-048). O DV-EST-006 (botões que apagam números do Item) não se repetiu na 12A.</p>
-<p><strong>Medida das 99 telas do menu</strong> (inventário <code>11-inventario-de-telas.md</code>; "falha grave" é o defeito de gravidade Alta aberto na tela, sem contar o DV-EST-008 de acesso): <strong>4 funcionam, 33 funcionam com falhas, 53 com falha grave, 3 bloqueadas no teste e 6 não testadas.</strong></p>
+<p><strong>O que não se confirmou</strong> (a tela contrariou a leitura do código ou da rodada anterior): o <strong>DV-EST-054</strong> (Análise do Planejamento de Kits "diz gerada e não grava") era leitura incompleta da rodada 8: a análise gera e mostra o resultado depois do OK, e entra na lista depois de SALVAR ANÁLISE; o responsável o descartou em 26/10/2026 (situação "Descartado" no registro). O botão ALTERAR ÚLTIMA CONTAGEM não existe na Justificativa do Inventário (a reabertura está na Apuração). O menu Relatórios tem <strong>22 itens, e não 25</strong>. O Atender Todos ordena pela validade (o Atender Item, não: DV-EST-048). O DV-EST-006 (botões que apagam números do Item) não se repetiu na 12A.</p>
+<p><strong>Medida das 99 telas do menu</strong> (inventário <code>11-inventario-de-telas.md</code>; "falha grave" é o defeito de gravidade Alta aberto na tela, sem contar o DV-EST-008 de acesso): <strong>3 funcionam, 33 funcionam com falhas, 54 com falha grave, 3 bloqueadas no teste e 6 não testadas.</strong></p>
 <p><strong>O que ficou sem fazer nas rodadas 12</strong> (a lista por rodada está nas seções 12A, 12B e 12C): o que depende de <strong>XML de nota fiscal de teste</strong> (importação, criação automática de NCM e CFOP), de <strong>nota fiscal em andamento</strong> para provar uso de cadastro, de <strong>fornecedor reprovado</strong>, do <strong>segundo usuário de teste</strong> nos passos de duas pessoas do Inventário, do Regulatório e dos Kits, do <strong>DBA</strong> (desligar a obrigação de análise de um tipo de movimentação), e as telas de <strong>Kits</strong> (cadastro e planejamento), <strong>Gestão Analítica</strong> (Curva ABC e o Pedido de Compra, bloqueado pelo DV-EST-077) e parte dos <strong>Relatórios</strong> (RM14 e RM03 com massa de controlado). Os casos de prioridade média e baixa do roteiro do recebimento e da quarentena que não foram exercidos ficam como testes de aceite da nova versão.</p>
 <p><strong>Situação anterior (22/10/2026, depois da rodada 11), das onze primeiras rodadas.</strong> Dos <strong>162 casos</strong> do plano, <strong>149 têm resultado conclusivo</strong> (eram 78 antes da rodada 8, 133 antes da 9 e 134 antes da 10; a rodada 11 trocou um conclusivo por outro, ver abaixo). Entre os <strong>46 de prioridade Alta</strong>, 44 têm resultado e <strong>2 seguem sem conclusão</strong> (CT-EST-058 e 091): o primeiro pela classificação de reanálise que não aparece no Item (DV-EST-043) e o segundo pela Ordem de Produção, que não nasce: <strong>o lote padrão do produto não está aprovado e ninguém consegue aprová-lo</strong> (DV-EST-076). A rodada 8 registrou <strong>18 defeitos novos (DV-EST-048 a 065)</strong>, a rodada 9 mais <strong>2 (DV-EST-066 e 067)</strong> a rodada 10 mais <strong>5 de funcionamento (DV-EST-068, 070, 071, 072 e 073; o DV-EST-068, da saída da amostra de retenção, é de gravidade Alta)</strong> e a rodada 11 mais <strong>4 (DV-EST-074 a 077; o DV-EST-076, do lote padrão que ninguém aprova, é de gravidade Alta)</strong>. O registro completo do módulo tem agora <strong>76 defeitos</strong>, com os de acesso e segurança. O módulo continua <strong>não apto</strong> para uso em ambiente regulado.</p>
 <div class="tabela"><table>
@@ -1364,7 +1364,7 @@
 <li><strong>Atendimento à produção sem a regra do primeiro que vence</strong> (DV-EST-048, Alta): a lista não ordena os lotes pela validade e a tela aceita o lote que vence depois, sem aviso. No atendimento de um kit, um lote de 31 dias foi aceito com validade mínima de 180 dias (DV-EST-056).</li>
 <li><strong>Remessa de kit nasce sem Origem e sem Responsável e não finaliza</strong> (DV-EST-058, Alta), o que reforça a pista do DV-EST-046.</li>
 <li><strong>Inventário sem separação de funções:</strong> a mesma pessoa contou três vezes, justificou e apurou (DV-EST-049); cancelar o inventário não pede justificativa (DV-EST-050); cancelar um atendimento também não pede justificativa e não deixa rastro (DV-EST-061).</li>
-<li><strong>Telas que dizem "sucesso" ou "gerada" e não gravam:</strong> Banco (mostra um erro técnico ao usuário, DV-EST-052) e Análise do Planejamento de Kits (DV-EST-054).</li>
+<li><strong>Telas que dizem "sucesso" ou "gerada" e não gravam:</strong> Banco (mostra um erro técnico ao usuário, DV-EST-052). A Análise do Planejamento de Kits, que a rodada 8 tinha incluído aqui (DV-EST-054), grava em dois passos e o defeito foi descartado em 26/10/2026.</li>
 <li><strong>Devolução de Material não encontra o lote</strong> de item com controle de qualidade (DV-EST-064).</li>
 <li><strong>Pontos que funcionam:</strong> inventário rotativo com contagem, justificativa e apuração (saldo ajustado de 75 para 72); item controlado exige o tipo de substância; revalidação de lote vencido abre a análise no CQ; alteração de cadastros exige justificativa e mostra o histórico.</li>
 </ul>
@@ -2053,8 +2053,8 @@
 <tr>
 <td>CT-EST-152</td>
 <td>Análise do Planejamento de Kits</td>
-<td><strong>Falhou</strong></td>
-<td>Diz "Analise gerada!" mas não grava nem mostra nada (DV-EST-054)</td>
+<td><strong>Falhou</strong> (nesta rodada)</td>
+<td>Disse "Analise gerada!" e a leitura parou aí (DV-EST-054). <strong>Descartado em 26/10/2026:</strong> na rodada 12B o caso passou (é preciso clicar OK e depois SALVAR ANÁLISE)</td>
 </tr>
 <tr>
 <td>CT-EST-093</td>
@@ -2827,264 +2827,7 @@
 </tbody>
 </table></div>
 <p><strong>Defeitos novos: DV-EST-078 a 118 (41):</strong> 20 de gravidade alta, 18 média e 3 baixa; 27 funcionais, 11 de norma e 3 de acesso. Das 28 telas, 25 ficaram como <strong>falha grave</strong> e 3 (NCM, Conta Financeira e Tipo de Referência) como "funciona com falhas"; a situação final de cada tela está no inventário de telas.</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Nº</th>
-<th>Gravidade</th>
-<th>Tela</th>
-<th>O que acontece</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DV-EST-078</td>
-<td>Média</td>
-<td>Remessa de Material (efeito de Almoxarifado e Grupo Usuário - Almoxarifado)</td>
-<td>A Remessa de Material oferece o almoxarifado inativo e o almoxarifado que foi desligado do grupo do usuário</td>
-</tr>
-<tr>
-<td>DV-EST-079</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Grupo Usuário - Almoxarifado</td>
-<td>Ligar um almoxarifado a um grupo de usuários não pede confirmação nem justificativa e não deixa rastro no Log</td>
-</tr>
-<tr>
-<td>DV-EST-080</td>
-<td>Baixa</td>
-<td>Cadastros › Local de Armazenagem</td>
-<td>A descrição do Local de Armazenagem descarta os números sem avisar</td>
-</tr>
-<tr>
-<td>DV-EST-081</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Local de Armazenagem</td>
-<td>No Local de Armazenagem as cinco marcações (acesso controlado, refrigerado, quarentena, umidade, refugo) ficam travadas logo depois de criar o local</td>
-</tr>
-<tr>
-<td>DV-EST-082</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Local de Armazenagem (e Endereço do Estoque)</td>
-<td>Local de Armazenagem: é excluído com endereço ativo e é inativado com saldo de lote dentro, sem aviso</td>
-</tr>
-<tr>
-<td>DV-EST-083</td>
-<td>Média</td>
-<td>Cadastros › Classificação do Item, Natureza da Operação e Parâmetros do Estoque</td>
-<td>Campos que aceitam mais letras do que o banco guarda dão erro genérico, ou travam o SALVAR sem mensagem</td>
-</tr>
-<tr>
-<td>DV-EST-084</td>
-<td>Média</td>
-<td>Cadastros › Estoque Coluna</td>
-<td>Estoque Coluna aceita outro registro com o código de um registro inativo (dois códigos iguais)</td>
-</tr>
-<tr>
-<td>DV-EST-085</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Estoque Rua, Estoque Coluna e Estoque Andar</td>
-<td>Rua, Coluna e Andar podem ser inativados mesmo com endereço ativo, sem aviso</td>
-</tr>
-<tr>
-<td>DV-EST-086</td>
-<td>Média</td>
-<td>Cadastros › Grupo do Item</td>
-<td>O Grupo do Item é gravado sem o Tipo do Item (que define a análise do CQ)</td>
-</tr>
-<tr>
-<td>DV-EST-087</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Grupo do Item</td>
-<td>A mudança do tempo de armazenagem do Grupo do Item não entra no Log</td>
-</tr>
-<tr>
-<td>DV-EST-088</td>
-<td>Baixa</td>
-<td>Cadastros › Grupo do Item (e demais cadastros)</td>
-<td>Data do Cadastro mostra a hora em 12 horas, sem manhã ou tarde (17:38 aparece como 05:38)</td>
-</tr>
-<tr>
-<td>DV-EST-089</td>
-<td>Média</td>
-<td>Cadastros › Subgrupo do Item</td>
-<td>A Diferença de Pesagem (%) do Subgrupo não tem limite: aceita até 999,99% e grava 0,00 quando digitam letras</td>
-</tr>
-<tr>
-<td>DV-EST-090</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Subgrupo do Item</td>
-<td>A mudança da Diferença de Pesagem do Subgrupo não entra no Log</td>
-</tr>
-<tr>
-<td>DV-EST-091</td>
-<td>Média</td>
-<td>Cadastros › Subgrupo do Item e Classificação do Item</td>
-<td>A pesquisa por código não acha o registro em Subgrupo do Item e em Classificação do Item (códigos que não têm o tamanho padrão)</td>
-</tr>
-<tr>
-<td>DV-EST-092</td>
-<td>Média</td>
-<td>Cadastros › Unidade de Medida (e Conversão de Unidade)</td>
-<td>A apresentação de estoque criada sozinha ao incluir uma unidade de medida não tem histórico</td>
-</tr>
-<tr>
-<td>DV-EST-093</td>
-<td>Média</td>
-<td>Cadastros › Conta Financeira</td>
-<td>Conta Financeira aceita o mesmo número duas vezes</td>
-</tr>
-<tr>
-<td>DV-EST-094</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Item</td>
-<td>Item novo perde a marca "Controle Portaria 344" (e o tipo da substância) ao ser salvo</td>
-</tr>
-<tr>
-<td>DV-EST-095</td>
-<td>Média</td>
-<td>Cadastros › Item</td>
-<td>Item: Altura e Largura são gravadas trocadas</td>
-</tr>
-<tr>
-<td>DV-EST-096</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Item</td>
-<td>O Log do Item não registra a mudança do Controle de Quarentena, das análises, do estoque mínimo e máximo, nem da grade de almoxarifados</td>
-</tr>
-<tr>
-<td>DV-EST-097</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Natureza da Operação</td>
-<td>Natureza da Operação grava o parâmetro "Incide IPI" com o valor de "Venda"</td>
-</tr>
-<tr>
-<td>DV-EST-098</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Parâmetros do Estoque</td>
-<td>Parâmetros do Estoque mudam controles de processo sem justificativa e sem guardar quem mudou, quando e o valor anterior</td>
-</tr>
-<tr>
-<td>DV-EST-099</td>
-<td>Média</td>
-<td>Cadastros › Parâmetros do Estoque</td>
-<td>Parâmetros do Estoque: a Margem aceita valores fora da faixa "entre 10 e 80" que a própria tela informa</td>
-</tr>
-<tr>
-<td>DV-EST-100</td>
-<td>Média</td>
-<td>Cadastros › Parâmetros do Estoque</td>
-<td>Parâmetros do Estoque: quem salva por último desfaz, sem aviso, a mudança feita por outro usuário (inclusive o Tipo de Remessa)</td>
-</tr>
-<tr>
-<td>DV-EST-101</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Tipo de Movimentação e Motivo da Movimentação</td>
-<td>Tipo e Motivo da Movimentação já usados podem ter o sentido (Entrada/Saída) trocado, sem aviso</td>
-</tr>
-<tr>
-<td>DV-EST-102</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Tipo de Movimentação</td>
-<td>O Log do Tipo de Movimentação mostra o sentido ao contrário (ENTRADA: NÃO → SIM quando o tipo passa a Saída)</td>
-</tr>
-<tr>
-<td>DV-EST-103</td>
-<td>Baixa</td>
-<td>Cadastros › Motivo da Movimentação</td>
-<td>Motivo da Movimentação aceita Entrada = Não e Saída = Não (fica invisível em todas as telas)</td>
-</tr>
-<tr>
-<td>DV-EST-104</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Motivo da Movimentação (e Entrada de Material - Outras)</td>
-<td>Motivo da Movimentação inativo continua sendo oferecido nas telas de movimentação</td>
-</tr>
-<tr>
-<td>DV-EST-105</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Conversão de Unidade</td>
-<td>Conversão de Unidade aceita fator de conversão 0</td>
-</tr>
-<tr>
-<td>DV-EST-106</td>
-<td>Média</td>
-<td>Cadastros › Tipo de Referência</td>
-<td>Tipo de Referência aceita o mesmo código duas vezes</td>
-</tr>
-<tr>
-<td>DV-EST-107</td>
-<td>Média</td>
-<td>Cadastros › Centro de Custo</td>
-<td>Centro de Custo do Estoque aceita nome repetido (e descarta os números digitados no nome)</td>
-</tr>
-<tr>
-<td>DV-EST-108</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Centro de Custo</td>
-<td>A troca dos itens de um Centro de Custo não entra no Log</td>
-</tr>
-<tr>
-<td>DV-EST-109</td>
-<td>Média</td>
-<td>Cadastros › Classificação de Reanálise</td>
-<td>Classificação de Reanálise: a lista não tem Editar, Excluir, Ver Log, Imprimir nem Excel para nenhum perfil (tela sem menu e sem funções)</td>
-</tr>
-<tr>
-<td>DV-EST-110</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Conversão Fornecedor</td>
-<td>Conversão Fornecedor recusa o mesmo código de produto em fornecedores diferentes</td>
-</tr>
-<tr>
-<td>DV-EST-111</td>
-<td>Média</td>
-<td>Cadastros › Conversão Fornecedor</td>
-<td>A mudança do código do item no fornecedor não entra no Log da Conversão Fornecedor</td>
-</tr>
-<tr>
-<td>DV-EST-112</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Classe do Item, Classificação, Nível de Segurança e Conta Corrente (e Item)</td>
-<td>Cadastro de apoio em uso por um item pode ser inativado; o Item abre com o campo vazio e, se for salvo assim, perde o vínculo para sempre</td>
-</tr>
-<tr>
-<td>DV-EST-113</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Almoxarifado e SJB (e Item)</td>
-<td>Almoxarifado e SJB em uso por um item podem ser excluídos, e o item perde o vínculo</td>
-</tr>
-<tr>
-<td>DV-EST-114</td>
-<td>Média</td>
-<td>Cadastros › Item (e Movimentação de Material, NMM)</td>
-<td>O Código NEB do Item aparece vazio e o NEB impresso na NMM (T1000) não confere com a regra (SJB + 2 últimos caracteres do grupo)</td>
-</tr>
-<tr>
-<td>DV-EST-115</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Unidade de Medida (e Item)</td>
-<td>Unidade de Medida em uso por um item pode ter a abreviatura mudada e ser inativada, sem aviso</td>
-</tr>
-<tr>
-<td>DV-EST-116</td>
-<td><strong>Alta</strong></td>
-<td>Cadastros › Subgrupo do Item</td>
-<td>Trocar o grupo de um subgrupo que tem itens é aceito, sem aviso</td>
-</tr>
-<tr>
-<td>DV-EST-117</td>
-<td>Média</td>
-<td>Cadastros › Local de Armazenagem (e Movimentação de Material)</td>
-<td>A marca "Controle de Acesso" do Local de Armazenagem não faz nada: item comum é movido para ele sem aviso</td>
-</tr>
-<tr>
-<td>DV-EST-118</td>
-<td>Média</td>
-<td>Cadastros › Item</td>
-<td>Item: o estoque mínimo digitado como 0,5 é gravado como 5</td>
-</tr>
-</tbody>
-</table></div>
+<p>Os 41 defeitos desta rodada estão na tabela completa deste dossiê (capítulo Desvios). Os 20 de gravidade <strong>Alta</strong>: DV-EST-079, DV-EST-081, DV-EST-082, DV-EST-085, DV-EST-087, DV-EST-090, DV-EST-094, DV-EST-096, DV-EST-097, DV-EST-098, DV-EST-101, DV-EST-102, DV-EST-104, DV-EST-105, DV-EST-108, DV-EST-110, DV-EST-112, DV-EST-113, DV-EST-115, DV-EST-116. Tabela completa: seção "Desvios das rodadas 12A, 12B e 12C", no capítulo Desvios.</p>
 <p><strong>O que a tela contrariou do que o código indicava</strong> (divergências):</p>
 <ul>
 <li>O <strong>código acertou</strong> em vários pontos, e a tela confirmou: a marca "Controle Portaria 344" do Item novo é gravada com o valor de "Controle de destruição" (DV-EST-094); Altura e Largura são gravadas trocadas (095); a Natureza da Operação grava "Incide IPI" com o valor de "Venda" (097); o Log do Tipo de Movimentação lê o sentido ao contrário (102); a exclusão de almoxarifado e de SJB não confere o uso por item (113); a Conversão de Unidade aceita fator 0 (105).</li>
@@ -3121,147 +2864,10 @@
 </tbody>
 </table></div>
 <p><strong>Defeitos novos: DV-EST-120 a 140 (21):</strong> 9 de gravidade alta, 10 média e 2 baixa; 14 funcionais, 6 de norma e 1 de acesso. <strong>Reconfirmados sem número novo:</strong> DV-EST-040, 047, 049, 057, 062, 068, 071, 077, 034 e 060.</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Nº</th>
-<th>Gravidade</th>
-<th>Tela</th>
-<th>O que acontece</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DV-EST-120</td>
-<td><strong>Alta</strong></td>
-<td>Kits › Parâmetros de Configuração (Kit)</td>
-<td>Parâmetros de Configuração (Kit): a validade mínima do kit muda sem justificativa, sem registro de quem mudou e sem o valor anterior, e aceita 99999 dias</td>
-</tr>
-<tr>
-<td>DV-EST-121</td>
-<td>Média</td>
-<td>Relatórios › Relatório - Listagem de Lotes (Kits)</td>
-<td>A Listagem de Lotes (Kits) mostra o mesmo lote enviado em duas linhas e inclui a remessa manual que não é de kit</td>
-</tr>
-<tr>
-<td>DV-EST-122</td>
-<td>Média</td>
-<td>Kits › Análise do Planejamento de Kits e Relatórios › Reposição de Componentes do Kit</td>
-<td>A Análise do Planejamento de Kits e o relatório de Reposição de Componentes dão números diferentes para o mesmo item e kit</td>
-</tr>
-<tr>
-<td>DV-EST-123</td>
-<td>Média</td>
-<td>Kits › Análise do Planejamento de Kits</td>
-<td>A Análise do Planejamento de Kits apaga e cancela sem registro de quem fez e por quê, e cada geração consome um código</td>
-</tr>
-<tr>
-<td>DV-EST-124</td>
-<td>Média</td>
-<td>Regulatório › Movimentações (lista)</td>
-<td>A lista de Movimentações do Regulatório vem sempre vazia, mesmo depois de entradas e saídas de amostra feitas no mesmo dia</td>
-</tr>
-<tr>
-<td>DV-EST-125</td>
-<td>Média</td>
-<td>Regulatório › Movimentações</td>
-<td>A Observação digitada na movimentação de amostra não aparece em lugar nenhum</td>
-</tr>
-<tr>
-<td>DV-EST-126</td>
-<td>Média</td>
-<td>Relatórios › Quarentena de Produto Acabado (RM18) e Relatório de Endereços (RM24)</td>
-<td>RM18 e RM24 (e o filtro de lote em geral): sem resultado, a tela fica em branco, sem a mensagem "nenhum resultado"</td>
-</tr>
-<tr>
-<td>DV-EST-127</td>
-<td>Média</td>
-<td>Relatórios › Relatório de Endereços (RM24)</td>
-<td>O PDF do Relatório de Endereços (RM24) sai com as descrições dos itens deslocadas</td>
-</tr>
-<tr>
-<td>DV-EST-128</td>
-<td><strong>Alta</strong></td>
-<td>Relatórios › Relatório de Movimentação de Material (RC08)</td>
-<td>RC08: o relatório de movimentação de material mostra valores de centenas de milhões e a coluna Lançamento zerada, com conta fixa</td>
-</tr>
-<tr>
-<td>DV-EST-129</td>
-<td><strong>Alta</strong></td>
-<td>Relatórios › Demonstrativo Financeiro (RC07), Relatório de NMM (RC03), RM14 e RM03</td>
-<td>Relatórios de movimentação (RC07, RC03, RM14, RM03) trazem texto, declaração e assinaturas fixas de outra organização, e o RC07 declara "existência física" com todos os valores zerados</td>
-</tr>
-<tr>
-<td>DV-EST-130</td>
-<td><strong>Alta</strong></td>
-<td>Relatórios › Inventário do Mês</td>
-<td>O Inventário do Mês deixa de fora os itens com saldo e sem custo, e declara o valor total sem avisar</td>
-</tr>
-<tr>
-<td>DV-EST-131</td>
-<td><strong>Alta</strong></td>
-<td>Relatórios › Mapa de Movimentação de Material</td>
-<td>O Mapa de Movimentação de Material soma transferências e ajustes em Aquisição e Consumo</td>
-</tr>
-<tr>
-<td>DV-EST-132</td>
-<td><strong>Alta</strong></td>
-<td>Relatórios › Material Reservado (RM10)</td>
-<td>O Material Reservado (RM10) lista os lotes sem reserva, mostra datas na coluna Solicitação e reserva maior que o saldo</td>
-</tr>
-<tr>
-<td>DV-EST-133</td>
-<td><strong>Alta</strong></td>
-<td>Relatórios › Relação de Lotes - Reanálise</td>
-<td>A Relação de Lotes - Reanálise não marca como vencido o lote com validade vencida: só olha a data de reanálise</td>
-</tr>
-<tr>
-<td>DV-EST-134</td>
-<td><strong>Alta</strong></td>
-<td>Gestão Analítica › Análise de Estoque</td>
-<td>A Análise de Estoque sugere compra negativa (-490) e aceita período de CMM igual a 0</td>
-</tr>
-<tr>
-<td>DV-EST-135</td>
-<td>Média</td>
-<td>Gestão Analítica › Análise de Estoque (lista)</td>
-<td>A pesquisa por período da lista da Análise de Estoque usa a data inicial nos dois limites e traz só as análises do primeiro dia</td>
-</tr>
-<tr>
-<td>DV-EST-136</td>
-<td><strong>Alta</strong></td>
-<td>Inventário › Apuração e Justificativa</td>
-<td>Inventário: reabrir a contagem e cancelar a justificativa não pedem motivo e não deixam registro; a execução também não entra no log</td>
-</tr>
-<tr>
-<td>DV-EST-137</td>
-<td>Baixa</td>
-<td>Inventário › Justificativa e Ver Log</td>
-<td>Inventário: o campo de justificativa corta em 100 caracteres sem avisar e a coluna Justificativa do log fica sempre vazia</td>
-</tr>
-<tr>
-<td>DV-EST-138</td>
-<td>Baixa</td>
-<td>Inventário › Contagem</td>
-<td>Contagem do inventário aceita 99.999 e 0 sem pedir confirmação</td>
-</tr>
-<tr>
-<td>DV-EST-139</td>
-<td>Média</td>
-<td>Inventário › Justificativa</td>
-<td>Inventário: quem justifica só vê a quantidade da 3ª contagem, sem o saldo do sistema nem as contagens anteriores</td>
-</tr>
-<tr>
-<td>DV-EST-140</td>
-<td>Média</td>
-<td>Relatórios › RC07, RC08, RM03 e RM14</td>
-<td>Relatórios RC07, RC08, RM03 e RM14: com a data incompleta, a janela mostra a página de erro do servidor com o rastro de chamadas</td>
-</tr>
-</tbody>
-</table></div>
+<p>Os 21 defeitos desta rodada estão na tabela completa deste dossiê (capítulo Desvios). Os 9 de gravidade <strong>Alta</strong>: DV-EST-120, DV-EST-128, DV-EST-129, DV-EST-130, DV-EST-131, DV-EST-132, DV-EST-133, DV-EST-134, DV-EST-136. Tabela completa: seção "Desvios das rodadas 12A, 12B e 12C", no capítulo Desvios.</p>
 <p><strong>O que não se confirmou ou mudou de leitura:</strong></p>
 <ul>
-<li><strong>DV-EST-054 não se confirmou.</strong> A Análise do Planejamento de Kits gera e mostra o resultado (depois de "Analise gerada!" é preciso clicar em OK) e entra na lista depois de SALVAR ANÁLISE. Era leitura incompleta da rodada 8; o que sobra é o DV-EST-123 (apagar e cancelar sem rastro, código consumido a cada geração). O registro ainda traz o 054 como aberto.</li>
+<li><strong>DV-EST-054 não se confirmou.</strong> A Análise do Planejamento de Kits gera e mostra o resultado (depois de "Analise gerada!" é preciso clicar em OK) e entra na lista depois de SALVAR ANÁLISE. Era leitura incompleta da rodada 8; o que sobra é o DV-EST-123 (apagar e cancelar sem rastro, código consumido a cada geração). O responsável descartou o 054 em 26/10/2026 (CT-EST-152, capturas <code>CT-EST-152-passo-4.2b</code> e <code>4.2c</code> da rodada 12B).</li>
 <li>O botão <strong>ALTERAR ÚLTIMA CONTAGEM não existe</strong> na tela de Justificativa do Inventário (o roteiro e o código falavam dele); a reabertura da contagem está na Apuração (VOLTAR CONTAGEM), e o defeito real é o DV-EST-136.</li>
 <li>O menu <strong>Relatórios tem 22 itens</strong>, e não 25: o Demonstrativo de Movimentação de Material, a Entrada de Material e a Saída de Material não têm item no menu, e o RC07 abre uma só tela, a do Demonstrativo Financeiro.</li>
 <li>A <strong>Listagem de Lotes (Kits)</strong> e a <strong>Reposição de Itens a Vencer</strong>, bloqueadas na rodada 8, trazem dados com a remessa 004 e o lote <code>TESTEKIT30</code>; o código não dizia que a Listagem repete o lote em duas linhas (DV-EST-121).</li>
@@ -3300,90 +2906,7 @@
 </tbody>
 </table></div>
 <p><strong>Defeitos novos: DV-EST-160 a 171 (12):</strong> 5 de gravidade alta (160, 162, 164, 166 e 167) e 7 média; 8 de norma e 4 funcionais. O achado de acesso (14 telas do Estoque abrem pelo endereço) é o DV-EST-008, já existente e reconfirmado.</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Nº</th>
-<th>Gravidade</th>
-<th>Tela</th>
-<th>O que acontece</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DV-EST-160</td>
-<td><strong>Alta</strong></td>
-<td>Endereçamento de Material</td>
-<td>Endereçamento aceita destino sem rua, coluna e andar e guarda a quantidade no endereço padrão R000-C000-A000</td>
-</tr>
-<tr>
-<td>DV-EST-161</td>
-<td>Média</td>
-<td>Conferência de Recebimento</td>
-<td>Conferência de Recebimento lê o ponto decimal como milhar (10.5 vira 105,000), ignora texto sem avisar e aceita zero</td>
-</tr>
-<tr>
-<td>DV-EST-162</td>
-<td><strong>Alta</strong></td>
-<td>Recebimento de Material</td>
-<td>Reabrir Recebimento não pede justificativa e não registra a reabertura nem quem reabriu</td>
-</tr>
-<tr>
-<td>DV-EST-163</td>
-<td>Média</td>
-<td>Endereçamento de Material</td>
-<td>Cancelar o endereçamento não pede justificativa e não deixa histórico</td>
-</tr>
-<tr>
-<td>DV-EST-164</td>
-<td><strong>Alta</strong></td>
-<td>Aprovação de Solicitação</td>
-<td>Cancelar a aprovação de uma solicitação não pede justificativa</td>
-</tr>
-<tr>
-<td>DV-EST-165</td>
-<td>Média</td>
-<td>Separação de Material</td>
-<td>Cancelar a separação não grava a justificativa no log e o Histórico do Lote mantém a saída</td>
-</tr>
-<tr>
-<td>DV-EST-166</td>
-<td><strong>Alta</strong></td>
-<td>CQ › Emissão Laudo Final (aprovar) e Controle da Qualidade / Disponibilidade do Lote</td>
-<td>A validade do laudo é editável e o laudo de lote vencido é aprovado com data futura; o lote vencido é liberado</td>
-</tr>
-<tr>
-<td>DV-EST-167</td>
-<td><strong>Alta</strong></td>
-<td>Movimentação de Material</td>
-<td>Movimentação de Material transfere lote vencido sem aviso nem justificativa</td>
-</tr>
-<tr>
-<td>DV-EST-168</td>
-<td>Média</td>
-<td>Entrada de Produção</td>
-<td>O código do lote é cortado em 10 caracteres, sem aviso, na Entrada de Produção</td>
-</tr>
-<tr>
-<td>DV-EST-169</td>
-<td>Média</td>
-<td>CQ › Solicitação de Análise (cancelar) e Controle da Qualidade / Movimentação de Material</td>
-<td>Cancelar a solicitação de análise no CQ não chega ao Estoque: o lote fica "Aguardando análise" e continua oferecido</td>
-</tr>
-<tr>
-<td>DV-EST-170</td>
-<td>Média</td>
-<td>Conferência de Recebimento</td>
-<td>Cancelar Conferência não pede justificativa; mensagem com erro de digitação ("cacelar")</td>
-</tr>
-<tr>
-<td>DV-EST-171</td>
-<td>Média</td>
-<td>CQ › Emissão Laudo Final; Controle da Qualidade e Agenda de Reanálise</td>
-<td>Laudo aprovado com "Reanálise prevista = Sim" aparece no Estoque como "Reanalisar? = NÃO", e a Agenda de Reanálise nunca lista lotes</td>
-</tr>
-</tbody>
-</table></div>
+<p>Os 12 defeitos desta rodada estão na tabela completa deste dossiê (capítulo Desvios). Os 5 de gravidade <strong>Alta</strong>: DV-EST-160, DV-EST-162, DV-EST-164, DV-EST-166, DV-EST-167. Tabela completa: seção "Desvios das rodadas 12A, 12B e 12C", no capítulo Desvios.</p>
 <p><strong>Em uma frase:</strong> a corrente do lote <strong>continua quebrada em dois pontos</strong> (a conferência dá erro de volumes, DV-EST-015, e o Endereçamento não grava, DV-EST-016); pelo caminho de contorno o lote chega ao disponível, e nesse caminho <strong>um lote vencido pode ser aprovado pelo CQ</strong> se a validade do laudo for digitada no futuro, liberado e movimentado (DV-EST-166 e 167).</p>
 <p><strong>Os quatro momentos do saldo</strong> (lote <code>TESTEPA004</code>, item <code>TST0003</code>, medidos na Disponibilidade do Lote): antes da solicitação, disponível 39 e total 39; com o atendimento finalizado, disponível 37, separação 2 e total 39; com a separação confirmada, disponível 37, separação 0 e total 37. A baixa do total só acontece na confirmação da separação; cancelar a separação devolve o saldo, mas o Histórico do Lote mantém a saída (DV-EST-165). A remessa em si não foi exercida nesta rodada.</p>
 <p><strong>O que a tela contrariou do que o código indicava</strong> (divergências):</p>
@@ -3434,7 +2957,7 @@
 </table></div>
 <p>As evidências (capturas de tela) estão no repositório de homologação, na pasta de execução de cada rodada.</p>
 <h2 id="desvios">Desvios</h2>
-<p>O registro completo, com os de acesso e segurança, está em <code>defeitos/defeitos-completo.md</code>: <strong>150 defeitos, todos abertos</strong> (55 de gravidade alta, 75 média e 20 baixa; 65 de norma, 70 funcionais, 14 de acesso e segurança e 1 de ambiente). A tabela abaixo traz os principais das onze primeiras rodadas (DV-EST-001 a 077); os 74 das rodadas 12A, 12B e 12C (DV-EST-078 a 118, 120 a 140 e 160 a 171) estão nas tabelas das seções de cada rodada e, de novo, em "Desvios das rodadas 12A, 12B e 12C", no fim deste capítulo.</p>
+<p>O registro completo, com os de acesso e segurança, está em <code>defeitos/defeitos-completo.md</code>: <strong>150 defeitos registrados, 149 abertos</strong> (55 de gravidade alta, 74 média e 20 baixa; 65 de norma, 69 funcionais, 14 de acesso e segurança e 1 de ambiente; o DV-EST-054 foi descartado em 26/10/2026). A tabela abaixo traz os principais das onze primeiras rodadas (DV-EST-001 a 077). Os 74 das rodadas 12A, 12B e 12C (DV-EST-078 a 118, 120 a 140 e 160 a 171) estão, completos, na seção "Desvios das rodadas 12A, 12B e 12C", no fim deste capítulo (no Relatório de Testes aparecem só a contagem por rodada e os de gravidade Alta).</p>
 <p>Gravidade: <strong>Alta</strong> impede o uso seguro ou fere a norma diretamente; <strong>Média</strong> prejudica o controle ou a prova do que foi feito; <strong>Baixa</strong> atrapalha o usuário, sem efeito na qualidade.</p>
 <div class="tabela"><table>
 <thead>
@@ -3829,8 +3352,8 @@
 <td>DV-EST-054</td>
 <td>Média</td>
 <td>Kits: Análise do Planejamento</td>
-<td>Diz "Analise gerada!", mas não grava nem mostra a necessidade; a lista de análises segue vazia. <em>Rodada 8</em></td>
-<td>O sistema não pode confirmar o que não gravou (mesma família do DV-EST-016)</td>
+<td><strong>Descartado em 26/10/2026.</strong> Parecia que a tela dizia "Analise gerada!" e não gravava; na rodada 12B se viu que é preciso clicar OK (aparece o resultado) e SALVAR ANÁLISE (entra na lista). <em>Rodada 8</em></td>
+<td>Não é defeito: leitura incompleta do teste</td>
 </tr>
 <tr>
 <td>DV-EST-056</td>
@@ -4487,9 +4010,9 @@
 </tbody>
 </table></div>
 <p><strong>Ponto positivo confirmado:</strong> a mesma pessoa não consegue cadastrar e autorizar o mesmo recebimento (CT-EST-189). É a separação de funções que a norma espera.</p>
-<p>O detalhe de cada desvio (passo a passo, capturas, trecho do código e sugestão de correção) está no documento <strong>Defeitos para Correção</strong> (150 defeitos, todos abertos: 55 de gravidade alta, 75 média e 20 baixa, inclusive 14 de acesso e segurança).</p>
+<p>O detalhe de cada desvio (passo a passo, capturas, trecho do código e sugestão de correção) está no documento <strong>Defeitos para Correção</strong> (150 defeitos registrados, 149 abertos: 55 de gravidade alta, 74 média e 20 baixa, inclusive 14 de acesso e segurança; o DV-EST-054 foi descartado em 26/10/2026).</p>
 <h2 id="defeitos-de-gravidade-alta-abertos-55">Defeitos de gravidade alta abertos (55)</h2>
-<p>Lista dos defeitos de gravidade <strong>Alta</strong> que continuam abertos em 25/10/2026, na ordem do registro. "Alta" quer dizer que o defeito impede o uso seguro ou fere a norma diretamente. O texto, o passo a passo e as capturas de cada um estão no documento Defeitos para Correção.</p>
+<p>Lista dos defeitos de gravidade <strong>Alta</strong> que continuam abertos em 26/10/2026, na ordem do registro. "Alta" quer dizer que o defeito impede o uso seguro ou fere a norma diretamente. O texto, o passo a passo e as capturas de cada um estão no documento Defeitos para Correção.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -4919,7 +4442,7 @@
 </tr>
 <tr>
 <td>Remessa e kits</td>
-<td>A remessa do kit nasce sem Origem e Responsável e a remessa da tela genérica não finaliza (com o Tipo de Remessa em GMM finaliza); a análise do planejamento não grava (DV-EST-046, 054, 058)</td>
+<td>A remessa do kit nasce sem Origem e Responsável e a remessa da tela genérica não finaliza (com o Tipo de Remessa em GMM finaliza) (DV-EST-046, 058)</td>
 <td>Remessa já com origem e responsável, que finaliza e baixa o saldo; a análise grava e mostra a necessidade</td>
 </tr>
 <tr>
@@ -5193,10 +4716,6 @@
 <td>Desenvolvimento</td>
 </tr>
 <tr>
-<td>Fechar o DV-EST-054 (Análise do Planejamento de Kits "não grava") como "não confirmado": a rodada 12B mostrou que a tela gera e salva em dois passos; o registro ainda o traz como aberto</td>
-<td>Responsável pela homologação</td>
-</tr>
-<tr>
 <td>Passos que dependem de dados ou ferramentas que o ambiente não tem: XML de nota fiscal de teste (importação, NCM e CFOP automáticos), nota fiscal em andamento para provar o uso de cadastro, fornecedor reprovado, pesquisa de item da Solicitação de Material (Consumo) que não achou nenhum item, marcar "Obriga análise" no Tipo de Movimentação e provocar falha de gravação no Endereçamento (DBA)</td>
 <td>Área fiscal, TI e DBA</td>
 </tr>
@@ -5257,11 +4776,11 @@
 </tr>
 <tr>
 <td>Defeitos no registro completo</td>
-<td><strong>150, todos abertos</strong>: 55 de gravidade alta, 75 média e 20 baixa; 65 de norma, 70 funcionais, 14 de acesso e segurança e 1 de ambiente. Os 74 mais recentes: 12A, 41 (DV-EST-078 a 118); 12B, 21 (DV-EST-120 a 140); 12C, 12 (DV-EST-160 a 171). O DV-EST-054 não se confirmou</td>
+<td><strong>150 registrados, 149 abertos</strong>: 55 de gravidade alta, 74 média e 20 baixa; 65 de norma, 69 funcionais, 14 de acesso e segurança e 1 de ambiente. Os 74 mais recentes: 12A, 41 (DV-EST-078 a 118); 12B, 21 (DV-EST-120 a 140); 12C, 12 (DV-EST-160 a 171). O DV-EST-054 não se confirmou e foi descartado em 26/10/2026</td>
 </tr>
 <tr>
 <td>Telas do menu (99)</td>
-<td>4 funcionam; 33 funcionam com falhas; 53 com falha grave; 3 bloqueadas no teste; 6 não testadas</td>
+<td>3 funcionam; 33 funcionam com falhas; 54 com falha grave; 3 bloqueadas no teste; 6 não testadas</td>
 </tr>
 <tr>
 <td>Documentação por tela</td>
@@ -5269,11 +4788,11 @@
 </tr>
 <tr>
 <td>Regras de negócio</td>
-<td><strong>1.291</strong>: 171 gerais e por fluxo (56 validadas, 46 validadas com falha, 32 validadas em parte, 8 contraditas pelo teste e 29 só extraídas do código) e 1.120 por tela (767 extraídas, 204 validadas em parte, 140 validadas e 9 contraditas)</td>
+<td><strong>1.291</strong>: 171 gerais e por fluxo (57 validadas, 45 validadas com falha, 32 validadas em parte, 8 contraditas pelo teste e 29 só extraídas do código) e 1.120 por tela (767 extraídas, 204 validadas em parte, 140 validadas e 9 contraditas)</td>
 </tr>
 <tr>
 <td>Requisitos da nova versão</td>
-<td><strong>148</strong>: 119 funcionais e 29 não funcionais, 35 deles novos desta versão; cada um dos 150 defeitos tem pelo menos um requisito que o corrige</td>
+<td><strong>148</strong>: 119 funcionais e 29 não funcionais, 35 deles novos desta versão; cada um dos 149 defeitos abertos tem pelo menos um requisito que o corrige</td>
 </tr>
 </tbody>
 </table></div>
@@ -5408,7 +4927,7 @@
 <tr>
 <td>3</td>
 <td>Desenvolvimento</td>
-<td><strong>Os 150 defeitos abertos</strong>, em especial os 55 de gravidade alta (lista na seção "Defeitos de gravidade alta abertos"); antes de tudo: <strong>DV-EST-043:</strong> mostrar a classificação de reanálise no cadastro do Item. <strong>DV-EST-005:</strong> fazer um perfil novo abrir o Estoque. <strong>DV-EST-067:</strong> corrigir a Central de Pesagem. <strong>DV-EST-077:</strong> dar ao Pedido de Compra as funções do perfil. <strong>DV-EST-074 e 075:</strong> religar o campo "Qtd. Estabilidade" e corrigir a Regra de Estabilidade</td>
+<td><strong>Os 149 defeitos abertos</strong>, em especial os 55 de gravidade alta (lista na seção "Defeitos de gravidade alta abertos"); antes de tudo: <strong>DV-EST-043:</strong> mostrar a classificação de reanálise no cadastro do Item. <strong>DV-EST-005:</strong> fazer um perfil novo abrir o Estoque. <strong>DV-EST-067:</strong> corrigir a Central de Pesagem. <strong>DV-EST-077:</strong> dar ao Pedido de Compra as funções do perfil. <strong>DV-EST-074 e 075:</strong> religar o campo "Qtd. Estabilidade" e corrigir a Regra de Estabilidade</td>
 <td>CT-EST-055 e 058 (prioridade alta); CT-EST-192; CT-EST-077; CT-EST-164; CT-EST-172 e 173</td>
 </tr>
 <tr>
@@ -5436,7 +4955,7 @@
 <td>Elaborado por</td>
 <td>André Nardacci</td>
 <td>Análise de negócio e homologação</td>
-<td>25/10/2026</td>
+<td>26/10/2026</td>
 <td></td>
 </tr>
 <tr>
@@ -5461,7 +4980,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#inventario-de-telas-e-situacao">Inventário de telas e situação</a></li><li class="sub"><a href="#resultado-por-situacao">Resultado por situação</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#conformidade-com-a-rdc-658-2022">Conformidade com a RDC 658/2022</a></li><li class="sub"><a href="#mapa-dos-temas">Mapa dos temas</a></li><li class="sub"><a href="#o-que-o-codigo-e-os-testes-mostram-tema-a-tema">O que o código e os testes mostram, tema a tema</a></li><li class="sub"><a href="#pontos-para-validar-com-a-garantia-da-qualidade-e-a-area">Pontos para validar com a Garantia da Qualidade e a área</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-e-situacao">Quantidade de casos e situação</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#o-que-foi-testado-e-o-resultado-rodada-a-rodada">O que foi testado e o resultado, rodada a rodada</a></li><li><a href="#desvios">Desvios</a></li><li class="sub"><a href="#desvios-das-rodadas-12a-12b-e-12c">Desvios das rodadas 12A, 12B e 12C</a></li><li><a href="#defeitos-de-gravidade-alta-abertos-55">Defeitos de gravidade alta abertos (55)</a></li><li><a href="#como-funciona-hoje-e-como-deveria-funcionar">Como funciona hoje e como deveria funcionar</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#fechamento-do-modulo-25-10-2026">Fechamento do módulo (25/10/2026)</a></li><li class="sub"><a href="#veredito">Veredito</a></li><li class="sub"><a href="#numeros-do-fechamento">Números do fechamento</a></li><li class="sub"><a href="#o-que-ficou-sem-teste-13-casos">O que ficou sem teste (13 casos)</a></li><li class="sub"><a href="#lista-de-reabertura">Lista de reabertura</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 25/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

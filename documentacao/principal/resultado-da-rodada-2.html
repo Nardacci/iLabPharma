@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -97,7 +97,7 @@
 <tr>
 <td>RG-PRI-004</td>
 <td>Passou</td>
-<td><code>[usuário de teste]</code>: "Usuário inativo."; <code>[usuário de teste]</code>: "Conta de usuário inativa." (API 401, mensagem que some em ~1 s: N-003)</td>
+<td><code>t.inativo</code>: "Usuário inativo."; <code>t.containativa</code>: "Conta de usuário inativa." (API 401, mensagem que some em ~1 s: N-003)</td>
 <td>Igual</td>
 <td>—</td>
 <td>B-tinativo-mensagem, B-tcontainativa-mensagem</td>
@@ -105,7 +105,7 @@
 <tr>
 <td>RG-PRI-005</td>
 <td>Passou</td>
-<td><code>[usuário de teste]</code>: "Usuário fora do período de validade."; <code>[usuário de teste]</code>: "Usuário ainda não está dentro do período de validade."</td>
+<td><code>t.vencido</code>: "Usuário fora do período de validade."; <code>t.futuro</code>: "Usuário ainda não está dentro do período de validade."</td>
 <td>Igual</td>
 <td>—</td>
 <td>B-tvencido-mensagem, B-tfuturo-mensagem</td>
@@ -113,7 +113,7 @@
 <tr>
 <td>RG-PRI-006</td>
 <td>Falhou (DV-PRI-016)</td>
-<td><code>[usuário de teste]</code>: tentativas 1 a 4 dizem "mais 4, 3, 2 e 1 tentativa(s)"; a <strong>5ª</strong> diz "Usuário bloqueado devido ao limite de tentativas de acesso." e as seguintes também, <strong>inclusive com a senha certa</strong>. A contagem agora fecha com o bloqueio (o legado bloqueava no 4º erro). O <strong>Reset de senha</strong> feito pelo administrador desbloqueia</td>
+<td><code>t.bloqueio</code>: tentativas 1 a 4 dizem "mais 4, 3, 2 e 1 tentativa(s)"; a <strong>5ª</strong> diz "Usuário bloqueado devido ao limite de tentativas de acesso." e as seguintes também, <strong>inclusive com a senha certa</strong>. A contagem agora fecha com o bloqueio (o legado bloqueava no 4º erro). O <strong>Reset de senha</strong> feito pelo administrador desbloqueia</td>
 <td><strong>Melhoria</strong></td>
 <td>—</td>
 <td>RG-PRI-006-tentativa-3, -5, -6, -senha-certa-apos-bloqueio</td>
@@ -121,7 +121,7 @@
 <tr>
 <td>RG-PRI-007</td>
 <td>Passou</td>
-<td>Complemento da rodada 1 (a rodada 1 só viu o acerto; <strong>não entra na contagem dos 17</strong>). Com <code>[usuário de teste]</code>: 2 erros ("mais 4", "mais 3"), acerto, novo erro: volta a "mais 4". O contador zera</td>
+<td>Complemento da rodada 1 (a rodada 1 só viu o acerto; <strong>não entra na contagem dos 17</strong>). Com <code>t.cadastro</code>: 2 erros ("mais 4", "mais 3"), acerto, novo erro: volta a "mais 4". O contador zera</td>
 <td>Igual</td>
 <td>—</td>
 <td>RG-PRI-007-passo-2</td>
@@ -129,7 +129,7 @@
 <tr>
 <td>RG-PRI-020</td>
 <td>Passou</td>
-<td><code>[usuário de teste]</code>: troca válida de 14 caracteres: "Senha alterada com sucesso. Entre novamente para continuar."; entra com a nova; a provisória e a antiga deixam de valer</td>
+<td><code>t.admin2</code>: troca válida de 14 caracteres: "Senha alterada com sucesso. Entre novamente para continuar."; entra com a nova; a provisória e a antiga deixam de valer</td>
 <td>Igual</td>
 <td>—</td>
 <td>RG-PRI-020-passo-1 a 3</td>
@@ -177,7 +177,7 @@
 <tr>
 <td>RG-PRI-026</td>
 <td>Bloqueado (legado)</td>
-<td><code>[usuário de teste]</code> (senha provisória): entra e <strong>vai direto a <code>/trocar-senha</code></strong></td>
+<td><code>t.senhavencida</code> (senha provisória): entra e <strong>vai direto a <code>/trocar-senha</code></strong></td>
 <td>Novo</td>
 <td>—</td>
 <td>RG-PRI-026-passo-1</td>
@@ -217,7 +217,7 @@
 <tr>
 <td>RG-PRI-037</td>
 <td>Falhou (DV-PRI-025)</td>
-<td><code>[usuário de teste]</code>: menu só com Perfil, Profissional e Conta usuário; <code>[usuário de teste]</code>: menu só com Centro de custo. <strong>Mas, digitando o endereço, <code>[usuário de teste]</code> abre TODAS as telas de Administração</strong> (lista e edição de perfil, profissional e conta) e a API devolve os dados (200). Pior: <strong><code>[usuário de teste]</code> (sem a função Incluir) abriu a tela de novo perfil por endereço, salvou e a API gravou o perfil id 24</strong></td>
+<td><code>t.consulta</code>: menu só com Perfil, Profissional e Conta usuário; <code>t.semadmin</code>: menu só com Centro de custo. <strong>Mas, digitando o endereço, <code>t.semadmin</code> abre TODAS as telas de Administração</strong> (lista e edição de perfil, profissional e conta) e a API devolve os dados (200). Pior: <strong><code>t.consulta</code> (sem a função Incluir) abriu a tela de novo perfil por endereço, salvou e a API gravou o perfil id 24</strong></td>
 <td>Igual (DV-PRI-025), <strong>agravado</strong></td>
 <td>DV-PRI-N-011</td>
 <td>RG-PRI-037-perfil-lista-menu, -escrita-sem-funcao-perfil</td>
@@ -225,7 +225,7 @@
 <tr>
 <td>RG-PRI-038</td>
 <td>Falhou (DV-PRI-023)</td>
-<td><code>[usuário de teste]</code> não consegue abrir um registro pela lista (os ícones aparecem desabilitados: "Sem permissão para alterar perfil"). Pelo endereço direto, as telas de perfil, profissional e conta abrem <strong>destravadas</strong> (só 2 de 8, 14 de 53 e 4 de 21 campos desabilitados, os que já eram) e com o botão SALVAR</td>
+<td><code>t.consulta</code> não consegue abrir um registro pela lista (os ícones aparecem desabilitados: "Sem permissão para alterar perfil"). Pelo endereço direto, as telas de perfil, profissional e conta abrem <strong>destravadas</strong> (só 2 de 8, 14 de 53 e 4 de 21 campos desabilitados, os que já eram) e com o botão SALVAR</td>
 <td>Igual (DV-PRI-023)</td>
 <td>DV-PRI-N-011</td>
 <td>RG-PRI-038-url-direta-perfil, -profissional, -conta</td>
@@ -273,7 +273,7 @@
 <tr>
 <td>CT-PRI-042</td>
 <td>Passou</td>
-<td>Login repetido (<code>[usuário de teste]</code> e <code>[usuário de teste]</code>): "Já existe um usuário cadastrado com esse login." (sem o nome do dono, como pedia o plano no legado)</td>
+<td>Login repetido (<code>t.admin</code> e <code>T.ADMIN</code>): "Já existe um usuário cadastrado com esse login." (sem o nome do dono, como pedia o plano no legado)</td>
 <td>Igual</td>
 <td>—</td>
 <td>CT-PRI-042-passo-1</td>
@@ -297,7 +297,7 @@
 <tr>
 <td>CT-PRI-045</td>
 <td>Passou</td>
-<td><code>[usuário de teste]</code>: inativar o profissional exige justificativa ("A justificativa é obrigatória para desativar o profissional."). Histórico: "ATIVO SIM → NÃO" e "JUSTIFICATIVA INATIVO"; entrar: "Usuário inativo."</td>
+<td><code>t.inativo</code>: inativar o profissional exige justificativa ("A justificativa é obrigatória para desativar o profissional."). Histórico: "ATIVO SIM → NÃO" e "JUSTIFICATIVA INATIVO"; entrar: "Usuário inativo."</td>
 <td>Igual</td>
 <td>—</td>
 <td>CT-PRI-045-passo-1</td>
@@ -305,7 +305,7 @@
 <tr>
 <td>CT-PRI-046</td>
 <td>Passou (DV-PRI-005)</td>
-<td>Conta de <code>[usuário de teste]</code>: sem justificativa "A justificativa é obrigatória."; com justificativa grava. Histórico: "NOVO PERFIL" e "PERFIL EXCLUÍDO", cada um com a justificativa, e a linha-ruído "RESETAR SENHA SIM → NÃO" a cada gravação (como o DV-PRI-005). A caixa de perfis mostra só 10 (N-006)</td>
+<td>Conta de <code>t.admin2</code>: sem justificativa "A justificativa é obrigatória."; com justificativa grava. Histórico: "NOVO PERFIL" e "PERFIL EXCLUÍDO", cada um com a justificativa, e a linha-ruído "RESETAR SENHA SIM → NÃO" a cada gravação (como o DV-PRI-005). A caixa de perfis mostra só 10 (N-006)</td>
 <td>Igual</td>
 <td>N-006</td>
 <td>CT-PRI-046-passo-1 a 4</td>
@@ -594,7 +594,7 @@
 <tr>
 <td>DV-PRI-N-011</td>
 <td>RG-PRI-037, 038</td>
-<td><strong>A API não confere as funções do perfil.</strong> <code>[usuário de teste]</code> (só Centro de custo) abre por endereço todas as telas de Administração e a API devolve perfis, contas e usuários (200). <strong><code>[usuário de teste]</code>, sem a função Incluir, abriu a tela de novo perfil por endereço e gravou o perfil id 24</strong> (<code>POST /perfis</code> 201). Os botões aparecem desabilitados, mas só isso</td>
+<td><strong>A API não confere as funções do perfil.</strong> <code>t.semadmin</code> (só Centro de custo) abre por endereço todas as telas de Administração e a API devolve perfis, contas e usuários (200). <strong><code>t.consulta</code>, sem a função Incluir, abriu a tela de novo perfil por endereço e gravou o perfil id 24</strong> (<code>POST /perfis</code> 201). Os botões aparecem desabilitados, mas só isso</td>
 <td>O servidor recusar (403) toda leitura e gravação sem a função, e o front esconder as telas</td>
 <td><strong>Alta</strong> (segurança, ALCOA+, RDC 658 art. 125)</td>
 <td>Igual ao DV-PRI-025 do legado, <strong>agravado</strong> (o legado só abria as telas; aqui grava)</td>
@@ -744,7 +744,7 @@
 <li><strong>DV-PRI-N-016 (CPF):</strong> a regra do legado existe no código e é ativa (<code>1.principal/app/LaboSys_UI/administracao/usuario_ed.aspx.cs:1980</code>, CPF inválido ou da lista de negados bloqueia o salvamento). A classe "Regressão" vale pelo código; o comportamento do legado não foi rodado na tela.</li>
 <li><strong>DV-PRI-N-019 (troca de senha fora do histórico):</strong> a confirmar com o DBA, só a tela foi vista.</li>
 <li><strong>Segurança:</strong> N-011, N-017 e N-019 e as linhas da senha provisória (CT-PRI-040, 046) ficam só neste arquivo; ao levar esta rodada ao portal, o filtro de segurança deve retirá-las. Nada de senha ou e-mail nos arquivos (conferido por busca).</li>
-<li><strong>Consequência para a GQ:</strong> como a API do Principal não confere funções (N-011), os casos CT-GQ-111 e 112 devem ser repetidos com <code>[usuário de teste]</code> e incluir a gravação por endereço.</li>
+<li><strong>Consequência para a GQ:</strong> como a API do Principal não confere funções (N-011), os casos CT-GQ-111 e 112 devem ser repetidos com <code>t.consulta</code> e incluir a gravação por endereço.</li>
 </ul>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="resultado-da-rodada-1.html"><small>← Anterior</small><strong>Resultado da rodada 1</strong></a><a class="ap ap-prox" href="login-resumo-geral.html"><small>Próximo →</small><strong>Login: resumo geral</strong></a></nav>
@@ -752,7 +752,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#0-resumo">0. Resumo</a></li><li><a href="#1-parte-a-usuarios-de-teste">1. Parte A: usuários de teste</a></li><li><a href="#2-parte-b-os-casos-que-ficaram-bloqueados-na-rodada-1">2. Parte B: os casos que ficaram bloqueados na rodada 1</a></li><li><a href="#3-parte-c-usuarios-e-contas-ct-pri-040-a-049">3. Parte C: usuários e contas (CT-PRI-040 a 049)</a></li><li><a href="#4-parte-d-cadastros-que-o-legado-ja-testou-ct-pri-090-a-097">4. Parte D: cadastros que o legado já testou (CT-PRI-090 a 097)</a></li><li><a href="#5-desvios-novos-continuam-a-numeracao-da-rodada-1">5. Desvios novos (continuam a numeração da rodada 1)</a></li><li><a href="#6-registros-criados-no-ambiente-da-versao-nova-ficam-sem-limpeza">6. Registros criados no ambiente da versão nova (ficam, sem limpeza)</a></li><li><a href="#7-limites-desta-rodada">7. Limites desta rodada</a></li><li><a href="#8-revisao-claude-17-10-2026">8. Revisão (Claude, 17/10/2026)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

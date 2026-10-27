@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=51211afb">
+<link rel="stylesheet" href="../../portal/portal.css?v=027bcbf8">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body data-raiz="../../">
@@ -43,7 +43,7 @@
     </header>
     
     <article class="texto">
-<p><strong>Data:</strong> 12/10/2026 (atualizado em 23/10/2026: contagem refeita com a documentação tela a tela das 99 telas do menu; atualizações anteriores: rodadas 8, 9, 10 e 11 de 22/10/2026) · <strong>Base:</strong> o roteiro do menu (<code>Hsolutions.Estoque.DB/dml.sql:1839</code> em diante), as telas do código (<code>LaboSys_UI</code>), os dez fluxos (<code>fluxos/</code>), os cadastros de apoio (<code>01-cadastros-de-apoio.md</code>) e o relatório de testes (<code>entregaveis/fonte/relatorio-de-testes.md</code>, rodadas de 07, 08, 12, 13 e 22/10/2026, esta com as rodadas 8, 9 e 10).</p>
+<p><strong>Data:</strong> 12/10/2026 (atualizado em 26/10/2026: o DV-EST-054 foi descartado e a Análise do Planejamento de Kits fica "Funciona com falhas" pelos DV-EST-122 e 123, sem mudar os totais; antes, em 23/10/2026: contagem refeita com a documentação tela a tela das 99 telas do menu; atualizações anteriores: rodadas 8, 9, 10 e 11 de 22/10/2026) · <strong>Base:</strong> o roteiro do menu (<code>Hsolutions.Estoque.DB/dml.sql:1839</code> em diante), as telas do código (<code>LaboSys_UI</code>), os dez fluxos (<code>fluxos/</code>), os cadastros de apoio (<code>01-cadastros-de-apoio.md</code>) e o relatório de testes (<code>entregaveis/fonte/relatorio-de-testes.md</code>, rodadas de 07, 08, 12, 13 e 22/10/2026, esta com as rodadas 8, 9 e 10).</p>
 <p>Os nomes são os do menu, que é o que o usuário vê. O detalhe de cada tela está no fluxo indicado.</p>
 <h3 id="como-ler">Como ler</h3>
 <div class="tabela"><table>
@@ -87,7 +87,7 @@
 <tbody>
 <tr>
 <td>Funciona</td>
-<td>4</td>
+<td>3</td>
 </tr>
 <tr>
 <td>Funciona com falhas</td>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
 <td>Falha grave</td>
-<td>53</td>
+<td>54</td>
 </tr>
 <tr>
 <td>Bloqueada no teste</td>
@@ -115,7 +115,7 @@
 <p><strong>O que isso quer dizer:</strong> os testes de 07 e 08/10 cobriram os cadastros de apoio e a entrada de material, até o Endereçamento. O Endereçamento não grava (DV-EST-016), então nenhum lote ganha saldo, e as telas seguintes (quarentena, CQ, movimentação, separação, remessa) <strong>não puderam ser testadas</strong>. A causa está no banco e depende do DBA, que não respondeu: fica <strong>pendente</strong>.</p>
 <p><strong>Um caminho para destravar (confirmado no teste de 12/10/2026):</strong> as telas <strong>Entrada de Material - Outras</strong> e <strong>Entrada de Material - Produção</strong> gravam a entrada por outra rotina (<code>LaboSys_UI/estoque/entrada_material_ed.aspx.cs:316-322</code>, <code>entrada_producao_ed.aspx.cs:156-166</code>: inclusão da movimentação, volumes e abertura da análise no CQ), sem passar pelo Endereçamento. Se funcionarem, criam um lote com saldo em quarentena e permitem testar a quarentena, a análise do CQ e o que vem depois.</p>
 <p><strong>Rodada 3 (12/10/2026):</strong> o ciclo da quarentena e do CQ foi executado com os lotes <code>TESTEPA001</code>, <code>TESTELOTE003</code> e <code>TESTEPA998</code>. Oito telas do Estoque passaram a ter situação (Controle da Qualidade, Movimentação de Quarentena, Separação, Atendimento, Movimentação de Material, Disponibilidade do Lote, Histórico do Lote e Solicitação de Material - Consumo). A <strong>Central de Pesagem</strong> continua não testada: a amostra do CQ não gerou pesagem. As telas do CQ têm o inventário próprio em <code>../4.controle_qualidade/11-inventario-de-telas.md</code>.</p>
-<p><strong>Rodada 8 (22/10/2026):</strong> 85 casos de 94 foram tentados (sem os de permissão). Das 58 telas "não testadas", <strong>22 passaram a ter situação</strong> (cadastros de apoio, Saída de Material, Devolução, Entrada de Produção, Aprovação de Solicitação, kits e relatórios de kit e de quarentena). <strong>8 mudaram de situação:</strong> o <strong>Atendimento de Solicitação</strong> passou a <strong>falha grave</strong> (não ordena os lotes por validade e aceita o que vence depois, DV-EST-048); a <strong>Movimentação de Material</strong>, a <strong>Entrada de Material - Outras</strong> e a <strong>Estoque Coluna</strong> passaram a "funciona com falhas"; e as quatro telas do <strong>Inventário</strong> saíram de "bloqueada no teste" depois que um almoxarifado sem pendências abriu o inventário (uma funciona, três funcionam com falhas, DV-EST-049 e 050). A <strong>Análise do Planejamento de Kits</strong> entrou como falha grave (diz "gerada" e não grava, DV-EST-054) e a tela <strong>Banco</strong> (fora do menu: não grava e mostra erro técnico, DV-EST-052) aparece em "Fora do menu".</p>
+<p><strong>Rodada 8 (22/10/2026):</strong> 85 casos de 94 foram tentados (sem os de permissão). Das 58 telas "não testadas", <strong>22 passaram a ter situação</strong> (cadastros de apoio, Saída de Material, Devolução, Entrada de Produção, Aprovação de Solicitação, kits e relatórios de kit e de quarentena). <strong>8 mudaram de situação:</strong> o <strong>Atendimento de Solicitação</strong> passou a <strong>falha grave</strong> (não ordena os lotes por validade e aceita o que vence depois, DV-EST-048); a <strong>Movimentação de Material</strong>, a <strong>Entrada de Material - Outras</strong> e a <strong>Estoque Coluna</strong> passaram a "funciona com falhas"; e as quatro telas do <strong>Inventário</strong> saíram de "bloqueada no teste" depois que um almoxarifado sem pendências abriu o inventário (uma funciona, três funcionam com falhas, DV-EST-049 e 050). A <strong>Análise do Planejamento de Kits</strong> entrou como falha grave (diz "gerada" e não grava, DV-EST-054; <strong>descartado em 26/10/2026</strong>: a rodada 12B mostrou que a tela grava, ver a linha da tela em Kits) e a tela <strong>Banco</strong> (fora do menu: não grava e mostra erro técnico, DV-EST-052) aparece em "Fora do menu".</p>
 <p><strong>Rodada 9 (22/10/2026):</strong> 27 casos que a rodada 8 deixou bloqueados ou não executados (sem os de segurança): 1 passou, 24 seguem bloqueados e 2 não se aplicam à tela. Duas telas mudaram de situação: a <strong>Central de Pesagem</strong> (de não testada para <strong>falha grave</strong>, DV-EST-067) e o <strong>Local de Armazenagem</strong> (de funciona para <strong>funciona com falhas</strong>, DV-EST-066). As demais ficam como estavam; a Remessa de Material não tem data de embarque, data da guia nem chave de nota fiscal (CT-EST-117 e 118).</p>
 <p><strong>Rodada 10 (22/10/2026):</strong> 27 casos que a rodada 9 deixou bloqueados ou não executados (sem os de segurança e acesso), mais o CT-EST-116: 5 passaram, 5 passaram com ressalva, 5 falharam, 10 seguem bloqueados e 2 não se aplicam à tela. Três telas mudaram de situação: a <strong>Aprovação de Solicitação</strong> (de bloqueada para <strong>funciona com falhas</strong>: aprova, mas aceita quem criou a solicitação, DV-EST-070), o <strong>Controle de Kits</strong> (de bloqueada para <strong>funciona</strong>: mostra guia, lote, validade e remessa do componente enviado) e a <strong>Consulta Disponibilidade (Referência-Retenção-Estabilidade)</strong> (de falha grave para <strong>funciona com falhas</strong>: a lista vazia era a marca de Retenção que faltava no cadastro do Item; depois de marcada, lista o saldo). A <strong>Movimentações</strong> segue <strong>falha grave</strong>: aceita a saída de retenção antes do vencimento sem aviso (DV-EST-068) e a entrada de estabilidade sem tipo (DV-EST-071).</p>
 <p><strong>Rodada 11 (22/10/2026):</strong> 8 linhas (1 passou, 1 falhou, 6 bloqueadas), para destravar a Produção, criar a Regra de Estabilidade e investigar o Pedido de Compra. <strong>Nenhuma tela do Estoque mudou de situação</strong>; entram só observações. O <strong>Pedido de Compra</strong> continua "funciona com falhas": sem nó na árvore de funções do perfil, a lista só mostra o ícone Excluir (DV-EST-077, acesso). A <strong>Entrada de Material (Referência-Retenção-Estabilidade)</strong> só recebe entradas pendentes de retenção: o campo "Qtd. Estabilidade" da amostragem do CQ está desligado, então não chega nenhuma de estabilidade (DV-EST-074); o ícone Movimentar só aparece depois da Movimentação de Quarentena do lote (regra da tela). A <strong>Solicitação de Material (Produção)</strong> e a <strong>Solicitação Avulsa</strong> seguem só com Pesquisar e Limpar, porque a ordem de produção não nasce: o lote padrão do produto 26 está sem aprovação e nenhuma tela liga a função de aprovar à configuração 19 (DV-EST-076, Alta, acesso). Na Consulta de Disponibilidade, o lote vencido mostra o saldo em "Bloqueado / Inventário" e a coluna "Vencido / Reanálise" em 0.</p>
@@ -337,9 +337,9 @@
 </tr>
 <tr>
 <td>Endereço do Estoque</td>
-<td>Funciona</td>
+<td>Funciona com falhas</td>
 <td>Movimentação interna</td>
-<td>Cadastro, repetido recusado e exclusão testados (12/10); exclusão sem justificativa (DV-EST-018)</td>
+<td>Cadastro, repetido recusado e exclusão testados (12/10); exclusão sem justificativa (DV-EST-018, Média)</td>
 </tr>
 <tr>
 <td>Atendimento de Solicitação</td>
@@ -487,7 +487,7 @@
 </tr>
 <tr>
 <td>Avaliação do Fornecedor</td>
-<td>Funciona com falhas</td>
+<td>Falha grave</td>
 <td>Compras e avaliação do fornecedor</td>
 <td>Não qualifica nem bloqueia; sem alteração nem histórico (DV-EST-022, 023)</td>
 </tr>
@@ -769,7 +769,7 @@
 <td>Análise do Planejamento de Kits</td>
 <td>Funciona com falhas</td>
 <td>Kits</td>
-<td>Rodada 12B (24/10/2026): gera, mostra e salva (o DV-EST-054 não se confirmou: era leitura incompleta); falta rastro e diverge da Reposição (DV-EST-122, DV-EST-123). Antes: Rodada 8 (22/10): diz "Analise gerada!", mas não grava nem mostra a necessidade (DV-EST-054; CT-EST-152)</td>
+<td>Rodada 12B (24/10/2026): gera, mostra e salva (o DV-EST-054 não se confirmou e foi descartado em 26/10/2026: depois de "Analise gerada!" é preciso clicar OK, e para a análise entrar na lista é preciso SALVAR ANÁLISE); falta rastro e diverge da Reposição (DV-EST-122, DV-EST-123). Antes: Rodada 8 (22/10): diz "Analise gerada!", mas não grava nem mostra a necessidade (DV-EST-054; CT-EST-152)</td>
 </tr>
 </tbody>
 </table></div>
@@ -867,7 +867,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#como-ler">Como ler</a></li><li><a href="#resultado">Resultado</a></li><li><a href="#cadastros-28-telas">Cadastros (28 telas)</a></li><li><a href="#estoque-30-telas">Estoque (30 telas)</a></li><li><a href="#inventario-4-telas">Inventário (4 telas)</a></li><li><a href="#gestao-analitica-3-telas">Gestão analítica (3 telas)</a></li><li><a href="#relatorios-25-telas">Relatórios (25 telas)</a></li><li><a href="#kits-6-telas">Kits (6 telas)</a></li><li><a href="#regulatorio-3-telas">Regulatório (3 telas)</a></li><li><a href="#fora-do-menu">Fora do menu</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 25/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
