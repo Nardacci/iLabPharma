@@ -121,7 +121,7 @@
     document.addEventListener('fullscreenchange', function () { document.body.classList.toggle('em-tela-cheia', !!document.fullscreenElement); });
   }
   document.addEventListener('keydown', function (e) {
-    if (zoomAberto() || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (zoomAberto() || videoAberto() || e.altKey || e.ctrlKey || e.metaKey) return;
     var t = e.target && e.target.tagName;
     if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
     if (e.key === 'ArrowRight') { e.preventDefault(); if (view === 'inicio') ir(1); else proximo(); }
@@ -129,6 +129,34 @@
     else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); alternarTelaCheia(); }
   });
   window.addEventListener('hashchange', function () { var k = seqDoHash(); if (k !== atualSeq) ir(k, true); });
+
+  /* ---------- vídeo narrado (botão do início) ---------- */
+  var vSobre = null, vUltimoFoco = null;
+  function videoAberto() { return !!(vSobre && vSobre.classList.contains('aberto')); }
+  function abrirVideo() {
+    if (!vSobre) {
+      vSobre = el('div', 'video-sobre');
+      vSobre.setAttribute('role', 'dialog'); vSobre.setAttribute('aria-modal', 'true'); vSobre.setAttribute('aria-label', 'Vídeo narrado da apresentação');
+      vSobre.innerHTML = '<button type="button" class="btn fechar" id="vFecha">Fechar ✕</button>' +
+        '<video id="vPlayer" controls playsinline preload="metadata" poster="video/apresentacao-capa.jpg"><source src="video/apresentacao-narrada.mp4" type="video/mp4"></video>';
+      document.body.appendChild(vSobre);
+      $('#vFecha').addEventListener('click', fecharVideo);
+      vSobre.addEventListener('click', function (e) { if (e.target === vSobre) fecharVideo(); });
+      document.addEventListener('keydown', function (e) { if (videoAberto() && e.key === 'Escape') fecharVideo(); });
+    }
+    vUltimoFoco = document.activeElement;
+    vSobre.classList.add('aberto');
+    var v = $('#vPlayer'); v.currentTime = 0; v.play().catch(function () {});
+    $('#vFecha').focus();
+  }
+  function fecharVideo() {
+    if (!vSobre) return;
+    $('#vPlayer').pause();
+    vSobre.classList.remove('aberto');
+    if (vUltimoFoco && vUltimoFoco.focus) vUltimoFoco.focus();
+  }
+  var btnVideo = $('#verVideo');
+  if (btnVideo) btnVideo.addEventListener('click', abrirVideo);
 
   /* ---------- diagrama de fluxo ---------- */
   function diagrama(f) {
