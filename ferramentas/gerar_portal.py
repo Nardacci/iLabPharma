@@ -74,8 +74,12 @@ ROTEIROS = {
     "3.estoque/roteiros/kits.md": "3.estoque/fluxos/kits.md",
     "3.estoque/roteiros/compras-fornecedor.md": "3.estoque/fluxos/compras-fornecedor.md",
     "3.estoque/roteiros/almoxarifado-cq.md": "3.estoque/fluxos/almoxarifado-cq.md",
+    "4.controle_qualidade/roteiros/solicitacao-analise-laudo.md": "4.controle_qualidade/fluxos/solicitacao-analise-laudo.md",
+    "4.controle_qualidade/roteiros/regras-amostragem-analise.md": "4.controle_qualidade/fluxos/regras-amostragem-analise.md",
+    "4.controle_qualidade/roteiros/estabilidade.md": "4.controle_qualidade/fluxos/estabilidade.md",
+    "4.controle_qualidade/roteiros/agua-ambiente.md": "4.controle_qualidade/fluxos/agua-ambiente.md",
 }
-ROTEIROS_EXTRA = ["3.estoque/roteiros/relatorios.md", "3.estoque/roteiros/cadastros-de-apoio.md", "1.principal/roteiros/acesso-ao-sistema.md", "1.principal/roteiros/administracao.md", "1.principal/roteiros/cadastros-e-tabelas-de-apoio.md"]  # roteiros sem fluxo próprio
+ROTEIROS_EXTRA = ["3.estoque/roteiros/relatorios.md", "3.estoque/roteiros/cadastros-de-apoio.md", "1.principal/roteiros/acesso-ao-sistema.md", "1.principal/roteiros/administracao.md", "1.principal/roteiros/cadastros-e-tabelas-de-apoio.md", "4.controle_qualidade/roteiros/acesso-e-saidas-impressas.md"]  # roteiros sem fluxo próprio
 RE_TELA = re.compile(r"^(?:Telas?\s+[\d, e]+|Fora da \w+|Fechamento)\s*·\s*(.+)$")
 
 
@@ -520,8 +524,8 @@ MODULOS = [
          ("2.producao/fluxos/preparacao.md", "Preparação: limpeza, calibração, qualificação, manutenção, água e ambiente", "fluxos", "2.producao/fluxos/LabMedSys - Modulo Producao - Fluxo Preparacao.docx"),
          ("2.producao/fluxos/terceirizacao-validade.md", "Terceirização e validade da OPE", "fluxos", "2.producao/fluxos/LabMedSys - Modulo Producao - Fluxo Terceirizacao e Validade da OPE.docx"),
      ]},
-    {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#2e9b4f", "situacao": "Em testes", "nivel": 2,
-     "resumo": "Solicitação de análise, amostragem, análise, laudo, etiqueta e estabilidade. Reconhecimento e conformidade com a RDC 658/2022 feitos: 25 telas (22 com lógica, 3 protótipos); dos 16 temas da norma, 8 atendidos em parte e 8 não atendidos. Os quatro fluxos prontos (solicitação ao laudo, regras de amostragem e de análise, estabilidade, água e ambiente), as 119 regras de negócio, o inventário das telas, as permissões, o modelo de dados, a análise de risco e o plano de testes (61 casos). Análise pelo código concluída. Rodada 1 de testes em tela em 23/10/2026 (legado, com massa de dados): dos 61 casos do plano, 17 passaram, 10 com ressalva, 21 falharam e 13 ficaram bloqueados (estabilidade, pelo DV-EST-074 do Estoque, e água, pela falta de uma tabela no banco); 26 defeitos registrados (8 Alta), entre eles qualquer usuário aprova o laudo, o laudo reprovado vale sem ser emitido e aprovar, emitir e corrigir resultado não deixam histórico.",
+    {"id": "controle-qualidade", "nome": "Controle da Qualidade", "icone": "✧", "cor": "#2e9b4f", "situacao": "Homologado: não apto", "nivel": 4,
+     "resumo": "Solicitação de análise, amostragem, análise, laudo, etiqueta e estabilidade. 25 telas (22 com lógica, 3 protótipos) em cinco menus documentados tela a tela, quatro fluxos com roteiro de execução, 119 regras de negócio e mapa de conformidade com a RDC 658/2022: dos 16 temas da norma, 8 atendidos em parte e 8 não atendidos. Testes de tela em 23/10/2026 e 28 a 30/10/2026: dos 61 casos do plano, 48 conclusivos; 13 ficaram bloqueados (estabilidade e água). 45 defeitos para correção, 21 de gravidade Alta, entre eles o laudo que não confere quem decide (aprova quem não tem a função de chefe, até o perfil só de consulta), a falta de histórico em aprovar, emitir, cancelar e excluir, e a decisão que não chega sozinha ao Estoque. Todos os entregáveis emitidos. Parecer: não apto para uso em ambiente regulado.",
      "docs": [
          ("4.controle_qualidade/00-reconhecimento.md", "Reconhecimento do módulo", "inicio", None),
          ("4.controle_qualidade/ideal/cq-ideal.md", "O Controle da Qualidade ideal", "ideal", "4.controle_qualidade/ideal/LabMedSys - Modulo Controle da Qualidade - O Ideal.docx"),
@@ -540,6 +544,17 @@ MODULOS = [
          ("4.controle_qualidade/fluxos/regras-amostragem-analise.md", "Regras de amostragem e de análise", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Regras de Amostragem e de Analise.docx"),
          ("4.controle_qualidade/fluxos/estabilidade.md", "Estabilidade", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Estabilidade.docx"),
          ("4.controle_qualidade/fluxos/agua-ambiente.md", "Água e ambiente", "fluxos", "4.controle_qualidade/fluxos/LabMedSys - Modulo Controle da Qualidade - Fluxo Agua e Ambiente.docx"),
+         ("4.controle_qualidade/entregaveis/fonte/por-que-nao-apta.md", "Por que o Controle da Qualidade não está apto", "inicio", "4.controle_qualidade/entregaveis/LabMedSys - Modulo Controle da Qualidade - Por que nao esta apto.docx"),
+         ("4.controle_qualidade/entregaveis/fonte/resumo-executivo.md", "Resumo do módulo", "inicio", "4.controle_qualidade/entregaveis/LabMedSys - Modulo Controle da Qualidade - Resumo Executivo.docx"),
+         ("4.controle_qualidade/entregaveis/fonte/dossie-de-homologacao.md", "Dossiê de homologação", "inicio", "4.controle_qualidade/entregaveis/LabMedSys - Modulo Controle da Qualidade - Dossie de Homologacao.docx"),
+         ("4.controle_qualidade/entregaveis/fonte/regras-de-negocio.md", "Regras de negócio", "negocio", "4.controle_qualidade/entregaveis/LabMedSys - Modulo Controle da Qualidade - Regras de Negocio.docx"),
+         ("4.controle_qualidade/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "4.controle_qualidade/entregaveis/LabMedSys - Modulo Controle da Qualidade - Manual do Usuario.docx"),
+         ("4.controle_qualidade/entregaveis/fonte/analise-de-requisitos.md", "Análise de requisitos", "tecnico", "4.controle_qualidade/entregaveis/LabMedSys - Modulo Controle da Qualidade - Analise de Requisitos.docx"),
+         ("4.controle_qualidade/roteiros/solicitacao-analise-laudo.md", "Roteiro de execução: Solicitação, análise e laudo (passo a passo)", "fluxos", "4.controle_qualidade/roteiros/LabMedSys - Modulo Controle da Qualidade - Roteiro de Testes Solicitacao, Analise e Laudo.docx"),
+         ("4.controle_qualidade/roteiros/regras-amostragem-analise.md", "Roteiro de execução: Regras de amostragem e de análise (passo a passo)", "fluxos", "4.controle_qualidade/roteiros/LabMedSys - Modulo Controle da Qualidade - Roteiro de Testes Regras de Amostragem e de Analise.docx"),
+         ("4.controle_qualidade/roteiros/estabilidade.md", "Roteiro de execução: Estabilidade (passo a passo)", "fluxos", "4.controle_qualidade/roteiros/LabMedSys - Modulo Controle da Qualidade - Roteiro de Testes Estabilidade.docx"),
+         ("4.controle_qualidade/roteiros/agua-ambiente.md", "Roteiro de execução: Água e ambiente (passo a passo)", "fluxos", "4.controle_qualidade/roteiros/LabMedSys - Modulo Controle da Qualidade - Roteiro de Testes Agua e Ambiente.docx"),
+         ("4.controle_qualidade/roteiros/acesso-e-saidas-impressas.md", "Roteiro de execução: Acesso e saídas impressas (passo a passo)", "fluxos", "4.controle_qualidade/roteiros/LabMedSys - Modulo Controle da Qualidade - Roteiro de Testes Acesso e Saidas Impressas.docx"),
      ]},
     {"id": "controle-documentos", "nome": "Controle de Documentos", "icone": "▤", "cor": "#4f6d8f", "situacao": "Pronto para testes", "nivel": 2,
      "resumo": "Ciclo do documento (inclusão, revisão, pré-aprovação, aprovação com senha, vigência, nova revisão, obsolescência), controle de cópias, documentos externos e legados, tipos de documento, arquivos e modelos. Reconhecimento e conformidade com a RDC 658/2022 feitos: 11 pastas de telas, 72 páginas, 10 situações do documento; dos 13 temas da norma, 1 atendido, 8 em parte, 3 não atendidos e 1 a verificar. Os quatro fluxos prontos (ciclo do documento, controle de cópias, documento externo e legado, tipo de documento e arquivos), as 67 regras de negócio, o inventário das 17 telas, o modelo de dados (9 tabelas usadas pelo código fora do projeto de banco) e a análise de risco (22 riscos, 15 de prioridade alta). Análise pelo código concluída: plano de testes com 45 casos, 19 de prioridade alta, e o modelo ideal do módulo.",
@@ -1333,6 +1348,11 @@ MENUS_GQ_DESC = {
     "Acesso ao sistema": "Como a pessoa entra no sistema, prova quem é e sai: login, troca de senha, início e menu, saída, sessão expirada, notificações e relatórios. Tudo o que o sistema grava depois leva o nome de quem entrou aqui.",
     "Administração": "Onde se definem pessoas, contas, perfis e permissões, a configuração do sistema e as notificações. Quem tem acesso a quê, e com que função, nasce aqui.",
     "Cadastros e tabelas de apoio": "Os cadastros que os outros módulos usam: ambientes, equipamentos, pessoas jurídicas, centros de custo, contas, instrumentos, estrutura funcional, locais, pontos de água, utensílios, utilidades e grau de contaminação.",
+    "Solicitação de Análise": "Onde o pedido de análise é aberto, priorizado e programado, e onde a coleta da amostra é marcada: a porta de entrada do trabalho do Controle da Qualidade.",
+    "Amostragem": "Onde o CQ define quanto coletar de cada item, mantém os checklists de conferência, mostra a fila de coletas de cada pessoa e registra a coleta feita.",
+    "Análise e Laudo": "O coração do Controle da Qualidade: define o que se mede, programa o analista, recebe os resultados, emite o laudo que aprova ou reprova o lote e imprime a etiqueta.",
+    "Tabelas de Apoio e Regulatório": "As unidades de medida e os motivos usados pelas outras telas do CQ e as três telas do estudo de estabilidade (regra, acompanhamento e encerramento).",
+    "Fora do menu": "As telas do Controle da Qualidade que existem no código mas não têm item próprio no menu: duas que não abrem e três protótipos de avaliação de fornecedor (estes só aparecem na visão geral, sem página própria).",
     "Treinamento Técnico": "Onde a empresa treina o pessoal e prova que só quem tem treinamento vigente executa a tarefa: tipos, cadastro, solicitação, programação, matriz, conclusão e acompanhamento.",
     "Configuração": "A configuração dos níveis de acesso da Garantia da Qualidade (Grupo Perfil): quem é Nível 1, 2 ou 3 em todo o módulo.",
     "Autoinspeção e Auditoria": "Onde a empresa confere, por conta própria, se cumpre as Boas Práticas: escreve os roteiros de perguntas, programa a verificação, registra o que encontrou e avalia o resultado.",
