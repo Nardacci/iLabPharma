@@ -977,7 +977,7 @@
 </ul>
 <h4 id="passo-a-passo_2">Passo a passo</h4>
 <p><strong>Antes de começar</strong></p>
-<p>Os pontos de água e as salas precisam estar cadastrados no Principal, ativos e com tag. Confirme que sabe qual <strong>tipo de análise</strong> quer: para ambiente, o certo pela norma é só <strong>microbiológico</strong>, mas a tela <strong>aceita físico-químico</strong> (DV-CQ-020). Enquanto o problema da água não for corrigido pelo DBA, só o ambiente pode ser marcado (DV-CQ-008).</p>
+<p>Os pontos de água e as salas precisam estar cadastrados no Principal, ativos e com tag. Confirme que sabe qual <strong>tipo de análise</strong> quer: para ambiente, o certo pela norma é só <strong>microbiológico</strong>, mas a tela <strong>aceita físico-químico</strong> (DV-CQ-020). A água passou a carregar no ambiente em 03/11/2026, depois do ajuste do DBA; o agendamento da água por arrasto ainda não foi testado.</p>
 <p><strong>Marcar uma coleta</strong></p>
 <ul>
 <li>Passo 1. Abra Programação de Solicitação de Análise. Em <strong>Tipo Item Análise</strong>, escolha ÁGUA POTÁVEL, PURIFICADA, PARA INJETÁVEIS ou AMBIENTE. Em <strong>Tipo Análise</strong>, marque Físico-Químico ou Microbiológico. Clique em <strong>Carregar</strong>.</li>
@@ -1176,7 +1176,7 @@
 <p>O que a tela faz diferente do esperado, como a equipe de homologação registrou. O número DV-CQ-nnn remete ao documento de defeitos para correção. O que o código prevê e os testes ainda não confirmaram está no documento de Regras de Negócio.</p>
 <p><strong>O que ainda não foi visto numa tela real</strong></p>
 <ul>
-<li><strong>Nenhum ponto de água apareceu na lista da agenda em nenhum teste</strong> (09/10 e 23/10/2026; a rodada 2 não repetiu a agenda de água: a Fase A1, em 28/10/2026, tentou só a Programação de Amostragem de água e o erro de servidor continuou (DV-CQ-008), e os casos CT-CQ-060 a 063, 067, 068 e N-33 não foram reexecutados porque o DBA não criou a tabela de tipo de água): ao clicar em Carregar com ÁGUA POTÁVEL ou PURIFICADA (as duas testadas; a de injetáveis não foi carregada na agenda), o calendário abre, mas a lista de pontos vem vazia e surge "Ocorreu um erro interno não esperado." (DV-CQ-001, DV-CQ-008). Portanto <strong>nenhuma coleta de água foi agendada por esta tela</strong>, e a água não foi vista nem no calendário nem na exclusão.</li>
+<li><strong>A agenda de água carrega no ambiente desde 03/11/2026.</strong> Nos testes de 09/10 e 23/10/2026 nenhum ponto de água apareceu e surgia "Ocorreu um erro interno não esperado." (DV-CQ-001, DV-CQ-008). Depois do ajuste do DBA no ambiente (a tabela de tipo de água passou a ter o nome que o código usa), o reteste de 03/11/2026 (CT-CQ-S03-01) carregou os três tipos de água: ÁGUA POTÁVEL + Físico-Químico mostra PTA-POT-01, TST-PA1 e TST-CQ-POT; ÁGUA PURIFICADA + Microbiológico mostra PAG, PTA-PW-01 e TST-CQ-PUR; ÁGUA PARA INJETÁVEIS + Microbiológico mostra TST-CQ-INJ. <strong>Ainda não foram testados com água</strong> o arrasto na agenda, o agendamento de uma coleta, a exclusão e o dia com 21 coletas (CT-CQ-S03-02 e S03-03, manuais, ficam para o responsável).</li>
 <li><strong>A mudança de dia por arrasto</strong> (que recalcula o horário de 30 em 30 minutos entre 8h e 18h) não foi concluída: o CT-CQ-068 ficou bloqueado em 23/10/2026 e, em 28/10/2026, o arrasto automático abriu a janela sem a data e o OK não agendou, para o administrador e para o perfil de consulta (CT-CQ-R2-AC-03, não conclusivo, atribuído à automação). As fases A, B, C, E, F e G (29 e 30/10/2026) não tentaram o arrasto de novo.</li>
 <li>A <strong>paginação dos itens</strong> (12 por página), a navegação de meses e a abertura em mais de uma aba não foram exercitadas.</li>
 </ul>
@@ -1192,12 +1192,12 @@
 <tbody>
 <tr>
 <td>DV-CQ-008</td>
-<td>A água não anda: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor (objeto de banco ausente: tabela de tipo de água), e a agenda de água também não carrega. Sem pontos, não se agenda monitoramento de água</td>
+<td>A água não andava: a Programação de Amostragem de qualquer ponto de água quebrava com erro de servidor e a agenda de água também não carregava. <strong>Resolvido no ambiente em 03/11/2026 (ajustado pelo DBA); aberto no projeto de banco</strong>, cujo script cria a tabela de tipo de água com o nome do Principal</td>
 <td>A lista de pontos de água do tipo escolhido e o ciclo completo</td>
 </tr>
 <tr>
 <td>DV-CQ-001</td>
-<td>Carregar com água mostra o calendário, mas a lista de pontos vem vazia e aparece "Ocorreu um erro interno não esperado." (mesmo com pontos de água novos e ativos)</td>
+<td>(Resolvido no ambiente em 03/11/2026; aberto no projeto de banco.) Carregar com água mostrava o calendário, mas a lista de pontos vinha vazia e aparece "Ocorreu um erro interno não esperado." (mesmo com pontos de água novos e ativos)</td>
 <td>A lista de pontos, ou uma mensagem clara como "Nenhum ponto de água cadastrado para este tipo"</td>
 </tr>
 <tr>
@@ -1246,7 +1246,7 @@
 </ul>
 <h4 id="passo-a-passo_3">Passo a passo</h4>
 <p><strong>Antes de começar</strong></p>
-<p>A solicitação precisa estar em "Coleta pendente de programação". O <strong>amostrador</strong> precisa ter, no cadastro do Principal, a função que o CQ procura (hoje, a de número 34: só quem a tem aparece na busca; DV-CQ-022). Para <strong>água</strong>, o ponto de água precisa estar cadastrado no Principal; enquanto o problema do ambiente de teste não for corrigido, a programação de água não abre (DV-CQ-008).</p>
+<p>A solicitação precisa estar em "Coleta pendente de programação". O <strong>amostrador</strong> precisa ter, no cadastro do Principal, a função que o CQ procura (hoje, a de número 34: só quem a tem aparece na busca; DV-CQ-022). Para <strong>água</strong>, o ponto de água precisa estar cadastrado no Principal; a programação de água abre no ambiente desde o ajuste do DBA em 03/11/2026 (DV-CQ-008).</p>
 <p><strong>Procurar a solicitação</strong></p>
 <ul>
 <li>Passo 1. Abra Programação de Amostragem. Escolha <strong>PRODUTO / MATERIAL</strong> (marcado de início) ou <strong>ÁGUA / AMBIENTE</strong>.</li>
@@ -1265,7 +1265,7 @@
 <ul>
 <li>A tela <strong>não impede programar duas vezes</strong> a mesma solicitação: se o formulário for aberto de novo (por exemplo, pelo botão Voltar do navegador ou pelo endereço), o segundo Salvar cria <strong>uma segunda amostragem pendente</strong> (DV-CQ-010).</li>
 <li><strong>Não há como cancelar</strong> a programação pela tela: o botão não existe (DV-CQ-040).</li>
-<li>Para <strong>água</strong>, a tela de edição dá <strong>erro de servidor</strong> (DV-CQ-008).</li>
+<li>Para <strong>água</strong>, a tela de edição dava <strong>erro de servidor</strong> (DV-CQ-008) até 28/10/2026; abre e grava desde o ajuste do DBA, em 03/11/2026.</li>
 <li>Programar <strong>não deixa histórico</strong> e não pede justificativa.</li>
 </ul>
 <p><strong>O que a tela não faz</strong></p>
@@ -1511,7 +1511,7 @@
 </tr>
 <tr>
 <td>(página de erro técnica do servidor)</td>
-<td>Editar numa solicitação de <strong>água</strong> (vista em teste, CT-CQ-N-32, 23/10/2026): resumida como "erro de servidor, objeto de banco ausente"</td>
+<td>Editar numa solicitação de <strong>água</strong> (vista em teste, CT-CQ-N-32, 23/10/2026): resumida como "erro de servidor" (visto até 28/10/2026; ajustado pelo DBA em 03/11/2026)</td>
 </tr>
 <tr>
 <td>Ocorreu um erro interno não esperado.</td>
@@ -1523,7 +1523,7 @@
 <p>O que a tela faz diferente do esperado, como a equipe de homologação registrou. O número DV-CQ-nnn remete ao documento de defeitos para correção. O que o código prevê e os testes ainda não confirmaram está no documento de Regras de Negócio.</p>
 <p><strong>O que ainda não foi visto numa tela real</strong></p>
 <ul>
-<li><strong>O formulário de programação de uma solicitação de água.</strong> Em 23/10/2026 (CT-CQ-064 e CT-CQ-N-32), ao clicar em Editar numa solicitação de água (020/26 a 023/26), o servidor devolveu a página de erro técnica por um objeto de banco ausente (a tabela de tipo de água), e nenhuma água foi programada (DV-CQ-008). Em 28/10/2026 (rodada 2, Fase A1, CT-CQ-064) a programação da 020/26 abriu de novo a página de erro do servidor: o DV-CQ-008 persiste.</li>
+<li><strong>O formulário de programação de uma solicitação de água.</strong> Em 23/10/2026 (CT-CQ-064 e CT-CQ-N-32), ao clicar em Editar numa solicitação de água (020/26 a 023/26), o servidor devolveu a página de erro técnica (ajustada pelo DBA no ambiente em 03/11/2026), e nenhuma água foi programada (DV-CQ-008). Em 28/10/2026 (rodada 2, Fase A1, CT-CQ-064) a programação da 020/26 abriu de novo a página de erro do servidor. <strong>Em 03/11/2026, depois do ajuste do DBA no ambiente, o formulário da 022/26 (água potável) abriu e gravou</strong> (responsável TESTE AMOSTRADOR CQ, data de hoje, "Alteração efetuada com sucesso."; CT-CQ-S04-11, CT-CQ-064 e CT-CQ-N-32 passaram). O DV-CQ-008 fica resolvido no ambiente e aberto no projeto de banco.</li>
 <li><strong>O botão Cancelar</strong>: não existe na tela. O código tem a ação, mas o botão está dentro de um comentário nas grades (DV-CQ-040).</li>
 <li><strong>Os filtros</strong> de busca (tipo de item, item, tipo de análise, solicitação, item de entrada) foram exercitados na Fase F, em 30/10/2026 (CT-CQ-F-25 a F-31; ver "Casos de teste"). Ficaram sem teste os filtros de data (comentados na tela).</li>
 <li><strong>A paginação</strong> das duas grades (10 linhas por página): a maior lista vista teve sete linhas. A grade sem resultado foi vista em 30/10/2026 (captura F-PA-F-23).</li>
@@ -1540,7 +1540,7 @@
 <tbody>
 <tr>
 <td>DV-CQ-008</td>
-<td>Ao programar a amostragem de qualquer solicitação de <strong>água</strong> (potável, purificada ou para injetáveis), o servidor devolveu a página de erro técnica (objeto de banco ausente: tabela de tipo de água). Nenhuma água anda no ciclo</td>
+<td>Ao programar a amostragem de qualquer solicitação de <strong>água</strong> (potável, purificada ou para injetáveis), o servidor devolveu a página de erro técnica. Nenhuma água andava no ciclo. <strong>Resolvido no ambiente em 03/11/2026 (ajustado pelo DBA); aberto no projeto de banco</strong></td>
 <td>Programar a amostragem e seguir o ciclo</td>
 </tr>
 <tr>
@@ -7008,9 +7008,9 @@
 </thead>
 <tbody>
 <tr>
-<td>Água: a agenda não carrega os pontos e a programação da amostragem dá erro de servidor (falta uma tabela no banco de teste, causa a confirmar com o DBA)</td>
-<td>Não usar o CQ para água até o DBA corrigir; manter o controle de água fora do sistema</td>
-<td>DV-CQ-001, 008</td>
+<td>Água: a agenda dos três tipos de água carrega e a Programação de Amostragem programa, desde o ajuste do DBA no ambiente (03/11/2026). Mas o registro da amostragem de água mostra "Ocorreu um erro interno não esperado." e grava, e o resultado da análise de água <strong>não grava</strong> (a tela mostra "Ocorreu um erro inesperado."), então o laudo e a etiqueta de água não chegam a ser emitidos</td>
+<td>Programar a água no CQ é possível; não confie no resultado de água digitado, mantenha o laudo de água fora do sistema e confira cada gravação</td>
+<td>DV-CQ-009, 019 (DV-CQ-001 e 008 resolvidos no ambiente e abertos no projeto de banco)</td>
 </tr>
 <tr>
 <td>Ambiente: a digitação diz "sucesso" mas perde o resultado; o registro da amostragem mostra "erro interno" e grava; a agenda aceita físico-químico e horário de madrugada e não tem frequência</td>
@@ -7096,7 +7096,7 @@
 <li><strong>Cadastro de item de análise:</strong> o item vem do Estoque, da Produção ou do Principal.</li>
 </ul>
 <h4 id="como-este-manual-sera-atualizado">Como este manual será atualizado</h4>
-<p>Esta é a versão 1.0 (30/10/2026), do <strong>sistema entregue pelo fornecedor</strong>. Quando as telas forem corrigidas e testadas de novo, os quadros de avisos serão revistos.</p>
+<p>Esta é a versão 1.1 (03/11/2026, atualizada com o reteste da água; a 1.0 é de 30/10/2026), do <strong>sistema entregue pelo fornecedor</strong>. Quando as telas forem corrigidas e testadas de novo, os quadros de avisos serão revistos.</p>
 <h2 id="o-que-nao-fazer">O que não fazer</h2>
 <p>Enquanto as correções não forem feitas, estas atitudes colocam o lote e a empresa em risco. Elas decorrem dos defeitos registrados; o número entre parênteses diz onde está o detalhe.</p>
 <ul>
@@ -7105,7 +7105,7 @@
 <li><strong>Não aprove um laudo sem conferir</strong> a função de quem decide, a validade do lote e os resultados; o sistema não confere (DV-CQ-003, 043).</li>
 <li><strong>Não reprove sem escrever o motivo</strong> na observação e <strong>não peça a atualização no Estoque</strong> antes de emitir o laudo (DV-CQ-004, 005).</li>
 <li><strong>Não cole a etiqueta</strong> sem corrigir o nome da instituição no alto e conferir o teor e a validade (DV-CQ-025).</li>
-<li><strong>Não use o CQ para água</strong> nem para estabilidade enquanto o ambiente de teste e o Estoque não corrigirem (DV-CQ-008, DV-EST-074).</li>
+<li><strong>Não conte com o CQ para o laudo de água</strong> (o resultado da análise de água não grava, DV-CQ-009) <strong>nem para a estabilidade</strong> (DV-EST-074). A agenda e a programação da amostragem de água passaram a funcionar no ambiente em 03/11/2026.</li>
 <li><strong>Não confie no resultado de ambiente</strong> que o sistema diz ter gravado: abra a análise e confira (DV-CQ-009).</li>
 <li><strong>Não programe a mesma amostragem duas vezes</strong> nem use o botão Voltar do navegador na tela de edição (DV-CQ-010).</li>
 <li><strong>Não dê a um perfil só de consulta</strong> acesso ao módulo achando que ele não grava: ele grava em 12 telas (DV-CQ-027 a 037, 015).</li>

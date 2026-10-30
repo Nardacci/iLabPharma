@@ -92,6 +92,7 @@
 <li><strong>Norma de acesso:</strong> o Guia 33/2020, item 9.3.2.3. O art. 8º, XV, e o art. 17 da RDC 658/2022 não tratam de acesso.</li>
 <li><strong>Registro de defeitos:</strong> os defeitos de acesso e segurança entram nos documentos (o portal publica todos); senhas, endereços de servidor, strings de conexão e chaves nunca entram.</li>
 </ul>
+<p>Atualização de 03/11/2026 (versão 1.1, reteste da água): o DBA ajustou o ambiente de teste e a água passou a carregar na agenda (Programação de Solicitação de Análise, três tipos de água) e a programar na Programação de Amostragem (solicitação 022/26). As regras de água (RN-CQ-104, RN-CQ-111, RN-CQ-S03-012 e RN-CQ-S04-009) mudam de situação por isso. O resultado da análise de água <strong>não grava</strong> (DV-CQ-009) e o registro da amostragem de água dá erro e grava (DV-CQ-019), então laudo, etiqueta e Autorização de ponto de água seguem bloqueados no teste. DV-CQ-001 e DV-CQ-008 estão resolvidos no ambiente e abertos no projeto de banco. A situação das 25 telas não muda.</p>
 <h2 id="inventario-de-telas-e-situacao">Inventário de telas e situação</h2>
 <p>Responde à pergunta "o que existe e funciona?". São <strong>25 linhas</strong>: as 22 telas do módulo (as 20 do menu e as 2 fora do menu) e os 3 protótipos de avaliação de fornecedores. Os nomes são os que o usuário vê.</p>
 <div class="tabela"><table>
@@ -175,14 +176,14 @@
 <td>Programação de Solicitação de Análise</td>
 <td><strong>Falha grave</strong></td>
 <td>DV-CQ-001, 008 (Alta), 018, 020, 023, 024</td>
-<td>Água não carrega (falta a tabela de tipo de água no ambiente de teste, a confirmar com o DBA); ambiente agenda, mas aceita físico-químico e horário de madrugada, sem frequência, e a exclusão não deixa histórico (CT-CQ-060 a 063, 067, N-23, N-33). A mudança de dia por arrasto não foi concluída (CT-CQ-068 bloqueado; R2-AC-03 não conclusivo).</td>
+<td>Água: a agenda dos três tipos passou a carregar depois do ajuste do DBA no ambiente (03/11/2026; DV-CQ-001 e 008 abertos no projeto de banco); ambiente agenda, mas aceita físico-químico e horário de madrugada, sem frequência, e a exclusão não deixa histórico (CT-CQ-060 a 063, 067, N-23, N-33). A mudança de dia por arrasto não foi concluída (CT-CQ-068 bloqueado; R2-AC-03 não conclusivo).</td>
 </tr>
 <tr>
 <td>Solicitação de Análise</td>
 <td>Programação de Amostragem</td>
 <td><strong>Falha grave</strong></td>
 <td>DV-CQ-008 (Alta), 029 (Alta, acesso), 010, 022, 040</td>
-<td>Água: erro de servidor ao programar. Programar duas vezes cria duas amostragens pendentes. Recusa data de ontem e exige responsável; não há como cancelar (botão comentado); o perfil só de consulta programa (CT-CQ-003, 004, 064, N-32, R2-AC-04, R2-AC-12a, R2-D2-03).</td>
+<td>Água: depois do ajuste do DBA (03/11/2026) a tela abre e programa (DV-CQ-008 aberto só no projeto de banco). Programar duas vezes cria duas amostragens pendentes. Recusa data de ontem e exige responsável; não há como cancelar (botão comentado); o perfil só de consulta programa (CT-CQ-003, 004, 064, N-32, R2-AC-04, R2-AC-12a, R2-D2-03).</td>
 </tr>
 <tr>
 <td>Amostragem</td>
@@ -945,7 +946,7 @@
 <td>RN-CQ-104</td>
 <td>Os pontos e salas vêm do Principal, consultados na hora; a identificação é a tag.</td>
 <td>ItensProgramaveisService.cs:41-80, 95-120 e 150-179</td>
-<td><strong>Validada em parte</strong> — casos 062; DV-CQ-001, DV-CQ-008</td>
+<td><strong>Validada em parte</strong> — casos 062, S03-01; DV-CQ-001, DV-CQ-008</td>
 </tr>
 <tr>
 <td>RN-CQ-105</td>
@@ -1053,7 +1054,7 @@
 <td>RN-CQ-S03-012</td>
 <td>Para água, a lista de pontos é pedida ao Principal pelo tipo de água; o tipo de água também é procurado em uma tabela do CQ. Se a consulta falha, a ação devolve erro ao navegador, que mostra "Ocorreu um erro interno não esperado." e deixa a lista vazia.</td>
 <td>ItensProgramaveisService.cs:49-66; Ctx/Configurations/AguaConfiguration.cs:11; ProgramacaoSolicitacaoController.cs:94-98; CQApi.js:20-22</td>
-<td><strong>Validada</strong> — casos 063, N-33; DV-CQ-001, DV-CQ-008</td>
+<td><strong>Validada</strong> — casos 063, N-33, S03-01; DV-CQ-001, DV-CQ-008</td>
 </tr>
 </tbody>
 </table></div>
@@ -1097,7 +1098,7 @@
 <td>RN-CQ-111</td>
 <td>A programação tem filtro próprio para água e ambiente; para água, mostra os dados do ponto vindos do Principal; o responsável é escolhido entre os amostradores; a conta de quantidade pela regra de amostragem está desligada para esses itens.</td>
 <td>ProgramacaoColetaController.cs:58-75; SolicitacaoAnaliseService.cs:185-225</td>
-<td><strong>Validada em parte</strong> — casos 064, R2-AC-12a; DV-CQ-008</td>
+<td><strong>Validada em parte</strong> — casos 064, R2-AC-12a, S04-11 e 064; DV-CQ-008</td>
 </tr>
 <tr>
 <td>RN-CQ-S04-001</td>
@@ -1149,9 +1150,9 @@
 </tr>
 <tr>
 <td>RN-CQ-S04-009</td>
-<td>Para <strong>água</strong>, o formulário pede ao Principal o ponto de água (e o ambiente dele) pelo código externo do item; quando a consulta falha, a página inteira cai em erro técnico e a água não é programada.</td>
+<td>Para <strong>água</strong>, o formulário pede ao Principal o ponto de água (e o ambiente dele) pelo código externo do item; quando a consulta falha, a página inteira cai em erro técnico e a água não é programada (o que ocorria no ambiente até o ajuste do DBA).</td>
 <td>ProgramacaoColetaController.cs:65-68; ProgramacaoColetaEditViewModel.cs:50-58</td>
-<td><strong>Validada</strong> — casos N-32 e 064, 064; DV-CQ-008</td>
+<td><strong>Validada</strong> — casos N-32 e 064, S04-11; DV-CQ-008</td>
 </tr>
 <tr>
 <td>RN-CQ-S04-010</td>
@@ -2136,7 +2137,7 @@
 <td>RN-CQ-113</td>
 <td>Água e ambiente não esperam a separação de amostra no Estoque.</td>
 <td>AnaliseProgramadaController.cs:205-223</td>
-<td><strong>Validada em parte</strong> — casos N-37; DV-CQ-008</td>
+<td><strong>Validada em parte</strong> — casos N-37; DV-CQ-009</td>
 </tr>
 <tr>
 <td>RN-CQ-114</td>

@@ -45,10 +45,10 @@
     <article class="texto texto-largo">
 <h2 id="resumo-da-tela">Resumo da tela</h2>
 <h3 id="programacao-de-amostragem">Programação de Amostragem</h3>
-<p>Menu: Controle da Qualidade › Solicitação de Análise › Programação de Amostragem (HSolutions.CQ.DB/dml.sql:170; o endereço do menu é <code>solicitacaoanalise/programacaocoleta/index</code>: no código a tela se chama "programação de coleta"). No alto da tela o sistema escreve "PROGRAMAÇÃO DE AMOSTRAGEM", na lista e no formulário (Area/Views/ProgramacaoColeta/Index.cshtml:5 e Edit.cshtml:3). Versão legado (código entregue pelo fornecedor, versão 3.5.1). Documentação de 28/10/2026, feita pela leitura do código e pelos resultados das rodadas 1 (23/10/2026) e 2 (28/10/2026) do Controle da Qualidade (<code>execucao/2026-10-23-rodada-1/resultado.md</code>, <code>execucao/2026-10-28-rodada-2/resultado.md</code>), atualizada em 30/10/2026 com as fases A, B, C, E, F e G da rodada 2. Situação (Fase G, 30/10/2026; confere com o <code>ordem.json</code>): <strong>Falha grave</strong> (DV-CQ-008, Alta: a água dá erro de servidor; DV-CQ-029, Alta: acesso; DV-CQ-010, 022 e 040).</p>
+<p>Menu: Controle da Qualidade › Solicitação de Análise › Programação de Amostragem (HSolutions.CQ.DB/dml.sql:170; o endereço do menu é <code>solicitacaoanalise/programacaocoleta/index</code>: no código a tela se chama "programação de coleta"). No alto da tela o sistema escreve "PROGRAMAÇÃO DE AMOSTRAGEM", na lista e no formulário (Area/Views/ProgramacaoColeta/Index.cshtml:5 e Edit.cshtml:3). Versão legado (código entregue pelo fornecedor, versão 3.5.1). Documentação de 28/10/2026, feita pela leitura do código e pelos resultados das rodadas 1 (23/10/2026) e 2 (28/10/2026) do Controle da Qualidade (<code>execucao/2026-10-23-rodada-1/resultado.md</code>, <code>execucao/2026-10-28-rodada-2/resultado.md</code>), atualizada em 30/10/2026 com as fases A, B, C, E, F e G da rodada 2. Situação (Fase G, 30/10/2026; confere com o <code>ordem.json</code>): <strong>Falha grave</strong> (DV-CQ-008, Alta: a água dava erro de servidor e passou a programar em 03/11/2026 depois do ajuste do DBA, aberto no projeto de banco; DV-CQ-029, Alta: acesso; DV-CQ-010, 022 e 040).</p>
 <p><strong>O que NÃO foi visto numa tela real, e por quê:</strong></p>
 <ul>
-<li><strong>O formulário de programação de uma solicitação de água.</strong> Em 23/10/2026 (CT-CQ-064 e CT-CQ-N-32), ao clicar em Editar numa solicitação de água (020/26 a 023/26), o servidor devolveu a página de erro técnica por um objeto de banco ausente (a tabela de tipo de água), e nenhuma água foi programada (DV-CQ-008). Em 28/10/2026 (rodada 2, Fase A1, CT-CQ-064) a programação da 020/26 abriu de novo a página de erro do servidor: o DV-CQ-008 persiste.</li>
+<li><strong>O formulário de programação de uma solicitação de água.</strong> Em 23/10/2026 (CT-CQ-064 e CT-CQ-N-32), ao clicar em Editar numa solicitação de água (020/26 a 023/26), o servidor devolveu a página de erro técnica (ajustada pelo DBA no ambiente em 03/11/2026), e nenhuma água foi programada (DV-CQ-008). Em 28/10/2026 (rodada 2, Fase A1, CT-CQ-064) a programação da 020/26 abriu de novo a página de erro do servidor. <strong>Em 03/11/2026, depois do ajuste do DBA no ambiente, o formulário da 022/26 (água potável) abriu e gravou</strong> (responsável <code>TESTE AMOSTRADOR CQ</code>, data de hoje, "Alteração efetuada com sucesso."; CT-CQ-S04-11, CT-CQ-064 e CT-CQ-N-32 passaram). O DV-CQ-008 fica resolvido no ambiente e aberto no projeto de banco.</li>
 <li><strong>O botão Cancelar</strong>: não existe na tela. O código tem a ação, mas o botão está dentro de um comentário nas grades (DV-CQ-040).</li>
 <li><strong>Os filtros</strong> de busca (tipo de item, item, tipo de análise, solicitação, item de entrada) foram exercitados na Fase F, em 30/10/2026 (CT-CQ-F-25 a F-31; ver "Casos de teste"). Ficaram sem teste os filtros de data (comentados na tela).</li>
 <li><strong>A paginação</strong> das duas grades (10 linhas por página): a maior lista vista teve sete linhas. A grade sem resultado foi vista em 30/10/2026 (captura <code>F-PA-F-23</code>).</li>
@@ -85,12 +85,12 @@
 <p>É o momento em que o CQ diz <strong>quem</strong> vai coletar a amostra e <strong>quando</strong>, ou seja, o primeiro passo de um registro que a norma exige rastreável e feito por pessoal autorizado; hoje a tela deixa programar a mesma amostra duas vezes, não deixa histórico, não consegue programar a água, e o perfil só de consulta consegue designar o amostrador.</p>
 <h4 id="o-que-a-tela-representa">O que a tela representa</h4>
 <p>A amostra é o que o laboratório analisa para liberar o lote. Antes de coletar, alguém precisa ser designado e a data marcada: é esta tela. Ela transforma uma solicitação parada (Coleta pendente de programação) em uma coleta com responsável e data (Em coleta), que o amostrador vê na sua lista de Amostragens Pendentes e depois registra, com checklist, verificador e quantidades (RN-CQ-019 e 021 a 029).</p>
-<p>O que a tela faz: exige data e responsável, recusa data passada, e mostra as urgentes primeiro (CT-CQ-003, N-10, N-11 e N-25, 23/10/2026). O que a norma enxerga como falha: a <strong>água não programa</strong> (erro de servidor; DV-CQ-008, Alta); programar <strong>duas vezes</strong> cria duas amostragens pendentes, e o risco é amostrar e descontar o estoque em duplicidade (DV-CQ-010); a escolha do amostrador depende de um <strong>número fixo de função</strong> e a gravação aceita qualquer usuário existente (DV-CQ-022; RN-CQ-S04-004); <strong>não há como cancelar</strong> (DV-CQ-040); a programação <strong>não deixa histórico</strong> (RN-CQ-S04-007); e o <strong>perfil só de consulta programa</strong> (DV-CQ-029, Alta; seção de segurança).</p>
+<p>O que a tela faz: exige data e responsável, recusa data passada, e mostra as urgentes primeiro (CT-CQ-003, N-10, N-11 e N-25, 23/10/2026). O que a norma enxerga como falha: a <strong>água</strong>, que dava erro de servidor ao programar, passou a programar no ambiente em 03/11/2026 depois do ajuste do DBA (DV-CQ-008, resolvido no ambiente e aberto no projeto de banco); programar <strong>duas vezes</strong> cria duas amostragens pendentes, e o risco é amostrar e descontar o estoque em duplicidade (DV-CQ-010); a escolha do amostrador depende de um <strong>número fixo de função</strong> e a gravação aceita qualquer usuário existente (DV-CQ-022; RN-CQ-S04-004); <strong>não há como cancelar</strong> (DV-CQ-040); a programação <strong>não deixa histórico</strong> (RN-CQ-S04-007); e o <strong>perfil só de consulta programa</strong> (DV-CQ-029, Alta; seção de segurança).</p>
 <h4 id="o-que-muda-para-o-resto-da-fabrica">O que muda para o resto da fábrica</h4>
 <ul>
 <li><strong>Controle da Qualidade:</strong> a coleta aparece nas Amostragens Pendentes do responsável (Pendente) e, na visão de administrador, para todos. Uma amostragem duplicada vai para a fila de dois amostradores.</li>
 <li><strong>Estoque:</strong> nada é pedido nesta etapa; o pedido de separação da amostra sai só quando a amostragem é registrada (RN-CQ-029). Uma amostragem duplicada, se registrada duas vezes, desconta o saldo duas vezes (leitura da área; o desconto pelo registro não foi testado em duplicidade).</li>
-<li><strong>Produção:</strong> a água e o ambiente usados na produção só têm monitoramento pelo CQ se esta tela funcionar; hoje a água não anda (DV-CQ-008), e a Produção decide o uso do ponto de água com registros próprios (RN-CQ-117).</li>
+<li><strong>Produção:</strong> a água e o ambiente usados na produção só têm monitoramento pelo CQ se esta tela funcionar; a água programa desde 03/11/2026, mas o resultado não grava e o ciclo não chega ao laudo (DV-CQ-009), e a Produção decide o uso do ponto de água com registros próprios (RN-CQ-117).</li>
 <li><strong>Garantia da Qualidade:</strong> não há prova de quem designou o amostrador nem de quando.</li>
 <li><strong>Inspeção sanitária:</strong> o inspetor pergunta quem foi autorizado a coletar aquela amostra; a lista de responsáveis é só uma lista, e a gravação não confere a função.</li>
 </ul>
@@ -109,7 +109,7 @@
 <tbody>
 <tr>
 <td>DV-CQ-008</td>
-<td>Ao programar a amostragem de qualquer solicitação de <strong>água</strong> (potável, purificada ou para injetáveis), o servidor devolveu a página de erro técnica (objeto de banco ausente: tabela de tipo de água). Nenhuma água anda no ciclo</td>
+<td>Ao programar a amostragem de qualquer solicitação de <strong>água</strong> (potável, purificada ou para injetáveis), o servidor devolveu a página de erro técnica. Nenhuma água andava no ciclo. <strong>Resolvido no ambiente em 03/11/2026 (ajustado pelo DBA); aberto no projeto de banco</strong></td>
 <td>Programar a amostragem e seguir o ciclo</td>
 <td>Alta</td>
 <td>CT-CQ-064 e CT-CQ-N-32, 23/10/2026</td>
@@ -141,7 +141,7 @@
 <h4 id="o-que-as-fases-a-b-c-e-f-e-g-da-rodada-2-mostraram-desta-tela">O que as fases A, B, C, E, F e G da rodada 2 mostraram desta tela</h4>
 <p>Fonte: <code>execucao/2026-10-28-rodada-2/resultado.md</code> e as capturas citadas. O que o teste viu está separado do que é inferência.</p>
 <ul>
-<li><strong>Água: o erro persiste</strong> (CT-CQ-064, Fase A1, 28/10/2026). Só o alto da página de erro foi guardado; o DBA ainda não criou a tabela de tipo de água (DV-CQ-008).</li>
+<li><strong>Água: o erro persistia em 28/10/2026</strong> (CT-CQ-064, Fase A1); <strong>em 03/11/2026 a programação da água passou</strong>, depois do ajuste do DBA no ambiente (CT-CQ-S04-11 e CT-CQ-064; DV-CQ-008).</li>
 <li><strong>Filtros: funcionam</strong>, com uma ressalva de método. Há sete capturas de filtro (<code>F-PA-F-23</code> a <code>F-PA-F-29</code>) e duas de apoio (item pela lista de sugestões e código forçado). Conferem o tipo de item (duas), o tipo de análise (duas) e o item pela lista; o código forçado não filtra (RN-CQ-S04-012); e o número da solicitação e o item de entrada foram feitos com a 109/26 e a TA0036/26, que já estavam programadas e por isso devolveram as duas grades vazias. O <code>resultado.md</code> resume o CT-CQ-F-25 como "devolvem só a linha pedida"; <strong>nesta tela a captura mostra lista vazia</strong>, não uma linha (divergência abaixo).</li>
 <li><strong>A lista de pendentes em 30/10/2026</strong> (produto/material): 001/26 a 004/26 (PARACETAMOL PÓ, itens de entrada MP0015/26 e MP0019/26, anteriores às rodadas) e 108/26 (TA0035/26, a da entrada que o Estoque respondeu com erro). Em água e ambiente (28/10/2026): 020/26 a 022/26, 1024/26, 1025/26 e 106/26 (a 1027/26 já tinha sido programada). A 109/26 e a 110/26 saíram da lista ao serem programadas (Fase B).</li>
 <li><strong>A coleta programada não tem como ser cancelada</strong> (CT-CQ-R2-D2-03, 28/10/2026): a lista da 1025/26 só tem Editar (DV-CQ-040).</li>
@@ -159,7 +159,7 @@
 <li><strong>Dois lugares fazem o mesmo trabalho:</strong> a <code>Edit.cshtml</code> da pasta Solicitação de Análise é uma cópia órfã desta lista (tela 01, Edit.cshtml:4).</li>
 <li><strong>O estado do total de urgentes</strong> fica na sessão e é lido com conversão direta (ProgramacaoColetaController.cs:32-41); a chamada correspondente está comentada no script (ProgramacaoColetaIndex.js:95-116), então não há efeito visível.</li>
 <li><strong>Filtro de datas comentado:</strong> a consulta aceita data inicial e final, mas a tela não oferece os campos (Index.cshtml:80-86).</li>
-<li><strong>Defeitos do mesmo fluxo que dependem da água:</strong> CT-CQ-066 (laudo de água e Produção) ficou bloqueado pelo DV-CQ-008.</li>
+<li><strong>Defeitos do mesmo fluxo que dependem da água:</strong> CT-CQ-066 (laudo de água e Produção) continua bloqueado, agora pelo DV-CQ-009 (o resultado da análise de água não grava), porque o DV-CQ-008 foi resolvido no ambiente em 03/11/2026.</li>
 </ul>
 <h4 id="pontos-para-validar-com-a-area">Pontos para validar com a área</h4>
 <ul>
@@ -202,7 +202,7 @@
 </ul>
 <h4 id="erros-tecnicos">Erros técnicos</h4>
 <ul>
-<li>Para água, o servidor devolve a <strong>página de erro padrão do ASP.NET</strong>, com a mensagem do banco (objeto ausente) e o rastro de chamadas (vista em teste, CT-CQ-N-32; SEG-CQ-14; DV-CQ-008). O registro público do defeito cobre os caminhos de arquivo da captura.</li>
+<li>Para água, o servidor devolve a <strong>página de erro padrão do ASP.NET</strong>, com a mensagem do banco e o rastro de chamadas (vista em teste, CT-CQ-N-32; SEG-CQ-14; DV-CQ-008). Em 03/11/2026 essa página deixou de aparecer na água, porque o DBA ajustou o ambiente; a tela segue sem tratamento de erro próprio. O registro público do defeito cobre os caminhos de arquivo da captura.</li>
 </ul>
 <h4 id="trilha-de-auditoria-incompleta">Trilha de auditoria incompleta</h4>
 <ul>

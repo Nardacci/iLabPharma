@@ -45,10 +45,10 @@
     <article class="texto texto-largo">
 <h2 id="resumo-da-tela">Resumo da tela</h2>
 <h3 id="programacao-de-solicitacao-de-analise">Programação de Solicitação de Análise</h3>
-<p>Menu: Controle da Qualidade › Solicitação de Análise › Programação de Solicitação de Análise (HSolutions.CQ.DB/dml.sql:167; o endereço do menu é <code>solicitacaoanalise/programacaosolicitacao/agenda</code>). No alto da tela o sistema escreve "PROGRAMAÇÃO DE SOLICITAÇÃO DE ANÁLISE" (Area/Views/ProgramacaoSolicitacao/Agenda.cshtml:4); a aba do navegador mostra "Calendário" (Agenda.cshtml:3). Os documentos de fluxo chamam a tela de "agenda de água e ambiente". Versão legado (código entregue pelo fornecedor, versão 3.5.1). Documentação de 28/10/2026, feita pela leitura do código e pelos resultados do teste automático de 09/10/2026 e das rodadas 1 (23/10/2026) e 2 (28/10/2026) do Controle da Qualidade (<code>execucao/2026-10-09-automatico/resultado.md</code>, <code>execucao/2026-10-23-rodada-1/resultado.md</code>, <code>execucao/2026-10-28-rodada-2/resultado.md</code>), atualizada em 30/10/2026 com as fases A, B, C, E, F e G da rodada 2. Situação (Fase G, 30/10/2026; confere com o <code>ordem.json</code>): <strong>Falha grave</strong> (DV-CQ-008, Alta: a água não carrega; DV-CQ-001, 018, 020, 023 e 024). O arrasto da agenda continua <strong>não conclusivo</strong>.</p>
+<p>Menu: Controle da Qualidade › Solicitação de Análise › Programação de Solicitação de Análise (HSolutions.CQ.DB/dml.sql:167; o endereço do menu é <code>solicitacaoanalise/programacaosolicitacao/agenda</code>). No alto da tela o sistema escreve "PROGRAMAÇÃO DE SOLICITAÇÃO DE ANÁLISE" (Area/Views/ProgramacaoSolicitacao/Agenda.cshtml:4); a aba do navegador mostra "Calendário" (Agenda.cshtml:3). Os documentos de fluxo chamam a tela de "agenda de água e ambiente". Versão legado (código entregue pelo fornecedor, versão 3.5.1). Documentação de 28/10/2026, feita pela leitura do código e pelos resultados do teste automático de 09/10/2026 e das rodadas 1 (23/10/2026) e 2 (28/10/2026) do Controle da Qualidade (<code>execucao/2026-10-09-automatico/resultado.md</code>, <code>execucao/2026-10-23-rodada-1/resultado.md</code>, <code>execucao/2026-10-28-rodada-2/resultado.md</code>), atualizada em 30/10/2026 com as fases A, B, C, E, F e G da rodada 2 e em 03/11/2026 com o reteste da água (<code>execucao/2026-11-03-agua-reteste/resultado.md</code>). Situação (confere com o <code>ordem.json</code>): <strong>Falha grave</strong> (DV-CQ-008, Alta, e DV-CQ-001: a água passou a carregar no ambiente depois do ajuste do DBA em 03/11/2026, mas os dois seguem abertos no projeto de banco; DV-CQ-018, 020, 023 e 024). O arrasto da agenda continua <strong>não conclusivo</strong>.</p>
 <p><strong>O que NÃO foi visto numa tela real, e por quê:</strong></p>
 <ul>
-<li><strong>Nenhum ponto de água apareceu na lista da agenda em nenhum teste</strong> (09/10 e 23/10/2026; a rodada 2 não repetiu a agenda de água: a Fase A1, em 28/10/2026, tentou só a Programação de Amostragem de água e o erro de servidor continuou (DV-CQ-008), e os casos CT-CQ-060 a 063, 067, 068 e N-33 não foram reexecutados porque o DBA não criou a tabela de tipo de água): ao clicar em Carregar com ÁGUA POTÁVEL ou PURIFICADA (as duas testadas; a de injetáveis não foi carregada na agenda), o calendário abre, mas a lista de pontos vem vazia e surge "Ocorreu um erro interno não esperado." (DV-CQ-001, DV-CQ-008). Portanto <strong>nenhuma coleta de água foi agendada por esta tela</strong>, e a água não foi vista nem no calendário nem na exclusão.</li>
+<li><strong>A agenda de água carrega no ambiente desde 03/11/2026.</strong> Nos testes de 09/10 e 23/10/2026 nenhum ponto de água apareceu e surgia "Ocorreu um erro interno não esperado." (DV-CQ-001, DV-CQ-008). Depois do ajuste do DBA no ambiente (a tabela de tipo de água passou a ter o nome que o código usa), o reteste de 03/11/2026 (CT-CQ-S03-01) carregou os três tipos de água: ÁGUA POTÁVEL + Físico-Químico mostra PTA-POT-01, TST-PA1 e TST-CQ-POT; ÁGUA PURIFICADA + Microbiológico mostra PAG, PTA-PW-01 e TST-CQ-PUR; ÁGUA PARA INJETÁVEIS + Microbiológico mostra TST-CQ-INJ. <strong>Ainda não foram testados com água</strong> o arrasto na agenda, o agendamento de uma coleta, a exclusão e o dia com 21 coletas (CT-CQ-S03-02 e S03-03, manuais, ficam para o responsável).</li>
 <li><strong>A mudança de dia por arrasto</strong> (que recalcula o horário de 30 em 30 minutos entre 8h e 18h) não foi concluída: o CT-CQ-068 ficou bloqueado em 23/10/2026 e, em 28/10/2026, o arrasto automático abriu a janela sem a data e o OK não agendou, para o administrador e para o perfil de consulta (CT-CQ-R2-AC-03, não conclusivo, atribuído à automação). As fases A, B, C, E, F e G (29 e 30/10/2026) não tentaram o arrasto de novo.</li>
 <li>A <strong>paginação dos itens</strong> (12 por página), a navegação de meses e a abertura em mais de uma aba não foram exercitadas.</li>
 </ul>
@@ -83,10 +83,10 @@
 </ul>
 <h2 id="importancia-no-modulo-controle-da-qualidade">Importância no módulo Controle da Qualidade</h2>
 <h4 id="em-uma-frase">Em uma frase</h4>
-<p>É a única tela do CQ que representa o programa de monitoramento da água e do ambiente: sem ela, ninguém marca a coleta que mostra se a água e as salas da fábrica continuam sob controle; hoje a água não carrega, o ambiente agenda sem frequência e a exclusão de uma coleta não deixa rastro.</p>
+<p>É a única tela do CQ que representa o programa de monitoramento da água e do ambiente: sem ela, ninguém marca a coleta que mostra se a água e as salas da fábrica continuam sob controle; a água carrega no ambiente desde 03/11/2026 (o agendamento de água ainda não foi testado), o ambiente agenda sem frequência e a exclusão de uma coleta não deixa rastro.</p>
 <h4 id="o-que-a-tela-representa">O que a tela representa</h4>
 <p>A água usada na fabricação e o ar e as superfícies das salas limpas são monitorados por coletas programadas, e os resultados alimentam o laudo, a tendência e a decisão de liberar uma área ou um ponto de uso. Aqui o CQ escolhe o tipo (água potável, purificada, para injetáveis ou ambiente), arrasta o ponto ou a sala para um dia e informa o horário. Cada marcação vira uma solicitação de análise que percorre o ciclo normal do CQ (RN-CQ-108).</p>
-<p>O que a tela faz: agenda o ambiente, recusa hoje e o passado, recusa horário repetido e horário inválido (CT-CQ-060, 061 e N-24, 23/10/2026). O que a norma enxerga como falha: <strong>a água não carrega</strong> (DV-CQ-001 e DV-CQ-008, Alta), então o programa de monitoramento de água não pode ser conduzido pelo sistema; <strong>não há frequência</strong> (DV-CQ-023); a agenda aceita <strong>análise físico-química para ambiente</strong> e <strong>horários de madrugada</strong> (DV-CQ-020); e a <strong>exclusão</strong> de uma coleta e a <strong>mudança de dia</strong> não pedem motivo nem deixam histórico (DV-CQ-018; RN-CQ-S03-008).</p>
+<p>O que a tela faz: agenda o ambiente, recusa hoje e o passado, recusa horário repetido e horário inválido (CT-CQ-060, 061 e N-24, 23/10/2026). O que a norma enxerga como falha: a <strong>água</strong>, que não carregava, passou a carregar no ambiente em 03/11/2026 depois do ajuste do DBA (DV-CQ-001 e DV-CQ-008, resolvidos no ambiente e abertos no projeto de banco), mas o agendamento de coletas de água por arrasto ainda não foi testado e o ciclo da água não chega ao laudo (DV-CQ-009); <strong>não há frequência</strong> (DV-CQ-023); a agenda aceita <strong>análise físico-química para ambiente</strong> e <strong>horários de madrugada</strong> (DV-CQ-020); e a <strong>exclusão</strong> de uma coleta e a <strong>mudança de dia</strong> não pedem motivo nem deixam histórico (DV-CQ-018; RN-CQ-S03-008).</p>
 <h4 id="o-que-muda-para-o-resto-da-fabrica">O que muda para o resto da fábrica</h4>
 <ul>
 <li><strong>Controle da Qualidade:</strong> cada coleta marcada cria uma solicitação que aparece na Programação de Amostragem (tela 04). Se a água não agenda, a água não chega à amostragem, à análise nem ao laudo (CT-CQ-064 e 066 bloqueados).</li>
@@ -111,17 +111,17 @@
 <tbody>
 <tr>
 <td>DV-CQ-008</td>
-<td>A água não anda: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor (objeto de banco ausente: tabela de tipo de água), e a agenda de água também não carrega. Sem pontos, não se agenda monitoramento de água</td>
+<td>A água não andava: a Programação de Amostragem de qualquer ponto de água quebrava com erro de servidor e a agenda de água também não carregava. <strong>Resolvido no ambiente em 03/11/2026 (ajustado pelo DBA); aberto no projeto de banco</strong>, cujo script cria a tabela de tipo de água com o nome do Principal</td>
 <td>A lista de pontos de água do tipo escolhido e o ciclo completo</td>
 <td>Alta</td>
 <td>CT-CQ-063 e CT-CQ-N-33, 23/10/2026</td>
 </tr>
 <tr>
 <td>DV-CQ-001</td>
-<td>Carregar com água mostra o calendário, mas a lista de pontos vem vazia e aparece "Ocorreu um erro interno não esperado." (mesmo com pontos de água novos e ativos)</td>
+<td>(Resolvido no ambiente em 03/11/2026; aberto no projeto de banco.) Carregar com água mostrava o calendário, mas a lista de pontos vinha vazia e aparece "Ocorreu um erro interno não esperado." (mesmo com pontos de água novos e ativos)</td>
 <td>A lista de pontos, ou uma mensagem clara como "Nenhum ponto de água cadastrado para este tipo"</td>
-<td>Média (a causa provável é a do DV-CQ-008)</td>
-<td>CT-CQ-063, 09/10/2026 (teste automático) e 23/10/2026</td>
+<td>Média (causa confirmada: a do DV-CQ-008). <strong>Resolvido no ambiente em 03/11/2026; aberto no projeto de banco</strong></td>
+<td>CT-CQ-063, 09/10/2026 (teste automático) e 23/10/2026; reteste CT-CQ-S03-01, 03/11/2026: carrega</td>
 </tr>
 <tr>
 <td>DV-CQ-018</td>
@@ -164,12 +164,12 @@
 <li><strong>A coleta programada some do calendário</strong> (RN-CQ-S03-002): a agenda não serve de histórico do monitoramento realizado.</li>
 <li><strong>Sem rastro de que a coleta foi feita no prazo:</strong> o calendário não compara o que foi marcado com o que foi coletado.</li>
 <li><strong>A tela de lista "Consultar Coletas Pendentes de Programação" citada no fluxo não existe no ambiente</strong> (404, rodada 2); a Programação de Amostragem (tela 04) cumpre esse papel.</li>
-<li><strong>Defeitos do mesmo fluxo que dependem da água e não puderam ser vistos:</strong> CT-CQ-064 (programar e registrar a amostragem de água) e CT-CQ-066 (laudo de água e Produção) ficaram bloqueados pelo DV-CQ-008.</li>
+<li><strong>Defeitos do mesmo fluxo que dependem da água e não puderam ser vistos:</strong> CT-CQ-064 (programar e registrar a amostragem de água) e CT-CQ-066 (laudo de água e Produção) ficaram bloqueados pelo DV-CQ-008 até 03/11/2026; depois do ajuste do DBA a programação passou (CT-CQ-064, parte de programar), e o registro, o resultado e o laudo seguem bloqueados ou falham por DV-CQ-019 e DV-CQ-009.</li>
 </ul>
 <h4 id="o-que-as-fases-a-b-c-e-f-e-g-da-rodada-2-mostraram-desta-tela">O que as fases A, B, C, E, F e G da rodada 2 mostraram desta tela</h4>
 <p>Fonte: <code>execucao/2026-10-28-rodada-2/resultado.md</code> e as capturas citadas. O que o teste viu está separado do que é inferência.</p>
 <ul>
-<li><strong>Água: nada mudou.</strong> A Fase A1 (28/10/2026) abriu a programação da 020/26 (ponto de água purificada) e o erro de servidor persistiu (DV-CQ-008); a agenda de água não foi reexecutada. Os nove casos de água seguem bloqueados.</li>
+<li><strong>Água: em 28/10/2026 nada tinha mudado; em 03/11/2026 a agenda carrega.</strong> A Fase A1 (28/10/2026) abriu a programação da 020/26 (ponto de água purificada) e o erro de servidor persistiu (DV-CQ-008). Depois do ajuste do DBA, o reteste de 03/11/2026 carregou a agenda dos três tipos de água (CT-CQ-S03-01, só a parte de carregar). Dos nove casos de água, o arrasto e o dia cheio (S03-02 e S03-03) são manuais e ficam para o responsável.</li>
 <li><strong>Arrasto da agenda: continua não conclusivo.</strong> Com o perfil só de consulta e com o administrador (duas tentativas), o arrasto abriu o modal "Agendamento dia:" sem a data, o OK não mostrou mensagem e nada foi agendado; numa das tentativas do administrador o modal nem abriu. Sem defeito novo; atribuído à automação (inferência).</li>
 <li><strong>A física-química de ambiente que a agenda aceita segue até a análise e para lá</strong> (RN-CQ-S03-009): é a consequência prática do DV-CQ-020.</li>
 <li><strong>O calendário só mostra o que ainda está em "Coleta pendente de programação".</strong> Em 28/10/2026, com ambiente e microbiológico, havia dois eventos (28/10 às 9:00, PRD-PES-02; 29/10 às 0:01, PRD-EMB-01). A 106/26, criada na tela Solicitação de Análise (ambiente PRD-PES-01, microbiológico) e listada na Programação de Amostragem, <strong>não aparece no calendário</strong>. <em>Inferência:</em> a agenda desenha pela data de início, e a inclusão manual não tem data. <em>Ponto para validar</em> (caso CT-CQ-S03-16).</li>
@@ -186,7 +186,7 @@
 </ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
-<li><strong>Agenda da água.</strong> O fluxo <code>agua-ambiente.md</code> descreve a agenda de água como funcionando; o teste mostrou que a lista de pontos de água nunca carrega (DV-CQ-001, DV-CQ-008). Só o ambiente funciona.</li>
+<li><strong>Agenda da água.</strong> O fluxo <code>agua-ambiente.md</code> descreve a agenda de água como funcionando; os testes de 09/10 e 23/10/2026 mostraram que a lista de pontos nunca carregava (DV-CQ-001, DV-CQ-008). Depois do ajuste do DBA no ambiente, em 03/11/2026, carrega nos três tipos de água; o agendamento por arrasto ainda não foi testado.</li>
 <li><strong>Ambiente só microbiológico.</strong> O fluxo (RN003 da amostragem) e RN-CQ-112 dizem que ambiente só aceita análise microbiológica; a agenda aceita físico-químico (CT-CQ-062, RN-CQ-112 contradita nesta tela).</li>
 <li><strong>Horário.</strong> O fluxo (ponto 7, "regra de horário incoerente") e RN-CQ-107 dizem 8h às 18h; o teste confirmou que a inclusão aceita qualquer hora e que o limite só existe na mudança de dia (RN-CQ-S03-006 e 007).</li>
 <li><strong>Capacidade do dia.</strong> O plano (CT-CQ-068) fala em 20 agendamentos; pelo código o dia comporta 21 (8h, 8h30, …, 18h), porque a conferência usa "menor ou igual" (SolicitacaoAnaliseService.cs:155). Ponto para validar.</li>
@@ -216,7 +216,7 @@
 </ul>
 <h4 id="erros-tecnicos">Erros técnicos</h4>
 <ul>
-<li>Quando a consulta dos pontos de água falha, a ação grava a causa no registro de erros do servidor e devolve erro; o navegador mostra só "Ocorreu um erro interno não esperado." (ProgramacaoSolicitacaoController.cs:94-98; CQApi.js:20-22). Nesta tela não se viu a página de erro técnica (a vista no DV-CQ-008 é a da Programação de Amostragem, tela 04; SEG-CQ-14).</li>
+<li>Quando a consulta dos pontos de água falha, a ação grava a causa no registro de erros do servidor e devolve erro; o navegador mostra só "Ocorreu um erro interno não esperado." (ProgramacaoSolicitacaoController.cs:94-98; CQApi.js:20-22). Nesta tela não se viu a página de erro técnica (a vista no DV-CQ-008 é a da Programação de Amostragem, tela 04; SEG-CQ-14). Depois do ajuste do DBA (03/11/2026) o erro deixou de aparecer na água.</li>
 </ul>
 <h4 id="trilha-de-auditoria-incompleta">Trilha de auditoria incompleta</h4>
 <ul>

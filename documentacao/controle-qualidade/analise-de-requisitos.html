@@ -55,7 +55,7 @@
 <p>Falhas do sistema atual <strong>não foram copiadas</strong>: viraram requisitos <strong>corrigidos</strong>, com o defeito de origem (DV-CQ-nnn). Os 46 defeitos do CQ aparecem todos, pelo menos uma vez, nos requisitos abaixo; a tabela "Defeito para requisito", no fim, prova isso. Os dois defeitos do Estoque que pesam no CQ (DV-EST-074 e DV-EST-171) também têm requisito. As regras detalhadas estão no documento <strong>Regras de Negócio</strong> do módulo; os defeitos, com passo a passo e capturas, no registro de defeitos.</p>
 <div class="callout">
 <p class="callout-titulo">Limite desta análise</p>
-<p>Esta é a <strong>versão 1.0</strong> (30/10/2026), feita no fechamento do módulo, com o <strong>legado</strong> como objeto. Não compara com a versão nova. Quatro pontos não puderam ser testados em tela e entram como requisito "pelo código": a estabilidade (nenhum acompanhamento se abre, DV-EST-074), a água (falta uma tabela no banco, DV-CQ-008), o arrasto da agenda de coletas (não conclusivo pela automação) e as telas de avaliação de fornecedores, que são protótipos. Os requisitos de <strong>registro completo do ensaio, verificação por segunda pessoa, investigação de resultado fora da especificação, reagentes, equipamentos e tendência</strong> vêm da norma e do modelo ideal, e não de defeito: o sistema atual simplesmente não os tem.</p>
+<p>Esta é a <strong>versão 1.1</strong> (03/11/2026), atualizada com o reteste da água; a versão 1.0 (30/10/2026) foi feita no fechamento do módulo. O objeto é o <strong>legado</strong>. Não compara com a versão nova. Quatro pontos não puderam ser testados por inteiro em tela e entram como requisito "pelo código": a estabilidade (nenhum acompanhamento se abre, DV-EST-074), o ciclo da água (a agenda carrega e a Programação de Amostragem programa desde o ajuste do DBA no ambiente, em 03/11/2026, mas o resultado não grava e o laudo, a etiqueta e a autorização na Produção ficam bloqueados, DV-CQ-009; DV-CQ-001 e 008 estão resolvidos no ambiente e continuam abertos no <strong>projeto de banco</strong>, e os requisitos RF-CQ-057 e RNF-CQ-008 seguem valendo), o arrasto da agenda de coletas (não conclusivo pela automação) e as telas de avaliação de fornecedores, que são protótipos. Os requisitos de <strong>registro completo do ensaio, verificação por segunda pessoa, investigação de resultado fora da especificação, reagentes, equipamentos e tendência</strong> vêm da norma e do modelo ideal, e não de defeito: o sistema atual simplesmente não os tem.</p>
 </div>
 <div class="callout">
 <p class="callout-titulo"></p>
@@ -954,10 +954,10 @@
 <tbody>
 <tr>
 <td>RF-CQ-057</td>
-<td>A <strong>Programação de Solicitação</strong> e a <strong>Programação de Amostragem de água</strong> carregam os pontos pelo tipo de água e programam sem erro de servidor (a tabela de tipo de água faz parte da instalação); se não há ponto, a tela diz isso em português claro</td>
+<td>A <strong>Programação de Solicitação</strong> e a <strong>Programação de Amostragem de água</strong> carregam os pontos pelo tipo de água e programam sem erro de servidor (a tabela de tipo de água faz parte da instalação, com o mesmo nome no código e no projeto de banco); se não há ponto, a tela diz isso em português claro</td>
 <td>Alta</td>
 <td>DV-CQ-008; DV-CQ-001; RN-CQ-104; RN-CQ-111; RDC art. 243, VI</td>
-<td>CT-CQ-063, CT-CQ-064, CT-CQ-066, CT-CQ-N-32, CT-CQ-N-33 (reexecutar depois da correção do banco)</td>
+<td>CT-CQ-063, CT-CQ-064, CT-CQ-066, CT-CQ-N-32, CT-CQ-N-33 (carregar e programar a água passaram em 03/11/2026, depois do ajuste do DBA no ambiente; o laudo de água depende do DV-CQ-009)</td>
 <td>A confirmar</td>
 </tr>
 <tr>
@@ -1744,7 +1744,7 @@
 <td>Água e ambiente › Programação e coleta</td>
 <td>DV-CQ-001, DV-CQ-008</td>
 <td>art. 243, VI</td>
-<td>CT-CQ-063, CT-CQ-064, CT-CQ-066, CT-CQ-N-32, CT-CQ-N-33 (reexecutar depois da correção do banco)</td>
+<td>CT-CQ-063, CT-CQ-064, CT-CQ-066, CT-CQ-N-32, CT-CQ-N-33 (carregar e programar a água passaram em 03/11/2026, depois do ajuste do DBA no ambiente; o laudo de água depende do DV-CQ-009)</td>
 </tr>
 <tr>
 <td>RF-CQ-058</td>
@@ -2022,13 +2022,13 @@
 <tr>
 <td>DV-CQ-008</td>
 <td>Alta</td>
-<td>Água: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor porque falta uma tabela no banco; a agenda de água também não carrega</td>
+<td>Água: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor por causa do nome da tabela de tipo de água no banco; a agenda de água também não carrega (resolvido no ambiente em 03/11/2026; aberto no projeto de banco)</td>
 <td>RF-CQ-057, RNF-CQ-008</td>
 </tr>
 <tr>
 <td>DV-CQ-009</td>
 <td>Alta</td>
-<td>Ambiente: a digitação diz "Alteração efetuada com sucesso." mas não grava o resultado, e o laudo oferece só Aprovar</td>
+<td>Ambiente e água: a digitação diz "Alteração efetuada com sucesso." mas não grava o resultado, e o laudo oferece só Aprovar</td>
 <td>RF-CQ-031</td>
 </tr>
 <tr>
@@ -2088,7 +2088,7 @@
 <tr>
 <td>DV-CQ-019</td>
 <td>Média</td>
-<td>Ambiente: registrar a amostragem mostra "Ocorreu um erro interno não esperado." mas a amostragem fica gravada</td>
+<td>Ambiente e água: registrar a amostragem mostra "Ocorreu um erro interno não esperado." mas a amostragem fica gravada</td>
 <td>RF-CQ-061</td>
 </tr>
 <tr>

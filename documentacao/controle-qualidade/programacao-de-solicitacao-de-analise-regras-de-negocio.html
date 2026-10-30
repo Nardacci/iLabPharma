@@ -58,7 +58,7 @@
 <td>RN-CQ-016</td>
 <td>A programação de água e ambiente exige código, tipo de item, data e o ponto (tag); as solicitações são encaixadas de 30 em 30 minutos entre 8h e 18h; a exclusão só marca a lixeira, sem justificativa e sem histórico.</td>
 <td>SolicitacaoAnaliseService.cs:35-58 e 119-158</td>
-<td>Validada em parte: a exclusão sem justificativa e sem histórico foi vista (CT-CQ-067, 23/10/2026); o encaixe de 30 em 30 minutos ficou sem teste (CT-CQ-068 bloqueado); a água não carrega</td>
+<td>Validada em parte: a exclusão sem justificativa e sem histórico foi vista (CT-CQ-067, 23/10/2026); o encaixe de 30 em 30 minutos ficou sem teste (CT-CQ-068 bloqueado); a água carrega desde 03/11/2026, mas o agendamento por arrasto ainda não foi testado</td>
 </tr>
 <tr>
 <td>RN-CQ-103</td>
@@ -70,7 +70,7 @@
 <td>RN-CQ-104</td>
 <td>Os pontos e salas vêm do Principal, consultados na hora; a identificação é a tag.</td>
 <td>ItensProgramaveisService.cs:41-80, 95-120 e 150-179</td>
-<td>Validada em parte: salas PRD-PES-01, PRD-PES-02, PRD-EMB-01 e INS-THG-08 apareceram (CT-CQ-062, 067, N-23); pontos de água não (DV-CQ-001, DV-CQ-008)</td>
+<td>Validada em parte: salas PRD-PES-01, PRD-PES-02, PRD-EMB-01 e INS-THG-08 apareceram (CT-CQ-062, 067, N-23); pontos de água só depois do ajuste do DBA, em 03/11/2026 (CT-CQ-S03-01; DV-CQ-001 e DV-CQ-008 resolvidos no ambiente)</td>
 </tr>
 <tr>
 <td>RN-CQ-105</td>
@@ -178,7 +178,7 @@
 <td>RN-CQ-S03-012</td>
 <td>Para água, a lista de pontos é pedida ao Principal pelo tipo de água; o tipo de água também é procurado em uma tabela do CQ. Se a consulta falha, a ação devolve erro ao navegador, que mostra "Ocorreu um erro interno não esperado." e deixa a lista vazia.</td>
 <td>ItensProgramaveisService.cs:49-66; Ctx/Configurations/AguaConfiguration.cs:11; ProgramacaoSolicitacaoController.cs:94-98; CQApi.js:20-22</td>
-<td>Validada: CT-CQ-063 (09/10 e 23/10/2026) e CT-CQ-N-33 (23/10/2026); DV-CQ-001 e DV-CQ-008. A causa (tabela de tipo de água ausente ou outro nome no ambiente de teste) é leitura da mensagem do servidor e <strong>só o DBA confirma</strong></td>
+<td>Validada: CT-CQ-063 (09/10 e 23/10/2026) e CT-CQ-N-33 (23/10/2026) mostraram o erro; em 03/11/2026 a causa foi confirmada (nome da tabela de tipo de água no banco do ambiente) e, depois do ajuste do DBA, a lista de pontos carrega (CT-CQ-S03-01); DV-CQ-001 e DV-CQ-008 resolvidos no ambiente e abertos no projeto de banco</td>
 </tr>
 </tbody>
 </table></div>
@@ -197,7 +197,7 @@
 <tr>
 <td>CT-CQ-060</td>
 <td>Agendar uma coleta para hoje</td>
-<td>Passou, 23/10/2026: ambiente para hoje recusado ("Não pode programar para uma data anterior ou igual a data atual."). Água: a agenda não carrega (DV-CQ-008)</td>
+<td>Passou, 23/10/2026: ambiente para hoje recusado ("Não pode programar para uma data anterior ou igual a data atual."). Água: a agenda não carregava (DV-CQ-008); em 03/11/2026 carrega (CT-CQ-S03-01), o agendamento por arrasto não foi testado</td>
 </tr>
 <tr>
 <td>CT-CQ-061</td>
@@ -212,7 +212,7 @@
 <tr>
 <td>CT-CQ-063</td>
 <td>Procurar frequência ou recorrência</td>
-<td>Falhou, 09/10/2026 (teste automático) e 23/10/2026 (DV-CQ-023, DV-CQ-008): nenhuma opção de frequência; a água não carrega</td>
+<td>Falhou, 09/10/2026 (teste automático) e 23/10/2026 (DV-CQ-023, DV-CQ-008): nenhuma opção de frequência; a água não carregava (carrega desde 03/11/2026)</td>
 </tr>
 <tr>
 <td>CT-CQ-067</td>
@@ -237,7 +237,7 @@
 <tr>
 <td>CT-CQ-N-33</td>
 <td>Carregar água potável e purificada</td>
-<td>Falhou, 23/10/2026 (DV-CQ-001, DV-CQ-008): "Ocorreu um erro interno não esperado."</td>
+<td>Falhou, 23/10/2026 (DV-CQ-001, DV-CQ-008): "Ocorreu um erro interno não esperado."; <strong>Passou, 03/11/2026</strong> (CT-CQ-S03-01): os três tipos de água carregam, depois do ajuste do DBA</td>
 </tr>
 <tr>
 <td>CT-CQ-R2-D1-T03</td>
@@ -257,7 +257,7 @@
 <tr>
 <td>CT-CQ-R2-A1 (CT-CQ-060 a 063, 067, 068 e N-33, repetição da água)</td>
 <td>Repetir a agenda depois da correção do DBA</td>
-<td><strong>Bloqueado (não reexecutado)</strong>, 28/10/2026: o DBA não criou a tabela de tipo de água; a única tentativa da Fase A1 (CT-CQ-064, Programação de Amostragem, captura <code>A1-agua-erro-topo</code>) continuou com erro de servidor (DV-CQ-008)</td>
+<td><strong>Bloqueado (não reexecutado)</strong>, 28/10/2026 (a única tentativa da Fase A1, na Programação de Amostragem, continuou com erro de servidor, DV-CQ-008). <strong>Reexecutado em 03/11/2026 depois do ajuste do DBA:</strong> a agenda dos três tipos de água carrega (CT-CQ-S03-01, Passou); arrasto e dia cheio ficam manuais</td>
 </tr>
 <tr>
 <td>CT-CQ-R2-AC-12a a 12c e AC-12 (apoio: 1027/26, ambiente físico-químico vindo desta agenda)</td>
