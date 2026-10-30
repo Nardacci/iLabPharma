@@ -83,7 +83,7 @@
 <p>É a única tela do Estoque que lembra a fábrica de reanalisar um material aprovado antes de ele passar da data; se ela não funciona, ninguém é avisado e o lote pode ser usado depois da data de reanálise.</p>
 <h4 id="o-que-a-tela-representa">O que a tela representa</h4>
 <p>A agenda lista os lotes que estão na hora de ser reanalisados e permite gerar a reanálise com um clique: o sistema abre uma análise do tipo REANÁLISE no Controle da Qualidade, marca o lote como "em reanálise" e o tira do saldo disponível até o resultado (RN-EST-087). A data de reanálise vem do laudo do CQ ("Reanalisar? = Sim" e "Data da Reanálise"), não do cadastro do Item, como os documentos anteriores diziam (RN-EST-085, nova leitura de 23/10/2026).</p>
-<p>Nos testes, <strong>a lista veio vazia em todas as tentativas</strong> (13/10 e 22/10/2026; DV-EST-041, gravidade Média, a confirmar) e o ícone de gerar a reanálise nunca apareceu; a reanálise só foi feita pela tela vizinha Reanálise - Avulsa (CT-EST-059). Além disso, a regra que tiraria do saldo disponível o lote com data de reanálise vencida está desligada na visão de saldo, e nenhuma rotina marca a reanálise quando a data chega (RN-EST-E25-005; CT-EST-058 bloqueado). Em resumo: o sistema só protege o lote em reanálise se alguém olhar a agenda e agir.</p>
+<p>Nos testes, <strong>a lista veio vazia em todas as tentativas</strong> (13/10, 22/10 e 24/10/2026; DV-EST-041, Média, e DV-EST-171, Alta: o laudo aprovado com reanálise prevista chega ao Estoque como "Reanalisar? = NÃO" e a data de reanálise não chega ao lote, que é o que a lista usa) e o ícone de gerar a reanálise nunca apareceu; a reanálise só foi feita pela tela vizinha Reanálise - Avulsa (CT-EST-059). Além disso, a regra que tiraria do saldo disponível o lote com data de reanálise vencida está desligada na visão de saldo, e nenhuma rotina marca a reanálise quando a data chega (RN-EST-E25-005; CT-EST-058 bloqueado). Em resumo: o sistema só protege o lote em reanálise se alguém olhar a agenda e agir.</p>
 <h4 id="o-que-muda-para-o-resto-da-fabrica">O que muda para o resto da fábrica</h4>
 <ul>
 <li><strong>Estoque e produção:</strong> o lote em reanálise sai do saldo disponível e deixa de aparecer na solicitação, na separação e na remessa (RN-EST-094; CT-EST-059). O lote com data vencida e sem agendamento continua disponível.</li>
@@ -107,8 +107,15 @@
 <td>DV-EST-041</td>
 <td>A lista não mostrou o lote <code>TESTELOTE003</code>, cuja data de reanálise (12/10/2028) estava dentro do período pesquisado (2026 a 2030). Em 22/10/2026 também veio "A pesquisa não retornou nenhum resultado." para o <code>TESTEPA001</code></td>
 <td>O lote com data de reanálise dentro do período aparece</td>
-<td>Média (a confirmar)</td>
-<td>CT-EST-055, 13/10/2026 e 22/10/2026 (rodada 8)</td>
+<td>Média (primeira ocorrência do sintoma; o defeito principal é o DV-EST-171)</td>
+<td>CT-EST-055, 13/10/2026 e 22/10/2026 (rodada 8); CT-EST-E25-01 e E25-08, 24/10/2026 (rodada 12C)</td>
+</tr>
+<tr>
+<td>DV-EST-171</td>
+<td>Com período largo (2026 a 2030) e sem período, a lista mostrou só a linha fantasma ("00 / 24/10/2026 / 0,000"), mesmo com lotes aprovados; o laudo aprovado no CQ com "Reanálise prevista = Sim" (o padrão) apareceu na análise do Estoque como "Reanalisar? = NÃO" (<code>TA0031/26</code>, <code>TA0023/26</code> e <code>TA0026/26</code>)</td>
+<td>O lote aprovado com reanálise prevista recebe a data de reanálise e aparece na Agenda</td>
+<td>Alta (elevada de Média em 27/10/2026, depois da comparação com o código)</td>
+<td>CT-EST-E25-01, E25-02 e E25-08, 24/10/2026 (rodada 12C)</td>
 </tr>
 <tr>
 <td>DV-EST-040</td>
@@ -143,6 +150,14 @@
 <li>o lote ainda estava em quarentena ou a última análise estava reprovada.</li>
 </ul>
 <p>Também há uma divergência com a rodada 5: o texto de 13/10/2026 diz que a tela do laudo não tem um campo de data de reanálise; o código tem o campo "Data da Reanálise", que aparece depois de escolher "Reanalisar? = Sim" e é obrigatório nesse caso (analise_controle_ed.aspx:395-413; analise_controle_ed.aspx.cs:408 e 1742-1746). Ponto para validar na próxima rodada. O DV-EST-043 continua verdadeiro para o cadastro do Item, mas, pelo código, não explica sozinho a agenda vazia.</p>
+<h4 id="o-que-a-rodada-12c-confirmou-e-a-conclusao-27-10-2026">O que a rodada 12C confirmou e a conclusão (27/10/2026)</h4>
+<p>A rodada 12C (24/10/2026; CT-EST-E25-01, E25-02 e E25-08) fechou a leitura acima com a tela: com período largo e <strong>sem período</strong> a Agenda mostra só a linha fantasma, mesmo com lotes aprovados; e o laudo aprovado no CQ com "Reanálise prevista = Sim" (valor que o CQ já traz marcado) chega à análise do Estoque como <strong>"Reanalisar? = NÃO"</strong> (DV-EST-171). Juntando o código e a tela:</p>
+<ul>
+<li>a lista exige, na última análise do lote, <code>ISNULL(AC.REANALISE, 1) = 1</code> (dalItemLote.cs:1490) e, com período informado, <code>IL.DATA_REANALISE</code> entre as datas (dalItemLote.cs:1511); a marca e a data são gravadas no fechamento da análise (analise_controle_ed.aspx.cs:477 e 487);</li>
+<li>como o laudo chega como "Reanalisar? = NÃO", nenhum lote satisfaz a condição e a data, pelo que o código mostra, não entra no lote; a lista nunca traz nada e o agendamento nunca acontece;</li>
+<li>a classificação de reanálise do item (DV-EST-043) <strong>não participa</strong> dessa consulta: o DV-EST-041, que em 13/10/2026 atribuía a lista vazia à classificação travada, estava com a causa errada e foi reescrito em 27/10/2026.</li>
+</ul>
+<p><strong>Conclusão:</strong> a cadeia laudo → data de reanálise no lote → Agenda → agendamento nunca se completa; a tela não cumpre a função. A reanálise de matéria-prima dentro da data de reteste é exigência da RDC 658/2022 (art. 189; ver a página Anvisa desta tela). Por isso o DV-EST-171 passou de Média para <strong>Alta</strong> em 27/10/2026 e é o defeito principal; o DV-EST-041 (Média) fica como a primeira ocorrência do sintoma. A causa exata (a data não é gravada quando a opção do laudo fica no padrão, ou o campo "Reanalisar?" do Estoque lê outra coluna) é <strong>provável</strong>, não confirmada: fica para o desenvolvimento. Reteste: CT-EST-E25-01 depois da correção.</p>
 <h4 id="o-que-o-codigo-mostra-e-o-teste-ainda-nao-confirmou">O que o código mostra e o teste ainda não confirmou</h4>
 <ul>
 <li><strong>Data de reanálise vencida não bloqueia nada.</strong> A regra que tiraria do disponível o lote com data de reanálise passada está comentada na visão de saldo (VW_SALDO_ITEM_LOTE_ENDERECO.sql:26-31) e nenhuma rotina marca a reanálise sozinha. Se ninguém olhar a agenda, o lote pode ser separado e usado (art. 189; CT-EST-058 bloqueado).</li>
@@ -161,7 +176,7 @@
 </ul>
 <h2 id="divergencias-encontradas">Divergências encontradas</h2>
 <ul>
-<li><strong>Origem da data de reanálise.</strong> O fluxo e o documento de regras (RN-EST-085) dizem que a data vem da classificação de reanálise do item. O código mostra o laudo do CQ ("Reanalisar? = Sim" e "Data da Reanálise") e a data gravada no lote (dalItemLote.cs:1511; analise_controle_ed.aspx.cs:487). A causa da lista vazia dos testes fica em aberto e o DV-EST-041 ("a confirmar") deve ser reescrito depois do CT-EST-E25-01.</li>
+<li><strong>Origem da data de reanálise.</strong> O fluxo e o documento de regras (RN-EST-085) dizem que a data vem da classificação de reanálise do item. O código mostra o laudo do CQ ("Reanalisar? = Sim" e "Data da Reanálise") e a data gravada no lote (dalItemLote.cs:1511; analise_controle_ed.aspx.cs:487). A rodada 12C (CT-EST-E25-01 e E25-08) confirmou a lista vazia com período largo e sem período e mostrou que o laudo aprovado com "Reanálise prevista = Sim" chega ao Estoque como "Reanalisar? = NÃO" (DV-EST-171, Alta); o DV-EST-041 foi reescrito em 27/10/2026 com essa leitura e a RN-EST-085 (e o fluxo) precisam ser corrigidos: a data vem do laudo, não da classificação do item.</li>
 <li><strong>Justificativa.</strong> O fluxo diz que a justificativa é obrigatória (RN005 do fluxo; RN-EST-089). A Agenda não tem o campo.</li>
 <li><strong>Mensagens.</strong> O fluxo cita "O Lote possui análise não finalizada!" e "O Lote está bloqueado. Operação não permitida!". Na Reanálise - Avulsa, as duas recusas deram "Lote não possui saldo para ser analisado!" (DV-EST-039); na Agenda o código dá as mensagens específicas, mas o teste ainda não chegou lá.</li>
 <li><strong>Campo do laudo.</strong> A rodada 5 (13/10/2026) escreve que o laudo "não tem um campo separado de data de reanálise"; o código tem o campo "Data da Reanálise", obrigatório quando "Reanalisar? = Sim".</li>
@@ -194,7 +209,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#resumo-da-tela">Resumo da tela</a></li><li class="sub"><a href="#agenda-de-reanalise">Agenda de Reanálise</a></li><li><a href="#importancia-no-modulo-estoque">Importância no módulo Estoque</a></li><li><a href="#falhas-e-pontos-de-atencao">Falhas e pontos de atenção</a></li><li><a href="#divergencias-encontradas">Divergências encontradas</a></li><li><a href="#seguranca-e-acesso">Segurança e acesso</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 27/10/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 30/10/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
