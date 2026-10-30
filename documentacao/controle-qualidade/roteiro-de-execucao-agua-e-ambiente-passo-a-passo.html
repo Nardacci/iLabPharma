@@ -46,12 +46,13 @@
 <p>Para quem vai <strong>executar os testes nas telas</strong> do monitoramento de <strong>água</strong> (potável, purificada e para injetáveis) e de <strong>ambiente</strong> (salas) no Controle da Qualidade (CQ): a agenda de coletas, a programação e o registro da amostragem, a digitação dos resultados, o laudo, o boletim, a etiqueta e a ligação com a Produção. Não é preciso ler o fluxo nem o código. Em cada passo: a tela, o usuário, o que preencher, onde clicar, o que deve aparecer, o caso do plano e o que registrar. Os casos são os do plano (<code>08-plano-de-testes.md</code>, CT-CQ-060 a 068), os casos novos já executados (N-23, N-24, N-32, N-33, N-36, N-37) e os casos novos propostos nas páginas por tela (<code>menu-solicitacao/telas/03</code> e <code>04</code>, <code>menu-amostragem/telas/04</code> e <code>menu-analise-laudo/telas/03</code>, <code>05</code> e <code>06</code>: CT-CQ-S03-nn, S04-nn, A04-nn, L03-nn, L05-nn e L06-nn). O fluxo completo, com as regras e o fluxograma, está em <code>fluxos/agua-ambiente.md</code>. O ciclo geral (solicitação, amostragem, análise, laudo, etiqueta) é o do roteiro <code>solicitacao-analise-laudo</code>; aqui estão <strong>só as diferenças</strong> de água e ambiente.</p>
 <p><strong>Por que água e ambiente pesam na norma:</strong> a água purificada e a de injetáveis são insumo do medicamento, e a sala é onde ele é fabricado. A RDC 658/2022 pede monitoramento com <strong>frequência definida</strong>, <strong>limites de alerta e de ação</strong> e investigação do resultado fora do limite (art. 245). No sistema, cada coleta é marcada uma a uma, sem frequência nem limites, e o resultado do CQ <strong>não protege a produção</strong>: a Produção libera o ponto de água pelos registros dela, à mão.</p>
 <blockquote>
-<p><strong>BLOQUEADO: a ÁGUA continua parada (DV-CQ-008).</strong> Programar a amostragem de qualquer ponto de água, e a agenda de água, dão erro de servidor porque falta uma tabela de tipo de água no banco (a confirmar com o DBA). Nas rodadas 1 e 2 (23 e 28/10/2026) nenhum dos nove casos de água andou. <strong>Todos os passos de água estão escritos aqui, mas ficam "Bloqueado até o DBA corrigir": tente uma vez e registre o estado atual</strong> (a mensagem, a captura sem o nome da tabela visível se a página mostrar). <strong>O ambiente funciona</strong> (com defeitos) e é a parte executável deste roteiro. Nos passos de água, se o erro continuar, anote "Bloqueado, DV-CQ-008 persiste em <data>" e <strong>pule o resto do ciclo da água</strong>.</p>
+<p><strong>ÁGUA: carrega e programa, mas o ciclo para na gravação do resultado (DV-CQ-009).</strong> Depois do ajuste do DBA no ambiente (03/11/2026), a agenda dos três tipos de água carrega (passos 1.17) e a Programação de Amostragem da 022/26 abre e grava (passos 2.4 e 2.5). O registro da amostragem de água falha como o de ambiente (DV-CQ-019), a análise de água não grava o resultado (DV-CQ-009) e, por isso, o <strong>laudo, a etiqueta e a Autorização de ponto de água (6.1) seguem bloqueados</strong> até o desenvolvimento corrigir o DV-CQ-009. DV-CQ-001 e DV-CQ-008 estão resolvidos no ambiente e abertos no projeto de banco. <strong>O que ainda falta fazer com água:</strong> arrastar e agendar uma coleta (1.17 e 1.18), programar a 020/26 e a 021/26 (2.4 e 2.5) e repetir o resultado, o laudo e a etiqueta com a 020/26 (purificada, físico-química), que já tem regra de análise. Se o resultado ainda não gravar, anote "Bloqueado, DV-CQ-009 persiste em <data>" e <strong>pare o ciclo da água ali</strong>. Passos de <strong>ambiente</strong> seguem como antes (funciona, com defeitos).</p>
 </blockquote>
 <p><strong>O que as rodadas anteriores já fizeram neste fluxo</strong> (<code>execucao/2026-10-23-rodada-1/resultado.md</code> e <code>execucao/2026-10-28-rodada-2/resultado.md</code>):</p>
 <ul>
 <li><strong>Rodada 1 (23/10/2026):</strong> CT-CQ-060, 061 e 065 passaram; 062 e 063 falharam; 064, 066 e 068 bloqueados; 067 falhou. Também N-23 (falhou), N-24 (passou), N-32 e N-33 (falharam), N-36 e N-37 (falharam).</li>
-<li><strong>Rodada 2 (28 a 30/10/2026):</strong> a programação da amostragem de água (020/26) deu o mesmo erro de servidor (A1); os casos de ambiente (1027/26) rodaram com o perfil de consulta (R2-AC-12a a 12c); o boletim de ambiente foi impresso em branco (REL-03b); o arrasto da agenda <strong>não foi concluído</strong> pela automação (R2-AC-03 não conclusivo): <strong>faça à mão</strong>.</li>
+<li><strong>Reteste da água (03/11/2026, <code>execucao/2026-11-03-agua-reteste/resultado.md</code>):</strong> depois do ajuste do DBA, a agenda dos três tipos de água carregou (CT-CQ-S03-01, passou), a 022/26 foi programada na amostragem (CT-CQ-S04-11, 064 e N-32, passaram), o registro e o resultado falharam (N-36 e L03-02/N-37; DV-CQ-019 e DV-CQ-009) e laudo, etiqueta e Produção ficaram bloqueados (CT-CQ-066, L05-10, L05-13, L06-03).</li>
+<li><strong>Rodada 2 (28 a 30/10/2026):</strong> a programação da amostragem de água (020/26) deu erro de servidor (A1), antes do ajuste do DBA; os casos de ambiente (1027/26) rodaram com o perfil de consulta (R2-AC-12a a 12c); o boletim de ambiente foi impresso em branco (REL-03b); o arrasto da agenda <strong>não foi concluído</strong> pela automação (R2-AC-03 não conclusivo): <strong>faça à mão</strong>.</li>
 </ul>
 <p>Os passos que repetem esses casos estão marcados <strong>"já feito"</strong>: só refaça se a tela tiver mudado. Os demais são <strong>casos novos, nunca executados</strong>.</p>
 <p><strong>Tempo estimado:</strong> 4 a 5 horas para o ambiente; os passos de água somam cerca de meia hora (uma tentativa em cada).</p>
@@ -280,18 +281,18 @@
 <tr>
 <td>1.17</td>
 <td>Administrador</td>
-<td><strong>ÁGUA (bloqueado):</strong> escolha <strong>água potável</strong>, depois <strong>purificada</strong> e <strong>injetáveis</strong>, e carregue. Arraste um ponto para um dia futuro, informe o horário e OK.</td>
-<td>A lista de pontos aparece e a solicitação nasce em Coleta pendente de programação. <strong>Já visto:</strong> "Ocorreu um erro interno não esperado." ao carregar (DV-CQ-001, explicado pelo DV-CQ-008).</td>
-<td>CT-CQ-S03-01 (Alta); CT-CQ-N-33 (Média, <strong>já feito</strong>, 23/10/2026, falhou)</td>
-<td><strong>Bloqueado até o DBA/Estoque corrigir: tente uma vez e registre o estado.</strong></td>
+<td><strong>ÁGUA (carrega; arrasto a fazer à mão):</strong> escolha <strong>água potável</strong>, depois <strong>purificada</strong> e <strong>injetáveis</strong>, e carregue. Arraste um ponto para um dia futuro, informe o horário e OK.</td>
+<td>A lista de pontos aparece e a solicitação nasce em Coleta pendente de programação. <strong>Já visto:</strong> em 23/10/2026 "Ocorreu um erro interno não esperado." ao carregar (DV-CQ-001); <strong>em 03/11/2026, depois do ajuste do DBA, os três tipos carregam</strong> (potável: PTA-POT-01, TST-PA1, TST-CQ-POT; purificada: PAG, PTA-PW-01, TST-CQ-PUR; injetáveis: TST-CQ-INJ).</td>
+<td>CT-CQ-S03-01 (Alta, <strong>carregar já feito</strong>, 03/11/2026, passou; arrastar e agendar falta); CT-CQ-N-33 (Média, <strong>já feito</strong>, 03/11/2026, passou)</td>
+<td><strong>Carregar: repetido só se o responsável pedir. Falta o arrasto e o agendamento</strong> (à mão): registre o que a tela fizer.</td>
 </tr>
 <tr>
 <td>1.18</td>
 <td>Administrador</td>
-<td><strong>ÁGUA (bloqueado):</strong> agende coleta de água para hoje e duas coletas no mesmo horário.</td>
+<td><strong>ÁGUA (a fazer à mão):</strong> agende coleta de água para hoje e duas coletas no mesmo horário.</td>
 <td>Como em 1.3 e 1.4.</td>
 <td>CT-CQ-060 e 061 (Baixa, parte da água)</td>
-<td><strong>Bloqueado.</strong> Registre o estado.</td>
+<td>O que a tela fizer; o agendamento por arrasto da água ainda não foi testado (a automação não conclui o arrasto).</td>
 </tr>
 </tbody>
 </table></div>
@@ -336,18 +337,18 @@
 <tr>
 <td>2.4</td>
 <td>Administrador</td>
-<td><strong>ÁGUA (bloqueado):</strong> clique em Editar na <strong>020/26</strong> (água purificada).</td>
-<td>Pela norma, a lista com o ambiente do ponto e a amostragem Pendente. <strong>Já visto:</strong> página de erro de servidor no lugar da tela, com o nome de um objeto de banco ausente (DV-CQ-008).</td>
-<td>CT-CQ-064 (Baixa, <strong>já feito</strong>, 23/10/2026 e 28/10/2026, bloqueado); CT-CQ-S04-11 (Alta); CT-CQ-N-32 (Alta, <strong>já feito</strong>, falhou)</td>
-<td><strong>Bloqueado até o DBA corrigir: tente uma vez e registre o estado.</strong> Não guarde a captura se ela mostrar o nome da tabela: guarde só o alto da página.</td>
+<td><strong>ÁGUA:</strong> clique em Editar na <strong>020/26</strong> (água purificada).</td>
+<td>Pela norma, a lista com o ambiente do ponto e a amostragem Pendente. <strong>Já visto:</strong> em 23 e 28/10/2026 página de erro de servidor no lugar da tela (DV-CQ-008); <strong>em 03/11/2026 a tela abriu e gravou na 022/26</strong> (responsável <code>TESTE AMOSTRADOR CQ</code>, data de hoje, "Alteração efetuada com sucesso."), depois do ajuste do DBA.</td>
+<td>CT-CQ-064 (Baixa, parte de programar <strong>feita</strong> em 03/11/2026, passou); CT-CQ-S04-11 (Alta, <strong>feito</strong> na 022/26, passou); CT-CQ-N-32 (Alta, <strong>feito</strong>, 03/11/2026, passou)</td>
+<td><strong>A 020/26 ainda não foi programada:</strong> repita nela e registre o resultado. Se aparecer erro de servidor, guarde só o alto da página, sem endereço nem nome de tabela.</td>
 </tr>
 <tr>
 <td>2.5</td>
 <td>Administrador</td>
-<td><strong>ÁGUA (bloqueado):</strong> repita para a 021/26 (microbiológica) e a 022/26 (potável).</td>
+<td><strong>ÁGUA:</strong> repita para a 021/26 (microbiológica). A 022/26 (potável) <strong>já foi programada</strong> em 03/11/2026.</td>
 <td>Como em 2.4.</td>
-<td>CT-CQ-S04-11 (Alta)</td>
-<td><strong>Bloqueado.</strong> Registre o estado de cada.</td>
+<td>CT-CQ-S04-11 (Alta, passou na 022/26)</td>
+<td>O resultado da 021/26; a 022/26 só se o responsável pedir repetição.</td>
 </tr>
 </tbody>
 </table></div>
@@ -448,7 +449,7 @@
 </tbody>
 </table></div>
 <h3 id="tela-5-emissao-laudo-final-e-gerar-etiqueta-agua-e-ambiente">Tela 5 · Emissão Laudo Final e Gerar Etiqueta (água e ambiente)</h3>
-<p>Água e ambiente têm <strong>laudo e etiqueta próprios</strong>; a aprovação e a emissão seguem as regras do fluxo geral. A 024/26 está com a decisão pendente e <strong>não serve</strong>: use uma análise de ambiente que consiga chegar a <strong>Liberar laudo</strong>. Se o defeito do DV-CQ-009 persistir (o resultado não grava), anote <strong>Bloqueado</strong> e faça só o que a tela deixar.</p>
+<p>Água e ambiente têm <strong>laudo e etiqueta próprios</strong>; a aprovação e a emissão seguem as regras do fluxo geral. A 024/26 está com a decisão pendente e <strong>não serve</strong>: use uma análise de ambiente que consiga chegar a <strong>Liberar laudo</strong>. Se o defeito do DV-CQ-009 persistir (o resultado não grava), anote <strong>Bloqueado</strong> e faça só o que a tela deixar. <strong>Na água, o resultado não gravou na 022/26 em 03/11/2026 (DV-CQ-009); o laudo e a etiqueta de água seguem bloqueados.</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -475,7 +476,7 @@
 <td>Imprima o <strong>laudo de ambiente</strong> (e o de água, se existir).</td>
 <td>Cabeçalho, datas, quem aprovou e quem emitiu corretos.</td>
 <td>CT-CQ-L05-10 (Alta, parte água e ambiente)</td>
-<td>O que saiu. Água: <strong>Bloqueado</strong>.</td>
+<td>O que saiu. Água: <strong>Bloqueado no teste</strong> em 03/11/2026 (022/26 em Pendente digitação, DV-CQ-009).</td>
 </tr>
 <tr>
 <td>5.3</td>
@@ -483,7 +484,7 @@
 <td>Menu Análise e Laudo › <strong>Gerar Etiqueta</strong>. Imprima a etiqueta de <strong>água</strong> e a de <strong>ambiente</strong>.</td>
 <td>Campos Item Análise, Nº Laudo, Validade, Responsável e Data.</td>
 <td>CT-CQ-L06-03 (Alta)</td>
-<td>A etiqueta. Água: <strong>Bloqueado</strong>.</td>
+<td>A etiqueta. Água: <strong>Bloqueado no teste</strong> em 03/11/2026 (nenhuma análise de água na lista, porque não há laudo emitido; DV-CQ-009).</td>
 </tr>
 <tr>
 <td>5.4</td>
@@ -520,10 +521,10 @@
 <tr>
 <td>6.1</td>
 <td>Administrador</td>
-<td><strong>ÁGUA (bloqueado):</strong> com um laudo de água <strong>reprovado e emitido</strong> no CQ para o ponto <code>TST-CQ-PUR</code>, abra no módulo Produção a <strong>Autorização de ponto de água</strong> e tente autorizar o mesmo ponto.</td>
+<td><strong>ÁGUA (bloqueado pelo DV-CQ-009):</strong> com um laudo de água <strong>reprovado e emitido</strong> no CQ para o ponto <code>TST-CQ-PUR</code>, abra no módulo Produção a <strong>Autorização de ponto de água</strong> e tente autorizar o mesmo ponto.</td>
 <td>Pela norma, a Produção deveria ser impedida. <strong>Pelo código, a escolha é manual</strong> (sim, não, pendente, cancelada) e não olha o CQ.</td>
-<td>CT-CQ-066 (Alta, <strong>já feito</strong>, 23/10/2026, bloqueado)</td>
-<td><strong>Bloqueado até o DBA corrigir a água: tente uma vez e registre o estado.</strong> Se a Produção abrir, anote o que ela oferece e <strong>não autorize nada</strong>.</td>
+<td>CT-CQ-066 (Alta, <strong>já feito</strong>, 23/10/2026 e 03/11/2026, bloqueado)</td>
+<td><strong>Bloqueado no teste em 03/11/2026: não há laudo de água emitido, porque o resultado não grava (DV-CQ-009); tente de novo só depois da correção.</strong> Se a Produção abrir, anote o que ela oferece e <strong>não autorize nada</strong>.</td>
 </tr>
 <tr>
 <td>6.2</td>
@@ -544,7 +545,7 @@
 <li><strong>Baixa, com caso novo:</strong> 1.11.</li>
 <li><strong>Média e Baixa já feitos (só se a tela mudou):</strong> 4.4, 4.5, 1.3, 1.5.</li>
 <li><strong>Preparação (sem caso do plano):</strong> 1.1, 2.1, 4.1, 5.1.</li>
-<li><strong>Bloqueados até a correção (tente uma vez e registre o estado):</strong> 1.17, 1.18, 2.4, 2.5, 6.1.</li>
+<li><strong>Água, a fazer à mão ou bloqueada:</strong> 1.17 e 1.18 (arrasto e agendamento, à mão), 2.4 e 2.5 (programar a 020/26 e a 021/26) e, bloqueados pelo DV-CQ-009 (tente de novo só depois da correção), o resultado da água na tela 4 e os passos 5.2, 5.3 e 6.1.</li>
 </ol>
 <h2 id="resultados">Resultados</h2>
 <p>Copie para o <code>resultado.md</code> da rodada e preencha uma linha por passo. <strong>Resultado:</strong> Passou, Passou com ressalva, Falhou ou Bloqueado. Para os passos marcados "já feito", escreva "repetido" ou "não repetido" na observação. Não escreva senhas, endereços de servidor nem nomes de tabela.</p>

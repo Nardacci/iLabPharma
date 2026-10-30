@@ -43,7 +43,7 @@
     </header>
     
     <article class="texto">
-<p><strong>Para a equipe de desenvolvimento e a Garantia da Qualidade.</strong> Registro <strong>completo</strong> de defeitos do módulo Controle da Qualidade encontrados nos testes de tela, com o passo a passo para reproduzir, o trecho do código onde o problema está e uma sugestão de correção, <strong>inclusive os de acesso e segurança</strong>. Cada defeito traz também como confirmar a correção (o caso de teste a repetir). Atualizado em 30/10/2026.</p>
+<p><strong>Para a equipe de desenvolvimento e a Garantia da Qualidade.</strong> Registro <strong>completo</strong> de defeitos do módulo Controle da Qualidade encontrados nos testes de tela, com o passo a passo para reproduzir, o trecho do código onde o problema está e uma sugestão de correção, <strong>inclusive os de acesso e segurança</strong>. Cada defeito traz também como confirmar a correção (o caso de teste a repetir). Atualizado em 03/11/2026.</p>
 <h2 id="resumo">Resumo</h2>
 <p><strong>46 defeitos registrados, 46 em aberto.</strong> Pendentes por gravidade: 0 crítica · 21 alta · 21 média · 4 baixa.</p>
 <p><strong>Pendentes por tipo:</strong> 16 funcional · 14 norma · 13 acesso/segurança · 3 ambiente/dados.</p>
@@ -171,7 +171,7 @@
 </tr>
 <tr>
 <td><a href="#dv-cq-008">DV-CQ-008</a></td>
-<td>Água: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor porque falta uma tabela no banco; a agenda de água também não carrega</td>
+<td>Água: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor por causa do nome da tabela de tipo de água no banco; a agenda de água também não carrega (resolvido no ambiente em 03/11/2026; aberto no projeto de banco)</td>
 <td>Alta</td>
 <td>Aberto</td>
 <td>Controle da Qualidade › Programação de Amostragem (água) e Programação de Solicitação de Análise (agenda)</td>
@@ -179,10 +179,10 @@
 </tr>
 <tr>
 <td><a href="#dv-cq-009">DV-CQ-009</a></td>
-<td>Ambiente: a digitação diz "Alteração efetuada com sucesso." mas não grava o resultado, e o laudo oferece só Aprovar</td>
+<td>Ambiente e água: a digitação diz "Alteração efetuada com sucesso." mas não grava o resultado, e o laudo oferece só Aprovar</td>
 <td>Alta</td>
 <td>Aberto</td>
-<td>Controle da Qualidade › Consultar Análise Programada (ambiente) e Emissão Laudo Final</td>
+<td>Controle da Qualidade › Consultar Análise Programada (ambiente e água) e Emissão Laudo Final</td>
 <td>Caso novo CT-CQ-N-37 (afeta CT-CQ-065), 23/10/2026</td>
 </tr>
 <tr>
@@ -371,10 +371,10 @@
 </tr>
 <tr>
 <td><a href="#dv-cq-019">DV-CQ-019</a></td>
-<td>Ambiente: registrar a amostragem mostra "Ocorreu um erro interno não esperado." mas a amostragem fica gravada</td>
+<td>Ambiente e água: registrar a amostragem mostra "Ocorreu um erro interno não esperado." mas a amostragem fica gravada</td>
 <td>Média</td>
 <td>Aberto</td>
-<td>Controle da Qualidade › Registro de Amostragem (ambiente)</td>
+<td>Controle da Qualidade › Registro de Amostragem (ambiente e água)</td>
 <td>Caso novo CT-CQ-N-36, 23/10/2026</td>
 </tr>
 <tr>
@@ -1050,7 +1050,7 @@
 <h3 id="observacoes_3">Observações</h3>
 <p>A 016/26 era a solicitação do lote TESTEPA013 (massa do Estoque, rodada 11); não é mais usada.</p>
 <h2 id="dv-cq-008">DV-CQ-008</h2>
-<p><strong>Água: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor porque falta uma tabela no banco; a agenda de água também não carrega</strong></p>
+<p><strong>Água: a Programação de Amostragem de qualquer ponto de água quebra com erro de servidor por causa do nome da tabela de tipo de água no banco; a agenda de água também não carrega (resolvido no ambiente em 03/11/2026; aberto no projeto de banco)</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1111,8 +1111,11 @@
 <figure><a href="../img/controle-qualidade/dv-cq-008-2.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-008-2.png" alt="Lista com as quatro solicitações de água que não podem ser programadas." loading="lazy"></a><figcaption>Lista com as quatro solicitações de água que não podem ser programadas. · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 2: Lista com as quatro solicitações de água que não podem ser programadas.</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-008-3.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-008-3.png" alt="Reteste de 03/11/2026: a Programação de Amostragem da 022/26 (água potável) abre e grava: &quot;Alteração efetuada com sucesso.&quot;" loading="lazy"></a><figcaption>Reteste de 03/11/2026: a Programação de Amostragem da 022/26 (água potável) abre e grava: &quot;Alteração efetuada com sucesso.&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Reteste de 03/11/2026: a Programação de Amostragem da 022/26 (água potável) abre e grava: "Alteração efetuada com sucesso."</em></p>
 <h3 id="onde-esta-no-codigo_5">Onde está no código</h3>
-<p><strong>Causa (confirmada):</strong> o servidor devolveu a página de erro "Invalid object name 'dbo.TBL_TIPO_AGUA'": o banco consultado não tem a tabela de tipo de água, que o cadastro de pontos de água usa. A tabela está nos scripts dos projetos de banco do Principal e do CQ, então o mais provável é que não tenha sido criada (ou esteja com outro nome) no banco do ambiente de teste. Leitura tirada da mensagem do servidor; <strong>a confirmar com o DBA</strong>. <strong>Confirmado pelo responsável (31/10/2026):</strong> consultando o banco, a tabela <code>TBL_TIPO_AGUA_CQ</code> (do CQ) existe, com três linhas (POTAVEL, PURIFICADA, INJETAVEIS), mas <strong><code>TBL_TIPO_AGUA</code> não existe</strong>, que é justamente a que a página de erro cita (lida pelo cadastro de pontos de água do Principal). O script dela está nos projetos de banco; ela não foi criada neste ambiente.</p>
+<p><strong>Causa (confirmada):</strong> o servidor devolveu a página de erro "Invalid object name 'dbo.TBL_TIPO_AGUA'": o banco do ambiente não tinha a tabela de tipo de água com o nome que o sistema usa. Consulta do responsável (31/10/2026): <code>TBL_TIPO_AGUA_CQ</code> (do CQ) existia, com três linhas (POTAVEL, PURIFICADA, INJETAVEIS), e <code>TBL_TIPO_AGUA</code> não existia. <strong>Confirmada em 03/11/2026:</strong> o DBA renomeou a tabela original do CQ para <code>TBL_TIPO_AGUA_CQ</code>, o nome que o código usa, e a tela passou a abrir e gravar. <strong>A causa era o nome da tabela no banco do ambiente.</strong> O defeito continua aberto pela falha de origem: o script do projeto de banco do CQ cria a tabela como <code>TBL_TIPO_AGUA</code> (mesmo nome da do Principal, com outra estrutura), e o código usa <code>TBL_TIPO_AGUA_CQ</code>; uma instalação feita pelo script quebra de novo.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1137,15 +1140,15 @@
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (4.controle_qualidade/app).</em></p>
 <h3 id="sugestao-de-correcao_6">Sugestão de correção</h3>
 <ul>
-<li>O DBA conferir se a tabela de tipo de água existe no banco de teste (e no de produção, quando houver) e criá-la a partir do script do projeto de banco, ou ajustar o nome no mapeamento.</li>
-<li>Criar a tabela (ou ajustar o mapeamento) de tipo de água, ou tirar a leitura do tipo no cadastro dos pontos; esconder a página técnica de erro.</li>
+<li>Alinhar o projeto de banco do CQ ao código: criar a tabela como <code>TBL_TIPO_AGUA_CQ</code> no script (<code>HSolutions.CQ.DB/Tables</code>), para não colidir com a <code>TBL_TIPO_AGUA</code> do Principal, e conferir no relatório de instalação (RNF-CQ-008).</li>
+<li>Esconder a página técnica de erro do servidor e mostrar mensagem clara ao usuário, deixando o detalhe no registro de erros.</li>
 </ul>
 <h3 id="como-confirmar-a-correcao_6">Como confirmar a correção</h3>
-<p>Repetir o(s) caso(s) CT-CQ-064 e CT-CQ-066 nos passos acima e conferir o esperado.</p>
+<p>No ambiente: passou em 03/11/2026 (CT-CQ-S04-11, CT-CQ-064 na parte de programar e CT-CQ-N-32, com a solicitação 022/26). Falta repetir com a 020/26 e a 021/26 (purificada) e, depois da correção do script, conferir uma instalação nova do banco do CQ.</p>
 <h3 id="observacoes_4">Observações</h3>
-<p>A captura publicada tem cobertos (retângulo cinza) os caminhos de arquivo do computador do desenvolvedor; ficam o nome da tabela e o rastro de chamadas. Conclusão de causa tirada da mensagem do servidor; só o DBA confirma. Os casos CT-CQ-064 e 066 voltam a ser testados quando a tabela existir.</p>
+<p>A captura publicada tem cobertos (retângulo cinza) os caminhos de arquivo do computador do desenvolvedor; ficam o nome da tabela e o rastro de chamadas. Conclusão de causa tirada da mensagem do servidor; só o DBA confirma.  <strong>Reteste da água em 03/11/2026</strong> (<code>execucao/2026-11-03-agua-reteste/resultado.md</code>): com o ajuste do DBA no ambiente (tabela original do CQ renomeada para <code>TBL_TIPO_AGUA_CQ</code>, o nome que o código usa), o defeito <strong>deixou de ocorrer no ambiente</strong>. <strong>Situação: resolvido no ambiente; continua aberto como defeito do projeto de banco</strong>, porque o script do CQ cria a tabela como <code>TBL_TIPO_AGUA</code> (nome que colide com a do Principal, de outra estrutura) enquanto o código usa <code>TBL_TIPO_AGUA_CQ</code>. O CT-CQ-066 (Produção) continua bloqueado, agora pelo DV-CQ-009 (o resultado da água não grava, então não há laudo).</p>
 <h2 id="dv-cq-009">DV-CQ-009</h2>
-<p><strong>Ambiente: a digitação diz "Alteração efetuada com sucesso." mas não grava o resultado, e o laudo oferece só Aprovar</strong></p>
+<p><strong>Ambiente e água: a digitação diz "Alteração efetuada com sucesso." mas não grava o resultado, e o laudo oferece só Aprovar</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -1161,7 +1164,7 @@
 <tr>
 <td>Alta</td>
 <td>Aberto</td>
-<td>Controle da Qualidade › Consultar Análise Programada (ambiente) e Emissão Laudo Final</td>
+<td>Controle da Qualidade › Consultar Análise Programada (ambiente e água) e Emissão Laudo Final</td>
 <td>Caso novo CT-CQ-N-37 (afeta CT-CQ-065)</td>
 <td>23/10/2026 (rodada 1 do CQ)</td>
 <td>RDC 658/2022 (resultados do controle ambiental devem ser registrados e rastreáveis)</td>
@@ -1210,14 +1213,23 @@
 <figure><a href="../img/controle-qualidade/dv-cq-009-3.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-009-3.png" alt="Emissão Laudo Final do ambiente: só Aprovar." loading="lazy"></a><figcaption>Emissão Laudo Final do ambiente: só Aprovar. · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 3: Emissão Laudo Final do ambiente: só Aprovar.</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-009-4.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-009-4.png" alt="Reteste da água (03/11/2026): resultado 150 digitado na análise da 022/26 (água potável); ao salvar, &quot;Ocorreu um erro inesperado.&quot;" loading="lazy"></a><figcaption>Reteste da água (03/11/2026): resultado 150 digitado na análise da 022/26 (água potável); ao salvar, &quot;Ocorreu um erro inesperado.&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Reteste da água (03/11/2026): resultado 150 digitado na análise da 022/26 (água potável); ao salvar, "Ocorreu um erro inesperado."</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-009-5.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-009-5.png" alt="Reteste da água: análise reaberta, a coluna Resultado continua vazia" loading="lazy"></a><figcaption>Reteste da água: análise reaberta, a coluna Resultado continua vazia · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: Reteste da água: análise reaberta, a coluna Resultado continua vazia</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-009-6.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-009-6.png" alt="Reteste da água: ensaio incluído à mão; mensagem &quot;Ocorreu um erro inesperado.&quot; (o ensaio aparece na grade)" loading="lazy"></a><figcaption>Reteste da água: ensaio incluído à mão; mensagem &quot;Ocorreu um erro inesperado.&quot; (o ensaio aparece na grade) · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: Reteste da água: ensaio incluído à mão; mensagem "Ocorreu um erro inesperado." (o ensaio aparece na grade)</em></p>
 <h3 id="sugestao-de-correcao_7">Sugestão de correção</h3>
 <ul>
 <li>Corrigir a gravação dos ensaios de ambiente e conferir os resultados antes do laudo.</li>
 </ul>
 <h3 id="como-confirmar-a-correcao_7">Como confirmar a correção</h3>
-<p>Repetir o(s) caso(s) Caso novo CT-CQ-N-37 nos passos acima e conferir o esperado.</p>
+<p>Repetir os casos CT-CQ-N-37 e CT-CQ-L03-02 (ambiente e água) nos passos acima; depois, o laudo, a etiqueta e o CT-CQ-066 com a 022/26 ou a 020/26 (purificada, físico-química, que já tem regra).</p>
 <h3 id="observacoes_5">Observações</h3>
-<p>Pode ser específico do tipo de item "Ambiente" (a digitação de matéria-prima e produto acabado gravou normalmente).</p>
+<p>A digitação de matéria-prima e produto acabado gravou normalmente. <strong>Confirmado também na água em 03/11/2026</strong> (reteste da água, solicitação 022/26, água potável, microbiológico): o resultado digitado (150, limite 0 a 100) não grava ("Ocorreu um erro inesperado."; reaberta, a coluna Resultado continua vazia), então o defeito não é específico do ambiente. O ensaio incluído à mão na análise da água (<code>TESTE ENSAIO MICRO AGUA</code>) grava e aparece na grade, <strong>mas a tela mostra "Ocorreu um erro inesperado."</strong> (mesma família: erro depois de gravar; registrado aqui, sem defeito novo). A água não tinha regra de análise para o item ("Não existem resultados"), por isso o ensaio foi incluído à mão (falta de dado de teste, não defeito). Consequência: a 022/26 ficou em Pendente digitação, e o laudo (CT-CQ-L05-10 e L05-13), a etiqueta (CT-CQ-L06-03) e a autorização de ponto de água na Produção (CT-CQ-066) ficaram <strong>Bloqueados no teste</strong> por este defeito. Quem corrige: desenvolvimento (o erro de servidor precisa ser lido no registro de erros pelo TI ou DBA).</p>
 <h2 id="dv-cq-027">DV-CQ-027</h2>
 <p><strong>Perfil só de consulta abre solicitação de análise</strong></p>
 <div class="tabela"><table>
@@ -2506,8 +2518,14 @@
 <figure><a href="../img/controle-qualidade/dv-cq-001-1.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-001-1.png" alt="ÁGUA POTÁVEL + Físico-Químico: janela de erro depois de CARREGAR" loading="lazy"></a><figcaption>ÁGUA POTÁVEL + Físico-Químico: janela de erro depois de CARREGAR · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: ÁGUA POTÁVEL + Físico-Químico: janela de erro depois de CARREGAR</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-001-2.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-001-2.png" alt="Reteste de 03/11/2026: ÁGUA POTÁVEL + Físico-Químico carrega os pontos PTA-POT-01, TST-PA1 e TST-CQ-POT" loading="lazy"></a><figcaption>Reteste de 03/11/2026: ÁGUA POTÁVEL + Físico-Químico carrega os pontos PTA-POT-01, TST-PA1 e TST-CQ-POT · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Reteste de 03/11/2026: ÁGUA POTÁVEL + Físico-Químico carrega os pontos PTA-POT-01, TST-PA1 e TST-CQ-POT</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-001-3.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-001-3.png" alt="Reteste de 03/11/2026: ÁGUA PURIFICADA + Microbiológico carrega os pontos PAG, PTA-PW-01 e TST-CQ-PUR" loading="lazy"></a><figcaption>Reteste de 03/11/2026: ÁGUA PURIFICADA + Microbiológico carrega os pontos PAG, PTA-PW-01 e TST-CQ-PUR · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Reteste de 03/11/2026: ÁGUA PURIFICADA + Microbiológico carrega os pontos PAG, PTA-PW-01 e TST-CQ-PUR</em></p>
 <h3 id="onde-esta-no-codigo_19">Onde está no código</h3>
-<p><strong>Causa (provável):</strong> a mensagem "Ocorreu um erro interno não esperado." só aparece quando a chamada ao servidor falha (erro HTTP). A agenda usa outra mensagem e abriu; logo, quem falha é a ação que lista os pontos. Ela grava no registro de erros do servidor uma linha começando por <strong>"Consulta de itens programáveis:"</strong>, com a causa exata. Duas hipóteses: (1) o serviço de integração que traz os pontos de água do Principal está fora do ar ou mal configurado; (2) falta no banco a tabela <code>TBL_TIPO_AGUA_CQ</code>, que o código usa e os scripts do projeto de banco não criam (eles criam <code>TBL_TIPO_AGUA</code>). <strong>Atualização (31/10/2026):</strong> a tabela <code>TBL_TIPO_AGUA_CQ</code> existe no banco (3 linhas), o que afasta a hipótese (2.1); porém o responsável confirmou que <strong><code>TBL_TIPO_AGUA</code> não existe</strong> no banco. Como os pontos de água vêm do Principal, que lê o tipo de água dessa tabela, é <strong>provável que a mesma tabela ausente (DV-CQ-008) derrube a lista de pontos</strong>, e a hipótese (2.2) passa a ser esta. A linha "Consulta de itens programáveis:" do registro de erros do servidor confirma.</p>
+<p><strong>Causa (confirmada):</strong> a mensagem "Ocorreu um erro interno não esperado." só aparece quando a chamada ao servidor falha (erro HTTP). A agenda usa outra mensagem e abriu; logo, quem falha é a ação que lista os pontos. Ela grava no registro de erros do servidor uma linha começando por <strong>"Consulta de itens programáveis:"</strong>, com a causa exata. Duas hipóteses: (1) o serviço de integração que traz os pontos de água do Principal está fora do ar ou mal configurado; (2) falta no banco a tabela <code>TBL_TIPO_AGUA_CQ</code>, que o código usa e os scripts do projeto de banco não criam (eles criam <code>TBL_TIPO_AGUA</code>). <strong>Reteste do responsável, depois do ajuste do DBA:</strong> o DBA renomeou a tabela original do CQ para <code>TBL_TIPO_AGUA_CQ</code>, o nome que o código usa, e a Programação de Solicitação de Análise <strong>passou a carregar</strong> (ÁGUA POTÁVEL, Físico-Químico: lista os pontos PTA-POT-01, TST-PA1 e TST-CQ-POT e abre a agenda de outubro). <strong>A causa era o nome da tabela no banco do ambiente.</strong> O defeito continua aberto porque a falha de origem permanece: o <strong>script do projeto de banco do CQ cria a tabela como <code>TBL_TIPO_AGUA</code></strong> (mesmo nome da do Principal, com outra estrutura), e o código usa <code>TBL_TIPO_AGUA_CQ</code>; uma instalação feita pelo script quebra de novo. Seguem também a mensagem genérica de erro e o retorno nulo não tratado.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2542,14 +2560,14 @@
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (4.controle_qualidade/app).</em></p>
 <h3 id="sugestao-de-correcao_20">Sugestão de correção</h3>
 <ul>
-<li>O DBA criar <code>TBL_TIPO_AGUA</code> a partir do script dos projetos de banco (mesmo pedido do DV-CQ-008) e repetir o caso; se o erro continuar, ler o registro de erros do servidor (linha "Consulta de itens programáveis:").</li>
+<li>Alinhar o projeto de banco do CQ ao código: criar a tabela como <code>TBL_TIPO_AGUA_CQ</code> no script (<code>HSolutions.CQ.DB/Tables</code>), para não colidir com a <code>TBL_TIPO_AGUA</code> do Principal, e conferir no relatório de instalação (RNF-CQ-008).</li>
 <li>Tratar retorno vazio ou nulo do serviço: mostrar "Nenhum ponto cadastrado para este tipo" em vez de quebrar.</li>
 <li>Trocar a mensagem genérica por uma que diga o que falhou (sem expor detalhes técnicos ao usuário) e manter o detalhe no registro de erros.</li>
 </ul>
 <h3 id="como-confirmar-a-correcao_21">Como confirmar a correção</h3>
-<p>Repetir o <strong>CT-CQ-063</strong> (procurar a opção de frequência de coleta) e os casos de água e ambiente CT-CQ-060 a 068, que hoje estão bloqueados por este defeito. Conferir com ÁGUA POTÁVEL, ÁGUA PURIFICADA e um tipo de ambiente.</p>
+<p>No ambiente: passou em 03/11/2026 (CT-CQ-S03-01, só carregar). Falta repetir o CT-CQ-063 e os casos CT-CQ-060 a 068 de água, e conferir, depois da correção do script, uma instalação nova do banco do CQ.</p>
 <h3 id="observacoes_19">Observações</h3>
-<p>Falta testar um tipo de <strong>ambiente</strong>, que usa outro serviço; se ele carregar, a hipótese da tabela de tipo de água fica mais forte. <strong>Reconfirmado em 23/10/2026 (rodada 1, CT-CQ-063 e CT-CQ-N-33)</strong> com pontos de água novos e ativos, para água potável e purificada, físico-química e microbiológica; a agenda de ambiente carrega. A causa provável é a do DV-CQ-008 (falta a tabela de tipo de água no banco de teste; a confirmar com o DBA).</p>
+<p>Falta testar um tipo de <strong>ambiente</strong>, que usa outro serviço; se ele carregar, a hipótese da tabela de tipo de água fica mais forte. <strong>Reconfirmado em 23/10/2026 (rodada 1, CT-CQ-063 e CT-CQ-N-33)</strong> com pontos de água novos e ativos, para água potável e purificada, físico-química e microbiológica; a agenda de ambiente carrega. A causa era a do DV-CQ-008 (nome da tabela de tipo de água no banco de teste; confirmada no reteste). <strong>Reteste da água em 03/11/2026</strong> (<code>execucao/2026-11-03-agua-reteste/resultado.md</code>): com o ajuste do DBA no ambiente (tabela original do CQ renomeada para <code>TBL_TIPO_AGUA_CQ</code>, o nome que o código usa), o defeito <strong>deixou de ocorrer no ambiente</strong>. <strong>Situação: resolvido no ambiente; continua aberto como defeito do projeto de banco</strong>, porque o script do CQ cria a tabela como <code>TBL_TIPO_AGUA</code> (nome que colide com a do Principal, de outra estrutura) enquanto o código usa <code>TBL_TIPO_AGUA_CQ</code>. Os três tipos de água carregam (potável, purificada e para injetáveis; caso CT-CQ-S03-01, parte de carregar a agenda). O arrasto de um ponto na agenda e o dia com 21 coletas (CT-CQ-S03-02 e S03-03) são manuais e ficam para o responsável.</p>
 <h2 id="dv-cq-010">DV-CQ-010</h2>
 <p><strong>Programar a amostragem duas vezes para a mesma solicitação cria duas amostragens pendentes</strong></p>
 <div class="tabela"><table>
@@ -3189,7 +3207,7 @@
 <h3 id="observacoes_22">Observações</h3>
 <p>Rodada 2 (CT-CQ-R2-D2-02, 28/10/2026): a exclusão de Unidade de Medida também não pede justificativa e o log fica vazio (nem a inclusão aparece).</p>
 <h2 id="dv-cq-019">DV-CQ-019</h2>
-<p><strong>Ambiente: registrar a amostragem mostra "Ocorreu um erro interno não esperado." mas a amostragem fica gravada</strong></p>
+<p><strong>Ambiente e água: registrar a amostragem mostra "Ocorreu um erro interno não esperado." mas a amostragem fica gravada</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -3205,7 +3223,7 @@
 <tr>
 <td>Média</td>
 <td>Aberto</td>
-<td>Controle da Qualidade › Registro de Amostragem (ambiente)</td>
+<td>Controle da Qualidade › Registro de Amostragem (ambiente e água)</td>
 <td>Caso novo CT-CQ-N-36</td>
 <td>23/10/2026 (rodada 1 do CQ)</td>
 <td>RDC 658/2022 (registro confiável)</td>
@@ -3250,6 +3268,12 @@
 <figure><a href="../img/controle-qualidade/dv-cq-019-2.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-019-2.png" alt="Rodada 2: registro da amostragem de ambiente 1027/26 com erro interno e gravado." loading="lazy"></a><figcaption>Rodada 2: registro da amostragem de ambiente 1027/26 com erro interno e gravado. · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 2: Rodada 2: registro da amostragem de ambiente 1027/26 com erro interno e gravado.</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-019-3.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-019-3.png" alt="Reteste da água (03/11/2026): registro da amostragem da 022/26 (água potável) com &quot;Erro: Ocorreu um erro interno não esperado.&quot;" loading="lazy"></a><figcaption>Reteste da água (03/11/2026): registro da amostragem da 022/26 (água potável) com &quot;Erro: Ocorreu um erro interno não esperado.&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Reteste da água (03/11/2026): registro da amostragem da 022/26 (água potável) com "Erro: Ocorreu um erro interno não esperado."</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-019-4.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-019-4.png" alt="Reteste da água: a 022/26 aparece depois como Executada (gravou mesmo com o erro)" loading="lazy"></a><figcaption>Reteste da água: a 022/26 aparece depois como Executada (gravou mesmo com o erro) · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Reteste da água: a 022/26 aparece depois como Executada (gravou mesmo com o erro)</em></p>
 <h3 id="sugestao-de-correcao_30">Sugestão de correção</h3>
 <ul>
 <li>Tratar a falha (provavelmente a chamada ao Estoque, que não existe para ambiente) sem derrubar a resposta.</li>
@@ -3257,7 +3281,7 @@
 <h3 id="como-confirmar-a-correcao_31">Como confirmar a correção</h3>
 <p>Repetir o(s) caso(s) Caso novo CT-CQ-N-36 nos passos acima e conferir o esperado.</p>
 <h3 id="observacoes_23">Observações</h3>
-<p>Hipótese, não confirmada: a falha vem da etapa que pede a separação ao Estoque, que não se aplica a ambiente. Reconfirmado em 28/10/2026 (CT-CQ-R2-AC-12b): mesma mensagem; a solicitação seguiu para a programação de análise.</p>
+<p>Hipótese, não confirmada: a falha vem da etapa que pede a separação ao Estoque, que não se aplica a ambiente. Reconfirmado em 28/10/2026 (CT-CQ-R2-AC-12b): mesma mensagem; a solicitação seguiu para a programação de análise. <strong>Confirmado também na água em 03/11/2026</strong> (reteste da água, solicitação 022/26): a mesma mensagem e a amostragem gravada como Executada; o item não tinha verificação nem regra de amostragem cadastradas. Cobre o CT-CQ-N-36 por analogia (o caso é de ambiente).</p>
 <h2 id="dv-cq-020">DV-CQ-020</h2>
 <p><strong>A agenda aceita ambiente com análise físico-química e horários fora de 8h às 18h</strong></p>
 <div class="tabela"><table>
