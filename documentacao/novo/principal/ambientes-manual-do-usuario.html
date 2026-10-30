@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ambientes · Manual do usuário · versão nova · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../portal/portal.css?v=027bcbf8">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="../../../portal/versao.css"></head>
+<body data-versao-pagina="novo" data-raiz="../../../">
+<header class="topo">
+  <a class="marca" href="../../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../../index.html#modulos">Módulos</a>
+    <a href="../../../biblioteca.html">Biblioteca</a>
+    <a href="../../../telas.html">Devs/QA</a>
+    <a href="../../../index.html#publicos">Por público</a>
+    <a href="../../../anvisa.html">ANVISA</a>
+    <a href="../../../cronograma.html">Cronograma</a>
+    <a href="../../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<main class="nv-pagina" id="conteudo">
+  <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../telas.html?versao=novo#mn-principal">Documentação por módulo · versão nova</a> › <a href="../../../documentacao/principal/index.html">Principal</a> › <span>Ambientes</span></nav>
+  <div class="versao-barra vb-novo"><div class="versao-seletor" role="group" aria-label="Versão do sistema"><span class="vs-rotulo">Versão:</span><a class="vs-btn" href="../../principal/ambientes-manual-do-usuario.html" title="Trocar de versão e abrir esta mesma tela">Legado</a><span class="vs-btn" aria-current="true">Novo</span></div><span class="vb-texto">Você está na versão <strong>Novo</strong>: a versão nova (o mesmo sistema com ferramentas atualizadas).</span></div>
+  <header class="doc-cabecalho"><h1>Ambientes <span class="sit-sufixo">· versão nova</span></h1>
+  <p class="nv-meta">Principal · menu Cadastros e tabelas de apoio · Situação na versão nova: <strong>Testada</strong></p></header>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="ambientes-analise.html">Análise</a><a href="ambientes-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="ambientes-fluxos.html">Fluxos</a><a href="ambientes-regras-de-negocio.html">Regras de negócio</a><a href="ambientes-anvisa.html" class="aba-sem">Anvisa</a><a href="ambientes-passo-a-passo.html">Passo a passo</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav>
+  <article class="texto texto-largo"><p><strong>O que a tela faz</strong></p>
+<p>Cadastro dos ambientes (salas e áreas) com descrição, tag, graus de contaminação e local. Pontos de água e equipamentos se ligam a ele.</p>
+<ul>
+<li>Obrigatória só a descrição (até 255 caracteres; a de 256 é recusada com a mesma mensagem "obrigatória", que engana). Tag com até 10.</li>
+<li><strong>Duas descrições iguais continuam aceitas</strong> (DV-PRI-007).</li>
+<li>Alterar e inativar exigem justificativa; o histórico traz campo, valor antigo e novo e a justificativa. Ambiente inativo some da lista "Localização" do Ponto de água.</li>
+<li>Excluir pede só "Confirma a exclusão do item?": <strong>sem justificativa</strong>.</li>
+<li><strong>Excluir um ambiente ligado a um Ponto de água é aceito</strong> e deixa o ponto de água sem ambiente (o legado recusava).</li>
+<li>Pesquisa "laboratorio" não acha "LABORATÓRIO".</li>
+</ul>
+<p><strong>Antes de começar (preparo do teste)</strong></p>
+<ul>
+<li>Usuário <code>t.cadastro</code> ou <code>t.admin</code>.</li>
+<li>Um Ponto de água de teste para o caso de exclusão com dependente.</li>
+<li>Todo registro novo começa com <code>T.</code> (se o ponto falhar, use <code>T-</code> e anote o campo).</li>
+<li>Dados de teste ficam no ambiente: não apague o que não criou.</li>
+</ul>
+<p><strong>Como usar, passo a passo</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso do plano</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Abrir Cadastros &gt; Cadastro de ambientes e clicar em Incluir. Salvar vazio.</td>
+<td>"A descrição é obrigatória."</td>
+<td>CT-PRI-091</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Incluir só com a descrição <code>T.AMBIENTE MIN</code>. Depois um completo (tag, graus, local).</td>
+<td>Gravam; o histórico mostra "INCLUSAO DO REGISTRO".</td>
+<td>CT-PRI-090</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Incluir de novo a mesma descrição.</td>
+<td>Hoje aceita (DV-PRI-007).</td>
+<td>CT-PRI-091</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Testar descrição de 255 e 256 caracteres e tag de 10 e 11.</td>
+<td>255 e 10 gravam; os maiores são recusados.</td>
+<td>CT-PRI-091</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Alterar a tag com e sem justificativa. Abrir o histórico.</td>
+<td>Exige justificativa; histórico campo a campo.</td>
+<td>CT-PRI-092</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Inativar e abrir o Ponto de água.</td>
+<td>O ambiente some da lista Localização.</td>
+<td>CT-PRI-093</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Excluir um ambiente sem uso.</td>
+<td>Pede só a confirmação.</td>
+<td>CT-PRI-094</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Ligar um ambiente a um Ponto de água e tentar excluí-lo.</td>
+<td>Deveria recusar; hoje exclui (N-012).</td>
+<td>CT-PRI-095</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Pesquisar <code>laboratorio</code> e <code>LABORATÓRIO</code>; gerar Excel e Imprimir.</td>
+<td>Sem acento não acha; Excel com a lista filtrada.</td>
+<td>CT-PRI-096, 097</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Como a tela é</strong></p>
+<figure><a href="../../img/principal/d-lista-amb.jpg" target="_blank" rel="noopener"><img src="../../img/principal/d-lista-amb.jpg" alt="Ambientes: lista" loading="lazy"></a><figcaption>Ambientes: lista · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/d-form-amb.jpg" target="_blank" rel="noopener"><img src="../../img/principal/d-form-amb.jpg" alt="Ambientes: formulário" loading="lazy"></a><figcaption>Ambientes: formulário · clique para ampliar</figcaption></figure></article>
+</main>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 30/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../../portal/portal.js"></script>
+<script src="../../../portal/versao.js"></script></body></html>

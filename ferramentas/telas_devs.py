@@ -153,7 +153,7 @@ def montar(modulos, origem, destino):
 COR_SIT = {"Funciona": "ok", "Funciona com falhas": "falhas", "Falha grave": "grave", "Não testada": "nao", "Protótipo": "proto", "Não abre": "grave"}
 
 
-def pagina(dados, cabecalho, rodape):
+def pagina(dados, cabecalho, rodape, arvore_novo="", total_validadas=0, total_novo=0):
     E = html.escape
     corpo = []
     for m in dados:
@@ -179,38 +179,59 @@ def pagina(dados, cabecalho, rodape):
         corpo.append("".join(h))
     opcoes_mod = "".join(f'<option value="{m["id"]}">{E(m["nome"])}</option>' for m in dados if m["menus"])
     opcoes_sit = "".join(f'<option>{s}</option>' for s in ["Funciona", "Funciona com falhas", "Falha grave", "Não testada", "Protótipo", "Não abre"])
-    return (cabecalho("Documentação por módulo · iLabMedSys", "", "telas").replace("</head>", '<link rel="stylesheet" href="portal/telas.css"></head>', 1) + f"""
+    opcoes_sit_n = "".join(f'<option>{s}</option>' for s in ["Validada nesta versão", "Ainda não validada"])
+    return (cabecalho("Documentação por módulo · iLabMedSys", "", "telas").replace("</head>", '<link rel="stylesheet" href="portal/telas.css"><link rel="stylesheet" href="portal/versao.css"></head>', 1) + f"""
 <main class="td-pagina">
   <h1>Documentação por módulo</h1>
+  <div class="td-vs">
+    <div class="versao-seletor" role="group" aria-label="Versão do sistema"><span class="vs-rotulo">Versão:</span>
+      <button type="button" class="vs-btn" data-set-versao="legado" aria-pressed="true">Legado</button>
+      <button type="button" class="vs-btn" data-set-versao="novo" aria-pressed="false">Novo</button></div>
+    <p class="td-vs-desc" data-so-versao="legado">Legado: o sistema entregue pelo fornecedor, analisado e testado. A escolha acompanha você nas páginas das telas.</p>
+    <p class="td-vs-desc" data-so-versao="novo" hidden>Novo: a versão nova (o mesmo sistema com ferramentas atualizadas). {total_validadas} de {total_novo} telas já têm conteúdo validado; as demais aparecem como “ainda não validada nesta versão”. O ideal é um só e vale para as duas versões.</p>
+  </div>
   <div class="td-filtros" role="search">
     <label class="td-f"><span>Buscar tela</span><input id="td-busca" type="search" placeholder="Nome da tela" autocomplete="off"></label>
     <label class="td-f"><span>Módulo</span><select id="td-mod"><option value="">Todos</option>{opcoes_mod}</select></label>
-    <label class="td-f"><span>Situação</span><select id="td-sit"><option value="">Todas</option>{opcoes_sit}</select></label>
-    <label class="td-so"><input id="td-so" type="checkbox"> Só telas com página própria</label>
+    <label class="td-f" data-so-versao="legado"><span>Situação</span><select id="td-sit"><option value="">Todas</option>{opcoes_sit}</select></label>
+    <label class="td-f" data-so-versao="novo" hidden><span>Situação</span><select id="td-sitn"><option value="">Todas</option>{opcoes_sit_n}</select></label>
+    <label class="td-so"><input id="td-so" type="checkbox"> <span data-so-versao="legado">Só telas com página própria</span><span data-so-versao="novo" hidden>Só telas com conteúdo validado</span></label>
     <span class="td-acoes"><button type="button" id="td-abrir">Abrir tudo</button><button type="button" id="td-fechar">Fechar tudo</button></span>
   </div>
   <p id="td-nada" hidden>Nenhuma tela encontrada com esses filtros.</p>
-  <div class="td-arvore">{"".join(corpo)}</div>
+  <div class="td-arvore" data-so-versao="legado">{"".join(corpo)}</div>
+  <div class="td-arvore" data-so-versao="novo" hidden>{arvore_novo or '<p class="td-vazio">A versão nova ainda não tem telas listadas.</p>'}</div>
 </main>
+<script src="portal/versao.js"></script>
 <script>
 (function(){{
-  var b=document.getElementById('td-busca'),s=document.getElementById('td-so'),sm=document.getElementById('td-mod'),ss=document.getElementById('td-sit'),nada=document.getElementById('td-nada');
+  var b=document.getElementById('td-busca'),s=document.getElementById('td-so'),sm=document.getElementById('td-mod'),ss=document.getElementById('td-sit'),ssn=document.getElementById('td-sitn'),nada=document.getElementById('td-nada');
+  function ativa(){{return document.querySelector('.td-arvore:not([hidden])');}}
+  function versao(){{return window.ilmsVersao?window.ilmsVersao.atual():'legado';}}
   function norm(x){{return x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}}
   function filtrar(){{
-    var q=norm(b.value),so=s.checked,mod=sm.value,sit=ss.value,total=0,filtro=!!(q||so||mod||sit);
-    document.querySelectorAll('.td-tela').forEach(function(li){{
+    var A=ativa(); if(!A)return;
+    var q=norm(b.value),so=s.checked,mod=sm.value,sit=(versao()==='novo'?ssn:ss).value,total=0,filtro=!!(q||so||mod||sit);
+    document.querySelectorAll('.td-arvore').forEach(function(ar){{ar.querySelectorAll('.td-tela,.td-menu,.td-mod').forEach(function(x){{if(ar!==A)x.hidden=false;}});}});
+    A.querySelectorAll('.td-tela').forEach(function(li){{
       var ok=(!q||li.dataset.nome.indexOf(q)>=0)&&(!so||li.dataset.tem==='1')&&(!sit||li.dataset.sit===sit)&&(!mod||li.closest('.td-mod').dataset.modulo===mod);
       li.hidden=!ok; if(ok)total++;
     }});
-    document.querySelectorAll('.td-menu').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis; if(filtro&&vis)d.open=true;}});
-    document.querySelectorAll('.td-mod').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis; if(filtro&&vis)d.open=true;}});
+    A.querySelectorAll('.td-menu').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis; if(filtro&&vis)d.open=true;}});
+    A.querySelectorAll('.td-mod').forEach(function(d){{var vis=d.querySelectorAll('.td-tela:not([hidden])').length; d.hidden=filtro&&!vis; if(filtro&&vis)d.open=true;}});
     nada.hidden=!filtro||total>0;
   }}
-  [b,sm,ss].forEach(function(e){{e.addEventListener('input',filtrar);}}); s.addEventListener('change',filtrar);
-  function todos(v){{document.querySelectorAll('.td-mod,.td-menu').forEach(function(d){{if(!d.hidden)d.open=v;}});}}
+  [b,sm,ss,ssn].forEach(function(e){{e.addEventListener('input',filtrar);}}); s.addEventListener('change',filtrar);
+  document.addEventListener('ilms-versao',function(){{abrirHash();filtrar();}});
+  function todos(v){{ativa().querySelectorAll('.td-mod,.td-menu').forEach(function(d){{if(!d.hidden)d.open=v;}});}}
   document.getElementById('td-abrir').addEventListener('click',function(){{todos(true);}});
   document.getElementById('td-fechar').addEventListener('click',function(){{todos(false);}});
-  if(location.hash){{var a=document.querySelector(location.hash); if(a&&a.tagName==='DETAILS')a.open=true;}}
+  function abrirHash(){{
+    var h=location.hash; if(!h)return;
+    var id=h.slice(1).replace(/^mn?-/,''), a=document.getElementById((versao()==='novo'?'mn-':'m-')+id);
+    if(a&&a.tagName==='DETAILS')a.open=true;
+  }}
+  abrirHash(); filtrar();
 }})();
 </script>
 """ + rodape(""))

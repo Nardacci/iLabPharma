@@ -1112,7 +1112,7 @@
 
 <p><em>Figura 2: Lista com as quatro solicitações de água que não podem ser programadas.</em></p>
 <h3 id="onde-esta-no-codigo_5">Onde está no código</h3>
-<p><strong>Causa (provável):</strong> o servidor devolveu a página de erro "Invalid object name 'dbo.TBL_TIPO_AGUA'": o banco consultado não tem a tabela de tipo de água, que o cadastro de pontos de água usa. A tabela está nos scripts dos projetos de banco do Principal e do CQ, então o mais provável é que não tenha sido criada (ou esteja com outro nome) no banco do ambiente de teste. Leitura tirada da mensagem do servidor; <strong>a confirmar com o DBA</strong>.</p>
+<p><strong>Causa (confirmada):</strong> o servidor devolveu a página de erro "Invalid object name 'dbo.TBL_TIPO_AGUA'": o banco consultado não tem a tabela de tipo de água, que o cadastro de pontos de água usa. A tabela está nos scripts dos projetos de banco do Principal e do CQ, então o mais provável é que não tenha sido criada (ou esteja com outro nome) no banco do ambiente de teste. Leitura tirada da mensagem do servidor; <strong>a confirmar com o DBA</strong>. <strong>Confirmado pelo responsável (31/10/2026):</strong> consultando o banco, a tabela <code>TBL_TIPO_AGUA_CQ</code> (do CQ) existe, com três linhas (POTAVEL, PURIFICADA, INJETAVEIS), mas <strong><code>TBL_TIPO_AGUA</code> não existe</strong>, que é justamente a que a página de erro cita (lida pelo cadastro de pontos de água do Principal). O script dela está nos projetos de banco; ela não foi criada neste ambiente.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2507,7 +2507,7 @@
 
 <p><em>Figura 1: ÁGUA POTÁVEL + Físico-Químico: janela de erro depois de CARREGAR</em></p>
 <h3 id="onde-esta-no-codigo_19">Onde está no código</h3>
-<p><strong>Causa (provável):</strong> a mensagem "Ocorreu um erro interno não esperado." só aparece quando a chamada ao servidor falha (erro HTTP). A agenda usa outra mensagem e abriu; logo, quem falha é a ação que lista os pontos. Ela grava no registro de erros do servidor uma linha começando por <strong>"Consulta de itens programáveis:"</strong>, com a causa exata. Duas hipóteses: (1) o serviço de integração que traz os pontos de água do Principal está fora do ar ou mal configurado; (2) falta no banco a tabela <code>TBL_TIPO_AGUA_CQ</code>, que o código usa e os scripts do projeto de banco não criam (eles criam <code>TBL_TIPO_AGUA</code>).</p>
+<p><strong>Causa (provável):</strong> a mensagem "Ocorreu um erro interno não esperado." só aparece quando a chamada ao servidor falha (erro HTTP). A agenda usa outra mensagem e abriu; logo, quem falha é a ação que lista os pontos. Ela grava no registro de erros do servidor uma linha começando por <strong>"Consulta de itens programáveis:"</strong>, com a causa exata. Duas hipóteses: (1) o serviço de integração que traz os pontos de água do Principal está fora do ar ou mal configurado; (2) falta no banco a tabela <code>TBL_TIPO_AGUA_CQ</code>, que o código usa e os scripts do projeto de banco não criam (eles criam <code>TBL_TIPO_AGUA</code>). <strong>Atualização (31/10/2026):</strong> a tabela <code>TBL_TIPO_AGUA_CQ</code> existe no banco (3 linhas), o que afasta a hipótese (2.1); porém o responsável confirmou que <strong><code>TBL_TIPO_AGUA</code> não existe</strong> no banco. Como os pontos de água vêm do Principal, que lê o tipo de água dessa tabela, é <strong>provável que a mesma tabela ausente (DV-CQ-008) derrube a lista de pontos</strong>, e a hipótese (2.2) passa a ser esta. A linha "Consulta de itens programáveis:" do registro de erros do servidor confirma.</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -2542,9 +2542,7 @@
 <p><em>Caminhos a partir da pasta <code>app/</code> do módulo (4.controle_qualidade/app).</em></p>
 <h3 id="sugestao-de-correcao_20">Sugestão de correção</h3>
 <ul>
-<li><strong>Primeiro, ler o registro de erros do servidor do CQ</strong> de 09/10/2026, por volta das 22h16, procurando "Consulta de itens programáveis:". Ele diz qual das hipóteses vale.</li>
-<li>Se for a tabela: criar <code>TBL_TIPO_AGUA_CQ</code> (e as demais tabelas com <code>_CQ</code> listadas em <code>homologacao/4.controle_qualidade/06-modelo-de-dados.md</code>, seção 7) ou alinhar o nome no mapeamento do código.</li>
-<li>Se for a integração: conferir a configuração e o funcionamento do serviço de pontos de água do Principal.</li>
+<li>O DBA criar <code>TBL_TIPO_AGUA</code> a partir do script dos projetos de banco (mesmo pedido do DV-CQ-008) e repetir o caso; se o erro continuar, ler o registro de erros do servidor (linha "Consulta de itens programáveis:").</li>
 <li>Tratar retorno vazio ou nulo do serviço: mostrar "Nenhum ponto cadastrado para este tipo" em vez de quebrar.</li>
 <li>Trocar a mensagem genérica por uma que diga o que falhou (sem expor detalhes técnicos ao usuário) e manter o detalhe no registro de erros.</li>
 </ul>

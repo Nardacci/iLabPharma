@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conta usuário · Análise · versão nova · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../portal/portal.css?v=027bcbf8">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="../../../portal/versao.css"></head>
+<body data-versao-pagina="novo" data-raiz="../../../">
+<header class="topo">
+  <a class="marca" href="../../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../../index.html#modulos">Módulos</a>
+    <a href="../../../biblioteca.html">Biblioteca</a>
+    <a href="../../../telas.html">Devs/QA</a>
+    <a href="../../../index.html#publicos">Por público</a>
+    <a href="../../../anvisa.html">ANVISA</a>
+    <a href="../../../cronograma.html">Cronograma</a>
+    <a href="../../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<main class="nv-pagina" id="conteudo">
+  <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../telas.html?versao=novo#mn-principal">Documentação por módulo · versão nova</a> › <a href="../../../documentacao/principal/index.html">Principal</a> › <span>Conta usuário</span></nav>
+  <div class="versao-barra vb-novo"><div class="versao-seletor" role="group" aria-label="Versão do sistema"><span class="vs-rotulo">Versão:</span><a class="vs-btn" href="../../principal/conta-usuario-analise.html" title="Trocar de versão e abrir esta mesma tela">Legado</a><span class="vs-btn" aria-current="true">Novo</span></div><span class="vb-texto">Você está na versão <strong>Novo</strong>: a versão nova (o mesmo sistema com ferramentas atualizadas).</span></div>
+  <header class="doc-cabecalho"><h1>Conta usuário <span class="sit-sufixo">· versão nova</span></h1>
+  <p class="nv-meta">Principal · menu Administração · Situação na versão nova: <strong>Testada</strong></p></header>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-usuario-analise.html" aria-current=page>Análise</a><a href="conta-usuario-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="conta-usuario-fluxos.html" class="aba-sem">Fluxos</a><a href="conta-usuario-regras-de-negocio.html" class="aba-sem">Regras de negócio</a><a href="conta-usuario-anvisa.html" class="aba-sem">Anvisa</a><a href="conta-usuario-passo-a-passo.html">Passo a passo</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav>
+  <article class="texto texto-largo"><p><strong>Menu:</strong> Administração · <strong>Situação na versão nova:</strong> Testada · <strong>Endereço:</strong> <code>/contas-usuario</code> · <strong>Tela equivalente no legado:</strong> <code>administracao/usuario_conta_lst</code>, <code>_ed</code>, <code>_rel</code> (Falha grave (DV-PRI-003, DV-PRI-005, DV-PRI-017))</p>
+<h3 id="em-uma-olhada">Em uma olhada</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Casos executados</th>
+<th>Igual</th>
+<th>Regressão</th>
+<th>Melhoria</th>
+<th>Novo</th>
+<th>Bloqueado</th>
+<th>Defeitos listados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>4</td>
+</tr>
+</tbody>
+</table></div>
+<p>Classes: <strong>Igual</strong> (mesmo comportamento do sistema entregue, inclusive a falha), <strong>Regressão</strong> (piorou), <strong>Melhoria</strong> (falhava e agora funciona), <strong>Novo</strong> (o sistema entregue não tinha resultado) e <strong>Bloqueado</strong> (não deu para executar).</p>
+<h3 id="o-que-a-tela-faz">O que a tela faz</h3>
+<p>Conta de acesso do profissional: login, validades, situação e perfis. <strong>Não tem o botão Incluir</strong> (como no legado): a conta é preenchida editando o profissional.</p>
+<ul>
+<li>Login duplicado é recusado: "Já existe um usuário cadastrado com esse login." (sem o nome do dono).</li>
+<li>Conta sem perfil: o servidor devolve "Perfil inválido." (o legado dizia "O perfil do usuário é obrigatório!").</li>
+<li>Validade final menor que a inicial é recusada.</li>
+<li>Adicionar e retirar perfis exige justificativa e fica no histórico ("NOVO PERFIL", "PERFIL EXCLUÍDO"). Cada gravação acrescenta uma linha de ruído "RESETAR SENHA SIM → NÃO".</li>
+<li>A caixa de perfis mostra só os 10 primeiros, também na edição da conta.</li>
+<li>O Reset de senha pede confirmação, <strong>não pede justificativa</strong> e vale na hora, mesmo sem clicar em Salvar. A senha provisória vale 60 dias na criação e 5 dias depois do reset.</li>
+<li>Excluir a conta exige justificativa; o servidor recusa sem ela, mas a tela só fecha a pergunta, sem mensagem.</li>
+</ul>
+<h3 id="como-a-tela-e">Como a tela é</h3>
+<figure><a href="../../img/principal/a-conta-lista-tadmin.jpg" target="_blank" rel="noopener"><img src="../../img/principal/a-conta-lista-tadmin.jpg" alt="Conta usuário: A conta lista tadmin" loading="lazy"></a><figcaption>Conta usuário: A conta lista tadmin · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/a-conta-edicao-tadmin.jpg" target="_blank" rel="noopener"><img src="../../img/principal/a-conta-edicao-tadmin.jpg" alt="Conta usuário: A conta edicao tadmin" loading="lazy"></a><figcaption>Conta usuário: A conta edicao tadmin · clique para ampliar</figcaption></figure>
+
+<h3 id="resultado-dos-testes">Resultado dos testes</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Cenário</th>
+<th>Legado</th>
+<th>Versão nova (o que a tela mostrou)</th>
+<th>Classe</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CT-PRI-042</td>
+<td>Login duplicado</td>
+<td>Passou</td>
+<td>"Já existe um usuário cadastrado com esse login."</td>
+<td>Igual</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-043</td>
+<td>Conta sem perfil</td>
+<td>Passou</td>
+<td>"Perfil inválido." (mensagem menos clara)</td>
+<td>Igual</td>
+<td>—</td>
+</tr>
+<tr>
+<td>CT-PRI-046</td>
+<td>Adicionar e retirar perfil; ver o histórico</td>
+<td>Passou (DV-PRI-005)</td>
+<td>Exige justificativa; histórico com NOVO PERFIL e PERFIL EXCLUÍDO e a linha-ruído de reset</td>
+<td>Igual</td>
+<td>DV-PRI-005, N-006</td>
+</tr>
+<tr>
+<td>CT-PRI-049</td>
+<td>Excluir conta sem justificativa</td>
+<td>Passou</td>
+<td>O servidor recusa (400), mas a tela só fecha a pergunta, sem mensagem</td>
+<td>Igual</td>
+<td>N-003</td>
+</tr>
+<tr>
+<td>RG-PRI-006</td>
+<td>Desbloquear um usuário bloqueado</td>
+<td>Falhou (DV-PRI-016)</td>
+<td>O Reset de senha feito pelo administrador desbloqueia o usuário (veja também a tela de Login)</td>
+<td>Melhoria</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Evidências (capturas): CT-PRI-042, 043, 046, 049 e RG-PRI-004 a 007 (rodada 2). As capturas ficam na pasta <code>evidencias/</code> de cada rodada.</p>
+<h3 id="defeitos-e-pontos-de-atencao">Defeitos e pontos de atenção</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Defeito</th>
+<th>Gravidade</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-PRI-003</td>
+<td>Média</td>
+<td>A senha provisória aparece em texto na janela do administrador e é gerada no navegador. Persiste, de forma mais grave.</td>
+</tr>
+<tr>
+<td>DV-PRI-N-006</td>
+<td>Média</td>
+<td>A caixa de perfis da conta mostra só 10 perfis (confirmado e agravado na edição).</td>
+</tr>
+<tr>
+<td>DV-PRI-N-019</td>
+<td>Média</td>
+<td>O histórico da conta não traz a troca de senha feita pelo próprio usuário nem os bloqueios por tentativas. A confirmar com o DBA.</td>
+</tr>
+<tr>
+<td>DV-PRI-005</td>
+<td>Baixa</td>
+<td>Linha de ruído "RESETAR SENHA SIM → NÃO" em cada gravação.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="para-quem-desenvolve">Para quem desenvolve</h3>
+<ul>
+<li>Mostrar a mensagem de erro do servidor ao excluir a conta sem justificativa (N-003).</li>
+<li>Exigir justificativa no Reset de senha e registrá-lo no histórico (DV-PRI-017).</li>
+<li>Listar todos os perfis (N-006) e mostrar a mensagem "O perfil do usuário é obrigatório!" antes de chamar o servidor.</li>
+<li>Registrar no histórico da conta toda troca de senha e todo bloqueio (N-019; requisito RF-PRI-024).</li>
+</ul>
+<h3 id="para-quem-testa-qa">Para quem testa (QA)</h3>
+<ul>
+<li>A conta nasce com o profissional: veja "Usuários de teste" para os 12 logins <code>t.*</code>. Os perfis de teste têm prefixo <code>0.T.</code> por causa do limite de 10.</li>
+<li>Quatro usuários (<code>t.admin</code>, <code>t.consulta</code>, <code>t.cadastro</code>, <code>t.semadmin</code>) têm senha fixa de teste; os outros precisam de Reset de senha pelo administrador.</li>
+</ul>
+<h3 id="para-a-gestao">Para a gestão</h3>
+<ul>
+<li>É a tela que dá permissão a cada pessoa. Falta registrar o motivo do Reset de senha e as trocas e bloqueios, que são eventos de acesso que a norma espera rastrear.</li>
+</ul>
+<p>O passo a passo para homologar esta tela está na página seguinte.</p></article>
+</main>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 30/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../../portal/portal.js"></script>
+<script src="../../../portal/versao.js"></script></body></html>

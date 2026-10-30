@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troca de senha · Passo a passo · versão nova · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../portal/portal.css?v=027bcbf8">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="../../../portal/versao.css"></head>
+<body data-versao-pagina="novo" data-raiz="../../../">
+<header class="topo">
+  <a class="marca" href="../../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../../index.html#modulos">Módulos</a>
+    <a href="../../../biblioteca.html">Biblioteca</a>
+    <a href="../../../telas.html">Devs/QA</a>
+    <a href="../../../index.html#publicos">Por público</a>
+    <a href="../../../anvisa.html">ANVISA</a>
+    <a href="../../../cronograma.html">Cronograma</a>
+    <a href="../../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<main class="nv-pagina" id="conteudo">
+  <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../telas.html?versao=novo#mn-principal">Documentação por módulo · versão nova</a> › <a href="../../../documentacao/principal/index.html">Principal</a> › <span>Troca de senha</span></nav>
+  <div class="versao-barra vb-novo"><div class="versao-seletor" role="group" aria-label="Versão do sistema"><span class="vs-rotulo">Versão:</span><a class="vs-btn" href="../../principal/troca-de-senha-analise.html" title="Trocar de versão e abrir esta mesma tela">Legado</a><span class="vs-btn" aria-current="true">Novo</span></div><span class="vb-texto">Você está na versão <strong>Novo</strong>: a versão nova (o mesmo sistema com ferramentas atualizadas).</span></div>
+  <header class="doc-cabecalho"><h1>Troca de senha <span class="sit-sufixo">· versão nova</span></h1>
+  <p class="nv-meta">Principal · menu Acesso ao sistema · Situação na versão nova: <strong>Testada</strong></p></header>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="troca-de-senha-analise.html">Análise</a><a href="troca-de-senha-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="troca-de-senha-fluxos.html" class="aba-sem">Fluxos</a><a href="troca-de-senha-regras-de-negocio.html" class="aba-sem">Regras de negócio</a><a href="troca-de-senha-anvisa.html" class="aba-sem">Anvisa</a><a href="troca-de-senha-passo-a-passo.html" aria-current=page>Passo a passo</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav>
+  <article class="texto texto-largo"><p>Roteiro para quem vai testar a tela <strong>Troca de senha</strong> (menu Acesso ao sistema) na versão nova. Use o ambiente de teste da versão nova; o sistema entregue só entra se um resultado parecer estranho.</p>
+<h3 id="antes-de-comecar">Antes de começar</h3>
+<ul>
+<li><code>t.senhavencida</code> e <code>t.admin2</code> com senha provisória (peça Reset de senha ao administrador se já usou).</li>
+<li>Não use o administrador das variáveis de ambiente.</li>
+<li>Todo registro novo começa com <code>T.</code> (se o ponto falhar, use <code>T-</code> e anote o campo).</li>
+<li>Dados de teste ficam no ambiente: não apague o que não criou.</li>
+</ul>
+<h3 id="passos">Passos</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso do plano</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Entrar com <code>t.senhavencida</code> e a senha provisória.</td>
+<td>Vai direto a <code>/trocar-senha</code>.</td>
+<td>RG-PRI-026</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Digitar <code>/administracao/perfis</code>, <code>/administrativas/locais</code> e <code>/</code> no endereço.</td>
+<td>Sempre volta à troca de senha.</td>
+<td>RG-PRI-027</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Clicar em Sair. Entrar de novo com o mesmo usuário.</td>
+<td>Volta ao login; a troca continua obrigatória.</td>
+<td>RG-PRI-029</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Informar senha atual errada.</td>
+<td>Mensagem na tela e continua logado. Se for expulso ao login sem mensagem, anote DV-PRI-N-018.</td>
+<td>RG-PRI-021</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Testar senhas de 4 e 7 caracteres, sem número, sem especial, só número, e uma de 15 caracteres.</td>
+<td>Botão desabilitado e aviso "de 8 a 14 caracteres, com letra, número e caractere especial".</td>
+<td>RG-PRI-022, 023</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Informar a nova senha e uma confirmação diferente.</td>
+<td>Botão desabilitado com "Nova senha e confirmação não conferem."</td>
+<td>RG-PRI-028</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Trocar para uma senha válida de 14 caracteres.</td>
+<td>"Senha alterada com sucesso. Entre novamente para continuar." Entra com a nova.</td>
+<td>RG-PRI-020</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Tentar trocar para uma das 3 últimas senhas e para a atual mudando só a caixa.</td>
+<td>Recusa com mensagem. Anote se a tela fica em "Salvando...".</td>
+<td>RG-PRI-024, 025</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="capturas-de-tela-da-versao-nova">Capturas de tela da versão nova</h3>
+<p>Imagens da rodada de testes de 17/10/2026, na ordem dos passos. Clique para ampliar.</p>
+<h4 id="passo-1">Passo 1</h4>
+<figure><a href="../../img/principal/rg-pri-026-passo-1.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-026-passo-1.jpg" alt="Rg pri 026 passo 1" loading="lazy"></a><figcaption>Rg pri 026 passo 1 · clique para ampliar</figcaption></figure>
+
+<h4 id="passo-2">Passo 2</h4>
+<figure><a href="../../img/principal/rg-pri-027-passo-1.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-027-passo-1.jpg" alt="Rg pri 027 passo 1" loading="lazy"></a><figcaption>Rg pri 027 passo 1 · clique para ampliar</figcaption></figure>
+
+<h4 id="passo-3">Passo 3</h4>
+<figure><a href="../../img/principal/rg-pri-029-passo-1-esqueci-senha.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-029-passo-1-esqueci-senha.jpg" alt="Esqueci senha" loading="lazy"></a><figcaption>Esqueci senha · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/rg-pri-029-passo-1-sair.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-029-passo-1-sair.jpg" alt="Sair" loading="lazy"></a><figcaption>Sair · clique para ampliar</figcaption></figure>
+
+<h4 id="passo-4">Passo 4</h4>
+<figure><a href="../../img/principal/rg-pri-021-passo-1.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-021-passo-1.jpg" alt="Rg pri 021 passo 1" loading="lazy"></a><figcaption>Rg pri 021 passo 1 · clique para ampliar</figcaption></figure>
+
+<h4 id="passo-5">Passo 5</h4>
+<figure><a href="../../img/principal/rg-pri-022-passo-1-curta-botao-desabilitado.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-022-passo-1-curta-botao-desabilitado.jpg" alt="Curta botao desabilitado" loading="lazy"></a><figcaption>Curta botao desabilitado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/rg-pri-022-passo-1-curta.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-022-passo-1-curta.jpg" alt="Curta" loading="lazy"></a><figcaption>Curta · clique para ampliar</figcaption></figure>
+
+<h4 id="passo-6">Passo 6</h4>
+<figure><a href="../../img/principal/rg-pri-028-passo-1.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-028-passo-1.jpg" alt="Rg pri 028 passo 1" loading="lazy"></a><figcaption>Rg pri 028 passo 1 · clique para ampliar</figcaption></figure>
+
+<h4 id="passo-7">Passo 7</h4>
+<figure><a href="../../img/principal/rg-pri-020-passo-0-tela.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-020-passo-0-tela.jpg" alt="Tela" loading="lazy"></a><figcaption>Tela · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/rg-pri-020-passo-1-tela-cadeado.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-020-passo-1-tela-cadeado.jpg" alt="Tela cadeado" loading="lazy"></a><figcaption>Tela cadeado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/rg-pri-020-passo-1-tela-troca.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-020-passo-1-tela-troca.jpg" alt="Tela troca" loading="lazy"></a><figcaption>Tela troca · clique para ampliar</figcaption></figure>
+
+<h4 id="passo-8">Passo 8</h4>
+<figure><a href="../../img/principal/rg-pri-024-passo-1.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-024-passo-1.jpg" alt="Rg pri 024 passo 1" loading="lazy"></a><figcaption>Rg pri 024 passo 1 · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/rg-pri-025-passo-1.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-025-passo-1.jpg" alt="Rg pri 025 passo 1" loading="lazy"></a><figcaption>Rg pri 025 passo 1 · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/rg-pri-025-passo-2-mensagem.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-025-passo-2-mensagem.jpg" alt="Mensagem" loading="lazy"></a><figcaption>Mensagem · clique para ampliar</figcaption></figure>
+
+<h3 id="como-registrar">Como registrar</h3>
+<p>Para cada passo anote: o que apareceu na tela (copie a mensagem), a classe (<strong>Igual</strong>, <strong>Regressão</strong>, <strong>Melhoria</strong>, <strong>Novo</strong> ou <strong>Bloqueado</strong>), o defeito (se houver) e o nome da captura. Se um caso ficou Bloqueado, diga o motivo (usuário, perfil ou dado que faltou).</p>
+<p>Se algo parecer uma falha de permissão, confira primeiro a <strong>Conta usuário</strong> e o <strong>Perfil</strong> do usuário antes de concluir que a tela falhou.</p>
+<h3 id="tabela-de-resultados">Tabela de resultados</h3>
+<p>A coluna <strong>Resultado do caso em 17/10/2026</strong> traz o que a tela mostrou, para o caso do plano que o passo cobre (passos do mesmo caso repetem o resultado). Refaça o passo e use a última coluna para o seu resultado: se for diferente, anote a classe (<strong>Igual</strong>, <strong>Regressão</strong>, <strong>Melhoria</strong>, <strong>Novo</strong> ou <strong>Bloqueado</strong>) e o defeito.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Passo</th>
+<th>Resultado do caso em 17/10/2026</th>
+<th>Classe</th>
+<th>Defeito</th>
+<th>Captura</th>
+<th>Seu resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Entra e vai direto à tela de troca</td>
+<td>Novo</td>
+<td>—</td>
+<td><code>RG-PRI-026-passo-1</code></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sempre volta à troca. O legado deixava abrir</td>
+<td>Melhoria</td>
+<td>—</td>
+<td><code>RG-PRI-027-passo-1</code></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Volta ao login e a troca continua obrigatória</td>
+<td>Novo</td>
+<td>—</td>
+<td><code>RG-PRI-029-passo-1-esqueci-senha</code>, <code>RG-PRI-029-passo-1-sair</code></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>A API recusa, mas a tela expulsa o usuário para o login sem mensagem</td>
+<td>Regressão</td>
+<td>DV-PRI-N-018</td>
+<td><code>RG-PRI-021-passo-1</code></td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>8 a 14 caracteres com letra, número e especial; recusa 4 e 7 caracteres, sem número, sem especial / 15 caracteres já são recusados (limite de 14). Ponto a validar: o texto da tela já dizia 8 a 14</td>
+<td>Igual / Regressão</td>
+<td>DV-PRI-N-021</td>
+<td><code>RG-PRI-022-passo-1-curta-botao-desabilitado</code>, <code>RG-PRI-022-passo-1-curta</code></td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Botão desabilitado, com "Nova senha e confirmação não conferem." O legado aceitava</td>
+<td>Melhoria</td>
+<td>—</td>
+<td><code>RG-PRI-028-passo-1</code></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>"Senha alterada com sucesso. Entre novamente para continuar." Entra com a nova; a provisória e a antiga deixam de valer</td>
+<td>Igual</td>
+<td>—</td>
+<td><code>RG-PRI-020-passo-0-tela</code>, <code>RG-PRI-020-passo-1-tela-cadeado</code></td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Recusado: a comparação ainda ignora maiúsculas / A API recusa, mas a tela fica em "Salvando..." para sempre, sem mensagem</td>
+<td>Igual / Regressão</td>
+<td>DV-PRI-021, DV-PRI-N-018</td>
+<td><code>RG-PRI-024-passo-1</code>, <code>RG-PRI-025-passo-1</code></td>
+<td></td>
+</tr>
+</tbody>
+</table></div></article>
+</main>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 30/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../../portal/portal.js"></script>
+<script src="../../../portal/versao.js"></script></body></html>

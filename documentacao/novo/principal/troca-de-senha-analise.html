@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troca de senha · Análise · versão nova · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../portal/portal.css?v=027bcbf8">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="../../../portal/versao.css"></head>
+<body data-versao-pagina="novo" data-raiz="../../../">
+<header class="topo">
+  <a class="marca" href="../../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../../index.html#modulos">Módulos</a>
+    <a href="../../../biblioteca.html">Biblioteca</a>
+    <a href="../../../telas.html">Devs/QA</a>
+    <a href="../../../index.html#publicos">Por público</a>
+    <a href="../../../anvisa.html">ANVISA</a>
+    <a href="../../../cronograma.html">Cronograma</a>
+    <a href="../../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<main class="nv-pagina" id="conteudo">
+  <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../telas.html?versao=novo#mn-principal">Documentação por módulo · versão nova</a> › <a href="../../../documentacao/principal/index.html">Principal</a> › <span>Troca de senha</span></nav>
+  <div class="versao-barra vb-novo"><div class="versao-seletor" role="group" aria-label="Versão do sistema"><span class="vs-rotulo">Versão:</span><a class="vs-btn" href="../../principal/troca-de-senha-analise.html" title="Trocar de versão e abrir esta mesma tela">Legado</a><span class="vs-btn" aria-current="true">Novo</span></div><span class="vb-texto">Você está na versão <strong>Novo</strong>: a versão nova (o mesmo sistema com ferramentas atualizadas).</span></div>
+  <header class="doc-cabecalho"><h1>Troca de senha <span class="sit-sufixo">· versão nova</span></h1>
+  <p class="nv-meta">Principal · menu Acesso ao sistema · Situação na versão nova: <strong>Testada</strong></p></header>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="troca-de-senha-analise.html" aria-current=page>Análise</a><a href="troca-de-senha-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="troca-de-senha-fluxos.html" class="aba-sem">Fluxos</a><a href="troca-de-senha-regras-de-negocio.html" class="aba-sem">Regras de negócio</a><a href="troca-de-senha-anvisa.html" class="aba-sem">Anvisa</a><a href="troca-de-senha-passo-a-passo.html">Passo a passo</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav>
+  <article class="texto texto-largo"><p><strong>Menu:</strong> Acesso ao sistema · <strong>Situação na versão nova:</strong> Testada · <strong>Endereço:</strong> <code>/trocar-senha</code> · <strong>Tela equivalente no legado:</strong> <code>trocaSenha.aspx</code> (Falha grave (DV-PRI-021, DV-PRI-022))</p>
+<h3 id="em-uma-olhada">Em uma olhada</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Casos executados</th>
+<th>Igual</th>
+<th>Regressão</th>
+<th>Melhoria</th>
+<th>Novo</th>
+<th>Bloqueado</th>
+<th>Defeitos listados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>4</td>
+</tr>
+</tbody>
+</table></div>
+<p>Classes: <strong>Igual</strong> (mesmo comportamento do sistema entregue, inclusive a falha), <strong>Regressão</strong> (piorou), <strong>Melhoria</strong> (falhava e agora funciona), <strong>Novo</strong> (o sistema entregue não tinha resultado) e <strong>Bloqueado</strong> (não deu para executar).</p>
+<h3 id="o-que-a-tela-faz">O que a tela faz</h3>
+<p>Tela de troca obrigatória de senha. Só abre para quem entrou com senha provisória ou redefinida; com a troca pendente, nenhuma outra tela abre.</p>
+<ul>
+<li>Regra de senha: 8 a 14 caracteres, com ao menos uma letra, um número e um destes: ! @ # $ % &amp; * ?. A regra vale no navegador e no servidor. (O legado pedia 3 de 4 tipos de caractere.)</li>
+<li>Maiúscula e minúscula não são exigidas. Espaço é aceito.</li>
+<li>Não pode repetir as 3 últimas senhas nem ser igual à atual (a comparação ainda ignora maiúsculas).</li>
+<li>Confirmação diferente da nova senha: o botão fica desabilitado, com aviso.</li>
+<li>Com a troca pendente, digitar o endereço de outras telas volta sempre à troca. O botão Sair volta ao login e a troca continua obrigatória no próximo acesso.</li>
+<li>Depois da troca, o sistema pede para entrar de novo.</li>
+</ul>
+<h3 id="como-a-tela-e">Como a tela é</h3>
+<figure><a href="../../img/principal/rg-pri-020-passo-1-tela-troca.jpg" target="_blank" rel="noopener"><img src="../../img/principal/rg-pri-020-passo-1-tela-troca.jpg" alt="Troca de senha: Tela troca" loading="lazy"></a><figcaption>Troca de senha: Tela troca · clique para ampliar</figcaption></figure>
+
+<h3 id="resultado-dos-testes">Resultado dos testes</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Cenário</th>
+<th>Legado</th>
+<th>Versão nova (o que a tela mostrou)</th>
+<th>Classe</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RG-PRI-020</td>
+<td>Troca válida (14 caracteres)</td>
+<td>Passou</td>
+<td>"Senha alterada com sucesso. Entre novamente para continuar." Entra com a nova; a provisória e a antiga deixam de valer</td>
+<td>Igual</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-021</td>
+<td>Senha atual errada</td>
+<td>Passou</td>
+<td>A API recusa, mas a tela expulsa o usuário para o login sem mensagem</td>
+<td>Regressão</td>
+<td>DV-PRI-N-018</td>
+</tr>
+<tr>
+<td>RG-PRI-022</td>
+<td>Regras de formato</td>
+<td>Passou</td>
+<td>8 a 14 caracteres com letra, número e especial; recusa 4 e 7 caracteres, sem número, sem especial</td>
+<td>Igual</td>
+<td>DV-PRI-N-021</td>
+</tr>
+<tr>
+<td>RG-PRI-023</td>
+<td>Senha longa</td>
+<td>Passou (40 aceitos)</td>
+<td>15 caracteres já são recusados (limite de 14). Ponto a validar: o texto da tela já dizia 8 a 14</td>
+<td>Regressão</td>
+<td>DV-PRI-N-021</td>
+</tr>
+<tr>
+<td>RG-PRI-024</td>
+<td>Mudar só a caixa da senha atual</td>
+<td>Falhou (DV-PRI-021)</td>
+<td>Recusado: a comparação ainda ignora maiúsculas</td>
+<td>Igual</td>
+<td>DV-PRI-021</td>
+</tr>
+<tr>
+<td>RG-PRI-025</td>
+<td>Reusar uma senha antiga</td>
+<td>Passou</td>
+<td>A API recusa, mas a tela fica em "Salvando..." para sempre, sem mensagem</td>
+<td>Regressão</td>
+<td>DV-PRI-N-018</td>
+</tr>
+<tr>
+<td>RG-PRI-026</td>
+<td>Entrar com senha provisória</td>
+<td>Bloqueado (legado)</td>
+<td>Entra e vai direto à tela de troca</td>
+<td>Novo</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-027</td>
+<td>Pular a troca digitando outro endereço</td>
+<td>Falhou (DV-PRI-022)</td>
+<td>Sempre volta à troca. O legado deixava abrir</td>
+<td>Melhoria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-028</td>
+<td>Confirmação diferente</td>
+<td>(Novo)</td>
+<td>Botão desabilitado, com "Nova senha e confirmação não conferem." O legado aceitava</td>
+<td>Melhoria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-029</td>
+<td>Botão Sair na troca</td>
+<td>Bloqueado (legado)</td>
+<td>Volta ao login e a troca continua obrigatória</td>
+<td>Novo</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Evidências (capturas): RG-PRI-020 a 029 (rodada 2). As capturas ficam na pasta <code>evidencias/</code> de cada rodada.</p>
+<h3 id="defeitos-e-pontos-de-atencao">Defeitos e pontos de atenção</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Defeito</th>
+<th>Gravidade</th>
+<th>O que acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-PRI-N-018</td>
+<td>Média</td>
+<td>Quando o servidor recusa a nova senha, a tela fica em "Salvando..." ou expulsa o usuário para o login, sem mostrar a mensagem. Regressão.</td>
+</tr>
+<tr>
+<td>DV-PRI-N-021</td>
+<td>Baixa</td>
+<td>Limite de 14 caracteres na senha (o legado aceitou 40). Ponto a validar com a Garantia da Qualidade.</td>
+</tr>
+<tr>
+<td>DV-PRI-021</td>
+<td>Média</td>
+<td>A comparação da senha nova com a atual ignora maiúsculas. Persiste.</td>
+</tr>
+<tr>
+<td>DV-PRI-N-022</td>
+<td>Baixa</td>
+<td>Rodapé da tela diz "Ambiente: Desenvolvimento · OnlineMed v1.0" (o login diz "Teste · v.0.0.1").</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="para-quem-desenvolve">Para quem desenvolve</h3>
+<ul>
+<li>Mostrar a mensagem do servidor e deixar o usuário tentar de novo, sem expulsar para o login (N-018).</li>
+<li>Definir a política de senha (tamanho máximo, tipos de caractere) com a Garantia da Qualidade antes de fixar o limite de 14.</li>
+<li>Comparar senha nova e atual diferenciando maiúsculas (DV-PRI-021).</li>
+<li>Corrigir o texto do rodapé (N-022).</li>
+</ul>
+<h3 id="para-quem-testa-qa">Para quem testa (QA)</h3>
+<ul>
+<li>Use <code>t.admin2</code> (descartável) e <code>t.senhavencida</code> (senha provisória). <strong>Nunca troque a senha do administrador das variáveis de ambiente</strong>: quebra os scripts de teste.</li>
+<li>Cada troca válida consome a senha provisória; peça um Reset de senha na Conta usuário para repetir.</li>
+</ul>
+<h3 id="para-a-gestao">Para a gestão</h3>
+<ul>
+<li>Política de senha e troca obrigatória são requisitos de segurança de acesso da norma. A troca obrigatória agora funciona melhor que no legado (não dá para pular). Falta decidir a política (tamanho, tipos de caractere).</li>
+</ul>
+<p>O passo a passo para homologar esta tela está na página seguinte.</p></article>
+</main>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 30/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../../portal/portal.js"></script>
+<script src="../../../portal/versao.js"></script></body></html>

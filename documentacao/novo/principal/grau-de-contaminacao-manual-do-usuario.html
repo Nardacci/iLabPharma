@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grau de contaminação · Manual do usuário · versão nova · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../portal/portal.css?v=027bcbf8">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="../../../portal/versao.css"></head>
+<body data-versao-pagina="novo" data-raiz="../../../">
+<header class="topo">
+  <a class="marca" href="../../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../../index.html#modulos">Módulos</a>
+    <a href="../../../biblioteca.html">Biblioteca</a>
+    <a href="../../../telas.html">Devs/QA</a>
+    <a href="../../../index.html#publicos">Por público</a>
+    <a href="../../../anvisa.html">ANVISA</a>
+    <a href="../../../cronograma.html">Cronograma</a>
+    <a href="../../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<main class="nv-pagina" id="conteudo">
+  <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../telas.html?versao=novo#mn-principal">Documentação por módulo · versão nova</a> › <a href="../../../documentacao/principal/index.html">Principal</a> › <span>Grau de contaminação</span></nav>
+  <div class="versao-barra vb-novo"><div class="versao-seletor" role="group" aria-label="Versão do sistema"><span class="vs-rotulo">Versão:</span><a class="vs-btn" href="../../principal/grau-de-contaminacao-manual-do-usuario.html" title="Trocar de versão e abrir esta mesma tela">Legado</a><span class="vs-btn" aria-current="true">Novo</span></div><span class="vb-texto">Você está na versão <strong>Novo</strong>: a versão nova (o mesmo sistema com ferramentas atualizadas).</span></div>
+  <header class="doc-cabecalho"><h1>Grau de contaminação <span class="sit-sufixo">· versão nova</span></h1>
+  <p class="nv-meta">Principal · menu Cadastros e tabelas de apoio · Situação na versão nova: <strong>Testada</strong></p></header>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="grau-de-contaminacao-analise.html">Análise</a><a href="grau-de-contaminacao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="grau-de-contaminacao-fluxos.html">Fluxos</a><a href="grau-de-contaminacao-regras-de-negocio.html">Regras de negócio</a><a href="grau-de-contaminacao-anvisa.html" class="aba-sem">Anvisa</a><a href="grau-de-contaminacao-passo-a-passo.html">Passo a passo</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav>
+  <article class="texto texto-largo"><p><strong>O que a tela faz</strong></p>
+<p>Tabela dos graus de contaminação (código de até 10 caracteres e descrição), usada nos ambientes.</p>
+<ul>
+<li>Obrigatórios: grau (até 10), descrição (até 255) e justificativa (até 255). Inclui e altera <strong>sem pedir confirmação</strong> (Perfil, Centro e Local pedem).</li>
+<li>Duplicado: "Esse codigo ja esta cadastrado."</li>
+<li>Excluir <strong>exige justificativa</strong> (janela "Justificativa*").</li>
+<li>O histórico <strong>não mostra a justificativa</strong>, embora a API a devolva; textos sem acento. O legado mostrava a justificativa de cada evento.</li>
+<li>Pesquisa: "gravissimo" não acha "GRAVISSÍMO".</li>
+</ul>
+<p><strong>Antes de começar (preparo do teste)</strong></p>
+<ul>
+<li>Usuário com a função Tabelas de apoio &gt; Grau de contaminação (<code>t.admin</code>).</li>
+<li>Todo registro novo começa com <code>T.</code> (se o ponto falhar, use <code>T-</code> e anote o campo).</li>
+<li>Dados de teste ficam no ambiente: não apague o que não criou.</li>
+</ul>
+<p><strong>Como usar, passo a passo</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso do plano</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Abrir Tabelas de apoio &gt; Grau de contaminação e clicar em Incluir. Salvar vazio.</td>
+<td>Mensagens do grau, da descrição e da justificativa.</td>
+<td>RG-PRI-040</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Incluir grau <code>T.G01</code>, descrição <code>T.GRAU DE TESTE 01</code>, justificativa <code>Teste</code>.</td>
+<td>Inclui sem pedir confirmação.</td>
+<td>RG-PRI-040</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Incluir de novo o mesmo grau.</td>
+<td>"Esse codigo ja esta cadastrado."</td>
+<td>RG-PRI-040</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Testar grau com 11 caracteres, descrição e justificativa com 256.</td>
+<td>Cortam ou recusam.</td>
+<td>RG-PRI-041</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Alterar a descrição, com justificativa. Abrir o histórico.</td>
+<td>Anote se o histórico mostra a justificativa (hoje não).</td>
+<td>RG-PRI-042, 048</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Inativar.</td>
+<td>Grava.</td>
+<td>RG-PRI-043</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Excluir <code>T.G02</code>.</td>
+<td>Exige justificativa.</td>
+<td>RG-PRI-044</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Pesquisar <code>gravissimo</code> e <code>GRAVISSÍMO</code>; gerar Excel e Imprimir.</td>
+<td>Sem acento não acha.</td>
+<td>RG-PRI-046, 047</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Como a tela é</strong></p>
+<figure><a href="../../img/principal/e-grau-lista.jpg" target="_blank" rel="noopener"><img src="../../img/principal/e-grau-lista.jpg" alt="Grau de contaminação: lista" loading="lazy"></a><figcaption>Grau de contaminação: lista · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/e-grau-incluir.jpg" target="_blank" rel="noopener"><img src="../../img/principal/e-grau-incluir.jpg" alt="Grau de contaminação: formulário" loading="lazy"></a><figcaption>Grau de contaminação: formulário · clique para ampliar</figcaption></figure></article>
+</main>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 30/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../../portal/portal.js"></script>
+<script src="../../../portal/versao.js"></script></body></html>
