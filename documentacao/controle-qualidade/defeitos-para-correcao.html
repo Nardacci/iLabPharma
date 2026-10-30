@@ -4350,12 +4350,45 @@
 <figure><a href="../img/controle-qualidade/dv-cq-046-1.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-046-1.png" alt="Recusa ao administrador, com HTTP 200 na faixa amarela." loading="lazy"></a><figcaption>Recusa ao administrador, com HTTP 200 na faixa amarela. · clique para ampliar</figcaption></figure>
 
 <p><em>Figura 1: Recusa ao administrador, com HTTP 200 na faixa amarela.</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-046-2.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-046-2.png" alt="Perfil ADMINISTRADOR: as duas funções Verificação de Amostragens marcadas (125 de 125)." loading="lazy"></a><figcaption>Perfil ADMINISTRADOR: as duas funções Verificação de Amostragens marcadas (125 de 125). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Perfil ADMINISTRADOR: as duas funções Verificação de Amostragens marcadas (125 de 125).</em></p>
+<figure><a href="../img/controle-qualidade/dv-cq-046-3.png" target="_blank" rel="noopener"><img src="../img/controle-qualidade/dv-cq-046-3.png" alt="Perfil de consulta (controle): 25 de 125 marcados, a leitura distingue marcado de desmarcado." loading="lazy"></a><figcaption>Perfil de consulta (controle): 25 de 125 marcados, a leitura distingue marcado de desmarcado. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Perfil de consulta (controle): 25 de 125 marcados, a leitura distingue marcado de desmarcado.</em></p>
 <h3 id="onde-esta-no-codigo_26">Onde está no código</h3>
-<p><strong>Causa (inferência):</strong> Possível função da tela não cadastrada ou não ligada ao perfil (a conferir no Principal, em Perfil). Se a função não existe, a correção é do desenvolvimento; se só falta a ligação, é dado do ambiente. O HTTP 200 é do desenvolvimento.</p>
+<p><strong>Causa (confirmada):</strong> A segunda versão da tela pede a permissão pela chave Coleta/VerificacaoAmostragem e <strong>nenhuma função cadastrada tem essa chave</strong>. O script de instalação do CQ (<code>HSolutions.CQ.DB/dml.sql</code>, linhas 173 e 441 a 443) cadastrou a função com essa chave e depois a <strong>renomeou</strong> para COLETA/VERIFICACAO; o controlador antigo ficou no código, sem função. As duas funções "Verificação de Amostragens" do cadastro (2839 e 2932) já estão marcadas nos perfis ADMINISTRADOR e TESTE CQ R10 (125 de 125 itens) e levam à tela da primeira versão; o perfil de consulta (25 de 125) serviu de controle da leitura. O Principal não tem cadastro de telas e funções (a árvore do Perfil só liga e desliga funções existentes). A chave exata das funções 2839 e 2932 não aparece na tela, então parte da conclusão vem do comportamento observado.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Linhas</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HSolutions.CQ.DB/dml.sql</code></td>
+<td>173</td>
+<td>Cadastra a função com a chave coleta/verificacaoamostragem.</td>
+</tr>
+<tr>
+<td><code>HSolutions.CQ.DB/dml.sql</code></td>
+<td>441-443</td>
+<td>Renomeia a função para COLETA/VERIFICACAO e aponta o link para a tela da primeira versão; nenhuma função com a chave da segunda versão sobra.</td>
+</tr>
+<tr>
+<td><code>HSolutions.CQ.UI/Areas/Coleta/Controllers/VerificacaoAmostragemController.cs</code></td>
+<td></td>
+<td>Controlador da segunda versão, mantido no código sem função cadastrada.</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Caminhos a partir da pasta <code>app/</code> do módulo (4.controle_qualidade/app).</em></p>
 <h3 id="sugestao-de-correcao_41">Sugestão de correção</h3>
 <ul>
-<li>Decidir se a segunda versão fica: se sim, cadastrar a função e ligar ao perfil; se não, retirar o código.</li>
-<li>Fazer a recusa de acesso responder 401 ou 403.</li>
+<li>Decidir com a área se a segunda versão volta ou sai. Se voltar: cadastrar a função com a chave Coleta/VerificacaoAmostragem (script de banco) e ligá-la aos perfis. Se sair: retirar o controlador antigo e o item duplicado do menu juntos.</li>
+<li>Fazer a recusa de acesso responder 401 ou 403, e não HTTP 200.</li>
 </ul>
 <h3 id="como-confirmar-a-correcao_45">Como confirmar a correção</h3>
 <p>Repetir CT-CQ-F02-01 com o administrador.</p>
