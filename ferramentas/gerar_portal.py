@@ -37,6 +37,7 @@ import biblioteca  # noqa: E402
 import higiene  # noqa: E402
 import menus_gq  # noqa: E402
 import telas_devs  # noqa: E402
+import versao_nova  # noqa: E402
 
 HOJE = datetime.date.today().strftime("%d/%m/%Y")
 
@@ -1016,6 +1017,10 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
         organizar_roteiro(mod)
     hom_ = Path(origem) / "homologacao"
     SITUACAO_TELAS.update(telas_devs.situacoes(hom_))
+    # Versão nova: telas de cada módulo (do inventário) e, no Principal, o conteúdo de homologacao/versao-nova/1.principal/
+    NOVO.clear()
+    NOVO.update(versao_nova.registro(hom_))
+    versao_nova.preencher_principal(NOVO, hom_, lambda md: limpar(md, "versao-nova/1.principal", retirado), lambda md: conv.converter(md, "principal", tirar_h1=True)[0])
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
         DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads(higiene.redigir((hom_ / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}
@@ -1058,7 +1063,39 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
             print(f"  - {c}")
     # Devs/QA: as telas por módulo e menu, com os cinco documentos de cada tela
     dados_telas = telas_devs.montar(MODULOS, origem, destino)
-    (destino / "telas.html").write_text(telas_devs.pagina(dados_telas, cabecalho, rodape), encoding="utf-8")
+    # Versão nova: páginas documentacao/novo/<módulo>/<tela>-<aba>.html, lista da versão nova e arquivos do seletor
+    por_id = {m["id"]: m for m in MODULOS}
+    doc_novo = {}
+    for m in MODULOS:
+        itens = [p for p in m["paginas"] if passo_de(p) in ("novo", "novo_parecer") and not p.get("grupo")]
+        if itens:
+            doc_novo[m["id"]] = [("Testes e comparação com o legado (versão nova)", f"documentacao/{m['id']}/novo.html")] + [(p["titulo"], f"documentacao/{m['id']}/{p['slug']}.html") for p in itens]
+    n_novas = 0
+    for mid, rm in NOVO.items():
+        mod = por_id.get(mid)
+        if not mod or not rm["telas"]:
+            continue
+        ideal = next((x for x in mod["paginas"] if x.get("cat") == "ideal" and "entre os m" not in x["titulo"].lower()), None)
+        href_ideal = f'{ideal["slug"]}.html' if ideal else None
+        pasta = doc_dir / "novo" / mid
+        pasta.mkdir(parents=True, exist_ok=True)
+        for t in rm["telas"]:
+            leg = {x["aba"]: x["slug"] for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]}
+            for chave, rot, aba_leg in versao_nova.ABAS:
+                alvo = leg.get(aba_leg) or next(iter(leg.values()), None)
+                href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../../telas.html?versao=legado#m-{mid}"
+                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal), encoding="utf-8")
+                n_novas += 1
+                if t["abas"][chave]:
+                    txt = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t["abas"][chave])))
+                    busca.append({"t": f"{t['nome']} · {rot} (versão nova)", "m": mod["nome"], "u": f"documentacao/novo/{mid}/{t['slug']}-{chave}.html", "h": [], "x": txt[:6000]})
+    (destino / "portal/versao.css").write_text(versao_nova.CSS, encoding="utf-8")
+    (destino / "portal/versao.js").write_text(versao_nova.JS, encoding="utf-8")
+    arvore_novo = versao_nova.arvore_novo(dados_telas, NOVO, por_id, doc_novo)
+    tot_n = sum(versao_nova.contagem(rm)[0] for rm in NOVO.values())
+    tot_v = sum(versao_nova.contagem(rm)[1] for rm in NOVO.values())
+    print(f"Versão nova: {n_novas} páginas por tela e aba; {tot_v} de {tot_n} telas com conteúdo validado (Principal: {versao_nova.contagem(NOVO['principal'])[1]} de {versao_nova.contagem(NOVO['principal'])[0]}).")
+    (destino / "telas.html").write_text(telas_devs.pagina(dados_telas, cabecalho, rodape, arvore_novo, tot_v, tot_n), encoding="utf-8")
     (destino / "portal/telas.css").write_text(telas_devs.CSS, encoding="utf-8")
     print(f"Devs/QA: {sum(len(ts) for m in dados_telas for _, ts in m['menus'])} telas em {sum(1 for m in dados_telas if m['menus'])} módulos com inventário.")
     cron = pagina_cronograma(origem)
@@ -1213,7 +1250,8 @@ def _abas_extras(mod, p):
         if pf:
             href = f'{pf["slug"]}.html'
     # Ideal
-    ideal = next((x for x in mod["paginas"] if x.get("cat") == "novo" and x.get("grupo") == p.get("grupo")
+    # (no Principal, as páginas "novo" com tela são da versão nova, não do ideal: o Ideal é a ficha do módulo)
+    ideal = next((x for x in mod["paginas"] if mod["id"] != "principal" and x.get("cat") == "novo" and x.get("grupo") == p.get("grupo")
                   and telas_devs._norm(re.sub(r"\s*\(.*?\)", "", x.get("tela") or "")) == nome), None)
     if not ideal:  # sem ficha da tela ideal: o documento "O módulo ideal" (visão do módulo inteiro)
         ideal = next((x for x in mod["paginas"] if x.get("cat") == "ideal" and "entre os m" not in x["titulo"].lower()), None)
@@ -1226,8 +1264,27 @@ def _abas_extras(mod, p):
             + botao("Ideal", f'{ideal["slug"]}.html' if ideal else None, "A ficha da tela ideal ainda não foi escrita"))
 
 
+def barra_versao(mod, p):
+    """Faixa "Versão: Legado | Novo" das páginas por tela do legado (e das páginas antigas da versão nova no Principal), mantendo a mesma tela."""
+    rm = NOVO.get(mod["id"])
+    chave = versao_nova.chave_tela(p.get("tela") or "")
+    t = next((x for x in rm["telas"] if x["chave"] == chave), None) if rm and chave else None
+    lista_novo = f'../../telas.html?versao=novo#mn-{mod["id"]}'
+    if p.get("tela_n") and p.get("aba"):
+        novo = f'../novo/{mod["id"]}/{t["slug"]}-{versao_nova.ABA_DO_LEGADO.get(p["aba"], "analise")}.html' if t else lista_novo
+        return versao_nova.barra_pagina("legado", f'{p["slug"]}.html', novo), "legado"
+    if mod["id"] == "principal" and p["cat"] == "novo" and p.get("tela"):
+        irma = next((x for x in mod["paginas"] if x.get("tela_n") and x.get("aba") == "analise" and versao_nova.chave_tela(x.get("tela") or "") == chave), None)
+        leg = f'{irma["slug"]}.html' if irma else f'../../telas.html?versao=legado#m-{mod["id"]}'
+        aba = "passo-a-passo" if "passo" in (p.get("rotulo") or "").lower() else "analise"
+        nota = (f'Este é o endereço antigo desta página; a tela, com as sete abas, está em <a href="../novo/{mod["id"]}/{t["slug"]}-{aba}.html">Documentação por módulo · versão nova</a>.' if t else "")
+        return versao_nova.barra_pagina("novo", leg, "#", nota), "novo"
+    return "", None
+
+
 def pagina_documento(mod, p):
     raiz = "../../"
+    barra_v, versao_pag = barra_versao(mod, p)
     word = f'<a class="botao" href="{p["word"]}" download>⤓ Baixar em Word</a>' if p["word"] else ""
     aviso = '<p class="nota">Versão publicada sem os trechos de segurança, que têm distribuição restrita.</p>' if p["limpo"] else ""
     ant_mod, prox_mod = vizinhos(mod)
@@ -1261,7 +1318,7 @@ def pagina_documento(mod, p):
     _info = next((x for x in SITUACOES_MOD if x[0] == _sit), None)
     onde_curto = E(p["passo_nome"]) if _info and not unico else onde
     trilha_sit = (f' › <a class="sit-trilha" href="{_sit}.html" style="--cor:{_info[3]}">{E(_info[1])}</a>' if _info else "")
-    return (cabecalho(f"{p['titulo']} · {mod['nome']} · iLabMedSys", raiz) + f"""
+    saida = (cabecalho(f"{p['titulo']} · {mod['nome']} · iLabMedSys", raiz) + f"""
 <div class="doc-layout">
   <aside class="lateral" aria-label="Roteiro do módulo">
     <a class="lat-modulo" href="index.html" style="--cor:{mod['cor']}"><span class="icone">{mod['icone']}</span>{E(mod['nome'])}</a>
@@ -1275,7 +1332,7 @@ def pagina_documento(mod, p):
       <div class="doc-acoes">{word}<button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
       {aviso}
     </header>
-    {abas}
+    {barra_v}{abas}
     <article class="texto{' texto-largo' if p.get('aba') else ''}">
 {p['corpo']}
     </article>
@@ -1284,6 +1341,7 @@ def pagina_documento(mod, p):
   {toc_html(p['toc'])}
 </div>
 """ + rodape(raiz))
+    return versao_nova.com_versao(saida, raiz).replace("<body ", f'<body data-versao-pagina="{versao_pag}" ', 1) if versao_pag else saida
 
 
 SITUACOES_MOD = [
@@ -1359,6 +1417,7 @@ MENUS_GQ_DESC = {
     "Autoinspeção e Auditoria": "Onde a empresa confere, por conta própria, se cumpre as Boas Práticas: escreve os roteiros de perguntas, programa a verificação, registra o que encontrou e avalia o resultado.",
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
+NOVO = {}  # telas da versão nova por módulo (versao_nova.registro), preenchido em gerar()
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
 
 
@@ -1434,7 +1493,7 @@ def pagina_modulo(mod, sit="index"):
                 bloco_menus += (f'<h3 class="novo-menu">{E(m)} ({n_telas} telas)</h3>'
                                 f'<p class="secao-desc">{MENUS_GQ_DESC.get(m, "")} '
                                 f'<a href="{entenda["slug"]}.html">Entenda o menu: o que faz e por que importa</a>.</p>' + _cartoes_um_menu(pm))
-        return (cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
+        return versao_nova.com_versao(cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
 <main class="pagina-modulo" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
   <header class="mod-cabecalho" style="--cor:{mod['cor']}">
@@ -1445,6 +1504,7 @@ def pagina_modulo(mod, sit="index"):
       <p>{E(intro_modulo(mod))}</p>
     </div>
   </header>
+  {versao_nova.bloco_modulo(mod, NOVO.get(mod["id"]))}
   <h2 class="secao-titulo">Escolha uma situação</h2>
   <p class="secao-desc">O módulo é o mesmo. O que muda é o retrato: o sistema entregue, a versão nova ou o que deve ser.</p>
   <div class="sit-cards">{"".join(cartoes)}</div>
@@ -1453,7 +1513,7 @@ def pagina_modulo(mod, sit="index"):
   <div class="doc-cards">{blocos_resumo}</div>{bloco_menus}
   {fim}
 </main>
-""" + rodape(raiz))
+""" + rodape(raiz), raiz)
 
     nome_sit, curta, cor = next((n, c, k) for kk, n, c, k in SITUACOES_MOD if kk == sit)
     est = estados[sit]
@@ -1546,7 +1606,7 @@ def pagina_modulo(mod, sit="index"):
                   f'<p>Esta parte tem <strong>{len(pags_sit)} documentos</strong>, do primeiro ({E(primeiro["titulo"])}) ao último ({E(ultimo["titulo"])}). Leia na ordem: cada documento leva ao próximo.</p></div>'
                   f'<a class="botao botao-grande" href="{primeiro["slug"]}.html">Iniciar o roteiro →</a></section>')
 
-    return (cabecalho(f"{mod['nome']} · {nome_sit} · iLabMedSys", raiz, "modulos") + f"""
+    return versao_nova.com_versao(cabecalho(f"{mod['nome']} · {nome_sit} · iLabMedSys", raiz, "modulos") + f"""
 <main class="pagina-modulo" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a> › <span>{E(nome_sit)}</span></nav>
   <header class="mod-cabecalho mod-sit" style="--cor:{cor}">
@@ -1559,13 +1619,14 @@ def pagina_modulo(mod, sit="index"):
     </div>
   </header>
   {troca_situacao(sit, mod)}
+  {versao_nova.bloco_modulo(mod, NOVO.get(mod["id"]))}
   <div class="numeros">{num_html}</div>
   {comece}
   {submenu_html}
   {''.join(blocos)}
   {fim if sit == "legado" else ""}
 </main>
-""" + rodape(raiz))
+""" + rodape(raiz), raiz)
 
 
 def bloco_painel(origem, ordem):

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pessoa jurídica · Manual do usuário · versão nova · Principal · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../portal/portal.css?v=027bcbf8">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<link rel="stylesheet" href="../../../portal/versao.css"></head>
+<body data-versao-pagina="novo" data-raiz="../../../">
+<header class="topo">
+  <a class="marca" href="../../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../../index.html#modulos">Módulos</a>
+    <a href="../../../biblioteca.html">Biblioteca</a>
+    <a href="../../../telas.html">Devs/QA</a>
+    <a href="../../../index.html#publicos">Por público</a>
+    <a href="../../../anvisa.html">ANVISA</a>
+    <a href="../../../cronograma.html">Cronograma</a>
+    <a href="../../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<main class="nv-pagina" id="conteudo">
+  <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../telas.html?versao=novo#mn-principal">Documentação por módulo · versão nova</a> › <a href="../../../documentacao/principal/index.html">Principal</a> › <span>Pessoa jurídica</span></nav>
+  <div class="versao-barra vb-novo"><div class="versao-seletor" role="group" aria-label="Versão do sistema"><span class="vs-rotulo">Versão:</span><a class="vs-btn" href="../../principal/pessoa-juridica-manual-do-usuario.html" title="Trocar de versão e abrir esta mesma tela">Legado</a><span class="vs-btn" aria-current="true">Novo</span></div><span class="vb-texto">Você está na versão <strong>Novo</strong>: a versão nova (o mesmo sistema com ferramentas atualizadas).</span></div>
+  <header class="doc-cabecalho"><h1>Pessoa jurídica <span class="sit-sufixo">· versão nova</span></h1>
+  <p class="nv-meta">Principal · menu Cadastros e tabelas de apoio · Situação na versão nova: <strong>Testada</strong></p></header>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="pessoa-juridica-analise.html">Análise</a><a href="pessoa-juridica-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="pessoa-juridica-fluxos.html">Fluxos</a><a href="pessoa-juridica-regras-de-negocio.html">Regras de negócio</a><a href="pessoa-juridica-anvisa.html" class="aba-sem">Anvisa</a><a href="pessoa-juridica-passo-a-passo.html">Passo a passo</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav>
+  <article class="texto texto-largo"><p><strong>O que a tela faz</strong></p>
+<p>Cadastro de empresas (fabricantes, fornecedores e outros), com CNPJ e endereço. Aparece como Fabricante e Fornecedor no cadastro de equipamentos.</p>
+<ul>
+<li>Obrigatórios: tipo de cadastro, razão social, CNPJ, CEP, logradouro, número, país, UF, município e bairro. Vazio mostra 10 mensagens claras.</li>
+<li>O <strong>CNPJ é validado</strong>: dígito errado, 11.111.111/1111-11 e letras são recusados ("CNPJ invalido.", mensagem que some da tela); CNPJ repetido: "CNPJ ja cadastrado!".</li>
+<li>Alterar o nome fantasia grava <strong>sem pedir justificativa</strong>, e o histórico traz a coluna <strong>Usuário em branco</strong>.</li>
+<li>Inativar <strong>exige justificativa</strong> (o legado gravava sem pedir); a empresa inativa some das listas de Fabricante e Fornecedor. O histórico não mostra a justificativa.</li>
+<li><strong>Não tem Excluir</strong>, só inativar (como no legado).</li>
+<li>O botão de pesquisa de CEP não preencheu o endereço.</li>
+</ul>
+<p><strong>Antes de começar (preparo do teste)</strong></p>
+<ul>
+<li>Usuário <code>t.cadastro</code> ou <code>t.admin</code>.</li>
+<li>CNPJs de teste válidos (gerados) e inválidos.</li>
+<li>Todo registro novo começa com <code>T.</code> (se o ponto falhar, use <code>T-</code> e anote o campo).</li>
+<li>Dados de teste ficam no ambiente: não apague o que não criou.</li>
+</ul>
+<p><strong>Como usar, passo a passo</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>O que fazer</th>
+<th>O que deve aparecer</th>
+<th>Caso do plano</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Abrir Cadastros &gt; Pessoa jurídica e clicar em Incluir. Salvar vazio.</td>
+<td>10 mensagens, uma por obrigatório.</td>
+<td>CT-PRI-091</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Incluir só com os obrigatórios (tipo, razão social <code>T.PJ MINIMA</code>, CNPJ válido, CEP, logradouro, número, país, UF, município, bairro).</td>
+<td>Grava e aparece na lista.</td>
+<td>CT-PRI-090</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Incluir outra, completa.</td>
+<td>Grava.</td>
+<td>CT-PRI-090</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Tentar CNPJ com dígito errado, 11.111.111/1111-11, com letras e um repetido.</td>
+<td>Recusados (as mensagens somem em 1 s: grave a tela).</td>
+<td>CT-PRI-091</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Alterar o nome fantasia. Abrir o histórico.</td>
+<td>Sem justificativa. Anote se a coluna Usuário vem preenchida.</td>
+<td>CT-PRI-092</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Inativar com e sem justificativa. Abrir o cadastro de equipamento e procurar a empresa em Fabricante e Fornecedor.</td>
+<td>Exige justificativa; some das listas.</td>
+<td>CT-PRI-093</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Procurar o botão Excluir.</td>
+<td>Não existe.</td>
+<td>CT-PRI-094</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Pesquisar <code>farmaceutica</code> e <code>FARMACÊUTICA</code>; pesquisar pelo CNPJ.</td>
+<td>Sem acento não acha; por CNPJ acha.</td>
+<td>CT-PRI-096</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Gerar Excel e Imprimir.</td>
+<td>Mesmas linhas da lista.</td>
+<td>CT-PRI-097</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Como a tela é</strong></p>
+<figure><a href="../../img/principal/d-lista-pj.jpg" target="_blank" rel="noopener"><img src="../../img/principal/d-lista-pj.jpg" alt="Pessoa jurídica: lista" loading="lazy"></a><figcaption>Pessoa jurídica: lista · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/principal/d-form-pj.jpg" target="_blank" rel="noopener"><img src="../../img/principal/d-form-pj.jpg" alt="Pessoa jurídica: formulário" loading="lazy"></a><figcaption>Pessoa jurídica: formulário · clique para ampliar</figcaption></figure></article>
+</main>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 30/10/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../../portal/portal.js"></script>
+<script src="../../../portal/versao.js"></script></body></html>
