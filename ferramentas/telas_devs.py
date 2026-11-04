@@ -41,8 +41,50 @@ def _norm(s):
     return re.sub(r"[^a-z0-9]+", " ", "".join(c for c in s if unicodedata.category(c) != "Mn")).strip()
 
 
+def _nomes(texto):
+    """Nomes separados por vírgula, com " e " antes do último ("A, B e C." vira [A, B, C])."""
+    t = re.sub(r",\s*com .*$", "", texto.strip().rstrip("."))
+    partes = [x.strip() for x in t.split(", ") if x.strip()]
+    if partes and " e " in partes[-1]:
+        a, b = partes[-1].rsplit(" e ", 1)
+        partes[-1:] = [a.strip(), b.strip()]
+    return partes
+
+
+def _listas_em_texto(L, menus_com_tabela):
+    """Seções do inventário escritas em texto corrido (sem tabela), como Relatórios e Tabelas de apoio da Produção:
+    a primeira linha de texto lista as telas; marcadores "Fora do menu" e "Administração" listam outras."""
+    out, i = [], 0
+    while i < len(L):
+        m = re.match(r"^## (Relatórios|Tabelas de apoio)[^(\n]*\(", L[i])
+        if not m:
+            i += 1
+            continue
+        menu = re.sub(r"\s*\([^)]*\)\s*$", "", L[i][3:]).strip()
+        j = i + 1
+        corpo = []
+        while j < len(L) and not L[j].startswith("## "):
+            corpo.append(L[j])
+            j += 1
+        i = j
+        if menu in menus_com_tabela:
+            continue
+        for linha in corpo:
+            t = linha.strip()
+            if not t or t.startswith(("|", "**Situação")):
+                continue
+            mm = re.match(r"^- \*\*(Fora do menu|Administração):\*\*\s*(.+)$", t)
+            if mm:
+                out += [(menu, n, "Não testada") for n in _nomes(mm.group(2))]
+            elif not t.startswith("-") and not any(x[0] == menu for x in out):
+                out += [(menu, n, "Não testada") for n in _nomes(t)]
+    return out
+
+
 def ler_inventario(arq):
-    """(menu, tela, situação) de cada tabela do inventário que tem coluna Situação."""
+    """(menu, tela, situação) de cada tabela do inventário que tem coluna Situação, mais as seções em texto corrido.
+    A tabela "Tela a tela" (resumo do CQ) repete as tabelas por menu e não conta. Uma linha de "N telas" (protótipos)
+    vira N telas."""
     if not arq.exists():
         return []
     L = arq.read_text(encoding="utf-8").splitlines()
@@ -60,17 +102,27 @@ def ler_inventario(arq):
             while i < len(L) and L[i].startswith("|"):
                 rows.append([x.strip() for x in L[i].strip().strip("|").split("|")])
                 i += 1
-            if ("Situação" in cols and menu and not menu.startswith(("Como ler", "Resultado", "Testes de tela", "Outros", "Próximos"))
+            if ("Situação" in cols and menu and not menu.startswith(("Como ler", "Resultado", "Testes de tela", "Outros", "Próximos", "Tela a tela"))
                     and cols[0].startswith(("Tela", "Cadastro", "Relatório"))):
                 for c in rows:
                     if len(c) != len(cols):
                         c = c[:len(cols) - 1] + [" | ".join(c[len(cols) - 1:])] if len(c) > len(cols) else c
                     if len(c) == len(cols):
-                        sit = re.sub(r"\*\*|`", "", c[cols.index("Situação")])
-                        sit = next((s for s in SITUACOES if sit.startswith(s)), sit.split(".")[0][:30])
-                        out.append((menu, re.sub(r"\*+|`", "", c[0]).strip(), sit))
+                        sit_bruta = re.sub(r"\*\*|`", "", c[cols.index("Situação")])
+                        sit = next((s for s in SITUACOES if sit_bruta.startswith(s)), sit_bruta.split(".")[0][:30])
+                        nome = re.sub(r"\*+|`", "", c[0]).strip()
+                        mn = re.search(r"\((\d+) telas\)", sit_bruta)
+                        if mn and int(mn.group(1)) > 1:
+                            base = re.sub(r"\s*\([^)]*\)\s*$", "", nome)
+                            partes = [x.strip() for x in re.split(r",\s*|\s+e\s+", base) if x.strip()]
+                            if len(partes) == int(mn.group(1)):
+                                suf = " (modelo)" if "modelo" in nome.lower() else ""
+                                out += [(menu, p + suf, sit) for p in partes]
+                                continue
+                        out.append((menu, nome, sit))
             continue
         i += 1
+    out += _listas_em_texto(L, {m for m, _n, _s in out})
     return out
 
 
