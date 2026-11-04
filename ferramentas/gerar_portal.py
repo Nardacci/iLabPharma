@@ -637,7 +637,7 @@ MODULOS = [
 ]
 
 PUBLICOS = [
-    ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("visao-geral", "mapa-de-integracoes-entre-os-modulos"), ("principal", "resumo-do-modulo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
+    ("Diretoria", "Situação de cada módulo e decisões.", [("visao-geral", "os-cinco-modulos-o-negocio-a-anvisa-e-o-que-falta"), ("visao-geral", "diagnostico-de-conformidade-com-a-anvisa"), ("visao-geral", "mapa-de-integracoes-entre-os-modulos"), ("principal", "resumo-do-modulo"), ("visao-geral", "mapa-do-processo-fabril"), ("estoque", "relatorio-de-testes")]),
     ("Usuários das áreas", "Como cada processo funciona nas telas.", [("principal", "manual-do-usuario"), ("estoque", "manual-do-usuario"), ("garantia-qualidade", "desvios-e-capa")]),
     ("Garantia da Qualidade", "Conformidade, riscos e rastreabilidade.", [("garantia-qualidade", "conformidade-com-a-rdc-658-2022"), ("principal", "conformidade-regulatoria"), ("principal", "dossie-de-homologacao")]),
     ("Desenvolvimento", "Requisitos e dados para a nova versão.", [("principal", "analise-de-requisitos"), ("principal", "modelo-de-dados-e-integracoes"), ("visao-geral", "telas-tabelas-e-codigo-repetidos-entre-os-modulos")]),
@@ -1903,7 +1903,7 @@ def pagina_inicial(origem):
       <h2>Visão entre módulos</h2>
       <p>{E(vg['resumo'])}</p>
     </div>
-    <a class="botao" href="documentacao/visao-geral/index.html">Ver o mapa do processo fabril →</a>
+    <p class="apresentacao-links"><a class="botao" href="documentacao/visao-geral/os-cinco-modulos-o-negocio-a-anvisa-e-o-que-falta.html">Ler: os cinco módulos, o negócio e a ANVISA →</a> <a class="botao botao-secundario" href="documentacao/visao-geral/index.html">Ver o mapa do processo fabril →</a></p>
   </section>
 
   <section class="secao" id="publicos">
