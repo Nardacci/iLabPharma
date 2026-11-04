@@ -186,12 +186,11 @@ def arvore_novo(dados_telas, reg, mods_por_id, doc_modulo_novo):
         rm = reg.get(mid)
         if not rm or not rm["telas"]:
             continue
-        n, v = contagem(rm)
         docs = doc_modulo_novo.get(mid, [])
         lista = "".join(f'<li class="td-item"><span class="td-ico td-i-tela" aria-hidden="true"></span><a href="{E(u)}">{E(r)}</a></li>' for r, u in docs)
         link_d = f'<ul class="td-lista td-dossie">{lista}</ul>' if lista else ""
         h.append(f'<details class="td-mod" id="mn-{mid}" data-modulo="{mid}"><summary><span class="td-ico td-i-mod" aria-hidden="true"></span>'
-                 f'<span class="td-mod-nome">{E(m["nome"])}</span><span class="td-mod-n">{v} de {n} telas validadas</span></summary>{link_d}')
+                 f'<span class="td-mod-nome">{E(m["nome"])}</span></summary>{link_d}')
         for menu, ts in rm["menus"]:
             ok = sum(1 for t in ts if t["validada"])
             h.append(f'<details class="td-menu"><summary><span class="td-ico td-i-pasta" aria-hidden="true"></span>{E(menu)} <span class="td-mod-n">{ok} de {len(ts)}</span></summary><ul class="td-lista">')
