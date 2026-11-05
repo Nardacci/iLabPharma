@@ -299,6 +299,7 @@ MODULOS = [
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
             ("transversal/08-visao-dos-cinco-modulos.md", "Os cinco módulos: o negócio, a ANVISA e o que falta", "inicio", "transversal/LabMedSys - Visao dos Cinco Modulos.docx"),
+            ("transversal/09-matriz-de-papeis-e-permissoes.md", "Matriz de papéis e permissões (como deve ser), versão 0.1", "inicio", "transversal/LabMedSys - Matriz de Papeis e Permissoes.docx"),
             ("transversal/05-precisa-de-voce-agora.md", "O que precisa de você agora", "inicio", None),
             ("cliente-ivb/02-aderencia-ao-edital.md", "Aderência ao edital do IVB", "inicio", None),
             ("transversal/04-mapa-de-integracoes.md", "Mapa de integrações entre os módulos", "inicio", "transversal/LabMedSys - Mapa de Integracoes entre Modulos.docx"),
