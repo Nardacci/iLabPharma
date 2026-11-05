@@ -44,6 +44,59 @@
     
     <article class="texto">
 <p><strong>Pedido pendente de envio ao desenvolvimento</strong> (decisão de 23/10/2026: o portal publica os defeitos de acesso e segurança; senhas, endereços de servidor e chaves continuam fora). Data: 18/10/2026. Ambiente: teste da versão nova. Refs.: DV-GQ-N-008, N-011, N-012 e rodadas 6, 7 e 8 da GQ (<code>versao-nova/5.garantia_qualidade/execucao/</code>).</p>
+<h3 id="atualizacao-de-05-11-2026-o-mesmo-problema-no-controle-de-documentos-dv-doc-n-001">Atualização de 05/11/2026: o mesmo problema no Controle de Documentos (DV-DOC-N-001)</h3>
+<p>A rodada 1 e a investigação do robô no Controle de Documentos (<code>6.controle_documento/execucao/2026-11-04-rodada-1/</code> e <code>2026-11-05-investigacao-n001/</code>) <strong>reconfirmam a causa para um terceiro módulo</strong>: só o perfil de id 1 grava. O que há de novo:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Evidência</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perfil Elaborador com as 76 funções do módulo, todas com escrita</td>
+<td>403 ao gravar setor revisor, aplicação e anexo; só o administrador consegue</td>
+</tr>
+<tr>
+<td>Perfil espelho do administrador (1.507 funções, 0 diferenças)</td>
+<td>403</td>
+</tr>
+<tr>
+<td>Token do administrador, claim <code>Modulos</code></td>
+<td><code>producao</code>, <code>estoque</code>, <code>cq</code>, <code>comercial</code>, <strong><code>patrimonio</code></strong>, <code>administracao</code>, <code>configurador_ope</code>, <code>gq</code>, <code>rastreabilidade</code>, <code>principal</code></td>
+</tr>
+<tr>
+<td>Token do Elaborador, claim <code>Modulos</code></td>
+<td><code>administracao</code> e <code>principal</code>. O Controle de Documentos aparece como <code>administracao</code> nos dois, então <strong>não falta módulo para a rota</strong></td>
+</tr>
+<tr>
+<td>Demais claims</td>
+<td>Iguais, exceto <code>ProfileId</code> (1 contra 28)</td>
+</tr>
+<tr>
+<td><code>GET /documentos/{id}</code></td>
+<td>200 para o Elaborador</td>
+</tr>
+<tr>
+<td><code>GET /documentos/{id}/setores</code>, <code>/anexos</code>, <code>/anexos/finais</code>, <code>/aplicacoes</code>, <code>/tags</code>, <code>/referencias</code>, <code>/historico</code></td>
+<td><strong>403</strong> para o Elaborador</td>
+</tr>
+<tr>
+<td><code>GET /documentos/999999/setores</code> (documento que não existe)</td>
+<td>403 para o Elaborador e <strong>200 com lista vazia</strong> para o administrador: a recusa vem <strong>antes</strong> de procurar o documento, então é uma regra de autorização da rota, não de setor, grupo ou dono do documento</td>
+</tr>
+<tr>
+<td>Corpo do 403</td>
+<td>Vazio, só o cabeçalho <code>Server</code>; a tela mostra "Ocorreu um erro inesperado."</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Descartado com dados:</strong> funções sem escrita, funções ocultas na árvore de Perfil e regra de negócio do documento. <strong>Sobra:</strong> uma regra de autorização por rota que só o <code>ProfileId</code> 1 (ou o módulo Patrimônio, que só o administrador recebe e que a tela de Perfil não mostra) satisfaz.</p>
+<p><strong>Consequência para os testes:</strong> na GQ, no Estoque e no Controle de Documentos da versão nova só dá para testar com o administrador. Ficam <strong>sem teste</strong>: separação de funções entre pessoas (quem revisa não aprova, quem cadastra o recebimento não autoriza), perfis de consulta e acesso por perfil. O "corrigido" de DV-DOC-030, 037 e 039 <strong>não está provado</strong>.</p>
+<p><strong>Perguntas acrescentadas ao pedido</strong> (as de 1 a 5 abaixo continuam valendo):
+6. A política de autorização dos subrecursos de <code>documentos/{id}</code> compara o <code>ProfileId</code> com 1, exige o módulo Patrimônio ou exige uma função que a árvore de Perfil não mostra?
+7. O 403 pode trazer o motivo (função ou módulo faltante), e a tela mostrar essa mensagem no lugar de "Ocorreu um erro inesperado."?</p>
 <h3 id="o-que-acontece">O que acontece</h3>
 <p>Um usuário de teste (<code>t.consulta</code>) com um perfil novo que tem as funções da Garantia da Qualidade marcadas <strong>vê o menu da GQ e abre as telas, mas todas as leituras da GQ são recusadas pelo servidor (403)</strong>. Com o perfil ADMINISTRADOR (id 1) ligado à mesma conta, a GQ funciona.</p>
 <h3 id="o-que-ja-foi-testado-rodadas-6-a-9">O que já foi testado (rodadas 6 a 9)</h3>
@@ -113,10 +166,10 @@
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="resumo-dos-testes.html"><small>← Anterior</small><strong>Resumo dos testes</strong></a><a class="ap ap-prox" href="resultado-da-rodada-4.html"><small>Próximo →</small><strong>Resultado da rodada 4</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece">O que acontece</a></li><li><a href="#o-que-ja-foi-testado-rodadas-6-a-9">O que já foi testado (rodadas 6 a 9)</a></li><li><a href="#o-que-precisamos-saber-perguntas-fechadas">O que precisamos saber (perguntas fechadas)</a></li><li><a href="#pontos-de-trilha-de-auditoria-encontrados-no-caminho-nao-bloqueiam-o-acesso">Pontos de trilha de auditoria encontrados no caminho (não bloqueiam o acesso)</a></li><li><a href="#o-que-fica-parado-ate-a-resposta">O que fica parado até a resposta</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#atualizacao-de-05-11-2026-o-mesmo-problema-no-controle-de-documentos-dv-doc-n-001">Atualização de 05/11/2026: o mesmo problema no Controle de Documentos (DV-DOC-N-001)</a></li><li><a href="#o-que-acontece">O que acontece</a></li><li><a href="#o-que-ja-foi-testado-rodadas-6-a-9">O que já foi testado (rodadas 6 a 9)</a></li><li><a href="#o-que-precisamos-saber-perguntas-fechadas">O que precisamos saber (perguntas fechadas)</a></li><li><a href="#pontos-de-trilha-de-auditoria-encontrados-no-caminho-nao-bloqueiam-o-acesso">Pontos de trilha de auditoria encontrados no caminho (não bloqueiam o acesso)</a></li><li><a href="#o-que-fica-parado-ate-a-resposta">O que fica parado até a resposta</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 04/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 05/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
