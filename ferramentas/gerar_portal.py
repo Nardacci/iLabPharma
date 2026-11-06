@@ -34,6 +34,7 @@ import markdown
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import biblioteca  # noqa: E402
+import erros_tela  # noqa: E402
 import higiene  # noqa: E402
 import menus_gq  # noqa: E402
 import telas_devs  # noqa: E402
@@ -864,6 +865,7 @@ def cabecalho(titulo, raiz, ativo=""):
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{raiz}portal/portal.css?v={CSS_VERSAO}">
+<link rel="stylesheet" href="{raiz}portal/erros.css">
 <script>try{{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}}catch(e){{}}</script>
 </head>
 <body data-raiz="{raiz}">
@@ -960,7 +962,7 @@ def indice_normas(origem):
                          "html": markdown.markdown(corpo.strip(), extensions=["sane_lists"])}
     return {"rdc": rdc, "guia": guia, "travas": travas}
 
-def gerar(origem, destino, relatorio, atualizar_metadados=False):
+def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equivalencia=False):
     conv = Conversor(origem, destino)
     n_logins = higiene.carregar(origem)
     print(f"Higiene: {n_logins} logins de teste lidos da fonte privada para redação.")
@@ -1036,6 +1038,17 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
         DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads(higiene.redigir((hom_ / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}
 
+    # Botão "Erros" por tela: liga os defeitos (legado e novo) às telas
+    ERROS.clear()
+    ERROS.update(erros_tela.montar(hom_, NOVO))
+    if atualizar_equivalencia:
+        print(f"Equivalência de telas: {erros_tela.atualizar_equivalencia(hom_, ERROS, NOVO)} linha(s) acrescentada(s) a {erros_tela.CSV_NOME} (em {hom_}).")
+        ERROS.clear()
+        ERROS.update(erros_tela.montar(hom_, NOVO))
+    for (_v, _m), _d in sorted(ERROS.items()):
+        _lig = _d["total"] - len(_d["sem"])
+        print(f"Erros por tela · {_v} · {_m}: {_lig} de {_d['total']} defeitos ligados a uma tela; {len(_d['sem'])} sem tela.")
+
     # Páginas de documento
     for mod in MODULOS:
         if not mod["paginas"]:
@@ -1090,16 +1103,34 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False):
         href_ideal = f'{ideal["slug"]}.html' if ideal else None
         pasta = doc_dir / "novo" / mid
         pasta.mkdir(parents=True, exist_ok=True)
+        defs_leg = next((x for x in mod["paginas"] if (x.get("arq") or "").endswith("defeitos-completo.md")), None)
+        href_defs = f'{defs_leg["slug"]}.html' if defs_leg else ""
+        pasta_leg = doc_dir / mid
+        if ("legado", mid) in ERROS:
+            lh = lambda sl: f"../../{mid}/{sl}"
+            nh = lambda sl: f"../novo/{mid}/{sl}"
+            for t in rm["telas"]:
+                (pasta_leg / f"erros-{t['slug']}.html").write_text(erros_tela.pagina(
+                    mod, t, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh(f"{t['slug']}-erros.html")), "../../",
+                    href_defs, "erros-sem-tela.html", None), encoding="utf-8")
+                (pasta / f"{t['slug']}-erros.html").write_text(erros_tela.pagina(
+                    mod, t, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh(f"erros-{t['slug']}.html"), "#"), "../../../",
+                    "", "sem-tela-erros.html", None), encoding="utf-8")
+            (pasta_leg / "erros-sem-tela.html").write_text(erros_tela.pagina_sem_tela(
+                mod, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh("sem-tela-erros.html")), "../../", href_defs), encoding="utf-8")
+            (pasta / "sem-tela-erros.html").write_text(erros_tela.pagina_sem_tela(
+                mod, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh("erros-sem-tela.html"), "#"), "../../../", ""), encoding="utf-8")
         for t in rm["telas"]:
             leg = {x["aba"]: x["slug"] for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]}
             for chave, rot, aba_leg in versao_nova.ABAS:
                 alvo = leg.get(aba_leg) or next(iter(leg.values()), None)
                 href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../../telas.html?versao=legado#m-{mid}"
-                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal), encoding="utf-8")
+                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]))), encoding="utf-8")
                 n_novas += 1
                 if t["abas"][chave]:
                     txt = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t["abas"][chave])))
                     busca.append({"t": f"{t['nome']} · {rot} (versão nova)", "m": mod["nome"], "u": f"documentacao/novo/{mid}/{t['slug']}-{chave}.html", "h": [], "x": txt[:6000]})
+    (destino / "portal/erros.css").write_text(erros_tela.CSS, encoding="utf-8")
     (destino / "portal/versao.css").write_text(versao_nova.CSS, encoding="utf-8")
     (destino / "portal/versao.js").write_text(versao_nova.JS, encoding="utf-8")
     arvore_novo = versao_nova.arvore_novo(dados_telas, NOVO, por_id, doc_novo)
@@ -1270,7 +1301,12 @@ def _abas_extras(mod, p):
         if destino:
             return f'<a class="aba-extra" href="{destino}">{rotulo}</a>'
         return f'<span class="aba-extra aba-apagada" aria-disabled="true" title="{dica}">{rotulo}</span>'
+    chave_t = versao_nova.chave_tela(p.get("tela") or "")
+    tn = next((x for x in NOVO.get(mod["id"], {"telas": []})["telas"] if x["chave"] == chave_t), None)
+    erros = (erros_tela.botao(f'erros-{tn["slug"]}.html', erros_tela.contagem(ERROS, "legado", mod["id"], chave_t)) if tn
+             else erros_tela.botao("", None))
     return ('<span class="aba-sep" aria-hidden="true"></span>'
+            + erros
             + botao("Passo a passo", href, "O roteiro de execução desta tela ainda não foi escrito")
             + botao("Ideal", f'{ideal["slug"]}.html' if ideal else None, "A ficha da tela ideal ainda não foi escrita"))
 
@@ -1291,6 +1327,18 @@ def barra_versao(mod, p):
         nota = (f'Este é o endereço antigo desta página; a tela, com as sete abas, está em <a href="../novo/{mod["id"]}/{t["slug"]}-{aba}.html">Documentação por módulo · versão nova</a>.' if t else "")
         return versao_nova.barra_pagina("novo", leg, "#", nota), "novo"
     return "", None
+
+
+def aviso_sem_print(p):
+    """Manual do usuário sem nenhuma captura de tela: avisa no alto da página (o aviso some sozinho quando entram as capturas)."""
+    t = (p.get("titulo") or "").lower()
+    if not (p.get("aba") == "manual" or t.startswith("manual") or ": manual do usu" in t):
+        return ""
+    if "<img" in (p.get("corpo") or ""):
+        return ""
+    return ('<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p>'
+            '<p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando '
+            'forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>\n')
 
 
 def pagina_documento(mod, p):
@@ -1345,7 +1393,7 @@ def pagina_documento(mod, p):
     </header>
     {barra_v}{abas}
     <article class="texto{' texto-largo' if p.get('aba') else ''}">
-{p['corpo']}
+{aviso_sem_print(p)}{p['corpo']}
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo">{ant}{prox}</nav>
   </main>
@@ -1428,6 +1476,7 @@ MENUS_GQ_DESC = {
     "Autoinspeção e Auditoria": "Onde a empresa confere, por conta própria, se cumpre as Boas Práticas: escreve os roteiros de perguntas, programa a verificação, registra o que encontrou e avalia o resultado.",
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
+ERROS = {}  # defeitos por tela (erros_tela.montar), preenchido em gerar()
 NOVO = {}  # telas da versão nova por módulo (versao_nova.registro), preenchido em gerar()
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
 
@@ -2279,10 +2328,11 @@ def main():
     ap.add_argument("--relatorio", help="Arquivo (fora do site) para listar o que foi retirado")
     ap.add_argument("--sem-seguranca", action="store_true", help="Volta ao comportamento antigo: retira do portal o conteúdo de segurança")
     ap.add_argument("--atualizar-metadados", action="store_true", help="Acrescenta ao arquivo de metadados da Biblioteca as linhas que faltam (não altera as existentes)")
+    ap.add_argument("--atualizar-equivalencia", action="store_true", help="Acrescenta a portal-equivalencia-telas.csv os textos de tela de defeito que ainda não têm linha (não altera as existentes)")
     a = ap.parse_args()
     global SEGURANCA_PUBLICA
     SEGURANCA_PUBLICA = not a.sem_seguranca
-    gerar(Path(a.origem).resolve(), Path(a.destino).resolve(), a.relatorio, a.atualizar_metadados)
+    gerar(Path(a.origem).resolve(), Path(a.destino).resolve(), a.relatorio, a.atualizar_metadados, a.atualizar_equivalencia)
 
 
 if __name__ == "__main__":
