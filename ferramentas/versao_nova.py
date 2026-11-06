@@ -211,7 +211,7 @@ AVISO_TELA = ("Esta tela ainda não foi validada nesta versão. Não há teste n
 AVISO_ABA = "Esta aba ainda não foi validada nesta versão."
 
 
-def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../"):
+def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../", erros=""):
     """Uma página (tela + aba) da versão nova."""
     mid = mod["id"]
     abas = []
@@ -221,7 +221,7 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
         abas.append(f'<a href="{t["slug"]}-{chave}.html"{marca}{vazia}>{rot}</a>')
     ideal = (f'<a class="aba-extra" href="../../{mid}/{href_ideal}" title="O ideal é um só, comum às duas versões">Ideal</a>' if href_ideal
              else '<span class="aba-extra aba-apagada" aria-disabled="true" title="A ficha do ideal ainda não foi escrita">Ideal</span>')
-    navabas = '<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(abas) + '<span class="aba-sep" aria-hidden="true"></span>' + ideal + '</nav>'
+    navabas = '<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(abas) + '<span class="aba-sep" aria-hidden="true"></span>' + erros + ideal + '</nav>'
     rot_aba = next(r for c, r, _l in ABAS if c == aba_atual)
     corpo = t["abas"][aba_atual]
     if corpo:
