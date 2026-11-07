@@ -41,6 +41,22 @@ def chave_tela(nome):
     return telas_devs._norm(re.sub(r"\s*\(.*?\)", "", nome))
 
 
+ALIAS_NOMES = {}  # (módulo, chave do nome na documentação do legado) -> slug da tela no inventário
+
+
+def carregar_alias(hom):
+    """Lê homologacao/portal-equivalencia-nomes-de-tela.csv: telas cujo nome na documentação do legado difere do nome no inventário."""
+    import csv
+    ALIAS_NOMES.clear()
+    arq = Path(hom) / "portal-equivalencia-nomes-de-tela.csv"
+    if arq.exists():
+        with arq.open(encoding="utf-8", newline="") as f:
+            for r in csv.DictReader(f):
+                if (r.get("slug_da_tela_no_inventario") or "").strip():
+                    ALIAS_NOMES[(r["modulo"].strip(), chave_tela(r["nome_na_documentacao"]))] = r["slug_da_tela_no_inventario"].strip()
+    return len(ALIAS_NOMES)
+
+
 def registro(hom):
     """{módulo: {"menus": [(menu, [tela])], "telas": [tela]}} a partir dos inventários de telas do legado.
     tela = {nome, menu, slug, chave, abas: {aba: html|None}, validada, situacao}."""

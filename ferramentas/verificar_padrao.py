@@ -102,7 +102,7 @@ def regra_c1(html, rel, tipo):
     alvo = link_da_outra_versao(html, tipo == "tela-novo")
     if alvo is None:
         return None
-    return bool(alvo) and alvo != "#" and "telas.html" not in alvo
+    return bool(alvo) and alvo != "#" and re.search(r"(^|/)telas\.html($|[?#])", alvo) is None
 
 
 def verificar(raiz):

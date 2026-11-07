@@ -1033,6 +1033,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     # Versão nova: telas de cada módulo (do inventário) e, no Principal, o conteúdo de homologacao/versao-nova/1.principal/
     NOVO.clear()
     NOVO.update(versao_nova.registro(hom_))
+    print(f"Equivalência de nomes de tela: {versao_nova.carregar_alias(hom_)} linhas lidas.")
     versao_nova.preencher_principal(NOVO, hom_, lambda md: limpar(md, "versao-nova/1.principal", retirado), lambda md: conv.converter(md, "principal", tirar_h1=True)[0])
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
@@ -1123,7 +1124,8 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
                     mod, t, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh(f"{t['slug']}-erros.html")), "../../",
                     href_defs, "erros-sem-tela.html", None, imagens=img_leg,
                     lateral=lateral_tela(mod, ref_leg, "") if ref_leg else "", abas=abas_erros_legado(mod, t, irmas),
-                    selo=telas_devs.selo_situacao(sit_leg) if sit_leg else "", ap=ap_erros_legado(mod, rm, t)), encoding="utf-8")
+                    selo=telas_devs.selo_situacao(sit_leg) if sit_leg else "", ap=ap_erros_legado(mod, rm, t),
+                    aviso_extra="" if irmas else "Esta tela ainda não tem documentação própria no legado (análise, manual, fluxos, regras). Esta página reúne o que foi registrado de erro nela."), encoding="utf-8")
                 situ_nov = (f'Situação na versão nova: <strong>{E(t["situacao"] or "Testada")}</strong>' if t["validada"] else 'Situação na versão nova: <strong>ainda não validada</strong>')
                 (pasta / f"{t['slug']}-erros.html").write_text(erros_tela.pagina(
                     mod, t, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh(f"erros-{t['slug']}.html"), "#"), "../../../",
@@ -1139,10 +1141,10 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
                 mod, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh("erros-sem-tela.html"), "#"), "../../../", "",
                 imagens=img_nov, lateral=lat_nov), encoding="utf-8")
         for t in rm["telas"]:
-            leg = {x["aba"]: x["slug"] for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]}
+            leg = {x["aba"]: x["slug"] for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and tela_do_legado(mid, x.get("tela")) is t}
             for chave, rot, aba_leg in versao_nova.ABAS:
                 alvo = leg.get(aba_leg) or next(iter(leg.values()), None)
-                href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../../telas.html?versao=legado#m-{mid}"
+                href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../{mid}/erros-{t['slug']}.html"  # sem documento da tela no legado: a página de Erros da tela (nunca a lista)
                 (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo"), lateral=lat_nov,
                     ap=ap_da_pagina_nova(mod, seq_nov, pos_nov[(t["slug"], chave)], mid), toc_fn=toc_da_pagina), encoding="utf-8")
                 n_novas += 1
@@ -1328,8 +1330,8 @@ def _abas_extras(mod, p):
         if destino:
             return f'<a class="aba-extra" href="{destino}">{rotulo}</a>'
         return f'<span class="aba-extra aba-apagada" aria-disabled="true" title="{dica}">{rotulo}</span>'
-    chave_t = versao_nova.chave_tela(p.get("tela") or "")
-    tn = next((x for x in NOVO.get(mod["id"], {"telas": []})["telas"] if x["chave"] == chave_t), None)
+    tn = tela_do_legado(mod["id"], p.get("tela"))
+    chave_t = tn["chave"] if tn else versao_nova.chave_tela(p.get("tela") or "")
     erros = (erros_tela.botao(f'erros-{tn["slug"]}.html', erros_tela.contagem(ERROS, "legado", mod["id"], chave_t), "legado") if tn
              else erros_tela.botao("", None))
     return ('<span class="aba-sep" aria-hidden="true"></span>'
@@ -1353,9 +1355,23 @@ def lateral_tela(mod, ref, prefixo):
     return _LATERAL[chave]
 
 
+def tela_do_legado(mid, nome):
+    """Tela do inventário (registro da versão nova) a que uma página do legado se refere: pelo nome ou pela tabela de equivalência."""
+    rm = NOVO.get(mid)
+    if not rm or not nome:
+        return None
+    ch = versao_nova.chave_tela(nome)
+    sl = versao_nova.ALIAS_NOMES.get((mid, ch))
+    if sl:
+        achada = next((x for x in rm["telas"] if x["slug"] == sl), None)
+        if achada:
+            return achada
+    return next((x for x in rm["telas"] if x["chave"] == ch), None)
+
+
 def irmas_da_tela(mod, t):
     """Páginas por aba (análise, manual, fluxos...) que o legado já tem para a tela, na ordem das abas."""
-    return sorted([x for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]],
+    return sorted([x for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and tela_do_legado(mod["id"], x.get("tela")) is t],
                   key=lambda x: ABAS_DESVIOS.index(x["aba"]) if x["aba"] in ABAS_DESVIOS else 9)
 
 
@@ -1444,7 +1460,7 @@ def barra_versao(mod, p):
     """Faixa "Versão: Legado | Novo" das páginas por tela do legado (e das páginas antigas da versão nova no Principal), mantendo a mesma tela."""
     rm = NOVO.get(mod["id"])
     chave = versao_nova.chave_tela(p.get("tela") or "")
-    t = next((x for x in rm["telas"] if x["chave"] == chave), None) if rm and chave else None
+    t = tela_do_legado(mod["id"], p.get("tela")) if rm and chave else None
     lista_novo = f'../../telas.html?versao=novo#mn-{mod["id"]}'
     if p.get("tela_n") and p.get("aba"):
         novo = f'../novo/{mod["id"]}/{t["slug"]}-{versao_nova.ABA_DO_LEGADO.get(p["aba"], "analise")}.html' if t else lista_novo
