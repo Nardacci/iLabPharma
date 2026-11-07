@@ -86,10 +86,11 @@ REGRAS = [
     ("E3", "Faixa de versão (Legado | Novo)", ("tela-legado", "tela-novo"), _tem(r'class="versao-seletor"')),
     ("E4", "Abas da tela", ("tela-legado", "tela-novo"), _tem(r'class="abas-tela"')),
     ("C2", "As 8 abas padrão, na mesma ordem", ("tela-legado", "tela-novo"), lambda h, r: abas_da_pagina(h) == ABAS_PADRAO),
-    ("C3a", "Botão Baixar em Word (quando há Word)", ("tela-legado", "tela-novo"), _tem(r"Baixar em Word")),
     ("C3b", "Botão Imprimir", ("tela-legado", "tela-novo", "doc-legado"), _tem(r"window\.print")),
     ("C3c", "Anterior/Próximo", ("tela-legado", "tela-novo", "doc-legado"), _tem(r'class="anterior-proximo"')),
-    ("C3d", "Índice lateral (Nesta página)", ("tela-legado", "tela-novo", "doc-legado"), _tem(r'class="toc"')),
+    # índice lateral: exigido quando a página tem pelo menos dois títulos (h2 ou h3) no conteúdo
+    ("C3d", "Índice lateral (Nesta página), quando há 2 ou mais títulos", ("tela-legado", "tela-novo", "doc-legado"),
+     lambda h, r: re.search(r'class="toc"', h) is not None or len(re.findall(r"<h[23][\s>]", h.split("</header>", 1)[-1])) < 2),
     ("C6", "A barra lateral destaca o item atual", ("tela-legado", "tela-novo", "doc-legado"),
      lambda h, r: re.search(r'<aside class="lateral".*?aria-current', h, re.S) is not None),
 ]

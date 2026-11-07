@@ -211,26 +211,37 @@ AVISO_TELA = ("Esta tela ainda não foi validada nesta versão. Não há teste n
 AVISO_ABA = "Esta aba ainda não foi validada nesta versão."
 
 
+ABAS_PRINCIPAIS = ["analise", "manual-do-usuario", "fluxos", "regras-de-negocio", "anvisa"]
+# ordem única do portal (igual à do legado): cinco abas, separador, Erros, Passo a passo, Ideal
+SEQUENCIA_ABAS = ABAS_PRINCIPAIS + ["erros", "passo-a-passo"]
+ROTULO_ABA = {**{c: r for c, r, _l in ABAS}, "erros": "Erros"}
+
+
 def navegacao_abas(mid, t, aba_atual, href_ideal, erros=""):
-    """Faixa de abas da tela na versão nova. aba_atual = chave de uma aba de ABAS ou "erros" (a aba Erros fica marcada)."""
+    """Faixa de abas da tela na versão nova, na mesma ordem do legado. aba_atual = chave de ABAS ou "erros" (a aba marcada)."""
     abas = []
-    for chave, rot, _leg in ABAS:
+    for chave in ABAS_PRINCIPAIS:
         marca = " aria-current=page" if chave == aba_atual else ""
         vazia = ' class="aba-sem"' if not t["abas"][chave] else ""
-        abas.append(f'<a href="{t["slug"]}-{chave}.html"{marca}{vazia}>{rot}</a>')
+        abas.append(f'<a href="{t["slug"]}-{chave}.html"{marca}{vazia}>{ROTULO_ABA[chave]}</a>')
+    passo = (f'<a class="aba-extra{" aba-sem" if not t["abas"]["passo-a-passo"] else ""}" href="{t["slug"]}-passo-a-passo.html"'
+             f'{" aria-current=page" if aba_atual == "passo-a-passo" else ""}>Passo a passo</a>')
     ideal = (f'<a class="aba-extra" href="../../{mid}/{href_ideal}" title="O ideal é um só, comum às duas versões">Ideal</a>' if href_ideal
              else '<span class="aba-extra aba-apagada" aria-disabled="true" title="A ficha do ideal ainda não foi escrita">Ideal</span>')
     if aba_atual == "erros" and erros:
         erros = erros.replace('<a class="', '<a aria-current="page" class="', 1)
-    return '<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(abas) + '<span class="aba-sep" aria-hidden="true"></span>' + erros + ideal + '</nav>'
+    return '<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(abas) + '<span class="aba-sep" aria-hidden="true"></span>' + erros + passo + ideal + '</nav>'
 
 
-def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../", erros="", lateral=""):
+def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../", erros="", lateral="", ap="", toc_fn=None):
     """Uma página (tela + aba) da versão nova."""
     mid = mod["id"]
     navabas = navegacao_abas(mid, t, aba_atual, href_ideal, erros)
     rot_aba = next(r for c, r, _l in ABAS if c == aba_atual)
     corpo = t["abas"][aba_atual]
+    toc = ""
+    if corpo and toc_fn:
+        corpo, toc = toc_fn(corpo)
     if corpo:
         miolo = f'<article class="texto texto-largo">{corpo}</article>'
     else:
@@ -242,16 +253,18 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
     barra = barra_pagina("novo", href_legado, f"{t['slug']}-{aba_atual}.html")
     titulo = f'{t["nome"]} · {rot_aba} · versão nova · {mod["nome"]} · iLabMedSys'
     abre = ('<div class="doc-layout">\n  ' + lateral + '\n  <main class="doc" id="conteudo">') if lateral else '<main class="nv-pagina" id="conteudo">'
-    fecha = '</main>\n</div>' if lateral else '</main>'
+    fecha = ('</main>\n  ' + toc + '\n</div>') if lateral else '</main>'
     pagina = (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css"></head>', 1)
               .replace("<body ", '<body data-versao-pagina="novo" ', 1) + f"""
 {abre}
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}telas.html?versao=novo#mn-{mid}">Documentação por módulo · versão nova</a> › <a href="{raiz}documentacao/{mid}/index.html">{E(mod['nome'])}</a> › <span>{E(t['nome'])}</span></nav>
   {barra}
   <header class="doc-cabecalho"><h1>{E(t['nome'])} <span class="sit-sufixo">· versão nova</span></h1>
+  <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
   <p class="nv-meta">{E(mod['nome'])} · menu {E(t['menu'])} · {situacao}</p></header>
   {navabas}
   {miolo}
+  {ap}
 {fecha}
 """ + rodape(raiz))
     return pagina.replace("</body></html>", f'<script src="{raiz}portal/versao.js"></script></body></html>')

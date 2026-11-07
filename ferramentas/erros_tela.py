@@ -246,6 +246,14 @@ def _sem_marcador(linha):
     return re.sub(r"^\s*(?:\d+[.)]|[-*])\s*", "", linha)
 
 
+def _toc_defeitos(lista):
+    """Índice lateral ("Nesta página") com os defeitos da página."""
+    if not lista:
+        return ""
+    itens = "".join(f'<li><a href="#{E(d["id"].lower())}">{E(d["id"])}</a></li>' for d in lista)
+    return f'<nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul>{itens}</ul></nav>'
+
+
 def _lista(texto):
     """Linhas do texto, sem as marcas de formatação do Markdown (** e crases) e já passadas pela higiene."""
     limpo = re.sub(r"\*\*|`", "", higiene.redigir(texto))
@@ -282,7 +290,7 @@ def _cartao(d, versao, href_defeito, imgs=()):
             f'<p class="er-meta">{" ".join(partes)}{link}</p></header>{corpo}</article>')
 
 
-def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, href_sem_tela, outra_versao, imagens=None, lateral="", abas="", selo=""):
+def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, href_sem_tela, outra_versao, imagens=None, lateral="", abas="", selo="", ap=""):
     """Página "Erros desta tela". href_defeitos = página do registro completo (só legado); outra_versao = (rótulo, href)."""
     d = dados[(versao, mod["id"])]
     lista = sorted(d["por_tela"].get(t["chave"], []), key=lambda x: (ORDEM_GRAV.get(x["gravidade"], 9), x["id"]))
@@ -310,7 +318,8 @@ def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos,
     titulo = f'Erros · {t["nome"]} · {rot_v} · {mod["nome"]} · iLabMedSys'
     if lateral:
         return _moldura(mod, titulo, f'{t["nome"]}: Erros', versao, raiz, cabecalho, rodape, lateral, barra, abas, selo,
-                        f'<article class="texto texto-largo">{aviso_novo}{resumo}{miolo}{rodape_lista}</article>', t["nome"])
+                        f'<article class="texto texto-largo">{aviso_novo}{resumo}{miolo}{rodape_lista}</article>', t["nome"],
+                        ap=ap, toc=_toc_defeitos(lista))
     return (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css">\n</head>', 1)
             .replace("<body ", f'<body data-versao-pagina="{versao}" ', 1) + f"""
 <main class="nv-pagina" id="conteudo">
@@ -322,7 +331,7 @@ def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos,
 """ + rodape(raiz))
 
 
-def _moldura(mod, titulo, h1, versao, raiz, cabecalho, rodape, lateral, barra, abas, selo, artigo, nome_tela, final="Erros"):
+def _moldura(mod, titulo, h1, versao, raiz, cabecalho, rodape, lateral, barra, abas, selo, artigo, nome_tela, final="Erros", ap="", toc=""):
     """Mesma moldura das páginas de documento do portal: barra lateral do módulo, trilha, título, faixa de versão, abas da tela e situação."""
     return (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css">\n</head>', 1)
             .replace("<body ", f'<body data-versao-pagina="{versao}" ', 1) + f"""
@@ -330,10 +339,13 @@ def _moldura(mod, titulo, h1, versao, raiz, cabecalho, rodape, lateral, barra, a
   {lateral}
   <main class="doc" id="conteudo">
     <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}documentacao/{mod['id']}/index.html">{E(mod['nome'])}</a> › <span>{E(nome_tela)}</span>{(' › <span>' + final + '</span>') if final else ''}</nav>
-    <header class="doc-cabecalho"><h1>{E(h1)}</h1></header>
+    <header class="doc-cabecalho"><h1>{E(h1)}</h1>
+    <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
     {barra}{abas}{selo}
     {artigo}
+    {ap}
   </main>
+  {toc}
 </div>
 """ + rodape(raiz))
 
@@ -352,7 +364,7 @@ def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_def
         explica = ('<p class="nv-meta">São defeitos cujo campo "Tela" não bate com nenhuma tela do inventário (por exemplo, citam mais de uma tela com outro nome). '
                    'Nada foi descartado: eles estão aqui até alguém indicar a tela no arquivo de equivalência.</p>')
         return _moldura(mod, titulo, "Defeitos sem tela associada", versao, raiz, cabecalho, rodape, lateral, barra, abas, selo,
-                        f'<article class="texto texto-largo">{explica}{corpo}{cartoes}</article>', "Sem tela associada", final="")
+                        f'<article class="texto texto-largo">{explica}{corpo}{cartoes}</article>', "Sem tela associada", final="", toc=_toc_defeitos(lista))
     return (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css"></head>', 1)
             .replace("<body ", f'<body data-versao-pagina="{versao}" ', 1) + f"""
 <main class="nv-pagina" id="conteudo">
