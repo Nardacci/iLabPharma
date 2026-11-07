@@ -1106,6 +1106,8 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         defs_leg = next((x for x in mod["paginas"] if (x.get("arq") or "").endswith("defeitos-completo.md")), None)
         href_defs = f'{defs_leg["slug"]}.html' if defs_leg else ""
         pasta_leg = doc_dir / mid
+        seq_nov = sequencia_novo(mod, rm)
+        pos_nov = {(tt["slug"], c): k for k, (tt, c) in enumerate(seq_nov)}
         ref_nov = next((x for x in mod["paginas"] if passo_de(x) in ("novo", "novo_parecer") and not x.get("grupo")), mod["paginas"][0] if mod["paginas"] else None)
         lat_nov = lateral_tela(mod, ref_nov, f"../../{mid}/") if ref_nov else ""
         if ("legado", mid) in ERROS:
@@ -1121,13 +1123,14 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
                     mod, t, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh(f"{t['slug']}-erros.html")), "../../",
                     href_defs, "erros-sem-tela.html", None, imagens=img_leg,
                     lateral=lateral_tela(mod, ref_leg, "") if ref_leg else "", abas=abas_erros_legado(mod, t, irmas),
-                    selo=telas_devs.selo_situacao(sit_leg) if sit_leg else ""), encoding="utf-8")
+                    selo=telas_devs.selo_situacao(sit_leg) if sit_leg else "", ap=ap_erros_legado(mod, rm, t)), encoding="utf-8")
                 situ_nov = (f'Situação na versão nova: <strong>{E(t["situacao"] or "Testada")}</strong>' if t["validada"] else 'Situação na versão nova: <strong>ainda não validada</strong>')
                 (pasta / f"{t['slug']}-erros.html").write_text(erros_tela.pagina(
                     mod, t, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh(f"erros-{t['slug']}.html"), "#"), "../../../",
                     "", "sem-tela-erros.html", None, imagens=img_nov, lateral=lat_nov,
                     abas=versao_nova.navegacao_abas(mid, t, "erros", href_ideal, erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo")),
-                    selo=f'<p class="nv-meta">{E(mod["nome"])} · menu {E(t["menu"])} · {situ_nov}</p>'), encoding="utf-8")
+                    selo=f'<p class="nv-meta">{E(mod["nome"])} · menu {E(t["menu"])} · {situ_nov}</p>',
+                    ap=ap_da_pagina_nova(mod, seq_nov, pos_nov[(t["slug"], "erros")], mid)), encoding="utf-8")
             ref_leg_m = mod["paginas"][0] if mod["paginas"] else None
             (pasta_leg / "erros-sem-tela.html").write_text(erros_tela.pagina_sem_tela(
                 mod, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh("sem-tela-erros.html")), "../../", href_defs,
@@ -1140,7 +1143,8 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
             for chave, rot, aba_leg in versao_nova.ABAS:
                 alvo = leg.get(aba_leg) or next(iter(leg.values()), None)
                 href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../../telas.html?versao=legado#m-{mid}"
-                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo"), lateral=lat_nov), encoding="utf-8")
+                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo"), lateral=lat_nov,
+                    ap=ap_da_pagina_nova(mod, seq_nov, pos_nov[(t["slug"], chave)], mid), toc_fn=toc_da_pagina), encoding="utf-8")
                 n_novas += 1
                 if t["abas"][chave]:
                     txt = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t["abas"][chave])))
@@ -1175,6 +1179,14 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         Path(relatorio).write_text("\n".join(linhas) + "\n", encoding="utf-8")
     total = sum(len(m["paginas"]) for m in MODULOS)
     print(f"Portal gerado: {total} documentos, {len(retirado)} trechos de segurança retirados.")
+    try:
+        import verificar_padrao
+        _pt, _pr = verificar_padrao.verificar(destino)
+        _rel, _div = verificar_padrao.relatorio(_pt, _pr)
+        _regras_div = sum(1 for r in _pr.values() if r["falha"])
+        print(f"Padrão do portal: {_div} divergências em {_regras_div} de {len(_pr)} verificações (detalhe: python3 ferramentas/verificar_padrao.py .)")
+    except Exception as _e:  # o verificador nunca impede a geração
+        print(f"Padrão do portal: não foi possível verificar ({_e})")
     achados = higiene.verificar(destino)
     if achados:
         for arq, o_que, n in achados:
@@ -1331,7 +1343,7 @@ _LATERAL = {}
 
 def lateral_tela(mod, ref, prefixo):
     """Barra lateral do módulo (a mesma das páginas de documento). prefixo = caminho até documentacao/<módulo>/ quando a página está em outra pasta."""
-    chave = (mod["id"], ref["slug"], prefixo)
+    chave = (mod["id"], ref["slug"] if ref else "", prefixo)
     if chave not in _LATERAL:
         h = (f'<aside class="lateral" aria-label="Roteiro do módulo">\n    <a class="lat-modulo" href="{prefixo}index.html" style="--cor:{mod["cor"]}">'
              f'<span class="icone">{mod["icone"]}</span>{E(mod["nome"])}</a>\n    {nav_lateral(mod, ref)}\n  </aside>')
@@ -1355,6 +1367,77 @@ def abas_erros_legado(mod, t, irmas):
         return ('<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(f'<a href="{x["slug"]}.html">{E(x["rotulo"])}</a>' for x in irmas)
                 + marca(_abas_extras(mod, irmas[0])) + '</nav>')
     return '<nav class="abas-tela" aria-label="Páginas desta tela">' + marca(erros_tela.botao(f'erros-{t["slug"]}.html', n, "legado")) + '</nav>'
+
+
+def toc_da_pagina(corpo):
+    """Índice lateral de uma página montada fora do conversor: acrescenta id aos títulos h2 e h3 que não têm e devolve (corpo, HTML do índice)."""
+    usados, toc, atual = set(), [], None
+
+    def tit(m):
+        nonlocal atual
+        nivel, attrs, txt = m.group(1), m.group(2) or "", m.group(3)
+        nome = html.unescape(re.sub(r"<[^>]+>", "", txt)).strip()
+        mid_ = re.search(r'\bid="([^"]+)"', attrs)
+        ident = mid_.group(1) if mid_ else slug(nome) or "secao"
+        base, k = ident, 2
+        while ident in usados:
+            ident, k = f"{base}-{k}", k + 1
+        usados.add(ident)
+        if nivel == "2" or atual is None:
+            atual = {"id": ident, "name": nome, "children": []}
+            toc.append(atual)
+        else:
+            atual["children"].append({"id": ident, "name": nome})
+        id_attr = "" if mid_ else f' id="{ident}"'
+        return f'<h{nivel}{id_attr}{attrs}>{txt}</h{nivel}>'
+    novo = re.sub(r"<h([23])(\s[^>]*)?>(.*?)</h\1>", tit, corpo, flags=re.S)
+    return novo, toc_html(toc)
+
+
+def anterior_proximo(ant, prox):
+    """Bloco "Anterior / Próximo" igual ao das páginas de documento. ant e prox = (rótulo, título, endereço) ou None."""
+    return ('<nav class="anterior-proximo" aria-label="Anterior e próximo">'
+            + (_cartao_ap(ant[0], ant[1], ant[2], "ant") if ant else "") + (_cartao_ap(prox[0], prox[1], prox[2], "prox") if prox else "") + '</nav>')
+
+
+def sequencia_novo(mod, rm):
+    """Ordem de leitura da versão nova no módulo: cada tela, na ordem das abas da faixa (cinco abas, Erros, Passo a passo)."""
+    return [(t, c) for t in rm["telas"] for c in versao_nova.SEQUENCIA_ABAS]
+
+
+def ap_da_pagina_nova(mod, seq, i, mid, raiz_mod="../../"):
+    """Anterior/Próximo da i-ésima página da sequência da versão nova (as pontas levam ao início do módulo e ao próximo módulo)."""
+    def alvo(k):
+        tt, c = seq[k]
+        return (f'{versao_nova.ROTULO_ABA[c]} · {tt["nome"]}', f'{tt["slug"]}-{c}.html')
+    ant_mod, prox_mod = vizinhos(mod)
+    if i > 0:
+        r, h = alvo(i - 1); ant = ("← Anterior", r, h)
+    else:
+        ant = ("← Início do módulo", mod["nome"], f"{raiz_mod}{mid}/index.html")
+    if i < len(seq) - 1:
+        r, h = alvo(i + 1); prox = ("Próximo →", r, h)
+    elif prox_mod:
+        prox = ("Fim do módulo · próximo módulo →", prox_mod["nome"], f'{raiz_mod}{prox_mod["id"]}/index.html')
+    else:
+        prox = ("Fim do roteiro", "Voltar ao início do portal", f"{raiz_mod}../index.html")
+    return anterior_proximo(ant, prox)
+
+
+def ap_erros_legado(mod, rm, t):
+    """Anterior/Próximo da página de Erros do legado: percorre as páginas de Erros das telas do módulo, na ordem do inventário."""
+    telas = rm["telas"]
+    i = next(k for k, x in enumerate(telas) if x["slug"] == t["slug"])
+    ant_mod, prox_mod = vizinhos(mod)
+    ant = (("← Anterior", f'Erros · {telas[i - 1]["nome"]}', f'erros-{telas[i - 1]["slug"]}.html') if i > 0
+           else ("← Início do módulo", mod["nome"], "index.html"))
+    if i < len(telas) - 1:
+        prox = ("Próximo →", f'Erros · {telas[i + 1]["nome"]}', f'erros-{telas[i + 1]["slug"]}.html')
+    elif prox_mod:
+        prox = ("Fim do módulo · próximo módulo →", prox_mod["nome"], f'../{prox_mod["id"]}/index.html')
+    else:
+        prox = ("Fim do roteiro", "Voltar ao início do portal", "../../index.html")
+    return anterior_proximo(ant, prox)
 
 
 def barra_versao(mod, p):
@@ -1558,6 +1641,10 @@ def cartoes_desvios(pags):
 def pagina_modulo(mod, sit="index"):
     """Visão geral do módulo (sit='index') ou uma das três situações: 'legado', 'novo', 'ideal'."""
     raiz = "../../"
+    # moldura única do portal: barra lateral do módulo ao lado do conteúdo (padrão C6, etapa 2)
+    lat = lateral_tela(mod, None, "") if mod["paginas"] else ""
+    abre_m = ('<div class="doc-layout sem-toc">\n  ' + lat + '\n  <main class="doc pagina-modulo" id="conteudo">') if lat else '<main class="pagina-modulo" id="conteudo">'
+    fecha_m = '</main>\n</div>' if lat else '</main>'
     estados = estado_situacoes(mod)
     ant_mod, prox_mod = vizinhos(mod)
     fim = (f'<section class="fim-roteiro"><p class="comece-rotulo">Fim do roteiro deste módulo</p>'
@@ -1600,7 +1687,7 @@ def pagina_modulo(mod, sit="index"):
                                 f'<p class="secao-desc">{MENUS_GQ_DESC.get(m, "")} '
                                 f'<a href="{entenda["slug"]}.html">Entenda o menu: o que faz e por que importa</a>.</p>' + _cartoes_um_menu(pm))
         return versao_nova.com_versao(cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
-<main class="pagina-modulo" id="conteudo">
+{abre_m}
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
   <header class="mod-cabecalho" style="--cor:{mod['cor']}">
     <div class="mod-icone" aria-hidden="true">{mod['icone']}</div>
@@ -1618,7 +1705,7 @@ def pagina_modulo(mod, sit="index"):
   <p class="secao-desc">Um resumo só, que situa o módulo nas três situações.</p>
   <div class="doc-cards">{blocos_resumo}</div>{bloco_menus}
   {fim}
-</main>
+{fecha_m}
 """ + rodape(raiz), raiz)
 
     nome_sit, curta, cor = next((n, c, k) for kk, n, c, k in SITUACOES_MOD if kk == sit)
@@ -1713,7 +1800,7 @@ def pagina_modulo(mod, sit="index"):
                   f'<a class="botao botao-grande" href="{primeiro["slug"]}.html">Iniciar o roteiro →</a></section>')
 
     return versao_nova.com_versao(cabecalho(f"{mod['nome']} · {nome_sit} · iLabMedSys", raiz, "modulos") + f"""
-<main class="pagina-modulo" id="conteudo">
+{abre_m}
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a> › <span>{E(nome_sit)}</span></nav>
   <header class="mod-cabecalho mod-sit" style="--cor:{cor}">
     <div class="mod-icone" aria-hidden="true">{mod['icone']}</div>
@@ -1731,7 +1818,7 @@ def pagina_modulo(mod, sit="index"):
   {submenu_html}
   {''.join(blocos)}
   {fim if sit == "legado" else ""}
-</main>
+{fecha_m}
 """ + rodape(raiz), raiz)
 
 
