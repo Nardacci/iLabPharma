@@ -35,6 +35,7 @@ import markdown
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import biblioteca  # noqa: E402
 import erros_tela  # noqa: E402
+import quem_pode  # noqa: E402
 import higiene  # noqa: E402
 import menus_gq  # noqa: E402
 import telas_devs  # noqa: E402
@@ -1034,6 +1035,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     NOVO.clear()
     NOVO.update(versao_nova.registro(hom_))
     print(f"Equivalência de nomes de tela: {versao_nova.carregar_alias(hom_)} linhas lidas.")
+    print(f"Quem pode fazer o quê: {quem_pode.carregar(hom_)} linhas lidas.")
     versao_nova.preencher_principal(NOVO, hom_, lambda md: limpar(md, "versao-nova/1.principal", retirado), lambda md: conv.converter(md, "principal", tirar_h1=True)[0])
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
@@ -1151,7 +1153,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
                 if t["abas"][chave]:
                     txt = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t["abas"][chave])))
                     busca.append({"t": f"{t['nome']} · {rot} (versão nova)", "m": mod["nome"], "u": f"documentacao/novo/{mid}/{t['slug']}-{chave}.html", "h": [], "x": txt[:6000]})
-    (destino / "portal/erros.css").write_text(erros_tela.CSS, encoding="utf-8")
+    (destino / "portal/erros.css").write_text(erros_tela.CSS + quem_pode.CSS, encoding="utf-8")
     (destino / "portal/versao.css").write_text(versao_nova.CSS, encoding="utf-8")
     (destino / "portal/versao.js").write_text(versao_nova.JS, encoding="utf-8")
     arvore_novo = versao_nova.arvore_novo(dados_telas, NOVO, por_id, doc_novo)
@@ -1480,6 +1482,14 @@ def barra_versao(mod, p):
     return "", None
 
 
+def quadro_quem_pode(mod, p):
+    """Quadro "Quem pode fazer o quê" ao fim do Manual por tela do legado (módulos do escopo do fechamento)."""
+    if not (p.get("tela_n") and p.get("aba") == "manual"):
+        return ""
+    tn = tela_do_legado(mod["id"], p.get("tela"))
+    return quem_pode.bloco(mod["id"], tn["slug"] if tn else None, p.get("tela") or "")
+
+
 def aviso_sem_print(p):
     """Manual do usuário sem nenhuma captura de tela: avisa no alto da página (o aviso some sozinho quando entram as capturas)."""
     t = (p.get("titulo") or "").lower()
@@ -1544,7 +1554,7 @@ def pagina_documento(mod, p):
     </header>
     {barra_v}{abas}
     <article class="texto{' texto-largo' if p.get('aba') else ''}">
-{aviso_sem_print(p)}{p['corpo']}
+{aviso_sem_print(p)}{p['corpo']}{quadro_quem_pode(mod, p)}
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo">{ant}{prox}</nav>
   </main>
