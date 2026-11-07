@@ -379,6 +379,7 @@ def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_def
 
 
 CSS = """
+.abas-tela span.aba-sem{padding:7px 14px;border:1px dashed var(--linha);border-radius:999px;font-size:.9rem;font-weight:600;color:var(--tinta);opacity:.55;cursor:not-allowed}
 .aba-erros{font-weight:700}
 .aba-erros-legado{border-color:#b3261e!important;color:#b3261e!important}
 .aba-erros-novo{border-color:#1769aa!important;color:#1769aa!important}

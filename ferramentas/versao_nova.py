@@ -41,7 +41,7 @@ def chave_tela(nome):
     return telas_devs._norm(re.sub(r"\s*\(.*?\)", "", nome))
 
 
-ALIAS_NOMES = {}  # (módulo, chave do nome na documentação do legado) -> slug da tela no inventário
+ALIAS_NOMES = {}  # (módulo, nome COMPLETO normalizado na documentação do legado, com o que está entre parênteses) -> slug da tela no inventário
 
 
 def carregar_alias(hom):
@@ -53,7 +53,7 @@ def carregar_alias(hom):
         with arq.open(encoding="utf-8", newline="") as f:
             for r in csv.DictReader(f):
                 if (r.get("slug_da_tela_no_inventario") or "").strip():
-                    ALIAS_NOMES[(r["modulo"].strip(), chave_tela(r["nome_na_documentacao"]))] = r["slug_da_tela_no_inventario"].strip()
+                    ALIAS_NOMES[(r["modulo"].strip(), telas_devs._norm(r["nome_na_documentacao"]))] = r["slug_da_tela_no_inventario"].strip()
     return len(ALIAS_NOMES)
 
 
