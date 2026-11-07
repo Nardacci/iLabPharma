@@ -1106,30 +1106,41 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         defs_leg = next((x for x in mod["paginas"] if (x.get("arq") or "").endswith("defeitos-completo.md")), None)
         href_defs = f'{defs_leg["slug"]}.html' if defs_leg else ""
         pasta_leg = doc_dir / mid
+        ref_nov = next((x for x in mod["paginas"] if passo_de(x) in ("novo", "novo_parecer") and not x.get("grupo")), mod["paginas"][0] if mod["paginas"] else None)
+        lat_nov = lateral_tela(mod, ref_nov, f"../../{mid}/") if ref_nov else ""
         if ("legado", mid) in ERROS:
             lh = lambda sl: f"../../{mid}/{sl}"
             nh = lambda sl: f"../novo/{mid}/{sl}"
+            img_leg = lambda d: [(f"../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]
+            img_nov = lambda d: [(f"../../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]
             for t in rm["telas"]:
+                irmas = irmas_da_tela(mod, t)
+                ref_leg = irmas[0] if irmas else (mod["paginas"][0] if mod["paginas"] else None)
+                sit_leg = SITUACAO_TELAS.get((mid, telas_devs._norm(re.sub(r"\s*\(.*?\)", "", t["nome"]))))
                 (pasta_leg / f"erros-{t['slug']}.html").write_text(erros_tela.pagina(
                     mod, t, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh(f"{t['slug']}-erros.html")), "../../",
-                    href_defs, "erros-sem-tela.html", None,
-                    imagens=lambda d: [(f"../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
+                    href_defs, "erros-sem-tela.html", None, imagens=img_leg,
+                    lateral=lateral_tela(mod, ref_leg, "") if ref_leg else "", abas=abas_erros_legado(mod, t, irmas),
+                    selo=telas_devs.selo_situacao(sit_leg) if sit_leg else ""), encoding="utf-8")
+                situ_nov = (f'Situação na versão nova: <strong>{E(t["situacao"] or "Testada")}</strong>' if t["validada"] else 'Situação na versão nova: <strong>ainda não validada</strong>')
                 (pasta / f"{t['slug']}-erros.html").write_text(erros_tela.pagina(
                     mod, t, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh(f"erros-{t['slug']}.html"), "#"), "../../../",
-                    "", "sem-tela-erros.html", None,
-                    imagens=lambda d: [(f"../../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
+                    "", "sem-tela-erros.html", None, imagens=img_nov, lateral=lat_nov,
+                    abas=versao_nova.navegacao_abas(mid, t, "erros", href_ideal, erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo")),
+                    selo=f'<p class="nv-meta">{E(mod["nome"])} · menu {E(t["menu"])} · {situ_nov}</p>'), encoding="utf-8")
+            ref_leg_m = mod["paginas"][0] if mod["paginas"] else None
             (pasta_leg / "erros-sem-tela.html").write_text(erros_tela.pagina_sem_tela(
                 mod, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh("sem-tela-erros.html")), "../../", href_defs,
-                imagens=lambda d: [(f"../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
+                imagens=img_leg, lateral=lateral_tela(mod, ref_leg_m, "") if ref_leg_m else ""), encoding="utf-8")
             (pasta / "sem-tela-erros.html").write_text(erros_tela.pagina_sem_tela(
                 mod, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh("erros-sem-tela.html"), "#"), "../../../", "",
-                imagens=lambda d: [(f"../../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
+                imagens=img_nov, lateral=lat_nov), encoding="utf-8")
         for t in rm["telas"]:
             leg = {x["aba"]: x["slug"] for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]}
             for chave, rot, aba_leg in versao_nova.ABAS:
                 alvo = leg.get(aba_leg) or next(iter(leg.values()), None)
                 href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../../telas.html?versao=legado#m-{mid}"
-                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo")), encoding="utf-8")
+                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo"), lateral=lat_nov), encoding="utf-8")
                 n_novas += 1
                 if t["abas"][chave]:
                     txt = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t["abas"][chave])))
@@ -1313,6 +1324,37 @@ def _abas_extras(mod, p):
             + erros
             + botao("Passo a passo", href, "O roteiro de execução desta tela ainda não foi escrito")
             + botao("Ideal", f'{ideal["slug"]}.html' if ideal else None, "A ficha da tela ideal ainda não foi escrita"))
+
+
+_LATERAL = {}
+
+
+def lateral_tela(mod, ref, prefixo):
+    """Barra lateral do módulo (a mesma das páginas de documento). prefixo = caminho até documentacao/<módulo>/ quando a página está em outra pasta."""
+    chave = (mod["id"], ref["slug"], prefixo)
+    if chave not in _LATERAL:
+        h = (f'<aside class="lateral" aria-label="Roteiro do módulo">\n    <a class="lat-modulo" href="{prefixo}index.html" style="--cor:{mod["cor"]}">'
+             f'<span class="icone">{mod["icone"]}</span>{E(mod["nome"])}</a>\n    {nav_lateral(mod, ref)}\n  </aside>')
+        if prefixo:
+            h = re.sub(r'href="([a-z0-9\-]+\.html)', lambda m: f'href="{prefixo}{m.group(1)}', h)
+        _LATERAL[chave] = h
+    return _LATERAL[chave]
+
+
+def irmas_da_tela(mod, t):
+    """Páginas por aba (análise, manual, fluxos...) que o legado já tem para a tela, na ordem das abas."""
+    return sorted([x for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]],
+                  key=lambda x: ABAS_DESVIOS.index(x["aba"]) if x["aba"] in ABAS_DESVIOS else 9)
+
+
+def abas_erros_legado(mod, t, irmas):
+    """Faixa de abas da página de Erros do legado: as abas da tela (se existirem) mais os botões extras, com Erros marcado."""
+    n = erros_tela.contagem(ERROS, "legado", mod["id"], t["chave"])
+    marca = lambda h: h.replace('<a class="aba-extra aba-erros', '<a aria-current="page" class="aba-extra aba-erros', 1)
+    if irmas:
+        return ('<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(f'<a href="{x["slug"]}.html">{E(x["rotulo"])}</a>' for x in irmas)
+                + marca(_abas_extras(mod, irmas[0])) + '</nav>')
+    return '<nav class="abas-tela" aria-label="Páginas desta tela">' + marca(erros_tela.botao(f'erros-{t["slug"]}.html', n, "legado")) + '</nav>'
 
 
 def barra_versao(mod, p):
