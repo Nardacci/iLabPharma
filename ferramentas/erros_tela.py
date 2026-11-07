@@ -279,13 +279,15 @@ def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos,
 """ + rodape(raiz))
 
 
-def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos):
+def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, imagens=None):
     d = dados[(versao, mod["id"])]
     rot_v = "legado" if versao == "legado" else "versão nova"
     lista = sorted(d["sem"], key=lambda x: (ORDEM_GRAV.get(x["gravidade"], 9), x["id"]))
     linhas = "".join(f'<tr><td>{E(x["id"])}</td><td>{E(x["gravidade"])}</td><td>{E(x["situacao"])}</td><td>{E(higiene.redigir(x["titulo"]))}</td><td>{E(higiene.redigir(x["tela_txt"]))}</td></tr>' for x in lista)
     corpo = (f'<table class="tabela"><thead><tr><th>Defeito</th><th>Gravidade</th><th>Situação</th><th>Título</th><th>Tela citada no defeito</th></tr></thead><tbody>{linhas}</tbody></table>'
              if lista else "<p>Todos os defeitos deste módulo estão ligados a uma tela.</p>")
+    cartoes = "".join(_cartao(x, versao, f"{href_defeitos}#{x['id'].lower()}" if href_defeitos else "", imagens(x) if imagens else ()) for x in lista)
+    cartoes = f'<h2>Cada defeito, com o passo a passo e as capturas</h2>{cartoes}' if cartoes else ""
     titulo = f'Defeitos sem tela associada · {rot_v} · {mod["nome"]} · iLabMedSys'
     return (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css"></head>', 1)
             .replace("<body ", f'<body data-versao-pagina="{versao}" ', 1) + f"""
@@ -294,7 +296,7 @@ def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_def
   {barra}
   <header class="doc-cabecalho"><h1>Defeitos sem tela associada <span class="sit-sufixo">· {rot_v}</span></h1>
   <p class="nv-meta">São defeitos cujo campo "Tela" não bate com nenhuma tela do inventário (por exemplo, citam mais de uma tela com outro nome). Nada foi descartado: eles estão aqui até alguém indicar a tela no arquivo de equivalência.</p></header>
-  <article class="texto texto-largo">{corpo}</article>
+  <article class="texto texto-largo">{corpo}{cartoes}</article>
 </main>
 """ + rodape(raiz))
 

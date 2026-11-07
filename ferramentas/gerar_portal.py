@@ -1119,9 +1119,11 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
                     "", "sem-tela-erros.html", None,
                     imagens=lambda d: [(f"../../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
             (pasta_leg / "erros-sem-tela.html").write_text(erros_tela.pagina_sem_tela(
-                mod, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh("sem-tela-erros.html")), "../../", href_defs), encoding="utf-8")
+                mod, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh("sem-tela-erros.html")), "../../", href_defs,
+                imagens=lambda d: [(f"../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
             (pasta / "sem-tela-erros.html").write_text(erros_tela.pagina_sem_tela(
-                mod, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh("erros-sem-tela.html"), "#"), "../../../", ""), encoding="utf-8")
+                mod, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh("erros-sem-tela.html"), "#"), "../../../", "",
+                imagens=lambda d: [(f"../../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
         for t in rm["telas"]:
             leg = {x["aba"]: x["slug"] for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]}
             for chave, rot, aba_leg in versao_nova.ABAS:
