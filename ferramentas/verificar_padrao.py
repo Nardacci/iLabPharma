@@ -91,6 +91,9 @@ REGRAS = [
     # índice lateral: exigido quando a página tem pelo menos dois títulos (h2 ou h3) no conteúdo
     ("C3d", "Índice lateral (Nesta página), quando há 2 ou mais títulos", ("tela-legado", "tela-novo", "doc-legado"),
      lambda h, r: re.search(r'class="toc"', h) is not None or len(re.findall(r"<h[23][\s>]", h.split("</header>", 1)[-1])) < 2),
+    # C4: toda página de Erros mostra defeitos ou a mensagem padrão "Sem erros registrados" (nunca uma página vazia ou com texto próprio)
+    ("C4", "Página de Erros: cartões de defeito ou a mensagem padrão", ("tela-legado", "tela-novo"),
+     lambda h, r: not (r.name.endswith("-erros.html") or r.name.startswith("erros-")) or 'class="er-cartao' in h or "Sem erros registrados" in h),
     ("C6", "A barra lateral destaca o item atual", ("tela-legado", "tela-novo", "doc-legado"),
      lambda h, r: re.search(r'<aside class="lateral".*?aria-current', h, re.S) is not None),
 ]

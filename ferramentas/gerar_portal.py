@@ -1361,7 +1361,7 @@ def tela_do_legado(mid, nome):
     if not rm or not nome:
         return None
     ch = versao_nova.chave_tela(nome)
-    sl = versao_nova.ALIAS_NOMES.get((mid, ch))
+    sl = versao_nova.ALIAS_NOMES.get((mid, telas_devs._norm(nome)))
     if sl:
         achada = next((x for x in rm["telas"] if x["slug"] == sl), None)
         if achada:
@@ -1376,13 +1376,19 @@ def irmas_da_tela(mod, t):
 
 
 def abas_erros_legado(mod, t, irmas):
-    """Faixa de abas da página de Erros do legado: as abas da tela (se existirem) mais os botões extras, com Erros marcado."""
+    """Faixa de abas da página de Erros do legado, sempre com as 8 abas do padrão (C2): a aba sem documento fica apagada, com dica, nunca some."""
     n = erros_tela.contagem(ERROS, "legado", mod["id"], t["chave"])
-    marca = lambda h: h.replace('<a class="aba-extra aba-erros', '<a aria-current="page" class="aba-extra aba-erros', 1)
+    botao_erros = erros_tela.botao(f'erros-{t["slug"]}.html', n, "legado").replace('<a class="aba-extra aba-erros', '<a aria-current="page" class="aba-extra aba-erros', 1)
     if irmas:
+        extras = re.sub(r'<a class="aba-extra aba-erros.*?</a>', lambda m: botao_erros, _abas_extras(mod, irmas[0]), count=1, flags=re.S)
         return ('<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(f'<a href="{x["slug"]}.html">{E(x["rotulo"])}</a>' for x in irmas)
-                + marca(_abas_extras(mod, irmas[0])) + '</nav>')
-    return '<nav class="abas-tela" aria-label="Páginas desta tela">' + marca(erros_tela.botao(f'erros-{t["slug"]}.html', n, "legado")) + '</nav>'
+                + extras + '</nav>')
+    dica = "Esta tela ainda não tem esta documentação no legado"
+    apagadas = "".join(f'<span class="aba-sem" aria-disabled="true" title="{dica}">{r}</span>'
+                       for r in ("Análise", "Manual do usuário", "Fluxos", "Regras de negócio", "Anvisa"))
+    extras = re.sub(r'<a class="aba-extra aba-erros.*?</a>|<span class="aba-extra aba-apagada"[^>]*>Erros</span>', lambda m: botao_erros,
+                    _abas_extras(mod, {"tela": t["nome"]}), count=1, flags=re.S)
+    return '<nav class="abas-tela" aria-label="Páginas desta tela">' + apagadas + extras + '</nav>'
 
 
 def toc_da_pagina(corpo):
