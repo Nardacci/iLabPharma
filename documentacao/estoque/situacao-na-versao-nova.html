@@ -46,18 +46,22 @@
     <article class="texto">
 <p>A versão nova é o mesmo sistema com ferramentas atualizadas: um front-end novo sobre as mesmas regras e o mesmo banco de dados do sistema entregue. O código dos módulos é idêntico ao do legado.</p>
 <h3 id="onde-estamos">Onde estamos</h3>
-<p><strong>Ainda não testado na versão nova.</strong> Os testes seguem a ordem combinada: Principal e Garantia da Qualidade primeiro, depois este módulo.</p>
-<h3 id="como-vai-ser-testado">Como vai ser testado</h3>
-<p>As mesmas situações do legado, caso a caso, com cada resultado classificado como Igual, Regressão, Melhoria, Novo ou Bloqueado. As falhas já conhecidas do sistema entregue (ver a página "Testes e defeitos" deste módulo) são o ponto de partida: a expectativa é que, onde a regra vem da API antiga, elas apareçam também na versão nova.</p>
-<h3 id="o-que-se-sabe-ate-agora">O que se sabe até agora</h3>
+<p><strong>Rodada 1 feita em 05/11/2026</strong> (resultado em <code>execucao/2026-11-05-rodada-1/resultado.md</code>). O módulo está <strong>muito incompleto</strong>: das 93 entradas do menu, <strong>68 são telas provisórias</strong> (cartão "API conectada" ou "Tela em integração") e só <strong>25 telas funcionam</strong> (cadastros de apoio, Item, Endereço do Estoque, Disponibilidade de Estoque e as duas Solicitações). Recebimento, Conferência, Endereçamento, Movimentação, Saída, Devolução, Remessa, Inventário, Kits, Relatórios, Laudo do CQ e Avaliação do Fornecedor ainda não têm tela.</p>
+<h3 id="o-que-a-rodada-mostrou">O que a rodada mostrou</h3>
 <ul>
-<li>No Principal e na Garantia da Qualidade, a versão nova repetiu a maior parte dos defeitos do legado, e piorou alguns (ver o resumo de cada um).</li>
-<li>A massa de dados de teste da versão nova tem dez medicamentos reais e o restante fictício, com o prefixo "T.".</li>
+<li><strong>Melhorou no que o servidor faz:</strong> o Endereçamento agora grava saldo, histórico e endereço (no legado mostrava sucesso e não gravava), a Conferência finaliza sem o erro dos volumes, o Item novo guarda a marca de controle especial (Portaria 344) e o código do lote guarda o hífen. Tudo isso foi visto pela API, porque as telas são provisórias.</li>
+<li><strong>Continua igual ao legado:</strong> lote com validade vencida e fornecedor reprovado são aceitos no recebimento; cadastros de apoio em uso podem ser inativados, excluídos ou ter a unidade e o grupo trocados sem aviso; o Log não registra o tempo de armazenagem e a diferença de pesagem; o Item não tem o campo da classificação de reanálise.</li>
+<li><strong>Defeitos novos (11):</strong> só o administrador acessa o Estoque (um perfil com todas as funções recebe 403 até para ler); a autorização do recebimento não executa e não tem segunda assinatura; o local do endereço libera ou reprova o lote sem laudo do CQ; reabrir recebimento dá erro 500; a Disponibilidade de Estoque não mostra o saldo; a movimentação interna e a entrada de produção não conseguem escolher destino.</li>
+<li><strong>Dos 56 defeitos de gravidade Alta do legado:</strong> 12 repetem, 3 corrigidos, 1 corrigido em parte, nenhum piorou, 7 bloqueados, 2 não executados e 31 não se aplicam (tela provisória).</li>
 </ul>
+<h3 id="massa-de-dados">Massa de dados</h3>
+<p>41 medicamentos reais e 30 insumos e embalagens (código <code>T.</code>), 15 fornecedores, 5 almoxarifados, 8 locais, 40 endereços e 26 lotes em quarentena, vencidos, a vencer, em retenção e em locais de aprovado e reprovado (lotes criados pela API).</p>
+<h3 id="o-que-falta">O que falta</h3>
+<p>Corrigir o acesso (N-001) e construir as telas provisórias para testar o caminho do lote pelas telas, o laudo do CQ, a movimentação interna, a saída, a remessa e o inventário; os testes de papéis e separação de funções ficam "não testáveis" até lá.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="dossie-de-homologacao.html"><small>← Anterior</small><strong>Dossiê de homologação</strong></a><a class="ap ap-prox" href="o-estoque-ideal.html"><small>Próximo →</small><strong>O Estoque ideal</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#onde-estamos">Onde estamos</a></li><li><a href="#como-vai-ser-testado">Como vai ser testado</a></li><li><a href="#o-que-se-sabe-ate-agora">O que se sabe até agora</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#onde-estamos">Onde estamos</a></li><li><a href="#o-que-a-rodada-mostrou">O que a rodada mostrou</a></li><li><a href="#massa-de-dados">Massa de dados</a></li><li><a href="#o-que-falta">O que falta</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 07/11/2026</div>

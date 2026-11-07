@@ -76,7 +76,7 @@ def carregar_novo(hom, mid):
         out.append({"id": m.group(1), "titulo": m.group(2).strip(), "gravidade": campos.get("Gravidade", ""), "situacao": campos.get("Situação") or "Aberto",
                     "tipo": campos.get("Tipo", ""), "tela_txt": campos.get("Tela", ""), "resumo": "", "passos": [secao("Passos para reproduzir")],
                     "esperado": secao("Esperado"), "obtido": secao("Obtido"), "responsavel": campos.get("Responsável pela correção", ""),
-                    "evid": [(n, "") for n in re.findall(r"`([^`]+\.(?:png|jpg|jpeg))`", campos.get("Evidência", ""))], "pasta": "versao-nova/" + pasta})
+                    "evid": [(n, "") for n in re.findall(r"[\w./\-]+\.(?:png|jpg|jpeg)", campos.get("Evidência", ""))], "pasta": "versao-nova/" + pasta})
     return out
 
 
@@ -115,6 +115,40 @@ def associar(defeitos, telas, ajustes, versao, mid):
     return por_tela, sem, sorted(textos)
 
 
+def carregar_provisorias(hom, mid):
+    """Telas provisorias da versao nova (cartao "API conectada" ou "Tela em integracao"): nao sao defeito. Lidas das tabelas das rodadas:
+    telas-provisorias.md (coluna "Tela") e, nos resultado.md, as tabelas logo abaixo de um titulo que fala de provisorias."""
+    pasta = PASTAS_NOVO.get(mid)
+    out = set()
+    if not pasta:
+        return out
+    base = Path(hom) / "versao-nova" / pasta / "execucao"
+    for arq in list(base.glob("*/telas-provisorias.md")) + list(base.glob("*/resultado.md")):
+        so_titulo_provisoria = arq.name == "resultado.md"
+        titulo_ok = not so_titulo_provisoria
+        cols = None
+        for linha in arq.read_text(encoding="utf-8").splitlines():
+            if linha.startswith("#"):
+                titulo_ok = (not so_titulo_provisoria) or ("provis" in linha.lower())
+                cols = None
+                continue
+            if not (linha.startswith("|") and titulo_ok):
+                if not linha.startswith("|"):
+                    cols = None
+                continue
+            cel = [c.strip() for c in linha.strip().strip("|").split("|")]
+            if cols is None:
+                cols = [c.lower() for c in cel]
+                continue
+            if set("".join(cel)) <= set("-: "):
+                continue
+            if "tela" in cols and cols.index("tela") < len(cel):
+                nome = re.sub(r"[*`]", "", cel[cols.index("tela")]).strip()
+                if nome:
+                    out.add(_norm(nome))
+    return out
+
+
 def montar(hom, registro):
     """{(versao, módulo): {"por_tela": {...}, "sem": [...], "textos_sem": [...], "total": n}} para todos os módulos com telas."""
     ajustes = _ler_csv(hom)
@@ -126,7 +160,8 @@ def montar(hom, registro):
         for versao, carga in (("legado", carregar_legado), ("novo", carregar_novo)):
             defs = carga(hom, mid)
             por_tela, sem, textos = associar(defs, telas, ajustes, versao, mid)
-            out[(versao, mid)] = {"por_tela": por_tela, "sem": sem, "textos_sem": textos, "total": len(defs)}
+            out[(versao, mid)] = {"por_tela": por_tela, "sem": sem, "textos_sem": textos, "total": len(defs),
+                                  "prov": carregar_provisorias(hom, mid) if versao == "novo" else set()}
     return out
 
 
@@ -158,12 +193,12 @@ def contagem(dados, versao, mid, chave):
     return None if d is None else len(d["por_tela"].get(chave, []))
 
 
-def botao(href, n, tela_testada=True):
+def botao(href, n, versao="legado"):
     """Botão ao lado das abas da tela. n = quantidade de erros ligados à tela (None se o módulo não tem registro de defeitos)."""
     if n is None:
         return f'<span class="aba-extra aba-apagada" aria-disabled="true" title="Este módulo ainda não tem defeitos registrados">Erros</span>'
     rot = f"Erros ({n})" if n else "Erros"
-    classe = "aba-extra aba-erros" + (" aba-erros-zero" if not n else "")
+    classe = f"aba-extra aba-erros aba-erros-{versao}" + (" aba-erros-zero" if not n else "")
     return f'<a class="{classe}" href="{href}">{rot}</a>'
 
 
@@ -243,7 +278,7 @@ def _cartao(d, versao, href_defeito, imgs=()):
             + (f"<figcaption>{E(higiene.redigir(l))}</figcaption>" if l else "") + "</figure>" for u, l in imgs) + "</div>"
     else:
         corpo += '<p class="er-vazio">Sem captura de tela registrada para este defeito.</p>'
-    return (f'<article class="er-cartao" id="{E(d["id"].lower())}"><header><h3>{E(d["id"])} · {E(higiene.redigir(d["titulo"]))}</h3>'
+    return (f'<article class="er-cartao er-v-{versao}" id="{E(d["id"].lower())}"><header><h3>{E(d["id"])} · {E(higiene.redigir(d["titulo"]))}</h3>'
             f'<p class="er-meta">{" ".join(partes)}{link}</p></header>{corpo}</article>')
 
 
@@ -259,12 +294,17 @@ def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos,
         situ = t.get("situacao") or ""
         if versao == "legado" and situ and situ != "Não testada":
             msg = f'Nenhum erro registrado para esta tela (situação no inventário: {E(situ)}). Isso vale só para o que foi testado.'
+        elif versao == "novo" and t["chave"] in d.get("prov", set()):
+            msg = ("<strong>Tela provisória (a desenvolver).</strong> A versão nova ainda não construiu esta tela: ela abre só um cartão, sem pesquisa, lista nem botões. "
+                   "Isso <strong>não é defeito</strong> e, por isso, não há erros registrados. Quando a tela for desenvolvida, ela entra nos testes.")
         elif versao == "novo" and not t.get("validada"):
             msg = "Esta tela ainda não foi validada na versão nova; por isso não há erros registrados. Não significa que esteja correta."
         else:
             msg = "Nenhum erro registrado para esta tela. Isso vale só para o que foi testado."
         miolo = f'<div class="callout nv-aviso"><p class="callout-titulo">Sem erros registrados</p><p>{msg}</p></div>'
         resumo = ""
+    aviso_novo = ('<p class="nv-meta er-aviso-novo">A versão nova ainda está em construção: telas provisórias (só um cartão) não são defeito e não aparecem como erro.</p>'
+                  if versao == "novo" else "")
     rodape_lista = (f'<p class="nv-meta">Defeitos do módulo que não foram ligados a nenhuma tela: <a href="{href_sem_tela}">{len(d["sem"])}</a>. '
                     f'Total registrado no módulo ({rot_v}): {d["total"]}.</p>')
     titulo = f'Erros · {t["nome"]} · {rot_v} · {mod["nome"]} · iLabMedSys'
@@ -274,18 +314,20 @@ def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos,
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}documentacao/{mod['id']}/index.html">{E(mod['nome'])}</a> › <span>{E(t['nome'])}</span> › <span>Erros</span></nav>
   {barra}
   <header class="doc-cabecalho"><h1>{E(t['nome'])} <span class="sit-sufixo">· erros · {rot_v}</span></h1>{resumo}</header>
-  <article class="texto texto-largo">{miolo}{rodape_lista}</article>
+  <article class="texto texto-largo">{aviso_novo}{miolo}{rodape_lista}</article>
 </main>
 """ + rodape(raiz))
 
 
-def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos):
+def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, imagens=None):
     d = dados[(versao, mod["id"])]
     rot_v = "legado" if versao == "legado" else "versão nova"
     lista = sorted(d["sem"], key=lambda x: (ORDEM_GRAV.get(x["gravidade"], 9), x["id"]))
     linhas = "".join(f'<tr><td>{E(x["id"])}</td><td>{E(x["gravidade"])}</td><td>{E(x["situacao"])}</td><td>{E(higiene.redigir(x["titulo"]))}</td><td>{E(higiene.redigir(x["tela_txt"]))}</td></tr>' for x in lista)
     corpo = (f'<table class="tabela"><thead><tr><th>Defeito</th><th>Gravidade</th><th>Situação</th><th>Título</th><th>Tela citada no defeito</th></tr></thead><tbody>{linhas}</tbody></table>'
              if lista else "<p>Todos os defeitos deste módulo estão ligados a uma tela.</p>")
+    cartoes = "".join(_cartao(x, versao, f"{href_defeitos}#{x['id'].lower()}" if href_defeitos else "", imagens(x) if imagens else ()) for x in lista)
+    cartoes = f'<h2>Cada defeito, com o passo a passo e as capturas</h2>{cartoes}' if cartoes else ""
     titulo = f'Defeitos sem tela associada · {rot_v} · {mod["nome"]} · iLabMedSys'
     return (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css"></head>', 1)
             .replace("<body ", f'<body data-versao-pagina="{versao}" ', 1) + f"""
@@ -294,16 +336,21 @@ def pagina_sem_tela(mod, versao, dados, cabecalho, rodape, barra, raiz, href_def
   {barra}
   <header class="doc-cabecalho"><h1>Defeitos sem tela associada <span class="sit-sufixo">· {rot_v}</span></h1>
   <p class="nv-meta">São defeitos cujo campo "Tela" não bate com nenhuma tela do inventário (por exemplo, citam mais de uma tela com outro nome). Nada foi descartado: eles estão aqui até alguém indicar a tela no arquivo de equivalência.</p></header>
-  <article class="texto texto-largo">{corpo}</article>
+  <article class="texto texto-largo">{corpo}{cartoes}</article>
 </main>
 """ + rodape(raiz))
 
 
 CSS = """
-.aba-erros{border-color:#b3261e!important;color:#b3261e!important;font-weight:700}
+.aba-erros{font-weight:700}
+.aba-erros-legado{border-color:#b3261e!important;color:#b3261e!important}
+.aba-erros-novo{border-color:#1769aa!important;color:#1769aa!important}
 .aba-erros-zero{border-color:var(--laranja2)!important;color:var(--tinta)!important;font-weight:600}
 .er-cartao{border:1px solid var(--linha,#d9dde3);border-radius:10px;padding:12px 16px;margin:12px 0;background:var(--painel,#fff)}
 .er-cartao h3{margin:0 0 6px;font-size:1rem}
+.er-v-legado{border-left:6px solid #b3261e}
+.er-v-novo{border-left:6px solid #1769aa}
+.er-aviso-novo{border-left:4px solid #1769aa;padding-left:10px}
 .er-meta{margin:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.88rem}
 .er-grav{background:var(--cor);color:#fff;border-radius:999px;padding:2px 10px;font-weight:700}
 .er-sit,.er-tipo,.er-resp{border:1px solid var(--linha,#d9dde3);border-radius:999px;padding:2px 10px}
