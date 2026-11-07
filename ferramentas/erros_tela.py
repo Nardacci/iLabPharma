@@ -20,6 +20,7 @@ import csv
 import html
 import json
 import re
+import shutil
 from pathlib import Path
 
 import higiene
@@ -52,7 +53,8 @@ def carregar_legado(hom, mid):
     for d in json.loads(arq.read_text(encoding="utf-8")).get("defeitos", []):
         out.append({"id": d["id"], "titulo": d.get("titulo", ""), "gravidade": d.get("gravidade", ""), "situacao": d.get("situacao") or "Aberto",
                     "tipo": d.get("tipo", ""), "tela_txt": d.get("tela", ""), "resumo": d.get("resumo", ""), "passos": d.get("passos") or [],
-                    "esperado": d.get("esperado", ""), "obtido": d.get("obtido", ""), "responsavel": ""})
+                    "esperado": d.get("esperado", ""), "obtido": d.get("obtido", ""), "responsavel": "",
+                    "evid": [(e.get("arquivo"), e.get("legenda", "")) if isinstance(e, dict) else (e, "") for e in d.get("evidencias") or []], "pasta": pasta})
     return out
 
 
@@ -73,7 +75,8 @@ def carregar_novo(hom, mid):
             return s.group(1).strip() if s else ""
         out.append({"id": m.group(1), "titulo": m.group(2).strip(), "gravidade": campos.get("Gravidade", ""), "situacao": campos.get("Situação") or "Aberto",
                     "tipo": campos.get("Tipo", ""), "tela_txt": campos.get("Tela", ""), "resumo": "", "passos": [secao("Passos para reproduzir")],
-                    "esperado": secao("Esperado"), "obtido": secao("Obtido"), "responsavel": campos.get("Responsável pela correção", "")})
+                    "esperado": secao("Esperado"), "obtido": secao("Obtido"), "responsavel": campos.get("Responsável pela correção", ""),
+                    "evid": [(n, "") for n in re.findall(r"`([^`]+\.(?:png|jpg|jpeg))`", campos.get("Evidência", ""))], "pasta": "versao-nova/" + pasta})
     return out
 
 
@@ -164,11 +167,58 @@ def botao(href, n, tela_testada=True):
     return f'<a class="{classe}" href="{href}">{rot}</a>'
 
 
+_EVID_CACHE = {}
+
+
+def _achar_evidencia(hom, pasta, arquivo):
+    """Caminho da captura no repositório da homologação. Legado: relativo a homologacao/<módulo>/. Novo: só o nome do arquivo, procurado em execucao/**/evidencias/."""
+    base = Path(hom) / pasta
+    direto = base / arquivo
+    if direto.exists():
+        return direto
+    achados = list(base.glob(f"execucao/**/evidencias/{Path(arquivo).name}"))
+    return achados[0] if achados else None
+
+
+def copiar_evidencia(hom, destino, mid, d, i):
+    """Copia (reduzida a 1200 px de largura) a i-ésima captura do defeito para documentacao/img/<módulo>/erros/ e devolve o nome do arquivo (ou None)."""
+    chave = (d["id"], i)
+    if chave in _EVID_CACHE:
+        return _EVID_CACHE[chave]
+    arq, _leg = d["evid"][i]
+    fonte = _achar_evidencia(hom, d["pasta"], arq) if arq else None
+    nome = None
+    if fonte:
+        nome = f'{d["id"].lower()}-{i + 1}.png'
+        pasta_dest = Path(destino) / "documentacao/img" / mid / "erros"
+        pasta_dest.mkdir(parents=True, exist_ok=True)
+        try:
+            from PIL import Image
+            im = Image.open(fonte)
+            if im.width <= 1200:
+                shutil.copy2(fonte, pasta_dest / nome)  # já é pequena: copia sem mexer
+            else:
+                im = im.convert("RGB").resize((1200, round(im.height * 1200 / im.width)))
+                im.quantize(colors=256).save(pasta_dest / nome, optimize=True)
+        except Exception:
+            nome = None
+    _EVID_CACHE[chave] = nome
+    return nome
+
+
+def _sem_marcador(linha):
+    """Tira o "1.", "1)" ou "-" do começo da linha (a lista numerada do HTML já numera)."""
+    return re.sub(r"^\s*(?:\d+[.)]|[-*])\s*", "", linha)
+
+
 def _lista(texto):
-    return [x for x in re.split(r"\n+", higiene.redigir(texto)) if x.strip()]
+    """Linhas do texto, sem as marcas de formatação do Markdown (** e crases) e já passadas pela higiene."""
+    limpo = re.sub(r"\*\*|`", "", higiene.redigir(texto))
+    return [x for x in re.split(r"\n+", limpo) if x.strip()]
 
 
-def _cartao(d, versao, href_defeito):
+def _cartao(d, versao, href_defeito, imgs=()):
+    """imgs = [(url relativo da captura, legenda)]. Passo a passo, esperado, obtido e capturas ficam sempre visíveis."""
     cor = COR_GRAV.get(d["gravidade"], "#6b7785")
     partes = [f'<span class="er-grav" style="--cor:{cor}">{E(d["gravidade"] or "—")}</span>', f'<span class="er-sit">{E(d["situacao"])}</span>']
     if d["tipo"]:
@@ -179,23 +229,31 @@ def _cartao(d, versao, href_defeito):
     corpo = ""
     if d["resumo"]:
         corpo += f'<p>{E(higiene.redigir(d["resumo"]))}</p>'
-    passos = [p for p in d["passos"] if p and p.strip()]
+    passos = [l for p in d["passos"] if p and p.strip() for l in _lista(p)]
     if passos:
-        corpo += "<p class=\"er-rot\">Como reproduzir</p><ol>" + "".join(f"<li>{E(l)}</li>" for p in passos for l in _lista(p)) + "</ol>"
+        corpo += '<p class="er-rot">Como reproduzir o erro, passo a passo</p><ol class="er-passos">' + "".join("<li>" + E(_sem_marcador(l)) + "</li>" for l in passos) + "</ol>"
+    else:
+        corpo += '<p class="er-rot">Como reproduzir o erro, passo a passo</p><p class="er-vazio">O passo a passo ainda não foi registrado neste defeito.</p>'
     for rot, k in (("Esperado", "esperado"), ("Obtido", "obtido")):
         if d[k] and d[k].strip():
             corpo += f'<p class="er-rot">{rot}</p>' + "".join(f"<p>{E(l)}</p>" for l in _lista(d[k]))
+    if imgs:
+        corpo += '<p class="er-rot">Evidência (captura da tela)</p><div class="er-evid">' + "".join(
+            f'<figure><a href="{E(u)}" target="_blank" rel="noopener"><img src="{E(u)}" alt="{E(l or "Captura da tela do defeito " + d["id"])}" loading="lazy"></a>'
+            + (f"<figcaption>{E(higiene.redigir(l))}</figcaption>" if l else "") + "</figure>" for u, l in imgs) + "</div>"
+    else:
+        corpo += '<p class="er-vazio">Sem captura de tela registrada para este defeito.</p>'
     return (f'<article class="er-cartao" id="{E(d["id"].lower())}"><header><h3>{E(d["id"])} · {E(higiene.redigir(d["titulo"]))}</h3>'
-            f'<p class="er-meta">{" ".join(partes)}{link}</p></header><details{" open" if len(corpo) < 900 else ""}><summary>Detalhes</summary>{corpo}</details></article>')
+            f'<p class="er-meta">{" ".join(partes)}{link}</p></header>{corpo}</article>')
 
 
-def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, href_sem_tela, outra_versao):
+def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, href_sem_tela, outra_versao, imagens=None):
     """Página "Erros desta tela". href_defeitos = página do registro completo (só legado); outra_versao = (rótulo, href)."""
     d = dados[(versao, mod["id"])]
     lista = sorted(d["por_tela"].get(t["chave"], []), key=lambda x: (ORDEM_GRAV.get(x["gravidade"], 9), x["id"]))
     rot_v = "legado" if versao == "legado" else "versão nova"
     if lista:
-        miolo = "".join(_cartao(x, versao, f"{href_defeitos}#{x['id'].lower()}" if href_defeitos else "") for x in lista)
+        miolo = "".join(_cartao(x, versao, f"{href_defeitos}#{x['id'].lower()}" if href_defeitos else "", imagens(x) if imagens else ()) for x in lista)
         resumo = f'<p class="nv-meta">{len(lista)} erro(s) registrado(s) nesta tela, do mais grave ao menos grave.</p>'
     else:
         situ = t.get("situacao") or ""
@@ -250,5 +308,9 @@ CSS = """
 .er-grav{background:var(--cor);color:#fff;border-radius:999px;padding:2px 10px;font-weight:700}
 .er-sit,.er-tipo,.er-resp{border:1px solid var(--linha,#d9dde3);border-radius:999px;padding:2px 10px}
 .er-rot{font-weight:700;margin:10px 0 2px}
-.er-cartao details summary{cursor:pointer;margin-top:8px}
+.er-passos{margin:4px 0 8px 1.2em;padding:0}.er-passos li{margin:3px 0}
+.er-vazio{opacity:.7;font-style:italic;margin:6px 0}
+.er-evid{display:flex;flex-wrap:wrap;gap:12px;margin:6px 0}
+.er-evid figure{margin:0;max-width:340px}.er-evid img{width:100%;height:auto;border:1px solid var(--linha,#d9dde3);border-radius:6px;display:block}
+.er-evid figcaption{font-size:.82rem;opacity:.8;margin-top:3px}
 """
