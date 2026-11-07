@@ -290,7 +290,7 @@ def _cartao(d, versao, href_defeito, imgs=()):
             f'<p class="er-meta">{" ".join(partes)}{link}</p></header>{corpo}</article>')
 
 
-def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, href_sem_tela, outra_versao, imagens=None, lateral="", abas="", selo="", ap=""):
+def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos, href_sem_tela, outra_versao, imagens=None, lateral="", abas="", selo="", ap="", aviso_extra=""):
     """Página "Erros desta tela". href_defeitos = página do registro completo (só legado); outra_versao = (rótulo, href)."""
     d = dados[(versao, mod["id"])]
     lista = sorted(d["por_tela"].get(t["chave"], []), key=lambda x: (ORDEM_GRAV.get(x["gravidade"], 9), x["id"]))
@@ -316,9 +316,10 @@ def pagina(mod, t, versao, dados, cabecalho, rodape, barra, raiz, href_defeitos,
     rodape_lista = (f'<p class="nv-meta">Defeitos do módulo que não foram ligados a nenhuma tela: <a href="{href_sem_tela}">{len(d["sem"])}</a>. '
                     f'Total registrado no módulo ({rot_v}): {d["total"]}.</p>')
     titulo = f'Erros · {t["nome"]} · {rot_v} · {mod["nome"]} · iLabMedSys'
+    bloco_extra = f'<p class="nv-meta">{aviso_extra}</p>' if aviso_extra else ""
     if lateral:
         return _moldura(mod, titulo, f'{t["nome"]}: Erros', versao, raiz, cabecalho, rodape, lateral, barra, abas, selo,
-                        f'<article class="texto texto-largo">{aviso_novo}{resumo}{miolo}{rodape_lista}</article>', t["nome"],
+                        f'<article class="texto texto-largo">{bloco_extra}{aviso_novo}{resumo}{miolo}{rodape_lista}</article>', t["nome"],
                         ap=ap, toc=_toc_defeitos(lista))
     return (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css">\n</head>', 1)
             .replace("<body ", f'<body data-versao-pagina="{versao}" ', 1) + f"""
