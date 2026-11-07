@@ -1119,15 +1119,17 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
                     "", "sem-tela-erros.html", None,
                     imagens=lambda d: [(f"../../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
             (pasta_leg / "erros-sem-tela.html").write_text(erros_tela.pagina_sem_tela(
-                mod, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh("sem-tela-erros.html")), "../../", href_defs), encoding="utf-8")
+                mod, "legado", ERROS, cabecalho, rodape, versao_nova.barra_pagina("legado", "#", nh("sem-tela-erros.html")), "../../", href_defs,
+                imagens=lambda d: [(f"../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
             (pasta / "sem-tela-erros.html").write_text(erros_tela.pagina_sem_tela(
-                mod, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh("erros-sem-tela.html"), "#"), "../../../", ""), encoding="utf-8")
+                mod, "novo", ERROS, cabecalho, rodape, versao_nova.barra_pagina("novo", lh("erros-sem-tela.html"), "#"), "../../../", "",
+                imagens=lambda d: [(f"../../img/{mid}/erros/{n}", leg) for i, (_a, leg) in enumerate(d["evid"]) if (n := erros_tela.copiar_evidencia(hom_, destino, mid, d, i))]), encoding="utf-8")
         for t in rm["telas"]:
             leg = {x["aba"]: x["slug"] for x in mod["paginas"] if x.get("tela_n") and x.get("aba") and versao_nova.chave_tela(x.get("tela") or "") == t["chave"]}
             for chave, rot, aba_leg in versao_nova.ABAS:
                 alvo = leg.get(aba_leg) or next(iter(leg.values()), None)
                 href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../../telas.html?versao=legado#m-{mid}"
-                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]))), encoding="utf-8")
+                (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo")), encoding="utf-8")
                 n_novas += 1
                 if t["abas"][chave]:
                     txt = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t["abas"][chave])))
@@ -1305,7 +1307,7 @@ def _abas_extras(mod, p):
         return f'<span class="aba-extra aba-apagada" aria-disabled="true" title="{dica}">{rotulo}</span>'
     chave_t = versao_nova.chave_tela(p.get("tela") or "")
     tn = next((x for x in NOVO.get(mod["id"], {"telas": []})["telas"] if x["chave"] == chave_t), None)
-    erros = (erros_tela.botao(f'erros-{tn["slug"]}.html', erros_tela.contagem(ERROS, "legado", mod["id"], chave_t)) if tn
+    erros = (erros_tela.botao(f'erros-{tn["slug"]}.html', erros_tela.contagem(ERROS, "legado", mod["id"], chave_t), "legado") if tn
              else erros_tela.botao("", None))
     return ('<span class="aba-sep" aria-hidden="true"></span>'
             + erros
