@@ -94,6 +94,11 @@ REGRAS = [
     # C4: toda página de Erros mostra defeitos ou a mensagem padrão "Sem erros registrados" (nunca uma página vazia ou com texto próprio)
     ("C4", "Página de Erros: cartões de defeito ou a mensagem padrão", ("tela-legado", "tela-novo"),
      lambda h, r: not (r.name.endswith("-erros.html") or r.name.startswith("erros-")) or 'class="er-cartao' in h or "Sem erros registrados" in h),
+    # L4: o Manual por tela dos módulos do escopo traz o quadro "Quem pode fazer o quê" (com dados ou com o aviso padrão)
+    ("L4", "Manual por tela tem o quadro Quem pode fazer o quê", ("tela-legado",),
+     lambda h, r: not re.search(r"aria-current=page>Manual do usuário", h)
+     or r.parts[1] not in ("principal", "estoque", "garantia-qualidade", "controle-qualidade", "controle-documentos")
+     or 'id="quem-pode-fazer-o-que"' in h),
     ("C6", "A barra lateral destaca o item atual", ("tela-legado", "tela-novo", "doc-legado"),
      lambda h, r: re.search(r'<aside class="lateral".*?aria-current', h, re.S) is not None),
 ]
