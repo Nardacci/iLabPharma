@@ -1175,6 +1175,14 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         Path(relatorio).write_text("\n".join(linhas) + "\n", encoding="utf-8")
     total = sum(len(m["paginas"]) for m in MODULOS)
     print(f"Portal gerado: {total} documentos, {len(retirado)} trechos de segurança retirados.")
+    try:
+        import verificar_padrao
+        _pt, _pr = verificar_padrao.verificar(destino)
+        _rel, _div = verificar_padrao.relatorio(_pt, _pr)
+        _regras_div = sum(1 for r in _pr.values() if r["falha"])
+        print(f"Padrão do portal: {_div} divergências em {_regras_div} de {len(_pr)} verificações (detalhe: python3 ferramentas/verificar_padrao.py .)")
+    except Exception as _e:  # o verificador nunca impede a geração
+        print(f"Padrão do portal: não foi possível verificar ({_e})")
     achados = higiene.verificar(destino)
     if achados:
         for arq, o_que, n in achados:
@@ -1331,7 +1339,7 @@ _LATERAL = {}
 
 def lateral_tela(mod, ref, prefixo):
     """Barra lateral do módulo (a mesma das páginas de documento). prefixo = caminho até documentacao/<módulo>/ quando a página está em outra pasta."""
-    chave = (mod["id"], ref["slug"], prefixo)
+    chave = (mod["id"], ref["slug"] if ref else "", prefixo)
     if chave not in _LATERAL:
         h = (f'<aside class="lateral" aria-label="Roteiro do módulo">\n    <a class="lat-modulo" href="{prefixo}index.html" style="--cor:{mod["cor"]}">'
              f'<span class="icone">{mod["icone"]}</span>{E(mod["nome"])}</a>\n    {nav_lateral(mod, ref)}\n  </aside>')
@@ -1558,6 +1566,10 @@ def cartoes_desvios(pags):
 def pagina_modulo(mod, sit="index"):
     """Visão geral do módulo (sit='index') ou uma das três situações: 'legado', 'novo', 'ideal'."""
     raiz = "../../"
+    # moldura única do portal: barra lateral do módulo ao lado do conteúdo (padrão C6, etapa 2)
+    lat = lateral_tela(mod, None, "") if mod["paginas"] else ""
+    abre_m = ('<div class="doc-layout sem-toc">\n  ' + lat + '\n  <main class="doc pagina-modulo" id="conteudo">') if lat else '<main class="pagina-modulo" id="conteudo">'
+    fecha_m = '</main>\n</div>' if lat else '</main>'
     estados = estado_situacoes(mod)
     ant_mod, prox_mod = vizinhos(mod)
     fim = (f'<section class="fim-roteiro"><p class="comece-rotulo">Fim do roteiro deste módulo</p>'
@@ -1600,7 +1612,7 @@ def pagina_modulo(mod, sit="index"):
                                 f'<p class="secao-desc">{MENUS_GQ_DESC.get(m, "")} '
                                 f'<a href="{entenda["slug"]}.html">Entenda o menu: o que faz e por que importa</a>.</p>' + _cartoes_um_menu(pm))
         return versao_nova.com_versao(cabecalho(f"{mod['nome']} · iLabMedSys", raiz, "modulos") + f"""
-<main class="pagina-modulo" id="conteudo">
+{abre_m}
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <span>{E(mod['nome'])}</span></nav>
   <header class="mod-cabecalho" style="--cor:{mod['cor']}">
     <div class="mod-icone" aria-hidden="true">{mod['icone']}</div>
@@ -1618,7 +1630,7 @@ def pagina_modulo(mod, sit="index"):
   <p class="secao-desc">Um resumo só, que situa o módulo nas três situações.</p>
   <div class="doc-cards">{blocos_resumo}</div>{bloco_menus}
   {fim}
-</main>
+{fecha_m}
 """ + rodape(raiz), raiz)
 
     nome_sit, curta, cor = next((n, c, k) for kk, n, c, k in SITUACOES_MOD if kk == sit)
@@ -1713,7 +1725,7 @@ def pagina_modulo(mod, sit="index"):
                   f'<a class="botao botao-grande" href="{primeiro["slug"]}.html">Iniciar o roteiro →</a></section>')
 
     return versao_nova.com_versao(cabecalho(f"{mod['nome']} · {nome_sit} · iLabMedSys", raiz, "modulos") + f"""
-<main class="pagina-modulo" id="conteudo">
+{abre_m}
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="index.html">{E(mod['nome'])}</a> › <span>{E(nome_sit)}</span></nav>
   <header class="mod-cabecalho mod-sit" style="--cor:{cor}">
     <div class="mod-icone" aria-hidden="true">{mod['icone']}</div>
@@ -1731,7 +1743,7 @@ def pagina_modulo(mod, sit="index"):
   {submenu_html}
   {''.join(blocos)}
   {fim if sit == "legado" else ""}
-</main>
+{fecha_m}
 """ + rodape(raiz), raiz)
 
 
