@@ -211,9 +211,8 @@ AVISO_TELA = ("Esta tela ainda não foi validada nesta versão. Não há teste n
 AVISO_ABA = "Esta aba ainda não foi validada nesta versão."
 
 
-def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../", erros=""):
-    """Uma página (tela + aba) da versão nova."""
-    mid = mod["id"]
+def navegacao_abas(mid, t, aba_atual, href_ideal, erros=""):
+    """Faixa de abas da tela na versão nova. aba_atual = chave de uma aba de ABAS ou "erros" (a aba Erros fica marcada)."""
     abas = []
     for chave, rot, _leg in ABAS:
         marca = " aria-current=page" if chave == aba_atual else ""
@@ -221,7 +220,15 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
         abas.append(f'<a href="{t["slug"]}-{chave}.html"{marca}{vazia}>{rot}</a>')
     ideal = (f'<a class="aba-extra" href="../../{mid}/{href_ideal}" title="O ideal é um só, comum às duas versões">Ideal</a>' if href_ideal
              else '<span class="aba-extra aba-apagada" aria-disabled="true" title="A ficha do ideal ainda não foi escrita">Ideal</span>')
-    navabas = '<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(abas) + '<span class="aba-sep" aria-hidden="true"></span>' + erros + ideal + '</nav>'
+    if aba_atual == "erros" and erros:
+        erros = erros.replace('<a class="', '<a aria-current="page" class="', 1)
+    return '<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(abas) + '<span class="aba-sep" aria-hidden="true"></span>' + erros + ideal + '</nav>'
+
+
+def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../", erros="", lateral=""):
+    """Uma página (tela + aba) da versão nova."""
+    mid = mod["id"]
+    navabas = navegacao_abas(mid, t, aba_atual, href_ideal, erros)
     rot_aba = next(r for c, r, _l in ABAS if c == aba_atual)
     corpo = t["abas"][aba_atual]
     if corpo:
@@ -234,16 +241,18 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
                 else 'Situação na versão nova: <strong>ainda não validada</strong>')
     barra = barra_pagina("novo", href_legado, f"{t['slug']}-{aba_atual}.html")
     titulo = f'{t["nome"]} · {rot_aba} · versão nova · {mod["nome"]} · iLabMedSys'
+    abre = ('<div class="doc-layout">\n  ' + lateral + '\n  <main class="doc" id="conteudo">') if lateral else '<main class="nv-pagina" id="conteudo">'
+    fecha = '</main>\n</div>' if lateral else '</main>'
     pagina = (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css"></head>', 1)
               .replace("<body ", '<body data-versao-pagina="novo" ', 1) + f"""
-<main class="nv-pagina" id="conteudo">
+{abre}
   <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}telas.html?versao=novo#mn-{mid}">Documentação por módulo · versão nova</a> › <a href="{raiz}documentacao/{mid}/index.html">{E(mod['nome'])}</a> › <span>{E(t['nome'])}</span></nav>
   {barra}
   <header class="doc-cabecalho"><h1>{E(t['nome'])} <span class="sit-sufixo">· versão nova</span></h1>
   <p class="nv-meta">{E(mod['nome'])} · menu {E(t['menu'])} · {situacao}</p></header>
   {navabas}
   {miolo}
-</main>
+{fecha}
 """ + rodape(raiz))
     return pagina.replace("</body></html>", f'<script src="{raiz}portal/versao.js"></script></body></html>')
 
