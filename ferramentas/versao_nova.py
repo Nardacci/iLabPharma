@@ -171,11 +171,11 @@ def seletor(href_legado=None, href_novo=None, ativo=None):
 
 
 def barra_pagina(ativo, href_legado, href_novo, nota=""):
-    """Faixa no alto da página de uma tela: a versão ativa e o botão para trocar, mantendo a mesma tela."""
-    nome = "Legado" if ativo == "legado" else "Novo"
-    desc = ("o sistema entregue pelo fornecedor" if ativo == "legado" else "a versão nova (o mesmo sistema com ferramentas atualizadas)")
-    return (f'<div class="versao-barra vb-{ativo}">{seletor(href_legado, href_novo, ativo)}'
-            f'<span class="vb-texto">Você está na versão <strong>{nome}</strong>: {desc}.{(" " + nota) if nota else ""}</span></div>')
+    """Faixa no alto da página de uma tela. Decisão do responsável (08/11/2026): a faixa "Versão: Legado | Novo" e o texto
+    "Você está na versão…" saíram das páginas de tela; a versão aparece no selo do cabeçalho e na trilha. Só resta a nota, quando há."""
+    if not nota:
+        return ""
+    return f'<div class="versao-barra vb-{ativo}"><span class="vb-texto">{nota}</span></div>'
 
 
 def bloco_modulo(mod, reg_mod, raiz="../../"):
@@ -263,7 +263,7 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
     else:
         aviso = AVISO_ABA if t["validada"] else AVISO_TELA
         miolo = (f'<article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Ainda não validada nesta versão</p>'
-                 f'<p>{aviso}</p><p>Para ver como a tela é no sistema entregue, use o botão <strong>Legado</strong> no alto da página.</p></div></article>')
+                 f'<p>{aviso}</p><p>Para ver como a tela é no sistema entregue, <a href="{E(href_legado)}">abra a página do Legado</a>.</p></div></article>')
     situacao = (f'Situação na versão nova: <strong>{E(t["situacao"] or "Testada")}</strong>' if t["validada"]
                 else 'Situação na versão nova: <strong>ainda não validada</strong>')
     barra = barra_pagina("novo", href_legado, f"{t['slug']}-{aba_atual}.html")

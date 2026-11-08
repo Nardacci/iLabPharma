@@ -83,7 +83,7 @@ def _tem(padrao):
 REGRAS = [
     ("E1", "Barra lateral do módulo", ("tela-legado", "tela-novo", "modulo", "doc-legado", "sem-tela"), _tem(r'<aside class="lateral"')),
     ("E2", "Trilha (onde estou)", ("tela-legado", "tela-novo", "modulo", "doc-legado", "sem-tela", "raiz"), _tem(r'class="trilha"')),
-    ("E3", "Faixa de versão (Legado | Novo)", ("tela-legado", "tela-novo"), _tem(r'class="versao-seletor"')),
+    # E3 (faixa "Versão: Legado | Novo") e C1 (trocar de versão leva à mesma tela) saíram em 08/11/2026: a faixa foi removida das páginas de tela.
     ("E4", "Abas da tela", ("tela-legado", "tela-novo"), _tem(r'class="abas-tela"')),
     ("C2", "As 8 abas padrão, na mesma ordem", ("tela-legado", "tela-novo"), lambda h, r: abas_da_pagina(h) == ABAS_PADRAO),
     ("C3b", "Botão Imprimir", ("tela-legado", "tela-novo", "doc-legado"), _tem(r"window\.print")),
@@ -136,7 +136,7 @@ def verificar(raiz):
                 r["ok"] += 1
             else:
                 r["falha"].append(rel.as_posix())
-        if tipo in ("tela-legado", "tela-novo"):
+        if False and tipo in ("tela-legado", "tela-novo"):
             ok = regra_c1(html, rel, tipo)
             if ok is not None:
                 r = por_regra[("C1", tipo)]
