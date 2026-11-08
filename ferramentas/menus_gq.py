@@ -17,6 +17,7 @@ MENUS = [
     {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-relatorios", "grupo": "Menu Relatórios", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Relatórios"},
     {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-kits", "grupo": "Menu Kits", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Kits"},
     {"modulo": "estoque", "base": "3.estoque", "pasta": "menu-regulatorio", "grupo": "Menu Regulatório", "prefixo_word": "LabMedSys - Modulo Estoque - Menu Regulatório"},
+    {"modulo": "estoque", "base": "3.estoque", "pasta": "fora-do-menu", "grupo": "Fora do menu do Estoque", "prefixo_word": "LabMedSys - Modulo Estoque - Fora do menu"},
     {"modulo": "producao", "base": "2.producao", "pasta": "menu-producao", "grupo": "Menu Produção", "prefixo_word": "LabMedSys - Modulo Producao - Menu Producao"},
     {"modulo": "principal", "base": "1.principal", "pasta": "menu-acesso", "grupo": "Acesso ao sistema", "prefixo_word": "LabMedSys - Modulo Principal - Acesso ao sistema"},
     {"modulo": "principal", "base": "1.principal", "pasta": "menu-administracao", "grupo": "Administração", "prefixo_word": "LabMedSys - Modulo Principal - Administração"},
