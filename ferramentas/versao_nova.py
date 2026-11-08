@@ -249,7 +249,7 @@ def navegacao_abas(mid, t, aba_atual, href_ideal, erros=""):
     return '<nav class="abas-tela" aria-label="Páginas desta tela">' + "".join(abas) + '<span class="aba-sep" aria-hidden="true"></span>' + erros + passo + ideal + '</nav>'
 
 
-def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../", erros="", lateral="", ap="", toc_fn=None):
+def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, raiz="../../../", erros="", lateral="", ap="", toc_fn=None, n=None, total=None):
     """Uma página (tela + aba) da versão nova."""
     mid = mod["id"]
     navabas = navegacao_abas(mid, t, aba_atual, href_ideal, erros)
@@ -264,8 +264,13 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
         aviso = AVISO_ABA if t["validada"] else AVISO_TELA
         miolo = (f'<article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Ainda não validada nesta versão</p>'
                  f'<p>{aviso}</p><p>Para ver como a tela é no sistema entregue, <a href="{E(href_legado)}">abra a página do Legado</a>.</p></div></article>')
-    situacao = (f'Situação na versão nova: <strong>{E(t["situacao"] or "Testada")}</strong>' if t["validada"]
-                else 'Situação na versão nova: <strong>ainda não validada</strong>')
+    _sit_txt = (t["situacao"] or "Testada") if t["validada"] else "ainda não validada"
+    _cor = {"Testada": "#2e7d32", "Validada nesta versão": "#2e7d32"}.get(_sit_txt, "#6b7785")
+    situacao = (f'<p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:{_cor};margin-right:6px"></span>'
+                f'Situação da tela na versão nova: <strong>{E(_sit_txt)}</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>')
+    _onde = f'Novo · menu {E(t["menu"])}'
+    _onde_estou = (f'<div class="onde-estou" aria-label="Onde você está no roteiro"><span>{_onde}</span>'
+                   + (f'<span>documento {n} de {total}</span><div class="prog-doc"><i style="width:{round(n / total * 100)}%"></i></div>' if n and total else '') + '</div>')
     barra = barra_pagina("novo", href_legado, f"{t['slug']}-{aba_atual}.html")
     titulo = f'{t["nome"]} · {rot_aba} · versão nova · {mod["nome"]} · iLabMedSys'
     abre = ('<div class="doc-layout">\n  ' + lateral + '\n  <main class="doc" id="conteudo">') if lateral else '<main class="nv-pagina" id="conteudo">'
@@ -273,12 +278,11 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
     pagina = (cabecalho(titulo, raiz).replace("</head>", f'<link rel="stylesheet" href="{raiz}portal/versao.css"></head>', 1)
               .replace("<body ", '<body data-versao-pagina="novo" ', 1) + f"""
 {abre}
-  <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}telas.html?versao=novo#mn-{mid}">Documentação por módulo · versão nova</a> › <a href="{raiz}documentacao/{mid}/index.html">{E(mod['nome'])}</a> › <span>{E(t['nome'])}</span></nav>
-  {barra}
-  <header class="doc-cabecalho"><h1>{E(t['nome'])} <span class="sit-sufixo">· versão nova</span></h1>
-  <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
-  <p class="nv-meta">{E(mod['nome'])} · menu {E(t['menu'])} · {situacao}</p></header>
-  {navabas}
+  <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}documentacao/{mid}/index.html">{E(mod['nome'])}</a> › <a class="sit-trilha" href="{raiz}documentacao/{mid}/novo.html" style="--cor:#1f6feb">Novo</a> › <span>{E(t['nome'])}</span></nav>
+  {_onde_estou}
+  <header class="doc-cabecalho"><h1>{E(t['nome'])}: {rot_aba}</h1>
+  <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
+  {barra}{navabas}{situacao}
   {miolo}
   {ap}
 {fecha}
@@ -294,6 +298,8 @@ def com_versao(texto, raiz):
 
 CSS = """/* Seletor de versão (Legado | Novo) e páginas da versão nova. */
 [data-so-versao][hidden]{display:none!important}
+/* Decisão do responsável (08/11/2026): a versão nova tem a mesma estrutura e o mesmo layout do legado, só a cor de destaque muda (azul). */
+[data-versao-pagina="novo"] .doc-layout{--laranja:#1f6feb;--laranja2:#5b9bff}
 .versao-seletor{display:inline-flex;align-items:center;gap:0;border:1px solid var(--linha);border-radius:999px;overflow:hidden;background:var(--painel);font-size:.9rem}
 .versao-seletor .vs-rotulo{padding:6px 10px 6px 14px;color:var(--suave);font-weight:600}
 .vs-btn{font:inherit;font-weight:700;padding:6px 16px;border:0;border-left:1px solid var(--linha);background:transparent;color:var(--tinta);text-decoration:none;cursor:pointer;display:inline-block}
