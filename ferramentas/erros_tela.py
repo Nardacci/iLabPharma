@@ -339,7 +339,7 @@ def _moldura(mod, titulo, h1, versao, raiz, cabecalho, rodape, lateral, barra, a
 <div class="doc-layout">
   {lateral}
   <main class="doc" id="conteudo">
-    <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}documentacao/{mod['id']}/index.html">{E(mod['nome'])}</a> › <span>{E(nome_tela)}</span>{(' › <span>' + final + '</span>') if final else ''}</nav>
+    <nav class="trilha" aria-label="Você está em"><a href="{raiz}index.html">Início</a> › <a href="{raiz}documentacao/{mod['id']}/index.html">{E(mod['nome'])}</a> › <a class="sit-trilha" href="{raiz}documentacao/{mod['id']}/{'novo' if versao == 'novo' else 'legado'}.html" style="--cor:{'#1f6feb' if versao == 'novo' else '#6b7a8c'}">{'Novo' if versao == 'novo' else 'Legado'}</a> › <span>{E(nome_tela)}</span>{(' › <span>' + final + '</span>') if final else ''}</nav>
     <header class="doc-cabecalho"><h1>{E(h1)}</h1>
     <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
     {barra}{abas}{selo}

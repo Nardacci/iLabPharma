@@ -1148,7 +1148,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
                 alvo = leg.get(aba_leg) or next(iter(leg.values()), None)
                 href_leg = f"../../{mid}/{alvo}.html" if alvo else f"../../{mid}/erros-{t['slug']}.html"  # sem documento da tela no legado: a página de Erros da tela (nunca a lista)
                 (pasta / f"{t['slug']}-{chave}.html").write_text(versao_nova.pagina_tela(mod, t, chave, cabecalho, rodape, href_leg, href_ideal, erros=erros_tela.botao(f"{t['slug']}-erros.html", erros_tela.contagem(ERROS, "novo", mid, t["chave"]), "novo"), lateral=lat_nov,
-                    ap=ap_da_pagina_nova(mod, seq_nov, pos_nov[(t["slug"], chave)], mid), toc_fn=toc_da_pagina), encoding="utf-8")
+                    ap=ap_da_pagina_nova(mod, seq_nov, pos_nov[(t["slug"], chave)], mid), toc_fn=toc_da_pagina, n=pos_nov[(t["slug"], chave)] + 1, total=len(seq_nov)), encoding="utf-8")
                 n_novas += 1
                 if t["abas"][chave]:
                     txt = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t["abas"][chave])))
