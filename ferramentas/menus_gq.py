@@ -35,6 +35,7 @@ MENUS = [
     {"pasta": "treinamento", "grupo": "Treinamento Técnico", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Treinamento Técnico"},
     {"pasta": "configuracao", "grupo": "Configuração", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Configuração"},
     {"pasta": "assuntos-regulatorios", "grupo": "Assuntos Regulatórios", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Assuntos Regulatórios"},
+    {"pasta": "assuntos-regulatorios-fora-do-menu", "grupo": "Assuntos Regulatórios fora do menu", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Assuntos Regulatórios fora do menu"},
     {"pasta": "mudancas", "grupo": "Controle de Mudanças", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Controle de Mudanças"},
     {"pasta": "autoinspecao", "grupo": "Autoinspeção e Auditoria", "prefixo_word": "LabMedSys - Modulo Garantia da Qualidade - Autoinspeção e Auditoria"},
 ]
