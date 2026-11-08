@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de papéis e permissões (como deve ser), versão 0.1 · Visão entre módulos · iLabMedSys</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../portal/portal.css?v=ef743450">
+<link rel="stylesheet" href="../../portal/erros.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body data-raiz="../../">
+<header class="topo">
+  <a class="marca" href="../../index.html" aria-label="iLabMedSys, página inicial"><img src="../../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../../index.html#modulos">Módulos</a>
+    <a href="../../biblioteca.html">Biblioteca</a>
+    <a href="../../telas.html">Devs/QA</a>
+    <a href="../../index.html#publicos">Por público</a>
+    <a href="../../anvisa.html">ANVISA</a>
+    <a href="../../cronograma.html">Cronograma</a>
+    <a href="../../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+
+<div class="doc-layout">
+  <aside class="lateral" aria-label="Roteiro do módulo">
+    <a class="lat-modulo" href="index.html" style="--cor:#2563eb"><span class="icone">◎</span>Visão entre módulos</a>
+    <div class="lat-grupo lat-atual"><div class="lat-titulo">Visão de ponta a ponta</div><ul><li><a href="mapa-do-processo-fabril.html">Mapa do processo fabril</a></li><li><a href="mapa-de-integracoes-entre-os-modulos.html">Mapa de integrações entre os módulos</a></li><li><a href="diagnostico-de-conformidade-com-a-anvisa.html">Diagnóstico de conformidade com a ANVISA</a></li><li><a href="telas-tabelas-e-codigo-repetidos-entre-os-modulos.html">Telas, tabelas e código repetidos entre os módulos</a></li><li><a href="qualidade-entre-os-modulos-situacao-do-lote-e-travas.html">Qualidade entre os módulos: situação do lote e travas</a></li><li><a href="os-cinco-modulos-o-negocio-a-anvisa-e-o-que-falta.html">Os cinco módulos: o negócio, a ANVISA e o que falta</a></li><li><a href="matriz-de-papeis-e-permissoes-como-deve-ser-versao-0-1.html" aria-current=page>Matriz de papéis e permissões (como deve ser), versão 0.1</a></li><li><a href="o-que-precisa-de-voce-agora.html">O que precisa de você agora</a></li><li><a href="aderencia-ao-edital-do-ivb.html">Aderência ao edital do IVB</a></li><li><a href="ata-da-reuniao-de-13-10-2026-por-que-tantas-telas-e-tabelas.html">Ata da reunião de 13/10/2026: por que tantas telas e tabelas</a></li></ul></div>
+  </aside>
+  <main class="doc" id="conteudo">
+    <nav class="trilha" aria-label="Você está em"><a href="../../index.html">Início</a> › <a href="index.html">Visão entre módulos</a> › <span>Visão de ponta a ponta</span></nav>
+    <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Visão de ponta a ponta</span><span>documento 7 de 10</span><div class="prog-doc"><i style="width:70%"></i></div></div>
+    <header class="doc-cabecalho">
+      <h1>Matriz de papéis e permissões (como deve ser), versão 0.1</h1>
+      <div class="doc-acoes"><a class="botao" href="../arquivos/visao-geral/LabMedSys - Matriz de Papeis e Permissoes.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
+      
+    </header>
+    
+    <article class="texto">
+<p><strong>Versão 0.1, de 05/11/2026. Proposta para validação da Qualidade.</strong> Escopo: os cinco módulos já testados (Principal, Estoque, Controle da Qualidade, Garantia da Qualidade e Controle de Documentos). Base: as tabelas "quem faz o quê" do documento "O ideal" de cada módulo, o modelo de decisões entre módulos (<code>modelo-ideal/01-qualidade-entre-modulos.md</code>) e a RDC 658/2022. <strong>Nada aqui está aprovado.</strong> O que depende de decisão da Qualidade está marcado como <em>a validar</em>.</p>
+<h2 id="para-que-serve">Para que serve</h2>
+<p>O QA e quem testa precisam saber <strong>qual usuário usar para cada ação</strong> e <strong>quem não pode fazer duas coisas ao mesmo tempo</strong>. Hoje isso não está escrito em lugar nenhum de forma única: o legado tem as regras espalhadas pelo código, e a versão nova ainda não tem perfis por papel que funcionem. Esta matriz é o ponto de partida: define os papéis, o que cada um decide, o que não pode e quando é preciso assinar.</p>
+<h3 id="regra-de-negocio-e-correcao-tecnica-sao-coisas-diferentes">Regra de negócio e correção técnica são coisas diferentes</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th></th>
+<th>Quem decide</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Regra de negócio</strong> (esta matriz)</td>
+<td>A Qualidade, apoiada na norma</td>
+<td>"Quem aprova o laudo não pode ser quem fez a análise"</td>
+</tr>
+<tr>
+<td><strong>Correção técnica</strong></td>
+<td>O desenvolvimento</td>
+<td>"Um perfil idêntico ao do administrador deveria funcionar, e hoje recebe erro 403"</td>
+</tr>
+</tbody>
+</table></div>
+<p>Sem a matriz aprovada, o desenvolvimento não sabe o que implementar. Sem a correção técnica, a matriz não funciona na versão nova.</p>
+<h2 id="os-papeis">Os papéis</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Onde atua</th>
+<th>Pode</th>
+<th>Não pode</th>
+<th>Assina?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Administrador do sistema</strong></td>
+<td>Principal</td>
+<td>Criar pessoas, perfis, grupos e funções; ativar e desativar</td>
+<td>Aprovar o que é de outro módulo; definir o próprio acesso</td>
+<td>Sim, nas ações críticas</td>
+</tr>
+<tr>
+<td><strong>Responsável pelo cadastro</strong></td>
+<td>Principal</td>
+<td>Manter pessoa jurídica, local, equipamento e tabelas de apoio</td>
+<td>Apagar registro em uso (só desativar)</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Gestor da área</strong></td>
+<td>Principal e GQ</td>
+<td>Pedir mudança de perfil de quem é da sua área</td>
+<td>Alterar o próprio perfil</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Recebimento</strong></td>
+<td>Estoque</td>
+<td>Receber, inspecionar e conferir</td>
+<td>Autorizar o recebimento que ele cadastrou</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Almoxarife</strong></td>
+<td>Estoque</td>
+<td>Endereçar, movimentar, separar e remeter</td>
+<td>Mudar a situação do lote</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Inventário</strong></td>
+<td>Estoque</td>
+<td>Contar e apurar</td>
+<td>Apurar o que ele mesmo contou</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Amostrador</strong></td>
+<td>CQ</td>
+<td>Registrar a coleta e identificar as amostras</td>
+<td>Analisar a amostra que coletou sem verificação por outra pessoa <em>(a validar)</em></td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Analista do CQ</strong></td>
+<td>CQ</td>
+<td>Registrar ensaios; fazer a fase de laboratório da investigação</td>
+<td>Verificar os próprios ensaios; aprovar o laudo</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Verificador</strong></td>
+<td>CQ</td>
+<td>Conferir ensaios e cálculos de outra pessoa</td>
+<td>Verificar o que ele mesmo fez</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Chefe do CQ</strong></td>
+<td>CQ, Estoque</td>
+<td>Aprovar ou reprovar o laudo; concluir a investigação de laboratório; aprovar especificações e planos</td>
+<td>Aprovar a análise que fez ou verificou; liberar para venda</td>
+<td><strong>Sim</strong></td>
+</tr>
+<tr>
+<td><strong>Responsável pela estabilidade</strong></td>
+<td>CQ</td>
+<td>Abrir e acompanhar estudos; registrar interrupção com motivo</td>
+<td>Encerrar estudo com resultado fora sem investigação</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Qualquer usuário</strong></td>
+<td>GQ</td>
+<td>Registrar um desvio ou uma reclamação</td>
+<td>Classificar, encerrar ou cancelar</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Área envolvida</strong></td>
+<td>GQ</td>
+<td>Investigar a causa e propor ações</td>
+<td>Aprovar o próprio plano; editar as respostas da autoinspeção da sua área</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Analista da GQ</strong></td>
+<td>GQ</td>
+<td>Pré-avaliar, conduzir a investigação, acompanhar CAPA, mudança, treinamento e regulatório</td>
+<td>Aprovar o que conduziu</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Gestor da GQ</strong></td>
+<td>GQ</td>
+<td>Aprovar planos, mudanças e encerramentos; verificar a eficácia</td>
+<td>Verificar a eficácia de ação que executou</td>
+<td><strong>Sim</strong></td>
+</tr>
+<tr>
+<td><strong>Inspetor</strong></td>
+<td>GQ</td>
+<td>Registrar a autoinspeção de área que não é a sua</td>
+<td>Inspecionar a própria área</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Pessoa Delegada</strong></td>
+<td>GQ, Estoque, CQ</td>
+<td>Certificar o lote para venda; decidir o destino de lote retido; decidir o recolhimento</td>
+<td>Liberar lote com desvio aberto; ser quem aprovou o laudo daquele lote <em>(a validar)</em></td>
+<td><strong>Sim</strong></td>
+</tr>
+<tr>
+<td><strong>Autor</strong> (área dona)</td>
+<td>Documentos</td>
+<td>Elaborar o documento e enviar para revisão; abrir nova revisão a partir de uma mudança aprovada</td>
+<td>Aprovar o próprio documento</td>
+<td>Não</td>
+</tr>
+<tr>
+<td><strong>Revisor</strong></td>
+<td>Documentos</td>
+<td>Conferir e devolver com motivo</td>
+<td>Aprovar o documento que revisou <em>(a validar)</em></td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Aprovador</strong></td>
+<td>Documentos</td>
+<td>Aprovar ou devolver (uma ou mais etapas)</td>
+<td>Aprovar em duas etapas do mesmo documento</td>
+<td><strong>Sim</strong></td>
+</tr>
+<tr>
+<td><strong>Responsável pela vigência</strong> (normalmente a GQ)</td>
+<td>Documentos</td>
+<td>Pôr em vigor, obsoletar com motivo, controlar cópias e recolhimento</td>
+<td>Pôr em vigor sem aprovação ou sem o treinamento exigido</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Administrador de documentos</strong></td>
+<td>Documentos</td>
+<td>Configurar tipos e caminhos (com histórico); migrar legado com o original anexado</td>
+<td>Pular etapas do caminho</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Usuário de consulta</strong></td>
+<td>Todos</td>
+<td>Consultar e imprimir o que o perfil permite</td>
+<td>Gravar ou abrir versões fora de uso</td>
+<td>Não</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="separacao-de-funcoes-quem-nao-pode-ser-a-mesma-pessoa">Separação de funções: quem não pode ser a mesma pessoa</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ato 1</th>
+<th>Ato 2</th>
+<th>Módulo</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cadastrar o recebimento</td>
+<td>Autorizar o recebimento</td>
+<td>Estoque</td>
+<td>No legado funciona; manter</td>
+</tr>
+<tr>
+<td>Contar o inventário</td>
+<td>Justificar e apurar o ajuste</td>
+<td>Estoque</td>
+<td>No legado <strong>não</strong> é separado; corrigir</td>
+</tr>
+<tr>
+<td>Registrar o resultado</td>
+<td>Verificar o resultado</td>
+<td>CQ</td>
+<td>Não existe verificação no legado; construir</td>
+</tr>
+<tr>
+<td>Registrar ou verificar o resultado</td>
+<td>Aprovar o laudo</td>
+<td>CQ</td>
+<td>No legado vale só em parte</td>
+</tr>
+<tr>
+<td>Aprovar o laudo</td>
+<td>Liberar o lote para venda</td>
+<td>CQ e Estoque</td>
+<td><em>A validar</em>: pode ser a mesma pessoa?</td>
+</tr>
+<tr>
+<td>Escrever o plano de ação</td>
+<td>Aprová-lo</td>
+<td>GQ</td>
+<td>No legado <strong>não</strong> é separado (DV-GQ-023); corrigir</td>
+</tr>
+<tr>
+<td>Executar a ação</td>
+<td>Verificar a eficácia</td>
+<td>GQ</td>
+<td>A construir</td>
+</tr>
+<tr>
+<td>Inspecionar</td>
+<td>Ser da área inspecionada</td>
+<td>GQ</td>
+<td>Em parte</td>
+</tr>
+<tr>
+<td>Elaborar o documento</td>
+<td>Aprová-lo</td>
+<td>Documentos</td>
+<td>No legado <strong>não</strong> é separado (rodada 1: confirmado; DV-DOC-002); corrigir</td>
+</tr>
+<tr>
+<td>Pré-aprovar</td>
+<td>Aprovar na etapa final</td>
+<td>Documentos</td>
+<td>No legado <strong>não</strong> é separado (DV-DOC-002); corrigir</td>
+</tr>
+<tr>
+<td>Revisar</td>
+<td>Aprovar</td>
+<td>Documentos</td>
+<td><em>A validar</em></td>
+</tr>
+<tr>
+<td>Criar a pessoa no sistema</td>
+<td>Definir o próprio acesso</td>
+<td>Principal</td>
+<td>A confirmar</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="como-o-acesso-e-decidido">Como o acesso é decidido</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th></th>
+<th>No legado hoje</th>
+<th>Como deve ser</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ver a tela no menu</strong></td>
+<td>Função da tela no perfil do Principal</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td><strong>Fazer a ação</strong></td>
+<td>Função e ação do perfil; na GQ, o <strong>Nível 1, 2 ou 3</strong> do Grupo Perfil</td>
+<td>Função por <strong>papel</strong>, conferida <strong>no servidor</strong> em toda gravação</td>
+</tr>
+<tr>
+<td><strong>Condições</strong></td>
+<td>Área, responsável e situação do registro, por tela</td>
+<td>As mesmas, escritas no quadro de cada tela</td>
+</tr>
+<tr>
+<td><strong>Decisão crítica</strong></td>
+<td>Sem assinatura</td>
+<td><strong>Assinatura eletrônica</strong> da pessoa logada, com motivo</td>
+</tr>
+<tr>
+<td><strong>Quando falta permissão</strong></td>
+<td>Volta à lista sem mensagem, ou erro genérico</td>
+<td>Mensagem clara com o que faltou</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Proposta de ligação com os níveis do legado (a validar):</strong> Nível 1 = registrar e mexer no que criou; Nível 2 = também o que é da sua área e as ações em que é o responsável; Nível 3 = abrir planos, monitorar, liberar mudanças e finalizar. Os níveis podem ser mantidos desde que <strong>ligados aos papéis acima</strong>.</p>
+<h2 id="o-que-cada-tela-deve-dizer-quadro-quem-pode-usar-esta-tela">O que cada tela deve dizer (quadro "Quem pode usar esta tela")</h2>
+<p>Piloto: Plano de Ação Corretiva (GQ). Para cada tela: (1) a função do perfil que mostra a tela, (2) o papel ou nível que abre e grava, (3) as condições de área, responsável e situação, (4) o que acontece sem permissão, (5) qual usuário de teste usar. Passa a vir <strong>desta matriz</strong>, e não só do que o código do legado faz hoje.</p>
+<h2 id="perguntas-para-a-qualidade-decidir">Perguntas para a Qualidade decidir</h2>
+<ol>
+<li>A <strong>Pessoa Delegada</strong> pode ser a mesma pessoa que aprovou o laudo do lote? (Proposta: não, salvo decisão registrada.)</li>
+<li>O <strong>revisor</strong> de um documento pode ser também o aprovador? (Proposta: não.)</li>
+<li>O <strong>amostrador</strong> pode analisar a própria amostra, se outra pessoa verifica? (Proposta: sim, com verificação obrigatória.)</li>
+<li>Quantas <strong>etapas de aprovação</strong> os documentos têm por tipo, e quem é o aprovador de cada etapa?</li>
+<li>Quem é o <strong>responsável pela vigência</strong> na empresa: sempre a GQ?</li>
+<li>O <strong>gestor da GQ</strong> pode aprovar uma mudança aberta pela própria área da GQ?</li>
+<li>A <strong>reprovação</strong> do laudo exige a mesma assinatura da aprovação?</li>
+<li>O que cada <strong>Nível (1, 2 e 3)</strong> deve poder fazer em cada tela da GQ? Confirmar o mapa proposto.</li>
+<li>O <strong>administrador do sistema</strong> pode aprovar algo na Qualidade? (Proposta: não.)</li>
+<li>Existem <strong>papéis que faltam</strong> (por exemplo, auditor externo, representante da diretoria)?</li>
+</ol>
+<h2 id="como-isto-vira-teste-na-versao-nova">Como isto vira teste na versão nova</h2>
+<p>Cada papel acima vira <strong>um perfil de teste</strong> com a função certa, com o prefixo <code>0.T.</code> (a lista de perfis mostra só os 10 primeiros em ordem alfabética), e um usuário <code>t.&lt;papel&gt;</code>. Enquanto o desenvolvimento não corrigir o acesso por perfil (<code>versao-nova/PEDIDO-AO-DESENVOLVIMENTO-GQ-ACESSO.md</code>), esses perfis só funcionam no Principal; na GQ, no Estoque e no Controle de Documentos só o administrador grava. A matriz aprovada também é o <strong>requisito</strong> que o desenvolvimento precisa para corrigir.</p>
+<h2 id="proximos-passos">Próximos passos</h2>
+<ol>
+<li>A Qualidade responde as 10 perguntas e valida (ou corrige) os papéis.</li>
+<li>Fica a versão 1.0 e entra no portal e no Dossiê de cada módulo.</li>
+<li>Os quadros "Quem pode usar esta tela" de cada tela passam a citar a matriz.</li>
+<li>O desenvolvimento recebe a matriz como requisito, junto com o pedido de acesso por perfil.</li>
+</ol>
+    </article>
+    <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="os-cinco-modulos-o-negocio-a-anvisa-e-o-que-falta.html"><small>← Anterior</small><strong>Os cinco módulos: o negócio, a ANVISA e o que falta</strong></a><a class="ap ap-prox" href="o-que-precisa-de-voce-agora.html"><small>Próximo →</small><strong>O que precisa de você agora</strong></a></nav>
+  </main>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#para-que-serve">Para que serve</a></li><li class="sub"><a href="#regra-de-negocio-e-correcao-tecnica-sao-coisas-diferentes">Regra de negócio e correção técnica são coisas diferentes</a></li><li><a href="#os-papeis">Os papéis</a></li><li><a href="#separacao-de-funcoes-quem-nao-pode-ser-a-mesma-pessoa">Separação de funções: quem não pode ser a mesma pessoa</a></li><li><a href="#como-o-acesso-e-decidido">Como o acesso é decidido</a></li><li><a href="#o-que-cada-tela-deve-dizer-quadro-quem-pode-usar-esta-tela">O que cada tela deve dizer (quadro &quot;Quem pode usar esta tela&quot;)</a></li><li><a href="#perguntas-para-a-qualidade-decidir">Perguntas para a Qualidade decidir</a></li><li><a href="#como-isto-vira-teste-na-versao-nova">Como isto vira teste na versão nova</a></li><li><a href="#proximos-passos">Próximos passos</a></li></ul></nav>
+</div>
+<footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 08/11/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../../portal/portal.js"></script>
+</body></html>
