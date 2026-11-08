@@ -1631,6 +1631,7 @@ MENUS_GQ_DESC = {
     "Amostragem": "Onde o CQ define quanto coletar de cada item, mantém os checklists de conferência, mostra a fila de coletas de cada pessoa e registra a coleta feita.",
     "Análise e Laudo": "O coração do Controle da Qualidade: define o que se mede, programa o analista, recebe os resultados, emite o laudo que aprova ou reprova o lote e imprime a etiqueta.",
     "Tabelas de Apoio e Regulatório": "As unidades de medida e os motivos usados pelas outras telas do CQ e as três telas do estudo de estabilidade (regra, acompanhamento e encerramento).",
+    "Fora do menu do Estoque": "As telas do Estoque que existem no código mas não têm item próprio no menu: as entradas por digitação e a devolução, o histórico do item e do lote com as etiquetas e impressões, a Liberação pelo CQ (protótipo) e o cadastro de Banco, que só abre pelo endereço. As outras cinco linhas fora do menu estão na visão geral.",
     "Fora do menu": "As telas do Controle da Qualidade que existem no código mas não têm item próprio no menu: duas que não abrem e três protótipos de avaliação de fornecedor (estes só aparecem na visão geral, sem página própria).",
     "Treinamento Técnico": "Onde a empresa treina o pessoal e prova que só quem tem treinamento vigente executa a tarefa: tipos, cadastro, solicitação, programação, matriz, conclusão e acompanhamento.",
     "Configuração": "A configuração dos níveis de acesso da Garantia da Qualidade (Grupo Perfil): quem é Nível 1, 2 ou 3 em todo o módulo.",
