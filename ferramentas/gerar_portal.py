@@ -339,6 +339,8 @@ MODULOS = [
             ("1.principal/10-comparacao-nova-versao.md", "Comparação com a nova versão", "tecnico", None),
             ("1.principal/01-regras-de-negocio.md", "Regras de negócio (rascunho com fontes)", "tecnico", None),
             ("1.principal/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("versao-nova/1.principal/entregaveis/fonte/dossie-de-homologacao-versao-nova.md", "Dossiê de homologação da versão nova", "novo", "versao-nova/1.principal/entregaveis/LabMedSys - Modulo Principal - Dossie de Homologacao da Versao Nova.docx"),
+            ("versao-nova/1.principal/entregaveis/fonte/resumo-executivo-versao-nova.md", "Resumo executivo da versão nova", "novo", "versao-nova/1.principal/entregaveis/LabMedSys - Modulo Principal - Resumo Executivo da Versao Nova.docx"),
             ("versao-nova/1.principal/manual/manual-principal-versao-nova.md", "Manual da versão nova, por tela", "novo", "versao-nova/1.principal/manual/LabMedSys - Modulo Principal - Manual da Versao Nova por Tela.docx"),
             ("versao-nova/1.principal/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
             ("versao-nova/1.principal/plano-de-regressao.md", "Plano de regressão", "novo", None),
