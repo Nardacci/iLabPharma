@@ -216,7 +216,7 @@ def arvore_novo(dados_telas, reg, mods_por_id, doc_modulo_novo):
             h.append(f'<details class="td-menu"><summary><span class="td-ico td-i-pasta" aria-hidden="true"></span>{E(menu)} <span class="td-mod-n">{len(ts)}</span></summary><ul class="td-lista">')
             for t in ts:
                 href = f'documentacao/novo/{mid}/{t["slug"]}-analise.html'
-                tag = "" if t["validada"] else '<span class="td-tag">ainda não validada nesta versão</span>'
+                tag = ""  # a tela sem conteúdo validado já aparece esmaecida; o texto "ainda não validada nesta versão" saiu da lista (decisão do responsável, 09/11/2026)
                 h.append(f'<li class="td-tela{"" if t["validada"] else " td-sem"}" data-nome="{E(telas_devs._norm(t["nome"]))}" data-tem="{"1" if t["validada"] else "0"}" '
                          f'data-sit="{"Validada nesta versão" if t["validada"] else "Ainda não validada"}"><span class="td-ico td-i-tela" aria-hidden="true"></span>'
                          f'<a href="{E(href)}">{E(t["nome"])}</a>{tag}</li>')
