@@ -204,15 +204,11 @@ def arvore_novo(dados_telas, reg, mods_por_id, doc_modulo_novo):
             continue
         n, v = contagem(rm)
         docs = doc_modulo_novo.get(mid, [])
-        # Como no legado: um só link "Dossiê de homologação" (a página Novo do módulo) e, dobrados numa pasta, os outros documentos da versão nova.
-        item = lambda r, u: f'<li class="td-item"><span class="td-ico td-i-tela" aria-hidden="true"></span><a href="{E(u)}">{E(r)}</a></li>'
+        # Igual ao legado: abaixo do módulo, só o link "Dossiê de homologação" (a página Novo do módulo, que lista os documentos da versão nova) e as pastas dos menus.
         link_d = ""
         if docs:
-            principal, outros = docs[0], docs[1:]
-            link_d = f'<ul class="td-lista td-dossie">{item("Dossiê de homologação", principal[1])}</ul>'
-            if outros:
-                link_d += (f'<details class="td-menu"><summary><span class="td-ico td-i-pasta" aria-hidden="true"></span>Outros documentos da versão nova '
-                           f'<span class="td-mod-n">{len(outros)}</span></summary><ul class="td-lista">{"".join(item(r, u) for r, u in outros)}</ul></details>')
+            link_d = (f'<ul class="td-lista td-dossie"><li class="td-item"><span class="td-ico td-i-tela" aria-hidden="true"></span>'
+                      f'<a href="{E(docs[0][1])}">Dossiê de homologação</a></li></ul>')
         h.append(f'<details class="td-mod" id="mn-{mid}" data-modulo="{mid}"><summary><span class="td-ico td-i-mod" aria-hidden="true"></span>'
                  f'<span class="td-mod-nome">{E(m["nome"])}</span><span class="td-mod-n">{n} telas</span></summary>{link_d}')
         for menu, ts in rm["menus"]:
