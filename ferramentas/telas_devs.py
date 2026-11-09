@@ -240,7 +240,7 @@ def pagina(dados, cabecalho, rodape, arvore_novo="", total_validadas=0, total_no
       <button type="button" class="vs-btn" data-set-versao="legado" aria-pressed="true">Legado</button>
       <button type="button" class="vs-btn" data-set-versao="novo" aria-pressed="false">Novo</button></div>
     <p class="td-vs-desc" data-so-versao="legado">Legado: o sistema entregue pelo fornecedor, analisado e testado. A escolha acompanha você nas páginas das telas.</p>
-    <p class="td-vs-desc" data-so-versao="novo" hidden>Novo: a versão nova (o mesmo sistema com ferramentas atualizadas). {total_validadas} de {total_novo} telas já têm conteúdo validado; as demais aparecem como “ainda não validada nesta versão”. O ideal é um só e vale para as duas versões.</p>
+    <p class="td-vs-desc" data-so-versao="novo" hidden>Novo: a versão nova (o mesmo sistema com ferramentas atualizadas). Mesma lista de telas do legado ({total_novo} telas); {total_validadas} já têm conteúdo validado, e as demais levam a marca “ainda não validada nesta versão”. O ideal é um só e vale para as duas versões.</p>
   </div>
   <div class="td-filtros" role="search">
     <label class="td-f"><span>Buscar tela</span><input id="td-busca" type="search" placeholder="Nome da tela" autocomplete="off"></label>
