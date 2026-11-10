@@ -224,7 +224,8 @@ def docs_com_telas(mod, hom):
         docs = _com_seguranca(mod, docs, hom)
     docs += menus_gq.entradas(hom, mod["id"])
     fontes = {"principal": "versao-nova/1.principal/telas/manifest.json",
-              "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json"}
+              "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json",
+              "estoque": "versao-nova/3.estoque/telas-menu/manifest.json"}
     if mod["id"] not in fontes:
         return docs
     arq = hom / fontes[mod["id"]]

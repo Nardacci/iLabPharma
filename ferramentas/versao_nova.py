@@ -174,7 +174,7 @@ def preencher_por_manifesto(reg, hom, mid, manifesto, limpar, converter):
 
 def preencher_estoque(reg, hom, limpar, converter):
     """Estoque novo: abas por tela no modelo do legado (versao-nova/3.estoque/telas/manifest.json)."""
-    preencher_por_manifesto(reg, hom, "estoque", "versao-nova/3.estoque/telas/manifest.json", limpar, converter)
+    preencher_por_manifesto(reg, hom, "estoque", "versao-nova/3.estoque/telas-modelo/manifest.json", limpar, converter)
 
 
 def preencher_principal_modelo(reg, hom, limpar, converter):
