@@ -39,11 +39,108 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Acesso ao sistema</span><span>documento 11 de 224</span><div class="prog-doc"><i style="width:5%"></i></div></div>
   <header class="doc-cabecalho"><h1>Troca de senha: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="troca-de-senha-analise.html">Análise</a><a href="troca-de-senha-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="troca-de-senha-fluxos.html" class="aba-sem">Fluxos</a><a href="troca-de-senha-regras-de-negocio.html" aria-current=page class="aba-sem">Regras de negócio</a><a href="troca-de-senha-anvisa.html" class="aba-sem">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="troca-de-senha-erros.html">Erros (3)</a><a class="aba-extra" href="troca-de-senha-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Ainda não validada nesta versão</p><p>Esta aba ainda não foi validada nesta versão.</p><p>Para ver como a tela é no sistema entregue, <a href="../../principal/troca-de-senha-regras-de-negocio.html">abra a página do Legado</a>.</p></div></article>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="troca-de-senha-analise.html">Análise</a><a href="troca-de-senha-manual-do-usuario.html">Manual do usuário</a><a href="troca-de-senha-fluxos.html">Fluxos</a><a href="troca-de-senha-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="troca-de-senha-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="troca-de-senha-erros.html">Erros (3)</a><a class="aba-extra" href="troca-de-senha-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
+<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Cenário</th>
+<th>Legado</th>
+<th>Versão nova (o que a tela mostrou)</th>
+<th>Classe</th>
+<th>Defeito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RG-PRI-020</td>
+<td>Troca válida (14 caracteres)</td>
+<td>Passou</td>
+<td>"Senha alterada com sucesso. Entre novamente para continuar." Entra com a nova; a provisória e a antiga deixam de valer</td>
+<td>Igual</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-021</td>
+<td>Senha atual errada</td>
+<td>Passou</td>
+<td>A API recusa, mas a tela expulsa o usuário para o login sem mensagem</td>
+<td>Regressão</td>
+<td>DV-PRI-N-018</td>
+</tr>
+<tr>
+<td>RG-PRI-022</td>
+<td>Regras de formato</td>
+<td>Passou</td>
+<td>8 a 14 caracteres com letra, número e especial; recusa 4 e 7 caracteres, sem número, sem especial</td>
+<td>Igual</td>
+<td>DV-PRI-N-021</td>
+</tr>
+<tr>
+<td>RG-PRI-023</td>
+<td>Senha longa</td>
+<td>Passou (40 aceitos)</td>
+<td>15 caracteres já são recusados (limite de 14). Ponto a validar: o texto da tela já dizia 8 a 14</td>
+<td>Regressão</td>
+<td>DV-PRI-N-021</td>
+</tr>
+<tr>
+<td>RG-PRI-024</td>
+<td>Mudar só a caixa da senha atual</td>
+<td>Falhou (DV-PRI-021)</td>
+<td>Recusado: a comparação ainda ignora maiúsculas</td>
+<td>Igual</td>
+<td>DV-PRI-021</td>
+</tr>
+<tr>
+<td>RG-PRI-025</td>
+<td>Reusar uma senha antiga</td>
+<td>Passou</td>
+<td>A API recusa, mas a tela fica em "Salvando..." para sempre, sem mensagem</td>
+<td>Regressão</td>
+<td>DV-PRI-N-018</td>
+</tr>
+<tr>
+<td>RG-PRI-026</td>
+<td>Entrar com senha provisória</td>
+<td>Bloqueado (legado)</td>
+<td>Entra e vai direto à tela de troca</td>
+<td>Novo</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-027</td>
+<td>Pular a troca digitando outro endereço</td>
+<td>Falhou (DV-PRI-022)</td>
+<td>Sempre volta à troca. O legado deixava abrir</td>
+<td>Melhoria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-028</td>
+<td>Confirmação diferente</td>
+<td>(Novo)</td>
+<td>Botão desabilitado, com "Nova senha e confirmação não conferem." O legado aceitava</td>
+<td>Melhoria</td>
+<td>—</td>
+</tr>
+<tr>
+<td>RG-PRI-029</td>
+<td>Botão Sair na troca</td>
+<td>Bloqueado (legado)</td>
+<td>Volta ao login e a troca continua obrigatória</td>
+<td>Novo</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
+<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="troca-de-senha-fluxos.html"><small>← Anterior</small><strong>Fluxos · Troca de senha</strong></a><a class="ap ap-prox" href="troca-de-senha-anvisa.html"><small>Próximo →</small><strong>Anvisa · Troca de senha</strong></a></nav>
 </main>
-  
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
