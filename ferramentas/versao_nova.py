@@ -227,8 +227,10 @@ def arvore_novo(dados_telas, reg, mods_por_id, doc_modulo_novo):
         # Igual ao legado: abaixo do módulo, só o link "Dossiê de homologação" (a página Novo do módulo, que lista os documentos da versão nova) e as pastas dos menus.
         link_d = ""
         if docs:
+            # Igual ao legado: o link abre o próprio documento do dossiê (a versão nova dele, quando existe); sem o dossiê da versão nova, a página Novo do módulo.
+            alvo = next((u for r, u in docs if r.startswith("Dossiê de homologação")), docs[0][1])
             link_d = (f'<ul class="td-lista td-dossie"><li class="td-item"><span class="td-ico td-i-tela" aria-hidden="true"></span>'
-                      f'<a href="{E(docs[0][1])}">Dossiê de homologação</a></li></ul>')
+                      f'<a href="{E(alvo)}">Dossiê de homologação</a></li></ul>')
         h.append(f'<details class="td-mod" id="mn-{mid}" data-modulo="{mid}"><summary><span class="td-ico td-i-mod" aria-hidden="true"></span>'
                  f'<span class="td-mod-nome">{E(m["nome"])}</span><span class="td-mod-n">{n} telas</span></summary>{link_d}')
         for menu, ts in rm["menus"]:
