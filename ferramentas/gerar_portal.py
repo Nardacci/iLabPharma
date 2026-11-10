@@ -1042,6 +1042,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     print(f"Equivalência de nomes de tela: {versao_nova.carregar_alias(hom_)} linhas lidas.")
     print(f"Quem pode fazer o quê: {quem_pode.carregar(hom_)} linhas lidas.")
     versao_nova.preencher_principal(NOVO, hom_, lambda md: limpar(md, "versao-nova/1.principal", retirado), lambda md: conv.converter(md, "principal", tirar_h1=True)[0])
+    versao_nova.preencher_estoque(NOVO, hom_, lambda md: limpar(md, "versao-nova/3.estoque", retirado), lambda md: conv.converter(md, "estoque", tirar_h1=True)[0])
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
         DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads(higiene.redigir((hom_ / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}

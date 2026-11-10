@@ -151,6 +151,26 @@ def preencher_principal(reg, hom, limpar, converter):
             t["situacao"] = "Testada"
 
 
+def preencher_estoque(reg, hom, limpar, converter):
+    """Lê homologacao/versao-nova/3.estoque/telas/manifest.json (uma entrada por tela e aba, com os títulos de seção do legado)
+    e põe o conteúdo nas telas reais do Estoque na versão nova. A tela é achada pelo nome do inventário do legado."""
+    arq_man = Path(hom) / "versao-nova/3.estoque/telas/manifest.json"
+    if not arq_man.exists() or "estoque" not in reg:
+        return
+    por_nome = {t["nome"]: t for t in reg["estoque"]["telas"]}
+    for m in json.loads(arq_man.read_text(encoding="utf-8")):
+        t = por_nome.get(m["tela"])
+        if not t or m["aba"] not in t["abas"]:
+            continue
+        md = limpar((Path(hom) / m["arq"]).read_text(encoding="utf-8"))
+        corpo = converter("# x\n" + md)  # o conversor descarta a primeira linha de título
+        t["abas"][m["aba"]] = corpo.replace('"../img/', '"../../img/')
+    for t in reg["estoque"]["telas"]:
+        t["validada"] = any(t["abas"].values())
+        if t["validada"] and not t["situacao"]:
+            t["situacao"] = "Testada"
+
+
 def contagem(reg_mod):
     telas = reg_mod["telas"]
     return len(telas), sum(1 for t in telas if t["validada"])
