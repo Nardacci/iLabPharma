@@ -1776,6 +1776,7 @@ def pagina_modulo(mod, sit="index"):
 
     blocos, submenu = [], []
     secao_atual = None
+    modelo_legado_novo = bool(NOVO.get(mod["id"])) and any(": entenda o menu" in p["titulo"] for g_ in grupos for p in g_[3])
     for i, (chave, nome, desc, pags) in enumerate(grupos, 1):
         if chave == "fluxos":
             roteiros = {p["roteiro_de"]: p for p in pags if p.get("roteiro_de")}
@@ -1797,6 +1798,15 @@ def pagina_modulo(mod, sit="index"):
             grade = f'<div class="fluxos">{"".join(cards)}</div>'
         elif chave == "desvios":
             grade = cartoes_desvios(pags)
+        elif chave == "novo_parecer" and modelo_legado_novo:
+            continue  # o parecer e a comparação já entram no Fechamento e em Dados e integrações da página Novo
+        elif chave == "novo" and modelo_legado_novo:
+            # página Novo no desenho do Legado: mesmas seções, na mesma ordem (padrão de 10/11/2026)
+            extras = [p for g_ in grupos if g_[0] == "novo_parecer" for p in g_[3]]
+            corpo_novo, sub_novo = versao_nova.secoes_novo_modelo_legado(mod["id"], pags + extras, NOVO[mod["id"]])
+            blocos.append(corpo_novo)
+            submenu_novo = sub_novo
+            continue
         elif chave == "novo" and any(p.get("grupo") for p in pags):
             def _card(p):
                 return (f'<a class="doc-card" href="{p["slug"]}.html"><span class="doc-card-titulo"><span class="doc-n">{p["n"]}</span>{E(p["titulo"])}</span>'
@@ -1826,6 +1836,8 @@ def pagina_modulo(mod, sit="index"):
             blocos.append(f'<section class="{classe}" id="passo-{chave}"><div class="passo-cab"><div><h3>{E(nome)}</h3><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
             submenu.append(f'<a href="#passo-{chave}"{" class=\"submenu-ideal\"" if chave == "ideal" else ""}>{E(nome)}</a>')
     submenu_html = f'<nav class="submenu" aria-label="Passos do roteiro">{"".join(submenu)}</nav>' if len(submenu) > 1 else ""
+    if sit == "novo" and modelo_legado_novo:
+        submenu_html = submenu_novo
     if not pags_sit:
         blocos = ['<p class="secao-desc sit-vazio">Ainda não há documentos nesta situação. Eles aparecem aqui quando existirem.</p>']
 

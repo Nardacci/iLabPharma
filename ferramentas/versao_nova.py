@@ -182,6 +182,77 @@ def preencher_principal_modelo(reg, hom, limpar, converter):
     preencher_por_manifesto(reg, hom, "principal", "versao-nova/1.principal/telas-modelo/manifest.json", limpar, converter)
 
 
+SECOES_MODELO_LEGADO = [
+    ("conhecer", "Telas e situação", "O que existe na versão nova, como as telas se organizam nos menus e o que os testes mostraram."),
+    ("fluxos", "Siga o processo", "Como usar esta documentação, na ordem em que o trabalho acontece."),
+    ("menus", "Menus do sistema, tela a tela", "Uma página por tela dos menus do módulo: análise, manual do usuário, fluxos, regras de negócio e Anvisa."),
+    ("regras", "Regras e uso", "O que a versão nova faz com cada dado, quem pode fazer o quê e como usar."),
+    ("dados", "Dados e integrações", "Comparação com o sistema entregue."),
+    ("testes", "Testes e defeitos", "O que foi testado, o resultado de cada rodada e os defeitos encontrados."),
+    ("fecho", "Fechamento", "O parecer, o dossiê e o resumo para a diretoria."),
+]
+MENU_EXIBIDO = {"Cadastros": "Cadastros e tabelas de apoio", "Tabelas de apoio": "Cadastros e tabelas de apoio"}
+
+
+def _secao_do_documento(titulo):
+    t = unicodedata.normalize("NFKD", titulo).encode("ascii", "ignore").decode().lower()
+    if "inventario de telas" in t or "visao geral por menu" in t:
+        return "conhecer"
+    if "como usar" in t:
+        return "fluxos"
+    if "manual" in t:
+        return "regras"
+    if "comparacao" in t:
+        return "dados"
+    if "dossie" in t or "resumo executivo" in t or "parecer" in t:
+        return "fecho"
+    return "testes"
+
+
+def _primeiro_paragrafo(html_aba):
+    m = re.search(r"Para que serve</h\d>\s*<p>(.*?)</p>", html_aba or "", re.S)
+    return re.sub(r"<[^>]+>", "", m.group(1)).strip() if m else ""
+
+
+def secoes_novo_modelo_legado(mid, pags, reg_mod):
+    """Seções da página Novo do módulo, com a mesma ordem e o mesmo desenho da página Legado."""
+    por_chave = {t["chave"]: t for t in reg_mod["telas"]}
+    card = lambda p, meta, num=True: (f'<a class="doc-card" href="{E(p["slug"])}.html"><span class="doc-card-titulo">'
+                                      + (f'<span class="doc-n">{p["n"]}</span>' if num else "") + f'{E(p["titulo"])}</span><span class="doc-card-meta">{meta}</span></a>')
+    eh_menu = lambda p: ": entenda o menu" in p["titulo"] or ": visão geral" in p["titulo"]
+    gerais = [p for p in pags if not p.get("grupo") and not eh_menu(p)]
+    menu_docs = [p for p in pags if eh_menu(p)]
+    telas_p = [p for p in pags if p.get("grupo") and not p.get("roteiro_de")]
+    out = {}
+    for p in gerais:
+        out.setdefault(_secao_do_documento(p["titulo"]), []).append(card(p, "Word disponível" if p["word"] else "Leitura no portal"))
+    menus = []
+    for g in dict.fromkeys(MENU_EXIBIDO.get(p["grupo"], p["grupo"]) for p in telas_p):
+        docs = [p for p in menu_docs if p["titulo"].startswith(g + ":")]
+        h = f'<h3 class="novo-menu">{E(g)}</h3><div class="doc-cards">' + "".join(card(p, "Comece por aqui", False) for p in docs) + "</div>"
+        cartas = []
+        for i, p in enumerate([x for x in telas_p if MENU_EXIBIDO.get(x["grupo"], x["grupo"]) == g], 1):
+            t = por_chave.get(chave_tela(p["tela"]))
+            if not t:
+                continue
+            links = " · ".join(f'<a href="../novo/{mid}/{t["slug"]}-{a}.html">{r}</a>' for a, r in
+                               (("analise", "Análise"), ("manual-do-usuario", "Manual do usuário"), ("fluxos", "Fluxos"), ("regras-de-negocio", "Regras de negócio"), ("anvisa", "Anvisa")))
+            meta = _primeiro_paragrafo(t["abas"].get("analise"))
+            cartas.append(f'<div class="doc-card tela-card"><a class="doc-card-titulo" href="../novo/{mid}/{t["slug"]}-analise.html"><span class="doc-n">{i}</span>{E(t["nome"])}</a>'
+                          f'<span class="doc-card-meta">{E(meta)}</span><span class="tela-links">{links}</span></div>')
+        menus.append(h + f'<div class="doc-cards">{"".join(cartas)}</div>')
+    out["menus"] = "".join(menus)
+    html_out, sub = [], []
+    for chave, nome, desc in SECOES_MODELO_LEGADO:
+        corpo = out.get(chave)
+        if not corpo:
+            continue
+        grade = corpo if chave == "menus" else f'<div class="doc-cards">{"".join(corpo)}</div>'
+        html_out.append(f'<section class="secao passo" id="passo-{chave}"><div class="passo-cab"><div><h3>{E(nome)}</h3><p class="secao-desc">{E(desc)}</p></div></div>{grade}</section>')
+        sub.append(f'<a href="#passo-{chave}">{E(nome)}</a>')
+    return "".join(html_out), '<nav class="submenu" aria-label="Passos do roteiro">' + "".join(sub) + "</nav>"
+
+
 def contagem(reg_mod):
     telas = reg_mod["telas"]
     return len(telas), sum(1 for t in telas if t["validada"])
