@@ -248,6 +248,7 @@ def pagina(dados, cabecalho, rodape, arvore_novo="", total_validadas=0, total_no
     <label class="td-f" data-so-versao="legado"><span>Situação</span><select id="td-sit"><option value="">Todas</option>{opcoes_sit}</select></label>
     <label class="td-f" data-so-versao="novo" hidden><span>Situação</span><select id="td-sitn"><option value="">Todas</option>{opcoes_sit_n}</select></label>
     <label class="td-so"><input id="td-so" type="checkbox"> <span data-so-versao="legado">Só telas com página própria</span><span data-so-versao="novo" hidden>Só telas com conteúdo validado</span></label>
+    <p class="td-legenda-marcas"><span data-so-versao="legado"><span class="m-ok">●</span> com página própria (link em azul) · <span class="m-sem">○</span> ainda sem página própria (o link abre o inventário do módulo)</span><span data-so-versao="novo" hidden><span class="m-ok">●</span> com conteúdo validado (link em azul) · <span class="m-sem">○</span> em preparo (o link abre a página, que mostra o que falta)</span></p>
     <span class="td-acoes"><button type="button" id="td-abrir">Abrir tudo</button><button type="button" id="td-fechar">Fechar tudo</button></span>
   </div>
   <p id="td-nada" hidden>Nenhuma tela encontrada com esses filtros.</p>
@@ -321,7 +322,12 @@ CSS = """/* Página Documentação por módulo (telas por módulo). */
 .td-tela a,.td-item a,.td-tela span:not(.td-ico){color:inherit;text-decoration:none;font-size:.93rem}
 .td-tela a,.td-item a{color:#1f5f8b;font-weight:600}
 .td-tela a:hover,.td-tela a:focus-visible,.td-item a:hover{text-decoration:underline}
-.td-sem a{color:inherit;font-weight:400;opacity:.8}
+.td-sem a{color:inherit;font-weight:400}
+/* Decisão do responsável (10/11/2026): a tela pronta e a em preparo têm a mesma estrutura e o link nunca fica desabilitado; só o marcador e a cor mudam. */
+.td-tela a::after{content:" \25CF";color:#2e9e5b;font-size:.7em;vertical-align:middle}
+.td-sem a::after{content:" \25CB";color:#8a97a6;font-size:.7em;vertical-align:middle}
+.td-legenda-marcas{margin:6px 0 10px;font-size:.88rem;color:var(--suave,#5b6776)}
+.td-legenda-marcas .m-ok{color:#2e9e5b}.td-legenda-marcas .m-sem{color:#8a97a6}
 .td-ico{display:inline-block;width:18px;height:18px;flex:none;background-color:currentColor;-webkit-mask:var(--ico) center/contain no-repeat;mask:var(--ico) center/contain no-repeat;opacity:.8}
 .td-i-mod{--ico:__MOD__;width:20px;height:20px;color:#1f5f8b;opacity:1}
 .td-i-pasta{--ico:__PASTA__}
