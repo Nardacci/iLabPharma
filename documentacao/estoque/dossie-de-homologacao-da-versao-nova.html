@@ -44,13 +44,287 @@
     </header>
     
     <article class="texto">
-<h2 id="objetivo-e-escopo">Objetivo e escopo</h2>
+<h2 id="introducao">Introdução</h2>
+<h3 id="escopo">Escopo</h3>
 <p>Este dossiê registra os testes de homologação do <strong>módulo Estoque na versão nova</strong> do LabMedSys (o mesmo sistema com um front-end novo sobre o mesmo back-end), entre 05 e 10/11/2026. O objetivo é saber o que funciona, o que falha e o que ainda impede o uso em ambiente regulado (RDC 658/2022, Guia 33/2020). O foco é o comportamento das telas; a leitura do código novo é a Fase 2 do trabalho e ainda não foi feita.</p>
-<div class="callout">
-<p class="callout-titulo">Sem veredito novo</p>
-<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo está <strong>muito incompleto</strong>: das 93 entradas do menu, <strong>68 são telas provisórias</strong> e só 25 funcionam. O caminho do lote (Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Saída, Remessa, Inventário) <strong>não pôde ser percorrido pelas telas</strong>, e por isso o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
-</div>
-<h2 id="ambiente-e-metodo">Ambiente e método</h2>
+<h3 id="documentos-deste-pacote">Documentos deste pacote</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Documento</th>
+<th>Conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dossiê de Homologação da versão nova (este documento)</td>
+<td>Classificação, plano, resultados dos testes, desvios, rastreabilidade, parecer e fechamento</td>
+</tr>
+<tr>
+<td>Resumo Executivo da versão nova</td>
+<td>Uma página para a diretoria</td>
+</tr>
+<tr>
+<td>Manual da versão nova, por tela</td>
+<td>Uso de cada tela testada, com as capturas e os defeitos ligados</td>
+</tr>
+<tr>
+<td>Fichas de defeito DV-EST-N</td>
+<td>33 fichas, com passos, esperado, obtido, impacto e evidência</td>
+</tr>
+<tr>
+<td>Documentos do Legado</td>
+<td>Regras de negócio, análise de requisitos e manual do sistema entregue, que valem para o que a versão nova não mudou</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="referencias">Referências</h3>
+<ul>
+<li>RDC nº 658/2022 (Boas Práticas de Fabricação de Medicamentos).</li>
+<li>Guia nº 33/2020 da ANVISA (validação de sistemas computadorizados, GAMP 5).</li>
+<li>Dossiê de Homologação do módulo no sistema entregue (Legado), que continua valendo para o que a versão nova não alterou.</li>
+</ul>
+<h2 id="classificacao-do-sistema">Classificação do sistema</h2>
+<ul>
+<li><strong>Categoria GAMP 5: 5 (aplicação customizada).</strong> A versão nova é o mesmo sistema com um front-end novo sobre o mesmo back-end e o mesmo banco; a classificação não muda.</li>
+<li><strong>Consequência (Guia 33, item 9.8.5):</strong> a rastreabilidade deve ir dos requisitos do usuário às especificações e aos testes; a validação pode incluir revisão de código. O código da versão nova ainda não foi analisado (Fase 2 do trabalho).</li>
+<li><strong>Impacto em Boas Práticas:</strong> alto, como no Legado.</li>
+</ul>
+<h2 id="estrategia-de-homologacao">Estratégia de homologação</h2>
+<h3 id="correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Documento do Guia 33</th>
+<th>Item</th>
+<th>Na versão nova</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plano de Validação</td>
+<td>9.2</td>
+<td>A fazer, com o critério de "apto" que a Garantia da Qualidade ainda vai escrever</td>
+</tr>
+<tr>
+<td>Requisitos do usuário (ERU/URS)</td>
+<td>9.3</td>
+<td>Requisitos corrigidos no anexo da Análise de Requisitos do Legado</td>
+</tr>
+<tr>
+<td>Especificação funcional</td>
+<td>9.5</td>
+<td>Regras de negócio do Legado + o que cada tela mostrou na versão nova (abas por tela do portal)</td>
+</tr>
+<tr>
+<td>Análise de risco</td>
+<td>6</td>
+<td>Do Legado; os riscos confirmados pelos testes da versão nova estão em "Resumo dos riscos"</td>
+</tr>
+<tr>
+<td>Plano de testes (IQ, OQ, PQ)</td>
+<td>9.7</td>
+<td>Plano de regressão contra o Legado e casos por tela</td>
+</tr>
+<tr>
+<td>Matriz de rastreabilidade</td>
+<td>9.8.5</td>
+<td>Fichas de defeito ligadas às telas e aos casos (capítulo Rastreabilidade)</td>
+</tr>
+<tr>
+<td>Relatório de validação</td>
+<td>9.9</td>
+<td>Este dossiê</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="inventario-de-telas-e-situacao">Inventário de telas e situação</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Menu</th>
+<th>Tela</th>
+<th>Situação</th>
+<th>Fichas ligadas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cadastros</td>
+<td>Almoxarifado</td>
+<td>Real (testada)</td>
+<td>N-010, N-018, N-033</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Local de Armazenagem</td>
+<td>Real (testada)</td>
+<td>N-009, N-025</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Estoque (Rua)</td>
+<td>Real (testada)</td>
+<td>N-009, N-026</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Estoque (Coluna)</td>
+<td>Real (testada)</td>
+<td>N-009</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Estoque (Andar)</td>
+<td>Real (testada)</td>
+<td>N-009</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Unidade de Medida</td>
+<td>Real (testada)</td>
+<td>N-026, N-027</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Condição de Armazenagem</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Classe do Item</td>
+<td>Real (testada)</td>
+<td>N-026, N-028</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Classificação do Item</td>
+<td>Real (testada)</td>
+<td>N-027</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>SJB</td>
+<td>Real (testada)</td>
+<td>N-025, N-027, N-028</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Nível de Segurança</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>NCM</td>
+<td>Real (testada)</td>
+<td>N-028</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Grupo de Itens</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Subgrupo de Itens</td>
+<td>Real (testada)</td>
+<td>N-022</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Tipo de Movimentação</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Motivo da Movimentação</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Tipo de Referência</td>
+<td>Real (testada)</td>
+<td>N-024</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Conta Corrente</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Conta Financeira</td>
+<td>Real (testada)</td>
+<td>N-024</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Grupo de Usuário - Almoxarifado</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cadastros</td>
+<td>Item</td>
+<td>Real (testada)</td>
+<td>N-023</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Endereço do Estoque</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Disponibilidade de Estoque</td>
+<td>Real (testada)</td>
+<td>N-007</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Solicitação de Material (Consumo)</td>
+<td>Real (testada)</td>
+<td>N-029, N-032</td>
+</tr>
+<tr>
+<td>Estoque</td>
+<td>Solicitação de Material (Produção)</td>
+<td>Real (testada)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Das 93 entradas do menu do Estoque novo, <strong>25 são telas reais</strong> (acima) e <strong>68 são provisórias</strong> (cartão "API conectada" ou "Tela em integração"): provisória não é defeito.</p>
+<h2 id="analise-de-risco">Análise de risco</h2>
+<h3 id="avaliacao-inicial">Avaliação inicial</h3>
+<p>Não foi refeita para a versão nova: vale a análise de risco do Legado (documento 07 do módulo).</p>
+<h3 id="escalas-usadas">Escalas usadas</h3>
+<p>As mesmas do Legado.</p>
+<h3 id="avaliacao-das-funcoes">Avaliação das funções</h3>
+<p>Não verificado na versão nova: depende da análise do código novo.</p>
+<h3 id="resumo-dos-riscos">Resumo dos riscos</h3>
+<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 9 defeitos de prioridade Alta (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
+<h2 id="achados-de-seguranca">Achados de segurança</h2>
+<ul>
+<li><strong>Perfil com todas as funções do Estoque</strong> recebe 403 até para leitura (N-001); só o administrador de perfil 1 usa o módulo. A <strong>separação de funções</strong> (quem recebe não autoriza, quem conta não ajusta) <strong>não pôde ser testada</strong>.</li>
+<li>A causa do 403 não está confirmada: o código lê <code>develop</code>, onde o módulo usa o mapeamento de funções do Principal; pode ser mapeamento de módulo/código ou versão publicada diferente. <strong>Pergunta aberta aos desenvolvedores.</strong></li>
+<li>O token de sessão cai em cerca de 10 minutos no ambiente de teste (tratado no Principal, N-043).</li>
+</ul>
+<h3 id="trilha-de-auditoria">Trilha de auditoria</h3>
+<p>O Log dos cadastros guarda <strong>usuário, data, hora, dado antigo, dado novo e justificativa</strong> nas alterações. Falhas: a linha de <strong>inclusão</strong> vem com dado antigo e dado novo vazios; <strong>reabrir recebimento</strong> não grava nada (N-021); a ligação de almoxarifado a grupo de usuários, no legado, não deixava rastro, e esta versão ainda não foi retestada nesse ponto.</p>
+<h2 id="plano-de-testes">Plano de testes</h2>
+<h3 id="objetivo">Objetivo</h3>
+<p>Saber o que funciona, o que falha e o que ainda impede o uso do Estoque da versão nova em ambiente regulado, em comparação com o sistema entregue.</p>
+<h3 id="escopo_1">Escopo</h3>
+<p>As telas reais do módulo na versão nova; telas provisórias não são testadas por tela (quando preciso, pela API).</p>
+<h3 id="ambiente-e-preparacao">Ambiente e preparação</h3>
 <ul>
 <li><strong>Ambiente:</strong> ambiente de teste da versão nova ("Teste", versão 0.0.1 no rodapé). Sem dados reais nem usuários reais. O banco é o do sistema entregue, no mesmo desenho; o back-end do Estoque mudou entre 05 e 06/11 (a API passou de 634 para 809 rotas, sem mudar o número da versão).</li>
 <li><strong>Quem testou:</strong> robôs (Claude Code) pelas telas, no navegador, com contas de teste, mais a API do Estoque nos pontos em que a tela é provisória. Leitura do código do back-end (idêntico ao do legado no Principal) para explicar causas.</li>
@@ -58,7 +332,14 @@
 <li><strong>Classes de resultado:</strong> Igual ao legado (inclusive a falha), Regressão, Melhoria, Novo, Provisória (tela sem lógica, <strong>não é defeito</strong>) e Bloqueado no teste.</li>
 <li><strong>Dados que não foram vistos:</strong> o banco, o código do front-end novo e o código da API nova. As causas citadas vêm da tela e do código do back-end entregue; a confirmação com a equipe de desenvolvimento está pendente.</li>
 </ul>
-<h2 id="o-que-foi-testado">O que foi testado</h2>
+<h3 id="evidencias-e-registro">Evidências e registro</h3>
+<p>Capturas das telas (com manifesto), resultados por rodada em <code>execucao/</code> e uma ficha por defeito (<code>defeitos/</code>). Imagens revisadas antes da publicação; registros de teste com o prefixo "T.".</p>
+<h3 id="criterios-de-aceite">Critérios de aceite</h3>
+<p>O critério de "apto para uso em ambiente regulado" <strong>ainda não foi escrito</strong> com a Garantia da Qualidade; por isso não há veredito novo.</p>
+<h3 id="quantidade-de-casos-por-classe">Quantidade de casos por classe</h3>
+<p>Igual ao Legado (inclusive a falha), Regressão, Melhoria, Novo, Provisória e Bloqueado no teste; as contagens estão no capítulo de resultados.</p>
+<h2 id="resultados-dos-testes">Resultados dos testes</h2>
+<h3 id="resumo-das-rodadas">Resumo das rodadas</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -94,13 +375,18 @@
 <td>157 casos de combinações e relacionamentos em 19 cadastros mais 12 casos no Item; exclusão e inativação em uso; vínculos; Log; tentativa do laudo do CQ; 6 defeitos novos (N-022 a N-027)</td>
 </tr>
 <tr>
+<td>Pendências</td>
+<td>10/11/2026</td>
+<td>Cadastros em uso (almoxarifado, item e fornecedor), Entrada de Material - Outras (pela API), Solicitação de Consumo gravada e aprovada, nova tentativa do laudo do CQ e Grupo Usuário - Almoxarifado; 5 defeitos novos (N-029 a N-033)</td>
+</tr>
+<tr>
 <td>Conferência da nuvem</td>
 <td>10/11/2026</td>
 <td>Revisão de segurança de 694 imagens (2 tarjadas); exclusão com justificativa conferida contra o legado (não é regressão); N-020 reclassificado; N-028 aberto</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="resultado-em-uma-frase-por-tema">Resultado em uma frase por tema</h2>
+<h3 id="resultado-em-uma-frase-por-tema">Resultado em uma frase por tema</h3>
 <p><strong>O que melhorou em relação ao legado</strong></p>
 <ul>
 <li>O <strong>Endereçamento grava</strong> saldo, histórico e endereço (no legado mostrava sucesso e não gravava).</li>
@@ -172,6 +458,21 @@
 <td>N-009</td>
 </tr>
 <tr>
+<td>Alta</td>
+<td><strong>Entrada de Material - Outras</strong> responde "Erro na integração com o módulo do CQ." (409) e nenhum item com controle de qualidade entra; a tela voltou a ser provisória</td>
+<td>N-030, N-031</td>
+</tr>
+<tr>
+<td>Média</td>
+<td><strong>O mesmo usuário aprova a própria solicitação</strong> (conclui e aprova); Solicitação de Consumo grava o cabeçalho sem item</td>
+<td>N-029, N-032</td>
+</tr>
+<tr>
+<td>Média</td>
+<td>Ligar e desligar um almoxarifado de um grupo de usuários <strong>não pede justificativa e não aparece no Log</strong></td>
+<td>N-033</td>
+</tr>
+<tr>
 <td>Baixa</td>
 <td>Sigla do lote cortada em 2 caracteres; "PROUÇÃO"; mensagens genéricas; Descrição bloqueada na edição</td>
 <td>N-010, N-018, N-011, N-027, N-028</td>
@@ -179,82 +480,72 @@
 </tbody>
 </table></div>
 <p><strong>Bloqueado no teste (ambiente/dados).</strong> O <strong>laudo do CQ</strong> não pôde ser testado: não existe análise para liberar. O código mostra que a análise nasce quando o endereçamento da <strong>nota</strong> é finalizado (nota conferida e todos os itens endereçados); a massa foi endereçada lote a lote pela API e nunca finalizada, e a conferência, que seria o primeiro passo do caminho completo, responde 400 (N-012). A ficha N-020 foi reclassificada de Alta para <strong>Bloqueado no teste</strong>; se, com a conferência funcionando, a finalização não gerar a análise, abre-se defeito funcional Alta.</p>
-<h2 id="regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</h2>
+<h3 id="regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</h3>
 <ul>
 <li><strong>Validade:</strong> o recebimento <strong>não compara a validade com a data de hoje</strong> e não confere a qualificação do fornecedor; lote vencido e fornecedor reprovado foram aceitos (igual ao legado, DV-EST-014). O banco também não confere (resposta do responsável).</li>
 <li><strong>Local e situação:</strong> a situação do saldo (quarentena, reprovado, disponível) é <strong>função do local</strong> (marcas <code>QUARENTENA</code> e <code>REFUGO</code> do local), e não do laudo. O servidor não impede pôr ou mover o lote para um local comum sem laudo (N-003). O caso da movimentação interna sem laudo ficou <strong>Inconclusivo</strong>, porque a transferência recusa todos os destinos por outro defeito (N-013); a causa provável é o <strong>grupo do usuário ausente do token</strong> (a declaração <code>GroupId</code> só entra no token se o grupo for maior que zero).</li>
 <li><strong>Autorização do recebimento:</strong> só vale se o parâmetro de configuração estiver ligado (padrão desligado); a segunda pessoa se autentica pelo Principal, e o endereço dessa chamada não está configurado no ambiente.</li>
 <li>Detalhe e linhas de código em <code>REGRAS-DE-LOTE-NO-CODIGO.md</code> e <code>ACESSO-NO-CODIGO.md</code>.</li>
 </ul>
-<h2 id="trilha-de-auditoria">Trilha de auditoria</h2>
-<p>O Log dos cadastros guarda <strong>usuário, data, hora, dado antigo, dado novo e justificativa</strong> nas alterações. Falhas: a linha de <strong>inclusão</strong> vem com dado antigo e dado novo vazios; <strong>reabrir recebimento</strong> não grava nada (N-021); a ligação de almoxarifado a grupo de usuários, no legado, não deixava rastro, e esta versão ainda não foi retestada nesse ponto.</p>
-<h2 id="acesso-e-seguranca">Acesso e segurança</h2>
-<ul>
-<li><strong>Perfil com todas as funções do Estoque</strong> recebe 403 até para leitura (N-001); só o administrador de perfil 1 usa o módulo. A <strong>separação de funções</strong> (quem recebe não autoriza, quem conta não ajusta) <strong>não pôde ser testada</strong>.</li>
-<li>A causa do 403 não está confirmada: o código lê <code>develop</code>, onde o módulo usa o mapeamento de funções do Principal; pode ser mapeamento de módulo/código ou versão publicada diferente. <strong>Pergunta aberta aos desenvolvedores.</strong></li>
-<li>O token de sessão cai em cerca de 10 minutos no ambiente de teste (tratado no Principal, N-043).</li>
-</ul>
-<h2 id="aderencia-a-norma-leitura-da-homologacao-a-confirmar-com-a-garantia-da-qualidade">Aderência à norma (leitura da homologação, a confirmar com a Garantia da Qualidade)</h2>
+<h2 id="desvios">Desvios</h2>
+<h3 id="defeitos-de-gravidade-alta">Defeitos de gravidade Alta</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Tema</th>
-<th>Leitura</th>
-<th>Base</th>
+<th>Defeito</th>
+<th>O que acontece</th>
+<th>Tela</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Rastreabilidade e trilha de auditoria</td>
-<td>Atende em parte</td>
-<td>Log com quem, quando, antes, depois e justificativa; inclusão vazia; reabrir recebimento sem log (N-021)</td>
+<td>DV-EST-N-001</td>
+<td>Perfil com todas as funções do Estoque recebe 403 em toda rota do módulo, até na leitura</td>
+<td>Todas as telas do Estoque</td>
 </tr>
 <tr>
-<td>Liberação de lote pelo CQ</td>
-<td>Não atende</td>
-<td>Situação do lote pelo local, sem laudo (N-003); laudo não pôde ser testado (N-020 bloqueado)</td>
+<td>DV-EST-N-002</td>
+<td>A autorização do recebimento não pode ser executada: o recebimento nunca chega ao estado "concluído" e a rota não pede login e senha de outro usuário</td>
+<td>Recebimento de Material (tela provisória; rota da API)</td>
 </tr>
 <tr>
-<td>Autorização e assinatura</td>
-<td>Não atende</td>
-<td>Autorização não executa (N-002, N-019) e parâmetro desligado</td>
+<td>DV-EST-N-003</td>
+<td>O lote vira "disponível" ou "reprovado" só pelo local do endereço, sem laudo do Controle da Qualidade</td>
+<td>Endereçamento de Material (rota da API); histórico do lote</td>
 </tr>
 <tr>
-<td>Controle de acesso e separação de funções</td>
-<td>Não atende</td>
-<td>Perfil com todas as funções recebe 403 (N-001); separação não testável</td>
+<td>DV-EST-N-012</td>
+<td>A finalização da conferência responde "Erro na consulta do registro!" (400) e o lote novo não entra no estoque</td>
+<td>Conferência de Recebimento (rota da API; tela provisória)</td>
 </tr>
 <tr>
-<td>Integridade e confiabilidade dos dados</td>
-<td>Atende em parte</td>
-<td>Decimais, mínimo &gt; máximo, duplicidade, exclusão em uso (N-022 a N-026)</td>
+<td>DV-EST-N-013</td>
+<td>A lista de endereços de destino oferece endereços que a gravação da transferência recusa ("Endereço de destino inválido!")</td>
+<td>Movimentação de Material (rota da API; tela provisória)</td>
 </tr>
 <tr>
-<td>Controle de validade e qualificação do fornecedor</td>
-<td>Não atende</td>
-<td>Lote vencido e fornecedor reprovado aceitos no recebimento (igual ao legado)</td>
+<td>DV-EST-N-019</td>
+<td>A autorização do recebimento falha por configuração do ambiente: "Integracoes:Principal:BaseUrl não configurada ou inválida."</td>
+<td>Recebimento de Material, autorização (rota da API)</td>
+</tr>
+<tr>
+<td>DV-EST-N-021</td>
+<td>Reabrir o recebimento apaga a conferência e o endereçamento já feitos, sem justificativa e sem nenhuma linha no log</td>
+<td>Recebimento de Material (rota da API; tela provisória)</td>
+</tr>
+<tr>
+<td>DV-EST-N-025</td>
+<td>Cadastro em uso é excluído com "sucesso" (SJB usado por item; Local de Armazenagem com endereço ativo)</td>
+<td>SJB; Local de Armazenagem</td>
+</tr>
+<tr>
+<td>DV-EST-N-030</td>
+<td>Entrada de Material - Outras responde "Erro na integração com o módulo do CQ." (409) e nenhum item com controle de qualidade entra</td>
+<td>Entrada de Material - Outras (chamada da API; a tela voltou a ser prov</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="limites-e-pontos-abertos">Limites e pontos abertos</h2>
-<ul>
-<li><strong>Telas provisórias (68 de 93):</strong> Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Saída, Devolução, Remessa, Inventário, Kits, Relatórios, Laudo do CQ e Avaliação do Fornecedor ainda serão desenvolvidos. Provisória <strong>não é defeito</strong>; os testes desse caminho foram pela API, com a mesma chamada que a tela faria.</li>
-<li><strong>Código do front-end e da API nova:</strong> fotografado e lido só nos pontos de acesso e de regra do lote; a análise por tela do código é a Fase 2.</li>
-<li><strong>Perguntas para a equipe de desenvolvimento:</strong> o ambiente de teste roda <code>develop</code> com as permissões ativas (N-001)? Qual é o valor de <code>AUTORIZA_RECEBIMENTO</code> e quem configura <code>Integracoes:Principal:BaseUrl</code> (N-019)? Por que o grupo do usuário não vai no token (N-013)? O banco confere validade e qualificação do fornecedor (a resposta do responsável foi não)?</li>
-<li><strong>Não executado:</strong> Almoxarifado em uso, Item em uso, fornecedor em uso e a Entrada de Material - Outras até "Finalizar movimentação".</li>
-<li><strong>Responsável pela correção:</strong> não é indicado nas fichas: a Garantia da Qualidade avalia e simula primeiro, e só depois abre o reparo para os desenvolvedores.</li>
-<li><strong>Imagens:</strong> 694 conferidas; 2 tarjadas (senha e CPF); nenhuma com endereço de servidor, caminho de disco ou nome de pessoa real.</li>
-</ul>
-<h2 id="condicoes-para-uma-nova-homologacao">Condições para uma nova homologação</h2>
-<ol>
-<li>Corrigir os itens de prioridade Alta (acesso, conferência, destinos, autorização, reabertura, exclusão em uso).</li>
-<li>Configurar o ambiente (autorização do recebimento, grupo no token, endereços de destino) e refazer o caso do laudo do CQ pelo caminho completo.</li>
-<li>Construir as telas provisórias do caminho do lote e repetir os testes por tela, com perfis diferentes (separação de funções).</li>
-<li>Definir com a Garantia da Qualidade o critério de "apto" e a regra de validade e qualificação do fornecedor.</li>
-<li>Receber e revisar o código do front-end e da API nova (Fase 2).</li>
-</ol>
-<h2 id="anexo-os-defeitos-do-estoque-novo">Anexo: os defeitos do Estoque novo</h2>
-<p>Fichas completas, com passos, esperado, obtido e evidência, em <code>homologacao/versao-nova/3.estoque/defeitos/</code>.</p>
+<h3 id="todos-os-defeitos">Todos os defeitos</h3>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -433,12 +724,156 @@
 <td>Baixa</td>
 <td>Classe do Item; SJB; NCM</td>
 </tr>
+<tr>
+<td>DV-EST-N-029</td>
+<td>A Aprovação de Solicitação aceita a mesma pessoa que criou e concluiu a solicitação</td>
+<td>Média</td>
+<td>Solicitação de Material (Consumo); Aprovação de Solicitação</td>
+</tr>
+<tr>
+<td>DV-EST-N-030</td>
+<td>Entrada de Material - Outras responde "Erro na integração com o módulo do CQ." (409) e nenhum item com controle de qualidade entra</td>
+<td>Alta</td>
+<td>Entrada de Material - Outras (chamada da API; a tela voltou a ser prov</td>
+</tr>
+<tr>
+<td>DV-EST-N-031</td>
+<td>A tela Entrada de Material - Outras voltou a ser um cartão provisório</td>
+<td>Média</td>
+<td>Entrada de Material - Outras</td>
+</tr>
+<tr>
+<td>DV-EST-N-032</td>
+<td>Solicitação de Material (Consumo): grava o cabeçalho sem nenhum item e a busca de item só responde com teclas e Enter e não acha códigos com ponto</td>
+<td>Baixa</td>
+<td>Solicitação de Material (Consumo)</td>
+</tr>
+<tr>
+<td>DV-EST-N-033</td>
+<td>Ligar e desligar um almoxarifado de um grupo de usuários não pede justificativa e não aparece no Log</td>
+<td>Média</td>
+<td>Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<p>Fichas completas, com passos, esperado, obtido e evidência, em <code>homologacao/versao-nova/3.estoque/defeitos/</code>.</p>
+<h2 id="rastreabilidade">Rastreabilidade</h2>
+<h3 id="defeito-tela-caso">Defeito → tela → caso</h3>
+<p>Cada ficha cita a tela e o caso que a mostrou; o portal liga a ficha à aba Análise da tela ("Defeitos confirmados em teste") e à aba Regras de negócio (casos). A matriz formal requisito → teste da versão nova depende da análise de requisitos do Legado e será montada quando o critério de "apto" existir.</p>
+<h3 id="aderencia-a-norma">Aderência à norma</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Tema</th>
+<th>Leitura</th>
+<th>Base</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rastreabilidade e trilha de auditoria</td>
+<td>Atende em parte</td>
+<td>Log com quem, quando, antes, depois e justificativa; inclusão vazia; reabrir recebimento sem log (N-021)</td>
+</tr>
+<tr>
+<td>Liberação de lote pelo CQ</td>
+<td>Não atende</td>
+<td>Situação do lote pelo local, sem laudo (N-003); laudo não pôde ser testado (N-020 bloqueado)</td>
+</tr>
+<tr>
+<td>Autorização e assinatura</td>
+<td>Não atende</td>
+<td>Autorização não executa (N-002, N-019) e parâmetro desligado</td>
+</tr>
+<tr>
+<td>Controle de acesso e separação de funções</td>
+<td>Não atende</td>
+<td>Perfil com todas as funções recebe 403 (N-001); separação não testável</td>
+</tr>
+<tr>
+<td>Integridade e confiabilidade dos dados</td>
+<td>Atende em parte</td>
+<td>Decimais, mínimo &gt; máximo, duplicidade, exclusão em uso (N-022 a N-026)</td>
+</tr>
+<tr>
+<td>Controle de validade e qualificação do fornecedor</td>
+<td>Não atende</td>
+<td>Lote vencido e fornecedor reprovado aceitos no recebimento (igual ao legado)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="pendencias">Pendências</h2>
+<ul>
+<li><strong>Telas provisórias (68 de 93):</strong> Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Saída, Devolução, Remessa, Inventário, Kits, Relatórios, Laudo do CQ e Avaliação do Fornecedor ainda serão desenvolvidos. Provisória <strong>não é defeito</strong>; os testes desse caminho foram pela API, com a mesma chamada que a tela faria.</li>
+<li><strong>Código do front-end e da API nova:</strong> fotografado e lido só nos pontos de acesso e de regra do lote; a análise por tela do código é a Fase 2.</li>
+<li><strong>Perguntas para a equipe de desenvolvimento:</strong> o ambiente de teste roda <code>develop</code> com as permissões ativas (N-001)? Qual é o valor de <code>AUTORIZA_RECEBIMENTO</code> e quem configura <code>Integracoes:Principal:BaseUrl</code> (N-019)? Por que o grupo do usuário não vai no token (N-013)? O banco confere validade e qualificação do fornecedor (a resposta do responsável foi não)?</li>
+<li><strong>Executado em 10/11 (pendências):</strong> Almoxarifado, Item e fornecedor em uso (inativar é aceito sem aviso em todos; excluir é bloqueado para Local e Item com saldo, e aceito para Almoxarifado em uso por Item, N-025); a Entrada de Material - Outras <strong>não pôde ser concluída</strong> (integração com o CQ, N-030; a tela voltou a ser provisória, N-031).</li>
+<li><strong>Responsável pela correção:</strong> não é indicado nas fichas: a Garantia da Qualidade avalia e simula primeiro, e só depois abre o reparo para os desenvolvedores.</li>
+<li><strong>Imagens:</strong> 694 conferidas; 2 tarjadas (senha e CPF); nenhuma com endereço de servidor, caminho de disco ou nome de pessoa real.</li>
+</ul>
+<h2 id="parecer-da-homologacao">Parecer da homologação</h2>
+<div class="callout">
+<p class="callout-titulo">Sem veredito novo</p>
+<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo está <strong>muito incompleto</strong>: das 93 entradas do menu, <strong>68 são telas provisórias</strong> e só 25 funcionam. O caminho do lote (Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Saída, Remessa, Inventário) <strong>não pôde ser percorrido pelas telas</strong>, e por isso o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
+<p>Fotografia do módulo na versão nova: 33 defeitos registrados, 9 de prioridade Alta. Não há veredito de "apto".</p>
+</div>
+<h2 id="fechamento-do-modulo">Fechamento do módulo</h2>
+<h3 id="o-que-foi-concluido">O que foi concluído</h3>
+<p>Os testes de tela das telas reais, as fichas de defeito, o dossiê, o resumo executivo e o manual por tela, todos no portal.</p>
+<h3 id="limitacoes-o-que-o-teste-nao-cobriu">Limitações: o que o teste não cobriu</h3>
+<p>Telas provisórias; código da API nova; perfis diferentes do administrador, quando o acesso é negado; o que está dito em Pendências.</p>
+<h3 id="o-que-muda-na-reabertura">O que muda na reabertura</h3>
+<ol>
+<li>Corrigir os itens de prioridade Alta (acesso, conferência, destinos, autorização, reabertura, exclusão em uso).</li>
+<li>Configurar o ambiente (autorização do recebimento, grupo no token, endereços de destino) e refazer o caso do laudo do CQ pelo caminho completo.</li>
+<li>Construir as telas provisórias do caminho do lote e repetir os testes por tela, com perfis diferentes (separação de funções).</li>
+<li>Definir com a Garantia da Qualidade o critério de "apto" e a regra de validade e qualificação do fornecedor.</li>
+<li>Receber e revisar o código do front-end e da API nova (Fase 2).</li>
+</ol>
+<h3 id="decisoes-e-pontos-para-validar">Decisões e pontos para validar</h3>
+<ul>
+<li>O critério de "apto" com a Garantia da Qualidade.</li>
+<li>As perguntas abertas à equipe de desenvolvimento (acesso, configuração do ambiente, grupo no token).</li>
+</ul>
+<h2 id="aprovacoes">Aprovações</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Nome</th>
+<th>Função</th>
+<th>Data</th>
+<th>Assinatura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elaborado por</td>
+<td>André Nardacci</td>
+<td>Análise de negócio e homologação</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Revisado por</td>
+<td></td>
+<td>Garantia da Qualidade</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Aprovado por</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table></div>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="dossie-de-homologacao.html"><small>← Anterior</small><strong>Dossiê de homologação</strong></a><a class="ap ap-prox" href="resumo-executivo-da-versao-nova.html"><small>Próximo →</small><strong>Resumo executivo da versão nova</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#objetivo-e-escopo">Objetivo e escopo</a></li><li><a href="#ambiente-e-metodo">Ambiente e método</a></li><li><a href="#o-que-foi-testado">O que foi testado</a></li><li><a href="#resultado-em-uma-frase-por-tema">Resultado em uma frase por tema</a></li><li><a href="#regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</a></li><li><a href="#trilha-de-auditoria">Trilha de auditoria</a></li><li><a href="#acesso-e-seguranca">Acesso e segurança</a></li><li><a href="#aderencia-a-norma-leitura-da-homologacao-a-confirmar-com-a-garantia-da-qualidade">Aderência à norma (leitura da homologação, a confirmar com a Garantia da Qualidade)</a></li><li><a href="#limites-e-pontos-abertos">Limites e pontos abertos</a></li><li><a href="#condicoes-para-uma-nova-homologacao">Condições para uma nova homologação</a></li><li><a href="#anexo-os-defeitos-do-estoque-novo">Anexo: os defeitos do Estoque novo</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#inventario-de-telas-e-situacao">Inventário de telas e situação</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li class="sub"><a href="#trilha-de-auditoria">Trilha de auditoria</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-por-classe">Quantidade de casos por classe</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#resultado-em-uma-frase-por-tema">Resultado em uma frase por tema</a></li><li class="sub"><a href="#regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</a></li><li><a href="#desvios">Desvios</a></li><li class="sub"><a href="#defeitos-de-gravidade-alta">Defeitos de gravidade Alta</a></li><li class="sub"><a href="#todos-os-defeitos">Todos os defeitos</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li class="sub"><a href="#defeito-tela-caso">Defeito → tela → caso</a></li><li class="sub"><a href="#aderencia-a-norma">Aderência à norma</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#fechamento-do-modulo">Fechamento do módulo</a></li><li class="sub"><a href="#o-que-foi-concluido">O que foi concluído</a></li><li class="sub"><a href="#limitacoes-o-que-o-teste-nao-cobriu">Limitações: o que o teste não cobriu</a></li><li class="sub"><a href="#o-que-muda-na-reabertura">O que muda na reabertura</a></li><li class="sub"><a href="#decisoes-e-pontos-para-validar">Decisões e pontos para validar</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
