@@ -151,24 +151,35 @@ def preencher_principal(reg, hom, limpar, converter):
             t["situacao"] = "Testada"
 
 
-def preencher_estoque(reg, hom, limpar, converter):
-    """Lê homologacao/versao-nova/3.estoque/telas/manifest.json (uma entrada por tela e aba, com os títulos de seção do legado)
-    e põe o conteúdo nas telas reais do Estoque na versão nova. A tela é achada pelo nome do inventário do legado."""
-    arq_man = Path(hom) / "versao-nova/3.estoque/telas/manifest.json"
-    if not arq_man.exists() or "estoque" not in reg:
+def preencher_por_manifesto(reg, hom, mid, manifesto, limpar, converter):
+    """Lê um manifest.json (uma entrada por tela e aba, com os títulos de seção do legado) e põe o conteúdo nas telas do módulo.
+    A tela é achada pelo nome do inventário do legado; o conteúdo substitui o que a aba já tinha."""
+    arq_man = Path(hom) / manifesto
+    if not arq_man.exists() or mid not in reg:
         return
-    por_nome = {t["nome"]: t for t in reg["estoque"]["telas"]}
+    por_nome = {_slug(t["nome"]): t for t in reg[mid]["telas"]}  # sem diferença de maiúscula, acento ou pontuação
     for m in json.loads(arq_man.read_text(encoding="utf-8")):
-        t = por_nome.get(m["tela"])
+        t = por_nome.get(_slug(m["tela"]))
         if not t or m["aba"] not in t["abas"]:
             continue
         md = limpar((Path(hom) / m["arq"]).read_text(encoding="utf-8"))
+        md = re.sub(r"^#(#+ )", r"\1", md, flags=re.M)  # o conversor sobe um nível de título; assim ## sai como h2 e #### como h4, como no legado
         corpo = converter("# x\n" + md)  # o conversor descarta a primeira linha de título
         t["abas"][m["aba"]] = corpo.replace('"../img/', '"../../img/')
-    for t in reg["estoque"]["telas"]:
+    for t in reg[mid]["telas"]:
         t["validada"] = any(t["abas"].values())
         if t["validada"] and not t["situacao"]:
             t["situacao"] = "Testada"
+
+
+def preencher_estoque(reg, hom, limpar, converter):
+    """Estoque novo: abas por tela no modelo do legado (versao-nova/3.estoque/telas/manifest.json)."""
+    preencher_por_manifesto(reg, hom, "estoque", "versao-nova/3.estoque/telas/manifest.json", limpar, converter)
+
+
+def preencher_principal_modelo(reg, hom, limpar, converter):
+    """Principal novo: telas já reescritas no modelo do legado (versao-nova/1.principal/telas-modelo/manifest.json), por cima das abas antigas."""
+    preencher_por_manifesto(reg, hom, "principal", "versao-nova/1.principal/telas-modelo/manifest.json", limpar, converter)
 
 
 def contagem(reg_mod):
