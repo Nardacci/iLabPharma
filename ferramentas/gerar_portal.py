@@ -224,7 +224,8 @@ def docs_com_telas(mod, hom):
         docs = _com_seguranca(mod, docs, hom)
     docs += menus_gq.entradas(hom, mod["id"])
     fontes = {"principal": "versao-nova/1.principal/telas/manifest.json",
-              "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json"}
+              "garantia-qualidade": "versao-nova/5.garantia_qualidade/telas-a-criar/manifest.json",
+              "estoque": "versao-nova/3.estoque/telas-menu/manifest.json"}
     if mod["id"] not in fontes:
         return docs
     arq = hom / fontes[mod["id"]]
@@ -420,6 +421,9 @@ MODULOS = [
             ("5.garantia_qualidade/entregaveis/fonte/manual-do-usuario.md", "Manual do usuário", "negocio", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Manual do Usuario.docx"),
             ("5.garantia_qualidade/entregaveis/fonte/analise-de-requisitos.md", "Análise de requisitos", "tecnico", "5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Analise de Requisitos.docx"),
             ("5.garantia_qualidade/08-plano-de-testes.md", "Plano de testes", "testes", None),
+            ("versao-nova/5.garantia_qualidade/entregaveis/fonte/dossie-de-homologacao-versao-nova.md", "Dossiê de homologação da versão nova", "novo", "versao-nova/5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Dossie de Homologacao da Versao Nova.docx"),
+            ("versao-nova/5.garantia_qualidade/entregaveis/fonte/resumo-executivo-versao-nova.md", "Resumo executivo da versão nova", "novo", "versao-nova/5.garantia_qualidade/entregaveis/LabMedSys - Modulo Garantia da Qualidade - Resumo Executivo da Versao Nova.docx"),
+            ("versao-nova/5.garantia_qualidade/manual/manual-gq-versao-nova.md", "Manual da versão nova, por tela", "novo", "versao-nova/5.garantia_qualidade/manual/LabMedSys - Modulo Garantia da Qualidade - Manual da Versao Nova por Tela.docx"),
             ("versao-nova/5.garantia_qualidade/resumo-versao-nova.md", "Resumo dos testes", "novo", None),
             ("versao-nova/PEDIDO-AO-DESENVOLVIMENTO-GQ-ACESSO.md", "Pedido ao desenvolvimento: acesso à Garantia da Qualidade na versão nova", "novo", None),
             ("versao-nova/5.garantia_qualidade/execucao/2026-10-17/resultado.md", "Resultado da rodada 4", "novo", None),
@@ -1044,6 +1048,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     versao_nova.preencher_principal(NOVO, hom_, lambda md: limpar(md, "versao-nova/1.principal", retirado), lambda md: conv.converter(md, "principal", tirar_h1=True)[0])
     versao_nova.preencher_estoque(NOVO, hom_, lambda md: limpar(md, "versao-nova/3.estoque", retirado), lambda md: conv.converter(md, "estoque", tirar_h1=True)[0])
     versao_nova.preencher_principal_modelo(NOVO, hom_, lambda md: limpar(md, "versao-nova/1.principal", retirado), lambda md: conv.converter(md, "principal", tirar_h1=True)[0])
+    versao_nova.preencher_por_manifesto(NOVO, hom_, "garantia-qualidade", "versao-nova/5.garantia_qualidade/telas-modelo/manifest.json", lambda md: limpar(md, "versao-nova/5.garantia_qualidade", retirado), lambda md: conv.converter(md, "garantia-qualidade", tirar_h1=True)[0])
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
         DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads(higiene.redigir((hom_ / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}
