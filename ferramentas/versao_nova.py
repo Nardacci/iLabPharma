@@ -222,19 +222,21 @@ def secoes_novo_modelo_legado(mid, pags, reg_mod):
     eh_menu = lambda p: ": entenda o menu" in p["titulo"] or ": visão geral" in p["titulo"]
     gerais = [p for p in pags if not p.get("grupo") and not eh_menu(p)]
     menu_docs = [p for p in pags if eh_menu(p)]
-    telas_p = [p for p in pags if p.get("grupo") and not p.get("roteiro_de")]
+    # Menus e telas vêm do inventário do Legado (mesma lista e mesma ordem do Legado); só os menus com página "entenda o menu" aparecem.
+    por_menu = {}
+    for menu, ts in reg_mod["menus"]:
+        por_menu.setdefault(MENU_EXIBIDO.get(menu, menu), []).extend(ts)
     out = {}
     for p in gerais:
         out.setdefault(_secao_do_documento(p["titulo"]), []).append(card(p, "Word disponível" if p["word"] else "Leitura no portal"))
     menus = []
-    for g in dict.fromkeys(MENU_EXIBIDO.get(p["grupo"], p["grupo"]) for p in telas_p):
+    for g, ts in por_menu.items():
         docs = [p for p in menu_docs if p["titulo"].startswith(g + ":")]
+        if not docs:
+            continue
         h = f'<h3 class="novo-menu">{E(g)}</h3><div class="doc-cards">' + "".join(card(p, "Comece por aqui", False) for p in docs) + "</div>"
         cartas = []
-        for i, p in enumerate([x for x in telas_p if MENU_EXIBIDO.get(x["grupo"], x["grupo"]) == g], 1):
-            t = por_chave.get(chave_tela(p["tela"]))
-            if not t:
-                continue
+        for i, t in enumerate(ts, 1):
             links = " · ".join(f'<a href="../novo/{mid}/{t["slug"]}-{a}.html">{r}</a>' for a, r in
                                (("analise", "Análise"), ("manual-do-usuario", "Manual do usuário"), ("fluxos", "Fluxos"), ("regras-de-negocio", "Regras de negócio"), ("anvisa", "Anvisa")))
             meta = _primeiro_paragrafo(t["abas"].get("analise"))
