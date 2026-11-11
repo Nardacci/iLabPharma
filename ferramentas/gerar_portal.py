@@ -301,6 +301,7 @@ MODULOS = [
         "situacao": "Em andamento", "nivel": 2,
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
+            ("versao-nova/defeitos-encontrados/defeitos-versao-nova.md", "Defeitos encontrados na versão nova", "novo", "versao-nova/defeitos-encontrados/LabMedSys - Defeitos Encontrados na Versao Nova.docx"),
             ("transversal/08-visao-dos-cinco-modulos.md", "Os cinco módulos: o negócio, a ANVISA e o que falta", "inicio", "transversal/LabMedSys - Visao dos Cinco Modulos.docx"),
             ("transversal/09-matriz-de-papeis-e-permissoes.md", "Matriz de papéis e permissões (como deve ser), versão 0.1", "inicio", "transversal/LabMedSys - Matriz de Papeis e Permissoes.docx"),
             ("transversal/05-precisa-de-voce-agora.md", "O que precisa de você agora", "inicio", None),
@@ -1060,6 +1061,15 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         print(f"Equivalência de telas: {erros_tela.atualizar_equivalencia(hom_, ERROS, NOVO)} linha(s) acrescentada(s) a {erros_tela.CSV_NOME} (em {hom_}).")
         ERROS.clear()
         ERROS.update(erros_tela.montar(hom_, NOVO))
+    DEFEITO_LINK.clear()
+    for (_v, _m), _d in ERROS.items():
+        if _v != "novo" or _m not in NOVO:
+            continue
+        for _t in NOVO[_m]["telas"]:
+            for _x in _d["por_tela"].get(_t["chave"], []):
+                DEFEITO_LINK.setdefault(_x["id"], (_m, f"{_t['slug']}-erros.html"))
+        for _x in _d["sem"]:
+            DEFEITO_LINK.setdefault(_x["id"], (_m, "sem-tela-erros.html"))
     for (_v, _m), _d in sorted(ERROS.items()):
         _lig = _d["total"] - len(_d["sem"])
         print(f"Erros por tela · {_v} · {_m}: {_lig} de {_d['total']} defeitos ligados a uma tela; {len(_d['sem'])} sem tela.")
@@ -1514,6 +1524,23 @@ def aviso_sem_print(p):
             'forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>\n')
 
 
+def ligar_defeitos(p):
+    """Na página "Defeitos encontrados na versão nova": cada defeito ganha o link para a página "Erros desta tela" (passos, evidências e capturas)."""
+    corpo = p["corpo"]
+    if not p["arq"].endswith("defeitos-encontrados/defeitos-versao-nova.md"):
+        return corpo
+
+    def alvo(i):
+        x = DEFEITO_LINK.get(i)
+        return f"../novo/{x[0]}/{x[1]}#{i.lower()}" if x else None
+
+    corpo = re.sub(r"(<h[23][^>]*>)(DV-[A-Z]+-N-\d+)(:.*?</h[23]>)",
+                   lambda m: m.group(0) + (f'<p><a class="botao" href="{alvo(m.group(2))}">Ver a tela do erro, com as evidências</a></p>' if alvo(m.group(2)) else ""), corpo)
+    corpo = re.sub(r"(<td[^>]*>)(DV-[A-Z]+-N-\d+)(</td>)",
+                   lambda m: m.group(1) + (f'<a href="{alvo(m.group(2))}">{m.group(2)}</a>' if alvo(m.group(2)) else m.group(2)) + m.group(3), corpo)
+    return corpo
+
+
 def pagina_documento(mod, p):
     raiz = "../../"
     barra_v, versao_pag = barra_versao(mod, p)
@@ -1566,7 +1593,7 @@ def pagina_documento(mod, p):
     </header>
     {barra_v}{abas}
     <article class="texto{' texto-largo' if p.get('aba') else ''}">
-{aviso_sem_print(p)}{p['corpo']}{quadro_quem_pode(mod, p)}
+{aviso_sem_print(p)}{ligar_defeitos(p)}{quadro_quem_pode(mod, p)}
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo">{ant}{prox}</nav>
   </main>
@@ -1652,6 +1679,7 @@ MENUS_GQ_DESC = {
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
 ERROS = {}  # defeitos por tela (erros_tela.montar), preenchido em gerar()
+DEFEITO_LINK = {}  # id do defeito da versão nova -> (módulo, página 'Erros desta tela')
 NOVO = {}  # telas da versão nova por módulo (versao_nova.registro), preenchido em gerar()
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
 
