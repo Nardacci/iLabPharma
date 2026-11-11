@@ -38,6 +38,7 @@ import erros_tela  # noqa: E402
 import erros_novo  # noqa: E402
 import mapa_processos  # noqa: E402
 import inicio  # noqa: E402
+import processo_pagina  # noqa: E402
 import quem_pode  # noqa: E402
 import higiene  # noqa: E402
 import menus_gq  # noqa: E402
@@ -1182,6 +1183,9 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     (destino / "portal/telas.css").write_text(telas_devs.CSS, encoding="utf-8")
     print(f"Devs/QA: {sum(len(ts) for m in dados_telas for _, ts in m['menus'])} telas em {sum(1 for m in dados_telas if m['menus'])} módulos com inventário.")
     print(f"Erros da versão nova: {erros_novo.pagina(hom_, destino, ERROS, NOVO, cabecalho, rodape)} erros em erros-novo.html (e a entrada erros.html).")
+    _fichas = {x["id"]: {"titulo": x["titulo"], "grav": x["grav"]} for _m, _n, _its in erros_novo.carregar(hom_) for x in _its}
+    for _arq in sorted((hom_ / "transversal/processos").glob("*.json")):
+        print(f"Processo interativo: {processo_pagina.pagina(hom_, destino, _arq, cabecalho, rodape, _fichas)}")
     _slugs = {(m["id"], p["titulo"]): p["slug"] for m in MODULOS for p in m["paginas"]}
     _n, _f = mapa_processos.pagina(hom_, destino, cabecalho, rodape, lambda mid, t: (f"documentacao/{mid}/ideal.html" if (destino / "documentacao" / mid / "ideal.html").exists() else None) if t == "__ideal__" else (f"documentacao/{mid}/{_slugs[(mid, t)]}.html" if (mid, t) in _slugs else None))
     print(f"Mapa dos processos: {_n} processos, {_f} links de fluxo em processos.html.")

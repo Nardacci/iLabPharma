@@ -55,6 +55,7 @@ h+='<h3>O que o sistema precisa garantir (ideal)</h3>';
 if(x.lig.length)h+=x.lig.map(function(l){return '<div class="mp-lig"><b>'+esc(l.nome)+'</b> (prioridade '+esc(l.gravidade.toLowerCase())+')<br>'+esc(l.norma)+'<details><summary>Como era no legado</summary>'+esc(l.texto)+'</details></div>';}).join('');
 else h+='<p class="mp-vazio">Nenhuma ligação com outro processo apontada na análise; vale a norma acima.</p>';
 h+='<h3>Fluxos e referências</h3>';
+if(x.roteiro)h+='<p><a class="botao" href="'+esc(x.roteiro)+'">Abrir o roteiro interativo</a></p>';
 if(x.fluxos.length||x.ideais.length)h+='<div class="mp-fluxos">'+x.fluxos.map(function(f){return '<a class="botao" href="'+esc(f.href)+'">'+esc(f.titulo)+'</a>';}).join('')+x.ideais.map(function(f){return '<a class="botao" href="'+esc(f.href)+'">Ideal: '+esc(f.titulo)+'</a>';}).join('')+'</div>';
 else h+='<p class="mp-vazio">Ainda não há fluxo documentado para este processo.</p>';
 p.innerHTML=h;p.hidden=false;p.className='mp-painel c-'+x.cod;history.replaceState(null,'','#'+id);if(rolar)p.scrollIntoView({behavior:'smooth',block:'nearest'});}
@@ -83,7 +84,8 @@ def pagina(hom, destino, cabecalho, rodape, href_fluxo):
             if h:
                 ideais.append({"titulo": m, "href": h})
         dados.append({**{k: p[k] for k in ("id", "nome", "resumo", "modulos", "norma", "nota_novo")}, "novo_txt": txt, "cod": cod,
-                      "lig": [lig[i] for i in p["ligacoes"]], "fluxos": fl, "ideais": ideais})
+                      "lig": [lig[i] for i in p["ligacoes"]], "fluxos": fl, "ideais": ideais,
+                      "roteiro": f'processo-{p["roteiro"]}.html' if p.get("roteiro") and (Path(destino) / f'processo-{p["roteiro"]}.html').exists() else ""})
     por_id = {x["id"]: x for x in dados}
     areas = []
     for a in d["areas"]:
