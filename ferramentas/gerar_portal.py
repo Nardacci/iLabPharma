@@ -1535,7 +1535,7 @@ def ligar_defeitos(p):
         x = DEFEITO_LINK.get(i)
         return f"{x}#{i.lower()}" if x else None
 
-    corpo = re.sub(r"(<h[23][^>]*>)(DV-[A-Z]+(?:-N)?-\d+)(:.*?</h[23]>)",
+    corpo = re.sub(r"(<h[234][^>]*>)(DV-[A-Z]+(?:-N)?-\d+)(:.*?</h[234]>)",
                    lambda m: m.group(0) + (f'<p><a class="botao" href="{alvo(m.group(2))}">Ver a tela do erro, com as evidências</a></p>' if alvo(m.group(2)) else ""), corpo)
     corpo = re.sub(r"(<td[^>]*>)(DV-[A-Z]+(?:-N)?-\d+)(</td>)",
                    lambda m: m.group(1) + (f'<a href="{alvo(m.group(2))}">{m.group(2)}</a>' if alvo(m.group(2)) else m.group(2)) + m.group(3), corpo)
