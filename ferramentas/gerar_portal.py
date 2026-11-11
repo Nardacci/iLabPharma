@@ -302,7 +302,6 @@ MODULOS = [
         "situacao": "Em andamento", "nivel": 2,
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
-            ("versao-nova/defeitos-encontrados/defeitos-encontrados.md", "Defeitos encontrados (legado e versão nova)", "novo", "versao-nova/defeitos-encontrados/LabMedSys - Defeitos Encontrados.docx"),
             ("transversal/08-visao-dos-cinco-modulos.md", "Os cinco módulos: o negócio, a ANVISA e o que falta", "inicio", "transversal/LabMedSys - Visao dos Cinco Modulos.docx"),
             ("transversal/09-matriz-de-papeis-e-permissoes.md", "Matriz de papéis e permissões (como deve ser), versão 0.1", "inicio", "transversal/LabMedSys - Matriz de Papeis e Permissoes.docx"),
             ("transversal/05-precisa-de-voce-agora.md", "O que precisa de você agora", "inicio", None),
