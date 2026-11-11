@@ -44,7 +44,7 @@ JS = """
 (function(){
 var d=JSON.parse(document.getElementById('mp-dados').textContent),p=document.getElementById('mp-painel');
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function abrir(id,rolar){var x=d.processos.filter(function(a){return a.id===id})[0];if(!x)return;
+function abrir(id,rolar){var x=d.filter(function(a){return a.id===id})[0];if(!x)return;
 document.querySelectorAll('.mp-bloco').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===id?'true':'false');});
 var h='<h2>'+esc(x.nome)+'</h2><p>'+esc(x.resumo)+'</p>';
 h+='<p><b>Situação da corrente (legado):</b> '+esc(x.corrente_txt)+'<br><b>Versão nova:</b> '+esc(x.novo_txt)+(x.nota_novo?' — '+esc(x.nota_novo):'')+'</p>';
