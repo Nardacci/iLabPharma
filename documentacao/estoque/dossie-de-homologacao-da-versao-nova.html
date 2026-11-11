@@ -70,7 +70,7 @@
 </tr>
 <tr>
 <td>Fichas de defeito DV-EST-N</td>
-<td>36 fichas, com passos, esperado, obtido, impacto e evidência</td>
+<td>40 fichas, com passos, esperado, obtido, impacto e evidência</td>
 </tr>
 <tr>
 <td>Documentos do Legado</td>
@@ -310,7 +310,7 @@
 <h3 id="avaliacao-das-funcoes">Avaliação das funções</h3>
 <p>Não verificado na versão nova: depende da análise do código novo.</p>
 <h3 id="resumo-dos-riscos">Resumo dos riscos</h3>
-<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 10 defeitos de prioridade Alta (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
+<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 11 defeitos de prioridade Alta (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
 <ul>
 <li><strong>Perfil com todas as funções do Estoque</strong> recebe 403 até para leitura (N-001, confirmado na Fase 2 B); sem token ou com token adulterado, 401; telas abertas sem login levam ao login; só o administrador de perfil 1 usa o módulo. A <strong>separação de funções</strong> (quem recebe não autoriza, quem conta não ajusta) <strong>continua sem teste</strong>: a autorização do recebimento segue bloqueada por configuração do ambiente (<code>Integracoes:Principal:BaseUrl</code>).</li>
@@ -385,6 +385,11 @@
 <td>Gravação forçada (403 e 401), regras do lote no recebimento, trilha em 46 telas, queda de sessão e Sair; 3 defeitos novos (N-034 a N-036)</td>
 </tr>
 <tr>
+<td>Repetição guiada pelo código</td>
+<td>11/11/2026</td>
+<td>Com o front novo já publicado: repetidos N-002, N-004, N-005, N-006, N-007, N-009, N-029, N-030 e N-031 (cinco corrigidas ou fechadas); testadas as telas novas Aprovação de solicitação, Atendimento de solicitação e Entrada de material - outras; 4 defeitos novos (N-037 a N-040); 82 telas no menu, 29 reais e 52 provisórias</td>
+</tr>
+<tr>
 <td>Conferência da nuvem</td>
 <td>10/11/2026</td>
 <td>Revisão de segurança de 694 imagens (2 tarjadas); exclusão com justificativa conferida contra o legado (não é regressão); N-020 reclassificado; N-028 aberto</td>
@@ -416,6 +421,26 @@
 <td>Alta</td>
 <td>Um perfil com <strong>todas as funções do Estoque</strong> recebe 403 em toda rota, até para ler; só o administrador usa o módulo</td>
 <td>N-001</td>
+</tr>
+<tr>
+<td>Alta</td>
+<td><strong>Entrada de material - outras</strong> grava o lote com validade vencida e abre a análise do CQ, mas responde erro de integração com o CQ</td>
+<td>N-037</td>
+</tr>
+<tr>
+<td>Média</td>
+<td>Aprovação e cancelamento da aprovação de solicitação e o atendimento <strong>não deixam rastro no histórico</strong>; o mesmo usuário aprova a própria solicitação (confirmado na tela nova); cancelar a aprovação não pede justificativa</td>
+<td>N-038, N-029</td>
+</tr>
+<tr>
+<td>Média</td>
+<td>O relatório Insumos Reprovados não concorda com a Disponibilidade do lote (a confirmar)</td>
+<td>N-039</td>
+</tr>
+<tr>
+<td>Baixa</td>
+<td>Em Entrada de material - outras, PESQUISAR sem filtro não faz nada e não avisa</td>
+<td>N-040</td>
 </tr>
 <tr>
 <td>Alta</td>
@@ -499,6 +524,7 @@
 </tr>
 </tbody>
 </table></div>
+<p><strong>Corrigidas ou fechadas (verificadas em 09 e 11/11/2026):</strong> N-005 (reabrir o recebimento não dá mais erro 500), N-006 (conferência de recebimento não finalizado agora é recusada), N-007 (a Disponibilidade de Estoque lista itens), N-031 (Entrada de material - outras está real) e N-002 (fechada em favor da N-019: a rota recebe login e senha; o bloqueio é de configuração do ambiente). N-004: tentativas novas de misturar itens no mesmo endereço são recusadas; o dado antigo continua gravado.</p>
 <p><strong>Bloqueado no teste (ambiente/dados).</strong> O <strong>laudo do CQ</strong> continua sem teste pelo caminho completo: o endereçamento não finaliza porque a conferência dá erro (N-012). O CQ passou a ter 3 análises (geradas fora da rodada), uma delas de lote com validade vencida; o servidor recusa (404) gravar laudo e liberar lote pelo Estoque. O código mostra que a análise nasce quando o endereçamento da <strong>nota</strong> é finalizado (nota conferida e todos os itens endereçados); a massa foi endereçada lote a lote pela API e nunca finalizada, e a conferência, que seria o primeiro passo do caminho completo, responde 400 (N-012). A ficha N-020 foi reclassificada de Alta para <strong>Bloqueado no teste</strong>; se, com a conferência funcionando, a finalização não gerar a análise, abre-se defeito funcional Alta.</p>
 <h3 id="regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</h3>
 <ul>
@@ -567,6 +593,11 @@
 <td>DV-EST-N-034</td>
 <td>O recebimento aceita fornecedor reprovado e lote com validade vencida, e finaliza o recebimento</td>
 <td>Recebimento de Material (rota da API; tela provisória)</td>
+</tr>
+<tr>
+<td>DV-EST-N-037</td>
+<td>Entrada de Material - Outras grava o lote com validade vencida e abre a análise do CQ, mas responde "Erro na integração com o módulo do CQ." (409)</td>
+<td>Entrada de Material - Outras (tela real desde 11/11/2026; chamada da A</td>
 </tr>
 </tbody>
 </table></div>
@@ -797,6 +828,30 @@
 <td>Baixa</td>
 <td>Almoxarifado (conta sem acesso); Item (justificativa vazia)</td>
 </tr>
+<tr>
+<td>DV-EST-N-037</td>
+<td>Entrada de Material - Outras grava o lote com validade vencida e abre a análise do CQ, mas responde "Erro na integração com o módulo do CQ." (409)</td>
+<td>Alta</td>
+<td>Entrada de Material - Outras (tela real desde 11/11/2026; chamada da A</td>
+</tr>
+<tr>
+<td>DV-EST-N-038</td>
+<td>Aprovação de solicitação (aprovar e cancelar a aprovação) e Atendimento não deixam registro no histórico nem pedem justificativa</td>
+<td>Média</td>
+<td>Aprovação de Solicitação e Atendimento de Solicitação (telas novas)</td>
+</tr>
+<tr>
+<td>DV-EST-N-039</td>
+<td>O relatório Insumos Reprovados (RM36) e a Disponibilidade do Lote não concordam sobre quais lotes estão reprovados</td>
+<td>Média</td>
+<td>Relatório Insumos Reprovados (RM36) e Disponibilidade do Lote</td>
+</tr>
+<tr>
+<td>DV-EST-N-040</td>
+<td>Em Entrada de Material - Outras, PESQUISAR sem filtro não faz nada e não avisa</td>
+<td>Baixa</td>
+<td>Entrada de Material - Outras</td>
+</tr>
 </tbody>
 </table></div>
 <p>Fichas completas, com passos, esperado, obtido e evidência, em <code>homologacao/versao-nova/3.estoque/defeitos/</code>.</p>
@@ -858,7 +913,7 @@
 <div class="callout">
 <p class="callout-titulo">Sem veredito novo</p>
 <p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo está <strong>muito incompleto</strong>: das 93 entradas do menu, <strong>68 são telas provisórias</strong> e só 25 funcionam. O caminho do lote (Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Saída, Remessa, Inventário) <strong>não pôde ser percorrido pelas telas</strong>, e por isso o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
-<p>Fotografia do módulo na versão nova: 36 defeitos registrados, 10 de prioridade Alta. Não há veredito de "apto".</p>
+<p>Fotografia do módulo na versão nova: 40 defeitos registrados, 11 de prioridade Alta. Não há veredito de "apto".</p>
 </div>
 <h2 id="fechamento-do-modulo">Fechamento do módulo</h2>
 <h3 id="o-que-foi-concluido">O que foi concluído</h3>
