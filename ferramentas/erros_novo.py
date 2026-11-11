@@ -48,7 +48,7 @@ main.conteudo{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem}
 """
 JS = """
 document.querySelectorAll('[data-abrir]').forEach(function(b){b.addEventListener('click',function(){
- var v=b.getAttribute('data-abrir')==='1';document.querySelectorAll('details.en-mod,details.en-ficha').forEach(function(d){d.open=v;});});});
+ var v=b.getAttribute('data-abrir')==='1';document.querySelectorAll('details.en-mod').forEach(function(d){d.open=v;});});});
 """
 
 
@@ -104,16 +104,16 @@ def links(erros, novo):
     return out
 
 
-def ficha(x, lig):
+def corpo_ficha(x, lig):
     a = lig.get(x["id"])
-    ver = f'<p><a class="botao" href="{a}#{x["id"].lower()}">Ver a tela do erro, com as evidências</a></p>' if a else ""
+    ver = f'<p><a class="botao" href="../{a}#{x["id"].lower()}">Ver a tela do erro, com as evidências</a></p>' if a else ""
     meta = " · ".join(f"<b>{E(k)}:</b> {E(x['cab'][k])}" for k in CAMPOS if x["cab"].get(k))
     corpo = "".join(f'<p class="en-rot">{E(t)}</p>{md(c)}' for t, c in x["sec"])
-    return (f'<details class="en-ficha" id="{x["id"].lower()}"><summary><span class="en-grav" style="--cor:{COR[x["grav"]]}">{E(x["grav"])}</span>{E(x["id"])} · {E(x["titulo"])}</summary>'
-            f'<div class="en-in"><p class="en-meta">{meta}</p>{ver}{corpo}</div></details>')
+    return (f'<p class="en-meta"><span class="en-grav" style="--cor:{COR[x["grav"]]}">{E(x["grav"])}</span> {meta}</p>{ver}{corpo}')
 
 
 def pagina(hom, destino, erros, novo, cabecalho, rodape):
+    """Uma lista só (erros-novo.html, por módulo, com tabela) e uma página por erro (erros-novo/<id>.html) com a ficha e o botão das evidências."""
     dados = carregar(hom)
     lig = links(erros, novo)
     total = sum(len(i) for _, _, i in dados)
@@ -125,25 +125,28 @@ def pagina(hom, destino, erros, novo, cabecalho, rodape):
         d.mkdir(parents=True, exist_ok=True)
         shutil.copy2(word_src, d / WORD)
         word = f'<a class="botao" href="documentacao/arquivos/erros-novo/{WORD.replace(" ", "%20")}" download>⤓ Baixar em Word</a>'
+    pasta = Path(destino) / "erros-novo"
+    pasta.mkdir(exist_ok=True)
     secs = []
     for mid, nome, itens in dados:
         c = {k: sum(1 for x in itens if x["grav"] == k) for k in ORDEM}
         resumo = ", ".join(f"{n} {k}" for k, n in c.items() if n)
         tab = ('<table class="en-tab"><thead><tr><th>Defeito</th><th>Gravidade</th><th>Tela</th><th>Título</th></tr></thead><tbody>'
-               + "".join(f'<tr><td><a href="#{x["id"].lower()}">{E(x["id"])}</a></td><td>{E(x["grav"])}</td><td>{E(x["cab"].get("Tela") or "—")}</td><td>{E(x["titulo"])}</td></tr>' for x in itens) + "</tbody></table>")
-        secs.append(f'<details class="en-mod" id="{mid}" open><summary>{E(nome)}<small>{len(itens)} erros · {E(resumo)}</small></summary><div class="en-corpo">{tab}'
-                    + "".join(ficha(x, lig) for x in itens) + "</div></details>")
+               + "".join(f'<tr><td><a href="erros-novo/{x["id"].lower()}.html">{E(x["id"])}</a></td><td>{E(x["grav"])}</td><td>{E(x["cab"].get("Tela") or "—")}</td><td>{E(x["titulo"])}</td></tr>' for x in itens) + "</tbody></table>")
+        secs.append(f'<details class="en-mod" id="{mid}" open><summary>{E(nome)}<small>{len(itens)} erros · {E(resumo)}</small></summary><div class="en-corpo">{tab}</div></details>')
+        for x in itens:
+            c2 = (f'<main class="conteudo" id="conteudo"><p><a href="../erros-novo.html#{mid}">← Erros: {E(nome)}</a></p><h1>{E(x["id"])}: {E(x["titulo"])}</h1>'
+                  f'<p class="en-meta">Versão nova · {E(nome)}</p>{corpo_ficha(x, lig)}</main>')
+            (pasta / f'{x["id"].lower()}.html').write_text(
+                cabecalho(f'{x["id"]}: {x["titulo"]}', "../").replace("</head>", f"<style>{CSS}</style></head>") + c2 + rodape("../"), encoding="utf-8")
     corpo = (f'<main class="conteudo" id="conteudo"><h1>Erros encontrados na versão nova</h1>'
-             f'<p>Todos os erros encontrados nos testes de tela da versão nova (de 17/10 a 11/11/2026), módulo a módulo. O ambiente de teste só tem informação fictícia. Cada erro traz o que fazer para reproduzir, o que era esperado, o que aconteceu e o impacto, e leva à tela do erro, com as evidências. Tela provisória (ainda por construir) não é erro.</p>'
+             f'<p>Todos os erros encontrados nos testes de tela da versão nova (de 17/10 a 11/11/2026), módulo a módulo. O ambiente de teste só tem informação fictícia. Clique no defeito para ver o que fazer para reproduzir, o que era esperado, o que aconteceu e o impacto, e o botão para a tela do erro, com as evidências. Tela provisória (ainda por construir) não é erro.</p>'
              f'<p><b>{total} erros:</b> ' + ", ".join(f"{n} {k}" for k, n in tg.items() if n) + '.</p>'
-             f'<div class="en-topo"><button class="botao" type="button" data-abrir="1">Abrir tudo</button><button class="botao" type="button" data-abrir="0">Fechar tudo</button>{word}'
-             f'<a class="botao" href="erros.html">← Erros</a></div>{"".join(secs)}</main>')
+             f'<div class="en-topo"><button class="botao" type="button" data-abrir="1">Abrir tudo</button><button class="botao" type="button" data-abrir="0">Fechar tudo</button>{word}</div>{"".join(secs)}</main>')
     (Path(destino) / "erros-novo.html").write_text(
-        cabecalho("Erros encontrados na versão nova", "") .replace("</head>", f"<style>{CSS}</style></head>") + corpo + rodape("").replace("</body>", f"<script>{JS}</script></body>"), encoding="utf-8")
-
-    cards = "".join(f'<a class="en-card" href="erros-novo.html#{mid}"><b>{len(i)}</b>{E(nome)}</a>' for mid, nome, i in dados)
-    entrada = (f'<main class="conteudo" id="conteudo"><h1>Erros</h1><p>Os erros encontrados nos testes da <b>versão nova</b> do sistema, reunidos numa só página, módulo a módulo.</p>'
-               f'<p><a class="botao en-grande" href="erros-novo.html">Erros</a></p><div class="en-cards">{cards}</div></main>')
+        cabecalho("Erros encontrados na versão nova", "").replace("</head>", f"<style>{CSS}</style></head>") + corpo + rodape("").replace("</body>", f"<script>{JS}</script></body>"), encoding="utf-8")
+    # a página de entrada antiga (com cartões) só leva à lista, para o endereço publicado continuar funcionando
     (Path(destino) / "erros.html").write_text(
-        cabecalho("Erros", "").replace("</head>", f"<style>{CSS}</style></head>") + entrada + rodape(""), encoding="utf-8")
+        '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0; url=erros-novo.html"><title>Erros</title>'
+        '<link rel="canonical" href="erros-novo.html"></head><body><p><a href="erros-novo.html">Erros encontrados na versão nova</a></p></body></html>', encoding="utf-8")
     return total
