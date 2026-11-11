@@ -22,7 +22,7 @@ MODS = [("principal", "Principal", "1.principal", "PRI"), ("estoque", "Estoque",
         ("garantia-qualidade", "Garantia da Qualidade", "5.garantia_qualidade", "GQ"), ("controle-documentos", "Controle de Documentos", "6.controle_documento", "DOC")]
 ORDEM = {"Crítica": 0, "Alta": 1, "Média": 2, "Baixa": 3, "A confirmar": 4}
 COR = {"Crítica": "#7a1020", "Alta": "#b3261e", "Média": "#b26a00", "Baixa": "#3f6aa0", "A confirmar": "#5b6472"}
-CAMPOS = ["Tipo", "Tela", "Classe na versão nova", "Rodada"]
+CAMPOS = ["Situação", "Tipo", "Tela", "Classe na versão nova", "Rodada"]
 SECOES = ("Passos para reproduzir", "Passos observados", "Esperado", "Obtido", "Impacto", "Onde ver o caso")
 WORD = "LabMedSys - Defeitos Encontrados na Versao Nova.docx"
 CSS = """
@@ -116,6 +116,11 @@ def links(erros, novo):
     return out
 
 
+def _fechado(x):
+    sit = (x["cab"].get("Situação") or "")
+    return f' <i>({E(sit.split("(")[0].strip().lower())})</i>' if re.match(r"(Corrigid|Fechad)", sit) else ""
+
+
 def _curto(txt):
     return txt.split(":")[0].split(" (")[0]
 
@@ -169,7 +174,7 @@ def pagina(hom, destino, erros, novo, cabecalho, rodape):
         c = {k: sum(1 for x in itens if x["grav"] == k) for k in ORDEM}
         resumo = ", ".join(f"{n} {k}" for k, n in c.items() if n)
         tab = ('<table class="en-tab"><thead><tr><th>Defeito</th><th>Gravidade</th><th>Tela</th><th>Título</th><th>Erro novo?</th><th>No legado?</th><th>Contraria a norma?</th></tr></thead><tbody>'
-               + "".join(f'<tr><td><a href="erros-novo/{x["id"].lower()}.html">{E(x["id"])}</a></td><td>{E(x["grav"])}</td><td>{E(x["cab"].get("Tela") or "—")}</td><td>{E(x["titulo"])}</td>{_celulas(CLASS.get(x["id"]))}</tr>' for x in itens) + "</tbody></table>")
+               + "".join(f'<tr><td><a href="erros-novo/{x["id"].lower()}.html">{E(x["id"])}</a></td><td>{E(x["grav"])}</td><td>{E(x["cab"].get("Tela") or "—")}</td><td>{E(x["titulo"])}{_fechado(x)}</td>{_celulas(CLASS.get(x["id"]))}</tr>' for x in itens) + "</tbody></table>")
         secs.append(f'<details class="en-mod" id="{mid}" open><summary>{E(nome)}<small>{len(itens)} erros · {E(resumo)}</small></summary><div class="en-corpo">{tab}</div></details>')
         for x in itens:
             c2 = (f'<main class="conteudo" id="conteudo"><p><a href="../erros-novo.html#{mid}">← Erros: {E(nome)}</a></p><h1>{E(x["id"])}: {E(x["titulo"])}</h1>'
