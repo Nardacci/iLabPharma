@@ -25,6 +25,9 @@ CAMPOS = ["Tipo", "Tela", "Classe na versão nova", "Rodada"]
 SECOES = ("Passos para reproduzir", "Passos observados", "Esperado", "Obtido", "Impacto", "Onde ver o caso")
 WORD = "LabMedSys - Defeitos Encontrados na Versao Nova.docx"
 CSS = """
+main.conteudo{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem}
+.en-card{color:inherit;text-decoration:none}
+.en-card:hover{border-color:#f57c00}
 .en-topo{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin:1rem 0}
 .en-mod{margin:1.2rem 0;border:1px solid var(--borda,#d9dee6);border-radius:12px;background:var(--cartao,transparent)}
 .en-mod>summary{cursor:pointer;padding:.9rem 1.1rem;font-weight:700;font-size:1.15rem;list-style:none}
