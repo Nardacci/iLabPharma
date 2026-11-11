@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DV-PRI-N-035: A API não confere as funções do perfil nas 13 telas de Administração e Cadastros: quem só tem consulta lê e grava</title>
+<meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../portal/portal.css?v=ef743450">
+<link rel="stylesheet" href="../portal/erros.css">
+<script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<style>
+main.conteudo{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem}
+.en-card{color:inherit;text-decoration:none}
+.en-card:hover{border-color:#f57c00}
+.en-topo{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin:1rem 0}
+.en-mod{margin:1.2rem 0;border:1px solid var(--borda,#d9dee6);border-radius:12px;background:var(--cartao,transparent)}
+.en-mod>summary{cursor:pointer;padding:.9rem 1.1rem;font-weight:700;font-size:1.15rem;list-style:none}
+.en-mod>summary small{font-weight:500;opacity:.75;margin-left:.5rem}
+.en-corpo{padding:0 1.1rem 1rem}
+.en-tab{width:100%;border-collapse:collapse;margin:.5rem 0 1rem;font-size:.92rem}
+.en-tab th,.en-tab td{padding:.4rem .55rem;border-bottom:1px solid var(--borda,#d9dee6);text-align:left;vertical-align:top}
+.en-ficha{border:1px solid var(--borda,#d9dee6);border-radius:10px;margin:.5rem 0}
+.en-ficha>summary{cursor:pointer;padding:.65rem .9rem;font-weight:600;list-style:none}
+.en-ficha .en-in{padding:0 .9rem .9rem}
+.en-grav{display:inline-block;padding:.05rem .5rem;border-radius:999px;color:#fff;font-size:.78rem;margin-right:.4rem;background:var(--cor)}
+.en-meta{font-size:.88rem;opacity:.85;margin:.2rem 0 .6rem}
+.en-rot{font-weight:700;margin:.8rem 0 .2rem}
+.en-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.9rem;margin:1.2rem 0}
+.en-card{border:1px solid var(--borda,#d9dee6);border-radius:12px;padding:1rem}
+.en-card b{font-size:1.6rem;display:block}
+.en-grande{font-size:1.15rem;padding:.9rem 2rem}
+</style></head>
+<body data-raiz="../">
+<header class="topo">
+  <a class="marca" href="../index.html" aria-label="iLabMedSys, página inicial"><img src="../assets/ilabmedsys-logo.svg" alt="iLabMedSys"></a>
+  <nav class="topo-nav" aria-label="Principal">
+    <a href="../index.html#modulos">Módulos</a>
+    <a href="../biblioteca.html">Biblioteca</a>
+    <a href="../telas.html">Devs/QA</a>
+    <a href="../index.html#publicos">Por público</a>
+    <a href="../anvisa.html">ANVISA</a>
+    <a href="../cronograma.html">Cronograma</a>
+    <a href="../apresentacao.html">Apresentação</a>
+  </nav>
+  <div class="topo-acoes">
+    <label class="busca"><span aria-hidden="true">⌕</span><input id="busca" type="search" placeholder="Buscar documento, regra, tela…" aria-label="Buscar na documentação" autocomplete="off"></label>
+    <button class="tema" id="tema" type="button" aria-label="Alternar tema claro e escuro">☾</button>
+  </div>
+  <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
+</header>
+<main class="conteudo" id="conteudo"><p><a href="../erros-novo.html#principal">← Erros: Principal</a></p><h1>DV-PRI-N-035: A API não confere as funções do perfil nas 13 telas de Administração e Cadastros: quem só tem consulta lê e grava</h1><p class="en-meta">Versão nova · Principal</p><p class="en-meta"><span class="en-grav" style="--cor:#b3261e">Alta</span> <b>Tipo:</b> acesso/segurança · <b>Tela:</b> Pontos de água; Instrumentos; Utilidades; Utensílios; Categoria de equipamento; Local físico; Conta contábil; Conta gerencial; Grupo de usuários; Funções profissionais; Notificações padrão; Configurar notificação · <b>Classe na versão nova:</b> Igual ao legado em essência: a rodada 3 registra &quot;Igual (N-011, ampliado)&quot; (a API do Principal não confere função; o DV-PRI-025 do legado já mostrava telas abrindo pelo endereço sem permissão) · <b>Rodada:</b> 3 (18/10/2026)</p><p><a class="botao" href="../documentacao/novo/principal/grupo-de-usuarios-erros.html#dv-pri-n-035">Ver a tela do erro, com as evidências</a></p><p class="en-rot">Passos para reproduzir</p><ol>
+<li>Entrar com o usuário de teste <code>t.consulta</code>, cujo perfil (<code>0.T.TESTE_CONSULTA</code>) tem o menu só com Perfil, Profissional e Conta usuário e nenhuma ação marcada. Nenhuma das 13 telas está no menu dele.</li>
+<li>Com a sessão desse usuário, chamar pela API a leitura (GET) de pontos de água, instrumentos, utilidades, utensílios, categorias de equipamento, locais físicos, contas contábeis, contas gerenciais, grupos de usuário, funções profissionais, notificações padrão, tipos de evento e configuração de notificação.</li>
+<li>Com a mesma sessão, gravar (POST) uma função profissional e um grupo de usuários.</li>
+<li>Digitar no navegador o endereço das telas de Funções profissionais, Grupo de usuários, Contas gerenciais, Pontos de água, Notificação padrão e Configurar notificação.
+Passos completos: ver <code>execucao/2026-10-18-rodada-3/confidencial-rodada-3.md</code>, seção 1.</li>
+</ol><p class="en-rot">Esperado</p><p>A API confere a função (tela e ação) em cada rota: quem só tem consulta (ou nada) não lê as telas fora do menu e não grava.</p><p class="en-rot">Obtido (o que a tela ou a API mostrou)</p><p><strong>Leitura:</strong> 200 em todas as telas listadas, com os dados (por exemplo 41 funções, 21 contas contábeis, 10 notificações padrão). <strong>Gravação:</strong> a criação de uma função profissional respondeu 201 (função de id 44, "T. CRIADA VIA CONSULTA") e a de um grupo de usuários respondeu 201 (grupo "TCONS"). <strong>Telas abertas pelo endereço</strong> abrem todas: nas listas os botões PESQUISAR e Incluir aparecem desabilitados e, no Grupo, o SALVAR aparece desabilitado; em Notificação padrão e em Configurar notificação o botão SALVAR está ativo. O que a tela mostra desabilitado não é o que o servidor impõe. A gravação das notificações não foi executada com esse usuário; que ela também passaria é <strong>inferência</strong>.</p><p class="en-rot">Impacto</p><p>Um usuário só de consulta pode, pela API, criar funções e grupos (que dão acesso e atribuições) e, por inferência, mudar quem recebe avisos regulatórios. Fere o controle de acesso por perfil, base da rastreabilidade de quem pode fazer o quê.</p></main><footer class="rodape">
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 11/11/2026</div>
+  <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
+</footer>
+<script src="../portal/portal.js"></script>
+</body></html>
