@@ -37,6 +37,7 @@ import biblioteca  # noqa: E402
 import erros_tela  # noqa: E402
 import erros_novo  # noqa: E402
 import mapa_processos  # noqa: E402
+import inicio  # noqa: E402
 import quem_pode  # noqa: E402
 import higiene  # noqa: E402
 import menus_gq  # noqa: E402
@@ -1086,7 +1087,10 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         for sit in ("index", "legado", "novo", "ideal"):
             (pasta / f"{sit}.html").write_text(pagina_modulo(mod, sit), encoding="utf-8")
 
-    (destino / "index.html").write_text(pagina_inicial(origem), encoding="utf-8")
+    # A página principal de antes (dashboard) passa a ser dashboard.html; o index.html é o menu de entrada do portal
+    _dash = pagina_inicial(origem)
+    (destino / "dashboard.html").write_text(_dash, encoding="utf-8")
+    (destino / "index.html").write_text(inicio.pagina(cabecalho, rodape), encoding="utf-8")
     (destino / "anvisa.html").write_text(pagina_anvisa(origem, busca), encoding="utf-8")
     # Biblioteca: metadados com fonte única em homologacao/biblioteca-metadados.csv
     nomes = {m["id"]: m["nome"] for m in MODULOS}
