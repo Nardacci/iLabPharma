@@ -18,6 +18,7 @@ import higiene
 
 E = html.escape
 MODS = [("principal", "Principal", "1.principal", "PRI"), ("estoque", "Estoque", "3.estoque", "EST"),
+        ("controle-qualidade", "Controle da Qualidade", "4.controle_qualidade", "CQ"),
         ("garantia-qualidade", "Garantia da Qualidade", "5.garantia_qualidade", "GQ"), ("controle-documentos", "Controle de Documentos", "6.controle_documento", "DOC")]
 ORDEM = {"Crítica": 0, "Alta": 1, "Média": 2, "Baixa": 3, "A confirmar": 4}
 COR = {"Crítica": "#7a1020", "Alta": "#b3261e", "Média": "#b26a00", "Baixa": "#3f6aa0", "A confirmar": "#5b6472"}
