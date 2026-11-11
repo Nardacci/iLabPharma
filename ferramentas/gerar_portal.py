@@ -35,6 +35,7 @@ import markdown
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import biblioteca  # noqa: E402
 import erros_tela  # noqa: E402
+import erros_novo  # noqa: E402
 import quem_pode  # noqa: E402
 import higiene  # noqa: E402
 import menus_gq  # noqa: E402
@@ -1061,16 +1062,6 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         print(f"Equivalência de telas: {erros_tela.atualizar_equivalencia(hom_, ERROS, NOVO)} linha(s) acrescentada(s) a {erros_tela.CSV_NOME} (em {hom_}).")
         ERROS.clear()
         ERROS.update(erros_tela.montar(hom_, NOVO))
-    DEFEITO_LINK.clear()
-    for (_v, _m), _d in ERROS.items():
-        if _m not in NOVO:
-            continue
-        _ref = (lambda f: f"../novo/{_m}/{f}") if _v == "novo" else (lambda f: f"../{_m}/erros-{f}")
-        for _t in NOVO[_m]["telas"]:
-            for _x in _d["por_tela"].get(_t["chave"], []):
-                DEFEITO_LINK.setdefault(_x["id"], _ref(f"{_t['slug']}-erros.html" if _v == "novo" else f"{_t['slug']}.html"))
-        for _x in _d["sem"]:
-            DEFEITO_LINK.setdefault(_x["id"], _ref("sem-tela-erros.html" if _v == "novo" else "sem-tela.html"))
     for (_v, _m), _d in sorted(ERROS.items()):
         _lig = _d["total"] - len(_d["sem"])
         print(f"Erros por tela · {_v} · {_m}: {_lig} de {_d['total']} defeitos ligados a uma tela; {len(_d['sem'])} sem tela.")
@@ -1186,6 +1177,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     (destino / "telas.html").write_text(telas_devs.pagina(dados_telas, cabecalho, rodape, arvore_novo, tot_v, tot_n), encoding="utf-8")
     (destino / "portal/telas.css").write_text(telas_devs.CSS, encoding="utf-8")
     print(f"Devs/QA: {sum(len(ts) for m in dados_telas for _, ts in m['menus'])} telas em {sum(1 for m in dados_telas if m['menus'])} módulos com inventário.")
+    print(f"Erros da versão nova: {erros_novo.pagina(hom_, destino, ERROS, NOVO, cabecalho, rodape)} erros em erros-novo.html (e a entrada erros.html).")
     cron = pagina_cronograma(origem)
     if cron:
         (destino / "cronograma.html").write_text(cron, encoding="utf-8")
@@ -1525,23 +1517,6 @@ def aviso_sem_print(p):
             'forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>\n')
 
 
-def ligar_defeitos(p):
-    """Na página "Defeitos encontrados na versão nova": cada defeito ganha o link para a página "Erros desta tela" (passos, evidências e capturas)."""
-    corpo = p["corpo"]
-    if not p["arq"].endswith("defeitos-encontrados/defeitos-encontrados.md"):
-        return corpo
-
-    def alvo(i):
-        x = DEFEITO_LINK.get(i)
-        return f"{x}#{i.lower()}" if x else None
-
-    corpo = re.sub(r"(<h[234][^>]*>)(DV-[A-Z]+(?:-N)?-\d+)(:.*?</h[234]>)",
-                   lambda m: m.group(0) + (f'<p><a class="botao" href="{alvo(m.group(2))}">Ver a tela do erro, com as evidências</a></p>' if alvo(m.group(2)) else ""), corpo)
-    corpo = re.sub(r"(<td[^>]*>)(DV-[A-Z]+(?:-N)?-\d+)(</td>)",
-                   lambda m: m.group(1) + (f'<a href="{alvo(m.group(2))}">{m.group(2)}</a>' if alvo(m.group(2)) else m.group(2)) + m.group(3), corpo)
-    return corpo
-
-
 def pagina_documento(mod, p):
     raiz = "../../"
     barra_v, versao_pag = barra_versao(mod, p)
@@ -1594,7 +1569,7 @@ def pagina_documento(mod, p):
     </header>
     {barra_v}{abas}
     <article class="texto{' texto-largo' if p.get('aba') else ''}">
-{aviso_sem_print(p)}{ligar_defeitos(p)}{quadro_quem_pode(mod, p)}
+{aviso_sem_print(p)}{p['corpo']}{quadro_quem_pode(mod, p)}
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo">{ant}{prox}</nav>
   </main>
@@ -1680,7 +1655,6 @@ MENUS_GQ_DESC = {
 }
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
 ERROS = {}  # defeitos por tela (erros_tela.montar), preenchido em gerar()
-DEFEITO_LINK = {}  # id do defeito da versão nova -> (módulo, página 'Erros desta tela')
 NOVO = {}  # telas da versão nova por módulo (versao_nova.registro), preenchido em gerar()
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
 
