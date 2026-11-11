@@ -41,6 +41,8 @@ main.conteudo{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem}
 .en-grav{display:inline-block;padding:.05rem .5rem;border-radius:999px;color:#fff;font-size:.78rem;margin-right:.4rem;background:var(--cor)}
 .en-meta{font-size:.88rem;opacity:.85;margin:.2rem 0 .6rem}
 .en-rot{font-weight:700;margin:.8rem 0 .2rem}
+.en-class{margin:.6rem 0;padding:.5rem .8rem;border-left:5px solid #7c3aed;background:color-mix(in srgb,#7c3aed 7%,transparent);border-radius:6px}
+.en-lista{margin:.2rem 0;padding-left:1.1rem}
 .en-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.9rem;margin:1.2rem 0}
 .en-card{border:1px solid var(--borda,#d9dee6);border-radius:12px;padding:1rem}
 .en-card b{font-size:1.6rem;display:block}
@@ -81,6 +83,15 @@ def ler(f):
     return dict(id=m.group(1), titulo=m.group(2).strip(), grav=grav(cab["Gravidade"]), cab=cab, sec=sec)
 
 
+def classificacao(hom):
+    import csv
+    arq = Path(hom) / "versao-nova/classificacao-erros.csv"
+    if not arq.exists():
+        return {}
+    with open(arq, encoding="utf-8-sig") as f:
+        return {r["id"]: r for r in csv.DictReader(f, delimiter=";")}
+
+
 def carregar(hom):
     out = []
     for mid, nome, pasta, sigla in MODS:
@@ -104,16 +115,41 @@ def links(erros, novo):
     return out
 
 
+def _curto(txt):
+    return txt.split(":")[0].split(" (")[0]
+
+
+def _celulas(c):
+    if not c:
+        return "<td>—</td><td>—</td><td>—</td>"
+    return f'<td>{E(_curto(c["erro_novo"]))}</td><td>{E(_curto(c["tambem_no_legado"]))}</td><td>{E(c["contraria_norma"])}</td>'
+
+
+def bloco_classificacao(c):
+    if not c:
+        return ""
+    art = f' <i>({E(c["artigo"])})</i>' if c["artigo"] else ""
+    return (f'<div class="en-class"><p class="en-rot">Classificação do erro</p><ul class="en-lista">'
+            f'<li><b>É um erro novo?</b> {E(c["erro_novo"])}</li><li><b>Também acontece no legado?</b> {E(c["tambem_no_legado"])}</li>'
+            f'<li><b>Contraria a norma da ANVISA?</b> {E(c["contraria_norma"])}{art}</li></ul>'
+            f'<p class="en-meta">Leitura da homologação, a confirmar com a Qualidade.</p></div>')
+
+
 def corpo_ficha(x, lig):
     a = lig.get(x["id"])
     ver = f'<p><a class="botao" href="../{a}#{x["id"].lower()}">Ver a tela do erro, com as evidências</a></p>' if a else ""
     meta = " · ".join(f"<b>{E(k)}:</b> {E(x['cab'][k])}" for k in CAMPOS if x["cab"].get(k))
     corpo = "".join(f'<p class="en-rot">{E(t)}</p>{md(c)}' for t, c in x["sec"])
-    return (f'<p class="en-meta"><span class="en-grav" style="--cor:{COR[x["grav"]]}">{E(x["grav"])}</span> {meta}</p>{ver}{corpo}')
+    return (f'<p class="en-meta"><span class="en-grav" style="--cor:{COR[x["grav"]]}">{E(x["grav"])}</span> {meta}</p>{bloco_classificacao(CLASS.get(x["id"]))}{ver}{corpo}')
+
+
+CLASS = {}
 
 
 def pagina(hom, destino, erros, novo, cabecalho, rodape):
     """Uma lista só (erros-novo.html, por módulo, com tabela) e uma página por erro (erros-novo/<id>.html) com a ficha e o botão das evidências."""
+    CLASS.clear()
+    CLASS.update(classificacao(hom))
     dados = carregar(hom)
     lig = links(erros, novo)
     total = sum(len(i) for _, _, i in dados)
@@ -131,8 +167,8 @@ def pagina(hom, destino, erros, novo, cabecalho, rodape):
     for mid, nome, itens in dados:
         c = {k: sum(1 for x in itens if x["grav"] == k) for k in ORDEM}
         resumo = ", ".join(f"{n} {k}" for k, n in c.items() if n)
-        tab = ('<table class="en-tab"><thead><tr><th>Defeito</th><th>Gravidade</th><th>Tela</th><th>Título</th></tr></thead><tbody>'
-               + "".join(f'<tr><td><a href="erros-novo/{x["id"].lower()}.html">{E(x["id"])}</a></td><td>{E(x["grav"])}</td><td>{E(x["cab"].get("Tela") or "—")}</td><td>{E(x["titulo"])}</td></tr>' for x in itens) + "</tbody></table>")
+        tab = ('<table class="en-tab"><thead><tr><th>Defeito</th><th>Gravidade</th><th>Tela</th><th>Título</th><th>Erro novo?</th><th>No legado?</th><th>Contraria a norma?</th></tr></thead><tbody>'
+               + "".join(f'<tr><td><a href="erros-novo/{x["id"].lower()}.html">{E(x["id"])}</a></td><td>{E(x["grav"])}</td><td>{E(x["cab"].get("Tela") or "—")}</td><td>{E(x["titulo"])}</td>{_celulas(CLASS.get(x["id"]))}</tr>' for x in itens) + "</tbody></table>")
         secs.append(f'<details class="en-mod" id="{mid}" open><summary>{E(nome)}<small>{len(itens)} erros · {E(resumo)}</small></summary><div class="en-corpo">{tab}</div></details>')
         for x in itens:
             c2 = (f'<main class="conteudo" id="conteudo"><p><a href="../erros-novo.html#{mid}">← Erros: {E(nome)}</a></p><h1>{E(x["id"])}: {E(x["titulo"])}</h1>'
