@@ -249,7 +249,7 @@ def pagina(dados, cabecalho, rodape, arvore_novo="", total_validadas=0, total_no
     <label class="td-f" data-so-versao="novo" hidden><span>Situação</span><select id="td-sitn"><option value="">Todas</option>{opcoes_sit_n}</select></label>
     <label class="td-so"><input id="td-so" type="checkbox"> <span data-so-versao="legado">Só telas com página própria</span><span data-so-versao="novo" hidden>Só telas com conteúdo validado</span></label>
     <p class="td-legenda-marcas"><span data-so-versao="legado"><span class="m-ok">●</span> com página própria (link em azul) · <span class="m-sem">○</span> ainda sem página própria (o link abre o inventário do módulo)</span><span data-so-versao="novo" hidden><span class="m-ok">●</span> com conteúdo validado (link em azul) · <span class="m-sem">○</span> em preparo (o link abre a página, que mostra o que falta)</span></p>
-    <span class="td-acoes"><button type="button" id="td-abrir">Abrir tudo</button><button type="button" id="td-fechar">Fechar tudo</button></span>
+    <span class="td-acoes"><a class="td-erros" href="erros.html">Erros</a><button type="button" id="td-abrir">Abrir tudo</button><button type="button" id="td-fechar">Fechar tudo</button></span>
   </div>
   <p id="td-nada" hidden>Nenhuma tela encontrada com esses filtros.</p>
   <div class="td-arvore" data-so-versao="legado">{"".join(corpo)}</div>
@@ -304,6 +304,8 @@ CSS = """/* Página Documentação por módulo (telas por módulo). */
 .td-acoes{display:flex;gap:6px;margin-left:auto;padding-bottom:4px}
 .td-acoes button{font:inherit;font-size:.85rem;padding:6px 10px;border:1px solid #c7ced6;border-radius:8px;background:transparent;color:inherit;cursor:pointer}
 .td-acoes button:hover{border-color:#1f5f8b}
+.td-acoes a.td-erros{font:inherit;font-size:.85rem;padding:6px 12px;border:1px solid #1f5f8b;border-radius:8px;background:#1f5f8b;color:#fff;text-decoration:none;font-weight:600}
+.td-acoes a.td-erros:hover{filter:brightness(1.1)}
 .td-arvore{border:1px solid #d9dee4;border-radius:12px;padding:6px 8px}
 .td-mod,.td-menu{margin:0}
 .td-mod>summary,.td-menu>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;padding:9px 8px;border-radius:8px}
