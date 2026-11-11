@@ -249,7 +249,7 @@ def pagina(dados, cabecalho, rodape, arvore_novo="", total_validadas=0, total_no
     <label class="td-f" data-so-versao="novo" hidden><span>Situação</span><select id="td-sitn"><option value="">Todas</option>{opcoes_sit_n}</select></label>
     <label class="td-so"><input id="td-so" type="checkbox"> <span data-so-versao="legado">Só telas com página própria</span><span data-so-versao="novo" hidden>Só telas com conteúdo validado</span></label>
     <p class="td-legenda-marcas"><span data-so-versao="legado"><span class="m-ok">●</span> com página própria (link em azul) · <span class="m-sem">○</span> ainda sem página própria (o link abre o inventário do módulo)</span><span data-so-versao="novo" hidden><span class="m-ok">●</span> com conteúdo validado (link em azul) · <span class="m-sem">○</span> em preparo (o link abre a página, que mostra o que falta)</span></p>
-    <span class="td-acoes"><a class="td-erros" href="erros.html">Erros</a><button type="button" id="td-abrir">Abrir tudo</button><button type="button" id="td-fechar">Fechar tudo</button></span>
+    <span class="td-acoes"><a class="td-erros" href="erros-novo.html">Erros</a><button type="button" id="td-abrir">Abrir tudo</button><button type="button" id="td-fechar">Fechar tudo</button></span>
   </div>
   <p id="td-nada" hidden>Nenhuma tela encontrada com esses filtros.</p>
   <div class="td-arvore" data-so-versao="legado">{"".join(corpo)}</div>
