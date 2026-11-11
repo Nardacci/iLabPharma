@@ -1183,10 +1183,14 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     (destino / "portal/telas.css").write_text(telas_devs.CSS, encoding="utf-8")
     print(f"Devs/QA: {sum(len(ts) for m in dados_telas for _, ts in m['menus'])} telas em {sum(1 for m in dados_telas if m['menus'])} módulos com inventário.")
     print(f"Erros da versão nova: {erros_novo.pagina(hom_, destino, ERROS, NOVO, cabecalho, rodape)} erros em erros-novo.html (e a entrada erros.html).")
-    _fichas = {x["id"]: {"titulo": x["titulo"], "grav": x["grav"]} for _m, _n, _its in erros_novo.carregar(hom_) for x in _its}
-    for _arq in sorted((hom_ / "transversal/processos").glob("*.json")):
-        print(f"Processo interativo: {processo_pagina.pagina(hom_, destino, _arq, cabecalho, rodape, _fichas)}")
     _slugs = {(m["id"], p["titulo"]): p["slug"] for m in MODULOS for p in m["paginas"]}
+    _href = lambda mid, t: f"documentacao/{mid}/{_slugs[(mid, t)]}.html" if (mid, t) in _slugs else None
+    _fichas = {x["id"]: {"titulo": x["titulo"], "grav": x["grav"]} for _m, _n, _its in erros_novo.carregar(hom_) for x in _its}
+    _mapa = mapa_processos.carregar(hom_)
+    for _arq in sorted((hom_ / "transversal/processos").glob("*.json")):
+        print(f"Processo interativo: {processo_pagina.pagina(hom_, destino, _arq, cabecalho, rodape, _fichas, _href, _mapa)}")
+    # endereço do piloto anterior continua valendo
+    (destino / "processo-recebimento-quarentena.html").write_text('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0; url=processo-quarentena.html"><title>Quarentena</title></head><body><p><a href="processo-quarentena.html">Fluxo da Quarentena</a></p></body></html>', encoding="utf-8")
     _n, _f = mapa_processos.pagina(hom_, destino, cabecalho, rodape, lambda mid, t: (f"documentacao/{mid}/ideal.html" if (destino / "documentacao" / mid / "ideal.html").exists() else None) if t == "__ideal__" else (f"documentacao/{mid}/{_slugs[(mid, t)]}.html" if (mid, t) in _slugs else None))
     print(f"Mapa dos processos: {_n} processos, {_f} links de fluxo em processos.html.")
     cron = pagina_cronograma(origem)
