@@ -301,7 +301,7 @@ MODULOS = [
         "situacao": "Em andamento", "nivel": 2,
         "resumo": "Como os módulos se encadeiam, do recebimento de material à liberação do lote, e onde a corrente está quebrada. Telas repetidas entre módulos.",
         "docs": [
-            ("versao-nova/defeitos-encontrados/defeitos-versao-nova.md", "Defeitos encontrados na versão nova", "novo", "versao-nova/defeitos-encontrados/LabMedSys - Defeitos Encontrados na Versao Nova.docx"),
+            ("versao-nova/defeitos-encontrados/defeitos-encontrados.md", "Defeitos encontrados (legado e versão nova)", "novo", "versao-nova/defeitos-encontrados/LabMedSys - Defeitos Encontrados.docx"),
             ("transversal/08-visao-dos-cinco-modulos.md", "Os cinco módulos: o negócio, a ANVISA e o que falta", "inicio", "transversal/LabMedSys - Visao dos Cinco Modulos.docx"),
             ("transversal/09-matriz-de-papeis-e-permissoes.md", "Matriz de papéis e permissões (como deve ser), versão 0.1", "inicio", "transversal/LabMedSys - Matriz de Papeis e Permissoes.docx"),
             ("transversal/05-precisa-de-voce-agora.md", "O que precisa de você agora", "inicio", None),
@@ -1063,13 +1063,14 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
         ERROS.update(erros_tela.montar(hom_, NOVO))
     DEFEITO_LINK.clear()
     for (_v, _m), _d in ERROS.items():
-        if _v != "novo" or _m not in NOVO:
+        if _m not in NOVO:
             continue
+        _ref = (lambda f: f"../novo/{_m}/{f}") if _v == "novo" else (lambda f: f"../{_m}/erros-{f}")
         for _t in NOVO[_m]["telas"]:
             for _x in _d["por_tela"].get(_t["chave"], []):
-                DEFEITO_LINK.setdefault(_x["id"], (_m, f"{_t['slug']}-erros.html"))
+                DEFEITO_LINK.setdefault(_x["id"], _ref(f"{_t['slug']}-erros.html" if _v == "novo" else f"{_t['slug']}.html"))
         for _x in _d["sem"]:
-            DEFEITO_LINK.setdefault(_x["id"], (_m, "sem-tela-erros.html"))
+            DEFEITO_LINK.setdefault(_x["id"], _ref("sem-tela-erros.html" if _v == "novo" else "sem-tela.html"))
     for (_v, _m), _d in sorted(ERROS.items()):
         _lig = _d["total"] - len(_d["sem"])
         print(f"Erros por tela · {_v} · {_m}: {_lig} de {_d['total']} defeitos ligados a uma tela; {len(_d['sem'])} sem tela.")
@@ -1527,16 +1528,16 @@ def aviso_sem_print(p):
 def ligar_defeitos(p):
     """Na página "Defeitos encontrados na versão nova": cada defeito ganha o link para a página "Erros desta tela" (passos, evidências e capturas)."""
     corpo = p["corpo"]
-    if not p["arq"].endswith("defeitos-encontrados/defeitos-versao-nova.md"):
+    if not p["arq"].endswith("defeitos-encontrados/defeitos-encontrados.md"):
         return corpo
 
     def alvo(i):
         x = DEFEITO_LINK.get(i)
-        return f"../novo/{x[0]}/{x[1]}#{i.lower()}" if x else None
+        return f"{x}#{i.lower()}" if x else None
 
-    corpo = re.sub(r"(<h[23][^>]*>)(DV-[A-Z]+-N-\d+)(:.*?</h[23]>)",
+    corpo = re.sub(r"(<h[23][^>]*>)(DV-[A-Z]+(?:-N)?-\d+)(:.*?</h[23]>)",
                    lambda m: m.group(0) + (f'<p><a class="botao" href="{alvo(m.group(2))}">Ver a tela do erro, com as evidências</a></p>' if alvo(m.group(2)) else ""), corpo)
-    corpo = re.sub(r"(<td[^>]*>)(DV-[A-Z]+-N-\d+)(</td>)",
+    corpo = re.sub(r"(<td[^>]*>)(DV-[A-Z]+(?:-N)?-\d+)(</td>)",
                    lambda m: m.group(1) + (f'<a href="{alvo(m.group(2))}">{m.group(2)}</a>' if alvo(m.group(2)) else m.group(2)) + m.group(3), corpo)
     return corpo
 
