@@ -31,6 +31,8 @@ CSS = """
 .mp-bloco[aria-pressed=true]{background:color-mix(in srgb,var(--c) 14%,transparent)}
 .mp-bloco b{display:block;margin-bottom:.25rem}
 .mp-bloco small{display:block;opacity:.8;font-size:.78rem}
+a.mp-bloco{text-decoration:none;color:inherit}
+.mp-abre{color:#f57c00;font-weight:600;opacity:1!important}
 .c-t{--c:#2e9b4f}.c-a{--c:#1f6aa5}.c-p{--c:#b26a00}.c-v{--c:#5b6472}.c-n{--c:#8a94a6}.c-x{--c:#7c3aed}.c-m{--c:#8a94a6}
 .c-n,.c-m,.c-x{border-style:dashed}
 .mp-painel{margin:1.6rem 0;padding:1.1rem 1.3rem;border:2px solid var(--c,#8a94a6);border-radius:12px}
@@ -46,7 +48,7 @@ JS = """
 var d=JSON.parse(document.getElementById('mp-dados').textContent),p=document.getElementById('mp-painel');
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function abrir(id,rolar){var x=d.filter(function(a){return a.id===id})[0];if(!x)return;
-document.querySelectorAll('.mp-bloco').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===id?'true':'false');});
+document.querySelectorAll('button.mp-bloco').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===id?'true':'false');});
 var h='<h2>'+esc(x.nome)+'</h2><p>'+esc(x.resumo)+'</p>';
 h+='<p><b>Versão nova:</b> '+esc(x.novo_txt)+(x.nota_novo?' — '+esc(x.nota_novo):'')+'</p>';
 if(x.modulos.length)h+='<p><b>Módulos:</b> '+x.modulos.map(esc).join(', ')+'</p>';
@@ -59,7 +61,7 @@ if(x.roteiro)h+='<p><a class="botao" href="'+esc(x.roteiro)+'">Abrir o roteiro i
 if(x.fluxos.length||x.ideais.length)h+='<div class="mp-fluxos">'+x.fluxos.map(function(f){return '<a class="botao" href="'+esc(f.href)+'">'+esc(f.titulo)+'</a>';}).join('')+x.ideais.map(function(f){return '<a class="botao" href="'+esc(f.href)+'">Ideal: '+esc(f.titulo)+'</a>';}).join('')+'</div>';
 else h+='<p class="mp-vazio">Ainda não há fluxo documentado para este processo.</p>';
 p.innerHTML=h;p.hidden=false;p.className='mp-painel c-'+x.cod;history.replaceState(null,'','#'+id);if(rolar)p.scrollIntoView({behavior:'smooth',block:'nearest'});}
-document.querySelectorAll('.mp-bloco').forEach(function(b){b.addEventListener('click',function(){abrir(b.dataset.id,true);});});
+document.querySelectorAll('button.mp-bloco').forEach(function(b){b.addEventListener('click',function(){abrir(b.dataset.id,true);});});
 if(location.hash.length>1)abrir(location.hash.slice(1),false);
 })();
 """
@@ -90,9 +92,14 @@ def pagina(hom, destino, cabecalho, rodape, href_fluxo):
     areas = []
     for a in d["areas"]:
         blocos = [p for p in d["processos"] if p["area"] == a["id"]]
-        fila = '<span class="mp-seta" aria-hidden="true">→</span>'.join(
-            f'<button type="button" class="mp-bloco c-{por_id[p["id"]]["cod"]}" data-id="{E(p["id"])}" aria-pressed="false"><b>{E(p["nome"])}</b>'
-            f'<small>{E(por_id[p["id"]]["novo_txt"])}</small></button>' for p in blocos)
+
+        def bloco(p):
+            x = por_id[p["id"]]
+            corpo = f'<b>{E(p["nome"])}</b><small>{E(x["novo_txt"])}</small>'
+            if x["roteiro"]:
+                return f'<a class="mp-bloco c-{x["cod"]}" href="{E(x["roteiro"])}" data-id="{E(p["id"])}">{corpo}<small class="mp-abre">↳ abre o fluxo</small></a>'
+            return f'<button type="button" class="mp-bloco c-{x["cod"]}" data-id="{E(p["id"])}" aria-pressed="false">{corpo}</button>'
+        fila = '<span class="mp-seta" aria-hidden="true">→</span>'.join(bloco(p) for p in blocos)
         areas.append(f'<section class="mp-area"><h2>{E(a["nome"])}</h2><p>{E(a["descricao"])}</p><div class="mp-fila">{fila}</div></section>')
     leg = "".join(f'<span><i style="--c:var(--lc-{c})"></i>{E(t)}</span>' for t, c in NOVO.values())
     css = CSS + ":root{--lc-t:#2e9b4f;--lc-a:#1f6aa5;--lc-p:#b26a00;--lc-v:#5b6472;--lc-n:#8a94a6;--lc-x:#7c3aed;--lc-m:#8a94a6}"
@@ -104,3 +111,9 @@ def pagina(hom, destino, cabecalho, rodape, href_fluxo):
     (Path(destino) / "processos.html").write_text(
         cabecalho("Mapa dos processos", "").replace("</head>", f"<style>{css}</style></head>") + corpo + rodape("").replace("</body>", f"<script>{JS}</script></body>"), encoding="utf-8")
     return len(dados), sum(len(x["fluxos"]) for x in dados)
+
+
+def carregar(hom):
+    """Dados do mapa para as páginas de processo (\"Sobre este processo\")."""
+    d = json.loads(higiene.redigir((Path(hom) / "transversal/mapa-processos.json").read_text(encoding="utf-8")))
+    return {"por_id": {p["id"]: p for p in d["processos"]}, "lig": d["ligacoes"]}

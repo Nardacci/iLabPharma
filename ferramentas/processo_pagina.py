@@ -34,6 +34,17 @@ CSS = """
 .pp-lista{margin:.2rem 0;padding-left:1.2rem}
 .pp-vazio{opacity:.7}
 .pp-voltar{margin:.3rem 0 .6rem}
+.pp-trilha{margin:.3rem 0 .6rem;font-size:.92rem}
+.pp-linha{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;margin:.6rem 0}
+.pp-pilha{display:flex;flex-direction:column;gap:.35rem}
+.pp-param{width:100%;max-width:720px}
+.pp-dec{border-style:dashed;border-radius:24px}
+.pp-dec b::before{content:"◇ ";}
+.pp-abre{display:block;margin-top:.3rem;font-weight:600;color:#f57c00}
+a.pp-et{text-decoration:none;color:inherit}
+.pp-res{width:210px;padding:.6rem .7rem;border:2px dashed #2e9b4f;border-radius:10px;font-size:.9rem;line-height:1.3}
+.pp-res b{display:block;margin-bottom:.2rem}
+.pp-saida{margin:.2rem 0}
 """
 JS = """
 (function(){
@@ -48,6 +59,8 @@ h+='<h3>Regras e norma</h3>';
 if(x.regras.length){h+='<div class="tabela"><table class="pp-tab"><thead><tr><th>O que o sistema precisa garantir</th><th>O que o código novo faz hoje</th><th>Situação</th></tr></thead><tbody>'+x.regras.map(function(r){return '<tr><td>'+esc(r.ideal)+'</td><td>'+esc(r.hoje)+'</td><td class="pp-cl">'+esc(r.classe)+'</td></tr>';}).join('')+'</tbody></table></div>';}
 else h+='<p class="pp-vazio">Nenhuma regra específica levantada para esta etapa.</p>';
 h+=x.norma?'<p><b>Norma:</b> '+esc(x.norma)+'</p>':'<p class="pp-vazio">Norma a definir com a Qualidade.</p>';
+if(x.saidas&&x.saidas.length)h+='<h3>Saídas</h3>'+lista(x.saidas.map(function(o){return '<b>'+esc(o.rotulo)+'</b> → '+esc(o.vai);}));
+if(x.link_roteiro)h+='<p><a class="botao" href="'+esc(x.link_roteiro.href)+'">Ver o roteiro: '+esc(x.link_roteiro.titulo.replace('Roteiro de execução: ',''))+'</a></p>';
 if(x.telas.length)h+='<h3>Telas</h3>'+lista(x.telas.map(esc));
 h+='<h3>Versão nova hoje</h3><p><b>'+esc(x.status_txt)+'.</b> '+esc(x.nota_novo)+'</p>';
 if(x.fichas.length)h+='<p><b>Erros encontrados:</b></p>'+lista(x.fichas.map(function(f){return '<a href="'+esc(f.href)+'">'+esc(f.id)+'</a> ('+esc(f.grav)+'): '+esc(f.titulo);}));
@@ -71,31 +84,57 @@ def _perguntas(hom):
     return out
 
 
-def pagina(hom, destino, arq_json, cabecalho, rodape, fichas):
-    """fichas: {id da ficha: {titulo, grav}}. Devolve o nome do arquivo gerado."""
+def _bloco_dados(e, fichas, perg):
+    txt, cod = STATUS[e["status_novo"]]
+    return {**{k: e.get(k, v) for k, v in (("id", ""), ("nome", ""), ("quem", ""), ("ideal", ""), ("regras", []), ("norma", ""), ("telas", []), ("nota_novo", ""), ("legado", []), ("saidas", []))},
+            "status_txt": txt, "cod": cod,
+            "fichas": [{"id": i, "titulo": fichas[i]["titulo"], "grav": fichas[i]["grav"], "href": f"erros-novo/{i.lower()}.html"} for i in e.get("fichas", []) if i in fichas],
+            "perguntas": [f"{n}. {perg[n]}" for n in e.get("perguntas", []) if n in perg]}
+
+
+def pagina(hom, destino, arq_json, cabecalho, rodape, fichas, href_fluxo=None, mapa=None):
+    """fichas: {id: {titulo, grav}}; href_fluxo(modulo, título) -> endereço do roteiro no portal; mapa: dados do mapa dos processos (para "Sobre este processo")."""
     d = json.loads(higiene.redigir(Path(arq_json).read_text(encoding="utf-8")))
     perg = _perguntas(hom)
-    dados = {"etapas": []}
-    for e in d["etapas"]:
-        txt, cod = STATUS[e["status_novo"]]
-        dados["etapas"].append({**{k: e[k] for k in ("id", "nome", "quem", "ideal", "regras", "norma", "telas", "nota_novo", "legado")}, "status_txt": txt, "cod": cod,
-                                "fichas": [{"id": i, "titulo": fichas[i]["titulo"], "grav": fichas[i]["grav"], "href": f"erros-novo/{i.lower()}.html"} for i in e["fichas"] if i in fichas],
-                                "perguntas": [f"{n}. {perg[n]}" for n in e["perguntas"] if n in perg]})
+    todas = [d["parametrizacao"]] + d["etapas"]
+    dados = {"etapas": [_bloco_dados(e, fichas, perg) for e in todas]}
+    lr = d["parametrizacao"].get("link_roteiro")
+    if lr and href_fluxo and href_fluxo(lr["modulo"], lr["titulo"]):
+        dados["etapas"][0]["link_roteiro"] = {"titulo": lr["titulo"], "href": href_fluxo(lr["modulo"], lr["titulo"])}
     por = {x["id"]: x for x in dados["etapas"]}
-    fases = []
-    n = 0
-    for f in d["fases"]:
-        itens = [e for e in d["etapas"] if e["fase"] == f["id"]]
-        blocos = []
-        for e in itens:
-            n += 1
-            blocos.append(f'<button type="button" class="pp-et c-{por[e["id"]]["cod"]}" data-id="{E(e["id"])}" aria-pressed="false"><b>{n}. {E(e["nome"])}</b>'
-                          f'<small>{E(e["quem"])}</small><small>{E(por[e["id"]]["status_txt"])}</small></button>')
-        fases.append(f'<section class="pp-fase"><h2>{E(f["nome"])}</h2><div class="pp-fila">{"<span class=pp-seta aria-hidden=true>→</span>".join(blocos)}</div></section>')
+
+    def card(e):
+        x = por[e["id"]]
+        if e.get("abre"):
+            return (f'<a class="pp-et c-{x["cod"]}" href="processo-{E(e["abre"])}.html"><b>{E(e["nome"])}</b><small>{E(e["quem"])}</small><small>{E(x["status_txt"])}</small>'
+                    f'<span class="pp-abre">↳ abre o fluxo</span></a>')
+        cls = " pp-dec" if e.get("tipo") == "decisao" else ""
+        return (f'<button type="button" class="pp-et c-{x["cod"]}{cls}" data-id="{E(e["id"])}" aria-pressed="false"><b>{E(e["nome"])}</b>'
+                f'<small>{E(e["quem"])}</small><small>{E(x["status_txt"])}</small></button>')
+
+    seta = '<span class="pp-seta" aria-hidden="true">→</span>'
+    entradas = [e for e in d["etapas"] if e.get("grupo") == "entrada"]
+    fluxo = [e for e in d["etapas"] if e.get("grupo") == "fluxo"]
+    ini = (f'<div class="pp-pilha">{"".join(card(e) for e in entradas)}</div>{seta}' if entradas else "")
+    linha = ini + seta.join(card(e) for e in fluxo) + seta + f'<div class="pp-res"><b>Resultado</b>{E(d["resultado"])}</div>'
+    trilha = '<a href="processos.html">Mapa dos processos</a>' + (f' › <a href="processo-{E(d["pai"]["id"])}.html">{E(d["pai"]["nome"])}</a>' if d.get("pai") else "") + f' › <span>{E(d["titulo"])}</span>'
+    sobre = ""
+    if mapa:
+        itens = []
+        for mid in d.get("mapa", []):
+            p = mapa["por_id"].get(mid)
+            if not p:
+                continue
+            ligs = "".join(f'<div class="pp-saida"><b>{E(mapa["lig"][i]["nome"])}</b>: {E(mapa["lig"][i]["norma"])}<details><summary>Como era no legado</summary>{E(mapa["lig"][i]["texto"])}</details></div>' for i in p["ligacoes"])
+            itens.append(f'<p>{E(p["resumo"])}</p>' + (f'<p><b>Norma:</b> {E(p["norma"])}</p>' if p["norma"] else "") + (f'<h3>O que o sistema precisa garantir entre processos</h3>{ligs}' if ligs else ""))
+        if itens:
+            sobre = f'<details class="pp-sobre"><summary><b>Sobre este processo</b></summary>{"".join(itens)}</details>'
     cores = {"t": "#2e9b4f", "a": "#1f6aa5", "p": "#b26a00", "v": "#5b6472", "n": "#8a94a6"}
     leg = "".join(f'<span><i style="--c:{cores[c]}"></i>{E(t)}</span>' for t, c in STATUS.values())
-    corpo = (f'<main class="pp" id="conteudo"><p class="pp-voltar"><a href="processos.html">← Mapa dos processos</a></p><h1>{E(d["titulo"])}</h1><p>{E(d["intro"])}</p>'
-             f'<p class="pp-vazio">{E(d["fonte"])}</p><div class="pp-leg" aria-label="Legenda">{leg}</div>{"".join(fases)}'
+    corpo = (f'<main class="pp" id="conteudo"><p class="pp-trilha">{trilha}</p><h1>{E(d["titulo"])}</h1><p>{E(d["intro"])}</p>{sobre}'
+             f'<p class="pp-vazio">{E(d["fonte"])}</p><div class="pp-leg" aria-label="Legenda">{leg}</div>'
+             f'<section class="pp-fase"><h2>Parametrização</h2><div class="pp-linha">{card(d["parametrizacao"])}</div></section>'
+             f'<section class="pp-fase"><h2>Fluxo</h2><div class="pp-linha">{linha}</div></section>'
              f'<section id="pp-painel" class="pp-painel" aria-live="polite" hidden></section>'
              f'<script type="application/json" id="pp-dados">{json.dumps(dados, ensure_ascii=False).replace("</", "<\\/")}</script></main>')
     nome = f'processo-{d["id"]}.html'
