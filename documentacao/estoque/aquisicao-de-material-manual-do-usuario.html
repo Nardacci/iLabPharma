@@ -45,21 +45,118 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="aquisicao-de-material-analise.html">Análise</a><a href="aquisicao-de-material-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="aquisicao-de-material-fluxos.html">Fluxos</a><a href="aquisicao-de-material-regras-de-negocio.html">Regras de negócio</a><a href="aquisicao-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-aquisicao-de-material.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-compras-e-avaliacao-do-fornecedor-passo-a-passo.html#tela-5-aquisicao-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Aquisição de Material</strong> é um relatório de consulta que lista, por grupo de item e por item, as <strong>entradas</strong> de material em um período (por mês e ano ou por datas específicas): documento (nota fiscal ou referência), data, unidade, quantidade, valor unitário e valor total, com total por material, por grupo e geral e três assinaturas. Responde "quanto se adquiriu" no período; é usado pelo almoxarifado e pela área de custos (leitura da área, a validar). Mostra numa segunda janela, com visualizador de relatórios. Não grava nada.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Entradas de material</strong> no período</td>
+<td>"Aquisição" aqui é toda entrada que não seja inventário, ajuste, transferência, atendimento de solicitação ou movimentação de quarentena; entram também devolução, entrada de produção e outras entradas</td>
+<td>Estoque › Recebimento (entradas por nota fiscal), Entrada de Material, Devolução, Entrada de Produção</td>
+</tr>
+<tr>
+<td><strong>Item ligado a um almoxarifado do seu grupo de usuário</strong></td>
+<td>O relatório só mostra itens dos almoxarifados do grupo da pessoa (o grupo vem da sessão, não do endereço)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Grupo de item</strong> (se quiser filtrar)</td>
+<td>Filtro da tela</td>
+<td>Cadastros › Grupo de Item</td>
+</tr>
+<tr>
+<td><strong>Três assinaturas na configuração do sistema</strong></td>
+<td>Saem no fim do relatório</td>
+<td>Configuração do sistema</td>
+</tr>
+<tr>
+<td><strong>Período</strong></td>
+<td>Mês e ano (4 números) ou datas específicas (inicial e final)</td>
+<td>Preenchido na própria tela</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório (leitura do código; nenhum passo foi executado numa tela real)</strong></p>
+<ol>
+<li>No menu Relatórios, abra <strong>Aquisição de Material</strong>. Aparece o quadro com Grupo, Tipo de Período, Mês, Ano e as datas do Período.</li>
+<li>Escolha o <strong>Grupo</strong> ("SELECIONE" = todos).</li>
+<li>Escolha o <strong>Tipo de Período</strong>: "MÊS/ANO" (informe Mês e Ano de 4 números) ou "ESPECÍFICO" (informe a data inicial e a final; os campos de data só ficam ativos neste tipo).</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. Se o Ano ou o período estiver incompleto, a tela avisa e não abre a janela.</li>
+<li>Leia: por grupo e por material, uma linha por documento e dia, com quantidade, valor unitário e valor total; total do material, do grupo e geral; no fim, três assinaturas.</li>
+<li><strong>LIMPAR</strong> volta o Grupo para "SELECIONE", o Mês e o Ano para os de hoje e esvazia as datas.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>"Aquisição" aqui é toda <strong>entrada</strong> que não seja inventário, ajuste, transferência, atendimento de solicitação ou movimentação de quarentena; entram também devolução, entrada de produção e outras entradas (ver Falhas).</li>
-<li>O relatório só mostra itens dos almoxarifados do seu grupo de usuário.</li>
+<li><strong>Não grava nada</strong>: só lê e não registra quem emitiu.</li>
+<li>Mostra as entradas por documento e dia. O <strong>valor total</strong> é a quantidade somada vezes o <strong>maior</strong> custo; custos diferentes no mesmo item, documento e dia dão total errado.</li>
+<li><strong>Não mostra o fornecedor</strong>. Documento sem nota fiscal e sem Referência sai em branco.</li>
+<li>O relatório não imprime usuário.</li>
 </ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Relatórios, abra "Aquisição de Material". Aparece o quadro com Grupo, Tipo de Período, Mês, Ano e as datas do Período.</li>
-<li>Passo 2. Escolha o <strong>Grupo</strong> ("SELECIONE" = todos).</li>
-<li>Passo 3. Escolha o <strong>Tipo de Período</strong>: "MÊS/ANO" (informe Mês e Ano de 4 números) ou "ESPECÍFICO" (informe a data inicial e a final; os campos de data só ficam ativos neste tipo).</li>
-<li>Passo 4. Clique em GERAR RELATÓRIO. Se o Ano ou o período estiver incompleto, a tela avisa e não abre a janela.</li>
-<li>Passo 5. Leia: por grupo e por material, uma linha por documento e dia, com quantidade, valor unitário e valor total; total do material, do grupo e geral; no fim, três assinaturas da configuração.</li>
-<li>Passo 6. LIMPAR volta o Grupo para "SELECIONE", o Mês e o Ano para os de hoje e esvazia as datas.</li>
+<li>Tipo MÊS/ANO com ano vazio ou sem 4 caracteres: "O Ano inválido ou não informado!".</li>
+<li>Tipo ESPECÍFICO com alguma data vazia: "Período inválido ou não informado!".</li>
+<li>Validadores da tela: "Ano não informado!", "Data inicial não informada" / "Data inicial inválida!", "Data final não informada" / "Data final inválida!".</li>
+<li>Falha da consulta: "Erro ao gerar o relatório!", na segunda janela.</li>
 </ul>
-<p>Tudo acima é leitura do código; nenhum passo foi executado numa tela real.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>relAquisicaoMat</code>. No catálogo de funções ela é só um ponto do menu Relatórios: as marcas de incluir, alterar, excluir, imprimir ou Excel, ver log e criar todas estão em "N" (dml.sql:1938), então <strong>não existe função de consultar, de imprimir nem de ver log para esta tela</strong>. Quem tem o ponto de menu no perfil abre a tela; não há grau menor de permissão.</li>
+<li>O botão de gerar não depende das funções do usuário (o trecho que esconderia botões de quem não tem função está comentado na base das telas).</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta) foi visto em outras telas do Estoque em 07/10 e 13/10/2026 e é esperado aqui, porque a tela usa a mesma base, mas <strong>não foi testado nesta tela</strong>.</li>
+<li>O relatório <strong>recorta pelo grupo do usuário</strong> (itens dos almoxarifados do grupo da sessão) e pela empresa, o que limita o que cada pessoa vê, mas não impede a abertura da página.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum DV-EST registrado para esta tela (nunca foi testada). Pontos pelo código:</li>
+<li><strong>Valor total errado quando há custos diferentes</strong> (F-REL17-1, gravidade provável Alta).</li>
+<li>"Aquisição" inclui devolução, outras entradas e entrada de produção (F-REL17-2); a lista de tipos excluídos é fixa no código.</li>
+<li><strong>Entrada excluída (lixeira) pode continuar somando</strong> (F-REL17-3).</li>
+<li>Pelo endereço, se uma das datas for vazia, o relatório traz todo o histórico, sem aviso (F-REL17-4; a tela já recusa).</li>
+<li>Sem fornecedor (F-REL17-5), documento em branco (F-REL17-6), sem registro de quem emitiu (F-REL17-8). Data e valores podem sair em formato americano (F-REL17-7; DV-EST-057).</li>
+<li>O Mapa de Movimentação (tela 15) tem uma coluna "Aquisição" que soma tudo, inclusive movimentos internos; os dois relatórios não devem dar o mesmo total para o mesmo mês.</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Valida a página, monta as datas e abre a segunda janela</td>
+<td>Sempre (não depende de função)</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Grupo para "SELECIONE"; Mês e Ano para os de hoje; esvazia as datas</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Detalhe do erro (+) / (-)</td>
+<td>Mostra ou esconde o texto do erro interno</td>
+<td>Quando o filtro dá erro</td>
+</tr>
+<tr>
+<td>Imprimir, exportar e páginas (visualizador)</td>
+<td>Visualizador padrão; formatos não conferidos</td>
+<td>Na segunda janela</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -185,7 +282,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

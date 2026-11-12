@@ -45,21 +45,113 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="relatorio-de-movimentacao-de-material-rc08-analise.html">Análise</a><a href="relatorio-de-movimentacao-de-material-rc08-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="relatorio-de-movimentacao-de-material-rc08-fluxos.html">Fluxos</a><a href="relatorio-de-movimentacao-de-material-rc08-regras-de-negocio.html">Regras de negócio</a><a href="relatorio-de-movimentacao-de-material-rc08-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-relatorio-de-movimentacao-de-material-rc08.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-2-movimentacao-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Relatório de Movimentação de Material (RC08)</strong> é um relatório de consulta, parente do RC07 financeiro (tela 09): usa a mesma data de referência, mas agrupa por conta contábil e por <strong>tipo de movimentação</strong> (entrada por nota fiscal, saída por nota fiscal, transferência, atendimento de solicitação e assim por diante), separando entradas de saídas. Mostra Saldo Anterior, Lançamento e Saldo Atual, com totais de entradas, de saídas e da conta, em valores. Seria usado pela contabilidade e pela diretoria (leitura da área, a validar). Não grava nada.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Conta financeira no item</strong></td>
+<td>Item sem conta some do relatório sem aviso</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Movimentações</strong> por tipo</td>
+<td>São a base dos valores</td>
+<td>Telas de movimentação do Estoque</td>
+</tr>
+<tr>
+<td><strong>Custo do item</strong></td>
+<td>Os valores dependem do custo (ver Cuidados: aplicado duas vezes)</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Data de referência</strong></td>
+<td>Separa o que veio antes (saldo anterior) do que ocorreu dela em diante (lançamento)</td>
+<td>Digitada na própria tela</td>
+</tr>
+<tr>
+<td><strong>Janelas abertas pelo sistema liberadas no navegador</strong></td>
+<td>O relatório abre em segunda janela</td>
+<td>Configuração do navegador</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório (leitura do código; nenhum passo foi executado numa tela real)</strong></p>
+<ol>
+<li>No menu Relatórios, abra <strong>Relatório de Movimentação de Material (RC08)</strong>. Aparece o quadro "Pesquisa" com a Data de Referência.</li>
+<li>Digite a data (dia/mês/ano) ou escolha no calendário.</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. Abre uma segunda janela.</li>
+<li>Leia: para cada conta contábil, as linhas de entrada e depois as de saída, uma por tipo de movimentação, com Saldo Anterior, Lançamento e Saldo Atual, e os totais de entradas, de saídas e da conta.</li>
+<li>Imprima ou exporte pelo visualizador. A data de referência não sai impressa.</li>
+<li><strong>LIMPAR FILTRO</strong> apaga a data.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>Defina a data de referência: o relatório separa o que veio antes (saldo anterior) do que ocorreu dela em diante (lançamento).</li>
-<li><strong>Cuidado com os valores:</strong> pelo código os valores saem multiplicados pelo custo duas vezes (ver Falhas); não use o relatório para decisão sem conferir.</li>
+<li><strong>Não grava nada</strong>: só lê.</li>
+<li><strong>Saldo Anterior:</strong> valor das movimentações antes da data de referência, por tipo. <strong>Lançamento:</strong> da data de referência em diante. <strong>Saldo Atual:</strong> saldo anterior + lançamento. As saídas aparecem com sinal.</li>
+<li><strong>Cuidado com os valores:</strong> pelo código o valor sai multiplicado pelo custo duas vezes; confira antes de usar para decisão.</li>
+<li>O Lançamento vai até o dia da emissão, sem data final, e sem filtro de empresa ou almoxarifado.</li>
 </ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Relatórios, abra "Relatório de Movimentação de Material (RC08)". Aparece o quadro "Pesquisa" com a Data de Referência.</li>
-<li>Passo 2. Digite a data (dia/mês/ano) ou escolha no calendário.</li>
-<li>Passo 3. Clique em GERAR RELATÓRIO. Abre uma segunda janela.</li>
-<li>Passo 4. Leia: para cada conta contábil, as linhas de entrada e depois as de saída, uma por tipo de movimentação, com Saldo Anterior, Lançamento e Saldo Atual, e os totais de entradas, de saídas e da conta.</li>
-<li>Passo 5. Imprima ou exporte pelo visualizador. A data de referência não sai impressa.</li>
-<li>Passo 6. LIMPAR FILTRO apaga a data.</li>
+<li>Campo vazio: "Data de referência não informada!". Formato errado: "Data de referência incorreta!". Data abaixo do mínimo: "Data de referência inválida!".</li>
+<li>Data maior que hoje: "A data de referência não pode ser superior a data atual!".</li>
+<li>Falha da consulta: "Erro ao gerar o relatório!", na segunda janela.</li>
+<li>Como no RC07, o clique não confere se a página é válida: a mensagem pode aparecer e a janela abrir assim mesmo.</li>
 </ul>
-<p>Tudo acima é leitura do código; nenhum passo foi executado numa tela real.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>rc08RelMovMat</code>. No catálogo de funções ela é só um ponto do menu Relatórios: as marcas de incluir, alterar, excluir, imprimir ou Excel, ver log e criar todas estão em "N" (dml.sql:1931), então <strong>não existe função de consultar, de imprimir nem de ver log para esta tela</strong>. Quem tem o ponto de menu no perfil abre a tela; não há grau menor de permissão.</li>
+<li>O botão de gerar não depende das funções do usuário (o trecho que esconderia botões de quem não tem função está comentado na base das telas).</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta) foi visto em outras telas do Estoque em 07/10 e 13/10/2026 e é esperado aqui, porque a tela usa a mesma base, mas <strong>não foi testado nesta tela</strong>.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum DV-EST registrado para esta tela (nunca foi testada). Pontos pelo código:</li>
+<li><strong>Valor com o custo aplicado duas vezes</strong> (F-REL10-1, gravidade provável Alta se confirmado): todos os valores do relatório podem estar errados.</li>
+<li><strong>Movimentação excluída continua somando</strong> (F-REL10-2).</li>
+<li>O rótulo "ESTOQUE DE PRODUTOS ACABADOS" aparece em qualquer conta (F-REL10-3).</li>
+<li><strong>Item sem conta financeira some sem aviso</strong>; sem filtro de empresa e de almoxarifado (F-REL10-4).</li>
+<li>Lançamento sem data final (F-REL10-5). A <strong>data de referência não sai impressa</strong> (F-REL10-6).</li>
+<li>Data inválida chega à conversão sem proteção (F-REL10-7). Data e número podem sair em formato americano (F-REL10-8; DV-EST-057, visto nos relatórios de kit).</li>
+<li>RC07 (tela 09) e RC08 usam a mesma data de referência, mas somam de modos diferentes; os dois não dão o mesmo total para a mesma data.</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Abre a segunda janela com o relatório; não confere a data antes de abrir</td>
+<td>Sempre (não depende de função)</td>
+</tr>
+<tr>
+<td>LIMPAR FILTRO</td>
+<td>Esvazia a data</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Imprimir, exportar e páginas (visualizador)</td>
+<td>Visualizador padrão; formatos não conferidos</td>
+<td>Na segunda janela</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -156,7 +248,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

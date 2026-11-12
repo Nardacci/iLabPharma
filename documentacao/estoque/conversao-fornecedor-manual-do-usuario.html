@@ -45,48 +45,147 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conversao-fornecedor-analise.html">Análise</a><a href="conversao-fornecedor-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="conversao-fornecedor-fluxos.html">Fluxos</a><a href="conversao-fornecedor-regras-de-negocio.html">Regras de negócio</a><a href="conversao-fornecedor-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-conversao-fornecedor.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-de-apoio-passo-a-passo.html#tela-22-conversao-fornecedor">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Conversão Fornecedor</strong> (no alto da tela: "Conversão de Unidade do Fornecedor") liga o <strong>código que o fornecedor usa para um produto</strong> (o campo <code>cProd</code> da nota fiscal eletrônica) ao <strong>item do estoque</strong> e a uma <strong>apresentação</strong> (a embalagem da nota, com o fator que a converte para a unidade do estoque). Quem cuida de compras e recebimento usa a tela. Quando o Recebimento lê o XML da nota, o sistema procura aqui o par "fornecedor da nota + código do produto" para saber qual item do estoque é aquele e quanto vale cada unidade da nota na unidade do estoque (LerNFeItem.cs:61-69 e 85-181). Não confunda com a tela Conversão de Unidade, que cadastra as apresentações.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fornecedor</strong> cadastrado como pessoa jurídica do tipo Fornecedor</td>
+<td>É escolhido na lista; a tela não confere se foi aprovado ou avaliado</td>
+<td>Módulo Principal › cadastro de pessoa jurídica</td>
+</tr>
+<tr>
+<td><strong>Item</strong></td>
+<td>É escolhido pelo código ou pela busca "Localizar Item"</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Apresentação</strong> ativa</td>
+<td>Diz quantas unidades do estoque há em cada embalagem da nota; a lista traz todas as ativas, sem conferir com o item</td>
+<td>Cadastros › Conversão de Unidade</td>
+</tr>
+<tr>
+<td>O <strong>código que o fornecedor escreve na nota</strong> para o produto (o mesmo do XML)</td>
+<td>É o Cód. Item Fornecedor (até 14 caracteres, letras e números)</td>
+<td>Nota do fornecedor</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu <strong>Cadastros</strong>, abra <strong>Conversão Fornecedor</strong>. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
+<li>Se quiser, escolha um <strong>Fornecedor</strong> e a situação <strong>Ativo</strong> (Todos, Sim, Não) e clique em <strong>Pesquisar</strong>. Sem filtro, a tela lista todas as ligações.</li>
+<li>A lista mostra Fornecedor, Cód. Item Fornecedor, Item, Apresentação e Ativo, 15 por página, com Editar, Excluir e Ver Log. Clicar nos títulos <strong>não reordena</strong> a lista. Sem resultado: "A pesquisa não retornou nenhum resultado.". <strong>Limpar</strong> esvazia; <strong>Imprimir</strong> e Excel aparecem depois de uma pesquisa com resultado e geram o "Relatório de Conversão de Unidade do Fornecedor".</li>
+</ol>
+<p><strong>Incluir uma ligação</strong></p>
+<ol start="4">
+<li>Clique em <strong>Incluir</strong>. Escolha o <strong>Fornecedor</strong>, escreva o <strong>Cód. Item Fornecedor</strong> e escolha a <strong>Apresentação</strong>.</li>
+<li>No campo <strong>Item</strong>, escreva o código do item ou parte da descrição e clique na lupa. Se o código existir, o item é escolhido na hora; senão abre a janela "Localizar Item", em que se escolhe a linha.</li>
+<li>Deixe <strong>Ativo = Sim</strong> e clique em <strong>SALVAR</strong>. A tela pergunta "Confirma a inclusão do item?". Com <strong>SIM</strong>, mostra "Inclusão realizada com sucesso!" e, ao clicar <strong>OK</strong>, volta à lista.</li>
+</ol>
+<p><strong>Alterar uma ligação</strong></p>
+<ol start="7">
+<li>Na lista, clique no lápis. O formulário abre com os dados e o painel <strong>Justificativa</strong>. Mude o que precisa, escreva a justificativa (obrigatória), clique em <strong>SALVAR</strong> e confirme: "Alteração realizada com sucesso!".</li>
+<li>Com Ativo = Não os campos ficam travados; para mudar qualquer dado, volte Ativo para Sim primeiro.</li>
+</ol>
+<p><strong>Excluir uma ligação</strong></p>
+<ol start="9">
+<li>Na lista, clique no X da linha. A tela mostra Código, Descrição e o campo <strong>Justificativa</strong> (obrigatório). Escreva a justificativa, clique em <strong>EXCLUIR REGISTRO</strong> e confirme "Confirma a exclusão do item?". A tela mostra "Exclusão realizada com sucesso!".</li>
+</ol>
+<p><strong>Ver o histórico</strong></p>
+<ol start="10">
+<li>Na lista, clique em <strong>Ver Log</strong>. A janela "Log Alteração - Conversão de Unidade do Fornecedor" mostra campo, dado antigo, dado novo, data, hora, usuário e justificativa. A tela não mostra o log de uma ligação já excluída.</li>
+</ol>
+<h4 id="o-que-acontece-ao-salvar">O que acontece ao salvar</h4>
 <ul>
-<li>Tenha o fornecedor cadastrado como pessoa jurídica do tipo Fornecedor.</li>
-<li>Tenha o item cadastrado e a apresentação criada (tela Conversão de Unidade). A apresentação diz quantas unidades do estoque há em cada embalagem da nota.</li>
-<li>Saiba o código que o fornecedor escreve na nota para o produto (o mesmo que aparece no XML).</li>
+<li><strong>Incluir:</strong> grava a ligação como ativa e volta à lista. Dali em diante, o Recebimento por XML reconhece o produto daquele fornecedor (dalApresentacaoFornecedor.cs:9-61 e 226-265).</li>
+<li><strong>Alterar:</strong> muda fornecedor, código, item, apresentação ou situação e grava o histórico (bllApresentacaoFornecedor.cs:47-76). <strong>A mudança do código do fornecedor não vai ao histórico.</strong></li>
+<li><strong>Excluir:</strong> marca a ligação como excluída (lixeira); ela some da lista e deixa de ser reconhecida no Recebimento (dalApresentacaoFornecedor.cs:99-119).</li>
+<li><strong>Onde a ligação é usada:</strong> no <strong>Recebimento de Material</strong>, ao ler o XML da nota. Não há aprovação nem passo seguinte nesta tela.</li>
+<li><strong>Se a ligação está em uso:</strong> hoje nenhuma tabela aponta para ela, então a exclusão não é bloqueada (a mensagem "Exclusão inválida..." só sairia se o banco acusasse vínculo).</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Cadastros, abra Conversão Fornecedor. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
-<li>Passo 2. Se quiser, escolha um Fornecedor e a situação Ativo (Todos, Sim, Não). Clique em Pesquisar. Sem filtro, a tela lista todas as ligações (apresentacao_fornecedor_lst.aspx:41-48; lst.aspx.cs:42-47).</li>
-<li>Passo 3. A lista mostra Fornecedor, Cód. Item Fornecedor, Item, Apresentação e Ativo, 15 por página, com os ícones Editar, Excluir e Ver Log (lst.aspx:72-131).</li>
-<li>Passo 4. Sem resultado, a tela escreve "A pesquisa não retornou nenhum resultado." (lst.aspx.cs:120).</li>
-<li>Passo 5. Limpar esvazia os filtros e a lista. Imprimir e o ícone do Excel aparecem depois de uma pesquisa com resultado e geram o relatório "Relatório de Conversão de Unidade do Fornecedor" (lst.aspx.cs:88-92 e 393-411).</li>
+<li>Campos vazios (vistos em teste, CT-EST-017, 22/10/2026): "O Fornecedor é obrigatório.", "O Código Item do Fornecedor é obrigatório!", "O Item é obrigatório!" e a apresentação sem escolha.</li>
+<li>"Item não informado ou inexistente!" quando o texto do campo Item não virou um item escolhido.</li>
+<li>"Esse código já está cadastrado." quando o código do fornecedor é igual ao de outra ligação, <strong>mesmo que seja de outro fornecedor</strong> (veja os cuidados).</li>
+<li>"Justificativa é obrigatória!" ou "A Justificativa é obrigatória!" ao alterar ou excluir sem justificativa.</li>
+<li>Na janela "Localizar Item": "Informe pelo menos um caracter para realizar a busca!" e "Nenhum registro foi encontrado!".</li>
 </ul>
-<h4 id="incluir-uma-ligacao">Incluir uma ligação</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 6. Clique em Incluir. Abre o formulário vazio.</li>
-<li>Passo 7. Escolha o Fornecedor, escreva o Cód. Item Fornecedor (até 14 caracteres, letras e números) e escolha a Apresentação.</li>
-<li>Passo 8. No campo Item, escreva o código do item ou parte da descrição e clique na lupa. Se o código existir, o item é escolhido na hora; senão abre a janela "Localizar Item", em que se escolhe a linha (ed.aspx.cs:308-316 e 384-417).</li>
-<li>Passo 9. Deixe Ativo = Sim e clique em SALVAR. A tela pergunta "Confirma a inclusão do item?". Responda SIM; a tela mostra "Inclusão realizada com sucesso!" e, ao clicar OK, volta à lista.</li>
+<li>A tela é a <strong>função 222 (Conversão Fornecedor)</strong>, que a carga do menu cria com as funções filhas incluir, alterar, excluir, imprimir/Excel e consultar log (dml.sql:1866).</li>
+<li>Na lista, <strong>Editar, Excluir e Ver Log</strong> são escondidos conforme a função do perfil; <strong>Imprimir e Excel</strong> dependem da função de imprimir. <strong>O formulário não esconde nada por função</strong> e abre para quem chegar até ele.</li>
+<li><strong>Cuidado:</strong> a conferência "a pessoa tem a função desta tela?" para abrir a página está <strong>comentada</strong> no código; quem digitar o endereço abre a lista e o formulário (DV-EST-008, Alta; por usar a mesma base, esta tela deve se comportar assim; falta confirmar, CT-EST-023 não executado).</li>
+<li>Não há limite por grupo de usuário nem conferência de fornecedor aprovado.</li>
 </ul>
-<h4 id="alterar-uma-ligacao">Alterar uma ligação</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<p>Nenhum defeito do registro foi aberto para esta tela; o único teste (CT-EST-017, 22/10/2026) passou na inclusão. Vale <strong>DV-EST-008</strong> (acesso pelo endereço, Alta). O que segue vem da leitura do código.</p>
 <ul>
-<li>Passo 10. Na lista, clique no lápis. O formulário abre com os dados e o painel <strong>Justificativa</strong>.</li>
-<li>Passo 11. Mude o que precisa, escreva a justificativa (obrigatória) e clique em SALVAR. Confirme. A tela mostra "Alteração realizada com sucesso!".</li>
-<li>Passo 12. Com Ativo = Não os campos ficam travados; para mudar qualquer dado, volte Ativo para Sim primeiro (ed.aspx.cs:66-68 e 476-487).</li>
+<li><strong>Produto sem ligação some da nota importada</strong>: no Recebimento por XML, o item da nota sem ligação ativa não é acrescentado e <strong>não há mensagem</strong>; o recebedor pode achar que a nota tem menos itens do que o fornecedor entregou (RDC 658/2022, art. 183). Gravidade proposta: Alta, a confirmar. Mantenha todas as ligações ativas e conferidas.</li>
+<li><strong>O mesmo código de fornecedor não serve a dois fornecedores:</strong> a conferência de duplicidade olha só o código, não o fornecedor. Gravidade proposta: Média.</li>
+<li><strong>A mudança do código do fornecedor não vai ao histórico</strong> (art. 125).</li>
+<li><strong>Fornecedor não avaliado pode receber ligação</strong> (a avaliação não é consultada em nenhuma tela, DV-EST-022).</li>
+<li><strong>A apresentação não é conferida com o item:</strong> uma apresentação de outra unidade pode ser ligada e a conversão importada fica errada.</li>
+<li>O texto técnico do erro aparece ao usuário no link "Detalhe do erro (+)".</li>
+<li>Ponto para validar com a área: dois fornecedores podem usar o mesmo código? Um produto sem ligação deve parar a importação, avisar ou entrar como pendente? Só fornecedor aprovado pode ter ligação? Uma ligação inativa deve continuar reconhecida?</li>
 </ul>
-<h4 id="excluir-uma-ligacao">Excluir uma ligação</h4>
-<ul>
-<li>Passo 13. Na lista, clique no X da linha. A tela mostra Código, Descrição e o campo Justificativa (obrigatório).</li>
-<li>Passo 14. Escreva a justificativa e clique em EXCLUIR REGISTRO. Confirme ("Confirma a exclusão do item?"). A tela mostra "Exclusão realizada com sucesso!" (lst.aspx.cs:250-302 e 369-377).</li>
-</ul>
-<h4 id="ver-o-historico">Ver o histórico</h4>
-<ul>
-<li>Passo 15. Na lista, clique no ícone Ver Log. A janela "Log Alteração - Conversão de Unidade do Fornecedor" mostra campo, dado antigo, dado novo, data, hora, usuário e justificativa (lst.aspx.cs:150-160 e 319-327).</li>
-</ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
-<ul>
-<li>Não confere se o fornecedor foi aprovado ou avaliado (a lista traz toda pessoa jurídica do tipo Fornecedor).</li>
-<li>Não mostra o log de uma ligação que já foi excluída.</li>
-<li>Não reordena a lista ao clicar nos títulos das colunas (ponto para validar, ver "Falhas e pontos de atenção").</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura as ligações por fornecedor e situação</td>
+<td>Na tela de lista</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário vazio</td>
+<td>Na tela de lista</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário com a ligação e a justificativa</td>
+<td>Em cada linha, para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>X (Excluir)</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Em cada linha, para quem tem a função de excluir</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre "Log Alteração - Conversão de Unidade do Fornecedor"</td>
+<td>Em cada linha, para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Geram o relatório da conversão do fornecedor</td>
+<td>Depois de uma pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -374,7 +473,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

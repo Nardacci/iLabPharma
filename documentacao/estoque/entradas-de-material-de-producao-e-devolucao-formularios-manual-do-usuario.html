@@ -45,23 +45,126 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="entradas-de-material-de-producao-e-devolucao-formularios-analise.html">Análise</a><a href="entradas-de-material-de-producao-e-devolucao-formularios-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="entradas-de-material-de-producao-e-devolucao-formularios-fluxos.html">Fluxos</a><a href="entradas-de-material-de-producao-e-devolucao-formularios-regras-de-negocio.html">Regras de negócio</a><a href="entradas-de-material-de-producao-e-devolucao-formularios-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-entradas-de-material-de-producao-e-devolucao-entrada-material-ed-entrada-producao-ed-devolucao-ed.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-devolucao-e-entradas-da-producao-passo-a-passo.html#tela-1-devolucao">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Não testada</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Estes são os três <strong>formulários de gravação</strong> abertos pelo ícone <strong>Incluir</strong> das listas de <strong>Devolução</strong>, <strong>Entrada de Material - Outras</strong> e <strong>Entrada de Material - Produção</strong> (a lista é uma só, escolhida pelo parâmetro <code>dev</code>). Servem para registrar a <strong>entrada de saldo no estoque por digitação</strong>, sem nota fiscal e sem passar pelo Recebimento: devolução de material que já saiu, entrada de material que não vem de compra e entrada manual de produto acabado. Quem usa é o almoxarifado (matéria-prima e produto acabado); o Controle da Qualidade recebe a análise aberta. Nos três, o usuário informa item, lote, validade, quantidade, volumes e endereço. O título no alto muda: <strong>"DEVOLUÇÃO DE MATERIAL"</strong>, <strong>"ENTRADA DE MATERIAL - OUTRAS"</strong> e <strong>"ENTRADAS DE MATERIAIS - PRODUÇÃO"</strong> (no plural, diferente do menu).</p>
+<p><strong>Situação:</strong> Não testada como tela própria; os testes das telas 19 a 21 do menu Estoque passaram por estes formulários (CT-EST-092 a 099, 101, 102 e 210) e é deles que vêm os resultados citados aqui. Detalhe de cada formulário: telas <code>19-devolucao</code>, <code>20-entrada-de-material-outras</code> e <code>21-entrada-de-material-producao</code> do menu Estoque.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item cadastrado</strong>, com unidade e custo</td>
+<td>É o que entra; item refrigerado ou com controle de umidade só oferece locais compatíveis</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado, Local, Rua, Coluna e Andar</strong> de destino, livres e <strong>liberados ao seu grupo de usuário</strong></td>
+<td>Formam o endereço de cada lote</td>
+<td>Cadastros › Almoxarifado, Local de Armazenagem, Rua, Coluna e Andar e Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Devolução:</strong> lote que <strong>já existe</strong> com o mesmo item, validade e fabricante</td>
+<td>Sem ele: "Lote, validade, fabricante não localizado!"</td>
+<td>Entrada original do lote (Recebimento ou Entrada de Material)</td>
+</tr>
+<tr>
+<td><strong>Entrada - Produção:</strong> ordem de produção (opcional, mas recomendada) e valor total do lote</td>
+<td>A ordem não é conferida com a Produção</td>
+<td>Informação da Produção, fora do sistema</td>
+</tr>
+<tr>
+<td><strong>Tipo de movimentação de entrada</strong> (só em "Outras"; vem "ENTRADA - OUTRAS")</td>
+<td>Classifica a entrada</td>
+<td>Cadastros › Tipo de Movimentação</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p>O roteiro é igual nos três formulários, com as diferenças indicadas.</p>
+<ol>
+<li>Na lista (Devolução, Entrada de Material - Outras ou Entrada de Material - Produção), clique em <strong>Incluir</strong>. O código e a data vêm preenchidos.</li>
+<li>Em <strong>"Dados do Registro"</strong>, escolha o <strong>tipo de movimentação</strong> (Outras), preencha o <strong>Documento de Devolução</strong> (Devolução) ou a <strong>ordem de produção</strong> (Produção). Esses campos de referência são livres, sem conferência com saída, pedido ou Produção.</li>
+<li>Em <strong>"Itens"</strong>, escolha o item pela lupa ou pelo código, informe custo (na Produção, <strong>Valor Total</strong>), quantidade, fabricante, lote, validade e volumes, e clique em <strong>SALVAR ITEM</strong> (Produção: <strong>INCLUIR ITEM</strong>). O item vai para a grade; <strong>nada é gravado ainda</strong>. Lote e validade só são exigidos se o item os controla (sem controle de lote vale "ND").</li>
+<li>Em <strong>"Endereços"</strong>, escolha o lote, almoxarifado, local, rua, coluna e andar, informe a quantidade e clique em <strong>INCLUIR ENDEREÇO</strong>. Repita até zerar o pendente; a quantidade não passa do pendente.</li>
+<li>Escreva a <strong>justificativa</strong> (obrigatória em Outras e Devolução; a Produção não a preenche) e clique em <strong>FINALIZAR MOVIMENTAÇÃO</strong>; confirme com <strong>SIM</strong>.</li>
+<li>Feche as janelas de etiqueta que se abrirem e confira o saldo em <strong>Disponibilidade do Lote</strong> e a análise na tela <strong>Controle da Qualidade</strong>.</li>
+<li><strong>Se aparecer erro depois de gravar, não clique de novo em FINALIZAR sem conferir a lista:</strong> pode duplicar a entrada.</li>
+</ol>
+<p>Os ícones <strong>Visualizar</strong> e <strong>Editar</strong> da lista abrem o <strong>mesmo formulário só para consulta</strong>; lá o botão <strong>ETIQUETA VOLUME</strong> reimprime a etiqueta. O <strong>Editar sempre abre o formulário da Devolução</strong>, com título e função da lista de origem.</p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>O item deve estar cadastrado; almoxarifado e endereços de destino devem existir, estar livres e liberados ao seu grupo. Item refrigerado ou com controle de umidade só oferece locais compatíveis (<code>entrada_material_ed.aspx.cs:1138-1170</code>).</li>
-<li>Na <strong>Devolução</strong>, o lote <strong>já precisa existir</strong> com o mesmo item, validade e fabricante (<code>devolucao_ed.aspx.cs:724-735</code>).</li>
-<li>Na <strong>Entrada - Produção</strong>, tenha à mão a ordem de produção (opcional, mas recomendada) e o valor total do lote.</li>
+<li>Grava a <strong>movimentação</strong> de entrada (usuário, data, tipo e referências), <strong>gera os volumes</strong>, abre a <strong>etiqueta</strong> e, se o item tem controle de qualidade, <strong>abre a análise no Controle da Qualidade</strong> ("AGUARDANDO ANÁLISE"; o lote fica em quarentena). Item sem controle entra como disponível (CT-EST-062 e CT-EST-093).</li>
+<li>A tela volta para a lista de origem, com "Movimentação gerada!" (Outras) ou "Inclusão realizada com sucesso!" (Produção).</li>
+<li><strong>Uma entrada gravada não pode ser alterada nem excluída pela tela</strong>; não há rascunho nem cancelamento.</li>
+<li><strong>Histórico:</strong> a inclusão grava usuário, data e a justificativa (a justificativa fica só no histórico/log, em maiúsculas, até 255 caracteres). O Histórico do Lote não mostra usuário nem hora (DV-EST-034). O ícone Log existe, mas o histórico <strong>nunca foi aberto em teste</strong>.</li>
+<li>A entrada manual de produto acabado <strong>não usa o vínculo com a ordem de produção</strong>.</li>
 </ul>
-<h4 id="passo-a-passo-igual-nos-tres-formularios-com-as-diferencas-indicadas">Passo a passo (igual nos três formulários, com as diferenças indicadas)</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. Na lista, clique em Incluir. O código e a data vêm preenchidos.</li>
-<li>Passo 2. Em "Dados do Registro", escolha o tipo de movimentação (Outras) ou preencha o Documento de Devolução (Devolução) ou a ordem de produção (Produção).</li>
-<li>Passo 3. Em "Itens", escolha o item pela lupa ou pelo código, informe custo (Produção: Valor Total), quantidade, fabricante, lote, validade e volumes, e clique em SALVAR ITEM (Produção: INCLUIR ITEM). O item vai para a grade; nada é gravado ainda.</li>
-<li>Passo 4. Em "Endereços", escolha o lote, almoxarifado, local, rua, coluna e andar, informe a quantidade e clique em INCLUIR ENDEREÇO. Repita até zerar o pendente.</li>
-<li>Passo 5. Escreva a justificativa e clique em FINALIZAR MOVIMENTAÇÃO; confirme com SIM.</li>
-<li>Passo 6. Feche as janelas de etiqueta que se abrirem e confira o saldo em Disponibilidade do Lote e a análise na tela Controle da Qualidade.</li>
-<li>Se aparecer erro <strong>depois</strong> de gravar, não clique de novo em FINALIZAR sem conferir a lista: pode duplicar a entrada (<code>entrada_material_ed.aspx.cs:316-335</code>).</li>
+<li>"Item não informado ou inválido!"; quantidade zero ou com mais de 3 casas.</li>
+<li>"O Item/Lote/Fabricante já existe na lista!" ao repetir (vista em CT-EST-095).</li>
+<li>"Lote, validade, fabricante não localizado!" na Devolução (vista em CT-EST-092; ver DV-EST-064).</li>
+<li>Quantidade do endereço maior que o pendente.</li>
+<li>Na Produção, <strong>custo (Valor Total) vazio faz o botão não responder, sem mensagem</strong>.</li>
+<li><strong>Não recusa:</strong> validade vencida (só o formato é conferido), lote repetido em Outras e Devolução, lote inventado em Produção, devolução maior que a saída.</li>
 </ul>
-<p><strong>Atenção:</strong> os passos vêm do código e dos testes das telas 19 a 21; esta tela, como formulário, não tem teste próprio.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>As funções do catálogo são <strong>312 (Devolução)</strong>, <strong>316 (Outras)</strong> e <strong>322 (Produção)</strong>, cada uma com incluir, imprimir e ver log; <strong>alterar e excluir não estão previstos</strong>. Quem só consulta não vê o ícone Incluir na lista.</li>
+<li><strong>O formulário não confere a função ao abrir nem na gravação:</strong> a classe base libera incluir, alterar e excluir a todos e a conferência de acesso está comentada. A barreira fica só no menu (a confirmar em CT-EST-F01-01).</li>
+<li><strong>Cuidado:</strong> a Produção aberta pelo endereço sem acesso mostrou erro técnico com o rastro de chamadas (DV-EST-008, Alta; CT-EST-102, 13/10/2026). Os outros dois formulários não foram testados quanto a acesso.</li>
+<li>Quem lança, quem endereça e quem justifica podem ser a mesma pessoa, sem assinatura e sem aprovação da Garantia da Qualidade (DV-EST-009 e DV-EST-028, em outras telas).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Entrada de produto acabado aceitou lote inventado, sem ordem de produção</strong> (DV-EST-024, Alta; CT-EST-098 falhou) e <strong>validade vencida</strong> (DV-EST-025, Alta; CT-EST-099 falhou). A validade vencida também passa em "Outras".</li>
+<li><strong>A análise do produto acabado abriu como tipo NORMAL</strong> (DV-EST-026, Média; CT-EST-097).</li>
+<li><strong>A Devolução não achou o lote existente de item com CQ</strong> e, para item sem CQ, criou novo item de entrada (DV-EST-064, Média; CT-EST-093 falhou).</li>
+<li><strong>Erro depois de gravar:</strong> na Entrada - Outras os dados ficam na tela e um novo clique duplica a entrada; na Produção volta à lista com o lote em quarentena <strong>sem análise</strong> (CT-EST-F01-02, a confirmar).</li>
+<li><strong>O Valor Total da Produção pode inflar o custo médio</strong> (RN-EST-E21-007).</li>
+<li><strong>Três formulários copiados com regras diferentes</strong> (por exemplo, a validade fixa de item sem controle é 31/12/2999 em Outras e 31/12/2099 na Devolução). <strong>Ponto para validar com a TI.</strong></li>
+<li><strong>Ponto para validar com a área:</strong> quando a entrada "Outras" e a Produção manual são permitidas e quem as autoriza? A Garantia da Qualidade deve aprovar antes do saldo? A devolução deve citar a saída e limitar a quantidade?</li>
+<li>A tela, como formulário, <strong>não tem teste próprio</strong>; os passos vêm do código e dos testes das telas 19 a 21.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>A lista é a da Devolução, da Entrada de Material - Outras ou da Entrada de Material - Produção (menu Estoque):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário</td>
+<td>Para quem tem a função de incluir</td>
+</tr>
+<tr>
+<td>Visualizar / Editar</td>
+<td>Abre o mesmo formulário só para consulta (o Editar abre sempre o da Devolução)</td>
+<td>Em toda linha</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>Abre o histórico (nunca aberto em teste)</td>
+<td>Para quem tem a função de ver log</td>
+</tr>
+<tr>
+<td>ETIQUETA VOLUME (no formulário de consulta)</td>
+<td>Reimprime a etiqueta</td>
+<td>Só na consulta</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Campos comuns aos três formulários. Detalhe completo, por formulário, nas telas 19, 20 e 21 do menu.</p>
 <div class="tabela"><table>
@@ -201,7 +304,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

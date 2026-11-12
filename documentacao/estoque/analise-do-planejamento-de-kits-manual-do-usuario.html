@@ -45,30 +45,133 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="analise-do-planejamento-de-kits-analise.html">Análise</a><a href="analise-do-planejamento-de-kits-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="analise-do-planejamento-de-kits-fluxos.html">Fluxos</a><a href="analise-do-planejamento-de-kits-regras-de-negocio.html">Regras de negócio</a><a href="analise-do-planejamento-de-kits-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-analise-do-planejamento-de-kits.html">Erros (3)</a><a class="aba-extra" href="roteiro-de-execucao-kits-passo-a-passo.html#tela-4-analise-do-planejamento-de-kits">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Tenha o planejamento do cliente já cadastrado (Planejamento de Kits) e a Validade Mínima do Kit definida nos Parâmetros de Configuração (Kit). Sem planejamento, a tela responde "Nenhum planejamento foi encontrado!".</p>
-<h4 id="gerar-e-salvar-uma-analise">Gerar e salvar uma análise</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Análise do Planejamento de Kits</strong> calcula, para um cliente e uma filial (ou para todos, se ficarem em branco), <strong>quanto de cada componente os kits planejados vão exigir nos próximos N dias</strong>, quanto já foi enviado, quanto está vencido ou vencendo no cliente, quanto repor e quanto resta <strong>comprar</strong> depois de descontar o estoque utilizável. É usada por quem planeja compras e reposição de componentes de kit (Compras, Almoxarifado e Comercial; leitura da área, a validar). <strong>A análise não gera compra nem solicitação</strong>: é consulta para decisão.</p>
+<p>É uma tela de <strong>dois passos</strong>: (1) <strong>Gerar</strong> calcula e grava a análise como <strong>rascunho</strong> e mostra o resultado; (2) <strong>Salvar análise</strong> a torna ativa e a faz aparecer na lista, ou <strong>Cancelar análise</strong> apaga o rascunho de vez.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Planejamento do cliente</strong> (e da filial)</td>
+<td>Sem planejamento, a tela responde "Nenhum planejamento foi encontrado!"</td>
+<td>Menu Kits › Planejamento de Kits</td>
+</tr>
+<tr>
+<td><strong>Validade Mínima do Kit</strong> definida</td>
+<td>Define o que conta como vencido e como estoque utilizável (é o parâmetro geral, não o do planejamento)</td>
+<td>Menu Kits › Parâmetros de Configuração (Kit)</td>
+</tr>
+<tr>
+<td><strong>Remessas de kit enviadas</strong> (com embarque confirmado)</td>
+<td>Alimentam a coluna Enviado e o que está vencido no cliente</td>
+<td>Fluxo Solicitação de Kits › Remessa de Material</td>
+</tr>
+<tr>
+<td><strong>Estoque com lotes e validade</strong></td>
+<td>Entra no cálculo da Compra</td>
+<td>Estoque (recebimento e entradas)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar e salvar uma análise</strong></p>
+<ol>
+<li>No menu <strong>Kits</strong>, abra <strong>Análise do Planejamento de Kits</strong> e clique em <strong>Gerar</strong>. A lista abre vazia; só mostra análises <strong>já salvas</strong>.</li>
+<li>Escolha o <strong>Cliente</strong> e a <strong>Filial</strong> (opcionais: em branco, a análise cobre todos os planejamentos) e informe o <strong>Período de Análise</strong> em dias (obrigatório: "Período não foi informado!").</li>
+<li>Clique em <strong>GERAR</strong> e responda <strong>SIM</strong> a "Confirma a Geração da Análise?". Aparece "Analise gerada!".</li>
+<li><strong>Clique em OK.</strong> A tela mostra o Código, a Data de Geração e o quadro "Resultado da Análise" (visto na rodada 12B, CT-EST-152). Escolha o <strong>Tipo de Análise</strong>: Por Componente, Por Kit ou Por Planejamento.</li>
+<li>Confira. Para guardar, clique em <strong>SALVAR ANÁLISE</strong> e responda <strong>SIM</strong> a "Deseja salvar a Análise!": "Análise Salva!". Para descartar, <strong>CANCELAR ANÁLISE</strong> e <strong>SIM</strong> a "Deseja cancelar a Análise!": "Análise cancelada!". <strong>A mensagem "Analise gerada!" não avisa que ainda falta salvar.</strong></li>
+<li><strong>GERAR RELATÓRIO</strong> abre o relatório do tipo escolhido.</li>
+</ol>
+<p><strong>O que cada coluna quer dizer</strong></p>
 <ul>
-<li>Passo 1. No menu Kits, abra Análise do Planejamento de Kits e clique em Gerar.</li>
-<li>Passo 2. Escolha o Cliente e a Filial (opcionais: em branco, a análise cobre todos os planejamentos) e informe o Período de Análise em dias (obrigatório: "Período não foi informado!").</li>
-<li>Passo 3. Clique em GERAR e responda SIM a "Confirma a Geração da Análise?". Aparece "Analise gerada!".</li>
-<li>Passo 4. <strong>Clique em OK.</strong> A tela mostra o resultado, no quadro "Resultado da Análise". Escolha o Tipo de Análise: Por Componente, Por Kit ou Por Planejamento.</li>
-<li>Passo 5. Confira. Para guardar, clique em SALVAR ANÁLISE e responda SIM a "Deseja salvar a Análise!": "Análise Salva!". Para descartar, CANCELAR ANÁLISE e SIM a "Deseja cancelar a Análise!": "Análise cancelada!".</li>
-<li>Passo 6. GERAR RELATÓRIO abre o relatório do tipo escolhido.</li>
-</ul>
-<h4 id="o-que-cada-coluna-quer-dizer">O que cada coluna quer dizer</h4>
-<ul>
-<li><strong>Planejado:</strong> quantidade planejada do componente (quantidade do kit vezes a quantidade planejada).</li>
-<li><strong>Enviado:</strong> o que já foi enviado ao cliente e filial do planejamento, com embarque confirmado.</li>
-<li><strong>Vencido:</strong> o que está no cliente e já vence antes do fim do período, conforme a Validade Mínima do Kit.</li>
+<li><strong>Planejado:</strong> quantidade do componente no kit vezes a quantidade planejada de kits.</li>
+<li><strong>Enviado:</strong> o que já foi enviado ao cliente e filial do planejamento, com embarque confirmado (sem janela de datas: o planejamento não tem período).</li>
+<li><strong>Vencido:</strong> o que está no cliente com validade menor que a Validade Mínima do Kit contada a partir de hoje mais o período.</li>
 <li><strong>Pendente (reposição):</strong> planejado menos enviado mais vencido.</li>
-<li><strong>Compra:</strong> o que falta depois de usar o estoque utilizável.</li>
+<li><strong>Compra:</strong> o que falta depois de usar o estoque disponível de lotes com validade acima da mínima.</li>
 </ul>
-<h4 id="excluir-pesquisar-e-ver-o-log">Excluir, pesquisar e ver o log</h4>
+<p><strong>Excluir, pesquisar e ver o log</strong></p>
 <ul>
-<li>A lista mostra só análises salvas: Código, Data, Cliente, Filial e Período (dias). Filtros: Código, Cliente, Filial.</li>
-<li>O ícone de excluir aparece em toda linha e pede justificativa; a exclusão não grava a justificativa nem log.</li>
+<li>A lista mostra Código, Data, Cliente, Filial e Período (dias). Filtros: <strong>Código</strong>, <strong>Cliente</strong> e <strong>Filial</strong>.</li>
+<li>O ícone <strong>Excluir</strong> aparece em toda linha e pede justificativa; a exclusão <strong>não grava a justificativa nem log</strong>.</li>
+<li>O Ver log da lista abre um histórico que esta tabela não alimenta.</li>
 </ul>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>Gerar:</strong> calcula e grava o <strong>rascunho</strong> (ativo = não) com o usuário, a data e a lista de itens calculados. Cada geração grava um rascunho, mesmo que ninguém o salve.</li>
+<li><strong>Salvar análise:</strong> marca a análise como ativa, grava usuário e data da alteração e a faz aparecer na lista.</li>
+<li><strong>Cancelar análise:</strong> apaga o rascunho e seus itens <strong>de vez</strong> (não vai para a lixeira), sem log nem justificativa.</li>
+<li><strong>Excluir pela lista:</strong> exclusão lógica, sem log.</li>
+<li>A análise <strong>guarda só o resultado</strong>: não registra com qual validade mínima nem com qual estoque foi calculada. Nada é gravado em outros módulos; a compra sugerida não vira pedido.</li>
+<li>Só entram na análise os componentes com <strong>Compra maior que zero</strong> depois de usar o estoque.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Período não foi informado!" (vista em CT-EST-152).</li>
+<li>"Nenhum planejamento foi encontrado!" quando não há planejamento para o cliente e a filial.</li>
+<li>"Nenhum dado foi encontrado para análise!" quando nenhum componente precisa de compra.</li>
+<li>"Ocorreram erros na geração da Análise!" quando a geração devolve código zero.</li>
+<li>"A Justificativa é obrigatória!" ao excluir pela lista sem justificativa.</li>
+<li>"Erro na Exclusão da Análise." ao falhar o cancelamento ou a exclusão.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela usa o identificador <code>AnalisePlanEstoque</code>. As funções de incluir e alterar aparecem no perfil renomeadas como <strong>"Gerar"</strong> e <strong>"Consultar"</strong> (dml.sql:2296-2312). <strong>Gerar</strong> (link da lista) segue a função de incluir; <strong>Visualizar</strong>, a de alterar; <strong>Pesquisar</strong>, a de consultar.</li>
+<li><strong>Excluir não confere função nenhuma:</strong> o ícone fica visível em toda linha. No formulário, os botões <strong>GERAR, SALVAR ANÁLISE e CANCELAR ANÁLISE</strong> aparecem pela situação da análise, sem conferir função.</li>
+<li>A análise lê o saldo de <strong>todos os almoxarifados</strong>, sem filtro pelo grupo do usuário (leitura do código).</li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta; SEG-EST-03): quem abrir o formulário pelo endereço consegue gerar, salvar e cancelar, inclusive o rascunho de outra pessoa (leitura do código, a confirmar em CT-EST-KIT06-S1).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Rascunhos invisíveis:</strong> a lista só mostra análises salvas; duas gerações sem salvar deixam a lista vazia, e cada geração deixou um rascunho que ninguém vê (RN-EST-KIT06-001). O DV-EST-054 ("diz gerada e não grava") foi <strong>descartado em 26/10/2026</strong>: era leitura incompleta do fluxo em dois passos.</li>
+<li><strong>Possível erro no cálculo da Compra:</strong> quando o lote tem menos estoque do que falta, o código abate "o que falta menos o lote", não o lote inteiro. Exemplo: faltam 15, o lote tem 10; o código mostraria Compra 10, quando o esperado é 5 (leitura do código, a confirmar em CT-EST-KIT06-06). <strong>Confira a coluna Compra antes de usar.</strong></li>
+<li><strong>A validade mínima do planejamento é ignorada:</strong> a análise usa o parâmetro geral (RN-EST-KIT06-005). Com o parâmetro em 0, o lote só é descartado se já tiver vencido.</li>
+<li><strong>"Enviado" sem janela:</strong> tudo o que já foi enviado ao cliente reduz o que falta, para sempre (CT-EST-KIT06-04).</li>
+<li><strong>Estoque sem separar compromissos:</strong> dois planejamentos do mesmo cliente podem usar o mesmo estoque (CT-EST-KIT06-07).</li>
+<li><strong>Cancelar e excluir sem rastro</strong>; a justificativa da exclusão é descartada.</li>
+<li>O Resumo da tela cita DV-EST-122 e 123 (divergências desta análise) como motivo de "Funciona com falhas", mas a seção de Falhas não os descreve: <strong>Ponto para validar com a área</strong> (e com o inventário de defeitos).</li>
+<li>Erros do banco aparecem com o texto técnico (SEG-EST-13).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gerar (link)</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a função de incluir ("Gerar")</td>
+</tr>
+<tr>
+<td>Visualizar</td>
+<td>Abre a análise salva</td>
+<td>Para quem tem a função de alterar ("Consultar")</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Abre o quadro de exclusão com Justificativa</td>
+<td>Em toda linha, sem conferir função</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório da lista</td>
+<td>Depois de pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <h4 id="filtros-da-lista">Filtros da lista</h4>
@@ -340,7 +443,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

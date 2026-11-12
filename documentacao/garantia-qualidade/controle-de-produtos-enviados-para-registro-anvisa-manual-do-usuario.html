@@ -45,15 +45,112 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="controle-de-produtos-enviados-para-registro-anvisa-analise.html">Análise</a><a href="controle-de-produtos-enviados-para-registro-anvisa-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="controle-de-produtos-enviados-para-registro-anvisa-fluxos.html">Fluxos</a><a href="controle-de-produtos-enviados-para-registro-anvisa-regras-de-negocio.html">Regras de negócio</a><a href="controle-de-produtos-enviados-para-registro-anvisa-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-controle-de-produtos-enviados-para-registro-anvisa.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-assuntos-regulatorios-passo-a-passo.html#tela-6-controle-de-produtos-enviados-para-registro-anvisa">Passo a passo</a><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Bloqueada no teste (tela fora </strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<p>Passo a passo pelo que o código prevê. <strong>Não foi executado</strong>: a tela não está no menu.</p>
+<p>Passo a passo pelo que o código prevê. <strong>Não foi executado</strong>: a tela não está no menu (Bloqueada no teste, DV-GQ-015).</p>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Guardar o <strong>andamento de cada pedido de registro na ANVISA</strong>: situação, processo, registro, data de publicação no D.O.U. (Diário Oficial da União), validade e revalidação, observação e anexos. Cada linha é um momento do pedido (SEQ 1, 2, 3...). O resto do sistema não consulta essa tela (RN-GQ-148). Quem usa: Assuntos Regulatórios (inferência pelo nome; o código não restringe a tela a uma área).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Solicitação de Registro já enviada à ANVISA</strong></td>
+<td>O botão Enviar Anvisa dela cria a primeira linha (SEQ 1), só com produto, tipo e grau. <strong>Não há botão Incluir na lista</strong></td>
+<td>Tela Solicitação de Registro (fora do menu)</td>
+</tr>
+<tr>
+<td><strong>Grupo de usuário</strong> do seu usuário</td>
+<td>Decide se pode incluir (Controller.cs:197-201)</td>
+<td>Configuração › Grupo Perfil</td>
+</tr>
+<tr>
+<td><strong>O endereço da tela</strong></td>
+<td>Não há entrada no menu (DV-GQ-015)</td>
+<td>Abrir pelo endereço da área</td>
+</tr>
+</tbody>
+</table></div>
 <h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>Abra a tela (hoje só pelo endereço da área) e clique em <strong>Pesquisar</strong>; <strong>Limpar</strong> esvazia filtros e lista.</li>
+<li>A lista mostra SEQ, produto, princípio ativo, processo, registro, D.O.U., validade, vencimento e revalidação. <strong>Não mostra a Situação.</strong> O lápis abre a edição.</li>
+<li>Na edição, Código e Produto vêm travados. Preencha Princípio Ativo, Apresentação Comercial, Validade Meses, Data Revalidação, Processo N e Situação (obrigatórios); D.O.U., Registro, Categoria e Observação são opcionais. <strong>Preencha também a Data Publicação D.O.U.</strong>: vazia, derruba a gravação (ver Cuidados).</li>
+<li><strong>Alterar</strong> corrige a linha aberta ("Confirma a edição do item?"). <strong>Novo</strong> e depois <strong>Incluir</strong> registram um novo momento ("Confirma a inclusão do item?") com o SEQ seguinte. Quando a situação do pedido mudar, use Novo e Incluir, para não perder o valor anterior.</li>
+<li><strong>Anexos</strong> juntam e removem arquivos da linha. A grade no pé lista todas as linhas do pedido. <strong>Voltar</strong> sai sem gravar.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. Antes: tenha uma Solicitação de Registro já enviada à ANVISA (ela cria a primeira linha). Abra a tela (hoje só pelo endereço da área) e clique em Pesquisar; Limpar esvazia filtros e lista.</li>
-<li>Passo 2. A lista mostra SEQ, produto, princípio ativo, processo, registro, D.O.U., validade, vencimento e revalidação. <strong>Não mostra a Situação.</strong> O lápis abre a edição.</li>
-<li>Passo 3. Na edição, Código e Produto vêm travados. Preencha Princípio Ativo, Apresentação Comercial, Validade Meses, Data Revalidação, Processo N e Situação (obrigatórios); D.O.U., Registro, Categoria e Observação são opcionais.</li>
-<li>Passo 4. Alterar corrige a linha aberta ("Confirma a edição do item?"). Novo e depois Incluir registram um novo momento ("Confirma a inclusão do item?") com o SEQ seguinte.</li>
-<li>Passo 5. Anexos juntam e removem arquivos da linha. A grade no pé lista todas as linhas do pedido.</li>
+<li>A linha grava e a tela <strong>continua aberta</strong>, com a grade do pedido recarregada (Controller.cs:206-241).</li>
+<li><strong>Incluir</strong> acrescenta um momento novo (SEQ seguinte) e grava o histórico de inclusão com o usuário. <strong>Alterar</strong> sobrescreve a linha aberta, <strong>sem histórico</strong>, sem justificativa e sem valor antigo e novo.</li>
+<li>Nada acontece em outro módulo: situação "Indeferida" ou revalidação vencida <strong>não chegam</strong> à Produção, ao Estoque nem ao Comercial.</li>
 </ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Código do produto é obrigatório.", "Produto é obrigatório.", "O Processo é obrigatório.", "O Principio Ativo é obrigatório.", "A válidade meses é obrigatório.", "A Data Revalidação é obrigatório.", "O Apresentação Comercial é obrigatório.", "Tipo Produto é obrigatório.", "Situação é obrigatório.".</li>
+<li>"Ocorreu um erro inesperado." em falha não prevista.</li>
+<li>"Não foi possível obter os produtos enviados Anvisa" se a pesquisa falhar.</li>
+<li><strong>Não recusa:</strong> "Deferida" sem número de registro; "Indeferida", "Em exigências" ou "Cancelada" sem motivo (não há campo); qualquer situação depois de qualquer outra; Validade Meses que não seja número (RN-GQ-AR04-006).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>Não há função própria no menu, porque a tela não tem menu. Os níveis 1, 2 e 3 veem a lista e gravam (<code>02-matriz-de-permissoes.md</code>; a confirmar no teste).</li>
+<li>O controlador não tem filtro de autorização; o que esconde a tela é só a falta de entrada no menu (nota do DV-GQ-015; a confirmar no teste).</li>
+<li>Na gravação, o servidor <strong>não confere nível, área, responsável nem a existência do pedido</strong> (RN-GQ-AR04-007). Qualquer usuário pode editar "Deferida", sem segunda pessoa que confirme.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-GQ-015</strong> (Média): sem entrada no menu.</li>
+<li><strong>Indeferido ou vencido não bloqueia nada:</strong> Produção, Estoque e Comercial não leem a situação. É o maior risco da tela (CT-GQ-098 e 099).</li>
+<li><strong>A alteração apaga o valor anterior sem rastro:</strong> "Deferida" pode virar "Indeferida" na mesma linha, sem histórico nem justificativa (RN-GQ-147). Prefira Novo e Incluir.</li>
+<li><strong>Sem aviso de vencimento</strong> (RN-GQ-146); os filtros de vencimento provavelmente não funcionam, e o de Princípio Ativo converte o texto em número (a confirmar no teste).</li>
+<li><strong>Data D.O.U. vazia derruba a gravação</strong> com "Ocorreu um erro inesperado.".</li>
+<li><strong>Sem campo para o motivo</strong> da exigência ou do indeferimento, e o produto é guardado como texto, sem ligação ao cadastro.</li>
+<li><strong>Filtros de data só valem com De e Até preenchidos.</strong></li>
+<li>Os pontos acima ainda não viraram defeitos próprios (só o DV-GQ-015 existe), porque a tela não foi executada.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>A regra de acesso das linhas está <strong>comentada</strong> no código: todas as linhas mostram os ícones sem conferir situação nem nível (<code>regras-de-botoes-bloco2.md</code>, item 4).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre a linha</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Lupa (Visualizar)</td>
+<td>Vai para ação <code>Visualizar</code> que <strong>não existe</strong> neste controlador</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Lixeira (Cancelar)</td>
+<td>Vai para <code>CancelarSolicitacao</code>, que <strong>não existe</strong> neste controlador</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Aponta para a classe "SolicitacaoRegistro", não para esta tela: provável que não mostre nada (inferência)</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Impressora</td>
+<td><strong>Não há ícone</strong>; o Imprimir está comentado e a ação não existe</td>
+<td>Nunca</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -234,7 +331,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

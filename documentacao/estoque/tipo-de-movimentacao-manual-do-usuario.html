@@ -45,44 +45,145 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="tipo-de-movimentacao-analise.html">Análise</a><a href="tipo-de-movimentacao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="tipo-de-movimentacao-fluxos.html">Fluxos</a><a href="tipo-de-movimentacao-regras-de-negocio.html">Regras de negócio</a><a href="tipo-de-movimentacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-tipo-de-movimentacao.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-de-apoio-passo-a-passo.html#tela-26-tipo-de-movimentacao">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Tipo de Movimentação</strong> cadastra os <strong>tipos de movimentação</strong> do estoque: o "porquê" de cada lançamento. Para cada tipo a tela guarda o código, a descrição, se é <strong>entrada ou saída</strong>, se <strong>atualiza o custo médio</strong> do item, se é <strong>entrada por nota fiscal</strong> e se está ativo. Os 18 tipos que o próprio sistema usa (entrada e saída por nota fiscal, inventário, ajuste, transferência, atendimento de solicitação, devolução, quarentena, produção, referência, retenção, estabilidade etc.) são criados pelo banco como "de sistema" e <strong>não aparecem na lista</strong>: os tipos que o usuário cria aqui são os que as telas de entrada e de saída avulsas oferecem. Quem decide o tratamento do custo e das entradas usa a tela (ponto para validar quem aprova a criação de um tipo).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nenhum outro cadastro</td>
+<td>O tipo é cadastro de apoio sem dependências</td>
+<td>Cadastros › Tipo de Movimentação</td>
+</tr>
+<tr>
+<td>A decisão: <strong>entrada ou saída</strong>, se <strong>atualiza o custo médio</strong> (só faz sentido para entradas) e, nas entradas, se é <strong>entrada por nota fiscal</strong> (aparece no Recebimento) ou avulsa (aparece em Entrada de Material - Outras)</td>
+<td>Define em que telas o tipo é oferecido e se o custo do item muda</td>
+<td>Decisão da área</td>
+</tr>
+<tr>
+<td>Pesquisa prévia na lista</td>
+<td>A tela não impede duas descrições iguais; os tipos de sistema já existem e não aparecem na lista, não é preciso criá-los</td>
+<td>A própria lista da tela</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu <strong>Cadastros</strong>, abra <strong>Tipo de Movimentação</strong>. A tela mostra o quadro de pesquisa e <strong>nenhuma lista</strong>: ela só aparece depois de clicar em <strong>Pesquisar</strong>.</li>
+<li>Use os filtros <strong>Código</strong> (só números, até 5), <strong>Descrição</strong> (até 255 letras), <strong>Entrada/Saída</strong> (Todos, Entrada, Saída) e <strong>Ativo</strong> (Todos, Sim, Não).</li>
+<li>A lista mostra Código, Descrição, Entrada/Saída e Ativo, 15 linhas por página; os títulos ordenam. Em cada linha há Editar, Excluir e Ver Log, conforme as funções. Depois de uma pesquisa com resultado, <strong>Imprimir</strong> e o ícone do Excel geram o relatório. <strong>Limpar</strong> esvazia filtros e lista.</li>
+</ol>
+<p><strong>Incluir</strong></p>
+<ol start="4">
+<li>Clique em <strong>Incluir</strong>. O formulário mostra Código, Data do Cadastro (travada), Descrição, Tipo (Entrada já marcada), Atualiza Custo Médio (Sim), Entrada por Nota Fiscal (Sim) e Ativo (Sim). Digite o <strong>Código</strong> (opcional; o sistema gera se vazio) e a <strong>Descrição</strong> (obrigatória, até 100 letras).</li>
+<li>Escolha Entrada ou Saída. Ao escolher <strong>Saída</strong>, Atualiza Custo Médio e Entrada por Nota Fiscal passam a Não e ficam travados.</li>
+<li>Para uma entrada avulsa, marque Entrada por Nota Fiscal = <strong>Não</strong> (em Sim, o tipo só aparece no Recebimento). Escolha se atualiza o custo médio.</li>
+<li>Clique em <strong>SALVAR</strong>. A tela pergunta "Confirma a inclusão do item?" (texto comum a todos os cadastros). Com <strong>SIM</strong>, mostra "Inclusão realizada com sucesso!"; o <strong>OK</strong> volta para a lista (visto em teste, CT-EST-020, 22/10/2026).</li>
+</ol>
+<p><strong>Alterar</strong></p>
+<ol start="8">
+<li>Pesquise e clique no lápis. O <strong>Código fica travado</strong>. Se o tipo estiver inativo, Descrição, Tipo e marcações ficam travados: reative e salve primeiro.</li>
+<li>Altere o que for preciso e escreva a <strong>Justificativa</strong> (obrigatória; só aparece ao alterar). <strong>Cuidado:</strong> trocar entrada por saída, ou o custo médio, de um tipo que já foi usado <strong>não é impedido</strong> pela tela. <strong>SALVAR</strong>, <strong>SIM</strong>, "Alteração realizada com sucesso!", <strong>OK</strong>.</li>
+</ol>
+<p><strong>Excluir</strong></p>
+<ol start="10">
+<li>Na lista, clique em Excluir, escreva a Justificativa (obrigatória) e clique em <strong>EXCLUIR REGISTRO</strong>; responda <strong>SIM</strong> a "Confirma a exclusão do item?": "Exclusão realizada com sucesso!". Se alguma movimentação, saída ou nota fiscal já usou o tipo, a tela recusa; nesse caso <strong>inative</strong> o tipo (Ativo = Não). O registro excluído some e o histórico dele não pode ser consultado por esta tela.</li>
+</ol>
+<p><strong>Ver o histórico</strong></p>
+<ol start="11">
+<li>Na lista, clique em <strong>Ver Log</strong>: a janela mostra campo, dado antigo, dado novo, data, hora, usuário e justificativa (4 por página). <strong>Atenção:</strong> o campo que registra a troca entre entrada e saída aparece com o título "ENTRADA" e valores True e False, o que lê <strong>ao contrário</strong>.</li>
+</ol>
+<h4 id="o-que-acontece-ao-salvar">O que acontece ao salvar</h4>
 <ul>
-<li>Decida se o tipo é de <strong>entrada</strong> ou de <strong>saída</strong>, se deve <strong>atualizar o custo médio</strong> do item (só faz sentido para entradas) e, nas entradas, se é uma <strong>entrada por nota fiscal</strong> (aparece no Recebimento) ou uma entrada avulsa (aparece em Entrada de Material - Outras).</li>
-<li>Procure antes se um tipo parecido já existe: a tela não impede duas descrições iguais.</li>
-<li>Os tipos que o sistema usa (inventário, transferência, atendimento, quarentena e outros) já existem e não aparecem nesta lista: não é preciso criá-los.</li>
+<li><strong>Incluir:</strong> grava código, descrição, entrada ou saída, atualiza custo, entrada por nota fiscal, situação, empresa, usuário e data (dalTipoMovimentacao.cs:176). "Obriga análise" e "Movimentação especial" são gravados sempre como Não, porque a tela não os mostra. O histórico recebe "INCLUSÃO DO REGISTRO".</li>
+<li><strong>Alterar:</strong> atualiza o tipo e grava uma linha de histórico por campo auditado alterado; <strong>grava de novo "Obriga análise" e "Movimentação especial" como Não</strong> (dalTipoMovimentacao.cs:237; :244).</li>
+<li><strong>Excluir:</strong> exclusão lógica, e só passa se nenhuma movimentação, saída ou nota fiscal usar o tipo.</li>
+<li><strong>Onde o tipo é usado:</strong> o tipo ativo aparece em Entrada de Material - Outras, Saída de Material, Recebimento (nota fiscal) e Devolução, conforme o sentido e a marca "Entrada por Nota Fiscal" (entrada_material_ed.aspx.cs:376; saida_item_ed.aspx.cs:72; recebimento_ed.aspx.cs:433; devolucao_ed.aspx.cs:283). Quando o tipo atualiza o custo médio, o gatilho do banco recalcula o custo do item a cada movimentação gravada (TBL_MOVIMENTACAO_ITEM.sql:123).</li>
+<li><strong>Se o tipo está em uso:</strong> a exclusão é recusada; <strong>a troca de sentido ou de custo médio não é</strong>, e os relatórios que agrupam por tipo (RC03, NMM) mudariam o passado (CT-EST-CAD28-06).</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Cadastros, abra Tipo de Movimentação. A tela mostra o quadro de pesquisa e <strong>nenhuma lista</strong>: ela só aparece depois de clicar em Pesquisar.</li>
-<li>Passo 2. Filtros: Código (só números, até 5), Descrição (até 255 letras), Entrada/Saída (Todos, Entrada, Saída) e Ativo (Todos, Sim, Não). Clique em Pesquisar.</li>
-<li>Passo 3. A lista mostra Código, Descrição, Entrada/Saída e Ativo, 15 linhas por página; os títulos ordenam. Em cada linha há os ícones Editar, Excluir e Ver Log, conforme as funções do usuário.</li>
-<li>Passo 4. Depois de uma pesquisa com resultado, Imprimir e o ícone do Excel geram o relatório com os filtros usados.</li>
-<li>Passo 5. Limpar esvazia os filtros e a lista. Incluir abre o formulário vazio.</li>
+<li>"A Descrição é obrigatória!" (visto em teste, CT-EST-020) e "A Justificativa é obrigatória!".</li>
+<li>"O Campo Entrada é obrigatório!" e semelhantes (Atualiza Custo Médio, Entrada por Nota Fiscal): só apareceriam com a tela adulterada, pois as escolhas já vêm marcadas.</li>
+<li>"O Código já está cadastrado." (código repetido na inclusão). <strong>Código zero e descrição repetida não são recusados.</strong></li>
+<li>"Exclusão inválida, existem referências com outras tabelas." para tipo usado por movimentação, saída ou nota fiscal.</li>
+<li>Falhas: "Erro ao gerar o código.", "Erro na inclusão do registro.", "Erro na alteração do Registro.", "Erro na Exclusão do Registro.", "Erro na consulta." e "Erro ao consultar registro!".</li>
 </ul>
-<h4 id="incluir">Incluir</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 6. Clique em Incluir. O formulário mostra Código, Data do Cadastro (travada), Descrição, Tipo (Entrada já marcada), Atualiza Custo Médio (Sim), Entrada por Nota Fiscal (Sim) e Ativo (Sim).</li>
-<li>Passo 7. Digite o Código (opcional; o sistema gera se vazio) e a Descrição (obrigatória, até 100 letras).</li>
-<li>Passo 8. Escolha Entrada ou Saída. Ao escolher <strong>Saída</strong>, Atualiza Custo Médio e Entrada por Nota Fiscal passam a Não e ficam travados.</li>
-<li>Passo 9. Para uma entrada avulsa, marque Entrada por Nota Fiscal = <strong>Não</strong> (em Sim, o tipo só aparece no Recebimento). Escolha se atualiza o custo médio.</li>
-<li>Passo 10. SALVAR. A tela pergunta "Confirma a inclusão do item?" (texto comum a todos os cadastros). Com SIM, mostra "Inclusão realizada com sucesso!"; o OK volta para a lista.</li>
+<li>A lista e o formulário usam o código de tela "TipoMovimentacao" (tipo_movimentacao_lst.aspx.cs:16; tipo_movimentacao_ed.aspx.cs:15). O <strong>Pesquisar</strong> aparece para quem consulta; Incluir, para quem inclui; Editar, Excluir e Ver Log, conforme a função; Imprimir e Excel, para quem imprime.</li>
+<li><strong>Cuidado:</strong> a conferência que mandaria quem não tem a função para o acesso negado está <strong>comentada</strong>; abrir a página pelo endereço não é barrado (DV-EST-008, Alta; não testado nesta tela). O formulário não esconde o SALVAR de quem não pode incluir ou alterar.</li>
+<li><strong>Esta tela decide se o custo médio do item muda</strong> e quais tipos de lançamento existem: quem abre o formulário pelo endereço e salva cria um tipo que passa a aparecer nas telas de entrada e de saída (a confirmar, CT-EST-CAD28-S1).</li>
+<li><strong>Os 18 tipos de sistema não aparecem na lista, mas o formulário carrega e grava qualquer tipo pelo número em <code>id=</code></strong>: quem digitar o endereço pode renomear, por exemplo, a transferência ou o atendimento de solicitação, ou trocar o sentido e o custo médio, e o código usa esses tipos por número (leitura do código, prioridade Alta, CT-EST-CAD28-S3).</li>
+<li>Não há limite por grupo de usuário. Não há assinatura nem segunda conferência.</li>
 </ul>
-<h4 id="alterar">Alterar</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<p>Nenhum defeito do registro cita esta tela. Valem aqui: <strong>DV-EST-059</strong> (código zero aceito) e <strong>DV-EST-008</strong> (acesso pelo endereço, Alta). O CT-EST-081, que usou um tipo criado aqui, gerou o DV-EST-060 (textos da Saída de Material), que é da outra tela.</p>
 <ul>
-<li>Passo 11. Pesquise e clique no lápis. O Código fica travado. Se o tipo estiver inativo, a Descrição, o Tipo e as marcações ficam travados: para mudar algo, primeiro reative e salve.</li>
-<li>Passo 12. Altere o que for preciso e escreva a <strong>Justificativa</strong> (obrigatória; só aparece ao alterar). Cuidado: trocar entrada por saída, ou o custo médio, de um tipo que já foi usado não é impedido pela tela.</li>
-<li>Passo 13. SALVAR, SIM, "Alteração realizada com sucesso!", OK.</li>
+<li><strong>Alterar apaga duas marcas que a tela não mostra</strong> ("Obriga análise" e "Movimentação especial"); hoje o efeito só aparece se alguém as marcou direto no banco (CT-EST-CAD28-04).</li>
+<li><strong>Histórico com título e valor trocados</strong> no campo de sentido (CT-EST-CAD28-03).</li>
+<li><strong>Custo médio:</strong> a rotina que recalcula o custo parece ligar a movimentação a todas as movimentações, e marcar "Atualiza Custo Médio" pode fazer o custo do item considerar linhas de qualquer tipo (leitura do código; a conferir com o DBA e com um teste de custo, CT-EST-CAD28-13, prioridade Alta).</li>
+<li><strong>"Obriga análise" não é usado</strong> por nenhum código: um tipo não obriga análise nem quarentena na entrada.</li>
+<li><strong>Texto sem tratamento:</strong> "entrada por doação" e "ENTRADA POR DOAÇÃO" seriam dois registros, com espaços duplicados (CT-EST-CAD28-07).</li>
+<li>O filtro do código aceita só números, mas o formulário aceita letras.</li>
+<li>Os tipos de sistema não aparecem aqui; quem quiser saber o que cada um dos 18 faz não encontra nesta tela (ponto para validar).</li>
+<li>Ponto para validar com a área: a fábrica precisa de mais tipos além dos 18? Quem aprova a criação de um tipo? Um tipo já usado pode ter sentido ou custo médio alterados? "Obriga análise" deveria colocar o lote em quarentena?</li>
 </ul>
-<h4 id="excluir">Excluir</h4>
-<ul>
-<li>Passo 14. Na lista, clique no ícone Excluir, escreva a Justificativa (obrigatória) e clique em EXCLUIR REGISTRO; responda SIM a "Confirma a exclusão do item?". Com sucesso: "Exclusão realizada com sucesso!".</li>
-<li>Passo 15. Se alguma movimentação, saída ou nota fiscal já usou o tipo, aparece "Exclusão inválida, existem referências com outras tabelas." Nesse caso, <strong>inative</strong> o tipo (Ativo = Não).</li>
-<li>Passo 16. O registro excluído não aparece mais e o histórico dele não pode ser consultado por esta tela.</li>
-</ul>
-<h4 id="ver-o-historico-de-um-tipo">Ver o histórico de um tipo</h4>
-<ul>
-<li>Passo 17. Na lista, clique no ícone Ver Log: a janela mostra campo, dado antigo, dado novo, data, hora, usuário e justificativa (4 por página, tipo_movimentacao_lst.aspx:213). Atenção: o campo que registra a troca entre entrada e saída aparece com o título "ENTRADA" e os valores True e False, o que lê ao contrário (ver Falhas e pontos de atenção).</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura os registros pelos filtros</td>
+<td>Para quem tem a função de consultar</td>
+</tr>
+<tr>
+<td>Incluir (sinal de mais)</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a função de incluir</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário com o registro</td>
+<td>Em cada linha, para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir)</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Em cada linha, para quem tem a função de excluir</td>
+</tr>
+<tr>
+<td>LOG (Ver Log)</td>
+<td>Abre o histórico do registro</td>
+<td>Em cada linha, para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Geram o relatório da tela com os filtros usados</td>
+<td>Depois de uma pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -396,7 +497,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

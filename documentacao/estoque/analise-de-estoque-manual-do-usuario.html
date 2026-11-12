@@ -45,39 +45,140 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="analise-de-estoque-analise.html">Análise</a><a href="analise-de-estoque-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="analise-de-estoque-fluxos.html">Fluxos</a><a href="analise-de-estoque-regras-de-negocio.html">Regras de negócio</a><a href="analise-de-estoque-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-analise-de-estoque.html">Erros (3)</a><a class="aba-extra" href="roteiro-de-execucao-compras-e-avaliacao-do-fornecedor-passo-a-passo.html#tela-1-analise-de-estoque">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Confira, no cadastro de Item, o estoque mínimo, o estoque máximo e os dias de reposição dos itens do grupo. A sugestão depende deles. O consumo vem das movimentações de saída do Estoque.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Análise de Estoque</strong> (no alto da lista: "ANÁLISE DO ESTOQUE"; no formulário, "ANALISE DO ESTOQUE", sem acento) calcula <strong>quanto comprar de cada item</strong> de um grupo de materiais. É usada pelo setor de compras e pelo almoxarifado (leitura da área). O sistema olha o consumo dos últimos meses, o saldo disponível, os pedidos em andamento e os estoques mínimo e máximo de cada item, e sugere uma quantidade a comprar. Da análise pronta, o usuário pode <strong>gerar o pedido de compra</strong> com os itens sugeridos. <strong>A análise não movimenta saldo.</strong> A página tem duas partes: a <strong>lista</strong> das análises já geradas e o <strong>formulário</strong> que gera e mostra a análise.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Itens ativos no grupo</strong> (e subgrupo) escolhido</td>
+<td>A análise gera uma linha por item ativo; sem item: "Nenhum item foi encontrado com os parâmetros informados!"</td>
+<td>Cadastros › Item, Grupo e Subgrupo de Item</td>
+</tr>
+<tr>
+<td><strong>Estoque mínimo, estoque máximo e dias de reposição</strong> no cadastro do Item</td>
+<td>A sugestão depende deles; mínimo maior que máximo é aceito no cadastro e distorce a sugestão (DV-EST-051)</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Consumo registrado</strong> (saídas externas nas movimentações)</td>
+<td>Sem consumo, a sugestão só repõe o que está abaixo do mínimo</td>
+<td>Telas de saída e atendimento do Estoque</td>
+</tr>
+<tr>
+<td><strong>Saldo disponível correto</strong></td>
+<td>É o saldo olhado; a quarentena é mostrada, mas não entra no cálculo</td>
+<td>Estoque (recebimento, aprovação do CQ, movimentação)</td>
+</tr>
+<tr>
+<td>Para gerar pedido: <strong>fornecedor e centro de custo</strong></td>
+<td>Escolhidos na seleção dos itens</td>
+<td>Pessoa jurídica (Principal) e Cadastros › Centro de Custo</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar as análises</strong></p>
+<ol>
+<li>No menu <strong>Gestão Analítica</strong>, abra <strong>Análise de Estoque</strong> e clique em <strong>Pesquisar</strong>.</li>
+<li>Filtros: <strong>Código</strong>, <strong>Período</strong> (data inicial e final), <strong>Grupo</strong> e <strong>Subgrupo</strong>. Informe as duas datas ou nenhuma ("Período inválido!"). <strong>Atenção:</strong> pelo código, a pesquisa por período traz <strong>só as análises do dia inicial</strong>.</li>
+<li>A lista mostra Código, Data, Grupo, Subgrupo e Qtde. de itens, com os ícones <strong>Visualizar</strong> e <strong>Excluir</strong> (este some quando a análise já gerou pedido). A lista traz as análises de todos os grupos de itens.</li>
+</ol>
+<p><strong>Gerar uma análise</strong></p>
+<ol>
+<li>Clique em <strong>Gerar</strong> (sinal de mais) acima da lista.</li>
+<li>Escolha o <strong>Grupo</strong> (obrigatório) e, se quiser, o <strong>Subgrupo</strong>. A <strong>Data da Análise</strong> é a de hoje e não muda.</li>
+<li>Informe o <strong>Período (meses)</strong>, o intervalo de consumo olhado para trás, e a <strong>Necessidade (meses)</strong>, quanto tempo o estoque deve cobrir. A tela traz 6 e 6; cada campo aceita até dois dígitos. <strong>O limite de 12 meses não é conferido</strong> (DV-EST-020).</li>
+<li>Clique em <strong>GERAR ANÁLISE</strong> e confirme ("Confima a geração da Análise?", com erro de digitação). O sistema responde "Análise concluída!" e abre a análise pronta, em leitura.</li>
+</ol>
+<p><strong>Ler o resultado</strong></p>
+<ol>
+<li>A grade mostra, por item: Unid. Med., <strong>CMM</strong> (consumo médio mensal), <strong>Qtde Pedido</strong> (já pedido e não recebido), Saldo Quarentena, Saldo Disponível, Saldo Total, <strong>Qtde Sugerida</strong>, Custo Médio, Custo Total, Ponto de Pedido (data), Dias de Estoque e Nº Pedido.</li>
+<li>Linhas em <strong>vermelho</strong>: há compra sugerida e ainda sem pedido. Linhas em <strong>verde</strong>: já têm pedido gerado. Use o filtro <strong>"Compra sugerida"</strong> (Sim, Não, Todos).</li>
+<li>O ícone de histórico abre o histórico do item; o botão <strong>RELATÓRIO</strong> imprime a análise.</li>
+<li>Para comprar, clique em <strong>GERAR PEDIDO DE COMPRA</strong> (só aparece com item a comprar), marque os itens, escolha fornecedor e centro de custo e confirme (ver a tela <strong>Pedido de Compra</strong>). O pedido nasce ABERTO.</li>
+</ol>
+<p><strong>Excluir</strong></p>
+<ol>
+<li>Na lista, clique no ícone de excluir, escreva a <strong>justificativa</strong> e confirme. Análise que já gerou pedido não pode ser excluída.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu Gestão Analítica, abra Análise de Estoque e clique em Pesquisar.</li>
-<li>Passo 2. Filtros: Código, Período (data inicial e final), Grupo e Subgrupo. Informe as duas datas ou nenhuma ("Período inválido!") (analise_lst.aspx.cs:60-64). <strong>Atenção:</strong> pelo código, a pesquisa por período traz só as análises do dia inicial (dalAnaliseEstoque.cs:288-289).</li>
-<li>Passo 3. A lista mostra Código, Data, Grupo, Subgrupo e Qtde. de itens, com os ícones Visualizar e Excluir (este some quando a análise já gerou pedido) (analise_lst.aspx.cs:213-232).</li>
+<li><strong>GERAR ANÁLISE</strong> grava o cabeçalho (código gerado, data, grupo, subgrupo, períodos) e uma <strong>linha por item ativo</strong> do grupo, com a sugestão de cada um; os estoques mínimo, máximo e os dias de reposição são <strong>copiados do item</strong> na hora e ficam gravados na linha. Grava o log de inclusão.</li>
+<li><strong>Como a sugestão é calculada:</strong> o CMM é a soma das saídas externas do item no período dividida pelos meses (movimentações internas, inclusive ajuste de inventário, e entradas não entram; o período termina na véspera da análise). Com consumo: necessidade = CMM × meses de necessidade, menos (saldo disponível + pedidos em andamento − estoque mínimo), limitada ao estoque máximo e arredondada para cima. Sem consumo: sugere repor quando o saldo está abaixo do mínimo.</li>
+<li><strong>Só pedidos FINALIZADOS ou EM RECEBIMENTO contam como "já pedidos"</strong>; o pedido ABERTO não conta (e hoje todos os pedidos gerados ficam ABERTO, DV-EST-077).</li>
+<li><strong>Excluir</strong> marca a análise como excluída e grava o log de exclusão, que esta tela não consegue mostrar (não há ícone de Log).</li>
+<li>Nada muda no saldo do estoque; nenhum outro módulo é gravado.</li>
 </ul>
-<h4 id="gerar-uma-analise">Gerar uma análise</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 4. Clique em "Gerar" (sinal de mais) acima da lista.</li>
-<li>Passo 5. Escolha o <strong>Grupo</strong> (obrigatório) e, se quiser, o <strong>Subgrupo</strong>. A <strong>Data da Análise</strong> é a de hoje e não muda.</li>
-<li>Passo 6. Informe o <strong>Período (meses)</strong>, que é o intervalo de consumo olhado para trás, e a <strong>Necessidade (meses)</strong>, que é quanto tempo o estoque deve cobrir. A tela traz 6 e 6; cada campo aceita até dois dígitos (analise_ed.aspx.cs:88-89). <strong>O limite de 12 meses não é conferido</strong> (DV-EST-020).</li>
-<li>Passo 7. Clique em GERAR ANÁLISE e confirme ("Confima a geração da Análise?"). O sistema responde "Análise concluída!".</li>
+<li>"Grupo do Item não foi informado!", "O Período de Análise não foi informado!" e "O Período de necessidade do estoque não foi informado!".</li>
+<li>"Nenhum item foi encontrado com os parâmetros informados!" (grupo sem item ativo; ver os cuidados) e "Ocorreram erros na geração da análise!".</li>
+<li>"Período inválido!" na lista, com só uma das datas.</li>
+<li>Excluir sem justificativa.</li>
+<li><strong>Não recusa:</strong> períodos acima de 12 meses (as mensagens "Período de análise não pode ser superior a 12 meses!" e a da necessidade estão comentadas no código e <strong>nunca aparecem</strong>, CT-EST-161), nem período 0.</li>
+<li>"Sem itens pendentes!" (no atalho de gerar pedido sem item a comprar), "Erro na Exclusão do Pedido." (texto herdado, ao falhar a exclusão da análise) e "Erro ao carregar formulário!".</li>
 </ul>
-<h4 id="ler-o-resultado">Ler o resultado</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 8. A grade mostra, por item: Unid. Med., CMM (consumo médio mensal), Qtde Pedido (já pedido e não recebido), Saldo Quarentena, Saldo Disponível, Saldo Total, Qtde Sugerida, Custo Médio, Custo Total, Ponto de Pedido (data) e Dias de Estoque (analise_ed.aspx:146-240).</li>
-<li>Passo 9. Linhas em vermelho: há compra sugerida e ainda sem pedido. Linhas em verde: já têm pedido gerado (analise_ed.aspx.cs:241-267). Use o filtro "Compra sugerida" (Sim, Não, Todos).</li>
-<li>Passo 10. O ícone de histórico abre o histórico do item; o botão RELATÓRIO imprime a análise.</li>
-<li>Passo 11. Para comprar, clique em GERAR PEDIDO DE COMPRA, marque os itens, escolha fornecedor e centro de custo e confirme (ver a tela Pedido de Compra).</li>
+<li>A tela é a função <strong>501 (Análise de Estoque)</strong>; a tela de Gerar Pedido usa a mesma. O cadastro do menu libera para o perfil <strong>Incluir (gerar), Imprimir e Ver log</strong>; <strong>não registra alterar nem excluir</strong>.</li>
+<li><strong>O sinal de Gerar aparece sempre</strong> e o ícone de <strong>Excluir</strong> também (exceto para análise que já gerou pedido), sem conferir a função: quem abre a tela gera e exclui.</li>
+<li>A lista traz as análises de todos os grupos de itens, sem filtro pelos almoxarifados do usuário.</li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta; SEG-EST-03). O teste de acesso de 13/10/2026 não incluiu esta tela; pela leitura do código, ela tem o mesmo risco.</li>
 </ul>
-<h4 id="excluir">Excluir</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 12. Na lista, clique no ícone de excluir, escreva a justificativa e confirme. Análise que já gerou pedido não pode ser excluída (analise_lst.aspx.cs:228-229).</li>
+<li><strong>Aceita 13 meses</strong> nos dois períodos (DV-EST-020, Média; CT-EST-161 falhou: análises 00000005 e 00000006).</li>
+<li><strong>Depois de gerar o pedido pelo atalho aparece "Sem itens pendentes!"</strong> e, sem fornecedor, o botão não mostra mensagem (DV-EST-021, Média; CT-EST-162, que passou com ressalvas; detalhe na tela Pedido de Compra).</li>
+<li><strong>Erros do cálculo são engolidos:</strong> se um item der erro, a tela diz "Análise concluída!" com números possivelmente incompletos (RN-EST-GES01-011). Confira a análise antes de comprar.</li>
+<li><strong>A sugestão pode ficar negativa</strong> quando o item não tem consumo, o saldo está abaixo do mínimo e a falta é maior que o máximo (ou o máximo é 0), e pode ser <strong>arredondada para inteiro no banco</strong> (inferência pelo esquema). <strong>Ponto para validar</strong> com itens sem estoque máximo (CT-EST-GES01-03 e 08).</li>
+<li><strong>Período 0 pode dar erro</strong> quando há consumo (divisão por zero).</li>
+<li><strong>A análise seguinte pode sugerir comprar de novo o que já foi pedido</strong>, pois o pedido ABERTO não é descontado (CT-EST-GES01-04).</li>
+<li><strong>A análise vazia fica gravada:</strong> se o grupo não tem item ativo, o aviso aparece mas o cabeçalho já existe na lista, com zero itens.</li>
+<li><strong>Quarentena não entra no cálculo.</strong> <strong>Ponto para validar com a área:</strong> a necessidade deve usar também o saldo em quarentena? O pedido ABERTO deve contar? Qual o limite de meses?</li>
+<li>O cálculo conferido à mão, o relatório, a exclusão, o histórico do item e os filtros da lista <strong>não foram vistos em tela</strong>. A análise 00000006 mostrou necessidade só para o MAT-001 (203 kg), os demais com sugestão 0 por falta de consumo.</li>
+<li>Não há ícone de Log, e os botões Imprimir e Excel da lista estão desligados no código. Textos com erro: "Confima", "Subgrpo", "ANALISE".</li>
+<li>Erros do banco aparecem com o texto técnico (SEG-EST-13).</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
-<ul>
-<li>Não confere o limite de 12 meses (DV-EST-020).</li>
-<li>Não deixa claro quando o cálculo falha: o erro é engolido e a tela diz "Análise concluída!" (bllAnaliseEstoqueItem.cs:208-210).</li>
-<li>Não conta pedidos ABERTOS como "já pedidos" (dalAnaliseEstoqueItem.cs:337).</li>
-<li>Não tem botão de Log nem de Excel ligados (analise_lst.aspx.cs:109-110 e 129-130).</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gerar (sinal de mais)</td>
+<td>Abre o formulário em branco</td>
+<td>Sempre, sem conferir a função</td>
+</tr>
+<tr>
+<td>Visualizar (olho)</td>
+<td>Abre a análise pronta, em leitura</td>
+<td>Em toda linha</td>
+</tr>
+<tr>
+<td>Excluir (lixeira)</td>
+<td>Pede justificativa e exclui</td>
+<td>Em toda linha, menos nas que geraram pedido; sem conferir a função</td>
+</tr>
+<tr>
+<td>Log / Imprimir / Excel</td>
+<td>Não funcionam (desligados no código)</td>
+<td>Nunca</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -355,7 +456,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

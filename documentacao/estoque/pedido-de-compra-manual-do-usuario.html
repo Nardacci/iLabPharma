@@ -45,38 +45,165 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="pedido-de-compra-analise.html">Análise</a><a href="pedido-de-compra-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="pedido-de-compra-fluxos.html">Fluxos</a><a href="pedido-de-compra-regras-de-negocio.html">Regras de negócio</a><a href="pedido-de-compra-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-pedido-de-compra.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-compras-e-avaliacao-do-fornecedor-passo-a-passo.html#tela-3-pedido-de-compra">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>O fornecedor e o centro de custo precisam estar cadastrados. O pedido gerado pela Análise de Estoque já traz os itens; o digitado exige incluir um a um. <strong>Hoje o sistema não oferece o item de menu nem as funções de alterar, incluir e baixar</strong> (DV-EST-077): procure a equipe de TI antes de usar.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Pedido de Compra</strong> é a tela do pedido de compra de material: o cabeçalho (fornecedor, centro de custo, data), os itens com quantidade e custo, a finalização do pedido e, depois, a <strong>baixa</strong> do que foi recebido (tela "Recebimento do Item"). É usada pelo setor de compras e, na baixa, pelo almoxarifado (leitura da área). O pedido pode nascer <strong>digitado</strong> na própria tela ou <strong>gerado a partir da Análise de Estoque</strong>, com os itens sugeridos. <strong>O pedido de compra não movimenta saldo</strong>: a entrada do material é feita no Recebimento de Material.</p>
+<p><strong>Importante:</strong> a linha do menu desta tela está <strong>comentada</strong> na carga do sistema; por isso ela <strong>não tem item de menu</strong>, só abre pelo botão da Análise de Estoque ou pelo endereço, e as funções da tela <strong>não existem</strong> no perfil (DV-EST-077). No ambiente testado, <strong>ninguém consegue alterar, incluir nem baixar</strong>; procure a equipe de TI antes de usar.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fornecedor</strong> (pessoa jurídica do tipo fornecedor)</td>
+<td>Entra no cabeçalho do pedido; o sistema <strong>não confere</strong> se foi avaliado ou aprovado (DV-EST-022)</td>
+<td>Pessoa jurídica (Principal) e Avaliação do Fornecedor</td>
+</tr>
+<tr>
+<td><strong>Centro de custo</strong> ativo</td>
+<td>Entra no cabeçalho</td>
+<td>Cadastros › Centro de Custo</td>
+</tr>
+<tr>
+<td><strong>Item ativo</strong>, com custo médio</td>
+<td>Os itens do pedido; o custo médio vem como custo unitário no pedido gerado pela Análise</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Análise de Estoque pronta, com item de compra sugerida</strong></td>
+<td>Para gerar o pedido pela Análise (o botão GERAR PEDIDO DE COMPRA só aparece com item sugerido)</td>
+<td>Menu Gestão Analítica › Análise de Estoque</td>
+</tr>
+<tr>
+<td><strong>Funções do perfil</strong> (incluir, alterar, excluir, baixar) e o item de menu</td>
+<td>Sem elas, a lista só mostra o ícone Excluir; <strong>hoje não existem</strong> (DV-EST-077)</td>
+<td>Equipe de TI e DBA</td>
+</tr>
+<tr>
+<td><strong>Lote já recebido do item</strong> (para a baixa)</td>
+<td>A baixa é manual contra um lote já recebido</td>
+<td>Recebimento de Material</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar os pedidos</strong></p>
+<ol>
+<li>Abra a lista de <strong>Pedido de Compra</strong> (pelo atalho da Análise de Estoque ou pelo endereço) e clique em <strong>Pesquisar</strong>. Filtros: <strong>Código</strong>, <strong>Período</strong>, <strong>Fornecedor</strong>, <strong>Centro de Custo</strong> e <strong>Situação</strong>.</li>
+<li>A lista mostra Código, Data, Fornecedor, Centro de Custo e Situação (Aberto, Finalizado, Recebido). Os ícones dependem da situação e das funções (ver o quadro no fim). Depois de pesquisar aparecem <strong>Imprimir</strong> e <strong>Excel</strong>.</li>
+</ol>
+<p><strong>Gerar o pedido pela Análise de Estoque</strong></p>
+<ol>
+<li>Na Análise de Estoque pronta, clique em <strong>GERAR PEDIDO DE COMPRA</strong>. A tela "GERAR PEDIDO DE COMPRA" mostra os itens com compra sugerida.</li>
+<li>Marque os itens (ou todos), escolha o <strong>Fornecedor</strong> e o <strong>Centro de Custo</strong> e clique em <strong>GERAR</strong>. O sistema pede confirmação e responde "Pedido: NNNNNN gerado!". O pedido nasce <strong>ABERTO</strong>, com a quantidade sugerida e o custo médio do item como custo unitário. Sem fornecedor, o botão não mostrou mensagem e não gerou (DV-EST-021, item c).</li>
+<li>Ao clicar OK, a tela se recarrega e mostra "Sem itens pendentes!": o código prevê isso (todos os itens já foram para o pedido), mas o teste registrou esse comportamento como parte do DV-EST-021 (item d); <strong>Ponto para validar com a área</strong>.</li>
+</ol>
+<p><strong>Montar e finalizar o pedido digitado</strong></p>
+<ol>
+<li>Na lista, clique no sinal de mais (<strong>Incluir</strong>), informe o <strong>Código</strong> (ou deixe o sistema gerar), a <strong>Data do Pedido</strong> (não pode ser futura), o <strong>Fornecedor</strong> e o <strong>Centro de Custo</strong>, e clique em <strong>GERAR</strong>.</li>
+<li>Inclua os itens: busque o item, informe a <strong>Quantidade</strong> e o <strong>Custo Unitário</strong> e clique em <strong>SALVAR ITEM</strong>. O mesmo item não pode repetir ("O Item informado já existe no pedido!"). <strong>Atenção:</strong> digitar <code>100</code> grava <code>0,100</code>; digite <code>100,000</code> (DV-EST-021).</li>
+<li>Clique em <strong>FINALIZAR PEDIDO</strong> ("Pedido não possui itens!" se estiver vazio). Para corrigir, clique em <strong>REABRIR PEDIDO</strong> (só em pedido FINALIZADO).</li>
+</ol>
+<p><strong>Receber o item (baixa manual)</strong></p>
+<ol>
+<li>Na lista, clique em <strong>Baixar</strong> (ícone) para abrir o pedido em modo de baixa; em cada item, clique no ícone de baixa para abrir "RECEBIMENTO DO ITEM".</li>
+<li>Escolha o <strong>Lote</strong> já recebido do item, informe a <strong>quantidade</strong> e clique em <strong>RECEBER ITEM</strong>. O sistema confere a quantidade contra o saldo do lote e o pendente do pedido.</li>
+<li>A situação do pedido passa para <strong>EM RECEBIMENTO</strong> e, quando tudo foi recebido, para <strong>RECEBIDO</strong>. <strong>A baixa é manual: o Recebimento de Material não baixa o pedido sozinho.</strong> O ícone de excluir da baixa recalcula a situação.</li>
+</ol>
+<p><strong>O que a tela não faz</strong></p>
 <ul>
-<li>Passo 1. Abra a lista de Pedido de Compra e clique em Pesquisar. Filtros: Código, Período, Fornecedor, Centro de Custo e Situação (pedido_compra_lst.aspx:47-130).</li>
-<li>Passo 2. A lista mostra Código, Data, Fornecedor, Centro de Custo e Situação (Aberto, Finalizado, Recebido). Os ícones dependem da situação e das funções: Editar (só no pedido ABERTO e com a função de alterar), Excluir, Log, Baixar (pedido FINALIZADO ou EM RECEBIMENTO e função BAIXAR_PEDIDO) e Imprimir (pedido que não está ABERTO) (pedido_compra_lst.aspx.cs:203-246).</li>
-<li>Passo 3. Depois de pesquisar, aparecem os botões Imprimir e Excel (pedido_compra_lst.aspx.cs:116-117).</li>
+<li>Não confere se o fornecedor foi avaliado ou aprovado (DV-EST-022; RDC 658/2022, art. 179).</li>
+<li>Não pede justificativa para alterar, finalizar, reabrir ou baixar (o painel está escondido); só a exclusão pede.</li>
+<li>Não impede excluir um pedido finalizado ou em recebimento.</li>
 </ul>
-<h4 id="gerar-o-pedido-pela-analise-de-estoque">Gerar o pedido pela Análise de Estoque</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 4. Na Análise de Estoque pronta, clique em GERAR PEDIDO DE COMPRA. A tela mostra os itens com compra sugerida (gerar_pedido_op.aspx.cs:296-345).</li>
-<li>Passo 5. Marque os itens (ou todos), escolha o <strong>Fornecedor</strong> e o <strong>Centro de Custo</strong> e clique em GERAR. O sistema pede confirmação e responde "Pedido: NNNNNN gerado!".</li>
-<li>Passo 6. Ao clicar OK, a tela se recarrega e mostra "Sem itens pendentes!": isso é esperado, pois todos os itens já foram para o pedido (gerar_pedido_op.aspx.cs:78 e 369-370).</li>
+<li><strong>GERAR / SALVAR</strong> grava o cabeçalho (situação ABERTO) e grava o log de inclusão ou alteração. <strong>SALVAR ITEM</strong>, a alteração e a exclusão de item e a baixa <strong>não gravam log</strong>; a baixa grava só o usuário e a data do recebimento.</li>
+<li><strong>FINALIZAR PEDIDO</strong> exige ao menos um item e leva a <strong>FINALIZADO</strong>; <strong>REABRIR PEDIDO</strong> volta a <strong>ABERTO</strong>.</li>
+<li><strong>RECEBER ITEM</strong> grava um recebimento manual contra o lote (sem movimentação de estoque, sem ligar a nota fiscal) e atualiza a situação do pedido.</li>
+<li><strong>Excluir</strong> exige justificativa, exclui o pedido em qualquer situação e <strong>solta os itens da Análise de Estoque</strong> (a ligação com a análise é apagada).</li>
+<li>Pela Análise, o item da análise fica ligado ao item do pedido. A Análise de Estoque só desconta como "já pedido" o pedido FINALIZADO ou EM RECEBIMENTO: o pedido ABERTO não conta, e a análise pode sugerir comprar de novo.</li>
+<li>Nada muda no saldo do estoque.</li>
 </ul>
-<h4 id="montar-e-finalizar-o-pedido-digitado">Montar e finalizar o pedido digitado</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 7. Na lista, clique no sinal de mais, informe o Código (ou deixe o sistema gerar), a Data do Pedido (não pode ser futura), o Fornecedor e o Centro de Custo, e clique em GERAR.</li>
-<li>Passo 8. Inclua os itens: busque o item, informe a <strong>Quantidade</strong> e o <strong>Custo Unitário</strong> e clique em SALVAR ITEM. O mesmo item não pode repetir ("O Item informado já existe no pedido!"). <strong>Atenção:</strong> digitar <code>100</code> grava <code>0,100</code>; digite <code>100,000</code> (DV-EST-021; DV-EST-002).</li>
-<li>Passo 9. Clique em FINALIZAR PEDIDO ("Pedido não possui itens!" se estiver vazio). Para corrigir, clique em REABRIR PEDIDO (só em pedido FINALIZADO).</li>
+<li>"O Item é obrigatório!" e "Item não encontrado ou não informado!"; "A quantidade não foi informada!"; "O custo unitário não foi informado!".</li>
+<li>"O Item informado já existe no pedido!" (vista em CT-EST-163).</li>
+<li>"Pedido não possui itens!" ao finalizar vazio e "Pedido não pode ser reaberto!" fora de FINALIZADO.</li>
+<li>"Nenhum item foi selecionado!" ao gerar pela Análise sem marcar itens.</li>
+<li>Data do pedido posterior a hoje.</li>
+<li>"Quantidade informada superior a quantidade disponível no lote!" e "Quantidade informada superior a quantidade pendente do pedido!" na baixa.</li>
+<li>"O Código já está cadastrado." e "Erro ao gerar o código do Pedido."; "Registro de baixa não encontrado!".</li>
+<li><strong>Não recusa:</strong> gravar o cabeçalho sem fornecedor nem centro de custo, nem excluir pedido finalizado.</li>
 </ul>
-<h4 id="receber-o-item-baixa-manual">Receber o item (baixa manual)</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 10. Na lista, clique em Baixar (ícone) para abrir o pedido em modo de baixa; em cada item, clique no ícone de baixa para abrir "RECEBIMENTO DO ITEM" (pedido_compra_ed.aspx.cs:448-452).</li>
-<li>Passo 11. Escolha o <strong>Lote</strong> já recebido do item, informe a <strong>quantidade</strong> e clique em RECEBER ITEM. O sistema confere a quantidade contra o saldo do lote e o pendente do pedido (pedido_compra_baixa_op.aspx.cs:177-185).</li>
-<li>Passo 12. A situação do pedido passa para EM RECEBIMENTO e, quando tudo foi recebido, para RECEBIDO (bllPedidoCompra.cs:190-205). <strong>A baixa é manual: o Recebimento de Material não baixa o pedido sozinho</strong> (nenhuma tela chama a ligação entre nota fiscal e pedido, bllNotaFiscalItemLotePedido.cs).</li>
+<li>A função da tela é <code>PedidoCompraStq</code> e a da baixa, <code>PedidoCompraBaixa</code>; <strong>a carga do sistema não as cria</strong> (linha do menu comentada; a função BAIXAR_PEDIDO é criada como filha da função da tela). Resultado no teste: sem item de menu e sem nó na árvore de funções do perfil (DV-EST-077).</li>
+<li>Na lista, <strong>Incluir</strong> depende da função de incluir; <strong>Editar</strong>, da de alterar (vira Visualizar fora de ABERTO); <strong>Ver Log</strong>, da de ver log; <strong>Baixar</strong>, da função BAIXAR_PEDIDO e da situação do pedido (FINALIZADO ou EM RECEBIMENTO). <strong>O ícone Excluir aparece sempre</strong>, por isso é o único visível hoje (CT-EST-164, rodadas 10 e 11). <strong>Imprimir</strong> só aparece para pedido que não está ABERTO.</li>
+<li>A tela de seleção da Análise usa a função 501 da Análise de Estoque.</li>
+<li><strong>Gerar, finalizar, reabrir, baixar e excluir não conferem a função de novo no servidor.</strong></li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta; CT-EST-168 deu erro técnico não tratado). Como a função não existe, vale a regra "começa permitido" para quem abrir o formulário pelo endereço.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Não confere se o fornecedor escolhido foi avaliado ou está aprovado (DV-EST-022; RDC 658/2022, art. 179).</li>
-<li>Não pede justificativa para alterar, finalizar, reabrir ou baixar: o painel de justificativa está escondido no código (pedido_compra_ed.aspx.cs:86; pedido_compra_baixa_op.aspx.cs:76 e 84).</li>
-<li>Não impede excluir um pedido finalizado ou em recebimento (pedido_compra_lst.aspx.cs:212; dalPedidoCompra.cs:110-138).</li>
+<li><strong>Ninguém consegue editar, incluir nem baixar hoje:</strong> os pedidos 000001 a 000008 (todos ABERTO) aparecem só com o ícone Excluir (DV-EST-077, Média; CT-EST-164 bloqueado).</li>
+<li><strong>A quantidade <code>100</code> é gravada como <code>0,100</code></strong> pela máscara de três casas, sem aviso (DV-EST-021, Média; CT-EST-163); GERAR sem fornecedor não mostra mensagem.</li>
+<li><strong>O pedido aceita qualquer fornecedor</strong>, avaliado ou não (DV-EST-022, Alta, tratado na Avaliação do Fornecedor).</li>
+<li><strong>A nota fiscal do Recebimento de Material não baixa o pedido</strong>: a RDC 658/2022 (art. 183) pede conferir a nota com o pedido, e o sistema não faz isso (ponto para validar com o desenvolvimento).</li>
+<li><strong>Situação RECEBIDO pode falhar:</strong> o código grava a situação número 4, e a carga do banco só tem três situações; a última baixa pode terminar em erro. <strong>Ponto para o DBA.</strong></li>
+<li><strong>Excluir não confere a situação</strong>, nem a existência de baixas.</li>
+<li><strong>A baixa aceita qualquer lote já recebido do item</strong>, mesmo de outro fornecedor ou outra nota (ponto para validar com a área).</li>
+<li><strong>O custo unitário do pedido gerado pela Análise é o custo médio</strong>, não um preço negociado.</li>
+<li>O formulário do pedido aberto, a finalização, a reabertura, a baixa e a exclusão <strong>não foram vistos em tela</strong>.</li>
+<li>Erros do banco aparecem com o texto técnico (SEG-EST-13).</li>
+<li><strong>Ponto para validar com a área:</strong> o pedido do Estoque é o oficial, ou o Comercial/Compras tem o seu? Quem pode excluir pedido finalizado?</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incluir (sinal de mais)</td>
+<td>Abre o formulário em branco</td>
+<td>Só com a função de incluir</td>
+</tr>
+<tr>
+<td>Editar / Visualizar</td>
+<td>Abre o formulário</td>
+<td>Só com a função de alterar; vira Visualizar fora de ABERTO</td>
+</tr>
+<tr>
+<td>Excluir (lixeira)</td>
+<td>Pede justificativa e exclui o pedido</td>
+<td>Em toda linha, sem conferir a função</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre o histórico do pedido</td>
+<td>Só com a função de ver log</td>
+</tr>
+<tr>
+<td>Baixar</td>
+<td>Abre o pedido em modo de baixa</td>
+<td>Pedido FINALIZADO ou EM RECEBIMENTO e função BAIXAR_PEDIDO</td>
+</tr>
+<tr>
+<td>Imprimir (impressora)</td>
+<td>Abre o relatório do pedido</td>
+<td>Pedido que não está ABERTO</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -521,7 +648,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

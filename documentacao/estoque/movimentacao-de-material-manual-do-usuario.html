@@ -45,35 +45,129 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="movimentacao-de-material-analise.html">Análise</a><a href="movimentacao-de-material-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="movimentacao-de-material-fluxos.html">Fluxos</a><a href="movimentacao-de-material-regras-de-negocio.html">Regras de negócio</a><a href="movimentacao-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-movimentacao-de-material.html">Erros (8)</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-2-movimentacao-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Movimentação de Material</strong> tem duas funções na mesma página. (1) <strong>Lista</strong> todas as movimentações gravadas do estoque, de qualquer tipo (entrada, saída, transferência, quarentena), para consulta e para imprimir a Nota de Movimentação de Material (NMM). (2) Permite a <strong>transferência de material entre endereços</strong>: o almoxarife escolhe item, lote e endereço de origem, informa a quantidade, o destino e a justificativa. Para cada item a tela grava duas linhas, uma <strong>saída</strong> na origem e uma <strong>entrada</strong> no destino, com a mesma quantidade (movimentacao_ed.aspx.cs:706-724). O tipo não pode ser escolhido: o formulário só oferece "TRANSFERÊNCIA". Movimentações de outros tipos nascem em outras telas e aparecem aqui só na lista. Usuário previsto: o almoxarife (leitura da área, a validar).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item ligado a um almoxarifado</strong></td>
+<td>A lista de almoxarifados de destino sai do cadastro do item (movimentacao_ed.aspx.cs:876-878)</td>
+<td>Estoque › Cadastro de Item</td>
+</tr>
+<tr>
+<td><strong>Lote com saldo maior que zero</strong> em endereço de almoxarifado do seu grupo</td>
+<td>Só aparecem esses lotes, fora dos almoxarifados de retenção, referência e estabilidade; lote <strong>bloqueado</strong> ou <strong>em reanálise</strong> não aparece (movimentacao_ed.aspx.cs:251 e 297-314; dalItemLote.cs:909-960)</td>
+<td>Entrada de Material ou Endereçamento</td>
+</tr>
+<tr>
+<td><strong>Endereço de destino livre</strong> (ou que já guarda o mesmo lote)</td>
+<td>O destino é montado por Almoxarifado, Local, Rua, Coluna e Andar. Para item refrigerado ou com controle de umidade o destino deve ser de local com a mesma característica (movimentacao_ed.aspx.cs:889-982)</td>
+<td>Estoque › Endereço do Estoque</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado ligado ao grupo do usuário</strong></td>
+<td>Só aparecem os almoxarifados do grupo</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No Menu Estoque, abra <strong>Movimentação de Material</strong>.</li>
+<li>Filtros: Código (só números, até 8), Período (data inicial e final) e Tipo. Clique em <strong>Pesquisar</strong>. A lista mostra Código, Data e Tipo de Movimentação, 15 linhas por página, com ordenação nos cabeçalhos.</li>
+<li>Em cada linha, a lupa abre a movimentação só para consulta e a impressora gera a NMM. <strong>Imprimir</strong> e o ícone do Excel geram o relatório com os filtros usados. <strong>Limpar</strong> esvazia filtros e lista. <strong>Incluir</strong> abre o formulário vazio.</li>
+</ol>
+<p><strong>Fazer uma transferência</strong></p>
+<ol start="4">
+<li>No formulário, "Dados da movimentação" mostra Código (vazio até salvar), Data (hoje) e Movimentação (TRANSFERÊNCIA), todos travados.</li>
+<li>Em "Itens", digite o código do item e clique na lupa. Se o texto for o código exato, o item é escolhido; se não, abre "Localizar Item" (pede ao menos um caractere). Unid. Medida é preenchido sozinho.</li>
+<li>Escolha o lote em "Item de Entrada" (só lotes com saldo, descontando o que já lançou nesta tela).</li>
+<li>Em "Origem", escolha o "Endereço de Origem". "Qtd Origem" mostra o saldo, também descontando o já lançado.</li>
+<li>Em "Destino", escolha Almoxarifado, Local, Rua, Coluna e Andar, nesta ordem. "Endereço Destino" é montado sozinho (ex.: L905-R905-C905-A905).</li>
+<li>Digite a "Qtd. Movimentada" e clique em <strong>ADICIONAR ITEM</strong>. Se algo estiver errado, a tela mostra a mensagem em vermelho e não adiciona. Se estiver certo, a grade mostra duas linhas: SAÍDA (origem) e ENTRADA (destino). Repita para outros itens.</li>
+<li>Escreva a "Justificativa" e clique em <strong>SALVAR REGISTRO</strong>. Responda SIM em "Confirma a inclusão do item?". Aparece "Inclusão realizada com sucesso!" e a tela volta para a lista.</li>
+<li>Para tirar uma linha antes de salvar, use o ícone vermelho. <strong>LIMPAR</strong> esvazia só os campos do item em edição, não a grade.</li>
+</ol>
+<p><strong>Consultar uma movimentação gravada</strong></p>
+<ol start="12">
+<li>Na lista, clique na lupa. A tela abre sem os botões de adicionar e salvar, mostra o usuário responsável e as linhas (movimentacao_ed.aspx.cs:26-34 e 52-65). Pelo código a coluna "Tipo" (Entrada ou Saída) fica escondida: a conferir na tela (CT-EST-E07-07).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Tenha o item cadastrado e ligado a um almoxarifado, com lote e saldo em um endereço (telas de entrada de material ou Endereçamento).</li>
-<li>Os endereços de destino precisam existir (tela Endereço do Estoque) e estar livres. Para itens refrigerados ou com controle de umidade, o destino precisa ser de um local com a mesma característica (ver Falhas e pontos de atenção).</li>
-<li>O almoxarifado precisa estar ligado ao seu grupo de usuário.</li>
+<li>Grava a transferência com código sequencial (ex.: 00000104) e a data de hoje (dalMovimentacao.cs:287-300). A justificativa e o usuário vão para a tabela de log, com o texto "INCLUSÃO DO REGISTRO" (bllMovimentacao.cs:32; dalLogAlteracao2.cs:60-75).</li>
+<li>O saldo do endereço de origem diminui, o do destino aumenta e o <strong>saldo total do lote não muda</strong>, por gatilho do banco (TBL_MOVIMENTACAO_ITEM.sql:31; CT-EST-034: origem 80, destino 10, total 90).</li>
+<li>A movimentação passa a aparecer nesta lista, no Histórico do Lote, na Disponibilidade do Lote, na Disponibilidade por Local e na Consulta Endereço Item.</li>
+<li>Não há aprovação nem passo seguinte: a transferência vale na hora do clique.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No Menu Estoque, abra Movimentação de Material. A tela mostra o quadro "Pesquisa".</li>
-<li>Passo 2. Filtros: Código (só números, até 8), Período (data inicial até data final, com calendário) e Tipo. Clique em Pesquisar. As datas têm máscara e conferência de formato (movimentacao_lst.aspx:58-84; leitura do código, não testado).</li>
-<li>Passo 3. A lista mostra Código, Data e Tipo de Movimentação, 15 linhas por página. Os cabeçalhos ordenam a lista.</li>
-<li>Passo 4. Em cada linha: o ícone da lupa abre a movimentação só para consulta; o ícone da impressora gera a Nota de Movimentação de Material (NMM). Imprimir e o ícone do Excel, acima da lista, geram o relatório com os filtros usados.</li>
-<li>Passo 5. Limpar esvazia os filtros e a lista. Incluir abre o formulário vazio.</li>
+<li>Sem itens: "Nenhum item incluído!" / "Nenhum item movimentado!". Sem justificativa: "A Justificativa é obrigatória!" (vista em teste, CT-EST-035).</li>
+<li>Campos: "O Item é obrigatório!", "Selecione o lote do item!", "Selecione o endereço de origem!", "O endereço de origem não tem saldo disponível!".</li>
+<li>Quantidade: "Informe a quantidade do endereço de destino!", "Quantidade do endereço de destino inválida!" (zero, negativa ou texto), "Fracionamento da quantidade do endereço de destino inválido!" (mais de 4 casas) e "Quantidade do destino é maior que a origem!" (vista em teste, CT-EST-036).</li>
+<li>Destino: "Endereço de destino inválido!", "O endereço de origem é mesmo do destino!", "Endereço já informado em outra movimentação!" (destino já usado na grade desta tela), "O item não pode ser armazenado no endereço informado!" (destino com outro item, CT-EST-037).</li>
+<li>Capacidade: "A altura do item excede a capacidade do endereço!" (e o mesmo para largura, profundidade e peso; a do peso vista em CT-EST-038).</li>
+<li>O servidor confere de novo: "Endereço incorreto na listagem!". Falha ao gravar: "Erro na inclusão do registro.".</li>
 </ul>
-<h4 id="fazer-uma-transferencia">Fazer uma transferência</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 6. No formulário, o quadro "Dados da movimentação" mostra Código (vazio até salvar), Data (hoje) e Movimentação (TRANSFERÊNCIA), todos travados.</li>
-<li>Passo 7. Em "Itens", digite o código do item e clique na lupa. Se o texto for o código exato, o item é escolhido; se não, abre a janela "Localizar Item" com os itens que combinam com o texto (pede ao menos um caractere). O campo Unid. Medida é preenchido sozinho.</li>
-<li>Passo 8. Escolha o lote em "Item de Entrada". A lista traz só lotes com saldo, descontando o que você já lançou nesta tela.</li>
-<li>Passo 9. Em "Origem", escolha o "Endereço de Origem". "Qtd Origem" mostra o saldo desse endereço, também descontando o que você já lançou.</li>
-<li>Passo 10. Em "Destino", escolha Almoxarifado, Local, Rua, Coluna e Andar, nesta ordem. O campo "Endereço Destino" é montado sozinho (ex.: L905-R905-C905-A905).</li>
-<li>Passo 11. Digite a "Qtd. Movimentada" e clique em ADICIONAR ITEM. Se algo estiver errado, a tela mostra a mensagem em vermelho e não adiciona. Se estiver certo, a grade mostra duas linhas, uma de SAÍDA (origem) e uma de ENTRADA (destino). Repita para outros itens.</li>
-<li>Passo 12. Escreva a "Justificativa" e clique em SALVAR REGISTRO. A tela pergunta "Confirma a inclusão do item?". Com SIM, mostra "Inclusão realizada com sucesso!" e volta para a lista.</li>
-<li>Passo 13. Para tirar uma linha antes de salvar, use o ícone vermelho da linha. LIMPAR esvazia só os campos do item em edição, não a grade.</li>
+<li>A lista e o formulário usam a função de tela <strong>303</strong>. O que o perfil libera só <strong>mostra ou esconde</strong> botões: Pesquisar (função de consultar), Incluir (incluir), Imprimir e Excel (imprimir). Editar, Excluir e Ver Log ficam escondidos para todos, qualquer que seja o perfil (movimentacao_lst.aspx.cs:21-22 e 279-289; ClassePaiLst.cs:130-239).</li>
+<li>A conferência que barraria a abertura da página está <strong>comentada</strong> (ClassePaiLst.cs:69-81; ClassePaiEd.cs:49-61): quem digita o endereço abre a tela (DV-EST-008, Alta; CT-EST-045 e 065).</li>
+<li>No formulário, as permissões de incluir, alterar e excluir começam como verdadeiras (ClassePaiEd.cs:79-81): pelo código, quem abre o formulário pelo endereço e monta uma transferência consegue salvar. A confirmar (CT-EST-E07-S1).</li>
+<li>O <strong>grupo de usuário</strong> limita a lista às movimentações com ao menos um endereço de almoxarifado do grupo (dalMovimentacao.cs:256-268), mas a consulta pelo número (<code>movimentacao_ed.aspx?id=</code>) não repete a conferência de grupo (movimentacao_ed.aspx.cs:53). A confirmar.</li>
+<li>O tipo da movimentação vem de um campo escondido e o servidor grava o recebido (movimentacao_ed.aspx.cs:127 e 232). A confirmar.</li>
 </ul>
-<h4 id="consultar-uma-movimentacao-ja-gravada">Consultar uma movimentação já gravada</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 14. Na lista, clique na lupa. A tela abre sem os botões de adicionar e salvar, mostra o usuário responsável e as linhas da movimentação (movimentacao_ed.aspx.cs:26-34 e 52-65). Pelo código, a coluna "Tipo" (Entrada ou Saída) fica escondida nesta consulta (movimentacao_ed.aspx.cs:33); a conferir na tela (caso CT-EST-E07-07).</li>
+<li><strong>Item refrigerado:</strong> a lista de destino fica vazia ou sem rua, coluna e andar, e a transferência não conclui (DV-EST-042). Causa provável: o local filtra pelo item, mas rua, coluna e andar filtram pelo endereço de origem.</li>
+<li><strong>Duas abas com a mesma origem gravam as duas movimentações</strong>, sem bloqueio; nada impede saldo negativo no banco (DV-EST-065, Baixa).</li>
+<li><strong>A lista de lotes oferece lote em quarentena</strong> (DV-EST-033, Baixa): a área deve dizer se isso é aceitável.</li>
+<li><strong>Quem fez e o motivo só ficam no log</strong>, escondido na lista; o Histórico do Lote não mostra usuário nem justificativa (DV-EST-034).</li>
+<li>Pelo código, ainda não vistos em tela: adicionar sem escolher o item pode dar erro técnico; destino com rua, coluna e andar em branco deve ser recusado só com "Endereço de destino inválido!"; a tela só compara o item do endereço (o servidor compara o lote); o peso do destino não soma o que o endereço já guarda; a lista de lotes não filtra validade, então lote vencido pode ser movimentado.</li>
+<li>A quantidade usa a máscara que, em outras telas, transforma 100 em 0,100 (DV-EST-002). Ponto para validar.</li>
+<li>Erros de texto: "Erro ao efetuar ao consultar registro!". O filtro Tipo usa a empresa 1 fixa (ponto para validar).</li>
+<li>Relatório sai sem ordem depois de ordenar pela grade (CT-EST-E07-08, a testar).</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lupa (Visualizar)</td>
+<td>Abre a movimentação só para consulta</td>
+<td>Em toda linha</td>
+</tr>
+<tr>
+<td>Impressora (Gerar Relatório NMM)</td>
+<td>Gera o PDF da Nota de Movimentação de Material</td>
+<td>Em toda linha</td>
+</tr>
+<tr>
+<td>Imprimir / Excel (acima da lista)</td>
+<td>Relatório da lista com os filtros usados</td>
+<td>Depois de pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Editar, Excluir e Ver Log</td>
+<td>Existem no código, mas as colunas são escondidas em todo carregamento</td>
+<td>Nunca aparecem</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -489,7 +583,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

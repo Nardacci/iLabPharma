@@ -45,42 +45,166 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="item-analise.html">Análise</a><a href="item-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="item-fluxos.html">Fluxos</a><a href="item-regras-de-negocio.html">Regras de negócio</a><a href="item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-item.html">Erros (21)</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-6-consulta-endereco-item">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Item</strong> é o <strong>cadastro mestre do material</strong>: cada matéria-prima, embalagem ou produto acabado nasce aqui, com os controles que dizem como o Estoque vai tratá-lo (lote, validade, quarentena, análise, refrigeração, umidade, retenção, estabilidade, substância controlada, pesagem). Quase todas as telas do Estoque leem este cadastro. Quem mantém o cadastro de materiais usa a tela antes de qualquer recebimento, solicitação ou inventário.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Grupo</strong> e <strong>Subgrupo</strong> (obrigatórios)</td>
+<td>Classificam o item</td>
+<td>Cadastros › Grupo do Item e Subgrupo do Item</td>
+</tr>
+<tr>
+<td><strong>Unidade de Medida</strong> (obrigatória)</td>
+<td>Unidade em que o estoque conta o item</td>
+<td>Cadastros › Unidade de Medida</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado</strong>, ligado ao <strong>seu grupo de usuário</strong> (ao menos um na grade; obrigatório)</td>
+<td>Onde o item pode ser movimentado; a lista só mostra os almoxarifados do seu grupo</td>
+<td>Cadastros › Almoxarifado e Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado de Identificação</strong> (se o item vai ser recebido)</td>
+<td>Sem ele o "Confirmar recebimento" falha depois (DV-EST-010)</td>
+<td>Cadastros › Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Cliente</strong> (só se o Tipo for Terceiro)</td>
+<td>Obrigatório quando o item não é próprio</td>
+<td>Cadastro de pessoas</td>
+</tr>
+<tr>
+<td>NCM, Conta Financeira, Classe, Classificação, Condição de Armazenagem, Nível de Segurança, Conta Corrente, SJB e Substância Controlada (opcionais; Substância só com Portaria 344)</td>
+<td>Complementam o item</td>
+<td>Cadastros › NCM, Conta Financeira, Classe do Item, Classificação do Item, Condição de Armazenagem, Nível de Segurança, Conta Corrente, SJB e Substância Controlada</td>
+</tr>
+</tbody>
+</table></div>
+<p>Decida os <strong>controles</strong> antes de salvar. Depois do primeiro movimento (nota, entrada ou saída) ficam travados: código, código de barras, custo inicial, tipo do item, cliente, grupo, subgrupo, unidade, classificação, classe, condição, nível, conta corrente, SJB, almoxarifado de identificação, classificação de reanálise e os controles de lote, validade, quarentena, teor, umidade, Exército e pesagem de saída (item_ed.aspx.cs:772-869).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu <strong>Cadastros</strong>, abra <strong>Item</strong>. A grade <strong>só aparece depois de Pesquisar</strong>.</li>
+<li>Use os filtros <strong>Código</strong> (até 10; procura o trecho), <strong>Descrição</strong> (trecho; <strong>não acha texto sem acento</strong>, DV-EST-053), <strong>Tipo</strong> (Próprio ou Terceiro), <strong>Grupo</strong> e <strong>Ativo</strong>.</li>
+<li>A lista mostra os itens ligados a algum almoxarifado do <strong>seu grupo de usuário</strong> e os que não têm almoxarifado nenhum. Em cada linha: lápis (Editar), X (Excluir), histórico (Ver Log) e impressora (Imprimir Etiqueta).</li>
+</ol>
+<p><strong>Incluir um item (preencha na ordem da tela)</strong></p>
+<ol start="4">
+<li>Atenção: mudar o <strong>Grupo</strong>, o <strong>Subgrupo</strong> ou o <strong>Tipo do Item</strong> <strong>apaga</strong> os almoxarifados já adicionados na grade; os botões e as marcações de controle também recarregam a tela e podem apagar números digitados (DV-EST-006).</li>
+<li><strong>Dados do Item:</strong> Código (em branco, o sistema gera), Descrição (obrigatória, até 100), Código de Barras (opcional), Ativo, <strong>Tipo do Item</strong> (Próprio ou Terceiro; Terceiro exige o Cliente), <strong>Grupo</strong> e <strong>Subgrupo</strong> (obrigatórios), NCM (opcional), <strong>Custo Inicial</strong> (obrigatório) e, se quiser, Conta Contábil, Conta Financeira, Conta Corrente, Nível de Segurança, Classe do Item, Classificação, Condição de Armazenagem, SJB e <strong>Ativo Imobilizado</strong> (obrigatório).</li>
+<li><strong>Parâmetros de Armazenagem:</strong> Almoxarifado de Identificação, <strong>Unid. de Medida</strong>, <strong>Est. Mínimo</strong>, <strong>Est. Máximo</strong>, <strong>Peso (kg)</strong>, <strong>Altura</strong>, <strong>Largura</strong> e <strong>Profundidade (cm)</strong>, <strong>Emp. Máximo</strong>, Nº Dias Reposição e <strong>Refrigerado</strong> (todos obrigatórios, menos o Almoxarifado de Identificação e os dias).</li>
+<li><strong>Controles:</strong> marque o que vale para o item (Controle de Lote, de Validade, de Quarentena, de Umidade, de Destruição, Polícia Federal, Exército, Item Produzido, Exigir Fabricante, Exigir Fornecedor, Obrigar Pesagem de entrada e de saída, Controle de Teor, Controle Portaria 344). Quarentena <strong>exige</strong> marcar Análise Físico-Química e/ou Microbiológica; Teor, Referência, Retenção e Estabilidade só ficam livres com Quarentena marcada; Teor pede o <strong>Grau de Pureza Esperado</strong>; Portaria 344 pede o <strong>Tipo de Substância Controlada</strong>.</li>
+<li><strong>Almoxarifados (Movimentação):</strong> escolha o Almoxarifado e clique em <strong>INCLUIR</strong>; repita. É obrigatório ao menos um. O X da linha tira o almoxarifado, <strong>menos se o item tem saldo nele</strong>.</li>
+<li>Escreva a <strong>Justificativa</strong> (obrigatória, <strong>também na inclusão</strong>) e clique em <strong>SALVAR</strong>. Responda <strong>SIM</strong> a "Confirma a inclusão do item?". Aparece "Inclusão realizada com sucesso!"; <strong>OK</strong> volta para a lista.</li>
+</ol>
+<p><strong>Alterar</strong></p>
+<ol start="10">
+<li>Na lista, clique no lápis e mude o que estiver liberado. Escreva a Justificativa, <strong>SALVAR</strong> e <strong>SIM</strong> em "Confirma a alteração do item?" (visto em teste: alterações de peso e de refrigerado do <code>TST0003</code> com justificativa, 13/10/2026).</li>
+<li>Para <strong>inativar</strong>, escolha Ativo = Não: o sistema avisa se o item está em kit ("O Item está associado a KITS!") ou tem saldo ("O Item possui saldo em estoque!"), mas <strong>deixa continuar</strong>. O item inativo fica travado e sai das telas de escolha.</li>
+</ol>
+<p><strong>Excluir</strong></p>
+<ol start="12">
+<li>Na lista, clique no X, escreva a Justificativa, <strong>EXCLUIR REGISTRO</strong> e <strong>SIM</strong>. Pelo desenho do banco, <strong>todo item salvo pela tela tem ao menos um vínculo de almoxarifado e a exclusão deve ser sempre recusada</strong>. Para parar de usar, <strong>inative</strong>.</li>
+</ol>
+<p><strong>Imprimir etiqueta e consultar o histórico</strong></p>
+<ol start="13">
+<li>O ícone da impressora gera a etiqueta do item (arquivo aberto em outra janela). O ícone de histórico abre "Log Alteração - Item" com campo, dado antigo, dado novo, data, hora, usuário e justificativa; <strong>vários controles não entram no histórico</strong>.</li>
+</ol>
+<h4 id="o-que-acontece-ao-salvar">O que acontece ao salvar</h4>
 <ul>
-<li>Cadastre antes o que o item vai apontar: <strong>Grupo e Subgrupo</strong>, <strong>Unidade de Medida</strong>, o <strong>Almoxarifado</strong> (ligado ao seu grupo de usuário) e, se usar, NCM, Conta Financeira, Classe, Classificação, Condição de Armazenagem, Nível de Segurança, SJB e Substância Controlada.</li>
-<li>Decida os <strong>controles</strong> antes de salvar. Depois do primeiro movimento (nota, entrada ou saída), ficam travados: código, código de barras, custo inicial, tipo do item, cliente, grupo, subgrupo, unidade, classificação, classe, condição, nível, conta corrente, SJB, almoxarifado de identificação, classificação de reanálise e os controles de lote, validade, quarentena, teor, umidade, Exército e pesagem de saída (item_ed.aspx.cs:772-869).</li>
-<li><strong>Preencha na ordem</strong>: mudar o Grupo, o Subgrupo ou o Tipo do Item <strong>apaga</strong> os almoxarifados já adicionados na grade (e, segundo o teste de 07/10/2026, os botões e as marcações de controle recarregam a tela e apagam números digitados: DV-EST-006).</li>
-<li>Se o item vai ser recebido, <strong>preencha o Almoxarifado de Identificação</strong> (DV-EST-010).</li>
+<li>Grava o item com todos os parâmetros e controles; os almoxarifados da grade vão para a ligação item-almoxarifado (dalItem.cs:35-159; dalItem.cs:2226). A inclusão escreve "INCLUSÃO" no histórico (bllItem.cs:67). Vale na hora do SIM, sem aprovação.</li>
+<li><strong>Onde o item é usado:</strong> o item ativo é oferecido por quase todas as telas: Recebimento, Endereçamento, Movimentação, Solicitação, Atendimento, Inventário, Kits, Análise de Estoque e a interface de integração (ItemServicoAPI.cs:39).</li>
+<li><strong>Se o item está em uso:</strong> a exclusão é recusada (sempre, na prática). A <strong>inativação com saldo ou em kit só avisa</strong>; o item inativo com saldo some das telas de escolha e o saldo fica "órfão" (inferência, CT-EST-CAD12-07).</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No Menu Cadastros do Estoque, abra Item. A grade <strong>só aparece depois de Pesquisar</strong> (resultado de 07/10/2026, item 9).</li>
-<li>Passo 2. Filtros: <strong>Código</strong> (até 10; procura o trecho), <strong>Descrição</strong> (trecho; <strong>não acha texto sem acento</strong>: DV-EST-053), <strong>Tipo</strong> (Próprio ou Terceiro), <strong>Grupo</strong> e <strong>Ativo</strong> (item_lst.aspx:41-67; dalItem.cs:483-1607).</li>
-<li>Passo 3. A lista mostra os itens ligados a algum almoxarifado do <strong>seu grupo de usuário</strong> e os que não têm nenhum almoxarifado (dalItem.cs:1329).</li>
-<li>Passo 4. Em cada linha: lápis (Editar), X (Excluir), histórico (Ver Log) e impressora (Imprimir Etiqueta).</li>
+<li>Campos em branco (vistas em teste, CT-EST-015, 22/10/2026): "A descrição do item é obrigatória!", "O Tipo de Item é obrigatório!", "O Grupo é obrigatório!", Subgrupo, "Custo Inicial inválido.", "Unidade de Medida é obrigatória!", "Estoque Mínimo inválido.", Estoque Máximo, "O campo Peso é obrigatório!", "Altura inválida.", "Largura inválida.", "Comprimento inválido." (é a Profundidade).</li>
+<li>"Item não foi vinculado a nenhum Almoxarifado!" e "Cliente é obrigatório quando o Tipo do Item não é próprio!" (vistas em teste).</li>
+<li>"É necessário informar um tipo de análise quando o item tiver CONTROLE DE QUARENTENA!" (visto em teste, 07/10/2026); "Tipo de Substância Controlada não foi informada!" (CT-EST-016); "Grau de Pureza não informado ou inválido!".</li>
+<li>"Item possui saldo no Almoxarifado!" ao tirar da grade um almoxarifado com saldo.</li>
+<li>"Esse código já está cadastrado.", "A Justificativa é obrigatória!" e "Exclusão inválida, existem referências com outras tabelas.".</li>
 </ul>
-<h4 id="incluir-um-item">Incluir um item</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. <strong>Dados do Item</strong>: Código (se deixar em branco, o sistema gera), Descrição (obrigatória, até 100), Código de Barras (opcional), Ativo, <strong>Tipo do Item</strong> (Próprio ou Terceiro; Terceiro exige o Cliente), <strong>Grupo</strong> e <strong>Subgrupo</strong> (obrigatórios), NCM (opcional), <strong>Custo Inicial</strong> (obrigatório) e, se quiser, Conta Contábil, Conta Financeira, Conta Corrente, Nível de Segurança, Classe do Item, Classificação, Condição de Armazenagem, SJB e <strong>Ativo Imobilizado</strong> (obrigatório).</li>
-<li>Passo 6. <strong>Parâmetros de Armazenagem</strong>: Almoxarifado de Identificação, <strong>Unid. de Medida</strong>, <strong>Est. Mínimo</strong>, <strong>Est. Máximo</strong>, <strong>Peso (kg)</strong>, <strong>Altura</strong>, <strong>Largura</strong> e <strong>Profundidade (cm)</strong>, <strong>Emp. Máximo</strong>, Nº Dias Reposição e <strong>Refrigerado</strong> (todos obrigatórios, menos o Almoxarifado de Identificação e os dias).</li>
-<li>Passo 7. <strong>Controles</strong>: marque o que vale para o item (Controle de Lote, de Validade, de Quarentena, de Umidade, de Destruição, Polícia Federal, Exército, Item Produzido, Exigir Fabricante, Exigir Fornecedor, Obrigar Pesagem de entrada e de saída, Controle de Teor, Controle Portaria 344). Quarentena <strong>exige</strong> marcar Análise Físico-Química e/ou Microbiológica; Teor, Referência, Retenção e Estabilidade só ficam livres com Quarentena marcada; Teor pede o <strong>Grau de Pureza Esperado</strong>; Portaria 344 pede o <strong>Tipo de Substância Controlada</strong> (item_ed.aspx.cs:889-905).</li>
-<li>Passo 8. <strong>Almoxarifados (Movimentação)</strong>: escolha o Almoxarifado e clique em INCLUIR; repita. É obrigatório ao menos um ("Item não foi vinculado a nenhum Almoxarifado!"). O X da linha tira o almoxarifado, <strong>menos se o item tem saldo nele</strong> ("Item possui saldo no Almoxarifado!").</li>
-<li>Passo 9. Escreva a <strong>Justificativa</strong> (obrigatória, também na inclusão) e clique em SALVAR. Responda SIM em "Confirma a inclusão do item?". Aparece "Inclusão realizada com sucesso!"; OK volta para a lista.</li>
+<li>A lista e o formulário usam a <strong>função 218 (Item)</strong>. A lista lê as funções do perfil (consultar, incluir, alterar, excluir, imprimir ou exportar e consultar log) e <strong>mostra ou esconde</strong> os botões e ícones de acordo com elas.</li>
+<li><strong>Cuidados:</strong> o botão <strong>Pesquisar não é escondido</strong>: quem não tem a função de consultar ainda o vê. A conferência que mandaria quem não tem a função para o acesso negado está <strong>comentada</strong>: abrir a página pelo endereço não é barrado (DV-EST-008, Alta; leitura do código, a confirmar neste cadastro). No formulário, quem abre a página pelo endereço consegue salvar mesmo sem a função de incluir ou alterar (a confirmar).</li>
+<li>Quem cadastra e quem confere são a mesma pessoa: não há assinatura nem segunda conferência.</li>
+<li>O <strong>grupo de usuário</strong> limita o que a pessoa vê: a lista filtra os itens pelo grupo <strong>no servidor</strong>, mas o formulário abre qualquer item pelo número no endereço e grava os almoxarifados da sessão sem repetir a conferência (leitura do código, a confirmar, CT-EST-CAD12-S3). Um usuário de grupo sem almoxarifado vê o Item e as consultas vazias (CT-EST-041).</li>
+<li>O ícone de <strong>Imprimir Etiqueta aparece para todos</strong>: a condição que o esconderia está invertida.</li>
 </ul>
-<h4 id="alterar">Alterar</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 10. Na lista, clique no lápis e mude o que estiver liberado (ver "Antes de começar"). Escreva a Justificativa, SALVAR e SIM em "Confirma a alteração do item?". Foram feitas alterações de peso e de refrigerado do <code>TST0003</code> com justificativa (13/10/2026).</li>
-<li>Passo 11. Para <strong>inativar</strong>, escolha Ativo = Não: o sistema avisa se o item está em kit ("O Item está associado a KITS!") ou tem saldo ("O Item possui saldo em estoque!"), mas <strong>deixa continuar</strong> (item_ed.aspx.cs:1080-1099). O item inativo fica travado e sai das telas de escolha.</li>
+<li><strong>DV-EST-043 (Alta):</strong> o campo da classificação de reanálise <strong>não aparece</strong>; sem ele o prazo de reanálise de um item novo não é cadastrável e a Agenda de Reanálise não age.</li>
+<li><strong>DV-EST-010 (Média):</strong> o item salva sem Almoxarifado de Identificação; o "Confirmar recebimento" falha depois com "Erro ao Finalizar Recebimento!", e o campo trava depois do primeiro movimento.</li>
+<li><strong>DV-EST-006 (Baixa):</strong> botões e marcações recarregam a tela e apagam números digitados.</li>
+<li><strong>DV-EST-051 (Baixa):</strong> aceita estoque mínimo 500 e máximo 10 sem aviso.</li>
+<li><strong>DV-EST-053 (Baixa):</strong> a pesquisa de Descrição não acha texto sem acento. <strong>DV-EST-008 (Alta):</strong> acesso pelo endereço.</li>
+<li><strong>Controles essenciais fora do histórico</strong> (quarentena, lote, umidade, substância controlada, pesagem, reanálise e almoxarifados vinculados): mudar o controle de quarentena decide se o lote será retido, e antes do primeiro movimento a mudança passa em branco. Gravidade provável: Alta (CT-EST-CAD12-05).</li>
+<li>O <strong>Código</strong> tem asterisco mas não é obrigatório (em branco, o sistema gera).</li>
+<li>O Estoque <strong>Mínimo só aceita dígitos</strong> (0,5 não se digita) e o máximo aceita decimais.</li>
+<li>Os itens de teste só se <strong>inativam</strong>: a exclusão é sempre recusada (inferência, CT-EST-CAD12-06).</li>
 </ul>
-<h4 id="excluir">Excluir</h4>
-<ul>
-<li>Passo 12. Na lista, clique no X, escreva a Justificativa, EXCLUIR REGISTRO e SIM. O sistema recusa com "Exclusão inválida, existem referências com outras tabelas." quando alguma tabela usa o item. Pelo desenho do banco, <strong>todo item salvo pela tela tem ao menos um vínculo de almoxarifado e, por isso, a exclusão deve ser sempre recusada</strong> (ver Falhas, item 2). Para parar de usar, <strong>inative</strong>.</li>
-</ul>
-<h4 id="imprimir-etiqueta-e-consultar-o-historico">Imprimir etiqueta e consultar o histórico</h4>
-<ul>
-<li>Passo 13. O ícone da impressora gera a etiqueta do item (arquivo aberto em outra janela) (item_lst.aspx.cs:189-192).</li>
-<li>Passo 14. O ícone de histórico abre a janela "Log Alteração - Item" com campo, dado antigo, dado novo, data, hora, usuário e justificativa (item_lst.aspx.cs:181). <strong>Vários controles não entram no histórico</strong> (ver Situações e histórico).</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura os itens pelos filtros (a grade não carrega sozinha)</td>
+<td>Sempre (não é escondido)</td>
+</tr>
+<tr>
+<td>Incluir (sinal de mais)</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a função de incluir</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário com o item</td>
+<td>Em cada linha, para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>X (Excluir)</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Em cada linha, para quem tem a função de excluir</td>
+</tr>
+<tr>
+<td>Ícone de histórico (Ver Log)</td>
+<td>Abre "Log Alteração - Item"</td>
+<td>Em cada linha, para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Impressora (Imprimir Etiqueta)</td>
+<td>Gera a etiqueta do item em outra janela</td>
+<td>Para todos (falha: devia depender da função de imprimir)</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Geram o relatório com os filtros usados</td>
+<td>Depois de uma pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e grade</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -693,7 +817,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

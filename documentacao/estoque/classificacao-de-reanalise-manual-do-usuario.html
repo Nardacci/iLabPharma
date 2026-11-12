@@ -45,44 +45,146 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="classificacao-de-reanalise-analise.html">Análise</a><a href="classificacao-de-reanalise-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="classificacao-de-reanalise-fluxos.html">Fluxos</a><a href="classificacao-de-reanalise-regras-de-negocio.html">Regras de negócio</a><a href="classificacao-de-reanalise-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-classificacao-de-reanalise.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-de-apoio-passo-a-passo.html#tela-20-classificacao-de-reanalise">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Classificação de Reanálise</strong> cadastra o <strong>prazo de reanálise</strong> da matéria-prima como <strong>percentual do prazo de validade do lote</strong>: a primeira reanálise (por exemplo, 50% da validade) e, se houver, a segunda. A Agenda de Reanálise calcula, para cada lote, a data da primeira e da segunda reanálise a partir desse percentual (VW_ITEM_LOTE_PERIODO_REANALISE.sql:27-35). Quem define o prazo de reteste (Qualidade e Almoxarifado, leitura da área) usa a tela. <strong>A tela não está no menu</strong> e <strong>a lista não tem botão Incluir</strong>: ela abre pelo endereço da página.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nenhum outro cadastro</td>
+<td>É cadastro de apoio sem dependências</td>
+<td>Esta tela</td>
+</tr>
+<tr>
+<td>O <strong>prazo de reanálise definido pela Qualidade</strong>, em percentual da validade (por exemplo, 50%)</td>
+<td>Preenche a Primeira e a Segunda Reanálise</td>
+<td>Decisão da Qualidade</td>
+</tr>
+<tr>
+<td>Acesso ao endereço da página (não há opção no menu)</td>
+<td>A linha do menu está comentada na carga do menu</td>
+<td>Peça o endereço à TI</td>
+</tr>
+<tr>
+<td>Para ter efeito: o <strong>Item</strong> apontar para a classificação</td>
+<td>Hoje o cadastro de Item <strong>não mostra</strong> o campo para escolher a classificação (DV-EST-043)</td>
+<td>Cadastros › Item</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>Abra o endereço da lista de Classificação de Reanálise (a tela não está no menu). A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
+<li>Se quiser, escreva parte da <strong>Descrição</strong> e escolha a situação (Todos, Sim, Não). Clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra Código, Descrição e Ativo, com Editar, Excluir e Ver Log. <strong>Não há botão Incluir.</strong> Sem resultado: "A pesquisa não retornou nenhum resultado.".</li>
+</ol>
+<p><strong>Incluir uma classificação</strong></p>
+<ol start="4">
+<li>Como a lista não oferece Incluir, abra o formulário pelo endereço da página de edição (foi assim que a tela foi aberta nos testes de 22/10/2026; a classificação de teste foi criada em 13/10/2026 e o resultado não registra o caminho usado).</li>
+<li>Escreva o <strong>Código</strong> (1 caractere, letra ou número), a <strong>Descrição</strong> (até 40 caracteres), a <strong>Primeira Reanálise</strong> (percentual maior que 0 e menor que 100) e, se quiser, a <strong>Segunda Reanálise</strong> (percentual maior que a primeira, até 100). Deixe <strong>Ativo = Sim</strong>.</li>
+<li>Clique em <strong>SALVAR</strong>. A tela pergunta "Confirma a inclusão do item?". Com <strong>SIM</strong>, mostra "Inclusão realizada com sucesso!" e, ao clicar <strong>OK</strong>, volta à lista.</li>
+</ol>
+<p><strong>Alterar uma classificação</strong></p>
+<ol start="7">
+<li>Na lista, clique no lápis. O código fica travado e aparece o painel <strong>Justificativa</strong>. Mude o que precisa, escreva a justificativa (obrigatória), clique em <strong>SALVAR</strong> e confirme ("Confirma a alteração do item?"): "Alteração realizada com sucesso!".</li>
+<li>Com Ativo = Não os campos ficam travados; reative para mudar qualquer dado.</li>
+</ol>
+<p><strong>Excluir uma classificação</strong></p>
+<ol start="9">
+<li>Na lista, clique no X, escreva a justificativa e clique em <strong>EXCLUIR REGISTRO</strong>. Confirme ("Confirma a exclusão do item?"): "Exclusão realizada com sucesso!". <strong>A tela não confere se algum item usa a classificação.</strong></li>
+</ol>
+<p><strong>Ver o histórico</strong></p>
+<ol start="10">
+<li>Na lista, clique em <strong>Ver Log</strong>. A janela "Log Alteração - Classificação de Reanálise" mostra campo, dado antigo, dado novo, data, hora, usuário e justificativa.</li>
+</ol>
+<h4 id="o-que-acontece-ao-salvar">O que acontece ao salvar</h4>
 <ul>
-<li>Saiba o prazo de reanálise definido pela Qualidade para o tipo de matéria-prima, como percentual da validade (por exemplo, reanalisar quando passar 50% da validade).</li>
-<li>Lembre que, nesta versão, o cadastro de Item não oferece o campo para escolher a classificação (DV-EST-043); o cadastro serve, hoje, para itens que já foram ligados por outro caminho.</li>
+<li><strong>Incluir:</strong> grava a classificação ativa, que passa a ser oferecida no campo de classificação do Item (que hoje não aparece, DV-EST-043).</li>
+<li><strong>Alterar:</strong> grava o histórico (Ver Log). <strong>Excluir:</strong> exclusão lógica; no histórico, a exclusão fica com a empresa em branco.</li>
+<li><strong>Onde é usada:</strong> o cadastro de <strong>Item</strong> deveria apontar para uma classificação, e a <strong>Agenda de Reanálise</strong> calcula as datas a partir dela. A data parte da <strong>data de criação do lote no sistema</strong>, não da fabricação nem do recebimento (ponto para validar com a área).</li>
+<li><strong>Se a classificação está em uso:</strong> excluir ou inativar uma classificação em uso <strong>não é conferido</strong>; itens que apontam para ela saem do cálculo da Agenda sem aviso (VW_ITEM_LOTE_PERIODO_REANALISE.sql:40-47).</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. Abra o endereço da lista de Classificação de Reanálise (a tela não está no menu). A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
-<li>Passo 2. Se quiser, escreva parte da Descrição e escolha a situação (Todos, Sim, Não). Clique em Pesquisar (classificacao_reanalise_lst.aspx:43-51; lst.aspx.cs:34-39).</li>
-<li>Passo 3. A lista mostra Código, Descrição e Ativo, com os ícones Editar, Excluir e Ver Log. <strong>Não há botão Incluir</strong> (classificacao_reanalise_lst.aspx:85-95; lst.aspx.cs:20-21).</li>
-<li>Passo 4. Sem resultado, a tela escreve "A pesquisa não retornou nenhum resultado." (lst.aspx.cs:105).</li>
+<li>Campos vazios (visto em teste, CT-EST-018, 22/10/2026): "Código é obrigatório!", "A Descrição é obrigatória!" e "A Primeira Reanálise é obrigatória!"; também "A Situação é obrigatória!" (não ocorre na prática).</li>
+<li>"A primeira reanálise deve ser maior que 0% e menor que 100%".</li>
+<li>"A segunda reanálise deve ser maior do que a primeira" e "A segunda reanálise deve estar entre 0% e 100".</li>
+<li>"A Justificativa é obrigatória!" ao alterar ou excluir sem justificativa.</li>
+<li>"Já existe uma reanálise com este código." (a conferência do programa não funciona; quem recusa é o banco e a mensagem pode chegar como erro técnico). Falhas de gravação: "Não foi possível inserir/alterar/excluir a Classificação de Reanálise".</li>
 </ul>
-<h4 id="incluir-uma-classificacao">Incluir uma classificação</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. Como a lista não oferece Incluir, abra o formulário pelo endereço da página de edição (<code>classificacao_reanalise_ed.aspx</code>). Foi assim que a tela foi aberta nos testes de 22/10/2026; a classificação de teste foi criada em 13/10/2026 (o resultado não registra o caminho usado).</li>
-<li>Passo 6. Escreva o Código (1 caractere, letra ou número), a Descrição (até 40 caracteres), a Primeira Reanálise (percentual maior que 0 e menor que 100) e, se quiser, a Segunda Reanálise (percentual maior que a primeira, até 100). Deixe Ativo = Sim.</li>
-<li>Passo 7. Clique em SALVAR. A tela pergunta "Confirma a inclusão do item?". Responda SIM; a tela mostra "Inclusão realizada com sucesso!" e, ao clicar OK, volta à lista.</li>
+<li>A <strong>lista</strong> usa a <strong>função 230</strong>, que a carga do menu <strong>não cria</strong>; o <strong>formulário</strong> usa a <strong>função 226</strong>, que é a do cadastro de Nível de Segurança (classificacao_reanalise_ed.aspx.cs:14; dml.sql:1869 e 1877). Por isso a lista <strong>não mostra o botão Incluir a ninguém</strong>.</li>
+<li>Na lista, <strong>Editar, Excluir e Ver Log</strong> são escondidos por função; <strong>Imprimir e Excel</strong> dependem da função de imprimir. <strong>O formulário não esconde nada por função</strong> e abre para quem chegar ao endereço.</li>
+<li><strong>Cuidado:</strong> a conferência "a pessoa tem a função desta tela?" está <strong>comentada</strong>; como a lista não oferece Incluir, <strong>o formulário aberto pelo endereço é o único caminho de inclusão e ninguém o confere</strong> (DV-EST-008, Alta; esta tela deve se comportar como as demais, a confirmar).</li>
+<li>Não há limite por grupo de usuário.</li>
 </ul>
-<h4 id="alterar-uma-classificacao">Alterar uma classificação</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 8. Na lista, clique no lápis. O código fica travado e aparece o painel <strong>Justificativa</strong>.</li>
-<li>Passo 9. Mude o que precisa, escreva a justificativa (obrigatória), clique em SALVAR e confirme ("Confirma a alteração do item?"). A tela mostra "Alteração realizada com sucesso!".</li>
-<li>Passo 10. Com Ativo = Não os campos ficam travados; reative para mudar qualquer dado (classificacao_reanalise_ed.aspx.cs:268-277).</li>
+<li><strong>DV-EST-043 (Alta):</strong> o cadastro de Item <strong>não mostra o campo da classificação</strong> (painel oculto); sem o vínculo, a Agenda de Reanálise nunca aplica prazo a item novo. Hoje o cadastro serve só a itens que já foram ligados por outro caminho.</li>
+<li><strong>DV-EST-041 (Média):</strong> a Agenda de Reanálise não lista lote de item que já teve movimentação (a confirmar); o campo do item trava depois da primeira movimentação.</li>
+<li><strong>DV-EST-008 (Alta):</strong> acesso pelo endereço.</li>
+<li>Alterar e inativar não aparecem em nenhum resultado de teste (só a inclusão, 13/10/2026, e a recusa por campos vazios, 22/10/2026), embora o inventário diga que funcionam.</li>
+<li><strong>Código repetido</strong> só é barrado pelo banco, e o código de uma classificação excluída não pode ser reutilizado.</li>
+<li><strong>Percentual "," ou ",,,"</strong> passa pela tela e quebra a conversão (Baixa).</li>
+<li>O texto técnico do erro aparece ao usuário em "Detalhe do erro (+)".</li>
+<li>Ponto para validar com a área: a reanálise deve partir da fabricação ou do recebimento? A tela deve voltar ao menu e ganhar o botão Incluir? Pode haver mais de duas reanálises? Uma classificação em uso pode ser excluída ou inativada?</li>
 </ul>
-<h4 id="excluir-uma-classificacao">Excluir uma classificação</h4>
-<ul>
-<li>Passo 11. Na lista, clique no X, escreva a justificativa e clique em EXCLUIR REGISTRO. Confirme ("Confirma a exclusão do item?"). A tela mostra "Exclusão realizada com sucesso!". A tela não confere se algum item usa a classificação (classificacao_reanalise_lst.aspx.cs:237-262 e 349-358).</li>
-</ul>
-<h4 id="ver-o-historico">Ver o histórico</h4>
-<ul>
-<li>Passo 12. Na lista, clique no ícone Ver Log. A janela "Log Alteração - Classificação de Reanálise" mostra campo, dado antigo, dado novo, data, hora, usuário e justificativa (lst.aspx.cs:135-145 e 300-308).</li>
-</ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
-<ul>
-<li>Não tem botão Incluir na lista nem opção no menu.</li>
-<li>Não liga a classificação ao item (isso seria feito no cadastro de Item, DV-EST-043).</li>
-<li>Não confere se algum item usa a classificação antes de excluir ou inativar.</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura as classificações por descrição e situação</td>
+<td>Na tela de lista</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abriria o formulário vazio</td>
+<td><strong>Não aparece</strong> (a função de incluir não existe para a lista)</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário com o painel de justificativa</td>
+<td>Em cada linha, para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>X (Excluir)</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Em cada linha, para quem tem a função de excluir</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre "Log Alteração - Classificação de Reanálise"</td>
+<td>Em cada linha, para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Geram o relatório com os filtros usados</td>
+<td>Para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -339,7 +441,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

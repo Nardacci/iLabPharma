@@ -45,17 +45,89 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="consulta-endereco-item-analise.html">Análise</a><a href="consulta-endereco-item-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="consulta-endereco-item-fluxos.html">Fluxos</a><a href="consulta-endereco-item-regras-de-negocio.html">Regras de negócio</a><a href="consulta-endereco-item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-consulta-endereco-item.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-6-consulta-endereco-item">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Não precisa de preparação. A consulta mostra os endereços dos almoxarifados ligados ao seu grupo de usuário.</p>
-<h4 id="achar-onde-um-item-esta">Achar onde um item está</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Consulta Endereço Item</strong> (título na tela: "ENDEREÇO DO ITEM") mostra <strong>onde cada item está guardado</strong>. Uma linha por endereço que tem item: o endereço (Local-Rua-Coluna-Andar), o item, a unidade, a quantidade, se o local do endereço é de quarentena e se o endereço está em inventário (consulta_endereco_lst.aspx:108-137; dalEstoqueEndereco.cs:886-911). Endereço livre não aparece. Usam quem precisa achar o item no armazém: almoxarifado, separação para a produção, inventário e Garantia da Qualidade (leitura da área, a validar). <strong>A tela só consulta: não grava nada e não mostra o lote</strong>, só o item. Situação no inventário: não testada; foi usada como instrumento de conferência de saldo em várias rodadas.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Endereço com item guardado</strong></td>
+<td>Só aparecem endereços com saldo; item inativo ou excluído some mesmo com saldo (dalEstoqueEndereco.cs:909-910)</td>
+<td>Estoque › Entrada de Material / Endereçamento / Movimentação</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado ligado ao grupo do usuário</strong></td>
+<td>O grupo limita os endereços por almoxarifado (dalEstoqueEndereco.cs:914-922); grupo sem almoxarifado vê a lista vazia (CT-EST-041)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<p>Não precisa de outra preparação.</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>No menu Estoque, abra <strong>Consulta Endereço Item</strong>. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
+<li>Filtros (nenhum obrigatório): Item (parte do código ou do nome), Local de Armazenagem (só os locais de estoque do seu grupo), Quarentena (TODOS, SIM, NÃO) e Inventário (TODOS, SIM, NÃO). Clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra Endereço, Item, Unid. Med., Quantidade, Quarentena e Inventário, 15 linhas por página, ordenada pelo código do endereço. Clique no título para ordenar; clicar de novo inverte.</li>
+<li>"Quarentena: SIM" quer dizer que o <strong>local</strong> do endereço é de quarentena; não diz se o lote foi aprovado.</li>
+<li><strong>Imprimir</strong> e o ícone do Excel aparecem depois de pesquisa com resultado, para quem tem a função de imprimir. <strong>Limpar</strong> esvazia filtros e lista.</li>
+<li>Para saber o lote de um endereço, use a Disponibilidade do Lote ou o Histórico do Lote.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>Nada é gravado. Imprimir abre o relatório "ENDEREÇO DO ITEM" em janela nova; Excel baixa o mesmo relatório (consulta_endereco_lst.aspx.cs:384-390). A grade não tem ícone de detalhe: a tela não leva a nenhuma outra.</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>A tela não tem validações nem mensagens próprias. Uma pesquisa sem resultado mostra "A pesquisa não retornou nenhum resultado." (vista em teste, CT-EST-041). Falha de consulta: o código lança o erro e a página de erro do sistema mostra o texto técnico.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 1. No menu, abra Consulta Endereço Item. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
-<li>Passo 2. Filtros: Item (parte do código ou do nome), Local de Armazenagem (só os locais de estoque do seu grupo), Quarentena (TODOS, SIM, NÃO) e Inventário (TODOS, SIM, NÃO). Nenhum é obrigatório. Clique em Pesquisar.</li>
-<li>Passo 3. A lista mostra Endereço, Item, Unid. Med., Quantidade, Quarentena e Inventário, 15 linhas por página, ordenada pelo código do endereço. Clique no título de uma coluna para ordenar; clicar de novo inverte.</li>
-<li>Passo 4. "Quarentena: SIM" quer dizer que o <strong>local</strong> do endereço é de quarentena. Não diz se o lote foi aprovado ou não.</li>
-<li>Passo 5. Imprimir e o ícone do Excel aparecem depois de uma pesquisa com resultado, para quem tem a função de imprimir. Limpar esvazia filtros e lista.</li>
-<li>Atenção: a tela não mostra o lote. Para saber o lote de um endereço, use a Disponibilidade do Lote ou o Histórico do Lote.</li>
+<li>A tela usa a função de código <strong>380</strong>. O botão Pesquisar aparece sempre; Imprimir e Excel, depois de uma pesquisa, para quem tem a função de imprimir (consulta_endereco_lst.aspx.cs:105-106).</li>
+<li>A conferência que mandaria para o acesso negado está <strong>comentada</strong> (ClassePaiLst.cs:69-81): quem digita o endereço da página usa a tela (DV-EST-008, Alta, confirmado em outras telas; sem teste por endereço aqui).</li>
+<li>O <strong>grupo de usuário</strong> limita os endereços por almoxarifado, e o filtro vale também para o saldo. <strong>Se o número do grupo for 0, o filtro deixa de existir e a consulta traz todos os almoxarifados</strong> (dalEstoqueEndereco.cs:914); a origem do 0 não foi investigada (ponto para validar).</li>
+<li>A consulta não registra quem consultou, imprimiu ou exportou.</li>
 </ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum defeito foi registrado em nome desta tela. Ela foi usada para conferir DV-EST-044 e DV-EST-016 (a quantidade some de um endereço e não chega ao outro) e DV-EST-047 (a amostra de retenção aparece aqui, não na consulta do Regulatório).</li>
+<li><strong>A tela não mostra o lote.</strong> Em endereço com dois lotes do mesmo item a quantidade é a soma.</li>
+<li><strong>"Quarentena" é do local, não do lote</strong>: um lote reprovado em local de refugo aparece com Quarentena = NÃO e um lote já aprovado que continue em local de quarentena aparece como SIM. A tela não tem marca de refugo, refrigerado nem bloqueio do lote.</li>
+<li><strong>O saldo movido para o endereço padrão (<code>R000-C000-A000</code>) não aparece</strong>, porque ele é de sistema: o lote some das consultas, o mesmo buraco do DV-EST-044.</li>
+<li>Endereço inativo com saldo continua visível (a consulta não filtra Ativo).</li>
+<li>Pelo código, ainda sem teste: dois itens no mesmo endereço deixam o resultado do gatilho incerto; a lista de locais pode ficar errada se os dois números de grupo forem de cadastros diferentes; a coluna de ordenação vem direto ao comando de consulta na tela e no relatório (SEG-EST-02).</li>
+<li>O relatório não mostra data, usuário nem numeração. Ponto para validar com a área: o saldo de endereço inativo deve aparecer? A tela deve mostrar o lote? A coluna Quarentena deve refletir o lote ou o local? O endereço padrão deve aparecer? O relatório é usado em inventário ou inspeção?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Imprimir</td>
+<td>Abre o relatório "ENDEREÇO DO ITEM" em janela nova</td>
+<td>Depois de pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>Baixa o relatório em planilha</td>
+<td>O mesmo</td>
+</tr>
+<tr>
+<td>Títulos da grade</td>
+<td>Ordenam a lista; clicar de novo inverte</td>
+<td>Depois de uma pesquisa</td>
+</tr>
+</tbody>
+</table></div>
+<p>A grade não tem coluna de Editar, Excluir nem Log (a página guarda, sem uso, o painel de exclusão e de log de uma tela de cadastro).</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -181,7 +253,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

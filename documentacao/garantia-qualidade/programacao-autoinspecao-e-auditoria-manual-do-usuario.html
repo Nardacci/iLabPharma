@@ -45,161 +45,144 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="programacao-autoinspecao-e-auditoria-analise.html">Análise</a><a href="programacao-autoinspecao-e-auditoria-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="programacao-autoinspecao-e-auditoria-fluxos.html">Fluxos</a><a href="programacao-autoinspecao-e-auditoria-regras-de-negocio.html">Regras de negócio</a><a href="programacao-autoinspecao-e-auditoria-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-programacao-autoinspecao-e-auditoria.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-autoinspecao-e-auditoria-passo-a-passo.html#tela-4-programacao-autoinspecao-e-auditoria">Passo a passo</a><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Tenha um cadastro de autoinspeção ativo com seus roteiros (telas Cadastro de Roteiro e Cadastro Autoinspeção e Auditoria). Para inspetores internos, a pessoa precisa ter a função profissional Auditor cadastrada no módulo Principal: a lista de inspetores traz só esses usuários (ProgramacaoAutoInspecaoAuditoriaQualidadeController.cs:763-769; UsuarioService.cs:136-144). Cada área auditada precisa ter um responsável cadastrado no Principal, senão a lista de responsáveis fica vazia.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p><strong>Programar</strong> uma autoinspeção ou auditoria: escolher o cadastro, dar um nome de versão e o motivo, definir o período, os inspetores (internos ou externos), as áreas a inspecionar e o inspetor de cada roteiro em cada área. Depois <strong>iniciar</strong> a programação, que passa a aparecer no Registro de Resultado. Usa a Garantia da Qualidade. Esta tela também permite <strong>cancelar</strong> uma programação ainda não iniciada.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cadastro de autoinspeção ativo, com roteiros ligados</strong></td>
+<td>É o que se escolhe na primeira aba; os roteiros dele são os que cada área responderá</td>
+<td>Autoinspeção e Auditoria › Cadastro Autoinspeção e Auditoria e Cadastro de Roteiro</td>
+</tr>
+<tr>
+<td><strong>Inspetores internos com a função profissional Auditor</strong></td>
+<td>A lista de inspetores traz só quem tem essa função (ProgramacaoAutoInspecaoAuditoriaQualidadeController.cs:763-769; UsuarioService.cs:136-144)</td>
+<td>Módulo Principal (usuários e funções profissionais)</td>
+</tr>
+<tr>
+<td><strong>Responsável cadastrado em cada área auditada</strong></td>
+<td>Sem ele a lista de responsáveis fica vazia ("Não existe funcionário para este setor")</td>
+<td>Módulo Principal (áreas e responsáveis)</td>
+</tr>
+<tr>
+<td><strong>Empresa cadastrada</strong> (só para inspetor externo)</td>
+<td>O campo da empresa é travado e só se preenche pela busca "Empresas Cadastradas"</td>
+<td>Cadastro de pessoa jurídica</td>
+</tr>
+<tr>
+<td><strong>Grupo de perfil</strong> para o seu usuário</td>
+<td>Regra padrão dos botões</td>
+<td>Configuração › Grupo Perfil</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Lista</strong></p>
+<ol>
+<li>No menu, abra Autoinspeção e Auditoria › Programação Autoinspeção e Auditoria. A tela mostra o quadro "Pesquisa" e uma área vazia. Clique em <strong>Pesquisar</strong> para listar.</li>
+<li>Filtros: Código, Ano, Descrição (nome do cadastro de autoinspeção), Versão (nome da versão), Situação, Data Início até Data Fim e Ativo. Atenção: as duas datas só funcionam juntas; com uma só, o filtro de data é ignorado (DV-GQ-108). O filtro Situação = Pendente Avaliação devolve 0 linhas (DV-GQ-107).</li>
+<li>A lista mostra Código, Descrição, Versão, Data (início do período), Situação e Ativo, três linhas por página, sem ordenação (DV-GQ-109). Os ícones aparecem conforme a situação (ver "Ícones e botões da lista").</li>
+<li><strong>Limpar</strong> esvazia a maior parte dos filtros e esconde a lista; não limpa Ano nem Situação (ProgramacaoAutoInspecaoAuditoriaIndex.js:90-96).</li>
+<li><strong>Imprimir</strong> gera um PDF com todas as programações do filtro. <strong>Incluir</strong> abre a tela para programar uma nova.</li>
+</ol>
+<p><strong>Programar (tela com cinco abas)</strong></p>
+<ol start="6">
+<li>Aba "Inspeção Auditoria": digite ao menos 3 letras do nome do cadastro e clique em buscar; escolha o cadastro na janela. Preencha Nome da versão, Ativo, Motivo da versão e, se o motivo for "Outro", o campo "Qual?".</li>
+<li>Aba "Visualizar Roteiro(s)": confira as perguntas dos roteiros do cadastro escolhido. É só leitura.</li>
+<li>Aba "Programação": escolha o Tipo de Recurso. <strong>Interno:</strong> escolha o inspetor na lista (a empresa vem como MAKROFARMA e não muda). <strong>Externo:</strong> digite o nome e escolha a empresa na busca. Marque se a pessoa é coordenadora da auditoria (só uma por programação) e clique em Adicionar. Depois informe o Período (início e fim), os Turnos, os Horários, o período e o motivo da última inspeção, a referência bibliográfica e, se quiser, anexos (escolha o arquivo, escreva a descrição e clique em Enviar).</li>
+<li>Aba "Lista de Inspecionados/ Auditados": escolha o Roteiro (buscar), a área (Depto/setor), o responsável da área (a lista é preenchida ao escolher a área), o inspetor que aplicará aquele roteiro (a lista traz as pessoas adicionadas na aba Programação) e, se quiser, uma Observação. Clique em Adicionar. Cada linha é um roteiro numa área com um inspetor. Para o mesmo roteiro em duas áreas, repita.</li>
+<li>Se o inspetor escolhido for o responsável da própria área, o navegador avisa "Um Responsável não pode ser auditado por ele mesmo." e volta o campo para "SELECIONE"; ao Adicionar, a faixa vermelha diz "Inspetor/Auditor é obrigatório." (mensagem enganosa, DV-GQ-104).</li>
+<li>Aba "Responsável Pelo Registro": mostra a data e hora de hoje e o nome de quem está programando, e tem um campo de observação.</li>
+<li>Clique em <strong>Salvar</strong>. Em programação nova o sistema pergunta "Confirma a inclusão do item?"; em programação já existente pergunta "Confirma a alteração do item?" e pede uma justificativa (obrigatória na janela). Se alguma regra falhar, a faixa vermelha aparece na aba do problema, que fica marcada.</li>
+<li>Depois de salvar, o botão <strong>Iniciar Programação</strong> aparece. Ele pergunta "Confirma a iniciar programação?" e, se tudo estiver certo, a programação vai para "Em Curso" e a tela volta para a lista.</li>
+<li>Para cancelar, use o ícone Cancelar da lista (só "Programada"). A tela abre sem campos editáveis; clique em <strong>Cancelar Programacao</strong>, confirme e escreva a justificativa.</li>
+</ol>
+<p><strong>Consultar uma programação já iniciada.</strong> Pelo ícone Visualizar, a mesma tela abre sem os botões de Adicionar, Salvar e Iniciar (ProgramacaoAutoInspecaoAuditoriaEditar.js:200-207).</p>
+<p><strong>Rodada 2 (22/10/2026).</strong> Inspetor externo: adicionar vazio dá "Inspetores/Auditores é obrigatório." e "Nome da Empresa é obrigatório."; sem digitar nada, a busca de empresa não lista ("A pesquisa não retornou nenhum resultado."); com "TESTE" lista duas (CT-GQ-AUD-2-23 e 24). O externo entra na grade e vira opção de inspetor da linha; salvar e iniciar funcionam, <strong>mas em Curso ninguém consegue registrar as respostas</strong> (CT-GQ-AUD-2-26; DV-GQ-118). Sem turno a programação salva e inicia, e a consulta mostra o turno em branco (ponto para validar com a área se deveria ser obrigatório); com turno e horário salva e inicia, e o horário final antes do inicial continua aceito (DV-GQ-106). <strong>Não há como reabrir</strong> uma programação (CT-GQ-AUD-2-29; DV-GQ-112).</p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu, abra Autoinspeção e Auditoria › Programação Autoinspeção e Auditoria. A tela mostra o quadro "Pesquisa" e uma área vazia. Clique em Pesquisar para listar.</li>
-<li>Passo 2. Filtros: Código, Ano, Descrição (nome do cadastro de autoinspeção), Versão (nome da versão), Situação, Data Início até Data Fim e Ativo. Atenção: as duas datas só funcionam juntas; com uma só, o filtro de data é ignorado (DV-GQ-108).</li>
-<li>Passo 3. A lista mostra Código, Descrição, Versão, Data (início do período), Situação e Ativo, três linhas por página. Cada linha tem Editar (só "Programada") ou Visualizar (as demais situações), Cancelar (só "Programada") e Log (histórico).</li>
-<li>Passo 4. Limpar esvazia a maior parte dos filtros e esconde a lista; não limpa Ano nem Situação (ProgramacaoAutoInspecaoAuditoriaIndex.js:90-96).</li>
-<li>Passo 5. Imprimir gera um PDF com todas as programações do filtro. Incluir abre a tela para programar uma nova.</li>
+<li><strong>Salvar</strong> programação nova grava o cadastro escolhido, os inspetores, as áreas e os anexos, com a situação <strong>Programada</strong>; o botão Iniciar Programação aparece. A edição grava histórico com justificativa; na tela mostrou "Inclusão efetuada com sucesso." mesmo na edição (DV-GQ-105).</li>
+<li><strong>Iniciar Programação</strong> muda a programação para <strong>Em Curso</strong> e a coloca no <strong>Registro de Resultado</strong>, onde os contatos das áreas registram as respostas. Mostra "Alteração efetuada com sucesso.". A mudança de situação dos roteiros ao iniciar não grava histórico, de propósito (SEG-GQ-04).</li>
+<li><strong>Cancelar Programacao</strong> exige justificativa e mostra "Cancelamento efetuado com sucesso.".</li>
+<li>Programação Em Curso, Pendente Avaliação ou Finalizado só abre para consulta.</li>
 </ul>
-<h4 id="o-que-cada-icone-da-lista-faz-e-quando-aparece">O que cada ícone da lista faz e quando aparece</h4>
-<p>Cada linha da lista pode ter alguns destes ícones. Eles aparecem ou somem conforme a <strong>situação do registro</strong> e o <strong>perfil</strong> de quem entra; <strong>a tela não explica por que um ícone some</strong>. A coluna "Regra do código" vem da leitura do código; a seção "O que a tela mostrou" vem do teste de 11 e 12/11/2026.</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Nome da inspeção/auditoria é obrigatório."; "Nome da Versão é obrigatório."; "Motivo da Versão é obrigatório."; "Qual é obrigatório." (motivo "Outro" sem texto).</li>
+<li>"Período início é obrigatório." / "Período fim é obrigatório."; "Período início não pode ser maior que perído fim."; "Período início não pode ser menor que a data atual." e igual para o fim (CT-GQ-053).</li>
+<li>"É obrigatório adicionar um Inspecionado/Auditado." (CT-GQ-054).</li>
+<li>Inspecionados: "Competência é obrigatória." (é o campo Roteiro), "Depto/setor a ser inspecionado/auditado é obrigatório.", "Responsável pelo depto/setor é obrigatório.", "Inspetor/Auditor é obrigatório.", "Depto/setor a ser inspecionado/auditado já foi cadastrado para o inspetor(a) (nome)".</li>
+<li>Inspetores: "Inspetores/Auditores é obrigatório.", "Nome da Empresa é obrigatório.", "Já existe um Coordenador Auditoria cadastrado.", "Necessáio ao menos um Inspetor/Auditor interno por Roteiro (título do roteiro)".</li>
+<li>"Usuário: digite no minímo 3 caracteres." na busca do cadastro; "Não existe funcionário para este setor."; "Ocorreu um erro inesperado.".</li>
+<li>"A justificativa é obrigatória!" na janela de justificativa (só no navegador).</li>
+<li><strong>Não recusa:</strong> hora final antes da inicial (DV-GQ-106); inspetor igual ao responsável da área se a chamada não passar pelo navegador (a regra só existe na tela).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>Na lista, os ícones dependem <strong>só da situação</strong> da programação, <strong>não do nível</strong>: o teste de 11 e 12/11/2026 mostrou que <strong>todos os perfis, inclusive o de consulta (Nível 1), veem os mesmos ícones</strong> (DV-GQ-347). O botão Incluir aparece para todos.</li>
+<li>A lista <strong>não filtra por usuário nem por área</strong>: todos veem todas as programações. A gravação (Editar, Iniciar, Cancelar, Salvar) <strong>não confere nível nem situação</strong> no servidor: uma chamada direta devolve para "Programada" uma programação "Em Curso" ou cancela qualquer programação (SEG-GQ-02; a confirmar nos casos A04-S1 a S3).</li>
+<li>A independência entre inspetor e responsável da área só é conferida no navegador (SEG-GQ-02 e 05). Quem programa, inicia e cancela pode ser a mesma pessoa, sem assinatura. Pela matriz, a tela é dos níveis 1 e 2 "se tiverem a ação" e do 3; não houve teste de acesso por endereço.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-GQ-118 (Alta):</strong> com inspetor <strong>externo</strong>, ninguém consegue registrar as respostas depois de iniciar. Não use inspetor externo sem combinar uma saída com a área (ponto para validar: quem registra as respostas de auditor externo?).</li>
+<li><strong>DV-GQ-112 (Média):</strong> não existe reabrir; uma programação iniciada não volta.</li>
+<li><strong>DV-GQ-106 (Média):</strong> aceita hora final antes da inicial. <strong>DV-GQ-107 (Média):</strong> filtro Pendente Avaliação vazio. <strong>DV-GQ-108 (Baixa):</strong> data sozinha é ignorada. <strong>DV-GQ-109 (Baixa):</strong> lista sem ordenação.</li>
+<li><strong>DV-GQ-104 (Baixa):</strong> inspetor que é o responsável da área recebe mensagem enganosa. <strong>DV-GQ-105 (Baixa):</strong> a edição mostra "Inclusão efetuada com sucesso.". <strong>DV-GQ-103 (Baixa):</strong> erros de português ("perído", "Confirma a iniciar programação?") e data do PDF em formato americano.</li>
+<li><strong>DV-GQ-093 (Média):</strong> cadastro com aspas no nome não pode ser escolhido na programação.</li>
+<li><strong>DV-GQ-347:</strong> os ícones não mudam por perfil.</li>
+<li><strong>Iniciar com início vencido é bloqueado:</strong> a validação do período se repete ao iniciar, então uma auditoria atrasada exige reprogramar (a confirmar no teste).</li>
+<li><strong>Salvar uma edição sobre programação "Em Curso" devolveria a situação para "Programada"</strong>, com os roteiros das áreas ainda "Em Curso" (RN-GQ-A4-017; a confirmar, caso A04-19).</li>
+<li>Nome com apóstrofo (observação, área, roteiro, inspetor) pode quebrar a abertura da programação já salva (a confirmar).</li>
+<li>Adicionar o mesmo inspetor duas vezes é ignorado sem aviso. A lista de "Ano" abre vazia.</li>
+<li>Pontos para validar com a área: turno e horário obrigatórios? iniciar auditoria atrasada sem reprogramar? verificar a competência do inspetor (art. 363)? o que o campo "Ativo" muda no fluxo?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Ícone</th>
 <th>O que faz</th>
+<th>Em que situação aparece</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Lápis (Editar)</td>
-<td>Abre a tela para executar a ação desta etapa</td>
+<td>Abre a tela de programação para alterar e iniciar</td>
+<td>Só na situação <strong>Programada</strong></td>
 </tr>
 <tr>
 <td>Lupa (Visualizar)</td>
-<td>Abre a mesma tela, só para ler; aparece quando o lápis não aparece</td>
+<td>Abre a mesma tela, só para ler</td>
+<td>Nas demais situações (Em Curso, Pendente Avaliação, Finalizado, Cancelado)</td>
 </tr>
 <tr>
-<td>LOG (Histórico)</td>
-<td>Abre a janela com quem alterou, quando, o campo e o valor antigo e o novo</td>
+<td>Lixeira (Cancelar)</td>
+<td>Abre a tela sem campos editáveis, para cancelar com justificativa</td>
+<td>Só na situação <strong>Programada</strong></td>
 </tr>
 <tr>
-<td>Impressora (Imprimir)</td>
-<td>Abre o relatório em PDF em outra aba</td>
+<td>LOG</td>
+<td>Abre o histórico</td>
+<td>Em todas as linhas</td>
 </tr>
 <tr>
-<td>Lixeira (Excluir ou Cancelar)</td>
-<td>Pede a justificativa e exclui ou cancela o registro</td>
+<td>Impressora do alto</td>
+<td>Gera o PDF "LISTAGEM DE PROGRAMAÇÃO AUTO INSPEÇÃO E AUDITORIA DE QUALIDADE" com a lista filtrada</td>
+<td>Sempre; não há impressora por linha</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Nesta tela a lista tem:</strong> Lupa, lápis, LOG e lixeira.</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Ícone</th>
-<th>Regra do código</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Lápis</td>
-<td>Muda com a <strong>situação da programação</strong> (<em>Programada</em>, <em>Em Curso</em>, concluída): quando sai da situação editável, lápis e lixeira somem e fica só a lupa.</td>
-</tr>
-<tr>
-<td>Impressora</td>
-<td>Impressão da lista no alto (<code>Imprimir</code> com os filtros).</td>
-</tr>
-<tr>
-<td>Lixeira</td>
-<td>Só na situação editável.</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>O que a tela mostrou em 11 e 12/11/2026</strong></p>
-<p>Ícones por situação e perfil (N3 = Nível 3; N2 A e N2 B = Nível 2 de duas áreas; N1 = Nível 1; — = o perfil não recebeu linha daquela situação, o que não prova a falta do ícone):</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Situação do registro</th>
-<th>N3 (admin)</th>
-<th>N2 área A</th>
-<th>N2 área B</th>
-<th>N1 (consulta)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cancelado</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-</tr>
-<tr>
-<td>Em Curso</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-</tr>
-<tr>
-<td>Finalizado</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-</tr>
-<tr>
-<td>Pendente Avaliação</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-<td>lupa+log</td>
-</tr>
-<tr>
-<td>Programada</td>
-<td>lapis+lixeira+log</td>
-<td>lapis+lixeira+log</td>
-<td>lapis+lixeira+log</td>
-<td>lapis+lixeira+log</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Impressora:</strong> botão Imprimir do alto (lista); o PDF abre? Sim; título do relatório: LISTAGEM DE PROGRAMAÇÃO AUTO INSPEÇÃO E AUDITORIA DE QUALIDADE.</p>
-<p><strong>Regras conferidas</strong></p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Regra</th>
-<th>Resultado</th>
-<th>O que a tela mostrou</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>R26: Programação de Autoinspeção: lápis e lixeira só em <em>Programada</em></td>
-<td>Confirmado</td>
-<td><em>Programada</em> = lápis + lixeira + LOG; as demais, lupa + LOG. <strong>Mas todos os perfis, inclusive o N1, veem o mesmo</strong> (DV-GQ-347).</td>
-</tr>
-</tbody>
-</table></div>
-<h4 id="programar-tela-com-cinco-abas">Programar (tela com cinco abas)</h4>
-<ul>
-<li>Passo 6. Aba "Inspeção Auditoria": digite ao menos 3 letras do nome do cadastro e clique em buscar; escolha o cadastro na janela. Preencha Nome da versão, Ativo, Motivo da versão e, se o motivo for "Outro", o campo "Qual?".</li>
-<li>Passo 7. Aba "Visualizar Roteiro(s)": confira as perguntas dos roteiros do cadastro escolhido. É só leitura.</li>
-<li>Passo 8. Aba "Programação": escolha o Tipo de Recurso. Interno: escolha o inspetor na lista (a empresa vem como MAKROFARMA e não muda). Externo: digite o nome e escolha a empresa na busca. Marque se a pessoa é coordenadora da auditoria (só uma por programação) e clique em Adicionar. Depois informe o Período (início e fim), os Turnos, os Horários, o período e o motivo da última inspeção, a referência bibliográfica e, se quiser, anexos (escolha o arquivo, escreva a descrição e clique em Enviar).</li>
-<li>Passo 9. Aba "Lista de Inspecionados/ Auditados": escolha o Roteiro (buscar), a área (Depto/setor), o responsável da área (a lista é preenchida ao escolher a área), o inspetor que aplicará aquele roteiro (a lista traz as pessoas adicionadas na aba Programação) e, se quiser, uma Observação. Clique em Adicionar. Cada linha é um roteiro numa área com um inspetor. Para o mesmo roteiro em duas áreas, repita.</li>
-<li>Passo 10. Se o inspetor escolhido for o responsável da própria área, o navegador avisa "Um Responsável não pode ser auditado por ele mesmo." e volta o campo para "SELECIONE"; ao Adicionar, a faixa vermelha diz "Inspetor/Auditor é obrigatório." (ver Falhas e pontos de atenção).</li>
-<li>Passo 11. Aba "Responsável Pelo Registro": mostra a data e hora de hoje e o nome de quem está programando, e tem um campo de observação.</li>
-<li>Passo 12. Clique em Salvar. Em programação nova o sistema pergunta "Confirma a inclusão do item?"; em programação já existente pergunta "Confirma a alteração do item?" e pede uma justificativa (obrigatória na janela). Se alguma regra falhar, a faixa vermelha aparece na aba do problema, que fica marcada.</li>
-<li>Passo 13. Depois de salvar, o botão Iniciar Programação aparece. Ele pergunta "Confirma a iniciar programação?" e, se tudo estiver certo, a programação vai para "Em Curso" e a tela volta para a lista.</li>
-<li>Passo 14. Para cancelar, use o ícone Cancelar da lista (só "Programada"). A tela abre sem campos editáveis; clique em Cancelar Programacao, confirme e escreva a justificativa.</li>
-</ul>
-<h4 id="consultar-uma-programacao-ja-iniciada">Consultar uma programação já iniciada</h4>
-<p>Pelo ícone Visualizar, a mesma tela abre sem os botões de Adicionar, Salvar e Iniciar (ProgramacaoAutoInspecaoAuditoriaEditar.js:200-207; Editar.cshtml:154-163 e 396-415).</p>
-<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
-<p>Fonte: execucao/2026-10-22-autoinspecao-rodada-2/resultado.md. Só o que a rodada 2 mostrou de novo ou contrariou.</p>
-<ul>
-<li><strong>Inspetor externo.</strong> Adicionar vazio: "Inspetores/Auditores é obrigatório." e "Nome da Empresa é obrigatório."; só com o nome: "Nome da Empresa é obrigatório.". O campo da empresa é travado e só se preenche pela busca (botão Buscar, Empresas Cadastradas); sem digitar nada, Pesquisar não lista empresa ("A pesquisa não retornou nenhum resultado."); com "TESTE" na razão social lista duas (CT-GQ-AUD-2-23 e 24).</li>
-<li><strong>Salvar e iniciar com inspetor externo.</strong> O externo entra na grade (Recurso "Externo", nome, empresa, coordenador Não) e aparece como opção de inspetor da linha. "Inclusão efetuada com sucesso." e "Alteração efetuada com sucesso." ao iniciar (CT-GQ-AUD-2-25). Mas, em Curso, ninguém consegue registrar as respostas (CT-GQ-AUD-2-26; DV-GQ-118).</li>
-<li><strong>Turno.</strong> Sem turno (nenhuma das três caixas) a programação salva, inicia e aparece no Registro como as outras; a consulta mostra o turno em branco (ponto para validar com a área se deveria ser obrigatório). Com turno e horário (Manhã, 08:00 a 10:00) salva e inicia; o horário final antes do inicial continua aceito (DV-GQ-106) (CT-GQ-AUD-2-32 e 33).</li>
-<li><strong>Reabrir.</strong> Na lista e na tela: Programada tem Editar, Excluir, Histórico e "Iniciar Programação"; Em Curso, Pendente Avaliação e Finalizado têm só Visualizar e Histórico. Não há como reabrir uma programação (CT-GQ-AUD-2-29; DV-GQ-112).</li>
-</ul>
+<p>Confirmado no teste de 11 e 12/11/2026 (regra R26): <strong>Programada = lápis + lixeira + LOG; Cancelado, Em Curso, Finalizado e Pendente Avaliação = lupa + LOG</strong>, igual para os quatro perfis (DV-GQ-347). O PDF da impressora do alto abre.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -439,7 +422,7 @@
 </tr>
 </tbody>
 </table></div>
-<h4 id="rodada-2-22-10-2026_1">Rodada 2 (22/10/2026)</h4>
+<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
 <p>Fonte: execucao/2026-10-22-autoinspecao-rodada-2/resultado.md. Só o que a rodada 2 mostrou de novo ou contrariou.</p>
 <ul>
 <li><strong>Empresa do inspetor externo.</strong> Travada; só se preenche pela busca, e a busca vazia não lista nada (CT-GQ-AUD-2-24).</li>
@@ -578,7 +561,7 @@
 </tr>
 </tbody>
 </table></div>
-<h4 id="rodada-2-22-10-2026_2">Rodada 2 (22/10/2026)</h4>
+<h4 id="rodada-2-22-10-2026_1">Rodada 2 (22/10/2026)</h4>
 <p>Fonte: execucao/2026-10-22-autoinspecao-rodada-2/resultado.md. Só o que a rodada 2 mostrou de novo ou contrariou.</p>
 <ul>
 <li><strong>Buscar (empresa):</strong> abre Empresas Cadastradas; Pesquisar sem digitar nada não lista (CT-GQ-AUD-2-24).</li>
@@ -747,7 +730,7 @@
 </tr>
 </tbody>
 </table></div>
-<h4 id="rodada-2-22-10-2026_3">Rodada 2 (22/10/2026)</h4>
+<h4 id="rodada-2-22-10-2026_2">Rodada 2 (22/10/2026)</h4>
 <p>Fonte: execucao/2026-10-22-autoinspecao-rodada-2/resultado.md. Só o que a rodada 2 mostrou de novo ou contrariou.</p>
 <ul>
 <li>"Inspetores/Auditores é obrigatório." e "Nome da Empresa é obrigatório." (CT-GQ-AUD-2-23).</li>

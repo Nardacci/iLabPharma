@@ -45,31 +45,123 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="entrada-de-material-producao-analise.html">Análise</a><a href="entrada-de-material-producao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="entrada-de-material-producao-fluxos.html">Fluxos</a><a href="entrada-de-material-producao-regras-de-negocio.html">Regras de negócio</a><a href="entrada-de-material-producao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-entrada-de-material-producao.html">Erros (3)</a><a class="aba-extra" href="roteiro-de-execucao-devolucao-e-entradas-da-producao-passo-a-passo.html#tela-3-entrada-de-material-producao">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Entrada de Material - Produção</strong> registra à mão a entrada no estoque de um lote de <strong>produto acabado</strong> fabricado: o usuário informa item, ordem de produção (opcional), lote, validade, fabricante, quantidade, valor total, volumes e endereço. Ao salvar, grava a movimentação "ENTRADA DE PRODUÇÃO", gera os volumes, abre a análise no Controle da Qualidade (CQ) com o tipo de item "produto acabado" e imprime a etiqueta de quarentena (entrada_producao_ed.aspx.cs:156-170). <strong>O lote é digitado</strong>: o sistema não o lê da Produção nem confere se ele existe lá. Usa o almoxarifado de produto acabado. Não confundir com a <strong>Entrada de Produção</strong> (que confirma uma entrada enviada pela Produção), o caminho previsto, com a ordem de produção; esta tela é um atalho manual sem esse vínculo.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item de produto acabado cadastrado</strong></td>
+<td>Define controle de qualidade e unidade</td>
+<td>Estoque › Cadastro de Item</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado, local, rua, coluna e andar livres e liberados ao grupo</strong>; de quarentena se o item tem controle de qualidade</td>
+<td>Só aparecem locais compatíveis (entrada_producao_ed.aspx.cs:266-296; dalLocalArmazenagem.cs:258-261)</td>
+<td>Estoque › Endereço do Estoque; Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Dados da Produção em mãos</strong>: ordem de produção, lote conforme a Produção gerou, validade, quantidade produzida e custo</td>
+<td>O sistema <strong>não confere</strong> nenhum desses dados com a Produção</td>
+<td>Módulo Produção</td>
+</tr>
+<tr>
+<td><strong>Conferir que o lote não está pendente na Entrada de Produção</strong></td>
+<td>É o caminho que traz a ordem de produção</td>
+<td>Estoque › Entrada de Produção</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu, abra Estoque › <strong>Entrada de Material - Produção</strong> e clique em <strong>Pesquisar</strong>. Filtros: Código (só números, até 8), Período e Tipo de Movimentação (aqui só "ENTRADA DE PRODUÇÃO"). A lista mostra Código, Data e Tipo, 15 linhas por página, com Editar, Visualizar e Log conforme o perfil. <strong>Visualizar abre a consulta correta; Editar abre a consulta da Devolução</strong>, com o título errado. <strong>Limpar</strong>, <strong>Imprimir</strong>, Excel e <strong>Incluir</strong> como nas outras entradas.</li>
+</ol>
+<p><strong>Registrar uma entrada</strong></p>
+<ol start="2">
+<li>Em "Dados do Registro", o código fica em branco e a data é a de hoje (travados); o tipo é "ENTRADA DE PRODUÇÃO". Escreva a ordem de produção e uma observação, se quiser. <strong>A ordem de produção não é obrigatória e não é conferida</strong> (DV-EST-024).</li>
+<li>Em "Itens", digite o código do item (só números) e clique na lupa, ou procure por nome. Informe a quantidade, o <strong>Valor Total</strong> (obrigatório: se faltar, o botão INCLUIR ITEM só não faz nada, sem mensagem), o fabricante, o lote (até 10 caracteres), a validade e o número de volumes.</li>
+<li>Escolha almoxarifado, local, rua, coluna e andar e clique em <strong>INCLUIR ITEM</strong>. <strong>Confira validade e lote antes</strong>: a tela recusa data que não existe (31/02/2027), mas aceita validade de ontem (DV-EST-025) e lote que não existe na Produção (DV-EST-024).</li>
+<li>O item aparece na grade. Para tirar um, use Excluir (com confirmação). Cada item tem um endereço; para dois endereços, inclua duas linhas.</li>
+<li>Clique em <strong>SALVAR REGISTRO</strong> e responda SIM em "Confirma a inclusão do item?". Grade vazia: "Nenhum item incluído!".</li>
+<li>A tela mostra "Inclusão realizada com sucesso!", abre a etiqueta de quarentena (feche-a) e volta para a lista. Se aparecer "Ocorreram erros na inclusão da análise!", <strong>a entrada já foi gravada</strong>: confira a lista e a Análise de Controle antes de tentar de novo.</li>
+<li>Confira na Disponibilidade do Lote o saldo em quarentena e, na tela Controle da Qualidade, a análise "AGUARDANDO ANÁLISE". A primeira entrada pode levar cerca de 50 segundos; as seguintes, 5 a 6 segundos (CT-EST-097).</li>
+</ol>
+<p><strong>Consultar uma entrada gravada</strong></p>
+<ol start="9">
+<li>Visualizar abre sem campos de item, endereço e observação e sem o botão de salvar, mostra os dados e os itens, e não oferece botão de etiqueta (entrada_producao_ed.aspx.cs:32-41).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>O item é de produto acabado e está cadastrado; o almoxarifado e os endereços de destino existem, estão livres e liberados ao seu grupo. Para item com controle de qualidade só aparecem locais de quarentena (<code>entrada_producao_ed.aspx.cs:266-296</code>; <code>dalLocalArmazenagem.cs:258-261</code>).</li>
-<li>Tenha à mão o número da ordem de produção, o número do lote conforme a Produção gerou, a validade, a quantidade produzida e o custo. O sistema <strong>não confere</strong> nenhum desses dados com a Produção.</li>
-<li>Antes de usar esta tela, confirme com a Produção se o lote não está pendente na <strong>Entrada de Produção</strong> (tela 22): esse é o caminho que traz a ordem de produção.</li>
+<li>O produto entra no saldo do endereço escolhido. Item com controle de qualidade: só locais de quarentena, lote em quarentena e análise "AGUARDANDO ANÁLISE" aberta no CQ (CT-EST-096 e 097).</li>
+<li>A tela mostra "Inclusão realizada com sucesso!", abre a etiqueta de quarentena e volta para a lista. <strong>Não abre a etiqueta de volume.</strong></li>
+<li>O tipo "ENTRADA DE PRODUÇÃO" <strong>atualiza o custo médio do item</strong> (dml.sql:1574-1576; pAtualizaCustoItem.sql). Se o Valor Total é digitado como total do lote, o custo por unidade pode ficar errado (veja os cuidados).</li>
+<li>A partir daí o lote segue o fluxo da Quarentena e do CQ.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu, abra Estoque › Entrada de Material - Produção. A tela mostra o quadro "Pesquisa" e uma área vazia: clique em Pesquisar para listar.</li>
-<li>Passo 2. Filtros: Código (só números, até 8), Período e Tipo de Movimentação (aqui só "ENTRADA DE PRODUÇÃO").</li>
-<li>Passo 3. A lista mostra Código, Data e Tipo de Movimentação, 15 linhas por página, com os ícones Editar, Visualizar e Log conforme a função do seu perfil. <strong>Visualizar abre a consulta correta</strong> (<code>entrada_producao_ed</code>); <strong>Editar abre a consulta da Devolução</strong>, com o título errado (ver Divergências) (<code>devolucao_lst.aspx.cs:244-250</code>).</li>
-<li>Passo 4. Limpar esvazia os filtros; Imprimir e o ícone de Excel geram o "RELATÓRIO DE ENTRADA". Incluir abre o formulário novo (<code>devolucao_lst.aspx.cs:116-120</code>).</li>
+<li>Sem itens: "Nenhum item incluído!". Item: "Item não foi informado!", "Código do item não localizado!", "Informe a quantidade!", "A quantidade deve ser maior que zero!", "Quantidade do item inválida!", "Lote do item não informado!", "Validade do item não informado!", "Fabricante não informado!", "Data de validade inválida!" (vista em teste, CT-EST-099), "Informe a quantidade do volume!", "Quantidade do volume inválida!".</li>
+<li>Endereço: "Informe o endereço!", "Endereço não localizado!", "Endereço já digitado!", "Endereço inválido!", "Local ou endereço inválido!", avisos de almoxarifado a andar e, na gravação, "Endereço incorreto na listagem!".</li>
+<li>Falha: "Erro na inclusão do registro.".</li>
+<li><strong>Não recusa</strong>: lote que não existe na Produção, ordem de produção vazia, validade de ontem.</li>
 </ul>
-<h4 id="registrar-uma-entrada-de-produto-acabado">Registrar uma entrada de produto acabado</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. Em "Dados do Registro", o código fica em branco e a data é a de hoje, travadas; o tipo de movimentação é "ENTRADA DE PRODUÇÃO". Escreva a ordem de produção e uma observação, se quiser. <strong>A ordem de produção não é obrigatória e não é conferida</strong> (<code>entrada_producao_ed.aspx:93-104</code>; DV-EST-024).</li>
-<li>Passo 6. Em "Itens", digite o código do item (só números) e clique na lupa, ou use a lupa para procurar por nome. O sistema mostra o nome e a unidade. Informe a quantidade, o <strong>Valor Total</strong> (obrigatório, mas a tela não avisa se faltar: o botão INCLUIR ITEM apenas não faz nada), o fabricante, o lote (até 10 caracteres), a validade e o número de volumes (<code>entrada_producao_ed.aspx:126-245</code>; CT-EST-097, 12/10/2026).</li>
-<li>Passo 7. Escolha almoxarifado, local, rua, coluna e andar (o endereço aparece montado) e clique em INCLUIR ITEM. Para item com controle de qualidade só há locais de quarentena (CT-EST-096, 12/10/2026). <strong>Confira a validade e o lote antes de incluir:</strong> a tela recusa uma data que não existe (31/02/2027), mas aceita validade de ontem (CT-EST-099; DV-EST-025) e aceita lote que não existe na Produção (CT-EST-098; DV-EST-024).</li>
-<li>Passo 8. O item aparece na grade com lote e validade, local, endereço e quantidade. Para tirar um item, use o ícone Excluir da linha (com confirmação). Cada item tem um endereço; para a mesma quantidade em dois endereços, inclua duas linhas.</li>
-<li>Passo 9. Clique em SALVAR REGISTRO e confirme com SIM em "Confirma a inclusão do item?". Se a grade estiver vazia: "Nenhum item incluído!".</li>
-<li>Passo 10. A tela mostra "Inclusão realizada com sucesso!", abre a etiqueta de quarentena em outra janela (feche-a) e volta para a lista. Se aparecer "Ocorreram erros na inclusão da análise!", <strong>a entrada já foi gravada</strong>: confira a lista e a Análise de Controle antes de tentar de novo (<code>entrada_producao_ed.aspx.cs:172-175</code>).</li>
-<li>Passo 11. Confira na Disponibilidade do Lote o saldo em quarentena e, na tela Controle da Qualidade, a análise "AGUARDANDO ANÁLISE" (CT-EST-097, 12/10/2026). A primeira entrada pode demorar cerca de 50 segundos; as seguintes, de 5 a 6 segundos (CT-EST-097).</li>
+<li>A lista e o formulário usam a função <strong>322</strong>. O catálogo prevê incluir, imprimir e ver log; <strong>alterar e excluir não estão previstos</strong> (dml.sql:1900). Os ícones da lista seguem o perfil (ClassePaiLst.cs:195-240); a lista traz só os almoxarifados do grupo.</li>
+<li>No formulário a base permite tudo a todos e a conferência de acesso está comentada (ClassePaiEd.cs:44-105; BaseController.cs:33-39). Aberta pelo endereço por usuário sem acesso, a tela deu <strong>erro técnico do servidor</strong>, porque usa o usuário da sessão sem verificar se existe (DV-EST-008, Alta; CT-EST-102, 13/10/2026).</li>
+<li>O tipo de movimentação vem de campo oculto: quem o alterar troca o tipo da entrada. A gravação não confere grupo nem função, e <strong>não há separação entre quem lança e quem libera</strong>.</li>
 </ul>
-<h4 id="consultar-uma-entrada-gravada">Consultar uma entrada gravada</h4>
-<p>Pelo ícone Visualizar, o formulário abre sem os campos de item, de endereço, sem a observação e sem o botão de salvar, mostra os dados da movimentação e os itens, e não oferece o botão de etiqueta (<code>entrada_producao_ed.aspx.cs:32-41</code>).</p>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Lote sem ordem de produção é aceito e ganha saldo em quarentena e análise</strong> (DV-EST-024, Alta; RDC 658/2022, arts. 124 e 164; o lote TESTEPA999 não existia na Produção).</li>
+<li><strong>Validade de ontem é aceita sem aviso</strong> (DV-EST-025, Alta; art. 189).</li>
+<li><strong>A análise do produto acabado abre como tipo NORMAL</strong> (DV-EST-026, Média).</li>
+<li><strong>O Valor Total vira o custo gravado e é multiplicado pela quantidade</strong>: digitar o total do lote pode deixar o custo médio do item muito maior (leitura do código; não conferido em teste).</li>
+<li>O lote da tela é cortado em 10 caracteres, enquanto a Produção e o banco aceitam até 40. Ponto para validar com a Produção.</li>
+<li>Item achado pelo código lê a refrigeração do campo de umidade (a lupa lê o campo certo): item refrigerado pode ver locais comuns.</li>
+<li>Se a análise falhar depois de gravar, o lote fica em quarentena <strong>sem análise</strong> e ninguém é avisado.</li>
+<li>O Histórico do Lote não mostra usuário nem hora (DV-EST-034). Título no plural no formulário e erro de digitação "efetuar ao consultar".</li>
+<li>Ponto para validar com a área: manter a tela manual ou só a Entrada de Produção? Há entrada sem ordem de produção na prática? O "Valor Total" é o total do lote ou o custo da unidade? Aceitar validade vencida?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visualizar</td>
+<td>Abre a consulta da movimentação (<code>entrada_producao_ed</code>)</td>
+<td>Se o perfil tem a função de consultar</td>
+</tr>
+<tr>
+<td>Editar</td>
+<td>Abre a consulta da Devolução (<code>devolucao_ed.aspx?dev=2</code>), com o título "ENTRADA DE MATERIAL - OUTRAS"</td>
+<td>Se o perfil tem a função de alterar</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>Abre o histórico da movimentação</td>
+<td>Se o perfil tem a função</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório de entrada da lista</td>
+<td>Depois de pesquisar, se o perfil tem a função de imprimir</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -421,7 +513,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

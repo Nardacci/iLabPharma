@@ -45,13 +45,70 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="exigencias-da-anvisa-analise.html">Análise</a><a href="exigencias-da-anvisa-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="exigencias-da-anvisa-fluxos.html">Fluxos</a><a href="exigencias-da-anvisa-regras-de-negocio.html">Regras de negócio</a><a href="exigencias-da-anvisa-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-exigencias-da-anvisa.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-assuntos-regulatorios-passo-a-passo.html#tela-7-exigencias-da-anvisa">Passo a passo</a><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Não abre</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<p><strong>Não há passo a passo, porque a tela não abre pelo código.</strong> O que se pode dizer, sem ter visto:</p>
+<p><strong>Não há passo a passo, porque a tela não abre pelo código</strong> (situação: Não abre; nunca foi vista funcionando). O que se pode dizer, sem ter visto:</p>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Pelo nome e pelos campos do desenho, serviria para registrar as <strong>exigências que a ANVISA faz a um produto em processo de registro</strong> (motivo, processo, registro, situação) e acompanhar a resposta no prazo. A tela real não foi terminada: o controlador é uma cópia do Controle de Produtos Enviados para Registro Anvisa e a página é só desenho, sem lógica. Quem usaria: Assuntos Regulatórios (inferência; o código não restringe).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<p>Hoje não há como cumprir o pré-requisito principal: <strong>a tela não tem entrada no menu</strong> (DV-GQ-015) e a única forma de chegar seria digitar o endereço da área (<code>/AssRegulatorios/ExigenciasAnvisa</code>), o que <strong>não foi testado</strong>. Pelo código, o salvar usaria os mesmos cadastros do Controle de Produtos Enviados para Registro Anvisa (um pedido de registro já enviado e um produto da Produção) e o grupo do usuário para decidir se pode incluir. Ponto para validar com a área: quais cadastros a tela exigirá quando for refeita.</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p>Não existe caminho pelo menu, e o que o código mostra é:</p>
 <ol>
-<li>Não existe caminho pelo menu.</li>
 <li>Pelo endereço da área, a primeira ação (<code>Index</code>) deve terminar em erro de página não encontrada (a confirmar no teste, CT-GQ-101).</li>
 <li>Se a página do desenho fosse exibida, o usuário veria dois blocos de campos em branco e uma grade com a linha "A pesquisa não retornou nenhum resultado." e linhas de exemplo com "x". Os botões <strong>não fazem nada</strong>: são <code>submit</code> sem formulário nem código (<code>Index.cshtml:76-81</code>, <code>:126-129</code>).</li>
 </ol>
 <p>Quando a tela for refeita, este manual será escrito por teste real.</p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>Nada pode ser salvo pela página, porque os botões do desenho não têm ação. Pelo controlador (<code>SalvarHistoricoAnvisa</code>), o salvar gravaria na tabela do <strong>histórico de produtos enviados à ANVISA</strong> (a mesma do Controle de Produtos), e <strong>não</strong> na tabela própria de exigências, que nenhuma tela usa (Controller:163-186). A confirmar no teste, se a tela um dia abrir. Nada chegaria a Estoque, Produção ou Comercial.</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>Pelo código, ao salvar seriam recusados (nenhuma foi vista na tela): "Código do produto é obrigatório.", "Produto é obrigatório.", "O Processo é obrigatório.", "O Principio Ativo é obrigatório.", "A válidade meses é obrigatório.", "A Data Revalidação é obrigatório.", "O Apresentação Comercial é obrigatório.", "Tipo Produto é obrigatório." e "Situação é obrigatório.". Falhas viriam como "Ocorreu um erro inesperado." e a pesquisa com falha, "Não foi possível obter os produtos enviados Anvisa". <strong>Data de publicação ou de revalidação vazia derruba a gravação</strong> (RN-GQ-EXI-007).</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li><strong>Função de menu:</strong> não há, porque a tela não tem menu.</li>
+<li>O controlador herda a base comum, mas <strong>não tem o filtro de autorização</strong>: abriria pelo endereço sem passar pelo menu (SEG-GQ-01, a confirmar no teste).</li>
+<li>O único uso do grupo do usuário é decidir se pode <strong>incluir</strong>; não há regra de quem vê, edita ou responde exigência, nem separação de funções.</li>
+<li>A alteração <strong>não registra o usuário</strong> (SEG-GQ-04), e <code>GetProduto</code> aceita GET, diferente das demais ações.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-GQ-015</strong> (Média, funcional, aberto): a tela não tem entrada no menu. Não há defeito próprio de "não abre", porque ainda não foi observado (CT-GQ-101 Bloqueado em 15/10 e 22/10/2026).</li>
+<li><strong>Não abre:</strong> a abertura e a edição procuram páginas que não existem (RN-GQ-EXI-001 e 002); a página existente, em outra pasta, é um desenho com título errado ("Incluir Solicitação de Registro").</li>
+<li><strong>Tabela de exigências nunca usada:</strong> o salvar iria para o histórico de produtos; o motivo da exigência não é gravado.</li>
+<li><strong>Sem exclusão, sem log, sem "Fechar" nem "Enviar"</strong>, apesar dos botões do desenho; sem prazo de resposta nem alerta (RF-GQ-129 sem base no código).</li>
+<li><strong>Ponto para validar com a área:</strong> as telas do registro de produto talvez nunca tenham sido ofertadas ao usuário na versão entregue (hipótese de 16/10/2026).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>A grade existe só no desenho (Editar, Excluir e Log), <strong>sem ação</strong> (<code>Index.cshtml:105-115</code>). Os ícones do servidor não foram conferidos em <code>regras-de-botoes-bloco2.md</code> para esta tela (ela não está na lista do item 4): ponto para validar com a área.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Nada no desenho; a ação <code>Editar</code> do controlador procura uma página que não existe</td>
+<td>Só no desenho</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir)</td>
+<td>Nada; não há exclusão no controlador</td>
+<td>Só no desenho</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Nada; não há log no controlador</td>
+<td>Só no desenho</td>
+</tr>
+<tr>
+<td>Voltar, Salvar, Incluir Exigência, Histórico, Imprimir, Fechar Exigência, Enviar ANVISA</td>
+<td>Nada: botões do desenho; "Fechar" e "Enviar" não existem no controlador</td>
+<td>Só no desenho</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Campos do <strong>desenho</strong> (<code>Bloco2/Views/ExigenciasAnvisa/Index.cshtml</code>). Todos são caixas de texto livres, sem validação, sem nome de campo e sem ligação com o servidor. Nenhum tem regra: a coluna "Obrigatório" reflete só que a página não exige nada.</p>
 <div class="tabela"><table>

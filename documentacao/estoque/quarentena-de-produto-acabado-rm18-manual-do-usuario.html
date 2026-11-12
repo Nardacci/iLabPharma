@@ -45,24 +45,139 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="quarentena-de-produto-acabado-rm18-analise.html">Análise</a><a href="quarentena-de-produto-acabado-rm18-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="quarentena-de-produto-acabado-rm18-fluxos.html">Fluxos</a><a href="quarentena-de-produto-acabado-rm18-regras-de-negocio.html">Regras de negócio</a><a href="quarentena-de-produto-acabado-rm18-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-quarentena-de-produto-acabado-rm18.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-relatorios-passo-a-passo.html#tela-3-quarentena-de-produto-acabado-rm18">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Quarentena de Produto Acabado (RM18)</strong> é um relatório de consulta que lista os <strong>lotes que entraram por Entrada de Produção e ainda têm saldo em quarentena</strong>: código, descrição, unidade, lote, número da ordem de produção, data da movimentação, validade, quantidade de entrada, saldo e situação da análise. Serve à Garantia da Qualidade, ao Controle da Qualidade e ao almoxarifado para ver o que a produção entregou e aguarda liberação (leitura da área, a validar). Mostra na tela (VISUALIZAR) e gera PDF (GERAR RELATÓRIO ou Imprimir). Não grava nada.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lote que entrou por <strong>Entrada de Produção</strong> (movimentação tipo 11, "ENTRADA DE PRODUÇÃO")</td>
+<td>É o critério que o relatório usa; lote recebido por nota fiscal não aparece aqui (aparece no RM17, se estiver em endereço de quarentena)</td>
+<td>Estoque › Entrada de Produção</td>
+</tr>
+<tr>
+<td><strong>Análise do CQ</strong> no lote (qualquer resultado, não excluída)</td>
+<td>O lote precisa ter análise para entrar</td>
+<td>Controle da Qualidade</td>
+</tr>
+<tr>
+<td><strong>Saldo em quarentena maior que zero</strong></td>
+<td>Só entra lote com saldo em quarentena na visão de saldos</td>
+<td>Movimenta-se pelo CQ e pelo almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Item ligado a um almoxarifado do seu grupo de usuário</strong></td>
+<td>O relatório só mostra os itens dos almoxarifados do grupo</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td>Nenhum filtro é obrigatório</td>
+<td>Todos os filtros são opcionais</td>
+<td>Não se aplica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Ver a lista na tela (leitura do código; não testado)</strong></p>
+<ol>
+<li>No Menu Relatórios, abra <strong>Quarentena de Produto Acabado (RM18)</strong>.</li>
+<li>Se quiser, escolha o <strong>Grupo</strong>, digite o <strong>Lote fabricante</strong> inteiro, parte do <strong>Cód. item</strong> e o <strong>Período</strong> (as duas datas; o filtro olha a data da movimentação de entrada).</li>
+<li>Clique em <strong>VISUALIZAR</strong>. A grade mostra Código, Descrição, UF, Lote, Num. OP, Data mov., Validade, Qtde. entrada, Saldo e Situação.</li>
+<li>Se nada for encontrado, o código tenta mostrar "A pesquisa não retornou nenhum resultado.", mas pode parar com erro (ver Cuidados).</li>
+</ol>
+<p><strong>Imprimir</strong></p>
+<ol start="5">
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. O PDF abre em outra janela (visto em 22/10/2026, sem filtro). Depois do clique, os filtros e a grade são esvaziados.</li>
+<li>Depois de um VISUALIZAR com resultado, <strong>Imprimir</strong> gera o PDF com a lista que está na tela.</li>
+<li><strong>Limpar</strong> esvazia filtros e grade.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>O produto precisa ter entrado pela <strong>Entrada de Produção</strong> e estar em <strong>quarentena</strong>, aguardando a liberação do CQ. Lote recebido por nota fiscal não aparece aqui (ele aparece no RM17, se estiver em endereço de quarentena).</li>
-<li>O item precisa estar ligado a um almoxarifado do seu grupo de usuário.</li>
+<li><strong>Não grava nada</strong>: só lê, e não registra quem consultou.</li>
+<li>Mostra o lote com análise do CQ, entrada de produção e saldo em quarentena maior que zero. O nome "produto acabado" vem do <strong>tipo de movimentação</strong>, não do tipo do item: o PDF de 22/10/2026 trouxe um insumo (lote <code>TESTEPA999</code>).</li>
+<li><strong>Saldo</strong> é o saldo total do lote, não só a parte retida.</li>
+<li>No PDF a coluna da ordem de produção se chama "OPE".</li>
 </ul>
-<h4 id="ver-a-lista-na-tela-leitura-do-codigo-nao-testado">Ver a lista na tela (leitura do código; não testado)</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No Menu Relatórios, abra <strong>Quarentena de Produto Acabado (RM18)</strong>.</li>
-<li>Passo 2. Se quiser, escolha o <strong>Grupo</strong>, digite o <strong>Lote fabricante</strong> inteiro, parte do <strong>Cód. item</strong> e o <strong>Período</strong> (as duas datas; o filtro olha a data da movimentação de entrada).</li>
-<li>Passo 3. Clique em <strong>VISUALIZAR</strong>. A grade mostra Código, Descrição, UF, Lote, Num. OP, Data mov., Validade, Qtde. entrada, Saldo e Situação.</li>
-<li>Passo 4. Se nada for encontrado, o código tenta mostrar "A pesquisa não retornou nenhum resultado.", mas pode parar com erro (ver Falhas).</li>
+<li>Data mal preenchida: "Data inicial inválida!" ou "Data final inválida!" (leitura do código, não testado).</li>
+<li>Sem linhas: "A pesquisa não retornou nenhum resultado." (VISUALIZAR, se a tela chegar até aí) ou "Nenhum registro foi encontrado!" (GERAR RELATÓRIO ou Imprimir).</li>
+<li>Qualquer erro da consulta vira "Erro ao gerar o relatório!", sem o motivo.</li>
 </ul>
-<h4 id="imprimir">Imprimir</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. Clique em <strong>GERAR RELATÓRIO</strong>. O PDF abre em outra janela (visto em 22/10/2026, sem filtro). Depois do clique, os filtros e a grade são esvaziados.</li>
-<li>Passo 6. Depois de um VISUALIZAR com resultado, <strong>Imprimir</strong> gera o PDF com a lista que está na tela.</li>
-<li>Passo 7. <strong>Limpar</strong> esvazia filtros e grade.</li>
+<li>A tela usa o identificador <strong>602</strong>. O script de carga do menu marca incluir, alterar, excluir, imprimir e ver log como "N" para ela (dml.sql:1923). Leitura do código, a confirmar (CT-EST-REL02-S1).</li>
+<li>O VISUALIZAR já nasce visível: a função de consultar não muda nada na tela. O ícone do Excel nasce escondido e nenhum código o liga.</li>
+<li>O <strong>grupo de usuário</strong> limita a lista: só aparecem itens dos almoxarifados do grupo da pessoa e da empresa da sessão. Se o grupo do usuário for "0", o filtro de grupo é pulado e a lista mostraria todos os grupos (a conferir).</li>
+<li><strong>Cuidado:</strong> a conferência "esta pessoa tem a função da tela?" para abrir a página está <strong>comentada no código</strong> (DV-EST-008, Alta, confirmado em outras telas do Estoque; <strong>não testado nesta tela</strong>). Quem digitar o endereço do relatório abre a página.</li>
 </ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum defeito DV-EST foi registrado para o RM18 (o DV-EST-062 trata do RM36 e do RM17). A tela foi vista uma só vez: o PDF, sem filtro (22/10/2026, CT-EST-063).</li>
+<li><strong>Possível erro no resultado vazio:</strong> a tela monta uma linha de apoio com colunas que a consulta não tem e pode parar com erro, em vez de mostrar a mensagem de vazio (leitura do código; CT-EST-REL02-02).</li>
+<li>"Produto acabado" é só nome: o filtro é a entrada de produção. Ponto para validar com a área.</li>
+<li>Lote de produto acabado que entra por outro caminho (Entrada de Material - Outras, devolução) e fica em quarentena <strong>não aparece</strong>.</li>
+<li>O mesmo lote pode sair em várias linhas (cada análise, data e ordem de produção gera uma linha).</li>
+<li>O <strong>dia final do período</strong> pode deixar de fora movimentos feitos nesse dia depois da meia-noite.</li>
+<li><strong>GERAR RELATÓRIO apaga os filtros e a grade</strong>: para gerar duas vezes com o mesmo filtro, digite de novo.</li>
+<li>Ao trocar de página, a ordem escolhida se perde.</li>
+<li>Lote vencido em quarentena não aparece marcado.</li>
+<li>O registro da rodada 8 diz "PDF sem linhas", mas a captura guardada mostra uma linha (ponto para validar com quem executou).</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VISUALIZAR</td>
+<td>Busca e mostra a grade</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Busca de novo e abre o PDF em nova janela</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Imprimir</td>
+<td>Gera o PDF com a lista da tela</td>
+<td>Só depois de um VISUALIZAR com resultado</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia os filtros e a grade</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Títulos das colunas</td>
+<td>Pedem ordenação por coluna</td>
+<td>Com resultado</td>
+</tr>
+<tr>
+<td>Paginação</td>
+<td>Muda de página (15 linhas por página)</td>
+<td>Com mais de 15 linhas</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>Existe, mas fica escondido e, se aparecesse, levaria à página da Disponibilidade, com o lote no lugar da descrição</td>
+<td>Nunca aparece</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <h4 id="filtros">Filtros</h4>
 <div class="tabela"><table>
@@ -208,7 +323,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

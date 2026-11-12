@@ -45,9 +45,43 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="acompanhamento-dos-treinamentos-analise.html">Análise</a><a href="acompanhamento-dos-treinamentos-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="acompanhamento-dos-treinamentos-fluxos.html">Fluxos</a><a href="acompanhamento-dos-treinamentos-regras-de-negocio.html">Regras de negócio</a><a href="acompanhamento-dos-treinamentos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-acompanhamento-dos-treinamentos.html">Erros (6)</a><a class="aba-extra" href="roteiro-de-execucao-treinamento-tecnico-passo-a-passo.html#tela-8-acompanhamento-dos-treinamentos-hoje-e-no-dia-seguinte">Passo a passo</a><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Acompanhamento dos Treinamentos</strong> é o relatório de "quem está em dia". Para cada treinamento obrigatório, mostra cada pessoa das funções e dos setores ligados a ele com a situação: Pendente (nunca treinou), Programado (tem turma), Vigente (dentro da validade), Vencido, Substituído ou Obsoleto. A tela <strong>só consulta e imprime</strong>: não grava nada nem avisa outro módulo.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <p>Confira que os treinamentos obrigatórios estão com as funções e os setores ligados no Cadastro de Treinamento e que as turmas foram concluídas na Conclusão do Treinamento. A tela deve ser aberta pelo endereço, porque não está no menu.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde vem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Treinamento obrigatório com funções e setores ligados</strong></td>
+<td>Só treinamentos obrigatórios entram; as pessoas vêm das funções e dos setores ligados</td>
+<td>Tela Cadastro de Treinamento</td>
+</tr>
+<tr>
+<td><strong>Turmas concluídas</strong></td>
+<td>A situação (Vigente, Vencido) vem das turmas Finalizadas e da validade</td>
+<td>Tela Conclusão do Treinamento</td>
+</tr>
+<tr>
+<td><strong>Funções, setores e pessoas</strong></td>
+<td>Lidos do módulo Principal; uma pessoa sem setor derruba a consulta (DV-GQ-316)</td>
+<td>Cadastros do módulo Principal</td>
+</tr>
+<tr>
+<td><strong>Endereço direto da tela</strong></td>
+<td><strong>A tela não está no menu</strong>; só abre pelo endereço (DV-GQ-318)</td>
+<td>TI / Ponto para validar com a área</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<h5 id="tela-de-lista">Tela de lista</h5>
 <ul>
 <li>Passo 1. Abra a tela pelo endereço direto (o item não consta do menu). A tela mostra o quadro "Pesquisa".</li>
 <li>Passo 2. Filtros: Código (número do POP, parte do texto), Treinamento (parte do nome), Revisão (parte do texto; hoje não acha nada, ver Falhas e pontos de atenção), Situação (Pendente, Programado, Vigente, Substituído, Vencido, Obsoleto), Setor (só os setores a que o usuário tem direito), Funcionário (parte do nome), Data Início e Data Validade (cada uma com "até"; só valem com as duas datas).</li>
@@ -55,7 +89,44 @@
 <li>Passo 4. Se nada for encontrado, aparece "A pesquisa não retornou nenhum resultado." Atenção: a mesma mensagem aparece quando a consulta dá erro (treinamento ligado a uma função, ou com treinando sem setor), e o relatório fica vazio sem aviso (CT-GQ-TRE-F-01 e F-13; DV-GQ-300 e DV-GQ-316).</li>
 <li>Passo 5. Limpar esvazia os filtros e esconde a lista. Imprimir abre o PDF "ACOMPANHAMENTO DE TREINAMENTOS" com as mesmas linhas (CT-GQ-TRE-F-08).</li>
 </ul>
-<h4 id="o-que-cada-icone-da-lista-faz-e-quando-aparece">O que cada ícone da lista faz e quando aparece</h4>
+<h5 id="como-ler-a-situacao">Como ler a situação</h5>
+<ul>
+<li>Pendente: a pessoa deveria ter o treinamento e não há turma nem treinamento concluído.</li>
+<li>Programado: a pessoa está numa turma que ainda não foi concluída.</li>
+<li>Vigente: o treinamento foi concluído e a validade é hoje ou ainda vai chegar. Em 23/10/2026, dois funcionários do cadastro 24 apareceram Vigentes, com validade em 24/10/2026 (CT-GQ-TRE-F-12).</li>
+<li>Vencido: a validade passou (CT-GQ-TRE-F-02: 13/10 a 16/10).</li>
+<li>Substituído: existe uma turma mais recente do mesmo treinamento para a pessoa. A tela mostra "Substituído" também para turmas que a pessoa nem fez (DV-GQ-317).</li>
+<li>Obsoleto: o treinamento foi marcado como inativo no Cadastro.</li>
+</ul>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>Não grava nada</strong>: lê os treinamentos obrigatórios, as turmas e os cadastros do Principal e mostra uma linha por pessoa e por treinamento (SETOR, FUNCIONÁRIO, CÓDIGO, TREINAMENTO, REV, SITUAÇÃO, DATA INÍCIO, DATA VALIDADE). Imprimir abre o PDF "ACOMPANHAMENTO DE TREINAMENTOS" com as mesmas linhas.</li>
+<li><strong>Treinamento pendente ou vencido não bloqueia nem avisa ninguém</strong> (DV-GQ-320): nenhum outro módulo consulta o treinamento; o vencido só aparece neste relatório.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>A tela não recusa nada; <strong>a mensagem "A pesquisa não retornou nenhum resultado." aparece também quando a consulta dá erro</strong> (treinamento ligado a uma função, ou com treinando sem setor): o relatório fica vazio sem aviso (DV-GQ-300, DV-GQ-316).</li>
+<li>Os filtros de data só valem com início e fim (DV-GQ-319).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela <strong>não aparece no menu de nenhum papel</strong>; abre só pelo endereço (DV-GQ-318). Não há botões de gravar.</li>
+<li>O que cada pessoa vê depende, nesta ordem, de: (1) quem tem a ação ADMINISTRAÇÃO no perfil do Principal para esta tela vê todos os setores e pessoas; (2) quem é responsável por uma área vê a área e as áreas filhas; (3) os demais veem só a si mesmos. <strong>O grupo de perfil (Níveis 1, 2 e 3) não é consultado.</strong></li>
+<li><strong>Provado (23/10/2026):</strong> o Nível 3 viu só a si mesmo (e HTTP 500 em treinamento com função); o Nível 2 responsável de área viu a área inteira (7 linhas); outro Nível 2 viu a área B sem linhas; o Nível 1 viu só a si mesmo. O perfil de teste do ADMIN parece não ter a ação ADMINISTRAÇÃO (inferência; conferir em Principal › Perfil).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>O relatório falha</strong> para qualquer treinamento obrigatório ligado a uma função: erro de servidor do Principal, e a tela diz "A pesquisa não retornou nenhum resultado." (DV-GQ-300, Alta). O vencido não é mostrado.</li>
+<li><strong>Um treinando avulso sem setor</strong> faz a consulta do treinamento dar erro para sempre (DV-GQ-316, Alta).</li>
+<li><strong>A Qualidade não enxerga todos</strong>: o Nível 3 vê só a si mesmo (DV-GQ-318); a tela não está no menu.</li>
+<li><strong>Uma linha por pessoa e por turma</strong>, inclusive turma que a pessoa não fez ("Substituído" com as datas da turma dos outros); a validade vem da turma (DV-GQ-317).</li>
+<li><strong>O treinamento vencido ou pendente não bloqueia ninguém</strong>: o ADMIN abre Estoque e Produção (DV-GQ-320).</li>
+<li>O filtro Revisão não acha nada e clicar no título da coluna não ordena (DV-GQ-319).</li>
+</ul>
+<h5 id="registro-das-rodadas-de-teste-e-do-que-ainda-nao-foi-visto">Registro das rodadas de teste e do que ainda não foi visto</h5>
+<h5 id="o-que-ainda-nao-foi-visto-numa-tela">O que ainda não foi visto numa tela</h5>
+<p>O "dia seguinte" do treinamento com validade de um dia (CT-GQ-079, marcado para 24/10/2026), a situação Obsoleto, o Imprimir com filtro, o que a tela mostra para um treinando insuficiente ou ausente numa turma Finalizada e para uma turma cancelada, e o acesso de uma pessoa com a ação ADMINISTRAÇÃO no perfil. Esses passos vêm do código.</p>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
 <p>Cada linha da lista pode ter alguns destes ícones. Eles aparecem ou somem conforme a <strong>situação do registro</strong> e o <strong>perfil</strong> de quem entra; <strong>a tela não explica por que um ícone some</strong>. A coluna "Regra do código" vem da leitura do código; a seção "O que a tela mostrou" vem do teste de 11 e 12/11/2026.</p>
 <div class="tabela"><table>
 <thead>
@@ -132,17 +203,33 @@
 </tr>
 </tbody>
 </table></div>
-<h4 id="como-ler-a-situacao">Como ler a situação</h4>
-<ul>
-<li>Pendente: a pessoa deveria ter o treinamento e não há turma nem treinamento concluído.</li>
-<li>Programado: a pessoa está numa turma que ainda não foi concluída.</li>
-<li>Vigente: o treinamento foi concluído e a validade é hoje ou ainda vai chegar. Em 23/10/2026, dois funcionários do cadastro 24 apareceram Vigentes, com validade em 24/10/2026 (CT-GQ-TRE-F-12).</li>
-<li>Vencido: a validade passou (CT-GQ-TRE-F-02: 13/10 a 16/10).</li>
-<li>Substituído: existe uma turma mais recente do mesmo treinamento para a pessoa. A tela mostra "Substituído" também para turmas que a pessoa nem fez (DV-GQ-317).</li>
-<li>Obsoleto: o treinamento foi marcado como inativo no Cadastro.</li>
-</ul>
-<h4 id="o-que-ainda-nao-foi-visto-numa-tela">O que ainda não foi visto numa tela</h4>
-<p>O "dia seguinte" do treinamento com validade de um dia (CT-GQ-079, marcado para 24/10/2026), a situação Obsoleto, o Imprimir com filtro, o que a tela mostra para um treinando insuficiente ou ausente numa turma Finalizada e para uma turma cancelada, e o acesso de uma pessoa com a ação ADMINISTRAÇÃO no perfil. Esses passos vêm do código.</p>
+<p>Esta tela <strong>não tem ícones por linha</strong> (consulta e relatório). Os botões são:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pesquisar</strong></td>
+<td>Monta o relatório com os filtros</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td><strong>Imprimir</strong></td>
+<td>Abre o PDF "ACOMPANHAMENTO DE TREINAMENTOS" com as mesmas linhas</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td><strong>Limpar</strong></td>
+<td>Esvazia os filtros e esconde a lista</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa.</p>
 <div class="tabela"><table>

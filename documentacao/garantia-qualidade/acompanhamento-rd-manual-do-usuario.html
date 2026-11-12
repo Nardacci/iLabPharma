@@ -44,6 +44,41 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="acompanhamento-rd-analise.html">Análise</a><a href="acompanhamento-rd-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="acompanhamento-rd-fluxos.html">Fluxos</a><a href="acompanhamento-rd-regras-de-negocio.html">Regras de negócio</a><a href="acompanhamento-rd-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-acompanhamento-rd-relatorio.html">Erros (5)</a><a class="aba-extra" href="roteiro-de-execucao-desvios-e-capa-passo-a-passo.html#telas-13-e-14-acompanhamento-rd-e-controle-de-emissao-de-rnc">Passo a passo</a><a class="aba-extra" href="acompanhamento-rd-tela-a-criar.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Acompanhamento RD</strong> gera, em PDF, a "Planilha para acompanhamento das não conformidades": uma linha por desvio, com número, meio de detecção, descrição, setor, grau de criticidade, situação do desvio e situação das ações. É a tela da Garantia da Qualidade para acompanhar os desvios de um período. Ela <strong>só imprime</strong>: não grava nada, não tem lista na tela.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde vem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Desvios registrados no período</strong></td>
+<td>O PDF lista os desvios cuja <strong>data de criação</strong> está no período (não a data da última mudança): um período curto deixa de fora desvios antigos, ainda que abertos</td>
+<td>Tela Relatório de Desvios</td>
+</tr>
+<tr>
+<td><strong>Data Início e Data "até"</strong></td>
+<td>As duas são obrigatórias</td>
+<td>Digitadas na tela</td>
+</tr>
+<tr>
+<td><strong>Sessão ativa no sistema</strong></td>
+<td>A impressão exige usuário conectado (o nome vai no rodapé do PDF)</td>
+<td>Login do sistema</td>
+</tr>
+<tr>
+<td><strong>Dados das etapas</strong> (criticidade, planos)</td>
+<td>Alimentam as colunas de criticidade e de situação das ações</td>
+<td>Telas das etapas do desvio</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
 <ol>
 <li>No menu, abra Controle de Desvios › Acompanhamento RD. A tela tem um bloco Pesquisa com Data Início, até e Situação. Não há lista na tela: o resultado sai direto em PDF.</li>
 </ol>
@@ -74,7 +109,37 @@
 <li>Escolhida uma situação, o PDF traz os desvios dela e a contagem confere (CT-GQ-N13-02). A opção "Aprovado Plano Ação Preventiva" devolve vazio, e a lista de situações não oferece Finalizado, Cancelado, Pendente Registro, Pré Avaliação, Responsável Área nem CAPA (DV-GQ-028).</li>
 <li>Na impressão de "todas as situações" (01/10 a 21/10), a situação impressa difere da situação da tela em 2 de 51 desvios lidos: o 018/26 (na tela, Cancelado; no PDF, Pendente Registro Ação Corretiva) e o 026/26 (na tela, Pendente Pré Avaliação; no PDF, Pendente Responsável Área). Não foi conferido de qual lado está a diferença (DV-GQ-037). Corrigido na rodada 2: a diferença não se reproduziu, e os "51" vieram de erro do programa que lia o texto do PDF (ver a subseção da rodada 2; DV-GQ-037 não confirmado).</li>
 </ul>
-<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>Não grava nada.</strong> A tela abre uma nova janela com o PDF "PLANILHA PARA ACOMPANHAMENTO DAS NÃO CONFORMIDADES" (A4 deitada), com cliente, logotipo, período, data e o usuário que imprimiu.</li>
+<li>A coluna STATUS DAS AÇÕES mostra Não Iniciadas, Não Implementadas, Implementadas Parcialmente ou Implementadas Integralmente, com o prefixo "Ações Corretivas:" ou "Ações Preventivas:".</li>
+<li>A impressão <strong>não deixa registro</strong> de quem imprimiu, quando e com que filtro (SEG-GQ-04).</li>
+<li>O relatório <strong>não agrupa nem conta por causa raiz, área, produto ou lote</strong>: só lista, sem análise de tendência.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li><strong>Preencha o Período.</strong> (Data Início ou "até" vazia; faixa vermelha e nada é impresso).</li>
+<li>"Usuário não encontrado" (impressão sem sessão de usuário) e "Configuração do cliente não foi encontrada" (cliente sem configuração no módulo Principal).</li>
+<li><strong>A tela não recusa</strong> Início maior que o "até" (o PDF sai sem linhas e sem aviso) nem período sem desvios (só o cabeçalho). Datas impossíveis (31/02/2026 e 00/00/0000) abrem página de erro do sistema, em vez de um aviso claro.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li><strong>Pelo código, a tela de filtros abre sem entrar no sistema</strong> (confirmado em 12/10/2026, SEG-GQ-01); a impressão exige sessão ativa. Não há conferência de nível, área ou papel: <strong>todo usuário com sessão ativa imprime todos os desvios</strong> (SEG-GQ-02).</li>
+<li>A tela não usa o grupo de perfil da GQ nem as funções de consultar, incluir e excluir do perfil do Principal. A matriz de permissões diz: "Todos com o menu; sem login exigido pelo código".</li>
+<li>Ponto para validar com a área: quem deve poder imprimir a planilha de desvios, que contém informação sigilosa da qualidade.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A coluna GRAU CRITICIDADE sai sempre em branco</strong> (DV-GQ-031), mesmo com CAPA crítico ou menor: a planilha perde a informação mais importante para priorizar.</li>
+<li><strong>O filtro de situação é incompleto</strong> (DV-GQ-028): não oferece Finalizado, Cancelado, Pendente Registro, Pré Avaliação, Responsável Área e CAPA, e "Aprovado Plano Ação Preventiva" devolve vazio; com TODAS, os cancelados e finalizados entram no PDF.</li>
+<li><strong>Data e hora do PDF em formato americano</strong> (DV-GQ-034).</li>
+<li>O período filtra pela data de criação do desvio; desvios antigos ainda abertos ficam de fora.</li>
+<li>O relatório não traz produto, lote, equipamento, prazo nem responsável pela ação.</li>
+<li>Em teste a situação do PDF coincidiu com a da tela; a divergência suspeita (DV-GQ-037) <strong>não foi confirmada</strong>.</li>
+<li>O título da tela ("Acompanhamento RNC") difere do nome do menu ("Acompanhamento RD").</li>
+</ul>
+<h5 id="registro-das-rodadas-de-teste-e-do-que-ainda-nao-foi-visto">Registro das rodadas de teste e do que ainda não foi visto</h5>
+<h5 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h5>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-2/resultado.md, ponto em aberto (c). O PDF foi baixado pela mesma chamada que o botão Imprimir faz (datas em mm/dd/aaaa) e conferido desvio a desvio.</p>
 <ul>
 <li>O período filtra pela data de criação do desvio, e não pela situação nem pela data da última mudança. Um período curto deixa de fora desvios mais antigos, mesmo que ainda estejam abertos: o 001/26 foi criado em 02/06/2026 e o 002/26 e o 003/26 em 07/09/2026, e não entraram num período que começa em 01/10. Para ver todos, use um período amplo (por exemplo, de 01/01 até hoje).</li>
@@ -82,7 +147,7 @@
 <li>Os "51 desvios" e a contagem manual de "56" da rodada 1 se explicam: na rodada 1 havia 59 desvios; tirando os 3 fora do período, dá 56 (a contagem manual). Os 51 vieram do programa que lia o texto do PDF: as colunas saem em linhas desencontradas (a descrição de um desvio aparece junto do número do vizinho) e o programa perdeu 5. Não é falta no PDF. Quem conferir o PDF por programa deve saber disso.</li>
 <li>A situação impressa coincidiu com a da tela nos 59 de 65 desvios em que a leitura é sem ambiguidade, inclusive 018/26 (Cancelado) e 026/26 (Pendente Pré Avaliação). Nos outros 6 a leitura não permite concluir, mas nenhum contradiz a tela. A diferença vista na rodada 1 (DV-GQ-037) não se reproduziu.</li>
 </ul>
-<h4 id="rodada-3-22-10-2026">Rodada 3 (22/10/2026)</h4>
+<h5 id="rodada-3-22-10-2026">Rodada 3 (22/10/2026)</h5>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-3c/resultado.md. O que a rodada mostrou de novo ou contrário ao passo a passo acima:</p>
 <ul>
 <li>Passo 2, um dia só: Data Início e até iguais a 22/10/2026 trazem os 25 desvios do dia (os mesmos 25 da lista da tela 1), inclusive o criado às 14h. Nesta tela o dia final entra (CT-GQ-N13-03).</li>
@@ -92,13 +157,37 @@
 <li>Ação removida (CT-GQ-N13-08): no plano preventivo do 053/26, com a segunda ação excluída antes de salvar e as outras duas concluídas e aprovadas, sai "Ações Preventivas: Implementadas Integralmente".</li>
 <li>Período sem desvios (CT-GQ-N13-12): com um ano sem desvios (2024), o PDF traz só o cabeçalho "Período: 01/01/2024 até 31/12/2024", sem linhas e sem aviso.</li>
 </ul>
-<h4 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h4>
+<h5 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h5>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-4/resultado.md. O que a rodada mostrou de novo ou contrário ao passo a passo acima:</p>
 <ul>
 <li>Passo 4, o PDF (CT-GQ-N13-10): traz o cliente, o título, o período, o usuário que imprimiu, a página ("Página 1/10") e o logotipo (uma imagem), em folha A4 deitada. A data e a hora impressas saem em formato americano com AM/PM ("10/22/2026 4:27:11 PM"); o resultado situa essa data no cabeçalho.</li>
 <li>Passo 6, Limpar (CT-GQ-N13-11): esvazia as datas, volta a Situação para TODAS e a faixa de erro não fica na tela.</li>
 <li>Passo 8, MEIO DETECÇÃO e SETOR SOLICITANTE (CT-GQ-N13-09): o meio "Processo / Produção" sai com a barra separada por espaços. O setor vem da área do responsável do desvio; quando o responsável não tem área cadastrada (029/26 e 054/26), o setor sai vazio. As duas áreas envolvidas do 029/26 não aparecem no relatório.</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Esta tela <strong>não tem lista nem ícones por linha</strong>. Os botões são:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Imprimir</strong></td>
+<td>Abre em nova janela o PDF da planilha, com as datas e a situação escolhidas</td>
+<td>Sempre; exige as duas datas e sessão ativa</td>
+</tr>
+<tr>
+<td><strong>Limpar</strong></td>
+<td>Esvazia as duas datas, volta a Situação para TODAS e esconde a faixa vermelha</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
+<p>Não há Pesquisar, Incluir, Editar, Cancelar nem Visualizar.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <h3 id="tela-index">Tela (Index)</h3>
 <div class="tabela"><table>
@@ -376,7 +465,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li class="sub"><a href="#tela-index">Tela (Index)</a></li><li class="sub"><a href="#colunas-do-relatorio-pdf">Colunas do relatório (PDF)</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

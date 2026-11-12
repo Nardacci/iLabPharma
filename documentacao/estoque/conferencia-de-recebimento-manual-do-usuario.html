@@ -45,32 +45,117 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conferencia-de-recebimento-analise.html">Análise</a><a href="conferencia-de-recebimento-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="conferencia-de-recebimento-fluxos.html">Fluxos</a><a href="conferencia-de-recebimento-regras-de-negocio.html">Regras de negócio</a><a href="conferencia-de-recebimento-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-conferencia-de-recebimento.html">Erros (3)</a><a class="aba-extra" href="roteiro-de-execucao-recebimento-quarentena-e-conferencia-passo-a-passo.html#tela-3-conferencia-de-recebimento">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Conferência de Recebimento</strong> é a tela em que o almoxarifado confere, nota por nota, <strong>quanto chegou de cada lote</strong> contra o que a nota fiscal diz. Para cada lote o usuário informa a quantidade conferida (ou usa CONFIRMAR TUDO para aceitar a quantidade da nota). Ao FINALIZAR, a nota passa a "Conferida" e o sistema redistribui a quantidade pelos volumes. É a verificação documentada de cada entrega (RDC 658/2022, art. 183, parágrafo único) e abre o caminho para o Endereçamento de Material.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Recebimento confirmado</strong> (status RECEBIDO), com nota, itens e lotes</td>
+<td>A lista só traz notas de recebimentos já recebidos (dalNotaFiscal.cs:803)</td>
+<td>Estoque › Recebimento de Material</td>
+</tr>
+<tr>
+<td><strong>Item no grupo do usuário</strong></td>
+<td>A lista só mostra notas de itens do grupo da pessoa (dalNotaFiscal.cs:820-831)</td>
+<td>Cadastros › Grupo Usuário (e Almoxarifado)</td>
+</tr>
+<tr>
+<td><strong>Pesagem concluída</strong>, nos itens que obrigam pesagem de entrada</td>
+<td>Esses itens são conferidos pela Central de Pesagem, não aqui (conferencia_ed2.aspx.cs:228 e 508)</td>
+<td>Estoque › Central de Pesagem</td>
+</tr>
+<tr>
+<td><strong>A nota fiscal e, havendo divergência, o registro dela por fora</strong></td>
+<td>A tela não pede justificativa</td>
+<td>Com a área</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No Menu Estoque, abra <strong>Conferência de Recebimento</strong>. Clique em <strong>Pesquisar</strong> (a lista só aparece depois).</li>
+<li>Filtros: Recebimento (trecho do código), Fornecedor, Nota Fiscal e Conferido (TODOS, SIM, NÃO). A lista mostra Recebimento, Data, Fornecedor, Nota Fiscal e Conferido. Imprimir e Excel aparecem depois de uma pesquisa com resultado (conferencia_lst.aspx.cs:119-130).</li>
+</ol>
+<p><strong>Conferir uma nota</strong></p>
+<ol start="3">
+<li>Clique no lápis da nota. A tela mostra Recebimento, Data do Recebimento, Nota Fiscal, Fornecedor, Data da nota e a grade dos lotes: Item, Unid. Med., Item Entrada, Lote, Pesagem, Qtde Lote, Conferido e Responsável.</li>
+<li>Para conferir um lote, clique no lápis da linha (some para item que obriga pesagem), digite a quantidade em <strong>Conferido</strong> e clique em <strong>CONFIRMAR LOTE</strong>. Se a quantidade for diferente da nota, o sistema pergunta "Quantidade divergente. Deseja Continuar?".</li>
+<li>Para aceitar todas as quantidades como estão na nota, clique em <strong>CONFIRMAR TUDO</strong> ("Deseja confirmar todos os lotes com a quantidade da NF?"). Vale só para itens que não obrigam pesagem.</li>
+<li>Com todos os lotes contados, clique em <strong>FINALIZAR</strong> e confirme "Deseja finalizar a conferência?". Aparece "Conferência realizada com sucesso!" e a nota segue para o Endereçamento.</li>
+<li>Para desfazer, use <strong>CANCELAR CONFERÊNCIA</strong> (só antes do endereçamento). A pergunta traz um erro de digitação ("cacelar") e não pede justificativa.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>O recebimento tem de estar <strong>confirmado</strong> (status RECEBIDO) na tela Recebimento de Material.</li>
-<li>Tenha a nota fiscal e, se houver divergência, o registro dela por fora (a tela não pede justificativa).</li>
+<li><strong>CONFIRMAR LOTE:</strong> grava a quantidade conferida, o usuário e a data/hora da contagem naquele lote e escreve no histórico (conferencia_ed2.aspx.cs:100-120; bllNotaFiscalItemLote.cs:41-60).</li>
+<li><strong>FINALIZAR:</strong> confere que todo lote foi contado e que nada ficou sem pesar, marca a nota como <strong>Conferida</strong>, grava e só então chama o ajuste dos volumes (procedimento <code>pAjustaVolume</code>; conferencia_ed2.aspx.cs:261-307). A nota segue para o Endereçamento.</li>
+<li><strong>CANCELAR CONFERÊNCIA:</strong> devolve a nota a "não conferida" (conferencia_ed2.aspx.cs:324-347).</li>
+<li>A divergência de quantidade <strong>não é enviada à Qualidade</strong> por esta tela.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No Menu Estoque, abra Conferência de Recebimento. Clique em Pesquisar (a lista só aparece depois).</li>
-<li>Passo 2. Filtros: Recebimento (trecho do código), Fornecedor, Nota Fiscal e Conferido (TODOS, SIM, NÃO) (conferencia_lst.aspx:44-82).</li>
-<li>Passo 3. A lista mostra Recebimento, Data, Fornecedor, Nota Fiscal e Conferido. O lápis abre a conferência; vira o olho (Visualizar) quando a nota já foi conferida (conferencia_lst.aspx.cs:194-221).</li>
-<li>Passo 4. Imprimir e Excel aparecem depois de uma pesquisa com resultado (conferencia_lst.aspx.cs:119-130).</li>
+<li>Lote sem quantidade: "Quantidade conferida não informada!".</li>
+<li>Finalizar com pendência: "Existem itens que não foram pesados!" (item que obriga pesagem) e "Existem itens que não foram conferidos!".</li>
+<li>Cancelar nota já endereçada: "Nota Fiscal já foi endereçada!".</li>
+<li>Nota sem lotes: "Nenhum item foi encontrado".</li>
+<li>Quantidade diferente da nota <strong>não é recusada</strong>: só pergunta "Quantidade divergente. Deseja Continuar?" (CT-EST-191).</li>
+<li>Falha no ajuste dos volumes: "Erro ao redistribuir quantidade dos volumes" (veja os cuidados).</li>
 </ul>
-<h4 id="conferir-uma-nota">Conferir uma nota</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. Clique no lápis da nota. A tela mostra Recebimento, Data do Recebimento, Nota Fiscal, Fornecedor, Data da nota e a grade dos lotes: Item, Unid. Med., Item Entrada, Lote, Pesagem, Qtde Lote, Conferido e Responsável.</li>
-<li>Passo 6. Para conferir um lote, clique no lápis da linha (some para item que obriga pesagem), digite a quantidade em <strong>Conferido</strong> e clique em CONFIRMAR LOTE. Se a quantidade for diferente da nota, o sistema pergunta "Quantidade divergente. Deseja Continuar?".</li>
-<li>Passo 7. Para aceitar todas as quantidades como estão na nota, clique em CONFIRMAR TUDO ("Deseja confirmar todos os lotes com a quantidade da NF?"). Vale só para itens que não obrigam pesagem.</li>
-<li>Passo 8. Quando todos os lotes estiverem contados, clique em FINALIZAR e confirme "Deseja finalizar a conferência?".</li>
-<li>Passo 9. Para desfazer, use CANCELAR CONFERÊNCIA (só antes do endereçamento). A pergunta traz um erro de digitação ("cacelar") e não pede justificativa.</li>
+<li>A lista e o formulário usam a função de código <strong>310</strong>. O lápis de edição da lista e o CANCELAR CONFERÊNCIA dependem da marca <strong>Alterar</strong> do perfil (conferencia_lst.aspx.cs:209-211; conferencia_ed2.aspx.cs:60-61). O servidor não repete essa conferência ao cancelar.</li>
+<li>O <strong>grupo de usuário</strong> limita a lista às notas de itens do grupo. Mas o número da nota vem no endereço e a tela carrega a nota sem conferir o grupo (conferencia_ed2.aspx.cs:23-24 e 40-41).</li>
+<li><strong>Pelo código, qualquer usuário que abra a tela confere</strong>: a tela grava o usuário da sessão sem pedir senha e sem conferir função (conferencia_ed2.aspx.cs:100-120). O caso de teste de usuário sem permissão (CT-EST-192) ficou bloqueado (DV-EST-005). A assinatura com usuário e senha existe só na versão antiga da tela, sem uso.</li>
+<li>A tela <strong>não confere a permissão ao ser aberta</strong>: quem digita o endereço consegue abri-la (DV-EST-008, Alta).</li>
 </ul>
-<h4 id="atencao-ao-usar">Atenção ao usar</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>FINALIZAR termina com <strong>"Erro ao redistribuir quantidade dos volumes"</strong> e, mesmo assim, a nota fica marcada como <strong>Conferida</strong> (DV-EST-015). Nesse estado a tela só oferece "Cancelar conferência". Não siga para o Endereçamento sem avisar a Qualidade.</li>
-<li>Uma divergência de quantidade é aceita só com "Deseja Continuar?", sem justificativa e sem aviso à Qualidade (CT-EST-191). Registre a divergência por fora.</li>
-<li>A conferência <strong>não pede usuário e senha</strong> nesta tela: grava quem está logado (a assinatura com senha existe só na versão antiga da tela).</li>
+<li><strong>FINALIZAR dá "Erro ao redistribuir quantidade dos volumes" e, mesmo assim, a nota fica Conferida</strong> (DV-EST-015, Alta); a tela passa a oferecer só "Cancelar conferência". Aconteceu com 90 de 100 e com 100 de 100, em 22,8 s, e se repetiu em outros recebimentos. Não siga para o Endereçamento sem avisar a Qualidade.</li>
+<li><strong>Divergência de quantidade é aceita</strong> só com "Deseja Continuar?", sem justificativa e sem aviso à Qualidade (CT-EST-191). Registre a divergência por fora.</li>
+<li>A causa real do erro de volumes fica escondida atrás da mensagem genérica e depende do DBA.</li>
+<li>O botão Novo da lista chama uma página que não existe; ele não aparece na tela. O ícone de histórico (Ver log) está com o código comentado: ponto para validar em tela se ele aparece.</li>
+<li>Erro de digitação: "Deseja cacelar a conferência?".</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre a conferência da nota</td>
+<td>Para quem tem a marca Alterar, em nota ainda não conferida</td>
+</tr>
+<tr>
+<td>Olho (Visualizar)</td>
+<td>Abre a nota só para consulta</td>
+<td>Quando a nota já foi conferida</td>
+</tr>
+<tr>
+<td>Ver Log Alteração</td>
+<td>Abre o histórico (TBL_NF_ITEM_LOTE)</td>
+<td>Previsto no .aspx, mas o trecho que o controla está comentado: ponto para validar</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório e planilha da lista</td>
+<td>Depois de uma pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <h4 id="lista">Lista</h4>
@@ -347,7 +432,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

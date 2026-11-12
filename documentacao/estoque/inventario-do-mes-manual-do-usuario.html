@@ -45,21 +45,116 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="inventario-do-mes-analise.html">Análise</a><a href="inventario-do-mes-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="inventario-do-mes-fluxos.html">Fluxos</a><a href="inventario-do-mes-regras-de-negocio.html">Regras de negócio</a><a href="inventario-do-mes-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-inventario-do-mes.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-inventario-passo-a-passo.html#tela-5-inventario-do-mes">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Inventário do Mês</strong> é um relatório de consulta que lista, por grupo de item, o <strong>saldo do fim do mês</strong>, o <strong>custo unitário</strong> e o <strong>valor total</strong> de cada item, com subtotal por grupo, valor total geral, o total <strong>por extenso</strong> e três assinaturas. Só entram itens com valor total maior que zero. <strong>Atenção ao nome:</strong> este relatório <strong>não é o inventário físico</strong> (a contagem por endereço feita nas telas do menu Inventário); é uma <strong>posição de valor do estoque no fim do mês</strong>, calculada pelo saldo e pelo custo por dia. Mostra numa segunda janela. Não grava nada.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Itens com saldo e custo</strong></td>
+<td>Itens sem custo, sem saldo ou com saldo negativo <strong>não aparecem</strong></td>
+<td>Cadastros › Item; movimentações do Estoque</td>
+</tr>
+<tr>
+<td><strong>Grupo de item</strong> (se quiser filtrar)</td>
+<td>Filtro da tela</td>
+<td>Cadastros › Grupo de Item</td>
+</tr>
+<tr>
+<td><strong>Três assinaturas na configuração do sistema</strong></td>
+<td>Saem no fim do relatório</td>
+<td>Configuração do sistema</td>
+</tr>
+<tr>
+<td><strong>Mês e ano</strong></td>
+<td>A tela já vem com o mês e o ano de hoje; o ano é obrigatório</td>
+<td>Preenchidos na própria tela</td>
+</tr>
+<tr>
+<td>(Não é necessário) <strong>inventário físico</strong></td>
+<td>O relatório <strong>não lê nenhuma contagem</strong>; só reflete um ajuste do inventário porque o ajuste gerou movimentação</td>
+<td>Menu Inventário</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório (leitura do código; nenhum passo foi executado numa tela real)</strong></p>
+<ol>
+<li>No menu Relatórios, abra <strong>Inventário do Mês</strong>. Aparece o quadro com Grupo, Mês e Ano, com o mês e o ano de hoje.</li>
+<li>Escolha o <strong>Grupo</strong> ("SELECIONE" = todos), o <strong>Mês</strong> e o <strong>Ano</strong> (4 números; obrigatório).</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. Abre uma segunda janela.</li>
+<li>Leia: por grupo, uma linha por item com unidade, quantidade, valor unitário e valor total; subtotal do grupo; valor total geral; o texto "Importa o Presente INVENTÁRIO no valor total de R$ ... referente aos BENS PATRIMONIAIS existentes no setor de ALMOXARIFADO"; e as três assinaturas.</li>
+<li>Imprima ou exporte pelo visualizador. A folha é numerada "Folha nº n / total".</li>
+<li><strong>LIMPAR</strong> volta o Grupo para "SELECIONE" e o Mês e o Ano para os de hoje.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>Este relatório <strong>não substitui o inventário físico</strong>: ele não lê nenhuma contagem. Se o inventário físico (menu Inventário) ajustou saldos, o relatório só reflete o ajuste porque o ajuste gerou movimentação.</li>
-<li>Itens sem custo, sem saldo ou com saldo negativo <strong>não aparecem</strong> (ver Falhas).</li>
+<li><strong>Não grava nada</strong>: só lê.</li>
+<li>Mostra a posição de valor do estoque no fim do mês pelo saldo e pelo último custo; <strong>não lê contagem nem apuração</strong>, embora o texto impresso afirme um inventário de "bens patrimoniais".</li>
+<li>Itens com saldo e sem custo, com saldo zero ou negativo ficam de fora, <strong>sem aviso</strong>.</li>
+<li>Não imprime usuário; o mês corrente e o futuro são aceitos e o resultado muda sem congelar.</li>
 </ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Relatórios, abra "Inventário do Mês". Aparece o quadro com Grupo, Mês e Ano, com o mês e o ano de hoje.</li>
-<li>Passo 2. Escolha o <strong>Grupo</strong> ("SELECIONE" = todos), o <strong>Mês</strong> e o <strong>Ano</strong> (4 números; obrigatório).</li>
-<li>Passo 3. Clique em GERAR RELATÓRIO. Abre uma segunda janela.</li>
-<li>Passo 4. Leia: por grupo, uma linha por item com unidade, quantidade, valor unitário e valor total; subtotal do grupo; valor total geral; o texto "Importa o Presente INVENTÁRIO no valor total de R$ ... referente aos BENS PATRIMONIAIS existentes no setor de ALMOXARIFADO"; e as três assinaturas da configuração.</li>
-<li>Passo 5. Imprima ou exporte pelo visualizador. A folha é numerada "Folha nº n / total".</li>
-<li>Passo 6. LIMPAR volta o Grupo para "SELECIONE" e o Mês e o Ano para os de hoje.</li>
+<li>Ano vazio: "Ano não informado!".</li>
+<li>Falha da consulta: "Erro ao gerar o relatório!", na segunda janela. O link "Detalhe do erro (+)" mostra o texto técnico quando o filtro dá erro.</li>
 </ul>
-<p>Tudo acima é leitura do código; nenhum passo foi executado numa tela real.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>relInventarioMes</code>. No catálogo de funções ela é só um ponto do menu Relatórios: as marcas de incluir, alterar, excluir, imprimir ou Excel, ver log e criar todas estão em "N" (dml.sql:1937), então <strong>não existe função de consultar, de imprimir nem de ver log para esta tela</strong>. Quem tem o ponto de menu no perfil abre a tela; não há grau menor de permissão.</li>
+<li>O botão de gerar não depende das funções do usuário (o trecho que esconderia botões de quem não tem função está comentado na base das telas).</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta) foi visto em outras telas do Estoque em 07/10 e 13/10/2026 e é esperado aqui, porque a tela usa a mesma base, mas <strong>não foi testado nesta tela</strong>.</li>
+<li>O grupo do usuário <strong>não é usado</strong> (F-REL16-5): todos os itens da empresa aparecem para qualquer perfil.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum DV-EST registrado para esta tela (nunca foi testada). Os DV-EST-049 e 050 são do inventário físico, não deste relatório. Pontos pelo código:</li>
+<li><strong>Documento que afirma o que o sistema não verificou</strong> (F-REL16-1, gravidade provável Alta): o texto fala em inventário de bens patrimoniais sem apuração por trás; o fluxo de Inventário lista este relatório entre os "relatórios de inventário", mas ele só compartilha o nome.</li>
+<li><strong>Item sem custo, com saldo zero ou negativo some sem aviso</strong> (F-REL16-2, Alta se acontecer): estoque sem custo fica fora do total.</li>
+<li>O saldo anterior pega a linha de maior número, não a de maior data (F-REL16-3). O valor é o último custo, não o da época (F-REL16-4).</li>
+<li>Sem fechamento do mês e sem registro de quem emitiu (F-REL16-6). Data e valores podem sair em formato americano (F-REL16-7; DV-EST-057).</li>
+<li>Existem dois modelos do relatório; só o 2 é usado (F-REL16-8).</li>
+<li>O texto fala em "bens patrimoniais"; o estoque é de insumos, materiais e produtos.</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Valida o Ano e abre a segunda janela</td>
+<td>Sempre (não depende de função)</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Grupo para "SELECIONE"; Mês e Ano para os de hoje</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Detalhe do erro (+) / (-)</td>
+<td>Mostra ou esconde o texto do erro interno</td>
+<td>Quando o filtro dá erro</td>
+</tr>
+<tr>
+<td>Imprimir, exportar e páginas (visualizador)</td>
+<td>Visualizador padrão; formatos não conferidos</td>
+<td>Na segunda janela</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -166,7 +261,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

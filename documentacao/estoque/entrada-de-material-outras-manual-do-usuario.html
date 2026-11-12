@@ -45,31 +45,116 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="entrada-de-material-outras-analise.html">Análise</a><a href="entrada-de-material-outras-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="entrada-de-material-outras-fluxos.html">Fluxos</a><a href="entrada-de-material-outras-regras-de-negocio.html">Regras de negócio</a><a href="entrada-de-material-outras-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-entrada-de-material-outras.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-devolucao-e-entradas-da-producao-passo-a-passo.html#tela-2-entrada-de-material-outras">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Entrada de Material - Outras</strong> registra a entrada no estoque de material que <strong>não vem de compra</strong> (sem nota fiscal e sem recebimento), nem é devolução nem produto acabado. O usuário informa item, lote, validade, fabricante, quantidade, custo, volumes e endereços, mais uma justificativa. Ao salvar, grava a movimentação, gera os volumes, abre a análise no Controle da Qualidade (CQ) para o item com controle de qualidade e imprime as etiquetas (entrada_material_ed.aspx.cs:316-331). Foi o caminho que a homologação usou para criar lote em quarentena enquanto o Endereçamento do recebimento não gravava (DV-EST-016; CT-EST-210). Usa o almoxarifado; a lista é a mesma da Devolução e da Entrada de Material - Produção, escolhida pelo parâmetro <code>dev</code>.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item cadastrado</strong></td>
+<td>Define controle de lote, validade, fabricante e qualidade</td>
+<td>Estoque › Cadastro de Item</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado, local, rua, coluna e andar livres e liberados ao grupo do usuário</strong>, compatíveis com o item (quarentena, umidade, refrigeração)</td>
+<td>Item refrigerado só oferece o local refrigerado; se ele não tem endereço cadastrado, a entrada não conclui (entrada_material_ed.aspx.cs:1138-1170)</td>
+<td>Estoque › Endereço do Estoque; Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Dados do lote</strong> (número como vem do fabricante, validade, fabricante e custo)</td>
+<td>O sistema não os confere com nenhum documento</td>
+<td>Com o fabricante</td>
+</tr>
+<tr>
+<td><strong>Combinado com a Garantia da Qualidade</strong> de quando esta entrada é permitida</td>
+<td>Ela não passa pela conferência do recebimento</td>
+<td>Com a área</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu, abra Estoque › <strong>Entrada de Material - Outras</strong> e clique em <strong>Pesquisar</strong>. Filtros: Código (só números, até 8), Período e Tipo de Movimentação. <strong>Com "SELECIONE", a pesquisa não filtra por tipo</strong> (devolucao_lst.aspx.cs:70-71 e 79-82).</li>
+<li>A lista mostra Código, Data e Tipo, 15 linhas por página, com Editar, Visualizar e Log conforme o perfil. Editar e Visualizar abrem só a consulta. <strong>Limpar</strong>, <strong>Imprimir</strong> e Excel como na Devolução. <strong>Incluir</strong> abre o formulário novo.</li>
+</ol>
+<p><strong>Registrar uma entrada</strong></p>
+<ol start="3">
+<li>Em "Dados do Registro", código e data são preenchidos pelo sistema. O tipo vem como "ENTRADA - OUTRAS" e pode ser trocado por outro tipo de entrada permitido. Escolha o motivo; referência e Nº OP são opcionais.</li>
+<li>Em "Itens", procure o item pela lupa ou digite código ou parte do nome. Informe custo unitário, quantidade, fabricante (quando o item exige), lote, validade e volumes. Item sem controle de lote recebe o lote "ND"; sem controle de validade, a validade 31/12/2999 (entrada_material_ed.aspx.cs:839 e 1567-1600).</li>
+<li>Clique em <strong>SALVAR ITEM</strong>. A tela recusa o mesmo item, lote e fabricante duas vezes ("O Item/Lote/Fabricante já existe na lista!", CT-EST-095). <strong>Não confere a validade contra hoje nem se o lote já existe no estoque</strong>: o lote vencido TESTEVENC foi aceito (CT-EST-062).</li>
+<li>Em "Endereços", escolha na lista "Item-Lote-Validade" o lote, depois almoxarifado, local, rua, coluna e andar, escreva a quantidade do endereço e clique em <strong>INCLUIR ENDEREÇO</strong>. Repita até zerar a quantidade pendente de cada lote.</li>
+<li>Escreva a justificativa (obrigatória) e clique em <strong>FINALIZAR MOVIMENTAÇÃO</strong>. Com pendência: "Existe pendência de endereçamento!". Confirme com SIM em "Confirma a inclusão do item?".</li>
+<li>A tela mostra "Movimentação gerada!", abre as etiquetas em outras janelas (feche-as) e volta para a lista. Confira na Disponibilidade do Lote o saldo em quarentena e, no Controle da Qualidade, a análise "AGUARDANDO ANÁLISE" (CT-EST-210).</li>
+<li>Se aparecer erro <strong>depois</strong> de os dados já terem sido gravados, <strong>não clique de novo em FINALIZAR</strong>: confira a lista antes.</li>
+</ol>
+<p><strong>Consultar uma entrada gravada</strong></p>
+<ol start="10">
+<li>Visualizar ou Editar abre a consulta no formulário da Devolução, sem campos editáveis, com <strong>ETIQUETA VOLUME</strong> para reimprimir. Não há alteração nem exclusão pela tela.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>O item precisa estar cadastrado e o almoxarifado e os endereços de destino precisam existir, livres e liberados ao seu grupo. Para item refrigerado ou com controle de umidade só aparecem locais compatíveis (<code>entrada_material_ed.aspx.cs:1138-1170</code>); se o local não tem endereço cadastrado, a entrada não pode ser concluída (massa de dados da rodada 8, item refrigerado).</li>
-<li>Tenha à mão o número do lote como vem do fabricante, a validade, o fabricante e o custo. O sistema não confere esses dados com nenhum documento.</li>
-<li>Combine com a Garantia da Qualidade quando a entrada "Outras" é permitida: ela não passa pela conferência do recebimento.</li>
+<li>O material entra no saldo dos endereços escolhidos. Item com controle de qualidade: só locais de quarentena, abre a análise no CQ e o lote fica em quarentena (entrada_material_ed.aspx.cs:322 e 1138-1170; CT-EST-210). Item sem controle de qualidade: só locais comuns e o saldo entra como disponível (CT-EST-062).</li>
+<li>A tela abre a etiqueta de quarentena (se algum item tem controle de qualidade) e a de volume, mostra "Movimentação gerada!" e volta para a lista.</li>
+<li>A partir daí o lote segue o fluxo da Quarentena e do CQ.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu, abra Estoque › Entrada de Material - Outras. A tela mostra o quadro "Pesquisa" e uma área vazia: clique em Pesquisar para listar.</li>
-<li>Passo 2. Filtros: Código (só números, até 8), Período e Tipo de Movimentação. A lista de tipos traz "SELECIONE" e os tipos de entrada permitidos nesta tela. <strong>Com "SELECIONE", a pesquisa não filtra por tipo</strong> (<code>devolucao_lst.aspx.cs:70-71</code> e <code>79-82</code>; <code>dalMovimentacao.cs:196-197</code>).</li>
-<li>Passo 3. A lista mostra Código, Data e Tipo de Movimentação, 15 linhas por página, com os ícones Editar, Visualizar e Log conforme a função liberada para o seu perfil. Editar e Visualizar abrem só a consulta (ver "Consultar uma entrada gravada").</li>
-<li>Passo 4. Limpar esvazia os filtros; Imprimir e o ícone de Excel geram o "RELATÓRIO DE ENTRADA". Incluir abre o formulário novo (<code>devolucao_lst.aspx.cs:116-120</code>).</li>
+<li>Sem itens: "Nenhum Item/Lote foi registrado!". Pendência de endereço: "Existe pendência de endereçamento!". Sem justificativa: "A Justificativa é obrigatória!".</li>
+<li>Item: "Item não informado ou inválido!", "Item não encontrado!", "Validade não foi informada!", "Fabricante não foi informado!", "Lote não foi informado!", "Quantidade inválida!", "O Item/Lote/Fabricante já existe na lista!".</li>
+<li>Endereço: "Nenhum lote foi selecionado!", "A quantidade informada é maior que o total pendente!", "O Endereço informado já está em uso!", "O Endereço já está sendo utilizado por outro Item", avisos de almoxarifado a andar, "Endereço inválido!", e na gravação "Endereço incorreto na listagem!".</li>
+<li>Falhas: "Erro ao validar listagem de Itens!" (lista da sessão perdida), "Erro na inclusão do registro.".</li>
 </ul>
-<h4 id="registrar-uma-entrada">Registrar uma entrada</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. Em "Dados do Registro", o código e a data são preenchidos pelo sistema. O tipo de movimentação vem como "ENTRADA - OUTRAS" e pode ser trocado por outro tipo de entrada permitido. Escolha o motivo, escreva a referência e o Nº OP se quiser (<code>entrada_material_ed.aspx:89-130</code>; <code>entrada_material_ed.aspx.cs:176</code>).</li>
-<li>Passo 6. Em "Itens", procure o item pela lupa ou digite o código ou parte do nome. Informe o custo unitário, a quantidade, o fabricante (quando o item exige), o lote, a validade e o número de volumes. Item sem controle de lote recebe o lote "ND"; item sem controle de validade recebe a validade 31/12/2999 (<code>entrada_material_ed.aspx.cs:839</code> e <code>1567-1600</code>).</li>
-<li>Passo 7. Clique em SALVAR ITEM. O sistema recusa o mesmo item, lote e fabricante duas vezes na lista: "O Item/Lote/Fabricante já existe na lista!" (CT-EST-095, 12/10/2026). <strong>Ele não confere a validade contra a data de hoje nem se o lote já existe no estoque</strong>: o lote vencido TESTEVENC foi aceito (CT-EST-062, 22/10/2026).</li>
-<li>Passo 8. Em "Endereços", escolha na lista "Item-Lote-Validade" o lote que vai endereçar, escolha almoxarifado, local, rua, coluna e andar, escreva a quantidade desse endereço e clique em INCLUIR ENDEREÇO. A quantidade pendente aparece na tela; ela não pode passar do que falta endereçar ("A quantidade informada é maior que o total pendente!"). Repita até zerar a quantidade pendente de cada lote (<code>entrada_material_ed.aspx.cs:1416-1530</code>).</li>
-<li>Passo 9. Escreva a justificativa (obrigatória) e clique em FINALIZAR MOVIMENTAÇÃO. Se algum lote ainda tem quantidade pendente: "Existe pendência de endereçamento!". Confirme com SIM em "Confirma a inclusão do item?" (<code>entrada_material_ed.aspx.cs:199-235</code>).</li>
-<li>Passo 10. O sistema mostra "Movimentação gerada!", abre as etiquetas em outras janelas (feche-as) e volta para a lista. Confira na Disponibilidade do Lote o saldo em quarentena e, na tela Controle da Qualidade, a análise "AGUARDANDO ANÁLISE" (CT-EST-210, 12/10/2026).</li>
-<li>Passo 11. Se aparecer uma mensagem de erro depois de os dados já terem sido gravados, <strong>não clique de novo em FINALIZAR</strong>: confira a lista antes (ver Falhas e pontos de atenção).</li>
+<li>A lista e o formulário usam a função <strong>316</strong>. O catálogo prevê para ela incluir, imprimir e ver log; <strong>alterar e excluir não estão previstos</strong> (dml.sql:1895).</li>
+<li>Na lista, os ícones seguem o perfil: Incluir, Editar (alterar), Visualizar (consultar), Imprimir/Excel e Log (ClassePaiLst.cs:195-240). A lista traz só os almoxarifados do grupo (dalMovimentacao.cs:199-213).</li>
+<li>No formulário a base permite incluir, alterar e excluir para todos e a conferência de acesso está comentada (ClassePaiEd.cs:44-105; BaseController.cs:33-39): <strong>quem abre o formulário pelo endereço consegue lançar a entrada</strong> (DV-EST-008, Alta). Nenhum teste de acesso nesta tela.</li>
+<li>A gravação não confere grupo nem função, e <strong>não há separação entre quem lança e quem aprova</strong>: quem lança, endereça e justifica pode ser a mesma pessoa, sem aprovação da Garantia da Qualidade.</li>
 </ul>
-<h4 id="consultar-uma-entrada-gravada">Consultar uma entrada gravada</h4>
-<p>Pelo ícone Visualizar ou Editar da lista, o sistema abre a consulta no formulário da Devolução, sem campos de item e de endereço editáveis, com o botão ETIQUETA VOLUME para reimprimir a etiqueta (<code>devolucao_lst.aspx.cs:244-253</code>; <code>devolucao_ed.aspx.cs:29-52</code>). Não há alteração nem exclusão pela tela.</p>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Lote vencido aceito sem aviso</strong> (mesma falha do DV-EST-014 e DV-EST-025, de outras telas; nenhum defeito está registrado em nome desta tela). A rodada 8 cita DV-EST-003 por engano: é outro defeito.</li>
+<li><strong>Nenhuma conferência de origem</strong>: sem fornecedor, nota fiscal nem pedido (art. 155 e art. 8º, VI). O mesmo código de lote pode ter dois ou mais registros, sem aviso. Item que não exige fabricante entra sem ele, e o lote perde a ligação com o fabricante.</li>
+<li><strong>Erro depois de gravar:</strong> se a abertura da análise falhar, a movimentação já está gravada e a tela mantém os dados; um novo FINALIZAR grava a entrada de novo (entrada_material_ed.aspx.cs:316-335).</li>
+<li>Pelo código, ainda sem teste: gravar com "SELECIONE" no tipo pode não ser barrado; a conferência "O Endereço informado já está em uso!" usa uma lista de sessão de outras telas e pode recusar endereço por engano; a consulta aberta pelo endereço pode quebrar com mais de um lote.</li>
+<li>Item sem controle de qualidade entra sem análise (marca "obriga análise" não usada). O Histórico do Lote não mostra usuário nem hora (DV-EST-034). As janelas de etiqueta derrubaram o navegador automático nos testes. Erro de digitação: "Endeeço".</li>
+<li>Ponto para validar com a área: quando a entrada "Outras" é permitida e quem a usa; exigir origem e aprovação da Garantia da Qualidade; ir sempre para quarentena; aceitar lote vencido; mais de um registro para o mesmo lote; lote sem fabricante.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Editar / Visualizar</td>
+<td>Abrem a consulta no formulário da Devolução</td>
+<td>Na linha, conforme a função do perfil</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>Abre o histórico da movimentação</td>
+<td>Se o perfil tem a função</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório de entrada da lista</td>
+<td>Depois de pesquisar, se o perfil tem a função de imprimir</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -538,7 +623,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

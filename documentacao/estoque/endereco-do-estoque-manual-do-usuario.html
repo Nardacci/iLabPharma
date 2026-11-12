@@ -45,35 +45,123 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="endereco-do-estoque-analise.html">Análise</a><a href="endereco-do-estoque-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="endereco-do-estoque-fluxos.html">Fluxos</a><a href="endereco-do-estoque-regras-de-negocio.html">Regras de negócio</a><a href="endereco-do-estoque-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-endereco-do-estoque.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-1-endereco-do-estoque">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Endereço do Estoque</strong> (menu Estoque › Cadastros) cria e mantém os <strong>endereços físicos</strong> onde os lotes ficam guardados. Um endereço é a combinação de local, rua, coluna e andar (ex.: <code>L901-R901-C901-A901</code>) e tem capacidade: altura, largura e profundidade (em cm) e peso máximo (em kg). Ao incluir, a tela <strong>gera vários endereços de uma vez</strong> (um para cada coluna e andar marcados, todos com a mesma capacidade). Ao editar, só a capacidade e a situação (Ativo) mudam. Todas as telas de movimentação, endereçamento e consulta dependem deste cadastro. Usuário previsto: quem organiza o armazém (leitura da área, a validar).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Local de armazenagem ativo, do tipo "Estoque"</strong>, de um almoxarifado ligado ao grupo do usuário</td>
+<td>O formulário e a lista só mostram locais do grupo (endereco_ed.aspx.cs:245; endereco_lst.aspx.cs:51)</td>
+<td>Cadastros › Local de Armazenagem; Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Rua, coluna e andar</strong></td>
+<td>Formam o endereço</td>
+<td>Cadastros de apoio do Estoque (Rua, Coluna e Andar)</td>
+</tr>
+<tr>
+<td><strong>Medidas e peso máximo da prateleira</strong> (cm e kg)</td>
+<td>A Movimentação de Material usa esses valores para recusar o que não cabe</td>
+<td>Com o responsável pelo armazém</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu, abra <strong>Endereço do Estoque</strong>. A lista abre vazia.</li>
+<li>Escolha o <strong>Local de Armazenagem</strong> (obrigatório; sem ele a tela pede "Selecione o local de Armazenagem"). Se quiser, filtre por Código do Endereço (parte do código, ou os 16 caracteres sem hífens), Endereço do Cliente, Ativo e Livre (sem item). Clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra Endereço, Cod. Cliente, Local, Altura, Largura, Profundidade, Peso Máx. e Ativo, 15 por página, com ordenação nos títulos. <strong>Limpar</strong> esvazia filtros e lista. <strong>Imprimir</strong> e o ícone do Excel geram o relatório. <strong>Incluir</strong> abre o formulário.</li>
+</ol>
+<p><strong>Gerar endereços</strong></p>
+<ol start="4">
+<li>No formulário "Geração de Endereços do Estoque", confira o Tipo de Local (Estoque) e escolha o Local de Armazenagem.</li>
+<li>Informe Altura (cm), Largura (cm), Profundidade (cm) e Peso Máximo (kg), todos obrigatórios, só números e vírgula. Os valores valem para todos os endereços gerados.</li>
+<li>Escolha a Rua e marque as colunas e os andares ("Selecionar todos" marca a lista inteira). Será criado um endereço para cada coluna e andar (2 colunas e 3 andares geram 6).</li>
+<li>Escreva a Justificativa e clique em <strong>GERAR ENDEREÇO</strong>. Responda SIM em "Confirma a inclusão do item?". Aparece "Inclusão efetuada com sucesso!" e a tela volta para a lista. As combinações que já existiam são puladas sem aviso.</li>
+</ol>
+<p><strong>Editar</strong></p>
+<ol start="8">
+<li>Na lista, clique no lápis. Mude as medidas, o peso máximo ou o campo Ativo (local, rua, coluna e andar não mudam). Escreva a justificativa e clique em <strong>SALVAR REGISTRO</strong> ("Alteração realizada com sucesso!").</li>
+</ol>
+<p><strong>Excluir</strong></p>
+<ol start="9">
+<li>Clique no ícone de excluir e responda SIM em "Confirma a exclusão do item?". O endereço sai se estiver vazio e sem uso. A tela <strong>não pede justificativa</strong> na exclusão.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Tenha o local de armazenagem cadastrado (tela Local de Armazenagem) e ligado a um almoxarifado do seu grupo.</li>
-<li>Tenha rua, coluna e andar cadastrados.</li>
-<li>Prepare as medidas e o peso máximo da prateleira, em centímetros e quilos. A Movimentação de Material usa esses valores para recusar o que não cabe.</li>
+<li><strong>Gerar:</strong> cada combinação nova vira um endereço <strong>ativo e livre</strong>, com a capacidade informada, e entra na lista e nas telas de movimentação, endereçamento e consulta (dalEstoqueEndereco.cs:15-68). A inclusão vai para o log (bllEstoqueEndereco.cs:38).</li>
+<li><strong>Editar:</strong> a capacidade e a situação mudam e a alteração vai para o log (bllEstoqueEndereco.cs:56-79).</li>
+<li><strong>Excluir:</strong> o endereço é marcado como lixeira, e só se estiver vazio e sem uso (dalEstoqueEndereco.cs:117-147).</li>
+<li>Não há aprovação nem passo seguinte.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu, abra Endereço do Estoque. A tela mostra o quadro "Pesquisa".</li>
-<li>Passo 2. Escolha o <strong>Local de Armazenagem</strong> (obrigatório; sem ele a tela pede "Selecione o local de Armazenagem"). Se quiser, filtre por Código do Endereço (parte do código, ou os 16 caracteres sem hífens), Endereço do Cliente, Ativo e Livre (livre quer dizer sem item). Clique em Pesquisar.</li>
-<li>Passo 3. A lista mostra Endereço, Cod. Cliente, Local, Altura, Largura, Profundidade, Peso Máx. e Ativo, 15 por página. Os títulos ordenam. Cada linha tem Editar, Excluir e Log (conforme as funções do usuário).</li>
-<li>Passo 4. Limpar esvazia os filtros e a lista. Imprimir e o ícone do Excel geram o relatório com os filtros. Incluir abre o formulário.</li>
+<li>Pesquisar sem local: "Selecione o local de Armazenagem".</li>
+<li>Formulário: "Tipo de Local é obrigatório", "Local de armazenagem é obrigatório", "O campo Altura é obrigatório!" (e o mesmo para Largura, Profundidade e Peso), "Selecione o campo Rua", "O campo coluna é obrigatório!", "O campo Andar é obrigatório!" e "A Justificativa é obrigatória!".</li>
+<li>Nenhum endereço novo criado (todas as combinações já existem): "Não foi possível inlcuir o endereço. Verifique se o mesmo já existe" (vista em teste, CT-EST-031).</li>
+<li>Excluir endereço com saldo: "O Registro não pode ser excluido pois possui item em estoque associado" (CT-EST-032). Endereço vazio que já foi usado: "Exclusão inválida, existem referências com outras tabelas.".</li>
+<li>Falhas de gravação: "Erro na inclusão do registro." / "Erro na alteração do Registro." / "Erro na Exclusão do Registro.".</li>
 </ul>
-<h4 id="gerar-enderecos">Gerar endereços</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. No formulário "Geração de Endereços do Estoque", confira o Tipo de Local (Estoque) e escolha o Local de Armazenagem.</li>
-<li>Passo 6. Informe Altura (cm), Largura (cm), Profundidade (cm) e Peso Máximo (kg). Todos são obrigatórios. Digite só números e vírgula. Os valores valem para todos os endereços gerados.</li>
-<li>Passo 7. Escolha a Rua.</li>
-<li>Passo 8. Marque as colunas e os andares. "Selecionar todos" marca a lista inteira. O sistema vai criar um endereço para cada coluna e cada andar marcados (por exemplo, 2 colunas e 3 andares geram 6 endereços).</li>
-<li>Passo 9. Escreva a Justificativa e clique em GERAR ENDEREÇO. A tela pergunta "Confirma a inclusão do item?". Com SIM, mostra "Inclusão efetuada com sucesso!" e volta para a lista. As combinações que já existiam são puladas sem aviso.</li>
+<li>A lista usa a função de tela <strong>305</strong> e o formulário a <strong>301</strong>. O perfil só mostra ou esconde: Pesquisar (consultar), Incluir, Editar (alterar), Excluir, Imprimir e Excel, Log (ClassePaiLst.cs:130-239).</li>
+<li>A conferência que barraria a abertura da página está <strong>comentada</strong> e, no formulário, as permissões começam verdadeiras (ClassePaiLst.cs:69-81; ClassePaiEd.cs:49-61 e 79-81). Pelo código, quem abre <code>endereco_ed.aspx</code> pelo endereço consegue gerar endereços sem a função de incluir (DV-EST-008, Alta, confirmado em outras telas do Estoque; nenhum teste de acesso nesta tela).</li>
+<li>O <strong>grupo de usuário</strong> limita os locais. O formulário de edição lê o endereço pelo número recebido sem repetir a conferência de grupo (endereco_ed.aspx.cs:130). A confirmar.</li>
+<li>A exclusão confere o saldo, mas não confere a função no momento de excluir, só esconde a coluna (endereco_lst.aspx.cs:252).</li>
+<li>Quem cadastra, altera a capacidade e exclui pode ser a mesma pessoa, sem segunda conferência.</li>
 </ul>
-<h4 id="editar-um-endereco">Editar um endereço</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 10. Na lista, clique no lápis. Mude as medidas, o peso máximo ou o campo Ativo. Local, rua, coluna e andar não mudam. Escreva a justificativa e clique em SALVAR REGISTRO. Mensagem: "Alteração realizada com sucesso!".</li>
+<li><strong>Excluir sem justificativa</strong> (DV-EST-018, Média): só SIM ou NÃO, e nada vai para o histórico.</li>
+<li><strong>Mensagem de endereço repetido</strong> com erro de grafia ("inlcuir") e sem dizer qual combinação repetiu (DV-EST-017, Baixa).</li>
+<li>A justificativa exigida na inclusão e na alteração <strong>pode não chegar ao log</strong> (endereco_ed.aspx.cs:292-312; dalLogAlteracao2.cs:437-452). Falta abrir o Log para confirmar.</li>
+<li>Na geração em lote, as combinações repetidas são puladas e a mensagem é de sucesso, sem avisar quais foram puladas.</li>
+<li>Pelo código, ainda sem teste: "1.5" pode virar 15 (o ponto separa milhares em pt-BR); capacidade zero vira vazio; dá para reduzir a capacidade abaixo do que o endereço guarda e para inativar endereço com saldo.</li>
+<li>O filtro e a coluna "Endereço do Cliente" não têm tela que preencha o valor; a coluna sai vazia.</li>
+<li>Dois usuários gerando a mesma combinação ao mesmo tempo: o banco não impede duplicidade. A mesma combinação excluída pode ser recriada.</li>
+<li>Valores fixos no código (tipo de endereço 101 e de armazenagem 100): ponto para validar com o DBA.</li>
 </ul>
-<h4 id="excluir-um-endereco">Excluir um endereço</h4>
-<ul>
-<li>Passo 11. Na lista, clique no ícone de excluir. A tela pergunta "Confirma a exclusão do item?". Com SIM, o endereço sai se estiver vazio e sem uso. A tela <strong>não pede justificativa</strong> na exclusão (ver Falhas e pontos de atenção). Se o endereço tem saldo, a mensagem é "O Registro não pode ser excluido pois possui item em estoque associado".</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Editar (lápis)</td>
+<td>Abre o formulário em modo de edição</td>
+<td>Para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Pede confirmação e exclui, se o endereço estiver vazio e sem uso</td>
+<td>Para quem tem a função de excluir</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>Abre o histórico de alterações do endereço</td>
+<td>Para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório de endereços com os filtros usados</td>
+<td>Depois de pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -386,7 +474,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

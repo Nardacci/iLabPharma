@@ -45,50 +45,127 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="regra-estabilidade-analise.html">Análise</a><a href="regra-estabilidade-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="regra-estabilidade-fluxos.html">Fluxos</a><a href="regra-estabilidade-regras-de-negocio.html">Regras de negócio</a><a href="regra-estabilidade-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-regra-estabilidade.html">Erros (4)</a><a class="aba-extra" href="roteiro-de-execucao-estabilidade-passo-a-passo.html#tela-1-regra-estabilidade">Passo a passo</a><a class="aba-extra" href="o-controle-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Tenha à mão o produto acabado (o código e o nome), o tipo de análise e, para cada tempo, os dias de cada tipo de estudo. O primeiro tempo (T0) deve ser vazio ou 0; os seguintes devem ser crescentes. Use itens de <strong>código numérico</strong> enquanto o defeito DV-EST-075 existir (item com letras no código dá "Selecione um item.").</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Regra Estabilidade</strong> é o cadastro do <strong>plano de tempos do estudo de estabilidade</strong> de um produto: para cada produto (e tipo de análise, físico-química ou microbiológica), a regra diz em <strong>quantos dias</strong> depois do início cada <strong>tempo</strong> (T0, T1, T2…) deve ser analisado, por <strong>tipo de estudo</strong>: acelerado, longa duração, acompanhamento e prateleira. É a regra que o Acompanhamento Estabilidade copia quando o Estoque avisa que um lote de produto acabado entrou para estudo. Quem usa é quem define o programa de estabilidade no CQ (leitura da área). <strong>A regra não é um protocolo</strong> no sentido da norma: faltam condição de armazenamento, métodos, critérios de aceitação e número de lotes (RDC 658/2022, arts. 275 e 277; RN-CQ-081). E alterar uma regra <strong>apaga todos os tempos e grava de novo</strong>, sem justificativa e sem histórico (DV-CQ-017).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Produto acabado</strong> (código e nome) com <strong>código numérico</strong></td>
+<td>Só produto acabado abre estudo; item com letras no código dá "Selecione um item." (DV-EST-075)</td>
+<td>Estoque › cadastro de itens</td>
+</tr>
+<tr>
+<td><strong>Tipo de análise</strong></td>
+<td>Físico-químico ou microbiológico</td>
+<td>Escolhido na tela</td>
+</tr>
+<tr>
+<td><strong>Dias de cada tipo de estudo, por tempo</strong></td>
+<td>O primeiro tempo (T0) deve ser vazio ou 0; os seguintes, crescentes</td>
+<td>Digitados na tela</td>
+</tr>
+<tr>
+<td>Para o fluxo seguinte: <strong>motivo ligado ao almoxarifado de estabilidade</strong></td>
+<td>O Acompanhamento Estabilidade o exige para gerar as solicitações</td>
+<td>Tabelas de Apoio › Motivos</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>A lista</strong></p>
+<ol>
+<li>No menu Tabelas de Apoio, abra <strong>Regra Estabilidade</strong>. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
+<li>Filtros: <strong>Tipo Item Análise</strong>, <strong>Item Análise</strong> (digite e escolha na lista; o Código preenche sozinho) e <strong>Tipo Análise</strong> (Físico-Químico e/ou Microbiológica).</li>
+<li>Clique em <strong>Pesquisar</strong>. A lista mostra Tipo Item Análise, Item Análise, Tipo Análise, Acelerada, Longa Duração, Acompanhamento e Prateleira (cada um "Sim" ou "Não") e Ativo, com os ícones Editar e Ver Log. <strong>Limpar</strong> esvazia os filtros.</li>
+</ol>
+<p><strong>Cadastrar uma regra</strong></p>
+<ol start="4">
+<li>Escolha o <strong>Tipo Item Análise</strong>, digite o item, escolha na lista e clique em <strong>INCLUIR</strong>. Sem item ou tipo: "Selecione um item." ou "Selecione um tipo de análise.".</li>
+<li>Se o item já tem duas regras: "Item já cadastrado". Senão, abre o formulário. O <strong>Tipo Análise</strong> vem sugerido (físico-químico na primeira regra, microbiológico na segunda); você pode trocá-lo, mas nada impede repetir um tipo.</li>
+<li>Clique em <strong>Incluir Tempo</strong> para cada ponto do estudo (T0, T1, T2…). Preencha os dias de cada tipo de estudo <strong>só depois de criar todas as linhas</strong>: preencher e depois clicar em Incluir Tempo apagou o que estava digitado (DV-CQ-016, observação). O teclado só aceita dígitos.</li>
+<li>Clique em <strong>SALVAR</strong>. A tela confere os dias (regras abaixo). Estando certos: "Alteração efetuada com sucesso." e volta à lista.</li>
+</ol>
+<p><strong>As regras de conferência dos dias (só na tela)</strong></p>
 <ul>
-<li>Passo 1. No menu Tabelas de Apoio, abra Regra Estabilidade. A tela mostra o quadro "Pesquisa" e uma área vazia (Index.cshtml:18-84).</li>
-<li>Passo 2. Filtros: <strong>Tipo Item Análise</strong> (matéria-prima, material de embalagem, granel, produto acabado, semielaborado, padrão secundário), <strong>Item Análise</strong> (digite e escolha na lista de sugestões; o campo Código preenche sozinho) e <strong>Tipo Análise</strong> (Físico-Químico e/ou Microbiológica) (Index.cshtml:31-58; RegraEstabilidadeIndex.js:22-31 e 71-98).</li>
-<li>Passo 3. Clique em Pesquisar. A lista mostra Tipo Item Análise, Item Análise, Tipo Análise, Acelerada, Longa Duração, Acompanhamento, Prateleira (cada um "Sim" ou "Não") e Ativo, com os ícones Editar e Ver Log. A lista só traz regras de itens de material e produto (RegraEstabilidadeRepository.cs:42-68).</li>
-<li>Passo 4. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (_GridRegrasEstabilidade.cshtml:42). Limpar esvazia os filtros e esconde a lista (RegraEstabilidadeIndex.js:55-69).</li>
+<li>T0 deve estar vazio ou 0; maior que 0 dá "Acelerada T0 com valor inválido!" (igual para os outros tipos). Todos os tipos do T0 vazios: "Nenhum valor foi informado para o T0!".</li>
+<li>Nos tempos seguintes, cada tipo de estudo deve ser preenchido em todos os tempos ou em nenhum, e cada valor não pode ser menor que o do tempo anterior; senão, "Acelerada T2 com valor inválido!" (ou o tipo correspondente). Tempo sem valor: "Nenhum valor foi informado para o T…!".</li>
 </ul>
-<h4 id="cadastrar-uma-regra">Cadastrar uma regra</h4>
+<p><strong>Alterar, desativar e excluir tempo</strong></p>
+<ol start="8">
+<li>Na lista, clique em <strong>Editar</strong>. O formulário mostra o item (não muda), o <strong>Ativo</strong>, o <strong>Tipo Análise</strong> e os tempos. Mude e <strong>SALVAR</strong>: <strong>não há justificativa</strong> e o sistema apaga e regrava todos os tempos.</li>
+<li>Para desativar, marque NÃO em Ativo e salve. Nos testes, isso deu "Ocorreu um erro inesperado." numa regra sem tempos (DV-CQ-041).</li>
+<li>O ícone Excluir (lixeira vermelha) só aparece no <strong>último tempo</strong> e tira só aquela linha da tela; vale depois de Salvar.</li>
+<li><strong>Ver Log</strong> respondeu "NÃO EXISTE LOG DE ALTERAÇÃO PARA ESTE REGISTRO." nos testes (CT-CQ-042).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 5. Escolha o <strong>Tipo Item Análise</strong>, digite o item e escolha na lista de sugestões, e clique em INCLUIR (Index.cshtml:73; RegraEstabilidadeIndex.js:100-131). Se faltar item ou tipo, a tela diz "Selecione um item." ou "Selecione um tipo de análise." (RegraEstabilidadeController.cs:225-233).</li>
-<li>Passo 6. Se o item já tem duas regras, o sistema diz "Item já cadastrado" (RegraEstabilidadeController.cs:237-240). Caso contrário, abre o formulário. O <strong>Tipo Análise</strong> vem sugerido: físico-químico para a primeira regra do item e microbiológico para a segunda (RegraEstabilidadeController.cs:242-250); você pode trocá-lo na lista, mas nada impede repetir um tipo.</li>
-<li>Passo 7. No formulário, clique em <strong>Incluir Tempo</strong> para cada ponto do estudo (T0, T1, T2…). Preencha os dias de cada tipo de estudo. <strong>Preencha só depois de criar todas as linhas</strong>: nos testes, preencher e depois clicar em Incluir Tempo apagou o que estava digitado (DV-CQ-016, observação). O teclado só aceita dígitos.</li>
-<li>Passo 8. Clique em SALVAR. A tela confere os dias (próximo passo). Estando certos, diz "Alteração efetuada com sucesso." e volta à lista (RegraEstabilidadeEdit.js:182-199).</li>
-</ul>
-<h4 id="as-regras-de-conferencia-dos-dias-so-na-tela">As regras de conferência dos dias (só na tela)</h4>
-<ul>
-<li>T0 deve estar vazio ou 0; um valor maior que 0 dá "Acelerada T0 com valor inválido!" (e igual para os outros tipos). Se todos os tipos do T0 estiverem vazios, dá "Nenhum valor foi informado para o T0!".</li>
-<li>Dos tempos seguintes, cada tipo de estudo deve ser preenchido em todos os tempos ou em nenhum, e cada valor não pode ser menor que o do tempo anterior; senão, "Acelerada T2 com valor inválido!" (ou o tipo correspondente). Um tempo sem nenhum valor dá "Nenhum valor foi informado para o T…!" (RegraEstabilidadeEdit.js:250-317).</li>
-</ul>
-<h4 id="alterar-desativar-e-excluir-tempo">Alterar, desativar e excluir tempo</h4>
-<ul>
-<li>Passo 9. Na lista, clique em Editar. O formulário mostra o item (não muda), o <strong>Ativo</strong> (SIM ou NÃO), o <strong>Tipo Análise</strong> e os tempos. Mude e clique em SALVAR: <strong>não há justificativa</strong> e o sistema apaga e regrava todos os tempos (RegraEstabilidadeController.cs:405-458).</li>
-<li>Passo 10. Para desativar, marque NÃO em Ativo e salve. Nos testes, essa gravação deu "Ocorreu um erro inesperado." numa regra sem tempos (CT-CQ-R2-AC-18, DV-CQ-041).</li>
-<li>Passo 11. O ícone Excluir (lixeira vermelha) do último tempo remove só aquela linha da tela; vale depois de Salvar. Só o último tempo oferece o ícone (_FormEstabilidade.cshtml:63-67).</li>
-<li>Passo 12. Para ver o histórico, use o ícone <strong>Ver Log</strong> da lista. Nos testes ele respondeu "NÃO EXISTE LOG DE ALTERAÇÃO PARA ESTE REGISTRO." (CT-CQ-042).</li>
-</ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
-<ul>
-<li>Não guarda condição de armazenamento, métodos, critérios de aceitação nem número de lotes (a regra não é um protocolo).</li>
-<li>Não pede justificativa nem deixa histórico ao alterar (DV-CQ-017).</li>
-<li>Não impede duas regras do mesmo tipo para o mesmo item (DV-CQ-016) nem salvar regra sem nenhum prazo.</li>
-<li>Não trava a alteração de uma regra que já tem estudos abertos (ao contrário da Regra de Análise).</li>
-<li>Não confere os dias no servidor: a ordem e o preenchimento dos tempos são cobrados só pela tela.</li>
-<li>Não impede a regra de um item que não é produto acabado, embora só o produto acabado abra estudo (RN-CQ-T03-008).</li>
-</ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
-<ul>
+<li><strong>Salvar:</strong> grava a regra e <strong>regrava todos os tempos</strong> (apaga e grava de novo). Não pede justificativa e não deixa histórico (DV-CQ-017).</li>
+<li><strong>Incluir Tempo e Excluir (último tempo):</strong> só mexem na tela; nada vai ao banco até Salvar.</li>
+<li>A regra é a que o <strong>Acompanhamento Estabilidade</strong> copia quando o <strong>Estoque</strong> avisa que um produto acabado entrou para estudo (o Estoque pede ao CQ que abra o estudo, e o CQ procura a regra do produto). <strong>Desativar a regra não impede o Estoque de abrir estudos com ela</strong> (RN-CQ-T03-007).</li>
 <li>Se um dia digitado for grande demais (mais de nove ou dez dígitos), a gravação pode falhar <strong>depois</strong> de apagar os tempos antigos, deixando a regra sem tempos (inferência do código, RN-CQ-T03-005; CT-CQ-T03-03).</li>
-<li>Desativar a regra não impede que o Estoque abra estudos com ela (RN-CQ-T03-007).</li>
 </ul>
-</div>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Selecione um item." e "Selecione um tipo de análise." (o texto fala "tipo de análise", mas o campo é o tipo do item).</li>
+<li>"Item já cadastrado" (o item já tem duas regras; <strong>a terceira foi aceita nos testes</strong>, CT-CQ-041).</li>
+<li>"Nenhum valor foi informado para o T0!" e "...para o T…!"; "Acelerada T… com valor inválido!" (e Longa Duração, Prateleira, Acompanhamento).</li>
+<li>"Tipo de análise não informado" e "Regra não encontrada" (gravação sem tipo ou sem regra).</li>
+<li>"Ocorreu um erro inesperado." (erro na gravação).</li>
+<li><strong>Não recusa no servidor:</strong> a conferência dos dias é só na tela. Também não recusa regra sem nenhum prazo (em 29/10/2026 passou a dar erro: DV-CQ-041), regra de item que não é produto acabado nem regra de estudo já aberto.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela é a função de Regra Estabilidade (DB/dml.sql:190). <strong>Nenhuma ação do controlador tem conferência de permissão</strong>, nem a abertura da lista; o mesmo vale para o Acompanhamento e o Final de Estabilidade (SEG-CQ-01).</li>
+<li>O menu cria as funções incluir, alterar, excluir, ver log e imprimir, mas o código <strong>não as confere</strong>; o script de botões por permissão é carregado e não é usado.</li>
+<li>A função profissional de estabilidade (número fixo 71) <strong>não é conferida</strong> e <strong>não existe</strong> no cadastro do Principal (DV-CQ-022; SEG-CQ-15).</li>
+<li><strong>Cuidado:</strong> um usuário sem nenhuma função profissional do CQ abriu a Regra Estabilidade pelo menu (CT-CQ-074; DV-CQ-015, Média). O perfil só de consulta abre a lista e o formulário pelo endereço e vê Salvar e Incluir Tempo; a tentativa de gravar falhou por erro de gravação (DV-CQ-041), <strong>não por bloqueio de acesso</strong>. Abrir sem a consulta da tela não foi testado (CT-CQ-T03-13).</li>
+<li>Chefe de subdivisão: não é exigido.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Terceira regra e regra sem prazos:</strong> o item 20011 ganhou uma terceira regra físico-química em vez de "Item já cadastrado" (DV-CQ-016, Média).</li>
+<li><strong>Alterar sem rastro:</strong> sem justificativa; "Ver Log" responde "NÃO EXISTE LOG DE ALTERAÇÃO PARA ESTE REGISTRO." (DV-CQ-017, Média).</li>
+<li><strong>Desativar dá erro</strong> em regra sem tempos; nada é gravado (DV-CQ-041, Média).</li>
+<li><strong>Item com letras no código</strong> dá "Selecione um item." (DV-EST-075, Média; registrado no Estoque).</li>
+<li><strong>Acesso:</strong> a tela abre e grava sem conferir função nem permissão (DV-CQ-015, Média).</li>
+<li>Não trava a alteração de regra que já tem estudos abertos (ao contrário da Regra de Análise). Não guarda condição de armazenamento, métodos, critérios de aceitação nem número de lotes.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário com a regra e os tempos</td>
+<td>Em toda linha, sem condição (_GridRegrasEstabilidade.cshtml:82-84)</td>
+</tr>
+<tr>
+<td>LOG (Ver Log)</td>
+<td>Abre o histórico da regra</td>
+<td>Em toda linha, sem condição</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir tempo)</td>
+<td>Tira a linha do último tempo (só da tela, vale ao salvar)</td>
+<td><strong>No formulário</strong>, só no <strong>último</strong> tempo (<code>total &gt; 0 &amp;&amp; cont == total</code>); os demais tempos não têm o ícone e a tela não diz o motivo (suspeita C11)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botões da tela: <strong>Pesquisar</strong>, <strong>Limpar</strong> e <strong>INCLUIR</strong> (sempre); no formulário, <strong>Incluir Tempo</strong>, <strong>Salvar</strong> e <strong>Voltar</strong>. A lista não tem lixeira para a regra inteira.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: RegraEstabilidade/Index.cshtml, Edit.cshtml, _FormEstabilidade.cshtml, _GridRegrasEstabilidade.cshtml, RegraEstabilidadeIndex.js, RegraEstabilidadeEdit.js e RegraEstabilidadeController.cs (caminho completo na seção Resumo).</p>
 <div class="tabela"><table>
@@ -345,7 +422,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

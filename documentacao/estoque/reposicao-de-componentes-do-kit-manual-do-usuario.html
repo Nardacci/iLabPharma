@@ -45,35 +45,133 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="reposicao-de-componentes-do-kit-analise.html">Análise</a><a href="reposicao-de-componentes-do-kit-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="reposicao-de-componentes-do-kit-fluxos.html">Fluxos</a><a href="reposicao-de-componentes-do-kit-regras-de-negocio.html">Regras de negócio</a><a href="reposicao-de-componentes-do-kit-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-reposicao-de-componentes-do-kit.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-kits-passo-a-passo.html#tela-11-reposicao-de-componentes-do-kit">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<ul>
-<li>Tenha planejamento de kits para o cliente e, para "enviado" e "vencido", remessas de kit com embarque.</li>
-<li>Para o relatório marcar como "vencido" o lote que <strong>está perto de vencer</strong>, preencha a validade mínima dos kits em Kits › Parâmetros de Configuração (Kit) (<code>kit/config_kit_op.aspx.cs:28 e 73</code>). Em branco ou zero, só conta o que já venceu.</li>
-</ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
-<ul>
-<li>Passo 1. No menu Relatórios, abra Reposição de Componentes do Kit. A tela mostra o quadro "Filtros".</li>
-<li>Passo 2. Se quiser, escolha o <strong>Cliente</strong>: a lista de <strong>Filiais</strong> se recarrega com as filiais ativas do cliente. Escolha também <strong>Tipo de Kit</strong>, <strong>Kit</strong> (a lista de componentes se recarrega) e <strong>Componente</strong>.</li>
-<li>Passo 3. Em <strong>Repor</strong>, deixe "TODOS", ou escolha "SIM" (só o que tem algo a enviar) ou "NÃO" (só o que não tem).</li>
-<li>Passo 4. Clique em GERAR RELATÓRIO. A tela não confere nada: abre uma nova janela com o relatório. <strong>Sem filtro, traz todos os clientes</strong> (por planejamento).</li>
-<li>Passo 5. LIMPAR volta os filtros ao estado inicial.</li>
-</ul>
-<h4 id="ler-o-relatorio">Ler o relatório</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Reposição de Componentes do Kit</strong> é um relatório de consulta que diz, <strong>por cliente, filial e planejamento, quanto de cada componente de kit falta enviar ou repor</strong>. Para cada componente mostra <strong>PLANEJADO</strong>, <strong>ENVIADO</strong>, <strong>VENCIDO(*)</strong> e <strong>ENVIAR / REPOR</strong> (o planejado menos o enviado, mais o que está vencido ou perto de vencer). Não repõe nada e não grava nada: a reposição de um lote é feita no Controle de Kits. Abre numa segunda janela, com visualizador de relatórios.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Planejamento de kits para o cliente</strong></td>
+<td>É a base do relatório; a consulta exige planejamento</td>
+<td>Menu Kits › Planejamento de Kits</td>
+</tr>
+<tr>
+<td><strong>Remessas de kit com embarque</strong></td>
+<td>Para "enviado" e "vencido"</td>
+<td>Estoque › Remessa de Material</td>
+</tr>
+<tr>
+<td><strong>Validade mínima dos kits preenchida</strong> (para marcar como vencido o lote que <strong>está perto de vencer</strong>)</td>
+<td>Em branco ou zero, só conta o que já venceu</td>
+<td>Menu Kits › Parâmetros de Configuração (Kit)</td>
+</tr>
+<tr>
+<td><strong>Cliente, filial, tipo de kit, kit e componente</strong> (se quiser filtrar)</td>
+<td>Filtros opcionais</td>
+<td>Cadastros › Pessoa Jurídica; cadastros de Kit</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório</strong></p>
+<ol>
+<li>No menu Relatórios, abra <strong>Reposição de Componentes do Kit</strong>. A tela mostra o quadro "Filtros".</li>
+<li>Se quiser, escolha o <strong>Cliente</strong>: a lista de <strong>Filiais</strong> se recarrega com as filiais ativas do cliente. Escolha também <strong>Tipo de Kit</strong>, <strong>Kit</strong> (a lista de componentes se recarrega) e <strong>Componente</strong>.</li>
+<li>Em <strong>Repor</strong>, deixe "TODOS", ou escolha "SIM" (só o que tem algo a enviar) ou "NÃO" (só o que não tem).</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. A tela não confere nada: abre uma nova janela. <strong>Sem filtro, traz todos os clientes</strong> (por planejamento).</li>
+<li><strong>LIMPAR</strong> volta os filtros ao estado inicial.</li>
+</ol>
+<p><strong>Ler o relatório</strong></p>
 <ul>
 <li>Blocos por planejamento, com "CLIENTE: ..." e "FILIAL: ..." e uma faixa com o tipo do kit (por exemplo "COLETIVO").</li>
 <li>Colunas: <strong>KIT</strong>, <strong>COMPONENTE</strong> ("código - nome"), <strong>UNID.</strong>, <strong>PLANEJADO</strong>, <strong>ENVIADO</strong>, <strong>VENCIDO(*)</strong> e <strong>ENVIAR / REPOR</strong>. No fim de cada bloco, "Total de Componentes: n".</li>
-<li>Quando a validade mínima está preenchida, uma nota no pé explica o asterisco: "(*) Todos os lotes com validade inferior a N dias".</li>
-<li>No alto: nome da empresa, logotipo, título e "Emitido em". No pé: "Página".</li>
+<li>Com a validade mínima preenchida, uma nota no pé explica o asterisco: "(*) Todos os lotes com validade inferior a N dias".</li>
 </ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>Em 22/10/2026 a coluna "VENCIDO(*)" saiu <strong>sem a nota</strong>: a validade mínima do sistema estava vazia ou zero (inferência: a nota só aparece quando o valor é maior que zero, <code>VisualizaRelatorio.aspx.cs:1240-1241</code>).</li>
-<li>O planejamento tem a sua própria <strong>validade mínima</strong> (no teste, 180 dias); o relatório <strong>não usa</strong> esse número, usa o do sistema (RN-EST-REL22-007).</li>
-<li>"ENVIAR / REPOR" pode ficar <strong>negativo</strong> quando já se enviou mais que o planejado.</li>
-<li>O "Emitido em" saiu em formato americano (10/22/2026): DV-EST-057.</li>
+<li><strong>Não grava nada</strong>: só lê.</li>
+<li>O relatório <strong>usa a validade mínima do sistema</strong>, não a do planejamento (que no teste era de 180 dias).</li>
+<li>"ENVIAR / REPOR" pode ficar <strong>negativo</strong> quando já se enviou mais que o planejado, sem sinal de excesso.</li>
+<li>Os filtros usados não aparecem no cabeçalho.</li>
 </ul>
-</div>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>A tela <strong>não tem validação de campo</strong>: não exige nem confere nada antes de abrir a janela.</li>
+<li>Falha da consulta: "Erro ao gerar dados do Relatório!", na janela do relatório.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>relReposicaoComp</code>. No script de menu (dml.sql:1943) as marcas de incluir, alterar, excluir, imprimir e ver log estão em "N": <strong>não há funções internas</strong> para esta tela. Quem vê o item no menu é decidido pelo perfil de cada pessoa. O botão GERAR RELATÓRIO não depende de função.</li>
+<li>Este relatório <strong>não recorta por grupo de usuário, almoxarifado nem cliente</strong>: quem o abre vê o planejamento e os envios de todos os clientes da empresa.</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta; visto em outras telas, CT-EST-065, 13/10/2026) é esperado aqui, mas <strong>não foi visto nesta tela</strong>.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-EST-057 (Baixa):</strong> "Emitido em" sai em formato americano ("10/22/2026"), visto nesta tela (CT-EST-157, 22/10/2026).</li>
+<li><strong>DV-EST-056 (Média, de outra tela, efeito relacionado):</strong> o atendimento do kit aceitou um lote de 31 dias com planejamento de 180 dias, sem aviso; este relatório também não aponta esse lote, porque não usa a validade mínima do planejamento.</li>
+<li><strong>Asterisco sem nota:</strong> a coluna "VENCIDO(*)" saiu <strong>sem a nota</strong> que explica o asterisco em 22/10/2026 (a validade mínima do sistema provavelmente estava vazia ou zero).</li>
+<li>O relatório e a coluna Reposição do Controle de Kits podem discordar (ponto para validar).</li>
+<li><strong>"Enviado" repetido</strong> se houver dois planejamentos do mesmo cliente, filial e kit; <strong>remessa sem filial não conta</strong> no enviado.</li>
+<li>O nome da filial é buscado linha a linha: com muitos planejamentos, pode ser lento.</li>
+<li>O filtro "Repor = NÃO" traz também as linhas com zero e as negativas.</li>
+<li>Visto em teste: o relatório do cliente <code>EMC IND FARMACEUTICA</code> mostrou os componentes dos kits <code>00001</code> e <code>00002</code> com planejado 15, 30 e 1, enviado e vencido zerados.</li>
+<li>Pontos para validar com a área: validade mínima do planejamento ou do sistema? este relatório e o Controle de Kits devem dar a mesma resposta? o que fazer com "enviar / repor" negativo?</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Monta o endereço com os filtros e abre a janela</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Volta os filtros ao estado inicial</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Cliente, Tipo de Kit e Kit (ao trocar)</td>
+<td>Recarregam as listas seguintes (filiais, kits, componentes)</td>
+<td>Ao trocar</td>
+</tr>
+<tr>
+<td>Detalhe do erro (+) / (-)</td>
+<td>Mostra ou esconde o texto da causa interna</td>
+<td>Quando a falha traz uma causa interna</td>
+</tr>
+<tr>
+<td>Barra do relatório (páginas, busca, atualizar)</td>
+<td>Navega pelo relatório; componente padrão</td>
+<td>Na janela do relatório</td>
+</tr>
+<tr>
+<td>Exportar (disquete da barra)</td>
+<td>Abre o menu de exportação; os formatos não estão no código (a conferir na tela)</td>
+<td>Na janela do relatório</td>
+</tr>
+<tr>
+<td>Imprimir</td>
+<td>Liga o botão de impressão do componente</td>
+<td>Na janela do relatório</td>
+</tr>
+</tbody>
+</table></div>
+<p>A tela de filtros não tem botão próprio de Excel nem de PDF.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: <code>rel_reposicao_kit_lst.aspx</code> e <code>.aspx.cs</code> (caminho na seção Resumo da tela). Nenhum campo é obrigatório.</p>
 <h4 id="filtros">Filtros</h4>
@@ -310,7 +408,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

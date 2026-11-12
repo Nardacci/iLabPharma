@@ -45,46 +45,147 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conversao-de-unidade-analise.html">Análise</a><a href="conversao-de-unidade-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="conversao-de-unidade-fluxos.html">Fluxos</a><a href="conversao-de-unidade-regras-de-negocio.html">Regras de negócio</a><a href="conversao-de-unidade-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-conversao-de-unidade.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-de-apoio-passo-a-passo.html#tela-10-conversao-de-unidade">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Conversão de Unidade</strong> diz quantas unidades do estoque cabem em uma "apresentação" (por exemplo, uma caixa com 1.000 comprimidos tem fator 1000 e unidade de estoque COMPRIMIDO) e, quando o módulo de Produção está ligado, quanto vale uma unidade de produção em unidades de estoque. Quem cuida dos cadastros de apoio e do recebimento usa a tela. No código o cadastro se chama "Apresentação do item"; o usuário vê "Conversão de Unidade".</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Unidade do estoque</strong> ativa</td>
+<td>É a unidade em que o fator é medido; cada unidade nova já nasce com uma conversão de estoque de fator 1</td>
+<td>Cadastros › Unidade de Medida</td>
+</tr>
+<tr>
+<td>O <strong>fator</strong> decidido com o fornecedor e o almoxarifado</td>
+<td>Entra no custo e na quantidade do recebimento (veja os cuidados)</td>
+<td>Decisão da área</td>
+</tr>
+<tr>
+<td>Módulo de <strong>Produção</strong> ligado (só para o tipo PRODUÇÃO)</td>
+<td>Sem o módulo, o campo Tipo fica travado em ESTOQUE; com ele, a lista de unidades de produção vem de uma biblioteca de integração</td>
+<td>Módulo Produção</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu <strong>Cadastros</strong>, abra <strong>Conversão de Unidade</strong>. A tela mostra o quadro "Pesquisa".</li>
+<li>Use os filtros <strong>Apresentação</strong> (procura o texto dentro do nome), <strong>Unidade</strong> (Todas ou uma das unidades ativas) e <strong>Ativo</strong> (Todos, Sim, Não) e clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra Tipo de Conversão, Apresentação, Fator de Conversão, Unidade do Estoque e Ativo, 15 linhas por página, com os ícones Editar, Excluir e Ver Log. <strong>Não use o título "Unidade Estoque" para ordenar</strong>: pela leitura do código isso dá erro de servidor (CT-EST-CAD04-11). <strong>Imprimir</strong> e Excel só aparecem depois de uma pesquisa com resultado; <strong>Limpar</strong> esvazia filtros e lista.</li>
+</ol>
+<p><strong>Incluir uma conversão de estoque</strong></p>
+<ol start="4">
+<li>Clique no sinal de mais com a palavra <strong>Incluir</strong>. Em <strong>Tipo</strong>, deixe ESTOQUE. Informe a <strong>Apresentação</strong> (obrigatória, até 30 caracteres, por exemplo CAIXA 1000), a <strong>Unidade do Estoque</strong> (obrigatória) e o <strong>Fator de Conversão</strong> (obrigatório).</li>
+<li><strong>Atenção ao fator:</strong> o campo tem máscara de três casas decimais e os números entram da direita para a esquerda: digitar <code>1000</code> mostra <code>1,000</code> e digitar <code>1</code> mostra <code>0,001</code>. Para o fator 1000, digite <code>1000000</code> e confira se aparece <code>1.000,000</code> (leitura do código, a conferir na tela: CT-EST-CAD04-03; comportamento igual já visto no campo de quantidade do lote, DV-EST-002).</li>
+<li>Clique em <strong>SALVAR</strong>. A tela pergunta "Confirma a inclusão do item?". Com <strong>SIM</strong>, mostra "Inclusão realizada com sucesso!"; <strong>OK</strong> volta para a lista.</li>
+</ol>
+<p><strong>Incluir uma conversão de produção (só com o módulo de Produção ligado)</strong></p>
+<ol start="7">
+<li>Em <strong>Tipo</strong>, escolha PRODUÇÃO. A tela libera a <strong>Unidade de Produção</strong> (obrigatória) e trava a Apresentação: o nome vem da unidade de produção escolhida. Informe a Unidade do Estoque e o Fator (até 15 posições) e salve como acima.</li>
+</ol>
+<p><strong>Alterar uma conversão</strong></p>
+<ol start="8">
+<li>Na lista, clique no lápis. A <strong>Justificativa</strong> aparece e é obrigatória. Com a Produção ligada, o nome da apresentação fica travado (um erro de digitação só se corrige criando outra conversão).</li>
+<li>Mude o que precisa (unidade, fator, situação), escreva a justificativa (até 255 letras), clique em <strong>SALVAR</strong> e <strong>SIM</strong>: "Alteração realizada com sucesso!".</li>
+<li>Atenção: <strong>mudar o fator de uma conversão já usada muda o custo calculado</strong> ao finalizar um recebimento ainda aberto e a quantidade das próximas notas lidas em XML. A tela não avisa; o histórico guarda o fator antigo e o novo.</li>
+</ol>
+<p><strong>Excluir uma conversão</strong></p>
+<ol start="11">
+<li>Na lista, clique na lixeira, escreva a justificativa e clique em <strong>EXCLUIR REGISTRO</strong>; responda <strong>SIM</strong> a "Confirma a exclusão do item?". A tela mostra "Exclusão realizada com sucesso!".</li>
+</ol>
+<p><strong>Ver o histórico</strong></p>
+<ol start="12">
+<li>Na lista, clique em <strong>LOG</strong>. Abre "Log Alteração - Conversão de Unidade" com o campo mudado (unidade, nome, ativo ou quantidade), valor antigo, valor novo, data, hora, usuário e justificativa. <strong>A mudança de Tipo e de Unidade de Produção não aparece no histórico.</strong></li>
+</ol>
+<h4 id="o-que-acontece-ao-salvar">O que acontece ao salvar</h4>
 <ul>
-<li>A <strong>unidade do estoque</strong> (tela 03) precisa existir e estar ativa. Cada unidade nova já nasce com uma conversão de estoque de fator 1.</li>
-<li>Decida o <strong>fator</strong>: quantas unidades de estoque há em uma apresentação (por exemplo, 1.000 comprimidos por caixa). Esse número entra no custo e na quantidade do recebimento, então confira com o fornecedor e com o almoxarifado.</li>
-<li>O tipo <strong>PRODUÇÃO</strong> só funciona com o módulo de Produção ligado. Com o módulo desligado, o campo Tipo fica travado em ESTOQUE.</li>
+<li><strong>Incluir:</strong> grava a conversão (nome, fator, unidade, tipo, unidade de produção, data e usuário) e a linha de histórico "INCLUSÃO DO REGISTRO" (dalApresentacaoProduto.cs:15; dalLogAlteracaoApresentacaoProduto.cs:77-89).</li>
+<li><strong>Alterar:</strong> atualiza nome, fator, unidade, situação, tipo e unidade de produção; o histórico ganha uma linha por campo mudado entre unidade, nome, ativo e quantidade (fator), com a justificativa.</li>
+<li><strong>Excluir:</strong> exclusão lógica (marca de excluído) e "EXCLUSÃO DO REGISTRO" no histórico (dalApresentacaoProduto.cs:87; bllApresentacaoProduto.cs:116).</li>
+<li><strong>Onde a conversão é usada:</strong> no <strong>Recebimento</strong>, que oferece as conversões da unidade do item e mostra o fator na nota e no lote (recebimento_ed.aspx.cs:2069); na leitura da <strong>nota fiscal em XML</strong>, que multiplica a quantidade pelo fator (LerNFeItem.cs:63); ao <strong>finalizar o recebimento</strong>, o <strong>custo do item</strong> é o valor unitário da nota <strong>dividido pelo fator atual</strong> (pFinalizaRecebimento.sql:158); na <strong>Apresentação do Fornecedor</strong>, que escolhe uma conversão; e na <strong>solicitação que vem da Produção</strong>, que multiplica a quantidade pelo fator (bllSolicitacao.cs:110).</li>
+<li><strong>Se a conversão está em uso:</strong> a exclusão é recusada quando uma nota fiscal, uma apresentação do fornecedor ou outro registro a usa. A tela não confere uso ao alterar o fator ou a situação.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Cadastros, abra Conversão de Unidade. A tela mostra o quadro "Pesquisa".</li>
-<li>Passo 2. Filtros: Apresentação (procura o texto dentro do nome), Unidade (Todas ou uma das unidades ativas) e Ativo (Todos, Sim, Não). Clique em Pesquisar.</li>
-<li>Passo 3. A lista mostra Tipo de Conversão, Apresentação, Fator de Conversão, Unidade do Estoque e Ativo, 15 linhas por página, e três ícones por linha: lápis (Editar), lixeira (Excluir) e LOG (Ver Log). Os títulos ordenam a lista.</li>
-<li>Passo 4. Imprimir e o ícone do Excel só aparecem depois de uma pesquisa com resultado e geram o relatório com os filtros usados.</li>
-<li>Passo 5. Limpar esvazia os filtros e a lista. O sinal de mais com a palavra "Incluir" abre o formulário vazio.</li>
+<li>"A Apresentação é obrigatória!", "A Unidade obrigatória!" (sem o verbo "é"), "O Fator de Conversão é obrigatório!", "A Situação é obrigatória!" e, no tipo Produção sem unidade de produção, "Unidade de Produção é obrigatória!".</li>
+<li>"Fator de conversão inválido!" quando o fator não vira número (por exemplo, duas vírgulas).</li>
+<li>"A Justificativa é obrigatória!" (na alteração o texto sai sem o "A": "Justificativa é obrigatória!").</li>
+<li>Com o módulo de Produção ligado: "Já existe uma conversão cadastrada com os parâmetros informados!" quando já há conversão ativa para a mesma unidade do estoque (pode impedir uma segunda caixa de tamanho diferente para a mesma unidade; inferência, CT-EST-CAD04-04).</li>
+<li>"Exclusão inválida, existem referências com outras tabelas." ao excluir uma conversão usada.</li>
 </ul>
-<h4 id="incluir-uma-conversao-de-estoque">Incluir uma conversão de estoque</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 6. Em <strong>Tipo</strong>, deixe ESTOQUE. Informe a <strong>Apresentação</strong> (obrigatória, até 30 caracteres, por exemplo CAIXA 1000), a <strong>Unidade do Estoque</strong> (obrigatória) e o <strong>Fator de Conversão</strong> (obrigatório).</li>
-<li>Passo 7. <strong>Atenção ao fator:</strong> o campo tem uma máscara de três casas decimais. Os números são empurrados para a direita: digitar <code>1000</code> mostra <code>1,000</code>; digitar <code>1</code> mostra <code>0,001</code>. Para o fator 1000, digite <code>1000000</code> e confira se aparece <code>1.000,000</code>. (Leitura do código, a conferir na tela: CT-EST-CAD04-03; o mesmo comportamento já foi visto no campo de quantidade do lote, DV-EST-002.)</li>
-<li>Passo 8. Clique em SALVAR. A tela pergunta "Confirma a inclusão do item?". Com SIM, mostra "Inclusão realizada com sucesso!"; ao clicar em OK volta para a lista.</li>
-<li>Passo 9. Sem apresentação: "A Apresentação é obrigatória!". Sem fator: "O Fator de Conversão é obrigatório!". Fator que não é número: "Fator de conversão inválido!". Com o módulo de Produção ligado, se já existe conversão ativa para a mesma unidade: "Já existe uma conversão cadastrada com os parâmetros informados!".</li>
+<li>A lista e o formulário usam a <strong>função 205 (Conversão de Unidade)</strong>. O perfil precisa da função de <strong>consultar</strong> para ver o botão Pesquisar, de <strong>incluir</strong> para ver Incluir, de <strong>alterar</strong> para o lápis, de <strong>excluir</strong> para a lixeira, de <strong>imprimir ou exportar</strong> para Imprimir e Excel e de <strong>consultar log</strong> para o ícone LOG (o menu mostra ou esconde cada botão conforme a função do perfil).</li>
+<li><strong>Cuidado:</strong> a conferência que mandaria quem não tem a função para a página de acesso negado está <strong>comentada</strong> no código; só se escondem botões e quem abrir o endereço da página não é barrado (DV-EST-008, Alta; nos cadastros é leitura do código, a confirmar). O formulário também não esconde o botão SALVAR de quem não pode incluir ou alterar (a confirmar, caso S1 desta tela).</li>
+<li>Quem cadastra e quem confere são a mesma pessoa: não há assinatura nem segunda conferência.</li>
 </ul>
-<h4 id="incluir-uma-conversao-de-producao-so-com-o-modulo-de-producao-ligado">Incluir uma conversão de produção (só com o módulo de Produção ligado)</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<p>Nenhum defeito do registro aponta esta tela, que é <strong>não testada</strong> (a lista foi vista só uma vez, em 07/10/2026). Valem aqui: <strong>DV-EST-002</strong> (máscara de três casas que grava <code>0,100</code> ao digitar <code>100</code>, Média; o fator tem a mesma máscara, não visto aqui), <strong>DV-EST-053</strong> (pesquisa sem acento, Baixa) e <strong>DV-EST-008</strong> (acesso pelo endereço, Alta). O que segue vem da leitura do código.</p>
 <ul>
-<li>Passo 10. Em <strong>Tipo</strong>, escolha PRODUÇÃO. A tela libera a <strong>Unidade de Produção</strong> (obrigatória) e trava a Apresentação: o nome vem da unidade de produção escolhida. Informe a Unidade do Estoque e o Fator (até 15 posições) e salve como acima.</li>
+<li><strong>Erro de mil vezes no fator</strong> por causa da máscara: muda o custo e a quantidade do recebimento (CT-EST-CAD04-03).</li>
+<li><strong>Fator zero não é recusado:</strong> o custo do item dividiria por zero ao finalizar o recebimento e a nota lida em XML teria a quantidade zerada (CT-EST-CAD04-02 e 14).</li>
+<li><strong>Conversão ausente vira zero na Produção:</strong> a solicitação da Produção sem conversão cadastrada fica com quantidade 0, sem aviso (depende da Produção).</li>
+<li><strong>Fator da nota e fator do custo podem divergir</strong> se o fator mudar entre a nota e a finalização (inferência, CT-EST-CAD04-06).</li>
+<li>O <strong>histórico é incompleto</strong> (sem Tipo e Unidade de Produção; CT-EST-CAD04-07).</li>
+<li>Com a Produção fora do ar, o formulário pode não abrir (leitura do código, a confirmar).</li>
+<li>O relatório escreve "Apresentacao:" (sem acento) para o nome e para o filtro de unidade (CT-EST-CAD04-12).</li>
+<li>Ponto para validar com a área: o fator é "quantas unidades de estoque há em uma apresentação"? Pode haver mais de uma conversão de estoque por unidade? O fator zero deve ser recusado? Qual o máximo?</li>
 </ul>
-<h4 id="alterar-uma-conversao">Alterar uma conversão</h4>
-<ul>
-<li>Passo 11. Na lista, clique no lápis. A área "Justificativa" aparece e é obrigatória. Com o módulo de Produção ligado, o nome da apresentação fica travado.</li>
-<li>Passo 12. Mude o que precisa (unidade, fator, situação), escreva a justificativa (até 255 letras), clique em SALVAR e SIM: "Alteração realizada com sucesso!".</li>
-<li>Passo 13. Atenção: <strong>mudar o fator de uma conversão que já foi usada muda o custo calculado</strong> ao finalizar um recebimento ainda aberto, e a quantidade das próximas notas lidas em XML. A tela não avisa. O histórico guarda o fator antigo e o novo.</li>
-</ul>
-<h4 id="excluir-uma-conversao">Excluir uma conversão</h4>
-<ul>
-<li>Passo 14. Na lista, clique na lixeira, escreva a justificativa e clique em EXCLUIR REGISTRO; responda SIM à pergunta "Confirma a exclusão do item?". Mostra "Exclusão realizada com sucesso!".</li>
-<li>Passo 15. Se uma nota fiscal, uma apresentação do fornecedor ou outro registro usa a conversão, a tela recusa com "Exclusão inválida, existem referências com outras tabelas.".</li>
-</ul>
-<h4 id="ver-o-historico">Ver o histórico</h4>
-<ul>
-<li>Passo 16. Na lista, clique no ícone LOG. Abre "Log Alteração - Conversão de Unidade" com o campo mudado (unidade, nome, ativo ou quantidade), valor antigo, valor novo, data, hora, usuário e justificativa. A mudança de <strong>Tipo</strong> e de <strong>Unidade de Produção</strong> não aparece no histórico.</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura os registros pelos filtros</td>
+<td>Para quem tem a função de consultar</td>
+</tr>
+<tr>
+<td>Incluir (sinal de mais)</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a função de incluir</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário com o registro</td>
+<td>Em cada linha, para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir)</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Em cada linha, para quem tem a função de excluir</td>
+</tr>
+<tr>
+<td>LOG (Ver Log)</td>
+<td>Abre o histórico do registro</td>
+<td>Em cada linha, para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Geram o relatório da tela com os filtros usados</td>
+<td>Depois de uma pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -433,7 +534,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

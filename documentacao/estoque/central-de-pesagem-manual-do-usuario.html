@@ -45,26 +45,118 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="central-de-pesagem-analise.html">Análise</a><a href="central-de-pesagem-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="central-de-pesagem-fluxos.html">Fluxos</a><a href="central-de-pesagem-regras-de-negocio.html">Regras de negócio</a><a href="central-de-pesagem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-central-de-pesagem.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-e-atendimento-a-producao-passo-a-passo.html#tela-5-central-de-pesagem">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>A pesagem precisa existir: ela nasce no Atendimento (para o item que obriga pesagem), no Recebimento ou na amostragem do CQ. O item precisa ter a marca "obriga pesagem" no cadastro. A balança precisa estar cadastrada no Principal como equipamento ativo da categoria de balanças, com o IP e a porta se quiser capturar o peso direto.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Central de Pesagem</strong> é onde se registra a pesagem do material que sai do estoque (separação para produção, consumo ou cliente) e da amostra do CQ, <strong>volume a volume</strong>: balança (tag), lacre, peso bruto, tara e peso líquido. São três telas encadeadas: a <strong>lista</strong> (pesquisa), a <strong>pesagem</strong> (cabeçalho, grade de volumes, dividir e agrupar volumes, finalizar, etiqueta) e o <strong>volume</strong> (pesar de fato, com captura direta da balança ou digitação). A mesma central mostra também as pesagens de recebimento (rodada 8). <strong>A pesagem de um volume nunca foi feita em tela real: o formulário do volume dá erro de servidor (DV-EST-067)</strong>; o que está abaixo sobre pesar vem do código.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pesagem criada</strong></td>
+<td>A lista não tem botão Incluir (pesagem_lst.aspx.cs:22-23). Nasce no Atendimento (só para item que "obriga pesagem"; pGeraPesagemSeparacao.sql:80), no Recebimento ou na amostragem do CQ</td>
+<td>Estoque › Atendimento de Solicitação / Recebimento de Material</td>
+</tr>
+<tr>
+<td><strong>Item com a marca "obriga pesagem"</strong></td>
+<td>Sem a marca a pesagem de separação não é criada</td>
+<td>Estoque › Cadastro de Item</td>
+</tr>
+<tr>
+<td><strong>Balança</strong> como equipamento ativo da categoria de balanças (categoria 1 no código), com IP e porta se quiser captura direta</td>
+<td>A lista de balanças vem do Principal (pesagem_ed2.aspx.cs:301-327)</td>
+<td>Módulo Principal › Equipamento</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado ligado ao grupo do usuário</strong></td>
+<td>A lista só traz pesagens de itens desses almoxarifados (dalPesagem.cs:438-447)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu Estoque, abra <strong>Central de Pesagem</strong> e clique em <strong>Pesquisar</strong>.</li>
+<li>Filtros: Código, Tipo, Período (as duas datas), Item de entrada, Lote fornecedor, Cód. Solicitação e Concluído (Todos, Sim, Não). A lista mostra Código, Item Entrada, Lote, Item, Tipo, Solicitação e Concluído, com os ícones Editar (ou Visualizar, quando concluída) e Ver log.</li>
+</ol>
+<p><strong>Pesar</strong></p>
+<ol start="3">
+<li>Clique em Editar. A tela mostra os dados do item e do lote e a grade de volumes (Volume, Quantidade requisitada, Peso bruto, Tara, Peso líquido, Tag da balança, Lacre, Data).</li>
+<li>Na linha do volume, clique em Editar. <strong>Hoje esta etapa falha</strong>: abre página de erro de servidor ("Erro na consulta do Equipamento.") e a pesagem não pode ser feita (DV-EST-067, Alta; CT-EST-077).</li>
+<li>(Pelo código.) No volume escolha a balança (Tag Balança). Se a balança tem IP, <strong>CAPTURAR</strong> lê o peso direto; senão o Peso Bruto é liberado para digitação. Informe o Nº do Lacre, o Peso Bruto e a Tara; o Peso Líquido é calculado.</li>
+<li>Clique em <strong>SALVAR</strong>. A tela pergunta "Confirma a alteração da Pesagem?" (ou "Confirmar pesagem com divergência?") e responde "Pesagem registrada!".</li>
+<li>(Pelo código.) <strong>DIVIDIR VOLUMES</strong> e <strong>AGRUPAR VOLUMES</strong> exigem que a soma de A e B seja igual ao volume original.</li>
+<li>Clique em <strong>FINALIZAR PESAGEM</strong> e responda SIM em "Deseja finalizar a Pesagem?". Se nada foi pesado, a tela pergunta "Pesagem com divergências no total. Deseja continuar?" e, com SIM, recusa com "Existem itens que não foram pesados!" (vista em teste, CT-EST-076).</li>
+<li>Depois de concluída, <strong>GERAR ETIQUETA</strong> imprime a etiqueta dos volumes.</li>
+</ol>
+<p><strong>Cancelar a pesagem de um volume</strong></p>
+<ol start="10">
+<li>O ícone de cancelar, na linha do volume, apaga peso, tara, balança, lacre, data e usuário daquela pesagem, <strong>sem pedir justificativa</strong> (pesagem_ed.aspx.cs:358-379; dalPesagemItem.cs:301-332).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu Estoque, abra Central de Pesagem. A tela mostra o quadro "Pesquisa". Clique em Pesquisar.</li>
-<li>Passo 2. Filtros: Código, Tipo, Período (as duas datas), Item de entrada, Lote fornecedor, Cód. Solicitação e Concluído (Todos, Sim, Não) (pesagem_lst.aspx:47-117).</li>
-<li>Passo 3. A lista mostra Código, Item Entrada, Lote, Item, Tipo, Solicitação e Concluído, com os ícones Editar (ou Visualizar, quando concluída) e Ver log. Imprimir e Excluir existem no código, mas ficam escondidos (pesagem_lst.aspx.cs:201 e 206).</li>
+<li><strong>SALVAR o volume:</strong> grava equipamento, lacre, peso bruto, tara, peso líquido, usuário e data (pesagem_ed2.aspx.cs:402-495). O banco soma os volumes no total pesado e baixa o saldo do volume do lote (TBL_PESAGEM_ITEM.sql:34-100).</li>
+<li><strong>FINALIZAR PESAGEM:</strong> marca a pesagem como concluída, grava usuário e data e, se o peso difere do atendido, ajusta a movimentação do atendimento (pesagem_ed.aspx.cs:222-340). O banco ainda <strong>reescreve a quantidade atendida</strong> da solicitação com o peso final (TBL_PESAGEM.sql:41-75): o valor original se perde.</li>
+<li>O próximo passo é a Separação de Material, que só confirma com as pesagens concluídas.</li>
 </ul>
-<h4 id="pesar">Pesar</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 4. Clique em Editar. A tela da pesagem mostra os dados do item e do lote e a grade de volumes (Volume, Quantidade requisitada, Peso bruto, Tara, Peso líquido, Tag da balança, Lacre, Data) (pesagem_ed.aspx:235-267).</li>
-<li>Passo 5. Na linha do volume, clique em Editar. <strong>Hoje esta etapa falha</strong>: abre uma página de erro de servidor ("Erro na consulta do Equipamento.") e a pesagem não pode ser feita pela tela (DV-EST-067, Alta; CT-EST-077, 22/10/2026).</li>
-<li>Passo 6. (Pelo código.) No volume, escolha a balança (Tag Balança). Se a balança tem IP, o botão CAPTURAR lê o peso direto; senão, o campo Peso Bruto é liberado para digitação. Informe o Nº do Lacre, o Peso Bruto e a Tara; o Peso Líquido é calculado (pesagem_ed2.aspx.cs:503-524 e 663-697).</li>
-<li>Passo 7. Clique em SALVAR. A tela pergunta "Confirma a alteração da Pesagem?" (ou "Confirmar pesagem com divergência?", se o líquido for maior que o requisitado) e responde "Pesagem registrada!".</li>
-<li>Passo 8. (Pelo código.) Se um volume foi dividido ou agrupado, use DIVIDIR VOLUMES ou AGRUPAR VOLUMES, que exigem que a soma de A e B seja igual ao volume original (pesagem_ed.aspx.cs:939-1031).</li>
-<li>Passo 9. Clique em FINALIZAR PESAGEM. A tela pergunta "Deseja finalizar a Pesagem?". Se nada foi pesado, pergunta "Pesagem com divergências no total. Deseja continuar?" e, com SIM, recusa com "Existem itens que não foram pesados!" (visto em teste, CT-EST-076, 22/10/2026).</li>
-<li>Passo 10. Depois de concluída, GERAR ETIQUETA imprime a etiqueta dos volumes (pesagem_ed.aspx.cs:80 e 516-553).</li>
+<li>Finalizar: "Existem itens que não foram pesados!"; produção com divergência: "Pesagem para produção não pode ser finalizada com divergência!"; demais tipos: "Total pesado não pode ser superior ao total do atendimento!"; amostra do CQ: "A diferença de pesagem excedeu os N% permitidos!"; "Lote sem saldo suficiente em estoque!".</li>
+<li>Volume: "O Tag da balança é obrigatório.", "O Nº lacre é obrigatório.", "O Peso é obrigatório!", "A Tara é obrigatória!", "Este lacre já foi utilizado", "Peso Líquido inválido!" / "Peso Bruto inválido!" / "Peso da Tara Inválido!" (valores negativos).</li>
+<li>Dividir ou agrupar: "Quantidade Volume (A) não informada ou inválida!" (e B), "A soma do peso nos volumes A e B não pode ser diferente do total do volume atual!", "É necessário selecionar os dois volumes!", "Os volumes não podem ser iguais!".</li>
+<li>Balança: "Erro de Comunicação com a Balança!" (e, na segunda falha, o Peso Bruto é liberado para registro manual). Etiqueta: "Erro ao gerar etiqueta.".</li>
 </ul>
-<h4 id="cancelar-a-pesagem-de-um-volume">Cancelar a pesagem de um volume</h4>
-<p>O ícone de cancelar pesagem, na linha do volume, apaga o peso, a tara, a balança, o lacre, a data e o usuário daquela pesagem, sem pedir justificativa (pesagem_ed.aspx.cs:358-379; dalPesagemItem.cs:301-332).</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função da tela é a <strong>308</strong>; a carga do menu registra "alterar", "imprimir" e "ver log" (dml.sql:1889), sem excluir nem incluir. Editar/Visualizar depende de "alterar" e Ver log da função de histórico; Imprimir e Excluir da lista ficam escondidos para todos.</li>
+<li>A tela <strong>não confere a permissão ao abrir</strong> (ClassePaiLst.cs:68-81; ClassePaiEd.cs:49-61) e as permissões começam verdadeiras (DV-EST-008, Alta). Não houve teste de acesso nesta tela.</li>
+<li>A lista filtra pelo grupo, mas <strong>a pesagem e o volume abrem pelo número, sem filtro de grupo</strong>: pela leitura, quem conhece o número abre e finaliza a pesagem de outro almoxarifado. Não testado.</li>
+<li>Não há segunda pessoa que verifique o peso (só o usuário de pesagem é gravado). Ponto para validar com a área (art. 193).</li>
+<li>O peso "capturado" volta do navegador em campo escondido, sem conferência de que veio da balança.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Não é possível pesar um volume pela tela</strong> (DV-EST-067, Alta): página de erro com detalhes técnicos. Causa provável pelo código: a consulta de equipamentos do Principal pede colunas de IP e porta que talvez não existam na base de teste (inferência; só o DBA confirma).</li>
+<li><strong>A amostra do CQ sai do estoque sem registro na Central de Pesagem</strong> (DV-EST-032, Média).</li>
+<li><strong>Cancelar a pesagem do volume apaga as leituras sem guardar o que havia</strong> (art. 125). O ajuste depois da pesagem também reescreve a quantidade da movimentação.</li>
+<li>Com percentual 0% no subgrupo, a amostra do CQ aceita qualquer peso. O peso digitado à mão é aceito sempre que a balança não tem IP e nenhum relatório lido o destaca.</li>
+<li>A tela não confere a calibração da balança. Ponto para validar se "ativo" no Principal já depende dela.</li>
+<li>O log do cabeçalho da pesagem está desligado (bllPesagem.cs:30-31). A etiqueta não traz a situação do lote.</li>
+<li>Ponto para validar com a área: quem pode pesar; o peso manual deve exigir justificativa; a balança só pode ser usada se calibrada.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Editar / Visualizar</td>
+<td>Abre a pesagem</td>
+<td>Em toda linha, se o usuário tem a função de alterar; vira Visualizar se concluída</td>
+</tr>
+<tr>
+<td>Ver log</td>
+<td>Abre o histórico "TBL_PESAGEM"</td>
+<td>Em toda linha, se o usuário pode consultar histórico</td>
+</tr>
+<tr>
+<td>Imprimir e Excluir</td>
+<td>Existem no código</td>
+<td><strong>Nunca aparecem</strong> (escondidos)</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -419,7 +511,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

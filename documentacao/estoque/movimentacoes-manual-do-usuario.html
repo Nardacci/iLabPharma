@@ -45,30 +45,129 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="movimentacoes-analise.html">Análise</a><a href="movimentacoes-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="movimentacoes-fluxos.html">Fluxos</a><a href="movimentacoes-regras-de-negocio.html">Regras de negócio</a><a href="movimentacoes-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-movimentacoes.html">Erros (6)</a><a class="aba-extra" href="roteiro-de-execucao-almoxarifado-do-controle-da-qualidade-passo-a-passo.html#tela-2-movimentacoes">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>O lote precisa ter análise no CQ. Para entrada e transferência, precisa existir almoxarifado do tipo (retenção, referência ou estabilidade) ligado ao seu grupo, com local, rua, coluna e andar livres; e o item precisa ter a marca correspondente no cadastro do Item para a Consulta Disponibilidade listá-lo. <strong>Para saída, combine antes com a Garantia da Qualidade</strong>: a tela não confere o prazo de guarda.</p>
-<h4 id="fazer-uma-entrada-saida-ou-movimentacao-interna">Fazer uma entrada, saída ou movimentação interna</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A tela <strong>Movimentações</strong> (no alto: "MOVIMENTAÇÕES (REFERÊNCIA - RETENÇÃO - ESTABILIDADE)") faz as <strong>operações manuais com amostras</strong> de referência, retenção e estabilidade. É usada pelo Almoxarifado do CQ e pela Garantia da Qualidade (leitura da área, a validar). Na mesma página fazem-se três operações:</p>
 <ul>
-<li>Passo 1. No menu Regulatório, abra Movimentações e clique em Incluir.</li>
-<li>Passo 2. Escolha a Operação (Entrada, Saída ou Movimentação Interna) e informe o Item Entrada (número completo do item de entrada do lote). Clique em PESQUISAR.</li>
-<li>Passo 3. A tela mostra Item, Unid. Medida, Custo Médio, Lote e Validade. Na Saída, sem saldo regulatório, aparece "Lote não possui saldo regulatório".</li>
-<li>Passo 4. Escolha o Tipo de Movimentação (por exemplo, Entrada - Retenção, Saída - Retenção). A Observação é opcional e <strong>não é gravada</strong>.</li>
-<li>Passo 5. Em Origem, escolha o Endereço (o Disponível aparece) e informe a quantidade em Movimentar.</li>
-<li>Passo 6. Em Destino (entrada e movimentação interna), escolha Almoxarifado, Local, Rua, Coluna e Andar; o Endereço Destino aparece.</li>
-<li>Passo 7. Clique em FINALIZAR e responda SIM a "Deseja finalizar a movimentação?". Aparece "Movimentação finalizada!". OK volta para a lista.</li>
+<li><strong>Entrada:</strong> leva a amostra de um endereço comum do lote para o almoxarifado especial. Não passa pela pendência do CQ: a tela cria a pendência e a finaliza no mesmo ato.</li>
+<li><strong>Saída:</strong> retira quantidade da amostra de um endereço do almoxarifado especial (consumo, descarte ou envio; a tela não pergunta qual).</li>
+<li><strong>Movimentação interna:</strong> transfere a amostra entre endereços de almoxarifados especiais do mesmo tipo.</li>
 </ul>
-<h4 id="consultar-a-lista">Consultar a lista</h4>
+<p>A <strong>Saída da amostra de retenção</strong>, que a norma pede para controlar pelo prazo de guarda, é feita aqui e <strong>hoje não confere nada</strong> (DV-EST-068). Não confundir com a página <code>movimentacao_saida_lst.aspx</code> (fora do menu e sem link): é uma cópia da lista da Entrada de Material; a Saída de verdade é a operação Saída desta tela.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se faz ou cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lote com ao menos uma análise do CQ</strong></td>
+<td>Todas as operações exigem análise ("Nenhuma análise foi encontrada para o lote!")</td>
+<td>Controle da Qualidade</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado do tipo</strong> (retenção, referência ou estabilidade), <strong>ativo e ligado ao seu grupo</strong>, com local, rua, coluna e andar livres</td>
+<td>É o destino da Entrada e da Movimentação interna; sem almoxarifado ligado ao grupo, a lista vem vazia</td>
+<td>Cadastros › Almoxarifado, Local de Armazenagem e Grupo Usuário - Almoxarifado (DV-EST-066)</td>
+</tr>
+<tr>
+<td><strong>Item com a marca</strong> de retenção, referência ou estabilidade</td>
+<td>Sem a marca, a Consulta Disponibilidade não lista o item</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Saldo regulatório do lote</strong> (para a Saída)</td>
+<td>Sem saldo: "Lote não possui saldo regulatório"</td>
+<td>Entrada de Material (Regulatório) ou Entrada pela própria tela</td>
+</tr>
+<tr>
+<td><strong>Decisão da Garantia da Qualidade</strong> (para a Saída)</td>
+<td>A tela não confere o prazo de guarda; combine antes e registre por fora</td>
+<td>Decisão da área</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Fazer uma entrada, saída ou movimentação interna</strong></p>
+<ol>
+<li>No menu <strong>Regulatório</strong>, abra <strong>Movimentações</strong> e clique em <strong>Incluir</strong>. A lista abre vazia; para ver as existentes, clique em <strong>Pesquisar</strong>.</li>
+<li>Escolha a <strong>Operação</strong> (Entrada, Saída ou Movimentação Interna) e informe o <strong>Item Entrada</strong> (número completo do item de entrada do lote; a tela usa o primeiro lote encontrado). Clique em <strong>PESQUISAR</strong>. A operação trava depois de pesquisar.</li>
+<li>A tela mostra Item, Unid. Medida, Custo Médio, Lote e Validade. Na Saída, sem saldo regulatório, aparece "Lote não possui saldo regulatório".</li>
+<li>Escolha o <strong>Tipo de Movimentação</strong> (por exemplo, Entrada - Retenção, Saída - Retenção; só aparecem os tipos de reserva e a Transferência). A <strong>Observação</strong> é opcional e <strong>não é gravada</strong>.</li>
+<li>Em <strong>Origem</strong>, escolha o <strong>Endereço</strong> (o <strong>Disponível</strong> aparece) e informe a quantidade em <strong>Movimentar</strong>.</li>
+<li>Em <strong>Destino</strong> (Entrada e Movimentação Interna), escolha <strong>Almoxarifado, Local, Rua, Coluna e Andar</strong>; o <strong>Endereço Destino</strong> aparece.</li>
+<li>Clique em <strong>FINALIZAR</strong> e responda <strong>SIM</strong> a "Deseja finalizar a movimentação?". Aparece "Movimentação finalizada!". OK volta para a lista. <strong>LIMPAR</strong> volta ao início.</li>
+</ol>
+<p><strong>Consultar a lista</strong></p>
 <ul>
-<li>Filtros: Tipo (referência, retenção ou estabilidade), Item Entrada (parte do número) e Período. A grade mostra Data, Tipo Movimentação, Item, Item Entrada, Origem, Destino e Qtde. Não há ícone para abrir ou ver o histórico.</li>
+<li>Filtros: <strong>Tipo</strong> (referência, retenção ou estabilidade), <strong>Item Entrada</strong> (procura dentro do número; diferencia maiúscula de minúscula) e <strong>Período</strong>. A grade mostra Data, Tipo Movimentação, Item, Item Entrada, Origem, Destino e Qtde. <strong>Não há ícone para abrir, editar ou ver o histórico.</strong> Para uma movimentação com vários endereços, a lista mostra só a primeira linha.</li>
 </ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>A saída da amostra de retenção, antes do vencimento do lote, é aceita sem aviso, sem impedimento e sem justificativa (DV-EST-068). Dê saída só com decisão da Garantia da Qualidade, registrada por fora.</li>
-<li>A Entrada nesta tela não pede o tipo de estabilidade e não abre o acompanhamento no CQ (DV-EST-071).</li>
-<li>Para o lote <code>TESTEPA001</code> a origem da Saída não lista endereço e a tela mostra "Object reference not set to an instance of an object." (DV-EST-047). Com lotes novos a Saída funciona.</li>
+<li><strong>Entrada:</strong> cria a <strong>pendência regulatória</strong> (ligada à <strong>última análise do lote, qualquer que seja o resultado</strong>) e a finaliza no mesmo ato; grava a movimentação com saída do endereço de origem e entrada no destino. O saldo passa para a coluna de retenção, referência ou estabilidade (não é saldo disponível). <strong>Não pede o tipo de estabilidade nem abre o acompanhamento no CQ.</strong></li>
+<li><strong>Saída:</strong> grava uma movimentação com <strong>uma linha de saída</strong> no endereço de origem, <strong>com custo zero</strong>; não pede justificativa, não confere validade nem prazo de guarda, não registra o destino da amostra e não se liga à pendência.</li>
+<li><strong>Movimentação interna:</strong> grava uma saída e uma entrada, do tipo Transferência.</li>
+<li>O resultado aparece na <strong>Consulta Disponibilidade</strong>, no <strong>Histórico do Lote</strong> (sem usuário e sem hora) e na lista desta tela. A movimentação grava código, data e hora e usuário; <strong>a tela não grava log de alteração</strong>.</li>
+<li>A <strong>Observação digitada se perde</strong> (a coluna existe na tabela, mas a tela não a passa).</li>
 </ul>
-</div>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Item de entrada não informado!", "Lote não encontrado!" / "Saldo do Lote não encontrado!" e "Nenhuma análise foi encontrada para o lote!".</li>
+<li>"Lote não possui saldo regulatório" na Saída sem saldo.</li>
+<li>"Endereço de Origem inválido!" / "Endereço de destino inválido" e, no destino, "Almoxarifado não informado!", "Local não Informado!", "Rua não informada!", "Coluna não informada!", "Andar não informado!" e "Endereço inválido!".</li>
+<li>"Quantidade disponível incorreta!" / "Quantidade movimentada incorreta!" (zero) e "Quantidade movimentada não pode ser superior a quantidade disponível!" (vista em CT-EST-174, 999 com 22 disponíveis).</li>
+<li><strong>Não recusa:</strong> saída de amostra de retenção antes do vencimento do lote, nem entrada de lote com análise reprovada. A conferência "Item não possui saldo disponível para movimentação" da movimentação interna <strong>nunca dispara</strong> (a condição do código é impossível).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela é a função <strong>802 (Movimentações, menu Regulatório)</strong>. O cadastro do menu libera para o perfil <strong>Incluir</strong> e <strong>Imprimir/Exportar</strong>; <strong>não cria</strong> alterar, excluir nem a de log. <strong>Pesquisar</strong> exige a função de consultar; <strong>Incluir</strong> segue a de incluir; <strong>Imprimir</strong> e <strong>Excel</strong>, a de imprimir.</li>
+<li>Dentro do formulário, <strong>PESQUISAR, LIMPAR e FINALIZAR não conferem função nenhuma</strong>, e <strong>a operação Saída não exige função própria</strong>. Quem abre <code>movimentacoes_ed.aspx</code> pelo endereço consegue fazer uma saída sem a função de incluir (leitura do código, a confirmar em CT-EST-REG02-S1).</li>
+<li>A lista e a lista de destino respeitam o grupo do usuário pelos almoxarifados especiais ligados ao grupo; a lista de endereços de origem da Saída <strong>não filtra pelo grupo</strong>.</li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta). Esta tela não foi testada por esse caminho. Quem faz a saída e quem a autoriza são a mesma pessoa, sem justificativa nem segunda conferência.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A saída da amostra de retenção antes do vencimento é aceita sem aviso, sem impedimento e sem justificativa</strong> (DV-EST-068, Alta; CT-EST-176: saída de 1 un. do lote TESTEPA010, validade 22/10/2027). Dê saída só com decisão da Garantia da Qualidade, registrada por fora. O Histórico do Lote mostra a saída sem usuário e com custo 0,00.</li>
+<li><strong>Para o lote <code>TESTEPA001</code>, a origem da Saída não lista endereço</strong> e a tela mostra "Object reference not set to an instance of an object." (DV-EST-047, Alta); com lotes novos a Saída funciona.</li>
+<li><strong>A Entrada - Estabilidade foi aceita sem tipo de estabilidade e sem abrir o acompanhamento do CQ</strong> (DV-EST-071, Média; corrigido na rodada 11 segundo o registro do defeito, embora RN-EST-168 siga como "Contradita"; <strong>Ponto para validar com a área</strong>), e o Acompanhamento Estabilidade do CQ continua vazio (DV-EST-074, Média; CT-EST-173 falhou).</li>
+<li><strong>A Entrada manual contorna o CQ:</strong> cria e finaliza a pendência sem esperar a aprovação nem a Movimentação de Quarentena, e aceita lote reprovado (CT-EST-REG02-04, a confirmar).</li>
+<li><strong>O endereço padrão do local (<code>L905-R000-C000-A000</code>) pode aparecer como origem</strong> (DV-EST-044, Alta, em outra tela).</li>
+<li><strong>Duas abas podem somar mais que o saldo</strong>, pois o banco não impede saldo negativo (CT-EST-REG02-09, a confirmar).</li>
+<li>Dois lotes com o mesmo item de entrada: a tela usa o primeiro, sem avisar.</li>
+<li>Entrada de Referência, Movimentação Interna, a lista, a impressão e o Excel <strong>não foram vistos em tela</strong>.</li>
+<li><strong>Ponto para validar com a área:</strong> qual o prazo de guarda da amostra de retenção, quem pode autorizar a saída antes dele e se a Saída deve pedir o motivo. A Entrada manual deve existir? A observação deve ficar gravada?</li>
+<li>Erros do banco aparecem com o texto técnico (SEG-EST-13).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário</td>
+<td>Para quem tem a função de incluir</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório e planilha da lista</td>
+<td>Depois de pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>(sem ícones de abrir, editar ou log)</td>
+<td>Não há; o código que os montava está comentado</td>
+<td>Nunca</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <h4 id="filtros-da-lista">Filtros da lista</h4>
@@ -330,7 +429,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

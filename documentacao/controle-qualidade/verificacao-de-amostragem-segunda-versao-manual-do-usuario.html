@@ -45,17 +45,98 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="verificacao-de-amostragem-segunda-versao-analise.html">Análise</a><a href="verificacao-de-amostragem-segunda-versao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="verificacao-de-amostragem-segunda-versao-fluxos.html">Fluxos</a><a href="verificacao-de-amostragem-segunda-versao-regras-de-negocio.html">Regras de negócio</a><a href="verificacao-de-amostragem-segunda-versao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-verificacao-de-amostragem-segunda-versao.html">Erros</a><span class="aba-extra aba-apagada" aria-disabled="true" title="O roteiro de execução desta tela ainda não foi escrito">Passo a passo</span><a class="aba-extra" href="o-controle-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Não testada</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p><strong>Esta tela não pode ser usada hoje.</strong> Para cadastrar verificações de amostragem, use a <strong>Verificação de Amostragens</strong> que abre pelo menu e funciona (cadastro de checklist com perguntas, <code>/coleta/verificacao</code>; CT-CQ-N-20 a N-22, 23/10/2026). O menu traz dois itens com o nome "Verificação de Amostragens", e os dois levam a essa mesma tela do cadastro de checklist (CT-CQ-F02-01, 31/10/2026): pode usar qualquer um. Esta tela antiga, em outro endereço, responde "Não autorizado" até para o administrador (DV-CQ-046).</p>
-<h4 id="o-que-a-tela-faria-se-abrisse-pelo-codigo">O que a tela faria, se abrisse (pelo código)</h4>
+<p><strong>Esta tela não pode ser usada hoje.</strong> Para cadastrar verificações de amostragem, use a <strong>Verificação de Amostragens</strong> do menu, que funciona (cadastro de checklist com perguntas, <code>/coleta/verificacao</code>; CT-CQ-N-20 a N-22). O menu traz dois itens com o nome "Verificação de Amostragens", e os dois levam a essa mesma tela do cadastro de checklist (CT-CQ-F02-01, 31/10/2026): pode usar qualquer um. Esta tela antiga, em outro endereço, responde "Não autorizado" até para o administrador (DV-CQ-046). O que segue é o que ela faria pelo código; nada foi visto em tela.</p>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Pelo código, é o cadastro das <strong>verificações de amostragem por tipo de produto/material</strong>, da primeira geração do sistema. Cada registro é um item de verificação com <strong>tipo de produto/material</strong>, <strong>descrição</strong> e <strong>ativo (sim ou não)</strong>; a lista mostra "DESCRIÇÃO DO ITEM" e "ATIVO" e filtra por tipo e por ativo. A tela do menu, que a substituiu, trabalha diferente: cadastra um <strong>checklist com código, descrição e várias perguntas</strong> (tabela <code>TBL_VERIFICACAO</code>), que é o que o Registro de Amostragem usa hoje. O que a tela antiga cadastra ainda é lido e gravado por <strong>outra tela</strong>: a Regra Amostragem tem um quadro "Itens de Verificação para Amostragem" que usa a mesma tabela (esse quadro não foi exercitado nos testes). Quem usaria seria quem mantém as regras de amostragem (Qualidade; ponto para validar com a área). Hoje ninguém usa: a página não abre.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Função de acesso para o endereço antigo</strong> (<code>coleta/verificacaoamostragem</code>)</td>
+<td>Sem ela o filtro recusa todos; hoje nenhuma função cadastrada corresponde ao endereço (inferência, a validar com o DBA, CT-CQ-F02-03)</td>
+<td>Menu e funções do Principal (DBA)</td>
+</tr>
+<tr>
+<td><strong>Tipo de produto/material</strong></td>
+<td>O tipo de item não pode ficar em branco</td>
+<td>Cadastro de tipos de item</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p>O que a tela faria, se abrisse (pelo código; <strong>não visto em tela</strong>):</p>
+<ol>
+<li>Na lista, escolher o <strong>Tipo Produto/Material</strong> e o <strong>Ativo</strong> (Todos, Sim ou Não) e clicar em <strong>Pesquisar</strong>. A lista traz os itens com a descrição e se estão ativos, em páginas, sem os excluídos. <strong>Limpar</strong> volta os filtros para "todos".</li>
+<li>Para incluir, clicar em <strong>INCLUIR</strong>; para alterar, no lápis da linha. O formulário pede o <strong>Tipo Produto Material</strong>, o <strong>Ativo</strong> (SIM, já marcado na inclusão) e a <strong>Descrição</strong>.</li>
+<li>Clicar em <strong>Salvar Registro</strong> e responder SIM a "Confirma a inclusão do item?" ou "Confirma a alteração do item?". A tela avisa e volta para a lista.</li>
+<li>Para excluir, clicar no X da linha e confirmar "Confirma a exclusão do item?". Não há pedido de justificativa.</li>
+<li>O ícone de log abriria o histórico do item.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. Na lista, escolher o <strong>Tipo Produto/Material</strong> e o <strong>Ativo</strong> (Todos, Sim ou Não) e clicar em Pesquisar. A lista traz os itens com a descrição e se estão ativos, em páginas (o tamanho vem de um parâmetro de configuração do sistema), sem os excluídos.</li>
-<li>Passo 2. Para incluir, clicar em <strong>INCLUIR</strong>; para alterar, no lápis da linha. O formulário pede o <strong>Tipo Produto Material</strong>, o <strong>Ativo</strong> (SIM, já marcado na inclusão) e a <strong>Descrição</strong>.</li>
-<li>Passo 3. Clicar em Salvar Registro e responder SIM a "Confirma a inclusão do item?" ou "Confirma a alteração do item?". A tela avisa e volta para a lista.</li>
-<li>Passo 4. Para excluir, clicar no X da linha e confirmar "Confirma a exclusão do item?". Não há pedido de justificativa.</li>
-<li>Passo 5. O ícone de log abriria o histórico do item.</li>
+<li>Incluir e alterar gravariam o item (tipo, descrição, ativo) com o usuário da sessão.</li>
+<li><strong>Excluir apaga o registro</strong>, em vez de apenas desativá-lo, sem justificativa.</li>
+<li>O mesmo cadastro é lido pela Regra Amostragem (quadro "Itens de Verificação"), por isso apagar item aqui poderia afetar aquela tela (a validar).</li>
 </ul>
-<p><strong>Atenção.</strong> Estes passos <strong>não foram vistos em tela</strong>. O tipo de item não pode ficar em branco e a descrição é obrigatória, mas só a tela confere (RN-CQ-F02-002).</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li><strong>Hoje, tudo:</strong> "Sessão Expirada / Não autorizado / O usuário não tem permissão para esta página." (visto em teste com o perfil só de consulta e com o administrador). A mensagem diz "Sessão Expirada" para quem tem sessão válida e a resposta vem com HTTP 200 (DV-CQ-046).</li>
+<li>Se abrisse: "O Tipo Produto Material é obrigatório!" e "A descrição é obrigatória!" (só a tela confere, RN-CQ-F02-002); "A pesquisa não retornou nenhum resultado."; "Ocorreu um erro inesperado.".</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>Para abrir, a lista e o formulário exigem a permissão de <strong>consultar</strong> da tela, conferida pelo endereço <code>Coleta/VerificacaoAmostragem</code> no cadastro de funções do Principal; a <strong>exclusão</strong> exige a de <strong>excluir</strong>.</li>
+<li><strong>Sem conferência</strong> ficam Pesquisar, <strong>Incluir</strong>, <strong>Alterar</strong> e a exportação. Quem estiver autenticado no CQ e pedir diretamente o endereço de Incluir ou Alterar poderia gravar sem passar pela página (inferência pelo código; não testado, CT-CQ-F02-05). É o padrão que o teste confirmou na tela do menu, onde o perfil só de consulta criou checklist (DV-CQ-030, Alta).</li>
+<li>Hoje, <strong>nem o administrador abre</strong> a página (provável causa: o comando de menu trocou o código e o link da função para <code>COLETA/VERIFICACAO</code>, deixando o endereço antigo sem função; o menu mostra dois itens, o que sugere que uma linha antiga foi recriada). Chefe de subdivisão: não se aplica.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Menu duplicado:</strong> "Verificação de Amostragens" aparece duas vezes, mas os dois itens abrem a tela do menu (DV-CQ-026, item 4, Baixa).</li>
+<li><strong>Recusa enganosa:</strong> a página antiga diz "Sessão Expirada" para quem tem sessão válida e responde HTTP 200 (DV-CQ-046, Baixa; Guia 33/2020, 9.3.2.3). Situação: <strong>Bloqueada no teste</strong>.</li>
+<li><strong>Código antigo no ar:</strong> a mesma tabela é ainda usada pela Regra Amostragem (Baixa, a decidir).</li>
+<li>Os defeitos DV-CQ-018 (excluir checklist sem justificativa e sem histórico, Média) e DV-CQ-030 (acesso, Alta) são da tela do menu, mas servem de alerta porque o código desta versão tem o mesmo padrão.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Se a página abrisse, a lista teria (sem condição de situação):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faria</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abriria o formulário do item</td>
+<td>Em cada linha, sem condição (_GridVerificacoesAmostragem.cshtml:47-49)</td>
+</tr>
+<tr>
+<td>X (Excluir)</td>
+<td>Pediria confirmação e apagaria o registro</td>
+<td>Em cada linha, sem condição</td>
+</tr>
+<tr>
+<td>LOG (Ver log)</td>
+<td>Abriria o histórico do item (chave <code>verificacao_amostragem</code>)</td>
+<td>Em cada linha</td>
+</tr>
+<tr>
+<td>Imprimir (ícone da lista)</td>
+<td>Sem ação ligada</td>
+<td>Escondido (<code>display:none</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botões da tela (não vistos): <strong>Pesquisar</strong>, <strong>Limpar</strong> e <strong>INCLUIR</strong>; no formulário, <strong>Salvar Registro</strong> e <strong>Voltar</strong>.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Todos os campos vêm do código; nenhum foi visto em tela. Fontes: <code>Index.cshtml</code>, <code>Edit.cshtml</code> e os modelos de tela (caminhos na seção Resumo).</p>
 <div class="tabela"><table>
@@ -250,7 +331,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

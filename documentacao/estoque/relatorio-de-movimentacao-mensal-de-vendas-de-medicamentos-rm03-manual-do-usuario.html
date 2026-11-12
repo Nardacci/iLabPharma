@@ -45,21 +45,114 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="relatorio-de-movimentacao-mensal-de-vendas-de-medicamentos-rm03-analise.html">Análise</a><a href="relatorio-de-movimentacao-mensal-de-vendas-de-medicamentos-rm03-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="relatorio-de-movimentacao-mensal-de-vendas-de-medicamentos-rm03-fluxos.html">Fluxos</a><a href="relatorio-de-movimentacao-mensal-de-vendas-de-medicamentos-rm03-regras-de-negocio.html">Regras de negócio</a><a href="relatorio-de-movimentacao-mensal-de-vendas-de-medicamentos-rm03-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-relatorio-de-movimentacao-mensal-de-vendas-de-medicamentos-rm03.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-relatorios-passo-a-passo.html#tela-9-relatorio-de-movimentacao-mensal-de-vendas-de-medicamentos-rm03">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Relatório de Movimentação Mensal de Vendas de Medicamentos (RM03)</strong> é um relatório de consulta em modelo de mapa de controle: lista as <strong>saídas de itens marcados como substância controlada</strong> em um período, uma linha por movimentação, com código da DCB (Denominação Comum Brasileira), nome genérico, nome do medicamento, apresentação e concentração, quantidade, lote, nota fiscal, data, comprador (endereço, CNPJ e UF), visto e responsável. O título impresso é "Relação mensal de movimentação de medicamentos sujeitos a controle especial (RMV)". Seria usado pela Garantia da Qualidade e pela área regulatória (leitura da área, a validar). Não grava nada.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item marcado como "substância controlada"</strong></td>
+<td>Só esses itens entram no mapa. Pelo código, um item <strong>novo</strong> pode ser gravado sem a marca (F-REL11-1); abra e salve de novo o cadastro dos itens controlados</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Saídas de material</strong> no período</td>
+<td>Uma linha por saída não interna</td>
+<td>Telas de saída do Estoque</td>
+</tr>
+<tr>
+<td><strong>Solicitação de cliente ligada à saída</strong></td>
+<td>Só saídas ligadas a uma solicitação trazem o comprador</td>
+<td>Fluxo de solicitação e atendimento</td>
+</tr>
+<tr>
+<td><strong>Período (data inicial e final)</strong></td>
+<td>As duas datas são obrigatórias</td>
+<td>Digitadas na própria tela</td>
+</tr>
+<tr>
+<td><strong>Janelas abertas pelo sistema liberadas no navegador</strong></td>
+<td>O relatório abre em segunda janela</td>
+<td>Configuração do navegador</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório (leitura do código; nenhum passo foi executado numa tela real)</strong></p>
+<ol>
+<li>No menu Relatórios, abra <strong>Relatório de Movimentação Mensal de Vendas de Medicamentos (RM03)</strong>. Aparece o quadro "Pesquisa".</li>
+<li>Digite o <strong>Período</strong>: data inicial e data final (dia/mês/ano, com máscara e calendário). As duas são obrigatórias.</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. Abre uma segunda janela.</li>
+<li>Leia o mapa: uma linha por saída, ordenada por código do item e data.</li>
+<li>Imprima ou exporte pelo visualizador. Os campos de endereço, telefone e autorizações do cabeçalho saem em branco: preencha à mão se o mapa for entregue.</li>
+<li><strong>LIMPAR FILTRO</strong> apaga as duas datas.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>Confira no cadastro de Item que os medicamentos controlados estão marcados como "substância controlada". Pelo código, um item <strong>novo</strong> pode ser gravado sem essa marca (ver Falhas); abra e salve de novo o cadastro dos itens controlados antes de contar com o relatório.</li>
-<li>Só saídas ligadas a uma solicitação de cliente trazem o comprador.</li>
+<li><strong>Não grava nada</strong>: só lê, e não registra quem emitiu.</li>
+<li>Entra <strong>qualquer saída não interna</strong> de item controlado, não só venda, embora o título diga "vendas" (ponto para validar com a área).</li>
+<li>O <strong>código da DCB sai vazio</strong>; o nome genérico repete o nome do medicamento; apresentação e concentração mostram a unidade.</li>
+<li>O <strong>lote</strong> impresso é o item de entrada (número interno), não o lote do fabricante.</li>
+<li>Saída sem solicitação sai sem comprador, sem aviso. O mapa não imprime usuário nem data de emissão.</li>
 </ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Relatórios, abra "Relatório de Movimentação Mensal de Vendas de Medicamentos (RM03)". Aparece o quadro "Pesquisa".</li>
-<li>Passo 2. Digite o <strong>Período</strong>: data inicial e data final (dia/mês/ano, com máscara e calendário). As duas são obrigatórias (rm03.aspx.cs:32-36).</li>
-<li>Passo 3. Clique em GERAR RELATÓRIO. Abre uma segunda janela.</li>
-<li>Passo 4. Leia o mapa: uma linha por saída, ordenada por código do item e data.</li>
-<li>Passo 5. Imprima ou exporte pelo visualizador. Os campos de endereço, telefone e autorizações do cabeçalho saem em branco: preencha à mão se o mapa for entregue.</li>
-<li>Passo 6. LIMPAR FILTRO apaga as duas datas.</li>
+<li>Data inicial vazia: "Data de início é obrigatório!". Data final vazia: "Data fim é obrigatório!".</li>
+<li>Validadores da tela: "Data inicial não informada" / "Data inicial inválida!" e "Data final não informada" / "Data final inválida!".</li>
+<li>Falha da consulta: "Erro ao gerar o relatório!", na segunda janela.</li>
+<li>O clique não chama a validação da página: data inválida vira 01/01/0001 e a consulta falha.</li>
 </ul>
-<p>Tudo acima é leitura do código; nenhum passo foi executado numa tela real.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>rm03</code>. No catálogo de funções ela é só um ponto do menu Relatórios: as marcas de incluir, alterar, excluir, imprimir ou Excel, ver log e criar todas estão em "N" (dml.sql:1932), então <strong>não existe função de consultar, de imprimir nem de ver log para esta tela</strong>. Quem tem o ponto de menu no perfil abre a tela; não há grau menor de permissão.</li>
+<li>O botão de gerar não depende das funções do usuário (o trecho que esconderia botões de quem não tem função está comentado na base das telas).</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta) foi visto em outras telas do Estoque em 07/10 e 13/10/2026 e é esperado aqui, porque a tela usa a mesma base, mas <strong>não foi testado nesta tela</strong>.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum DV-EST registrado para esta tela (nunca foi testada). Pontos pelo código:</li>
+<li><strong>Item controlado pode ficar de fora do mapa</strong> (F-REL11-1, gravidade provável Alta): a marca "substância controlada" é gravada, na inclusão, com o valor do campo "Controle de destruição". O CT-EST-016 não conferiu a gravação.</li>
+<li><strong>Colunas sem informação:</strong> DCB vazia, nome genérico repetido, apresentação e concentração com a unidade (F-REL11-2, Alta).</li>
+<li><strong>Lote impresso é interno</strong>, o que atrapalha a rastreabilidade para recolhimento (F-REL11-3).</li>
+<li><strong>Cabeçalho em branco:</strong> endereço, telefone e autorizações (F-REL11-4).</li>
+<li>Entra qualquer saída não interna (F-REL11-5). Saída sem comprador sai sem aviso (F-REL11-7).</li>
+<li>O mapa não rastreia quem emitiu (F-REL11-8). Datas podem sair em formato americano (F-REL11-9; DV-EST-057).</li>
+<li>As mensagens de data têm erros de concordância, sem consequência.</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Recusa data vazia e abre a segunda janela com o período</td>
+<td>Sempre (não depende de função)</td>
+</tr>
+<tr>
+<td>LIMPAR FILTRO</td>
+<td>Esvazia as duas datas</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Imprimir, exportar e páginas (visualizador)</td>
+<td>Visualizador padrão; formatos não conferidos</td>
+<td>Na segunda janela</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -163,7 +256,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

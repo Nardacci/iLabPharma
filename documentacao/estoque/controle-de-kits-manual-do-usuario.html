@@ -45,30 +45,146 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="controle-de-kits-analise.html">Análise</a><a href="controle-de-kits-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="controle-de-kits-fluxos.html">Fluxos</a><a href="controle-de-kits-regras-de-negocio.html">Regras de negócio</a><a href="controle-de-kits-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-controle-de-kits.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-kits-passo-a-passo.html#tela-6-controle-de-kits">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela: <strong>Funciona</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>O kit precisa ter sido solicitado, a guia gerada, a solicitação de estoque atendida e a remessa finalizada e liberada (embarque liberado). Sem isso, a lista vem vazia.</p>
-<h4 id="consultar-os-kits-enviados">Consultar os kits enviados</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Controle de Kits</strong> é o acompanhamento dos kits que já saíram: para cada kit enviado a um cliente com remessa liberada, mostra a guia (GMM), o cliente, a data de embarque, os lotes de cada componente que estão no cliente, a validade e se algum lote está vencido. Para a Boa Prática de Fabricação, responde "em que cliente está cada lote do kit e há lote vencido em uso?". É usado por quem acompanha os kits no cliente (Almoxarifado, Comercial e Garantia da Qualidade; leitura da área, a validar). A tela também oferece <strong>repor lotes vencidos</strong> (nova solicitação, remessa e solicitação de estoque). O clique em uma linha abre "Controle de Kits - Detalhes" e, pela lupa de um componente, "Controle de Kits - Lotes do Componente".</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<p>O kit só aparece depois de percorrer todo este caminho; sem ele, a lista vem vazia ("A pesquisa não retornou nenhum resultado.", como em CT-EST-155, rodada 8):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Kit ativo</strong> cadastrado</td>
+<td>É o que aparece na lista</td>
+<td>Menu Kits › Cadastro de Kits</td>
+</tr>
+<tr>
+<td><strong>Solicitação de kit com guia gerada</strong></td>
+<td>Liga o kit à remessa</td>
+<td>Menu Kits › Solicitação de Kits</td>
+</tr>
+<tr>
+<td><strong>Solicitação de estoque atendida</strong></td>
+<td>Separa os lotes que vão no kit</td>
+<td>Atendimento de Solicitação e Separação de Material</td>
+</tr>
+<tr>
+<td><strong>Remessa finalizada e com embarque liberado</strong></td>
+<td>A lista só mostra kit com remessa liberada</td>
+<td>Remessa de Material (tipo GMM; ver DV-EST-046 e DV-EST-058)</td>
+</tr>
+<tr>
+<td><strong>Cliente e filial</strong></td>
+<td>Aparecem nos filtros Cliente e Local de Entrega</td>
+<td>Pessoa jurídica (Principal)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar os kits enviados</strong></p>
+<ol>
+<li>No menu <strong>Kits</strong>, abra <strong>Controle de Kits</strong> e clique em <strong>Pesquisar</strong>. Filtros: <strong>Código</strong> (parte do código), <strong>Tipo</strong>, <strong>Cliente</strong>, <strong>Local de Entrega</strong> (filial do cliente; recarrega ao trocar o cliente) e <strong>Vencido</strong> (todos, sim ou não).</li>
+<li>A lista mostra Código, Descrição, Tipo e Vencido. Linhas com lote vencido saem em vermelho.</li>
+<li>Clique no ícone de detalhe da linha.</li>
+</ol>
+<p><strong>Ver o detalhe de um kit</strong></p>
+<ol>
+<li>A tela "Controle de Kits - Detalhes" mostra o código, a data de cadastro, a descrição e o tipo do kit.</li>
+<li>A grade de componentes mostra Item, Unid., <strong>Qtde. Padrão</strong> (do cadastro), <strong>Qtde. Guia</strong> (soma enviada) e <strong>Qtde. Vencida</strong>. O ícone de lupa abre os lotes do componente.</li>
+<li>A grade de remessas mostra a GMM, a data da remessa, o cliente (consignatário), a data de embarque e se está vencida; o filtro Vencido da tela vale para essa grade.</li>
+</ol>
+<p><strong>Ver os lotes de um componente</strong></p>
+<ol>
+<li>A lupa abre "Controle de Kits - Lotes do Componente" com Cód. KIT, Item e a grade de lotes: Remessa, Lote, Item Entrada, Validade, Fornecedor, Qtde., Dias e Reposição (filtros Vencido e Reposição).</li>
+<li><strong>Dias</strong> é a validade menos hoje (0 se o item estiver inativo). Linhas vencidas e sem reposição saem em vermelho.</li>
+</ol>
+<p><strong>Repor lote vencido</strong></p>
+<ol>
+<li>O ícone de reposição só aparece para lote com <strong>Dias menor ou igual a zero</strong>, sem reposição pedida e de item ativo; por isso um lote que ainda vai vencer (por exemplo, 31 dias) <strong>não</strong> pode ser reposto por esta tela.</li>
+<li>Há reposição por lote, por componente, por remessa e para o kit todo (<strong>REPOR TODOS</strong>), cada uma com seu pedido de confirmação ("Deseja repor o lote?", "Deseja repor os lotes vencidos?", "Repor lotes vencidos da GMM?" ou "Repor todos os lotes vencidos?"). Aparece "Reposição gerada!".</li>
+<li>O botão <strong>REPOR LOTES VENCIDOS</strong> da tela de lotes e o ícone Repor da lista <strong>não fazem nada</strong> (rotina vazia / coluna oculta); use os ícones do detalhe e do lote.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu Kits, abra Controle de Kits e clique em Pesquisar. Filtros: Código (parte do código), Tipo, Cliente, Local de Entrega (filial do cliente) e Vencido (todos, sim ou não).</li>
-<li>Passo 2. A lista mostra Código, Descrição, Tipo e Vencido. Linhas com lote vencido saem em vermelho.</li>
-<li>Passo 3. Clique no ícone de detalhe da linha.</li>
+<li><strong>A consulta não grava nada</strong> (nem quem consultou ou imprimiu).</li>
+<li><strong>A reposição</strong> cria uma <strong>nova solicitação de kit</strong> do tipo Componente (Reposição = Sim), uma <strong>nova remessa</strong> copiada da anterior e uma <strong>solicitação de estoque</strong> do tipo Cliente (Fechado); marca o lote antigo como "reposição solicitada" (usuário e data) e grava o vínculo em TBL_KIT_REPOSICAO (RN-EST-KIT03-005).</li>
+<li>Depois o fluxo segue em <strong>Solicitação de Kits</strong>, <strong>Atendimento de Solicitação</strong> e <strong>Remessa de Material</strong>.</li>
+<li>A reposição <strong>não pergunta nem registra o destino do lote vencido</strong> que está no cliente (devolução, descarte ou recolhimento) e <strong>não pede justificativa nem aprovação</strong> (RN-EST-KIT03-006).</li>
 </ul>
-<h4 id="ver-o-detalhe-de-um-kit">Ver o detalhe de um kit</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. A tela "Controle de Kits - Detalhes" mostra o código, a data de cadastro, a descrição e o tipo do kit.</li>
-<li>Passo 2. A grade de componentes mostra Item, Unid., Qtde. Padrão (do cadastro), Qtde. Guia (soma enviada) e Qtde. Vencida. O ícone de lupa abre os lotes do componente.</li>
-<li>Passo 3. A grade de remessas mostra a GMM, a data da remessa, o cliente (consignatário), a data de embarque e se está vencida; o filtro Vencido da tela vale para essa grade.</li>
+<li>Sem resultado: "A pesquisa não retornou nenhum resultado.".</li>
+<li>"Componente não encontrado!", "Item não está ativo!" / "O Item não está ativo!" ao repor componente ou lote de item inativo.</li>
+<li>"Nenhum lote vencido foi encontrado!", "Nenhuma remessa encontrada para o lote!", "Nenhum componente encontrado para o kit", "Nenhum lote foi encontrado para reposição!" e "Nenhuma reposição foi gerada!" quando não há o que repor.</li>
+<li>"Erro ao carregar formulário!" se o detalhe falhar (com "Detalhe do erro (+)").</li>
 </ul>
-<h4 id="ver-os-lotes-de-um-componente">Ver os lotes de um componente</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 1. A lupa abre "Controle de Kits - Lotes do Componente" com Cód. KIT, Item, e a grade de lotes: Remessa, Lote, Item Entrada, Validade, Fornecedor, Qtde., Dias e Reposição.</li>
-<li>Passo 2. Dias é a validade menos hoje (0 se o item estiver inativo). Linhas vencidas e sem reposição saem em vermelho.</li>
+<li>A lista, o detalhe e os lotes usam a mesma função, <code>controleKit</code>. O script do menu cria para a tela só as funções de <strong>alterar</strong> e de <strong>imprimir ou exportar</strong>; <strong>não cria</strong> a de incluir, a de excluir nem a de log. <strong>Pesquisar</strong> exige a função de consultar.</li>
+<li>Os botões de reposição do detalhe e dos lotes <strong>não conferem função alguma</strong>: aparecem pela situação do lote (e pelo parâmetro <code>vencido</code> do endereço da página, a confirmar).</li>
+<li>A lista <strong>não filtra pelo almoxarifado do usuário</strong>: mostra os kits de qualquer almoxarifado com remessa liberada (leitura do código, a confirmar).</li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta; SEG-EST-03). Aberta pelo endereço, sem permissão, a tela caiu em "Sessão Expirada" no teste (CT-EST-158), sem recusa clara. Quem abrir o detalhe ou os lotes pelo endereço consegue acionar a reposição (leitura do código, a confirmar em CT-EST-KIT03-S1).</li>
 </ul>
-<h4 id="repor-lote-vencido">Repor lote vencido</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>O ícone de reposição só aparece para lote com Dias menor ou igual a zero e sem reposição pedida; por isso um lote que ainda vai vencer (por exemplo, 31 dias) <strong>não</strong> pode ser reposto por esta tela.</li>
-<li>Há reposição por lote, por componente, por remessa e para o kit todo (REPOR TODOS), cada uma com seu pedido de confirmação. O botão "REPOR LOTES VENCIDOS" da tela de lotes pede confirmação e não faz nada (rotina vazia).</li>
+<li><strong>Lote a vencer não é reposto.</strong> Só o lote já vencido ou que vence hoje tem o ícone; o recolhimento antes do prazo fica manual (CT-EST-156, ressalva).</li>
+<li><strong>Dois botões não fazem nada</strong> (Repor da lista e REPOR LOTES VENCIDOS): o usuário pode achar que repôs (RN-EST-KIT03-007).</li>
+<li><strong>A reposição não registra o destino do lote vencido no cliente</strong> (lacuna para o recolhimento, art. 147; CT-EST-KIT03-04).</li>
+<li>Na reposição feita pelo kit (CT-EST-156), a coluna <strong>Reposição ficou NÃO</strong> e o botão de reposição ficou desabilitado: nada indicou a reposição.</li>
+<li><strong>"Qtde. Guia" soma remessas ainda não liberadas</strong> e de todos os clientes: não é "o que está no cliente" (RN-EST-KIT03-003).</li>
+<li><strong>"Vencido" usa só a validade do lote</strong>, sem comparar com a validade mínima do planejamento (DV-EST-056).</li>
+<li>O filtro <strong>Reposição</strong> da tela de lotes pode estar invertido, a ordenação da grade de remessas é sempre decrescente e o detalhe ignora o cliente e a filial do filtro (leitura do código, a confirmar em CT-EST-KIT03-07 e 09).</li>
+<li>A lista fica vazia se a remessa do kit não finalizar: DV-EST-046 e DV-EST-058 (Alta, na Remessa de Material).</li>
+<li>Relatórios de kit saem com data em formato americano e nome do usuário cortado (DV-EST-057, Baixa).</li>
+<li>Erros do banco aparecem com o texto técnico (SEG-EST-13).</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detalhar</td>
+<td>Abre "Controle de Kits - Detalhes"</td>
+<td>Em toda linha</td>
+</tr>
+<tr>
+<td>Lupa do componente</td>
+<td>Abre os lotes do componente</td>
+<td>Em toda linha de componente do detalhe</td>
+</tr>
+<tr>
+<td>Repor (lista)</td>
+<td>Não faz nada</td>
+<td>Escondido</td>
+</tr>
+<tr>
+<td>Repor componente / remessa / lote</td>
+<td>Gera a reposição dos lotes vencidos</td>
+<td>Componente ou remessa com lote vencido; lote com Dias menor ou igual a zero e sem reposição</td>
+</tr>
+<tr>
+<td>REPOR TODOS</td>
+<td>Gera a reposição de todos os lotes vencidos do kit</td>
+<td>Detalhe de kit com algum lote vencido</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório da lista</td>
+<td>Depois de pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <h4 id="filtros-da-lista">Filtros da lista</h4>
@@ -330,7 +446,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

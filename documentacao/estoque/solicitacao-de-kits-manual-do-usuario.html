@@ -45,34 +45,141 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-kits-analise.html">Análise</a><a href="solicitacao-de-kits-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="solicitacao-de-kits-fluxos.html">Fluxos</a><a href="solicitacao-de-kits-regras-de-negocio.html">Regras de negócio</a><a href="solicitacao-de-kits-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-solicitacao-de-kits.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-kits-passo-a-passo.html#tela-5-solicitacao-de-kits">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela: <strong>Funciona</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>O kit precisa estar cadastrado e ativo no almoxarifado que você vai escolher. O cliente precisa ter filial cadastrada (é ela que vira o "Local de Entrega"). Tenha o centro de custo.</p>
-<h4 id="criar-a-solicitacao-e-incluir-os-kits">Criar a solicitação e incluir os kits</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Solicitação de Kits</strong> é o pedido de montagem e envio de kits a um cliente. Quem planeja e despacha os kits escolhe o tipo (Componente ou Kit), o almoxarifado, o centro de custo e o cliente, inclui os kits (ou componentes avulsos) com a quantidade, finaliza a solicitação e gera a <strong>guia de movimentação (GMM)</strong>. Ao gerar a guia, a tela cria a remessa do kit e uma solicitação de estoque comum por kit, que depois é atendida pela Separação e pelo Atendimento. <strong>A tela não escolhe lote</strong>: isso é do Atendimento de Solicitação.</p>
 <ul>
-<li>Passo 1. No menu Kits, abra Solicitação de Kits e clique em Incluir.</li>
-<li>Passo 2. Escolha o Tipo de Solicitação (Componente ou Kit), o Almoxarifado, o Centro de Custo e o Cliente. O Código é gerado pelo sistema.</li>
-<li>Passo 3. Clique em SALVAR e responda SIM a "Deseja gerar Solicitação do KIT?". Aparece "Solicitação gerada com sucesso!".</li>
-<li>Passo 4. No quadro "Kits/Itens da Solicitação", escolha o Kit (e, no tipo Componente, o componente) e a Quantidade; clique em SALVAR KIT/ITEM. Repita para cada kit.</li>
-<li>Passo 5. Clique em FINALIZAR SOLICITAÇÃO e responda SIM a "Deseja Finalizar a Solicitação do KIT?". Sem nenhum kit ou item aparece "Nenhum KIT/Item foi informado!".</li>
+<li><strong>Kit</strong>: inclui todos os componentes do kit, multiplicados pela quantidade de kits.</li>
+<li><strong>Componente</strong>: inclui um componente avulso de um kit (usado também para repor lotes vencidos).</li>
 </ul>
-<h4 id="gerar-a-solicitacao-guia">Gerar a solicitação / guia</h4>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Kit ativo</strong>, com componentes, no almoxarifado escolhido</td>
+<td>Sem kit no almoxarifado: "Nenhum KIT cadastrado para o Almoxarifado informado!". No tipo Kit, só aparecem kits com todos os componentes ativos</td>
+<td>Menu Kits › Cadastro de Kits</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado</strong> ativo liberado para o seu grupo de usuário</td>
+<td>A lista só mostra os do seu grupo</td>
+<td>Cadastros › Almoxarifado e Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Centro de custo</strong> ativo</td>
+<td>Campo obrigatório</td>
+<td>Cadastros › Centro de Custo</td>
+</tr>
+<tr>
+<td><strong>Cliente</strong> cadastrado, <strong>com filial</strong></td>
+<td>A filial vira o "Local de Entrega", obrigatório ao gerar a guia; no teste, só um cliente tinha filial</td>
+<td>Pessoa jurídica (Principal)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Criar a solicitação e incluir os kits</strong></p>
+<ol>
+<li>No menu <strong>Kits</strong>, abra <strong>Solicitação de Kits</strong> e clique em <strong>Incluir</strong>.</li>
+<li>Escolha o <strong>Tipo de Solicitação</strong> (Componente ou Kit), o <strong>Almoxarifado</strong>, o <strong>Centro de Custo</strong> e o <strong>Cliente</strong>. O Código é gerado pelo sistema.</li>
+<li>Clique em <strong>SALVAR</strong> e responda <strong>SIM</strong> a "Deseja gerar Solicitação do KIT?". Aparece "Solicitação gerada com sucesso!" e o formulário reabre no mesmo registro.</li>
+<li>No quadro "Kits/Itens da Solicitação", escolha o <strong>Kit</strong> (e, no tipo Componente, o componente) e a <strong>Quantidade do Kit</strong>; clique em <strong>SALVAR KIT/ITEM</strong>. Repita para cada kit. No tipo Kit, incluir de novo o mesmo kit <strong>troca</strong> a quantidade, não soma.</li>
+<li>Clique em <strong>FINALIZAR SOLICITAÇÃO</strong> e responda <strong>SIM</strong> a "Deseja Finalizar a Solicitação do KIT?". Aparece "Solicitação Finalizada!". Sem nenhum kit ou item aparece "Nenhum KIT/Item foi informado!".</li>
+</ol>
+<p><strong>Gerar a solicitação / guia</strong></p>
+<ol>
+<li>Com a solicitação finalizada, o quadro "Guia de Movimentação" aparece. Escolha o <strong>Local de Entrega</strong> (a filial do cliente) e escreva a <strong>Justificativa</strong>.</li>
+<li>Clique em <strong>GERAR SOLICITAÇÃO / GUIA</strong> e responda <strong>SIM</strong> a "Deseja Gerar a Solicitação / GMM?". Aparece "Solicitação/GMM gerada!".</li>
+<li>A tela passa a mostrar o Nº da Guia, a data da guia, o consignatário e a situação da separação. O botão <strong>Solicitações (Estoque)</strong> lista as solicitações de estoque geradas.</li>
+<li>Atenda e separe pelas telas <strong>Atendimento de Solicitação</strong> e <strong>Separação de Material</strong>; finalize e libere a remessa pela <strong>Remessa de Material</strong> (tipo GMM). Quando liberada, a solicitação aparece como <strong>Enviado = Sim</strong> e o botão Reabrir não existe mais.</li>
+</ol>
+<p><strong>Reabrir, cancelar a guia e cancelar a reposição</strong></p>
 <ul>
-<li>Passo 1. Com a solicitação finalizada, o quadro "Guia de Movimentação" aparece. Escolha o Local de Entrega (a filial do cliente) e escreva a Justificativa.</li>
-<li>Passo 2. Clique em GERAR SOLICITAÇÃO / GUIA e responda SIM a "Deseja Gerar a Solicitação / GMM?". Aparece "Solicitação/GMM gerada!".</li>
-<li>Passo 3. A tela passa a mostrar o Nº da Guia, a data da guia, o consignatário e a situação da separação. O botão "Solicitações (Estoque)" lista as solicitações de estoque geradas.</li>
-<li>Passo 4. Atenda e separe pelas telas Atendimento de Solicitação e Separação de Material; finalize e libere a remessa pela Remessa de Material (tipo GMM). Quando liberada, a solicitação de kit aparece como Enviado = Sim e o botão Reabrir não existe mais.</li>
+<li><strong>Reabrir solicitação:</strong> só antes de gerar a guia; exige Justificativa. Depois da guia, o botão não aparece.</li>
+<li><strong>Cancelar guia:</strong> só enquanto a solicitação de estoque não foi atendida; exige Justificativa; exclui as solicitações de estoque e a remessa.</li>
+<li><strong>Cancelar reposição:</strong> só nas solicitações de reposição; exclui a remessa e a solicitação.</li>
 </ul>
-<h4 id="reabrir-cancelar-a-guia-e-cancelar-a-reposicao">Reabrir, cancelar a guia e cancelar a reposição</h4>
+<p><strong>Excluir e pesquisar</strong></p>
 <ul>
-<li>Reabrir solicitação: só antes de gerar a guia; exige Justificativa. Depois da guia, o botão não aparece.</li>
-<li>Cancelar guia: só enquanto a solicitação de estoque não foi atendida; exige Justificativa; exclui as solicitações de estoque e a remessa.</li>
-<li>Cancelar reposição: só nas solicitações de reposição; exclui a remessa e a solicitação.</li>
+<li><strong>Excluir</strong> (pela lista): só aparece para solicitação que não gerou solicitação de estoque, não foi enviada e não é de reposição; exige Justificativa e confirma com "Confirma a exclusão do item?".</li>
+<li>Filtros da lista: <strong>Solic. Kit</strong>, <strong>Solic. Estoque</strong>, <strong>GMM</strong>, <strong>Tipo</strong>, <strong>Almoxarifado</strong> (só os do seu grupo), <strong>Enviado</strong>, <strong>Reposição</strong> e <strong>Período</strong>. Informar só uma das duas datas dá "Período inválido!". A lista abre vazia: clique em <strong>Pesquisar</strong>.</li>
 </ul>
-<h4 id="excluir-e-pesquisar">Excluir e pesquisar</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Excluir (pela lista): só aparece para solicitação que não gerou solicitação de estoque, não foi enviada e não é de reposição; exige Justificativa.</li>
-<li>Filtros da lista: Solic. Kit, Solic. Estoque, GMM, Tipo, Almoxarifado, Enviado, Reposição e Período. Informar só uma das duas datas dá "Período inválido!".</li>
+<li><strong>Salvar (criação):</strong> grava a solicitação com código gerado e reabre o formulário para incluir os kits. Criação e alterações do cabeçalho (finalizar, guia, situação) gravam log de campo.</li>
+<li><strong>Gerar a guia:</strong> cria a <strong>remessa GMM</strong> (marcada como origem kit) e <strong>uma solicitação de estoque por kit</strong>, do tipo Cliente e com situação Fechado, ligadas à solicitação de kit. Elas seguem para o <strong>Atendimento de Solicitação</strong>; a remessa segue para a <strong>Remessa de Material</strong>, onde é finalizada e liberada. Liberada, o kit aparece no <strong>Controle de Kits</strong> (RN-EST-KIT02-004).</li>
+<li><strong>Cancelar a guia</strong> exclui as solicitações de estoque e a remessa; <strong>excluir</strong> e <strong>cancelar reposição</strong> não gravam log (RN-EST-KIT02-010).</li>
+<li>A remessa, a solicitação de kit e as solicitações de estoque são gravadas em passos separados, sem transação única.</li>
 </ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Tipo de Solicitação / Almoxarifado / Centro de Custo / Cliente não foi informado!".</li>
+<li>"Nenhum KIT cadastrado para o Almoxarifado informado!".</li>
+<li>"KIT não foi informado!", "Compoenente não foi informado!" (erro de grafia do sistema) e "Quantidade do Kit não informada!".</li>
+<li>"Nenhum KIT/Item foi informado!" ao finalizar sem kit.</li>
+<li>"Local de Entrega não foi informado!" e "A Justificativa é obrigatória!" ao gerar a guia, reabrir, cancelar a guia ou cancelar a reposição (vistas em CT-EST-156).</li>
+<li>"Solicitação do Estoque já foi atendida!" ao cancelar guia ou reposição depois do atendimento.</li>
+<li>"Período inválido!" na lista, com uma só data.</li>
+<li>Falhas de geração: "Erro ao gerar GMM", "Guia não encontrada!" e "Erro ao excluir as solicitações do estoque!".</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela usa o identificador <code>solicitacaoKit</code>; o script do menu cria as funções de incluir, alterar, excluir, imprimir ou exportar e consultar log. <strong>Pesquisar</strong> exige a função de consultar; <strong>Incluir</strong>, a de incluir; <strong>Editar</strong> (que vira <strong>Visualizar</strong> se a solicitação já foi enviada), a de alterar; <strong>Excluir</strong>, a de excluir; <strong>Ver log</strong>, a de consultar log.</li>
+<li>No formulário, os botões <strong>FINALIZAR, REABRIR, GERAR GUIA, CANCELAR GUIA e CANCELAR REPOSIÇÃO não conferem função nenhuma</strong>: aparecem pela situação da solicitação. Quem gera a guia e quem libera a remessa pode ser a mesma pessoa; <strong>Ponto para validar com a área</strong> se precisa de segunda aprovação.</li>
+<li>O <strong>grupo de usuário</strong> limita os almoxarifados do filtro e do formulário.</li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta; SEG-EST-03): quem digitar o endereço abre a tela, e as permissões de incluir, alterar e excluir do formulário são ligadas como verdadeiras (leitura do código, a confirmar em CT-EST-KIT02-S1).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>As justificativas não são gravadas.</strong> Gerar guia, reabrir, cancelar guia, cancelar reposição e excluir exigem justificativa, mas o texto não vai para nenhum registro (RN-EST-KIT02-009; CT-EST-KIT02-06 a confirmar). Cancelar um envio não deixa rastro de quem, quando e por quê.</li>
+<li><strong>"Solicitação/GMM gerada!" pode aparecer mesmo se a solicitação de estoque falhar</strong> (RN-EST-KIT02-008; CT-EST-KIT02-07): confira o botão Solicitações (Estoque).</li>
+<li><strong>A remessa criada pela guia nasce sem Origem e sem Responsável</strong> (DV-EST-058, Alta): na tela comum de remessa ela não finaliza; finaliza com o tipo GMM (DV-EST-046, Alta, na Remessa de Material).</li>
+<li><strong>O Atendimento aceita lote com validade menor que a mínima do planejamento</strong> (DV-EST-056, Média; teste CT-EST-153: lote de 31 dias com mínima de 180) e <strong>não ordena os lotes por validade</strong> (DV-EST-048, Alta).</li>
+<li><strong>A remessa liberada não chega à Rastreabilidade</strong> (DV-EST-072, Média).</li>
+<li>Reabrir depois da guia não é recusado por mensagem: o botão simplesmente some (RN-EST-130, CT-EST-154).</li>
+<li>O teste de reposição (CT-EST-156) mostrou a coluna <strong>Reposição = NÃO</strong> e o botão de reposição do Controle de Kits desabilitado.</li>
+<li>Cancelar a guia de uma solicitação já separada (mas não atendida) é permitido (CT-EST-KIT02-05, a confirmar).</li>
+<li>Textos com erro de grafia: "Compoenente" e "CANCELAR REPOSÇÃO".</li>
+<li>Erros do banco aparecem ao usuário com o texto técnico (SEG-EST-13).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Editar / Visualizar</td>
+<td>Abre o formulário</td>
+<td>Em toda linha; vira Visualizar se a solicitação já foi enviada</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Abre o quadro de exclusão com Justificativa</td>
+<td>Para quem tem a função de excluir, se não houve solicitação de estoque, não foi enviada e não é reposição</td>
+</tr>
+<tr>
+<td>Ver log</td>
+<td>Abre o histórico da solicitação</td>
+<td>Para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório da lista</td>
+<td>Depois de pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <h4 id="filtros-da-lista">Filtros da lista</h4>
@@ -527,7 +634,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -45,31 +45,132 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="inventario-contagem-analise.html">Análise</a><a href="inventario-contagem-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="inventario-contagem-fluxos.html">Fluxos</a><a href="inventario-contagem-regras-de-negocio.html">Regras de negócio</a><a href="inventario-contagem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-inventario-contagem.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-inventario-passo-a-passo.html#tela-2-inventario-contagem">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>O inventário precisa ter sido gerado na tela Inventário. Combine antes quem fará cada contagem: o sistema não impede que a mesma pessoa faça as três (DV-EST-049).</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
-<ul>
-<li>Passo 1. No menu Inventário, abra Inventário - Contagem. Clique em Pesquisar para listar os inventários com contagem em curso.</li>
-<li>Passo 2. Filtros: Código, Período e Motivo. O filtro de Situação não aparece nesta tela (inventario_lst.aspx.cs:108-111).</li>
-<li>Passo 3. Clique no lápis (Editar) da linha para abrir a contagem (inventario_lst.aspx.cs:273-275).</li>
-</ul>
-<h4 id="contar">Contar</h4>
-<ul>
-<li>Passo 4. A tela mostra Código, Data, Motivo, Tipo, Situação e a contagem atual (1ª, 2ª ou 3ª) (inventario_contagem.aspx:96-100).</li>
-<li>Passo 5. Digite o <strong>código da linha</strong> (campo "Código", a coluna "It." da grade) e tecle Enter, ou clique no lápis da linha. A tela mostra Endereço, Item, Item Entrada (lote), Validade e Unidade (inventario_contagem.aspx.cs:675-760).</li>
-<li>Passo 6. Digite a <strong>Quantidade</strong> encontrada (só números e vírgula; três casas) e clique em REGISTRAR CONTAGEM. Para endereço sem nada, marque "Endereço Vazio" (a quantidade é desligada).</li>
-<li>Passo 7. Se o que você encontrou é outro item ou outro lote, clique em ALTERAR ITEM, busque o novo item e escolha o lote (inventario_contagem.aspx.cs:809-860).</li>
-<li>Passo 8. Para desfazer o registro de uma linha, use o ícone de limpar da grade: a quantidade volta a zero e a linha volta a pendente (inventario_contagem.aspx.cs:414-460).</li>
-<li>Passo 9. As linhas ainda não contadas aparecem em vermelho (inventario_contagem.aspx.cs:329-333). Use o filtro PENDENTES para ver só elas.</li>
-<li>Passo 10. Quando todas as linhas estiverem registradas, clique em FINALIZAR CONTAGEM e confirme ("Deseja finalizar a contagem?").</li>
-<li>Passo 11. Leia a resposta: "Inventário concluído!" (sem divergência); "N-ª Contagem finalizada! Necessário efetuar nova contagem!" (volta para contar os itens divergentes); ou "3ª Contagem finalizada! Necessário justificar divergências!".</li>
-</ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A tela <strong>Inventário - Contagem</strong> é onde os contadores do almoxarifado <strong>registram a contagem física</strong> do que existe em cada endereço do inventário aberto, e o responsável pelo inventário <strong>finaliza cada contagem</strong>. Para cada linha (endereço e lote) informa-se a quantidade encontrada ou marca-se "Endereço Vazio". Se houver divergência em relação ao saldo guardado na abertura, o sistema abre sozinho uma nova contagem (até três) só para os itens divergentes; se não houver, o inventário fica concluído. Nada muda no saldo do estoque aqui: o saldo só muda na Apuração.</p>
+<p>A página tem duas partes: a <strong>lista</strong> dos inventários com contagem em curso (compartilhada com as outras três telas do menu) e a <strong>tela de contagem</strong> do inventário escolhido.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inventário gerado</strong>, com a contagem ainda não finalizada</td>
+<td>Só esses aparecem na lista; é daí que vêm as linhas a contar</td>
+<td>Menu Inventário › Inventário</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado do inventário liberado para o seu grupo de usuário</strong></td>
+<td>A lista só traz inventários de almoxarifados do grupo</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Pessoas diferentes para cada contagem</strong> (combinação da equipe)</td>
+<td>O sistema <strong>não impede</strong> que a mesma pessoa faça as três (DV-EST-049); a regra precisa ser validada com a área</td>
+<td>Decisão da área, fora do sistema</td>
+</tr>
+<tr>
+<td>Ficha de contagem impressa (opcional)</td>
+<td>A contagem sai pela tela Inventário (IMPRIMIR FICHA); esta tela não tem relatório</td>
+<td>Menu Inventário › Inventário</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Abrir a contagem</strong></p>
+<ol>
+<li>No menu <strong>Inventário</strong>, abra <strong>Inventário - Contagem</strong>. Clique em <strong>Pesquisar</strong> para listar os inventários com contagem em curso.</li>
+<li>Filtros: <strong>Código</strong>, <strong>Período</strong> e <strong>Motivo</strong>. O filtro de Situação não aparece nesta tela.</li>
+<li>Clique no <strong>lápis (Editar)</strong> da linha para abrir a contagem.</li>
+</ol>
+<p><strong>Contar</strong></p>
+<ol>
+<li>A tela mostra Código, Data, Motivo, Tipo, Situação e a contagem atual (1ª, 2ª ou 3ª).</li>
+<li>Digite o <strong>código da linha</strong> (campo "Código", a coluna "It." da grade) e tecle Enter, ou clique no lápis da linha. A tela mostra Endereço, Item, Item Entrada (lote), Validade e Unidade. Na 2ª e na 3ª contagem trazem o item e o lote da contagem anterior.</li>
+<li>Digite a <strong>Quantidade</strong> encontrada (só números e vírgula; três casas) e clique em <strong>REGISTRAR CONTAGEM</strong>. Para endereço sem nada, marque <strong>"Endereço Vazio"</strong> (a quantidade é desligada e grava zero).</li>
+<li>Se o que você encontrou é outro item ou outro lote, clique em <strong>ALTERAR ITEM</strong>, busque o novo item e escolha o lote (o lote só é oferecido a item com controle de lote).</li>
+<li>Para desfazer o registro de uma linha, use o <strong>ícone de limpar da grade</strong>: a quantidade volta a zero e a linha volta a pendente. <strong>LIMPAR CONTAGEM</strong> só limpa os campos da tela, sem apagar nada gravado.</li>
+<li>As linhas ainda não contadas aparecem em <strong>vermelho</strong>. Use o filtro <strong>PENDENTES</strong> para ver só elas (Todos, Pendentes, Registrados); a tela mostra o total registrado e o total pendente.</li>
+<li>Quando todas as linhas estiverem registradas, clique em <strong>FINALIZAR CONTAGEM</strong> e confirme ("Deseja finalizar a contagem?").</li>
+<li>Leia a resposta: "Inventário concluído!" (sem divergência); "1ª Contagem finalizada! Necessário efetuar nova contagem!" (volta para contar os itens divergentes); ou "3ª Contagem finalizada! Necessário justificar divergências!". O próximo passo é <strong>Inventário - Auditoria/Justificativa</strong> (ou, sem divergência, <strong>Inventário - Apuração</strong>).</li>
+</ol>
+<p><strong>O que a tela não faz</strong></p>
 <ul>
 <li>Não impede que a mesma pessoa conte as três vezes e depois justifique e apure (DV-EST-049).</li>
-<li>Não pede motivo para cada alteração de quantidade: o sistema guarda só a última quantidade registrada de cada contagem e o log de alteração.</li>
-<li>Não tem relatório de contagem nesta tela; a ficha de contagem sai pela tela Inventário (IMPRIMIR FICHA).</li>
+<li>Não pede motivo para alterar uma quantidade: guarda só a última quantidade de cada contagem; o valor antigo fica só no log.</li>
+<li>Não tem relatório de contagem.</li>
 </ul>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>REGISTRAR CONTAGEM</strong> grava a quantidade da linha e a marca como registrada; o inventário continua em contagem. Registrar, alterar e limpar contagem gravam o <strong>log de alteração</strong> com usuário e data; a linha guarda quem a criou e quem a alterou por último (esse "Responsável" aparece na tela de Apuração).</li>
+<li><strong>FINALIZAR CONTAGEM</strong> compara com o <strong>saldo da abertura</strong>. Regras da divergência: na 1ª contagem, a linha diverge se a quantidade difere do saldo ou se o item contado é outro; na 2ª, se difere do saldo <strong>e</strong> da 1ª; na 3ª, se difere do saldo, da 1ª e da 2ª.</li>
+<li><strong>Sem divergência:</strong> situação <strong>CONCLUÍDO</strong>. <strong>Com divergência:</strong> situação <strong>DIVERGENTE</strong> e nova contagem só para as linhas divergentes. <strong>Fim da 3ª contagem:</strong> situação <strong>PENDENTE</strong> (no código, "Em auditoria"), mesmo que nenhuma linha tenha ficado divergente (RN-EST-INV02-007), e a contagem é dada como finalizada.</li>
+<li>Finalizar grava o log de alteração do inventário. Nenhum outro módulo é gravado.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Código da contagem não foi informado!" e "Contagem não encontrada!".</li>
+<li>"Quantidade não informada ou inválida!" / "Quantidade inválida!".</li>
+<li>"Nenhum Item foi informado!" (registrar sem item e sem marcar vazio) e "Nenhuma contagem foi informada!" (ALTERAR ITEM sem linha).</li>
+<li>"Novo item não foi informado!" / "Novo lote não foi selecionado!".</li>
+<li>"Existem itens que não foram contados!" ao finalizar com linha pendente (recusa não vista em teste).</li>
+<li>"Erro ao finalizar contagem!" e "Erro ao alterar o item da contagem!" / "Erro ao alterar o lote da contagem!".</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela é a função <strong>402 (Inventário - Contagem)</strong>. O cadastro do menu libera para o perfil só <strong>alterar</strong> e <strong>ver log</strong>; <strong>não registra incluir, excluir nem imprimir</strong>.</li>
+<li>Na lista, o <strong>lápis</strong> depende da função de alterar e o <strong>Log</strong>, da função de ver log. A lista só traz inventários de almoxarifados do grupo do usuário.</li>
+<li><strong>Registrar e finalizar não conferem a função de novo no servidor, nem o usuário que já contou:</strong> não há trava de separação de funções, e quem abriu o inventário pode contá-lo (DV-EST-049).</li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta; CT-EST-141, feito em outra tela, deu erro técnico). Nos formulários as permissões de incluir, alterar e excluir começam como verdadeiras (leitura do código).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A mesma pessoa pode fazer a 1ª, a 2ª e a 3ª contagem, justificar e apurar, sem aviso</strong> (DV-EST-049, Média; CT-EST-140 falhou em 22/10/2026).</li>
+<li><strong>Valor repetido vale como confirmado:</strong> se a 2ª contagem for igual à 1ª, a linha sai do ciclo mesmo diferindo do saldo, e a apuração ajusta pelo valor repetido. <strong>Ponto para validar com a área</strong> (RN-EST-INV02-004; CT-EST-INV02-02).</li>
+<li><strong>Na 3ª contagem toda linha vai para a justificativa</strong>, mesmo a que não divergiu. <strong>Ponto para validar.</strong></li>
+<li><strong>Inventário cancelado pode continuar na lista de contagem</strong>, e a tela não confere o cancelamento antes de registrar (CT-EST-INV02-05, a confirmar).</li>
+<li><strong>ALTERAR ITEM pode falhar fora do tipo "Rotativo - Endereço"</strong> (leitura do código; ponto para validar em tela).</li>
+<li><strong>Dois contadores na mesma linha:</strong> a última gravação vale, sem aviso. A tela <strong>aceita quantidade muito maior que o saldo</strong> sem pedir confirmação.</li>
+<li>A contagem é <strong>"cega" pelo código</strong> (a grade não mostra o saldo do sistema), mas isso <strong>não foi conferido em tela</strong> (CT-EST-INV02-03).</li>
+<li>Não foram vistos em tela: recusa de finalizar com linha pendente, ALTERAR ITEM, o ícone de limpar, "Endereço Vazio" e a 2ª contagem igual à 1ª.</li>
+<li>Erros do banco aparecem com o texto técnico (SEG-EST-13).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Editar (lápis)</td>
+<td>Abre a contagem do inventário</td>
+<td>Na lista, para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre o histórico de alterações do inventário</td>
+<td>Na lista, para quem tem a função de ver log</td>
+</tr>
+<tr>
+<td>Lápis da grade</td>
+<td>Carrega a linha nos campos</td>
+<td>Em cada linha da contagem</td>
+</tr>
+<tr>
+<td>Ícone de limpar da grade</td>
+<td>Zera a quantidade e desmarca a linha como registrada</td>
+<td>Em cada linha da contagem</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -371,7 +472,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

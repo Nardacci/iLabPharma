@@ -45,16 +45,94 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="matriz-de-treinamento-analise.html">Análise</a><a href="matriz-de-treinamento-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="matriz-de-treinamento-fluxos.html">Fluxos</a><a href="matriz-de-treinamento-regras-de-negocio.html">Regras de negócio</a><a href="matriz-de-treinamento-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-matriz-de-treinamento.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-treinamento-tecnico-passo-a-passo.html#tela-6-matriz-de-treinamento">Passo a passo</a><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Matriz de Treinamento</strong> é a tela em que a Garantia da Qualidade coloca os funcionários numa turma já programada. Para cada turma, escolhe uma solicitação pendente e passa os funcionários para a coluna de alocados, ou inclui uma pessoa avulsa (com justificativa). Depois de salvar os alocados, pode <strong>iniciar o treinamento</strong>, e a turma segue para a <strong>Conclusão do Treinamento</strong>.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <p>Confira que a turma está programada e que as solicitações do treinamento estão Pendentes. Tenha em mãos o número de vagas da turma (ele aparece na tela como "Qtd Vagas").</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde vem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Turma programada</strong> (Pendente ou Alocado)</td>
+<td>A lista traz as turmas; o número de vagas aparece como "Qtd Vagas"</td>
+<td>Tela Programação de Treinamento</td>
+</tr>
+<tr>
+<td><strong>Solicitação Pendente ou Concluído Parcial do mesmo treinamento</strong></td>
+<td>Para alocar por solicitação (MatrizTreinamentoController.cs:569-579)</td>
+<td>Tela Solicitação de Treinamento</td>
+</tr>
+<tr>
+<td><strong>Funcionário ativo com setor</strong></td>
+<td>Para alocar como avulso; o avulso sem setor derruba o relatório do Acompanhamento dos Treinamentos (DV-GQ-316)</td>
+<td>Cadastros do módulo Principal</td>
+</tr>
+<tr>
+<td><strong>Requisitos do treinamento</strong> (função e setor)</td>
+<td>O sistema avisa, mas deixa alocar quem não atende</td>
+<td>Tela Cadastro de Treinamento</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<h5 id="tela-de-lista">Tela de lista</h5>
 <ul>
 <li>Passo 1. No menu, abra Treinamento Técnico › Matriz de Treinamento. A tela mostra o quadro "Pesquisa".</li>
 <li>Passo 2. Filtros: Código Programação, Treinamento (parte do nome), Revisão do Treinamento (parte do texto), Data Início e Data Fim (valem juntas) e Situação (Pendente, Cancelado, Em Curso, Finalizado, Alocado). Clique em Pesquisar.</li>
 <li>Passo 3. A lista mostra CÓD. PROG., TREINAMENTO, REVISÃO DO TREINAMENTO, DATA e SITUAÇÃO, com os ícones Editar (turma Pendente ou Alocado), Visualizar (Em Curso, Finalizado ou Cancelado) e Log (CT-GQ-TRE-F-14, 23/10/2026). A lista mostra 3 linhas por página.</li>
 <li>Passo 4. Limpar esvazia os filtros; Imprimir abre um PDF com a lista.</li>
 </ul>
-<h4 id="o-que-cada-icone-da-lista-faz-e-quando-aparece">O que cada ícone da lista faz e quando aparece</h4>
+<h5 id="alocar-os-funcionarios">Alocar os funcionários</h5>
+<ul>
+<li>Passo 5. Clique no lápis da turma. O quadro de cima mostra os dados da turma (treinamento, revisão, local, período, turnos e horários). No quadro "Alocação do Treinamento", escolha em Solicitações o código da solicitação pendente; os funcionários dela aparecem na coluna da esquerda, com Treinandos (quantos) e Total.</li>
+<li>Passo 6. Clique no funcionário para passá-lo para os Alocados, ou use o botão » para passar todos. Se o funcionário não atende aos requisitos do treinamento (setor ou função), o sistema pergunta "Treinando não atende aos requisitos do treinamento. Confirma alocação?", e a pessoa pode seguir sem justificar. Quando as vagas acabam, aparece "O número máximo de alunos foi atingido." e a pessoa não passa (CT-GQ-TRE-43). Com 2 pessoas para 1 vaga, a segunda fica sem turma (CT-GQ-TRE-43; DV-GQ-314).</li>
+<li>Passo 7. Para um funcionário que não pediu treinamento, use "Nome Avulso": digite 3 letras, clique em "buscar", escolha o nome, escreva a Justificativa (obrigatória; "Preencha a justificativa."; CT-GQ-TRE-44) e clique em "Alocar Avulso". O avulso não respeita as vagas e o mesmo funcionário pode entrar em duas turmas (CT-GQ-TRE-45 e 46; DV-GQ-315). A busca de avulso pode mostrar dois funcionários com o mesmo nome, um sem setor, e deixa escolher o sem setor (CT-GQ-TRE-48).</li>
+<li>Passo 8. Para tirar alguém da turma, clique na linha dele nos Alocados (volta à coluna da esquerda se for da solicitação aberta) ou use o botão «.</li>
+<li>Passo 9. Clique em "Salvar Alocados"; o sistema pergunta "Confirma alteração?" e grava. Aparece "Alteração efetuada com sucesso." e a turma fica Alocado. A solicitação inteira também fica Alocado, mesmo se só parte das pessoas coube (CT-GQ-074, CT-GQ-TRE-43).</li>
+</ul>
+<h5 id="iniciar-o-treinamento">Iniciar o treinamento</h5>
+<ul>
+<li>Passo 10. O botão "Iniciar Treinamento" só aparece quando há pelo menos um alocado (CT-GQ-TRE-47, 23/10/2026). Clique, e confirme em "Confirma início do treinamento?". Aparece "Inclusão efetuada com sucesso." (texto de inclusão, ver DV-GQ-327) e a turma fica Em Curso. Não há etapa de aprovação do programa (CT-GQ-TRE-42; DV-GQ-322).</li>
+<li>Passo 11. O Log da turma mostra "AlocacaoTreinamento Inclusão" de cada pessoa e "TipoSituacao Alocado → EmCurso" (CT-GQ-074).</li>
+</ul>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>Salvar Alocados</strong> grava os treinandos na turma e leva a <strong>turma a Alocado</strong> e a <strong>solicitação inteira a Alocado</strong>, e volta para a lista (MatrizTreinamentoController.cs:219-365).</li>
+<li><strong>Iniciar Treinamento</strong> leva a turma a <strong>Em Curso</strong> e recalcula a situação das solicitações; a sobra de uma solicitação que passou das vagas fica sem turma e a solicitação vira "Concluído Parcial" (DV-GQ-314). A mensagem de sucesso desse passo é "Inclusão efetuada com sucesso." (DV-GQ-327).</li>
+<li>A turma em curso passa a aparecer na <strong>Conclusão do Treinamento</strong>.</li>
+<li>A turma é alocada e iniciada <strong>sem aprovação do responsável</strong> (DV-GQ-322).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>Aviso (confirmável): <strong>Treinando não atende aos requisitos do treinamento. Confirma alocação?</strong> e <strong>Existem Treinandos que não atendem aos requisitos do treinamento. Confirma alocações?</strong></li>
+<li><strong>O número máximo de alunos foi atingido.</strong> (passar mais funcionários que as vagas pelo caminho da solicitação).</li>
+<li>Avulso: "Selecione um treinando avulso.", "Preencha a justificativa." e "Treinando já foi alocado."; "Digite ao menos 3 caracteres" (aparece com o ícone de sucesso, DV-GQ-315).</li>
+<li><strong>A tela não recusa</strong> avulso acima das vagas (2 alocados para máximo 1, DV-GQ-315) nem o mesmo funcionário em duas turmas.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>O código <strong>não separa os usuários por nível nem por área</strong>: nenhuma ação usa o grupo de perfil. Os ícones dependem só da situação da turma (MatrizTreinamentoIndexResultadoModel.cs:29-36). Qualquer usuário com a tela aloca e inicia.</li>
+<li><strong>Provado (23/10/2026):</strong> o Nível 3 usou Editar, Visualizar, Iniciar e Log; Nível 2 e <strong>Nível 1 (consulta)</strong> veem Editar e Visualizar na lista (DV-GQ-326, Alta); Iniciar não foi conferido dentro da tela para esses perfis. Ponto para validar com a área: o perfil de cada usuário no Principal não foi conferido.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Alocar mais gente que as vagas deixa a sobra sem turma</strong> (DV-GQ-314): o botão » move só uma pessoa, a solicitação inteira vira Alocado, some da lista e só volta como "Concluído Parcial" ao iniciar a turma.</li>
+<li><strong>O avulso ignora as vagas</strong>, o mesmo funcionário entra em duas turmas, e a busca mostra homônimos (um sem setor) e deixa escolher o errado (DV-GQ-315).</li>
+<li><strong>Avulso sem setor derruba o relatório do Acompanhamento dos Treinamentos</strong> com erro de servidor, para sempre (DV-GQ-316, Alta).</li>
+<li><strong>Não há aprovação da programação</strong> antes de alocar e iniciar (DV-GQ-322).</li>
+<li>A caixa da turma traz o título "Conclusão do Treinamento", e iniciar mostra "Inclusão efetuada com sucesso." (DV-GQ-327).</li>
+<li><strong>Os botões aparecem para o perfil de consulta</strong> (DV-GQ-326, Alta).</li>
+</ul>
+<h5 id="registro-das-rodadas-de-teste-e-do-que-ainda-nao-foi-visto">Registro das rodadas de teste e do que ainda não foi visto</h5>
+<h5 id="o-que-ainda-nao-foi-visto-numa-tela">O que ainda não foi visto numa tela</h5>
+<p>Os filtros isolados, o Imprimir, o Visualizar, a desalocação de quem já estava gravado, a abertura de uma turma Em Curso por endereço direto e o aviso de requisito para quem não atende. Esses passos vêm do código.</p>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
 <p>Cada linha da lista pode ter alguns destes ícones. Eles aparecem ou somem conforme a <strong>situação do registro</strong> e o <strong>perfil</strong> de quem entra; <strong>a tela não explica por que um ícone some</strong>. A coluna "Regra do código" vem da leitura do código; a seção "O que a tela mostrou" vem do teste de 11 e 12/11/2026.</p>
 <div class="tabela"><table>
 <thead>
@@ -159,21 +237,6 @@
 </tr>
 </tbody>
 </table></div>
-<h4 id="alocar-os-funcionarios">Alocar os funcionários</h4>
-<ul>
-<li>Passo 5. Clique no lápis da turma. O quadro de cima mostra os dados da turma (treinamento, revisão, local, período, turnos e horários). No quadro "Alocação do Treinamento", escolha em Solicitações o código da solicitação pendente; os funcionários dela aparecem na coluna da esquerda, com Treinandos (quantos) e Total.</li>
-<li>Passo 6. Clique no funcionário para passá-lo para os Alocados, ou use o botão » para passar todos. Se o funcionário não atende aos requisitos do treinamento (setor ou função), o sistema pergunta "Treinando não atende aos requisitos do treinamento. Confirma alocação?", e a pessoa pode seguir sem justificar. Quando as vagas acabam, aparece "O número máximo de alunos foi atingido." e a pessoa não passa (CT-GQ-TRE-43). Com 2 pessoas para 1 vaga, a segunda fica sem turma (CT-GQ-TRE-43; DV-GQ-314).</li>
-<li>Passo 7. Para um funcionário que não pediu treinamento, use "Nome Avulso": digite 3 letras, clique em "buscar", escolha o nome, escreva a Justificativa (obrigatória; "Preencha a justificativa."; CT-GQ-TRE-44) e clique em "Alocar Avulso". O avulso não respeita as vagas e o mesmo funcionário pode entrar em duas turmas (CT-GQ-TRE-45 e 46; DV-GQ-315). A busca de avulso pode mostrar dois funcionários com o mesmo nome, um sem setor, e deixa escolher o sem setor (CT-GQ-TRE-48).</li>
-<li>Passo 8. Para tirar alguém da turma, clique na linha dele nos Alocados (volta à coluna da esquerda se for da solicitação aberta) ou use o botão «.</li>
-<li>Passo 9. Clique em "Salvar Alocados"; o sistema pergunta "Confirma alteração?" e grava. Aparece "Alteração efetuada com sucesso." e a turma fica Alocado. A solicitação inteira também fica Alocado, mesmo se só parte das pessoas coube (CT-GQ-074, CT-GQ-TRE-43).</li>
-</ul>
-<h4 id="iniciar-o-treinamento">Iniciar o treinamento</h4>
-<ul>
-<li>Passo 10. O botão "Iniciar Treinamento" só aparece quando há pelo menos um alocado (CT-GQ-TRE-47, 23/10/2026). Clique, e confirme em "Confirma início do treinamento?". Aparece "Inclusão efetuada com sucesso." (texto de inclusão, ver DV-GQ-327) e a turma fica Em Curso. Não há etapa de aprovação do programa (CT-GQ-TRE-42; DV-GQ-322).</li>
-<li>Passo 11. O Log da turma mostra "AlocacaoTreinamento Inclusão" de cada pessoa e "TipoSituacao Alocado → EmCurso" (CT-GQ-074).</li>
-</ul>
-<h4 id="o-que-ainda-nao-foi-visto-numa-tela">O que ainda não foi visto numa tela</h4>
-<p>Os filtros isolados, o Imprimir, o Visualizar, a desalocação de quem já estava gravado, a abertura de uma turma Em Curso por endereço direto e o aviso de requisito para quem não atende. Esses passos vêm do código.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa.</p>
 <div class="tabela"><table>
