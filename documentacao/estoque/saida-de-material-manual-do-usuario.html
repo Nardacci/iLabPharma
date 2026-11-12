@@ -44,25 +44,228 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="saida-de-material-analise.html">Análise</a><a href="saida-de-material-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="saida-de-material-fluxos.html">Fluxos</a><a href="saida-de-material-regras-de-negocio.html">Regras de negócio</a><a href="saida-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-saida-de-material.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-e-atendimento-a-producao-passo-a-passo.html#tela-6-saida-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Não testada</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Cadastre o tipo e o motivo da movimentação (o tipo especial não aparece: o formulário só lista tipos sem a marca de movimentação especial, saida_item_ed.aspx.cs:72-75). O item precisa ter lote com saldo em endereço do seu grupo.</p>
-<h4 id="incluir-uma-saida">Incluir uma saída</h4>
+<h4 id="para-que-serve-e-quando-usar">Para que serve e quando usar</h4>
+<p>A <strong>Saída de Material (Outras)</strong> baixa do estoque uma quantidade de um lote que está num endereço, <strong>por um motivo que não é a solicitação da produção nem a remessa</strong>: descarte, ajuste, perda, uso especial. A baixa é <strong>imediata</strong>: ao confirmar, o saldo do lote e do endereço diminui e o histórico do lote registra a saída. <strong>Não use</strong> esta tela para atender uma solicitação da produção (isso é o Atendimento de Solicitação) nem para enviar material a terceiros (isso é a Remessa de Material).</p>
+<figure><a href="../img/estoque/t17-saida-material-outras-formulario.png" target="_blank" rel="noopener"><img src="../img/estoque/t17-saida-material-outras-formulario.png" alt="Saída de Material (Outras): o formulário" loading="lazy"></a><figcaption>Saída de Material (Outras): o formulário · clique para ampliar</figcaption></figure>
+
+<h4 id="o-que-precisa-existir-antes-cadastros-e-relacionamentos">O que precisa existir antes (cadastros e relacionamentos)</h4>
+<p>Para registrar uma saída, estes cadastros já precisam estar prontos e ligados entre si:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tipo de movimentação de saída</strong> (sem a marca de "movimentação especial")</td>
+<td>Classifica a saída; o tipo especial não aparece nesta tela</td>
+<td>Cadastros › Tipo de Movimentação</td>
+</tr>
+<tr>
+<td><strong>Motivo da movimentação</strong>, ligado a saída</td>
+<td>Diz por que o material sai; a lista de motivos acompanha o tipo escolhido (se o tipo é de saída, mostra motivos de saída)</td>
+<td>Cadastros › Motivo da Movimentação</td>
+</tr>
+<tr>
+<td><strong>Item</strong> ativo, com unidade de medida e <strong>custo médio</strong></td>
+<td>O custo médio vira o Valor Unitário da saída</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Lote do item com saldo</strong> em algum endereço</td>
+<td>Só aparecem lotes com saldo maior que zero, <strong>não bloqueados</strong> e <strong>fora de reanálise</strong></td>
+<td>Entra pelo Recebimento, Entrada de Material ou Devolução</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado, Local, Rua, Coluna e Andar</strong> onde o lote está</td>
+<td>Formam o <strong>endereço</strong> (formato <code>L000-R000-C000-A000</code>)</td>
+<td>Cadastros › Almoxarifado, Local de Armazenagem, Rua, Coluna e Andar</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado liberado para o seu grupo de usuário</strong></td>
+<td>Só aparecem os almoxarifados, locais e lotes do grupo do usuário</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="informacoes-necessarias-para-registrar-uma-saida">Informações necessárias para registrar uma saída</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>O que informar</th>
+<th>De onde vem</th>
+<th>Obrigatório</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Gerado pelo sistema (até 10 caracteres)</td>
+<td>Automático</td>
+<td>Não preencher</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>Data da saída; não pode ser futura</td>
+<td>Hoje, editável</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Tipo de Movimentação</strong></td>
+<td>Tipo de saída</td>
+<td>Lista dos tipos sem marca especial</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Motivo da Movimentação</strong></td>
+<td>Motivo da baixa</td>
+<td>Lista que acompanha o tipo</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Item</strong></td>
+<td>Código do item (a lupa abre "Localizar Item")</td>
+<td>Cadastro de itens do seu grupo</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Unid. Medida</td>
+<td>Unidade do item</td>
+<td>Vem do item (travado)</td>
+<td>Automático</td>
+</tr>
+<tr>
+<td><strong>Item entrada</strong></td>
+<td>O lote a baixar</td>
+<td>Só lotes do item com saldo, no seu grupo</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Saldo</td>
+<td>Saldo total do lote</td>
+<td>Calculado (travado)</td>
+<td>Automático</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado, Local, Rua, Coluna, Andar</strong></td>
+<td>O endereço de onde o material sai</td>
+<td>Só endereços onde o lote tem saldo</td>
+<td>Sim, os cinco</td>
+</tr>
+<tr>
+<td>Endereço</td>
+<td>Código do endereço montado</td>
+<td>Automático (<code>L...-R...-C...-A...</code>)</td>
+<td>Automático</td>
+</tr>
+<tr>
+<td>Saldo Endereço</td>
+<td>Saldo do lote naquele endereço</td>
+<td>Calculado (travado)</td>
+<td>Automático</td>
+</tr>
+<tr>
+<td><strong>Valor Unitário</strong></td>
+<td>Custo por unidade</td>
+<td>Preenchido com o custo médio do item</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td><strong>Quantidade</strong></td>
+<td>Quanto sai</td>
+<td>Ao escolher o Andar, vem preenchida com <strong>todo o saldo do endereço</strong>; ajuste se for menos</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Valor Total</td>
+<td>Quantidade × valor unitário</td>
+<td>Calculado (travado)</td>
+<td>Automático</td>
+</tr>
+<tr>
+<td>Observação</td>
+<td>Justificativa da saída (até 255 caracteres; o sistema grava em maiúsculas)</td>
+<td>Digitada</td>
+<td><strong>Não é obrigatória</strong> (veja os cuidados)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>No menu <strong>Estoque</strong>, abra <strong>Saída de Material</strong> e clique em <strong>Incluir</strong>.</li>
+<li>Confira a <strong>Data</strong>. Escolha o <strong>Tipo</strong> e depois o <strong>Motivo</strong> (o motivo só lista o que combina com o tipo).</li>
+<li>Digite o <strong>código do Item</strong> e clique na lupa. Se não achar, o sistema abre "Localizar Item". O sistema preenche a unidade e o valor unitário.</li>
+<li>Escolha o <strong>Item entrada</strong> (o lote). O sistema mostra o <strong>Saldo</strong> do lote.</li>
+<li>Escolha <strong>Almoxarifado, Local, Rua, Coluna e Andar</strong>, nesta ordem: cada lista só mostra o que existe onde o lote tem saldo. Ao escolher o Andar, aparecem o <strong>Endereço</strong>, o <strong>Saldo Endereço</strong> e a <strong>Quantidade</strong> (já com todo o saldo do endereço).</li>
+<li>Ajuste a <strong>Quantidade</strong> se for retirar só parte. O <strong>Valor Total</strong> é calculado.</li>
+<li>Escreva a <strong>Observação</strong> com o motivo real da baixa (recomendado, mesmo não sendo obrigatória).</li>
+<li>Clique em <strong>CONFIRMAR</strong>. O sistema pergunta "Confirma a Movimentação do Lote?". Com <strong>SIM</strong>, responde "Inclusão realizada com sucesso!" e volta para a lista.</li>
+</ol>
+<h4 id="o-que-acontece-quando-voce-confirma">O que acontece quando você confirma</h4>
 <ul>
-<li>Passo 1. No menu Estoque, abra Saída de Material e clique em Incluir.</li>
-<li>Passo 2. Confira a Data da saída. Escolha o Tipo e o Motivo da movimentação.</li>
-<li>Passo 3. Informe o Item (por código) e escolha o Item de entrada (o lote). O sistema mostra a Unid. e o Saldo.</li>
-<li>Passo 4. Escolha Almoxarifado, Local, Rua, Coluna e Andar; o sistema mostra o Saldo Endereço e o Valor Unitário (o custo médio do item).</li>
-<li>Passo 5. Informe a Quantidade. O Valor Total é calculado.</li>
-<li>Passo 6. Escreva a Observação (a justificativa). Ela não é obrigatória.</li>
-<li>Passo 7. Clique em CONFIRMAR. A tela pergunta "Confirma a Movimentação do Lote?"; com SIM, responde "Inclusão realizada com sucesso!".</li>
+<li>Grava a <strong>saída</strong> (código, tipo, motivo, lote, endereço, quantidade, valor, observação, usuário e data).</li>
+<li>Cria a <strong>movimentação de estoque</strong> de saída e <strong>baixa o saldo</strong> do lote e do endereço, na mesma operação.</li>
+<li>Marca a saída como <strong>confirmada</strong>. <strong>Não existe saída em rascunho</strong>, e uma saída confirmada <strong>não pode ser desfeita</strong> por esta tela (o ícone de excluir some).</li>
+<li>A saída aparece no <strong>Histórico do Lote</strong>. O LOG da saída registra a inclusão e a confirmação.</li>
+<li>Esta tela <strong>não lê nem grava em outros módulos</strong>: tudo fica no Estoque.</li>
 </ul>
-<h4 id="consultar-e-excluir">Consultar e excluir</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>A lista permite pesquisar por Código, Almoxarifado e Período e mostra Código, Data, Tipo de Saída, Item, Item Entrada e os ícones.</li>
-<li>Visualizar abre o formulário <strong>vazio</strong>: o código só carrega os combos e não preenche o registro escolhido (saida_item_ed.aspx.cs:44-56). Extraído; não testado.</li>
-<li>Excluir fica escondido para qualquer saída já confirmada (saida_item_lst.aspx.cs:188-189), o que na prática é toda saída gravada. Se aparecesse, pediria justificativa (:257-300).</li>
+<li>Campo obrigatório vazio (cada campo mostra a sua mensagem, por exemplo "Motivo da movimentação não informado.!").</li>
+<li><strong>Quantidade zero</strong> ("Quantidade inválida!").</li>
+<li>Quantidade <strong>maior que o saldo do lote</strong> ou <strong>do endereço</strong>.</li>
+<li>Lote em <strong>endereço de quarentena com análise pendente</strong> ("O Lote informado possui pendencia de analise!").</li>
+<li>Endereço montado que <strong>não existe</strong> ("Endereço inválido!").</li>
 </ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela é a função <strong>340 (Saída de Material)</strong>. O cadastro do menu libera para o perfil só <strong>Incluir</strong> e <strong>Imprimir/Exportar</strong>. <strong>Visualizar</strong>, <strong>Excluir</strong> e <strong>Ver log</strong> dependem de funções que o menu não registra: por isso <strong>ficam escondidos para quem só tem o que o menu dá</strong>.</li>
+<li>O <strong>grupo de usuário</strong> limita o que a pessoa enxerga: só os <strong>almoxarifados</strong>, <strong>locais</strong> e <strong>lotes</strong> do grupo dela aparecem na lista e no formulário.</li>
+<li><strong>Cuidado:</strong> a conferência "esta pessoa tem a função da tela?" para abrir a página está <strong>desligada no código</strong> (DV-EST-008, Alta): quem digitar o endereço da tela pode abri-la mesmo sem a função. A permissão hoje é, na prática, só esconder botões.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A Observação não é obrigatória</strong>, e o campo "justificativa" do histórico é fixo ("INCLUSÃO DE REGISTRO" / "CONFIRMAÇÃO DA MOVIMENTAÇÃO"): uma saída pode ficar <strong>sem nenhum motivo escrito</strong> (DV-EST-060). Escreva sempre a observação.</li>
+<li>Se o <strong>custo médio do item</strong> for zero, a saída grava custo <strong>0,00</strong> (DV-EST-060).</li>
+<li><strong>Lote vencido não é impedido</strong> de sair (a tela não confere a validade); para descarte isso é o esperado, mas registre o motivo.</li>
+<li>A saída e a movimentação são gravadas em <strong>passos separados, sem transação única</strong>: se falhar entre os dois, pode sobrar uma saída não confirmada.</li>
+<li><strong>Visualizar</strong> abre o formulário <strong>vazio</strong> (não mostra a saída escolhida) e <strong>Excluir</strong> não aparece para saída confirmada.</li>
+<li>O <strong>Valor Unitário</strong> vem do navegador sem conferência no servidor: alterá-lo grava outro custo.</li>
+<li>Existe outra página com o mesmo título (<code>saidamaterial_lst.aspx</code>), fora do menu: use sempre a do menu <strong>Estoque › Saída de Material</strong>.</li>
+</ul>
+<h4 id="consultar-saidas">Consultar saídas</h4>
+<p>A lista pesquisa por <strong>Código</strong>, <strong>Almoxarifado</strong> (só os do seu grupo) e <strong>Período</strong>, e mostra Código, Data, Tipo de Saída, Item, Item Entrada e os ícones:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lupa (Visualizar)</td>
+<td>Abre o formulário da saída</td>
+<td>Só para quem tem a função "alterar" na tela; <strong>abre vazio</strong> (falha conhecida)</td>
+</tr>
+<tr>
+<td>LOG (Ver log)</td>
+<td>Abre "Log Alteração - Saída de Material (Outras)"</td>
+<td>Só para quem tem a função de consultar o log (que o menu não registra)</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir)</td>
+<td>Pede justificativa e manda a saída para a lixeira</td>
+<td><strong>Nunca aparece</strong> para saída confirmada, ou seja, para toda saída gravada</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os botões <strong>Imprimir</strong> e <strong>Excel</strong> aparecem com resultado na lista e dependem da função de imprimir.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>"Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -338,7 +541,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
