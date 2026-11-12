@@ -45,35 +45,143 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="consumo-de-material-analise.html">Análise</a><a href="consumo-de-material-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="consumo-de-material-fluxos.html">Fluxos</a><a href="consumo-de-material-regras-de-negocio.html">Regras de negócio</a><a href="consumo-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-consumo-de-material.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-relatorios-passo-a-passo.html#tela-18-consumo-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Consumo de Material</strong> é um relatório de consulta das <strong>saídas de material por grupo de item</strong> em um período: para cada grupo e cada item, uma linha por documento, destino e dia, com quantidade, custo unitário e custo total, e totais por material, por grupo e geral. Serve ao almoxarifado, à área de custos e à Garantia da Qualidade para conferir quanto de cada material saiu, para quem e a que custo (leitura da área, a validar). Abre numa segunda janela, com visualizador de relatórios. Não grava nada.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Saídas gravadas no período</strong>, de tipos de consumo</td>
+<td>Ficam de fora Inventário, Ajuste, Transferência, Atendimento de Solicitação e Movimentação de Quarentena</td>
+<td>Solicitação de Material (Consumo), Saída de Material, Remessa</td>
+</tr>
+<tr>
+<td><strong>Item ligado a um almoxarifado do seu grupo de usuário</strong></td>
+<td>O relatório só traz os itens dos almoxarifados do grupo</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Grupo de material</strong> (se quiser filtrar)</td>
+<td>Filtro da tela</td>
+<td>Cadastros › Grupo de Item</td>
+</tr>
+<tr>
+<td><strong>Até três assinaturas na configuração do sistema</strong></td>
+<td>Saem no relatório; se estiverem vazias, saem em branco (a conferir)</td>
+<td>Configuração do sistema</td>
+</tr>
+<tr>
+<td><strong>Período</strong></td>
+<td>Mês e ano ou datas específicas</td>
+<td>Preenchido na própria tela</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório (leitura do código; nada foi visto numa tela real)</strong></p>
+<ol>
+<li>No menu Relatórios, abra <strong>Consumo de Material</strong>. A tela mostra o quadro "Filtros".</li>
+<li>Em <strong>Grupo</strong>, escolha um grupo de material ou deixe "SELECIONE" para trazer todos.</li>
+<li>Em <strong>Tipo Período</strong>, deixe "MÊS/ANO" (padrão) e escolha o <strong>Mês</strong> e o <strong>Ano</strong> (já vêm com os de hoje), ou escolha "ESPECÍFICO" para liberar as duas datas do <strong>Período</strong>.</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. Se algo estiver errado, uma faixa vermelha mostra a mensagem. Se estiver certo, abre uma nova janela com o relatório.</li>
+<li>Na janela, use a barra do componente para trocar de página, procurar texto, imprimir e exportar.</li>
+<li><strong>LIMPAR</strong> volta o grupo para "SELECIONE", o mês e o ano para hoje e esvazia as datas.</li>
+</ol>
+<p><strong>Ler o relatório</strong></p>
 <ul>
-<li>Tenha saídas gravadas no período (por exemplo, uma Solicitação de Material (Consumo) concluída, uma Remessa ou uma Saída de Material).</li>
-<li>O relatório só traz os itens dos almoxarifados ligados ao seu grupo de usuário.</li>
+<li>Cada grupo abre um bloco "GRUPO: <código - nome>"; cada item tem cabeçalho "Código" e "Descrição" e suas linhas.</li>
+<li>Cada linha mostra <strong>Destino</strong> (cliente da remessa ou centro de custo da solicitação), <strong>Doc</strong> ("GMM-" mais o número da remessa, ou "S-" mais o número da solicitação), <strong>Data</strong>, <strong>Unidade</strong>, <strong>Qtd.</strong>, <strong>Valor Unit.</strong> e <strong>Valor Total</strong>. Depois vêm "Total do Material", "Total do Grupo" e "Total Geral".</li>
+<li>No alto: nome da empresa, logotipo, "Período: De ... até ..." e "Emitido em". No pé: "Página".</li>
 </ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>Passo 1. No menu Relatórios, abra Consumo de Material. A tela mostra o quadro "Filtros".</li>
-<li>Passo 2. Em <strong>Grupo</strong>, escolha um grupo de material ou deixe "SELECIONE" para trazer todos (<code>rel_consumo_material_lst.aspx.cs:31</code>; <code>dalRelatorio.cs:2020</code>).</li>
-<li>Passo 3. Em <strong>Tipo Período</strong>, deixe "MÊS/ANO" (padrão) e escolha o <strong>Mês</strong> e o <strong>Ano</strong> (já vêm preenchidos com o mês e o ano de hoje), ou escolha "ESPECÍFICO" para liberar as duas datas do <strong>Período</strong> (<code>rel_consumo_material_lst.aspx.cs:166-189</code>).</li>
-<li>Passo 4. Clique em GERAR RELATÓRIO. Se algo estiver errado, uma faixa vermelha mostra a mensagem. Se estiver certo, abre uma nova janela com o relatório.</li>
-<li>Passo 5. Na janela, use a barra do componente para trocar de página, procurar texto, imprimir e exportar.</li>
-<li>Passo 6. LIMPAR volta o grupo para "SELECIONE", o mês e o ano para hoje e esvazia as datas.</li>
-</ul>
-<h4 id="ler-o-relatorio">Ler o relatório</h4>
-<ul>
-<li>Cada <strong>grupo de material</strong> abre um bloco "GRUPO: <código - nome>". Dentro dele, cada <strong>item</strong> tem cabeçalho "Código" e "Descrição" e suas linhas.</li>
-<li>Cada linha mostra <strong>Destino</strong> (cliente da remessa ou centro de custo da solicitação), <strong>Doc</strong> ("GMM-" mais o número da remessa, ou "S-" mais o número da solicitação), <strong>Data</strong>, <strong>Unidade</strong>, <strong>Qtd.</strong>, <strong>Valor Unit.</strong> e <strong>Valor Total</strong>.</li>
-<li>Depois das linhas há "Total do Material", "Total do Grupo" e, no fim, "Total Geral".</li>
-<li>No alto: o nome do cliente (da empresa), o logotipo, "Período: De ... até ..." e "Emitido em". No pé: "Página". Até três assinaturas (nome e cargo) saem de campos da configuração do sistema.</li>
-</ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
-<ul>
-<li>Nada foi visto numa tela real. Estes passos descrevem o que o código faz.</li>
-<li>O <strong>custo total</strong> é a quantidade somada vezes o <strong>maior</strong> custo do grupo de linhas; se um mesmo documento tiver lotes de custos diferentes, o total pode não bater com a soma lote a lote (ponto para validar; <code>dalRelatorio.cs:1986-1987</code>).</li>
+<li><strong>Não grava nada</strong>: só lê.</li>
+<li>Só entram <strong>saídas</strong> de tipos de consumo; a <strong>devolução não abate</strong> (o relatório mostra o consumo bruto; ponto para validar com a área).</li>
+<li>O <strong>custo total</strong> é a quantidade somada vezes o <strong>maior</strong> custo do grupo de linhas; se um mesmo documento tiver lotes de custos diferentes, o total pode não bater com a soma lote a lote.</li>
 <li>Saídas feitas pela tela Saída de Material podem aparecer <strong>sem documento e sem destino</strong>, e com custo 0,00 (DV-EST-060).</li>
+<li>O cabeçalho não mostra qual grupo foi escolhido.</li>
 </ul>
-</div>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>Ano em branco: "Ano não informado!". Ano com menos ou mais de 4 dígitos: "O Ano inválido ou não informado!".</li>
+<li>Tipo ESPECÍFICO com alguma data em branco: "Período inválido ou não informado!".</li>
+<li>Data fora do formato: "Data inicial inválida!" / "Data final inválida!"; em branco: "Data inicial não informada" / "Data final não informada".</li>
+<li>Falha da consulta: "Erro ao gerar dados do Relatório!", na janela do relatório (aparece como erro do servidor, não na faixa da tela).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>relConsumoMat</code>. No script de menu (dml.sql:1939) as marcas de incluir, alterar, excluir, imprimir e ver log estão em "N": <strong>não há funções internas</strong> para esta tela. Quem vê o item no menu é decidido pelo perfil de cada pessoa. O botão GERAR RELATÓRIO não depende de função.</li>
+<li>O relatório recorta pelo <strong>grupo de usuário</strong> (itens dos almoxarifados do grupo) e pela empresa. Isto limita o que cada pessoa vê, mas não impede a abertura da página.</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta; visto em outras telas, CT-EST-065, 13/10/2026) é esperado aqui, mas <strong>não foi visto nesta tela</strong>.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Nenhum defeito foi confirmado em teste para esta tela.</strong> Os que mexem no que ela mostra são de outras telas: <strong>DV-EST-060</strong> (a Saída de Material grava custo 0,00 no histórico do lote; o relatório lê esse custo) e <strong>DV-EST-008</strong> (acesso pelo endereço).</li>
+<li><strong>Custo total pode divergir</strong> do total lote a lote.</li>
+<li><strong>Saída sem documento e sem destino</strong>, com custo 0,00.</li>
+<li><strong>Devolução não abate</strong> o consumo.</li>
+<li>A lista de tipos que ficam de fora é <strong>fixa por número</strong>: um tipo de saída novo entra no consumo mesmo que seja movimentação interna (a consulta não usa a marca "interna" do cadastro).</li>
+<li><strong>Ano "0000" derruba a tela:</strong> a conversão da data falha com um erro que a tela não trata, e a pessoa vê a página de erro.</li>
+<li><strong>Período invertido</strong> (início depois do fim) não é recusado: o relatório sai vazio, sem aviso.</li>
+<li>As datas são lidas na configuração regional do servidor; o "Emitido em" pode sair em formato americano (DV-EST-057, visto nos relatórios de kit; a confirmar aqui).</li>
+<li>O logotipo pode sair como "SUA LOGO AQUI" se não estiver configurado (visto nos relatórios de kit, 22/10/2026).</li>
+<li>Pontos para validar com a área: consumo bruto ou líquido de devoluções; custo de cada linha pelo lote; quem deve ver o relatório; falta o saldo inicial e o final para a reconciliação de quantidades pedida pela norma.</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Valida os campos e abre a janela do relatório</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Volta os filtros ao estado inicial</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Tipo Período (ao trocar)</td>
+<td>Liga mês e ano, ou liga as duas datas</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Detalhe do erro (+) / (-)</td>
+<td>Mostra ou esconde o texto da causa interna</td>
+<td>Quando a falha traz uma causa interna</td>
+</tr>
+<tr>
+<td>Barra do relatório (páginas, busca, atualizar)</td>
+<td>Navega pelo relatório; componente padrão</td>
+<td>Na janela do relatório</td>
+</tr>
+<tr>
+<td>Exportar (disquete da barra)</td>
+<td>Abre o menu de exportação; os formatos não estão no código (a conferir na tela)</td>
+<td>Na janela do relatório</td>
+</tr>
+<tr>
+<td>Imprimir</td>
+<td>Liga o botão de impressão do componente</td>
+<td>Na janela do relatório</td>
+</tr>
+</tbody>
+</table></div>
+<p>A tela de filtros não tem botão próprio de Excel nem de PDF.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: <code>rel_consumo_material_lst.aspx</code> e <code>.aspx.cs</code> (caminho na seção Resumo da tela). "Sim (tela)" quando só o navegador confere; "Sim (servidor)" quando o servidor também recusa.</p>
 <h4 id="filtros">Filtros</h4>
@@ -314,7 +422,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -45,20 +45,99 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="historico-do-lote-analise.html">Análise</a><a href="historico-do-lote-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="historico-do-lote-fluxos.html">Fluxos</a><a href="historico-do-lote-regras-de-negocio.html">Regras de negócio</a><a href="historico-do-lote-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-historico-do-lote.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-7-historico-do-lote">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Tenha o <strong>Item de Entrada</strong> do lote (o código que o sistema dá a cada lote que entra, por exemplo <code>TA0006/26</code>). Ele aparece na Disponibilidade do Lote, no Histórico do Item e nas telas de entrada.</p>
-<h4 id="consultar-um-lote">Consultar um lote</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Histórico do Lote</strong> é a <strong>ficha do lote</strong>: mostra, na mesma página, os dados do lote, a última análise do Controle da Qualidade, os saldos por condição, as movimentações, os endereços onde o lote está e as solicitações que o consumiram (historico_lote_lst.aspx:45-455). Serve à Garantia da Qualidade e ao Controle da Qualidade para investigar um lote (desvio, reclamação, recolhimento) e ao almoxarifado para localizar material (leitura da área, a validar). <strong>A tela só consulta: não grava nada, e não tem Imprimir nem Excel.</strong></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item de Entrada do lote</strong> (código que o sistema dá ao lote, por exemplo <code>TA0006/26</code>)</td>
+<td>É a chave da busca; precisa ser digitado por inteiro</td>
+<td>Aparece na Disponibilidade do Lote, no Histórico do Item e nas telas de entrada</td>
+</tr>
+<tr>
+<td><strong>Lote que passou pelo estoque</strong></td>
+<td>Sem saldo e sem movimentação, as grades aparecem vazias (CT-EST-197)</td>
+<td>Estoque › Entrada de Material / Endereçamento</td>
+</tr>
+<tr>
+<td><strong>Análise do CQ</strong> (opcional)</td>
+<td>Alimenta o quadro "Controle da Qualidade" (só a última análise)</td>
+<td>Módulo Controle da Qualidade</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>No menu Estoque, abra <strong>Histórico do Lote</strong>. A tela mostra o campo "Item de Entrada" e o botão <strong>PESQUISAR</strong>. (Também abre pelo Histórico do Item, já pesquisada, com o botão VOLTAR.)</li>
+<li>Digite o Item de Entrada <strong>completo</strong> e clique em PESQUISAR. A busca é exata: <code>TA0006/26</code> acha; <code>TA0006</code> não. Se não achar: "Nenhum lote foi encontrado!".</li>
+<li>"Dados do Lote": Item, Unid. Medida, Custo Médio (do <strong>item</strong>, não do lote), Lote, Validade (a original), Fabricante, Fornecedor e Saldo Atual.</li>
+<li>"Controle da Qualidade": Nº do Laudo, Data da Análise, Validade do Laudo, Tipo de Análise, Data da Reanálise, Grau de Pureza, Teor, Resultado e Responsável. Só a <strong>última</strong> análise; o Resultado só diz APROVADO ou REPROVADO e, em outros casos, fica em branco.</li>
+<li>"Saldos": Disponível, Vencido/Reanálise, Reprovado, Bloq./Inventário, Solic./Separação, Quarentena e Total. As colunas podem se sobrepor, como na Disponibilidade do Lote.</li>
+<li>"Histórico de Movimentações": uma linha por entrada ou saída (Código, Data, Tipo de Movimentação, Endereço, Quantidade, Custo Unitário, Entrada/Saída), a mais recente primeiro, 5 por página. <strong>Não mostra quem fez nem a hora.</strong></li>
+<li>"Endereços do Lote": onde o lote está agora, só com saldo. <strong>Só os 5 primeiros podem ser vistos</strong>, porque a troca de página não funciona.</li>
+<li>"Solicitações": solicitações que usaram o lote, com datas, almoxarifado, centro de custo, tipo e quantidade atendida, 5 por página.</li>
+<li><strong>LIMPAR</strong> (depois da pesquisa) libera o campo para outro lote. <strong>VOLTAR</strong> só aparece quando a tela foi aberta pelo Histórico do Item.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>Nada é gravado. PESQUISAR só lê e preenche a página; VOLTAR leva ao Histórico do Item, quando foi ele que abriu a tela (historico_lote_lst.aspx.cs:160-164).</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu, abra Histórico do Lote. A tela mostra o campo "Item de Entrada" e o botão PESQUISAR.</li>
-<li>Passo 2. Digite o Item de Entrada <strong>completo</strong> e clique em PESQUISAR. A busca é exata: <code>TA0006/26</code> acha; <code>TA0006</code> não. Se não achar, a tela diz "Nenhum lote foi encontrado!".</li>
-<li>Passo 3. "Dados do Lote": Item, Unid. Medida, Custo Médio (o custo atual do <strong>item</strong>, não o do lote), Lote, Validade (a original do lote), Fabricante, Fornecedor e Saldo Atual.</li>
-<li>Passo 4. "Controle da Qualidade": Nº do Laudo, Data da Análise, Validade do Laudo, Tipo de Análise, Data da Reanálise, Grau de Pureza, Teor, Resultado e Responsável. Mostra só a <strong>última</strong> análise do lote. O Resultado só diz APROVADO ou REPROVADO; em outros casos fica em branco.</li>
-<li>Passo 5. "Saldos": Disponível, Vencido/Reanálise, Reprovado, Bloq./Inventário, Solic./Separação, Quarentena e Total. As colunas podem se sobrepor, como na Disponibilidade do Lote.</li>
-<li>Passo 6. "Histórico de Movimentações": uma linha por entrada ou saída do lote, com Código, Data, Tipo de Movimentação, Endereço, Quantidade, Custo Unitário e Entrada/Saída; a mais recente primeiro, 5 por página. <strong>Não mostra quem fez nem a hora.</strong></li>
-<li>Passo 7. "Endereços do Lote": onde o lote está agora, com almoxarifado, local, endereço e quantidade, só os que têm saldo. Pelo código, só os 5 primeiros endereços podem ser vistos, porque a troca de página não funciona (ver Falhas e pontos de atenção).</li>
-<li>Passo 8. "Solicitações": as solicitações que usaram o lote, com datas de solicitação, atendimento e separação, almoxarifado, centro de custo, tipo e quantidade atendida, 5 por página.</li>
-<li>Passo 9. LIMPAR (depois da pesquisa) libera o campo para outro lote. VOLTAR aparece quando a tela foi aberta pelo Histórico do Item.</li>
+<li>Item de Entrada inexistente: "Nenhum lote foi encontrado!".</li>
+<li>Grades sem dados: "Nenhuma movimentação encontrada" (vista em teste, CT-EST-197), "Nenhum endereço encontrado" (vista na rodada 6) e "Nenhuma solicitação encontrada para o lote".</li>
+<li>Outras falhas aparecem em quadro vermelho com o link "Detalhe do erro (+)".</li>
 </ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela usa a função de código <strong>341</strong> e a base do <strong>formulário</strong>, que começa com todas as permissões ligadas e tem a conferência desligada (ClassePaiEd.cs:18, 49-61, 79-81 e 95-105). Não há botão de gravação.</li>
+<li><strong>Quem digita o endereço da página pesquisa qualquer lote</strong> (DV-EST-008, Alta, confirmado em outras telas; sem teste por endereço nesta).</li>
+<li>O <strong>grupo de usuário</strong> filtra os endereços e as solicitações, mas <strong>não filtra as movimentações nem os dados do lote</strong>: quem não tem acesso ao almoxarifado do lote vê as movimentações dele. Leitura do código, a confirmar (CT-EST-E11-06). O número do lote vem do endereço da página sem conferência de grupo.</li>
+<li>A ficha não registra quem a consultou.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Sem usuário, sem hora, sem análise, sem laudo, sem aprovador e sem a reprovação</strong> (DV-EST-034, Média): a consulta não pede esses dados, que existem no banco. Não serve, sozinha, como trilha da norma.</li>
+<li>A saída pela remessa aparece só como "ATENDIMENTO DE SOLICITAÇÃO" do tipo Cliente, sem remessa, destino nem usuário (DV-EST-073, Baixa).</li>
+<li>A ficha mostra só a última análise (reanálises e revalidações anteriores não aparecem) e a validade original, enquanto a Disponibilidade mostra a nova validade da revalidação.</li>
+<li>Pelo código, ainda sem teste: a paginação dos endereços não funciona (lote em mais de 5 endereços); "Solic./Separação" só recebe a solicitação; o Responsável da análise às vezes fica em branco (ponto para validar com a Qualidade); na rodada 11 apareceu uma linha em branco com zeros nas solicitações.</li>
+<li>Falhas de outras telas aparecem aqui: o histórico vazio do Endereçamento que não grava (DV-EST-016), a saída sem entrada com destino incompleto (DV-EST-044), o cancelamento de atendimento sem rastro (DV-EST-061) e os saldos sobrepostos (DV-EST-029).</li>
+<li>Erros de texto: "Data Atentimento" no título da coluna. Ponto para validar com a área: aceitar busca por parte do Item de Entrada; mostrar remessa e destino (recolhimento, art. 346 e 347).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>A tela não tem lista de linhas com ícones. As grades de movimentações, endereços e solicitações só têm a troca de página (5 linhas por vez; a dos endereços não funciona).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PESQUISAR</td>
+<td>Busca o lote pelo Item de Entrada</td>
+<td>Antes de pesquisar</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Esvazia a página e libera o campo</td>
+<td>Depois de pesquisar, se a tela não foi aberta pelo Histórico do Item</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta ao Histórico do Item</td>
+<td>Só quando a tela foi aberta por ele</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -240,7 +319,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

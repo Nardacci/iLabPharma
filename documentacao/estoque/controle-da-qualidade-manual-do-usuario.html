@@ -45,39 +45,133 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="controle-da-qualidade-analise.html">Análise</a><a href="controle-da-qualidade-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="controle-da-qualidade-fluxos.html">Fluxos</a><a href="controle-da-qualidade-regras-de-negocio.html">Regras de negócio</a><a href="controle-da-qualidade-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-controle-da-qualidade.html">Erros (4)</a><a class="aba-extra" href="roteiro-de-execucao-recebimento-quarentena-e-conferencia-passo-a-passo.html#tela-5-controle-da-qualidade">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A tela <strong>Controle da Qualidade</strong> do menu Estoque (não é o módulo Controle da Qualidade) é onde o Estoque vê <strong>a situação da análise de cada lote em quarentena</strong> (aguardando análise, aprovado, reprovado ou com amostra solicitada), consulta lote, item de entrada, validade, saldo e volumes e, com o módulo CQ ligado, busca o resultado do laudo com <strong>ATUALIZAR RESULTADO</strong>. Laudo aprovado libera o lote para a Movimentação de Quarentena; laudo reprovado <strong>bloqueia</strong> o lote. Na mesma tela o Estoque pode pedir amostra ao CQ (SOLICITAR AMOSTRA), confirmar a separação da amostra, anexar o laudo, anotar observações e, com o CQ desligado, lançar ele mesmo o resultado (SALVAR ANÁLISE) (analise_controle_ed.aspx.cs:58-236, 284-336, 395-520 e 1233-1434).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lote em quarentena com análise aberta</strong></td>
+<td>A lista só mostra análises geradas. O caminho que funciona é a entrada por Entrada de Material - Outras ou - Produção (CT-EST-097 e 210); pelo Recebimento → Conferência → Endereçamento a análise não nasce (DV-EST-016)</td>
+<td>Estoque › Entrada de Material</td>
+</tr>
+<tr>
+<td><strong>Etapas do CQ feitas</strong> (programação da coleta, amostragem, programação da análise, resultados, aprovação, emissão do laudo)</td>
+<td>Sem laudo emitido, a atualização responde "Resultado sem alteração!". Na amostragem o CQ pede ao Estoque a Separação de Material</td>
+<td>Módulo Controle da Qualidade</td>
+</tr>
+<tr>
+<td><strong>Perfil com a função "Aprovar/Reprovar"</strong> (CQ_APROVAR)</td>
+<td>Sem ela os botões ATUALIZAR RESULTADO, SALVAR ANÁLISE e REABRIR ANÁLISE não aparecem (analise_controle_ed.aspx.cs:83 e 97-124)</td>
+<td>Cadastros › Perfil</td>
+</tr>
+<tr>
+<td><strong>Centro de Custo padrão do Controle da Qualidade</strong></td>
+<td>Necessário para gerar a solicitação de amostra</td>
+<td>Parâmetros do Estoque</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado liberado ao grupo do usuário</strong></td>
+<td>A lista mostra só lotes dos almoxarifados do grupo (analise_controle_lst.aspx.cs:86)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Combinado com o CQ de quem clica em ATUALIZAR</strong></td>
+<td>O Estoque não é avisado do laudo (DV-EST-029)</td>
+<td>Com a área</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No Menu Estoque, abra <strong>Controle da Qualidade</strong> e clique em <strong>Pesquisar</strong>.</li>
+<li>Filtros: Item Entrada, N. do Laudo, Situação (AGUARDANDO ANÁLISE, APROVADO, REPROVADO, SOLICITADO), Fabricante, Item e Período. A lista mostra Data Geração, Item, Item Entrada, Lote / Validade, Tipo de Análise e Situação. Imprimir e Excel aparecem depois de uma pesquisa com resultado.</li>
+</ol>
+<p><strong>Acompanhar a análise de um lote</strong></p>
+<ol start="3">
+<li>Abra a análise. O alto da tela mostra item, unidade, item de entrada, lote, validade, volumes, saldo do lote e última análise. O quadro de análise mostra datas de geração, início e fim, tipo (normal, reanálise, revalidação), "Reanalisar?" e, depois do laudo, números e validades dos laudos (físico-químico e microbiológico), resultado, motivo da reprovação, quem aprovou e quantidades de referência, retenção e estabilidade.</li>
+<li>Quando o CQ já emitiu o laudo, clique em <strong>ATUALIZAR RESULTADO</strong> e responda SIM. Se o CQ ainda não terminou, aparece "Resultado sem alteração!".</li>
+<li>Confira na Disponibilidade do Lote: o lote aprovado fica em quarentena até a Movimentação de Quarentena; o reprovado fica bloqueado.</li>
+<li>Em "Solicitar amostra" informe a quantidade por volume e clique em <strong>SOLICITAR AMOSTRA</strong>; na grade de solicitações, confirme a separação ou cancele a solicitação.</li>
+<li>Use <strong>ENVIAR LAUDO</strong> (Word, Excel, PDF ou JPG), <strong>INCLUIR OBSERVAÇÃO</strong> e, depois de finalizada a análise, <strong>IMPRIMIR ETIQUETA</strong>.</li>
+</ol>
+<p><strong>Com o módulo CQ desligado</strong></p>
+<ol start="8">
+<li>Preencha o número e a validade do laudo, o resultado (e o motivo, se reprovado), a reanálise e, se o item controla o teor, o grau de pureza e o teor, e clique em <strong>SALVAR ANÁLISE</strong>. <strong>REABRIR ANÁLISE</strong> desfaz a finalização enquanto o lote não foi movimentado.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>O lote precisa ter análise aberta (o caminho que funciona é a entrada pelas telas Entrada de Material - Outras ou - Produção).</li>
-<li>No módulo Controle da Qualidade, as etapas da análise (programação da coleta, amostragem, programação da análise, digitação dos resultados, aprovação e emissão do laudo) devem estar feitas. Durante a amostragem, o CQ pede ao Estoque a Separação de Material da amostra.</li>
-<li>Combine com o CQ <strong>quem clica em ATUALIZAR RESULTADO</strong> a cada laudo: o Estoque não é avisado.</li>
+<li><strong>ATUALIZAR RESULTADO:</strong> consulta o CQ, grava o resultado (aprovada ou reprovada), o número do laudo, a validade do laudo, o usuário e a data do fim da análise, marca a análise como finalizada e <strong>bloqueia o lote se Reprovado</strong> (bllAnaliseControle.cs:861-980; analise_controle_ed.aspx.cs:289-336). Aparece "Resultado atualizado com sucesso!".</li>
+<li>Depois, o lote aprovado aparece na Movimentação de Quarentena; o reprovado fica bloqueado e sai da Movimentação de Material e do Atendimento (CT-EST-211).</li>
+<li><strong>SOLICITAR AMOSTRA:</strong> gera uma solicitação do tipo Controle da Qualidade (analise_controle_ed.aspx.cs:1277-1308).</li>
+<li><strong>SALVAR ANÁLISE (só com o CQ desligado):</strong> grava o resultado digitado e bloqueia o lote reprovado (analise_controle_ed.aspx.cs:395-520).</li>
+<li>O Estoque não avisa o CQ de que atualizou.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No Menu Estoque, abra Controle da Qualidade. Clique em Pesquisar.</li>
-<li>Passo 2. Filtros: Item Entrada, N. do Laudo, Situação (AGUARDANDO ANÁLISE, APROVADO, REPROVADO, SOLICITADO), Fabricante, Item e Período (analise_controle_lst.aspx:44-100).</li>
-<li>Passo 3. A lista mostra Data Geração, Item, Item Entrada, Lote / Validade, Tipo de Análise e Situação. O ícone da linha abre a análise (quando o CQ está ligado, sempre como consulta) e o outro mostra o histórico (analise_controle_lst.aspx.cs:198-235).</li>
-<li>Passo 4. Imprimir e Excel aparecem depois de uma pesquisa com resultado.</li>
+<li>Salvar análise sem data de reanálise: "Data da Reanálise não foi informada!"; laudo repetido: "O Nº do Laudo informado já foi utilizado em outra análise!".</li>
+<li>Reabrir lote já movimentado: "O Lote já foi movimentado, alteração não permitida!".</li>
+<li>Amostra: "Quantidade solicitada inválida!", "Quantidade solicitada é maior que o saldo do lote" e "Centro de Custo padrão do Controle da Qualidade não está configurado!".</li>
+<li>Cancelar solicitação: "Os endereços de origem já foram ocupados por outros produtos!", "A Solicitação já foi finalizada!".</li>
+<li>Separação: "Solicitação já foi separada!", "Solicitação ainda não foi atendida!", "Existem pesagens pendentes para a Solicitação!".</li>
+<li>Anexo: "Arquivo com tamanho máximo de {0}mb.", "Nenhum arquivo foi selecionado!" e "Somente é permitido arquivos no formato Word, Excel, PDF ou JPG.".</li>
+<li>Falha na consulta ao CQ: "Erro ao atualizar dados da análise." (sem dizer a causa).</li>
 </ul>
-<h4 id="acompanhar-a-analise-de-um-lote">Acompanhar a análise de um lote</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. Abra a análise. O alto da tela mostra o item, a unidade, o item de entrada, o lote, a validade, a quantidade de volumes, o saldo do lote e a última análise.</li>
-<li>Passo 6. O quadro de análise mostra a data de geração, de início e de fim, o tipo (normal, reanálise, revalidação), "Reanalisar?" e, depois do laudo, os números e as validades dos laudos (físico-químico e microbiológico), o resultado (AGUARDANDO ANÁLISE, APROVADO, REPROVADO), o motivo da reprovação, quem aprovou e as quantidades de referência, retenção e estabilidade.</li>
-<li>Passo 7. Quando o CQ já emitiu o laudo, clique em <strong>ATUALIZAR RESULTADO</strong> e responda SIM. Se o CQ ainda não terminou, aparece "Resultado sem alteração!".</li>
-<li>Passo 8. Depois de atualizar, confira na Disponibilidade do Lote: lote aprovado fica em quarentena até a Movimentação de Quarentena; lote reprovado fica bloqueado.</li>
-<li>Passo 9. Em "Solicitar amostra" informe a quantidade por volume e clique em SOLICITAR AMOSTRA (gera a solicitação do CQ); na grade de solicitações, confirme a separação ou cancele a solicitação.</li>
-<li>Passo 10. Use ENVIAR LAUDO para anexar o laudo (Word, Excel, PDF ou JPG), INCLUIR OBSERVAÇÃO para anotar e IMPRIMIR ETIQUETA depois de finalizada a análise.</li>
+<li>A lista e o formulário usam a função de código <strong>319</strong>. O ícone de abrir da lista aparece para quem tem a marca <strong>Alterar</strong>; o histórico, para <strong>Consultar log</strong> (analise_controle_lst.aspx.cs:210 e 227).</li>
+<li>ATUALIZAR RESULTADO, SALVAR ANÁLISE, REABRIR ANÁLISE, o painel de resultado e os anexos exigem a função própria <strong>Aprovar/Reprovar (CQ_APROVAR)</strong> (bllAnaliseControle.cs:404-420). Na rodada 10 (22/10/2026) o botão só apareceu depois de o usuário receber um perfil com essa função.</li>
+<li><strong>Não há segunda pessoa que confirme</strong> a atualização: a rotina que pedia o login de outro usuário está comentada (analise_controle_ed.aspx.cs:386-392 e 595). Quem tem a função grava aprovação ou reprovação do lote.</li>
+<li>O <strong>grupo de usuário</strong> limita a lista, mas o número da análise vem no endereço e a tela abre sem conferir o grupo (analise_controle_ed.aspx.cs:39-42).</li>
+<li>A tela <strong>não confere a permissão ao ser aberta</strong> (DV-EST-008, Alta).</li>
+<li>No CQ, qualquer usuário com a tela aprova o laudo, mesmo sem a função de chefe de subdivisão (DV-EST-028, Alta), e as funções do CQ são procuradas por número fixo, ausente no ambiente de teste (DV-EST-035, Alta). Salvar a conta de um usuário no Principal apagou permissões dele no Estoque e no CQ (DV-EST-036, Alta).</li>
 </ul>
-<h4 id="com-o-modulo-cq-desligado">Com o módulo CQ desligado</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 11. Preencha o número e a validade do laudo, o resultado (e o motivo, se reprovado), a reanálise e, se o item controla o teor, o grau de pureza e o teor, e clique em SALVAR ANÁLISE. REABRIR ANÁLISE desfaz a finalização enquanto o lote não foi movimentado.</li>
-</ul>
-<h4 id="atencao-ao-usar">Atenção ao usar</h4>
-<ul>
-<li>O Estoque <strong>não sabe do laudo sozinho</strong> (DV-EST-029). Sem o clique, o lote aprovado continua em quarentena e o reprovado continua "Solicitado".</li>
-<li>Depois de atualizado, o saldo do lote reprovado mostra o mesmo material em <strong>Quarentena</strong> e <strong>Bloqueado</strong> ao mesmo tempo, e a coluna "Reprovado" fica em 0 (DV-EST-029). Só a Movimentação de Quarentena (destino de refugo) leva o saldo para "Reprovado".</li>
-<li>O "número do laudo" que o Estoque mostra é o número da solicitação (por exemplo 005/26), e o responsável do laudo no CQ é quem vê a tela, não quem aprovou (DV-EST-030).</li>
+<li><strong>O Estoque não sabe do laudo sozinho</strong> (DV-EST-029): sem o clique, o aprovado continua em quarentena e o reprovado continua "Solicitado". Depois do clique, o lote reprovado mostra o mesmo material em Quarentena e Bloqueado, com a coluna "Reprovado" em 0.</li>
+<li><strong>Número do laudo é o da solicitação</strong> (por exemplo 005/26), e o "Responsável" do laudo no CQ é quem vê a tela, não quem aprovou (DV-EST-030).</li>
+<li><strong>Reprovar no CQ não exigiu motivo</strong> nem registrou quem reprovou, e o Estoque bloqueou o lote sem motivo (DV-EST-027, Alta, do módulo CQ).</li>
+<li>A amostra do CQ saiu do estoque (100 para 90) sem registro na Central de Pesagem; o Volume continuou 100 (DV-EST-032).</li>
+<li>O resultado de conformidade já vem "CONFORME" na digitação do CQ (DV-EST-038).</li>
 <li>A análise do produto acabado abre como tipo NORMAL (DV-EST-026).</li>
+<li>O Histórico do Lote não mostra análise, laudo, aprovador nem reprovação (DV-EST-034).</li>
+<li>Pelo código, uma solicitação cancelada no CQ viraria Reprovado no Estoque e bloquearia o lote (bllAnaliseControle.cs:891-896). Ponto para validar com a área.</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abrir / Visualizar</td>
+<td>Abre a análise</td>
+<td>Para quem tem a marca Alterar; vira "Visualizar" se a análise está finalizada ou o CQ está ligado</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre o histórico (TBL_ANALISE_CONTROLE)</td>
+<td>Para quem tem a marca Consultar log</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório e planilha da lista</td>
+<td>Depois de uma pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <h4 id="lista">Lista</h4>
@@ -460,7 +554,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

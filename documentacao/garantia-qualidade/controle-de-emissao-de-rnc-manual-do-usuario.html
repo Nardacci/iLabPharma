@@ -44,6 +44,41 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="controle-de-emissao-de-rnc-analise.html">Análise</a><a href="controle-de-emissao-de-rnc-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="controle-de-emissao-de-rnc-fluxos.html">Fluxos</a><a href="controle-de-emissao-de-rnc-regras-de-negocio.html">Regras de negócio</a><a href="controle-de-emissao-de-rnc-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-controle-de-emissao-de-rnc-relatorio.html">Erros (4)</a><a class="aba-extra" href="roteiro-de-execucao-desvios-e-capa-passo-a-passo.html#telas-13-e-14-acompanhamento-rd-e-controle-de-emissao-de-rnc">Passo a passo</a><a class="aba-extra" href="controle-de-emissao-de-rnc-tela-a-criar.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Controle de Emissão de RNC</strong> gera, em PDF, o "Formulário de controle de emissão de RNC" de um ano: a lista dos números de desvio emitidos, com data, descrição e divisão/seção. Serve à Garantia da Qualidade para controlar a numeração dos desvios. A tela <strong>só imprime</strong>: não grava nada nem mostra lista.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde vem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Desvios já pré-avaliados no ano</strong></td>
+<td>O PDF lista só desvios que já passaram pela pré-avaliação; os cancelados antes dela e os que ainda esperam não aparecem (DV-GQ-030, DV-GQ-082)</td>
+<td>Pré Avaliação Relatório Desvios</td>
+</tr>
+<tr>
+<td><strong>Ano entre o atual e dez anos antes</strong></td>
+<td>Fora disso o sistema recusa</td>
+<td>Digitado na tela (vem preenchido com o ano atual)</td>
+</tr>
+<tr>
+<td><strong>Sessão ativa no sistema</strong></td>
+<td>A impressão exige usuário conectado</td>
+<td>Login do sistema</td>
+</tr>
+<tr>
+<td><strong>Área do usuário que registrou o desvio</strong></td>
+<td>Sai na coluna DIVISÃO/SEÇÃO, pelo cadastro de hoje (vazia em vários desvios)</td>
+<td>Cadastro de usuários do módulo Principal</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
 <ol>
 <li>No menu, abra Controle de Desvios › Controle de Emissão de RNC. A tela tem o bloco Pesquisa com um único campo, Ano, já preenchido com o ano atual. Não há lista na tela: o resultado sai em PDF.</li>
 </ol>
@@ -72,7 +107,36 @@
 <li>O PDF da massa lista só os desvios já pré-avaliados: 001, 002, 003, 005, 006, 009, 010, 014, 027 a 049 e 052 a 059. Ficam de fora, por exemplo, 004, 007, 008, 011 a 013, 015, 016 e 017 a 026 (CT-GQ-N14-06; DV-GQ-030).</li>
 <li>Os desvios cancelados antes da pré-avaliação (004, 011, 017 e 018) não aparecem e não há marca de cancelado, o que deixa buracos na sequência dos números (CT-GQ-N14-07; DV-GQ-030). A coluna DIVISÃO/SEÇÃO fica vazia para vários desvios (CT-GQ-F15).</li>
 </ul>
-<h4 id="rodada-3-22-10-2026">Rodada 3 (22/10/2026)</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>Não grava nada.</strong> Abre nova janela com o PDF "FORMULÁRIO DE CONTROLE DE EMISSÃO DE RNC" (A4 em pé), com cliente, título, ano, usuário que imprimiu, página e logotipo.</li>
+<li>A impressão <strong>não deixa registro</strong> de quem imprimiu, quando e para qual ano (SEG-GQ-04).</li>
+<li>O PDF <strong>não marca cancelados nem situação</strong> e não verifica lacunas na numeração: um controle de emissão <strong>incompleto</strong> (em 22/10/2026 mostrou 58 dos 85 desvios; DV-GQ-082).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li><strong>Informe um Ano entre o atual até 10 anos anteriores!</strong> (ano maior que o atual, menor que o atual menos dez, ou campo vazio). O limite é conferido só no navegador; o servidor aceita qualquer ano e devolve vazio.</li>
+<li>O campo só aceita números e no máximo quatro dígitos.</li>
+<li>"Usuário não encontrado" (impressão sem sessão) e "Configuração do cliente não foi encontrada".</li>
+<li><strong>A tela não avisa</strong> quando o ano não tem desvios: o PDF sai só com o cabeçalho.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li><strong>Pelo código, a tela de filtros pode abrir sem entrar no sistema</strong> (SEG-GQ-01; <strong>a confirmar no teste</strong> nesta tela: o caso CT-GQ-N14-13 está sem resultado). A impressão exige sessão ativa.</li>
+<li>Sem conferência de nível, área ou papel: <strong>todo usuário com sessão ativa imprime todos os desvios do ano</strong> (SEG-GQ-02). A tela não usa o grupo de perfil da GQ.</li>
+<li>Ponto para validar com a área: quem deve poder imprimir o controle de emissão.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>O controle não está completo</strong> (DV-GQ-030 e DV-GQ-082, Alta): só entram desvios já pré-avaliados; os cancelados antes da pré-avaliação e os que aguardam ficam de fora, sem marca, e deixam buracos na sequência dos números.</li>
+<li><strong>Não há marca de cancelado nem de situação</strong> no PDF.</li>
+<li><strong>Data e hora em formato americano</strong> (DV-GQ-034); a coluna DATA traz data e hora.</li>
+<li>A coluna DIVISÃO/SEÇÃO mostra a área de hoje do usuário que registrou, não a da época, e fica vazia em vários desvios.</li>
+<li>Ano sem desvios gera PDF só com o cabeçalho, sem aviso.</li>
+<li>O número do desvio é calculado como texto e pode repetir ou pular após o desvio 999 do ano (inferência).</li>
+</ul>
+<h5 id="registro-das-rodadas-de-teste-e-do-que-ainda-nao-foi-visto">Registro das rodadas de teste e do que ainda não foi visto</h5>
+<h5 id="rodada-3-22-10-2026">Rodada 3 (22/10/2026)</h5>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-3c/resultado.md. O que a rodada mostrou de novo ou contrário ao passo a passo acima:</p>
 <ul>
 <li>Passo 4, limite de dez anos: o ano atual menos dez (2016) abre o PDF; 2015 mostra a faixa "Informe um Ano entre o atual até 10 anos anteriores!" (CT-GQ-N14-03).</li>
@@ -80,13 +144,37 @@
 <li>Passo 7, colunas do PDF (CT-GQ-N14-08): Nº RNC com o ano (por exemplo 001/26), DATA com data e hora (02/06/2026 11:23:56), descrição completa (inclusive a de 150 caracteres) e DIVISÃO/SEÇÃO com a área de quem registrou (028/26: TESTE AREA B; 029/26: TESTE ESTRUTURA FUNCIONAL II). O desvio registrado por usuário sem área (030/26) sai com DIVISÃO/SEÇÃO vazia, sem erro (CT-GQ-N14-09).</li>
 <li><strong>Atenção, o controle não está completo</strong> (CT-GQ-N14-12; DV-GQ-082): nos três desvios consecutivos 080, 081 e 082, o 081 (cancelado antes da pré-avaliação) não está no controle. Em 22/10/2026 o controle mostrou 58 dos 85 desvios: faltam os 9 cancelados e todos os que ainda estão em Pendente Registro ou Pendente Pré Avaliação. Não há marca de lacuna entre o 080 e o 083. Quem confere a numeração por este PDF não vê os números faltando; use a lista da tela 1 para completar.</li>
 </ul>
-<h4 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h4>
+<h5 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h5>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-4/resultado.md. O que a rodada mostrou de novo ou contrário ao passo a passo acima:</p>
 <ul>
 <li>Passo 2, digitação (CT-GQ-N14-05): letras e sinais não entram; "12345" fica "1234" e "20a2-6" fica "2026".</li>
 <li>Passo 3, o PDF (CT-GQ-N14-11): traz o cliente, o título "FORMULÁRIO DE CONTROLE DE EMISSÃO DE RNC", o ano, o usuário que imprimiu, a página ("Página 1/3") e o logotipo, em folha A4 em pé. A data e a hora impressas saem em formato americano com AM/PM.</li>
 <li>Ano sem desvios (CT-GQ-N14-10): com 2025, o PDF sai só com o cabeçalho, sem linhas e sem aviso. Quem imprime um ano sem registros não sabe se não houve desvios ou se o filtro falhou.</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Esta tela <strong>não tem lista nem ícones por linha</strong>. Os botões são:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Imprimir</strong></td>
+<td>Abre em nova janela o PDF do controle de emissão do ano escolhido</td>
+<td>Sempre; exige ano válido e sessão ativa</td>
+</tr>
+<tr>
+<td><strong>Limpar</strong></td>
+<td>Esvazia o campo Ano e esconde a faixa vermelha</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
+<p>Não há Pesquisar, Incluir, Editar, Cancelar nem Visualizar.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <h3 id="tela-index">Tela (Index)</h3>
 <div class="tabela"><table>
@@ -297,7 +385,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li class="sub"><a href="#tela-index">Tela (Index)</a></li><li class="sub"><a href="#colunas-do-relatorio-pdf">Colunas do relatório (PDF)</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

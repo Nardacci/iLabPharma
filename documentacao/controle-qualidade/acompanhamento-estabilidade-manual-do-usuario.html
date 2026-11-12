@@ -45,42 +45,135 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="acompanhamento-estabilidade-analise.html">Análise</a><a href="acompanhamento-estabilidade-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="acompanhamento-estabilidade-fluxos.html">Fluxos</a><a href="acompanhamento-estabilidade-regras-de-negocio.html">Regras de negócio</a><a href="acompanhamento-estabilidade-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-acompanhamento-estabilidade.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-estabilidade-passo-a-passo.html#tela-3-acompanhamento-estabilidade">Passo a passo</a><a class="aba-extra" href="o-controle-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Bloqueada no teste</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Confirme que o produto acabado tem Regra Estabilidade (tela 03), que o Estoque tem o almoxarifado de estabilidade e que existe, no CQ, um motivo ligado a ele (tela 02). <strong>O manual abaixo é o que o código prevê; nenhum passo depois de "Pesquisar" foi executado em tela.</strong></p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<p><strong>Atenção:</strong> nenhum passo depois de "Pesquisar" foi executado em tela, porque nenhum estudo de estabilidade se abriu nos testes (DV-EST-074). O que segue é o que o código prevê.</p>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Acompanhamento Estabilidade</strong> acompanha cada <strong>estudo de estabilidade</strong> aberto para um lote de produto acabado: mostra o produto, o lote, o tipo de estudo (acelerado, longa duração, acompanhamento ou prateleira), o tipo de análise e a <strong>evolução dos tempos</strong> (T0, T1, T2…). Em cada tempo, o botão <strong>Gerar Solicitação</strong> cria a solicitação de análise daquele ponto; quando o laudo sai, passa a <strong>Imprimir Laudo</strong>. O estudo pode ser <strong>interrompido</strong> com justificativa. Quem usa é quem acompanha os estudos de estabilidade no CQ (leitura da área). A tela <strong>não abre</strong> estudo (não tem Incluir): o estudo vem do Estoque. No alto da tela o sistema escreve "ACOMPANHAMENTO DA ESTABILIDADE".</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Estudo de estabilidade aberto</strong> para um lote de produto acabado</td>
+<td>É o que a lista mostra; vem do Estoque pela Entrada de Material com "Qtd. Estabilidade" (hoje desligada no Registro de Amostragem: DV-EST-074)</td>
+<td>Estoque › Entrada de Material; Amostragem › Consultar Amostragem</td>
+</tr>
+<tr>
+<td><strong>Regra Estabilidade</strong> do produto</td>
+<td>O estudo copia os tempos da regra</td>
+<td>Tabelas de Apoio › Regra Estabilidade</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado de estabilidade</strong> no Estoque</td>
+<td>Sem ele: "Almoxarifado de estabilidade não encontrado!"</td>
+<td>Estoque › Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Motivo ligado ao almoxarifado de estabilidade</strong></td>
+<td>Sem ele: "Motivo não cadastrado!" ao gerar solicitação</td>
+<td>Tabelas de Apoio › Motivos</td>
+</tr>
+<tr>
+<td><strong>Regras de análise</strong> do item</td>
+<td>A janela de Gerar Solicitação lista as regras do item</td>
+<td>Análise e Laudo › Regra de Análise</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>A lista</strong></p>
+<ol>
+<li>No menu Regulatório, abra <strong>Acompanhamento Estabilidade</strong>. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
+<li>Filtros: <strong>Tipo Análise</strong>, <strong>Item</strong> (digite e escolha na lista), <strong>Lote</strong> (procura no lote do fabricante e na entrada), <strong>Tipo Estabilidade</strong>, <strong>Cód. Estab.</strong> e <strong>Status</strong> (ABERTO, FINALIZADO, INTERROMPIDO). Mudar um filtro esconde a lista até nova pesquisa.</li>
+<li>Clique em <strong>Pesquisar</strong>. A lista mostra Item, Tipo Estabilidade, Tipo Análise, Cód. Estabilidade, Lote e Status, com os ícones. Sem resultado: "A pesquisa não retornou nenhum resultado." (<strong>foi o que apareceu em todas as tentativas</strong>, CT-CQ-043 e CT-CQ-R2-AC-19).</li>
+</ol>
+<p><strong>Acompanhar um estudo (previsto no código, não visto)</strong></p>
+<ol start="4">
+<li>Clique em Editar ou Visualizar. A tela mostra os dados do estudo e a tabela <strong>Evolução do Acompanhamento</strong>: tempo, código da solicitação, status, data da solicitação e "dias para próxima análise".</li>
+<li>Em cada tempo com solicitação, aparece <strong>Imprimir Laudo</strong> (laudo liberado) ou <strong>Ver Detalhes</strong> (outros casos; só leva à lista de Solicitação de Análise).</li>
+<li>No <strong>primeiro tempo ainda sem solicitação</strong>, com o estudo Em aberto, clique no ícone <strong>Gerar Solicitação</strong>. Abre uma janela com as regras de análise do item (as "padrão" já marcadas); confirme com pelo menos uma regra marcada ou: "Regra não definida!".</li>
+<li>O sistema cria a solicitação do tempo e a tabela recarrega com o código. Nada é gerado pela data; é preciso clicar (RN-CQ-087).</li>
+</ol>
+<p><strong>Interromper um estudo (previsto no código, não visto)</strong></p>
+<ol start="8">
+<li>Com o estudo Em aberto, clique em <strong>Interromper Estudo</strong> e responda SIM a "Confirma a interrupção do estudo?".</li>
+<li>Se algum tempo tem solicitação sem laudo liberado: "Existem solicitações pendentes!" e não segue. Senão, a janela pede a <strong>justificativa</strong> (qualquer texto). O estudo passa a "Interrompido": "Estudo interrompido com sucesso!". Não há como reabrir.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu Regulatório, abra Acompanhamento Estabilidade. A tela mostra o quadro "Pesquisa" e uma área vazia (Index.cshtml:18-96).</li>
-<li>Passo 2. Filtros: <strong>Tipo Análise</strong> (Físico-Químico, Microbiológica), <strong>Item</strong> (digite e escolha na lista de sugestões), <strong>Lote</strong> (procura no lote do fabricante e na entrada), <strong>Tipo Estabilidade</strong>, <strong>Cód. Estab.</strong> e <strong>Status</strong> (ABERTO, FINALIZADO, INTERROMPIDO). Mudar um filtro esconde a lista até nova pesquisa (Index.cshtml:32-70; AcompanhamentoIndex.js:61-85).</li>
-<li>Passo 3. Clique em Pesquisar. A lista mostra Item, Tipo Estabilidade, Tipo Análise, Cód. Estabilidade, Lote e Status, com o ícone <strong>Editar</strong> (estudo em aberto) ou <strong>Visualizar</strong> (os outros) e <strong>Ver Log</strong> (_GridAcompanhamentoEstabilidade.cshtml:6-30 e 70-84).</li>
-<li>Passo 4. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (_GridAcompanhamentoEstabilidade.cshtml:36). <strong>Foi o que apareceu em todas as tentativas</strong> (CT-CQ-043, 23/10/2026; CT-CQ-R2-AC-19, 28/10/2026).</li>
+<li><strong>Gerar Solicitação:</strong> cria a solicitação de análise do tempo em <strong>"Coleta pendente de programação"</strong>, que segue para a Programação de Amostragem; a tela lê do Estoque o lote e o almoxarifado de estabilidade.</li>
+<li><strong>Interromper:</strong> passa o estudo a "Interrompido" com a justificativa informada.</li>
+<li>A tela <strong>não calcula</strong> a data prevista de cada tempo nem avisa tempo próximo ou atrasado (RN-CQ-085 e 092) e não guarda condição de armazenamento, quantidade reservada nem data de início (RN-CQ-086).</li>
 </ul>
-<h4 id="acompanhar-um-estudo-previsto-no-codigo-nao-visto">Acompanhar um estudo (previsto no código, não visto)</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 5. Clique em Editar/Visualizar. A tela mostra os dados do estudo (item, status, lote, tipo de análise, tipo de estabilidade e código) e a tabela <strong>Evolução do Acompanhamento</strong>: tempo, código da solicitação, status, data da solicitação e "dias para próxima análise" (Edit.cshtml:35-97; _FormAcompanhamento.cshtml:5-23).</li>
-<li>Passo 6. Em cada tempo com solicitação, o ícone <strong>Imprimir Laudo</strong> aparece quando o laudo está liberado (status 900), ou <strong>Ver Detalhes</strong> nos outros casos; o Ver Detalhes só leva à lista de Solicitação de Análise, sem abrir a solicitação (_FormAcompanhamento.cshtml:66-77; AcompanhamentoEdit.js:135-138).</li>
-<li>Passo 7. No <strong>primeiro tempo ainda sem solicitação</strong>, se o estudo estiver Em aberto, aparece o ícone <strong>Gerar Solicitação</strong>. Ele abre uma janela com as regras de análise do item (as "padrão" já marcadas); confirme com pelo menos uma regra marcada ou a tela diz "Regra não definida!" (_FormAcompanhamento.cshtml:78-84; AcompanhamentoEdit.js:149-189).</li>
-<li>Passo 8. O sistema cria a solicitação do tempo e a tabela recarrega com o código da solicitação. Nada é gerado pela data; é preciso clicar (RN-CQ-087).</li>
+<li>"Regra não definida!" (gerar solicitação sem regra marcada).</li>
+<li>"Existem solicitações pendentes!" e "A justificativa é obrigatória!" (interromper); <strong>a conferência de pendência é só da tela</strong>, e a justificativa aceita qualquer texto.</li>
+<li>"Registro não encontrado!", "Lote não encontrado!", "Almoxarifado de estabilidade não encontrado!", "Motivo não cadastrado!", "Solicitação T0 não encontrada!".</li>
+<li>"Erro ao gerar solicitação!" e "Ocorreu um erro inesperado.".</li>
+<li>"Usuário não autorizado!": é a mensagem de acesso negado da tela, mas <strong>nunca aparece</strong> (ver Permissões).</li>
+<li><strong>Não recusa no servidor:</strong> gerar solicitação com o estudo fora de Em aberto, de um tempo que já tem solicitação, ou interromper com pendência.</li>
 </ul>
-<h4 id="interromper-um-estudo-previsto-no-codigo-nao-visto">Interromper um estudo (previsto no código, não visto)</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 9. Com o estudo Em aberto, clique em <strong>Interromper Estudo</strong> (Edit.cshtml:101-104). Responda SIM a "Confirma a interrupção do estudo?".</li>
-<li>Passo 10. Se algum tempo tem solicitação sem laudo liberado, a tela diz "Existem solicitações pendentes!" e não segue. Senão, a janela pede a <strong>justificativa</strong> (qualquer texto). O estudo passa a "Interrompido" e diz "Estudo interrompido com sucesso!" (AcompanhamentoEdit.js:58-95; AcompanhamentoController.cs:132-162). Não há como reabrir.</li>
+<li>A tela é a função de Acompanhamento Estabilidade (DB/dml.sql:193). <strong>Nenhuma ação do controlador tem conferência de permissão</strong> (Index, Pesquisar, Edit, Interromper, Gerar Solicitação e Imprimir Laudo) (SEG-CQ-01 e 02).</li>
+<li>A conferência da função <strong>71 – Estabilidade</strong> existe e é <strong>sobrescrita com "sim"</strong>; a função 71 nem existe no cadastro do Principal (DV-CQ-022; SEG-CQ-15). O menu cria as funções incluir, alterar, excluir, ver log e imprimir, mas o código não as confere.</li>
+<li>A <strong>abertura do estudo pela API</strong> (usada pelo Estoque) <strong>não pede autenticação</strong> (SEG-CQ-01 e 11).</li>
+<li>No teste, o perfil só de consulta abriu a lista pelo endereço; a lista veio vazia, <strong>nada foi gravado</strong> (CT-CQ-R2-AC-19). Interromper sem o papel de estabilidade e abrir sem a consulta da tela são casos propostos (CT-CQ-T04-07 e T04-15).</li>
+<li>Chefe de subdivisão: não é exigido.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Não abre estudo: não tem Incluir. O estudo vem do Estoque.</li>
-<li>Não calcula a data prevista de cada tempo nem avisa tempo próximo ou atrasado: só mostra os dias (RN-CQ-085 e 092).</li>
-<li>Não guarda a condição de armazenamento, a quantidade reservada nem a data de início (RN-CQ-086).</li>
-<li>Não confere no servidor se o estudo está Em aberto ao gerar a solicitação, nem se o tempo já tem solicitação, nem se há pendência ao interromper (RN-CQ-T04-003 e RN-CQ-093).</li>
-<li>Não confere o papel de quem interrompe (as regras de acesso estão na seção de segurança).</li>
+<li><strong>Nenhum estudo se abre:</strong> a lista vem vazia, a tela não tem Incluir, e a abertura depende de um campo desligado no Registro de Amostragem (DV-EST-074, Média; registrado no Estoque). Todos os casos do plano ficaram Bloqueados (CT-CQ-043 a 049).</li>
+<li><strong>Imprimir o laudo</strong> chamando o endereço com um número inexistente dá erro técnico do servidor (HTTP 500, "Object reference not set to an instance of an object") (DV-CQ-042, Média).</li>
+<li><strong>Papel de estabilidade inexistente:</strong> a função é procurada por número fixo e não existe no cadastro (DV-CQ-022, Média; CT-CQ-049 Bloqueado).</li>
+<li><strong>Rótulos do filtro Status:</strong> Finalizado e Interrompido estão trocados em relação ao código do estudo (RN-CQ-T04-001); ponto para validar na tela quando houver estudos.</li>
+<li><strong>Gerar Solicitação</strong> chama o servidor por GET e cria a solicitação; repetir pode <strong>duplicar</strong> (RN-CQ-T04-003).</li>
+<li><strong>Ver Detalhes</strong> só leva à lista de Solicitação de Análise.</li>
 </ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
-<ul>
-<li>O filtro de Status tem os rótulos de <strong>Finalizado</strong> e <strong>Interrompido</strong> trocados em relação ao código do estudo (RN-CQ-T04-001). Ponto para validar na tela quando houver estudos.</li>
-<li>O botão Gerar Solicitação chama o servidor por GET e cria a solicitação; repetir a chamada pode duplicar (RN-CQ-T04-003).</li>
-</ul>
-</div>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o estudo</td>
+<td>Só se o estudo está <strong>Em aberto</strong> (<code>PermiteEditar</code>); a página de edição abre para qualquer estudo pelo endereço</td>
+</tr>
+<tr>
+<td>Lupa (Visualizar)</td>
+<td>Abre o estudo</td>
+<td>Nos demais (Finalizado e Interrompido)</td>
+</tr>
+<tr>
+<td>LOG (Ver Log)</td>
+<td>Abre o histórico do estudo</td>
+<td>Em cada linha</td>
+</tr>
+<tr>
+<td>Impressora (Imprimir Laudo, no formulário)</td>
+<td>Abre o laudo da análise do tempo</td>
+<td>Só se há solicitação e o laudo está liberado (status 900)</td>
+</tr>
+<tr>
+<td>Mais (Gerar Solicitação, no formulário)</td>
+<td>Cria a solicitação do tempo</td>
+<td>Só no primeiro tempo sem solicitação e com o estudo Em aberto</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botões da tela: <strong>Pesquisar</strong> e <strong>Limpar</strong> (sempre); no formulário, <strong>Interromper Estudo</strong> (só Em aberto) e <strong>Voltar</strong>. <strong>Incluir</strong> não existe (comentado no código).</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: Acompanhamento/Index.cshtml, Edit.cshtml, _FormAcompanhamento.cshtml, _GridAcompanhamentoEstabilidade.cshtml, _ModalGerarSolicitacao.cshtml, AcompanhamentoIndex.js, AcompanhamentoEdit.js e AcompanhamentoController.cs (caminho completo na seção Resumo). <strong>Nenhum campo foi visto com dados reais.</strong></p>
 <div class="tabela"><table>
@@ -373,7 +466,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

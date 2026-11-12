@@ -45,37 +45,147 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="inventario-analise.html">Análise</a><a href="inventario-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="inventario-fluxos.html">Fluxos</a><a href="inventario-regras-de-negocio.html">Regras de negócio</a><a href="inventario-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-inventario.html">Erros (7)</a><a class="aba-extra" href="roteiro-de-execucao-inventario-passo-a-passo.html#tela-1-inventario">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Confira que o recorte que você vai inventariar não tem recebimento em andamento nem solicitação de material ainda não finalizada. Se tiver, o sistema recusa. Combine com a Qualidade quem vai contar e quem vai apurar (o sistema não impõe essa separação, ver DV-EST-049).</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Inventário</strong> é a tela em que o almoxarifado <strong>abre um inventário</strong>: escolhe o tipo (geral ou rotativo), o motivo e o recorte do estoque (almoxarifado, local, grupo e subgrupo, item ou endereço) e manda o sistema gerar a lista de itens a contar. A mesma página tem a <strong>lista</strong> dos inventários já abertos e o <strong>formulário</strong> "Inventário". Ao gerar, o sistema tira uma "foto" do saldo de cada endereço (por lote) e <strong>trava os endereços</strong>: o saldo deles sai do disponível até o inventário terminar. As contagens, a justificativa e a apuração acontecem nas três telas seguintes do menu (Inventário - Contagem, Auditoria/Justificativa e Apuração).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Almoxarifado, local e endereços</strong> em local do tipo "Estoque" (não de separação nem de expedição, nem local de sistema)</td>
+<td>Só entram no inventário endereços desses locais, que não estejam em outro inventário aberto</td>
+<td>Cadastros › Almoxarifado, Local de Armazenagem, Rua, Coluna e Andar</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado liberado para o seu grupo de usuário</strong></td>
+<td>A lista e o formulário só mostram os almoxarifados do grupo; o tipo Geral só olha os do grupo</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Recorte sem pendências</strong>: nenhum recebimento de material não concluído e nenhuma solicitação de material não finalizada nem cancelada</td>
+<td>Com pendência, o sistema recusa</td>
+<td>Concluir ou cancelar nas telas de Recebimento e Solicitação</td>
+</tr>
+<tr>
+<td><strong>Itens com saldo nos endereços</strong> (ou marcar "Endereço zerados")</td>
+<td>Sem saldo e sem a marca, aparece "Não existem itens para geração do Inventário!"</td>
+<td>Estoque (recebimento, entradas, movimentação)</td>
+</tr>
+<tr>
+<td>Grupo e subgrupo, item ou endereço (conforme o tipo)</td>
+<td>São os recortes do tipo escolhido</td>
+<td>Cadastros › Grupo e Subgrupo de Item, Item</td>
+</tr>
+</tbody>
+</table></div>
+<p>Combine com a Qualidade quem vai contar e quem vai apurar: o sistema não impõe essa separação (DV-EST-049).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar os inventários</strong></p>
+<ol>
+<li>No menu <strong>Inventário</strong>, abra <strong>Inventário</strong>. A tela mostra o quadro "Pesquisa". Clique em <strong>Pesquisar</strong> para listar.</li>
+<li>Filtros: <strong>Código</strong> (só números, até 6), <strong>Período</strong> (data inicial e final), <strong>Motivo</strong> e <strong>Situação</strong>.</li>
+<li>A lista mostra Código, Data, Situação, Tipo e Motivo, com os ícones <strong>Visualizar</strong> (olho) e, para quem tem a função, <strong>Log</strong>. Depois de pesquisar aparecem os botões <strong>Imprimir</strong> e <strong>Excel</strong>. Sem resultado: "A pesquisa não retornou nenhum resultado.". A lista inclui também os inventários cancelados.</li>
+</ol>
+<p><strong>Abrir um inventário</strong></p>
+<ol>
+<li>Clique no sinal de mais (<strong>Incluir</strong>) acima da lista.</li>
+<li>Escolha o <strong>Tipo</strong>. Os campos que aparecem mudam conforme o tipo:
+   - <strong>Geral:</strong> sem recorte (vale para os almoxarifados do seu grupo).
+   - <strong>Rotativo - Almoxarifado:</strong> Almoxarifado.
+   - <strong>Rotativo - Almoxarifado/Local:</strong> Almoxarifado e Local.
+   - <strong>Rotativo - Local/Grupo/Subgrupo:</strong> Almoxarifado, Local, Grupo e Subgrupo.
+   - <strong>Rotativo - Grupo/Subgrupo:</strong> Grupo e Subgrupo.
+   - <strong>Rotativo - Item:</strong> um Item (busque pelo código ou pela lupa).
+   - <strong>Rotativo - Endereço:</strong> um Endereço (digite o código e clique na lupa).</li>
+<li>Escolha o <strong>Motivo</strong>. A <strong>Data</strong> é preenchida pelo sistema e não pode ser alterada. A <strong>Situação</strong> vem como ABERTO.</li>
+<li>Se quiser que endereços sem saldo também entrem na contagem, marque <strong>"Endereço zerados"</strong> (não aparece no tipo Item).</li>
+<li>Clique em <strong>GERAR INVENTÁRIO</strong> e confirme ("Confirma a geração do inventário?"). O sistema responde "Inventário gerado com sucesso!". Ao clicar OK, mostra o inventário gerado em modo de leitura.</li>
+<li>Em modo leitura, use <strong>IMPRIMIR FICHA</strong> (lista de contagem) e <strong>IMPIMIR ETIQUETA</strong> (o botão tem erro de digitação na tela), escolhendo a Contagem, a ordem (código, endereço, item ou descrição) e crescente ou decrescente.</li>
+<li>O próximo passo é a tela <strong>Inventário - Contagem</strong>.</li>
+</ol>
+<p><strong>O que a tela não faz</strong></p>
 <ul>
-<li>Passo 1. No menu Inventário, abra Inventário. A tela mostra o quadro "Pesquisa". Clique em Pesquisar para listar.</li>
-<li>Passo 2. Filtros: Código (só números, até 6), Período (data inicial e final), Motivo e Situação (inventario_lst.aspx:48-107).</li>
-<li>Passo 3. A lista mostra Código, Data, Situação, Tipo e Motivo, com os ícones Visualizar (olho) e, para quem tem a função, Log (inventario_lst.aspx:148-236; inventario_lst.aspx.cs:295-342). Depois de pesquisar aparecem os botões Imprimir e Excel.</li>
-<li>Passo 4. Sem resultado: "A pesquisa não retornou nenhum resultado." (inventario_lst.aspx.cs:249).</li>
+<li>Não permite escolher a data nem <strong>excluir</strong> o inventário: o ícone de excluir está desligado no código. Para desistir, o caminho é cancelar na tela <strong>Inventário - Apuração</strong>.</li>
+<li>Não pede justificativa para abrir, e os motivos oferecidos são de natureza fiscal: não há motivo de rotina de BPF, investigação ou reconciliação.</li>
+<li>Não mostra o saldo do sistema, nem quem abriu, no formulário.</li>
 </ul>
-<h4 id="abrir-um-inventario">Abrir um inventário</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 5. Clique no sinal de mais ("Incluir") acima da lista.</li>
-<li>Passo 6. Escolha o <strong>Tipo</strong>. Os campos que aparecem mudam conforme o tipo (inventario_ed2.aspx.cs:259-320):</li>
-<li>Geral: sem recorte (vale para os almoxarifados do seu grupo).</li>
-<li>Rotativo - Almoxarifado: Almoxarifado.</li>
-<li>Rotativo - Almoxarifado/Local: Almoxarifado e Local.</li>
-<li>Rotativo - Local/Grupo/Subgrupo: Almoxarifado, Local, Grupo e Subgrupo.</li>
-<li>Rotativo - Grupo/Subgrupo: Grupo e Subgrupo.</li>
-<li>Rotativo - Item: um Item (busque pelo código ou pela lupa).</li>
-<li>Rotativo - Endereço: um Endereço (digite o código e clique na lupa).</li>
-<li>Passo 7. Escolha o <strong>Motivo</strong>. A <strong>Data</strong> é preenchida pelo sistema e não pode ser alterada. A <strong>Situação</strong> vem como ABERTO.</li>
-<li>Passo 8. Se quiser que endereços sem saldo também entrem na contagem, marque "Endereço zerados".</li>
-<li>Passo 9. Clique em GERAR INVENTÁRIO e confirme ("Confirma a geração do inventário?"). O sistema responde "Inventário gerado com sucesso!".</li>
-<li>Passo 10. Em modo leitura, use IMPRIMIR FICHA (lista de contagem) e IMPIMIR ETIQUETA (o botão tem erro de digitação na tela) escolhendo a ordem (código, endereço, item ou descrição) e crescente ou decrescente.</li>
+<li>Grava o inventário com situação <strong>ABERTO</strong> e a <strong>1ª contagem</strong>, cria uma linha de contagem em branco por endereço e lote a contar e guarda o <strong>saldo do momento da abertura</strong> ("foto"); a apuração compara as contagens com essa foto, não com o saldo atual (RN-EST-INV01-004).</li>
+<li><strong>Trava os endereços</strong> (marca Inventário = SIM): o saldo sai do disponível; a Disponibilidade e o Atendimento deixam de oferecê-lo (CT-EST-132 e 133).</li>
+<li>Grava o log de inclusão do inventário. O travamento dos endereços e as linhas de contagem não geram histórico por linha.</li>
+<li><strong>Nada é gravado na movimentação do estoque</strong>: o saldo só muda na apuração. Nenhum outro módulo é gravado; o recebimento e a solicitação são só consultados.</li>
+<li>A foto lê o saldo total do endereço e lote, sem separar quarentena, reprovado ou bloqueado (<strong>Ponto para validar com a Qualidade</strong>).</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Não permite escolher a data nem excluir o inventário: o ícone de excluir está desligado no código (inventario_lst.aspx.cs:334). Para desistir, o caminho é cancelar na tela Inventário - Apuração.</li>
-<li>Não pede justificativa para abrir o inventário, e os motivos oferecidos são de natureza fiscal (dml.sql:720-733): não há motivo de rotina de BPF, investigação ou reconciliação.</li>
-<li>Não mostra o saldo do sistema no formulário.</li>
+<li>"O Inventário não pode ser gerado com solicitações pendentes!" (vista em CT-EST-131; vale para o almoxarifado inteiro).</li>
+<li>"O Inventário não pode ser gerado com itens pendentes de recebimento!" (não vista em teste na página em uso).</li>
+<li>"Não existem itens para geração do Inventário!".</li>
+<li>"Item não informado!", "Endereço não informado!", "Código do endereço não informado!" e "Código do endereço não localizado!".</li>
+<li>Motivo ou tipo em "SELECIONE" (validador da tela).</li>
+<li>"O Inventário não foi gerado. Ocorreram problemas no processo!" e "Erro na inclusão do registro!" (com "Detalhe do erro (+)").</li>
 </ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela é a função <strong>401 (Inventário)</strong>. O cadastro do menu libera para o perfil <strong>Incluir</strong>, <strong>Imprimir</strong> e <strong>Ver log</strong>; <strong>não registra alterar nem excluir</strong>. O ícone Visualizar aparece sempre; Editar e Log dependem das funções de alterar e de ver log.</li>
+<li>O <strong>grupo de usuário</strong> limita tudo: a lista só traz inventários de almoxarifados do grupo, o formulário só oferece os almoxarifados do grupo e o tipo Geral só olha os almoxarifados do grupo.</li>
+<li><strong>Cuidado:</strong> a conferência de acesso à página está <strong>desligada no código</strong> (DV-EST-008, Alta; CT-EST-141, em outra tela, deu erro técnico). Nos formulários, as permissões de incluir, alterar e excluir começam como verdadeiras: quem abrir o formulário pelo endereço tem o botão GERAR INVENTÁRIO, e o servidor não confere a função ao clicar (leitura do código).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Quem abre pode ser a mesma pessoa que conta, justifica e apura</strong> (DV-EST-049, Média).</li>
+<li><strong>O ajuste do inventário aparece no Histórico do Lote sem usuário e sem justificativa</strong> (DV-EST-034, Média; detalhe na Apuração).</li>
+<li><strong>A conferência de solicitação pendente não respeita o recorte:</strong> qualquer solicitação não finalizada do almoxarifado impede, mesmo de outro item ou grupo (RN-EST-INV01-006; CT-EST-INV01-01 a confirmar).</li>
+<li><strong>O tipo "Rotativo - Grupo/Subgrupo" pode abrir sem grupo e subgrupo</strong>, pois a conferência do código nunca é verdadeira (CT-EST-INV01-02, ponto para validar em tela).</li>
+<li><strong>Só o tipo Rotativo - Almoxarifado foi testado</strong> (22/10/2026); os outros seis tipos, "Endereço zerados", a impressão da ficha e das etiquetas e o Excel não foram vistos.</li>
+<li>A data é a do servidor (CT-EST-130): a regra "não anterior à data atual" é atendida por construção.</li>
+<li>A mensagem "Existem solicitações não finalizadas para os parâmetros informados!" (vista em 13/10/2026) é da página antiga; a página em uso responde com a outra mensagem. <strong>Ponto para validar com o desenvolvimento.</strong></li>
+<li>Erros do banco aparecem com o texto técnico (SEG-EST-13).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incluir (sinal de mais)</td>
+<td>Abre o formulário em branco</td>
+<td>Só com a função de incluir</td>
+</tr>
+<tr>
+<td>Visualizar (olho)</td>
+<td>Abre o formulário em leitura</td>
+<td>Em toda linha</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre o histórico de alterações do inventário</td>
+<td>Em toda linha, se o usuário tem a função de ver log</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Não aparece (desligado no código)</td>
+<td>Nunca</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório da lista</td>
+<td>Depois de pesquisar, se o usuário pode imprimir</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -395,7 +505,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

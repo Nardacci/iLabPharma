@@ -45,32 +45,116 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="programacao-de-amostragem-analise.html">Análise</a><a href="programacao-de-amostragem-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="programacao-de-amostragem-fluxos.html">Fluxos</a><a href="programacao-de-amostragem-regras-de-negocio.html">Regras de negócio</a><a href="programacao-de-amostragem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-programacao-de-amostragem.html">Erros (5)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-analise-e-laudo-passo-a-passo.html#tela-4-programacao-de-amostragem">Passo a passo</a><a class="aba-extra" href="o-controle-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>A solicitação precisa estar em "Coleta pendente de programação". O <strong>amostrador</strong> precisa ter, no cadastro do Principal, a função que o CQ procura (hoje, a de número 34: só quem a tem aparece na busca; DV-CQ-022). Para <strong>água</strong>, o ponto de água precisa estar cadastrado no Principal; a programação de água abre no ambiente desde o ajuste do DBA em 03/11/2026 (DV-CQ-008).</p>
-<h4 id="procurar-a-solicitacao">Procurar a solicitação</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Programação de Amostragem</strong> mostra as solicitações de análise que <strong>ainda não têm coleta marcada</strong> e permite <strong>programar a amostragem</strong> de cada uma: definir a <strong>data de início</strong> e o <strong>responsável</strong> (o amostrador). Quem usa é a chefia ou o planejamento do CQ (leitura da área; o sistema não diz o dono da tela). As solicitações urgentes (marcadas na tela Priorização de Solicitação Análise) aparecem em cima, na grade "Urgentes!". Em termos da norma, é o momento em que o CQ designa <strong>quem</strong> vai coletar a amostra, que deve ser "pessoal autorizado" (RDC 658/2022, art. 14, II).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Solicitação de análise</strong> em "Coleta pendente de programação", fora da lixeira e <strong>sem nenhuma amostragem</strong> (SolicitacaoAnaliseRepository.cs:19-22 e 63-66)</td>
+<td>É o que aparece na lista</td>
+<td>Vem da inclusão manual (Solicitação de Análise), da agenda de água e ambiente (Programação de Solicitação de Análise), da chegada automática do Estoque ou da Produção com fase de coleta, ou da solicitação de estabilidade</td>
+</tr>
+<tr>
+<td><strong>Amostrador</strong> com a função de número 34 no cadastro de usuários</td>
+<td>Só quem tem essa função aparece na busca do Responsável (DV-CQ-022); a função "AMOSTRADOR" (40) não vale</td>
+<td>Principal › cadastro de usuário e de função</td>
+</tr>
+<tr>
+<td><strong>Ponto de água</strong> cadastrado (solicitação de água)</td>
+<td>A programação de água abre e grava no ambiente desde o ajuste do DBA em 03/11/2026 (DV-CQ-008)</td>
+<td>Principal</td>
+</tr>
+<tr>
+<td><strong>Item e, em produto/material, item de entrada (lote)</strong></td>
+<td>Aparecem na lista e no formulário, só para leitura</td>
+<td>Estoque (recebimento) e cadastro de itens</td>
+</tr>
+</tbody>
+</table></div>
+<p>A lista abre <strong>sem linhas</strong>: é preciso escolher "Produto / Material" (marcado de início) ou "Água / Ambiente" e clicar em Pesquisar (ProgramacaoColetaIndex.js:15-19 e 228-233).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>Abra <strong>Programação de Amostragem</strong> (menu Controle da Qualidade › Solicitação de Análise). Escolha <strong>PRODUTO / MATERIAL</strong> (marcado de início) ou <strong>ÁGUA / AMBIENTE</strong>.</li>
+<li>Se quiser, preencha os filtros. Produto/Material: Tipo de Item, Item Análise (busca por 3 letras), Tipo Análise, Solicitação e Item Entrada. Água/Ambiente: Tipo Item Análise, Item Análise, Tipo Análise e Solicitação (Index.cshtml:39-133).</li>
+<li>Clique em <strong>Pesquisar</strong>. Aparecem duas grades: <strong>Urgentes!</strong> (em cima) e as demais, com tipo de análise, tipo do item, item (cortado em 20 caracteres), solicitação e, em produto/material, o item de entrada. A lista mostra 10 linhas por grade e por página (UI/Web.config:15). Sem resultado, o sistema escreve "A pesquisa não retornou nenhum resultado.".</li>
+<li>Clique no lápis (<strong>Editar</strong>) da linha. Abre o formulário "Informações" com os dados da solicitação (item, tipo de análise, tipo de item, etapa e subetapa, ambiente, item de entrada, lote e quantidade), todos só para leitura.</li>
+<li>Informe a <strong>Data Início Coleta</strong> (hoje ou depois; máscara dd/mm/aaaa, com calendário). Para solicitações vindas da agenda, a data da agenda já vem preenchida.</li>
+<li>Informe o <strong>Responsável</strong>: digite pelo menos 3 letras do nome e escolha na lista de amostradores.</li>
+<li>Clique em <strong>Salvar Registro</strong> e confirme "Confirma a alteração do item?". O sistema mostra "Alteração efetuada com sucesso." e volta à lista; a solicitação sai da lista e segue para Amostragens Pendentes. <strong>Voltar</strong> sai do formulário sem gravar.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. Abra Programação de Amostragem. Escolha <strong>PRODUTO / MATERIAL</strong> (marcado de início) ou <strong>ÁGUA / AMBIENTE</strong>.</li>
-<li>Passo 2. Preencha, se quiser: Produto/Material: Tipo de Item, Item Análise (busca por 3 letras), Tipo Análise, Solicitação e Item Entrada. Água/Ambiente: Tipo Item Análise, Item Análise, Tipo Análise e Solicitação (Index.cshtml:39-133).</li>
-<li>Passo 3. Clique em <strong>Pesquisar</strong>. Aparecem duas grades: <strong>Urgentes!</strong> (em cima) e as demais, com tipo de análise, tipo do item, item (cortado em 20 caracteres), solicitação e, em produto/material, o item de entrada. A lista mostra 10 linhas por grade e por página (UI/Web.config:15).</li>
+<li>Cria uma <strong>amostragem em "Pendente"</strong> com o responsável e leva a solicitação para <strong>"Em coleta"</strong>, com a data de início (ProgramacaoColetaController.cs:89-114; SolicitacaoAnaliseService.cs:185-215).</li>
+<li><strong>Não grava histórico</strong>, não grava quem programou nem quando (RN-CQ-S04-007) e o responsável fica só na amostragem, não na solicitação.</li>
+<li>A coleta passa a aparecer em <strong>Amostragens Pendentes</strong> (menu Amostragem) do responsável. O próximo passo é o <strong>Registro de Amostragem</strong>: quem amostrou, quem verificou, quantidades e checklist.</li>
+<li>A tela <strong>não avisa</strong> o amostrador e <strong>não lê nem grava no Estoque</strong>: o que ela lê do Estoque é só o item de entrada e o lote da solicitação.</li>
 </ul>
-<h4 id="programar-a-amostragem">Programar a amostragem</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 4. Clique no lápis (<strong>Editar</strong>) da linha. Abre o formulário "Informações" com os dados da solicitação (item, tipo de análise, tipo de item, etapa e subetapa, ambiente, item de entrada, lote e quantidade), todos só para leitura.</li>
-<li>Passo 5. Informe a <strong>Data Início Coleta</strong> (hoje ou depois; máscara dd/mm/aaaa, com calendário). Para solicitações vindas da agenda, a data da agenda já vem preenchida.</li>
-<li>Passo 6. Informe o <strong>Responsável</strong>: digite pelo menos 3 letras do nome e escolha na lista de amostradores.</li>
-<li>Passo 7. Clique em <strong>Salvar Registro</strong> e confirme "Confirma a alteração do item?". O sistema mostra "Alteração efetuada com sucesso." e volta à lista; a solicitação sai da lista e segue para Amostragens Pendentes.</li>
+<li>"A Data Início Coleta é obrigatória!" (salvar sem data).</li>
+<li>"O Responsável é obrigatório!" e "O Responsável é inválido!" (sem responsável, ou texto digitado e não escolhido na lista).</li>
+<li>"Data de Início anterior a data atual." (data de ontem).</li>
+<li>Conferências do servidor: "Data de Início não informada.", "Data de Início inválida.", "Solicitação análise não informada.", "Usuário responsável não informado.", "Usuário não foi encontrado" (não vistas em teste).</li>
+<li>Falha na gravação: "Ocorreu um erro inesperado."; falha de comunicação: "Ocorreu um erro interno não esperado.".</li>
 </ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>A tela <strong>não impede programar duas vezes</strong> a mesma solicitação: se o formulário for aberto de novo (por exemplo, pelo botão Voltar do navegador ou pelo endereço), o segundo Salvar cria <strong>uma segunda amostragem pendente</strong> (DV-CQ-010).</li>
-<li><strong>Não há como cancelar</strong> a programação pela tela: o botão não existe (DV-CQ-040).</li>
-<li>Para <strong>água</strong>, a tela de edição dava <strong>erro de servidor</strong> (DV-CQ-008) até 28/10/2026; abre e grava desde o ajuste do DBA, em 03/11/2026.</li>
-<li>Programar <strong>não deixa histórico</strong> e não pede justificativa.</li>
+<li>A tela é a função <code>solicitacaoanalise/programacaocoleta</code> (DB/dml.sql:170). Para ver o item no menu, o perfil precisa da permissão de consultar; o código não mostra outras permissões para esta tela (o botão Editar aparece para todos os que abrem a lista).</li>
+<li>O <strong>responsável da coleta</strong> precisa ter a função 34 no cadastro do Principal para aparecer na busca; <strong>o servidor, na gravação, só confere se o usuário existe</strong>, não a função dele (RN-CQ-S04-004).</li>
+<li><strong>Cuidado:</strong> só a <strong>abertura da lista</strong> (<code>Index</code>) e a <strong>do formulário</strong> (<code>Edit</code>) têm conferência de permissão, e ela confere só "consultar". <strong>Salvar, Cancelar, Pesquisar e a busca do responsável não conferem a função</strong> (SEG-CQ-01). No teste, um usuário de <strong>perfil só de consulta</strong> abriu a lista pelo endereço e programou duas amostragens (DV-CQ-029, Alta; CT-CQ-R2-AC-04 e AC-12a).</li>
+<li>Não há filtro por usuário: quem abre a tela vê <strong>todas</strong> as solicitações pendentes. Chefe de subdivisão: o código não exige.</li>
 </ul>
-</div>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
-<p>Não registra a amostragem (quem amostrou, quantidades, checklist), não escolhe a regra de amostragem, não cancela nem reagenda (o reagendamento de responsável e data é feito na tela de registro da amostragem), e não avisa o amostrador.</p>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Acesso:</strong> a permissão não é conferida na gravação (DV-CQ-029, Alta).</li>
+<li><strong>Programar duas vezes:</strong> a tela não impede; um segundo Salvar cria <strong>outra amostragem pendente</strong> (DV-CQ-010, Média). O servidor também não confere a situação da solicitação nem se o número está na lista (RN-CQ-S04-003).</li>
+<li><strong>Não há como cancelar</strong> a programação pela tela: o botão Cancelar está dentro de um comentário (DV-CQ-040, Média).</li>
+<li><strong>Responsável:</strong> só aparece quem tem a função 34 (DV-CQ-022, Média).</li>
+<li><strong>Água:</strong> o formulário dava erro de servidor (DV-CQ-008, Alta); abre e grava desde 03/11/2026 depois do ajuste do DBA, mas segue aberto no projeto de banco. A tela não trata erro por conta própria.</li>
+<li>A data de início <strong>não tem limite superior</strong> (RN-CQ-S04-006); programar <strong>não pede justificativa</strong>.</li>
+<li>Não registra a amostragem, não escolhe a regra de amostragem e não reagenda (o reagendamento de responsável e data é feito na tela de registro da amostragem).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário de programação</td>
+<td>Conforme a leitura do código, só se o item é produto/material; no teste, apareceu em cada linha (ponto para validar com a área)</td>
+</tr>
+<tr>
+<td>X (Cancelar)</td>
+<td>Cancelaria a solicitação, com justificativa</td>
+<td><strong>Não aparece</strong>: está comentado na tela (DV-CQ-040). A leitura do código das regras de botões o descreve "sem condição", mas no teste a lista só tinha Editar</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>—</td>
+<td>Não é desenhado nesta lista</td>
+</tr>
+<tr>
+<td>Lixeira</td>
+<td>—</td>
+<td>Não é desenhada nesta lista</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botões da tela: <strong>Pesquisar</strong> e <strong>Limpar</strong> (sempre); no formulário, <strong>Salvar Registro</strong> e <strong>Voltar</strong>.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: Area/Views/ProgramacaoColeta/<em>.cshtml e Area/Script/</em>.js.</p>
 <h4 id="pesquisa-index">Pesquisa (Index)</h4>
@@ -367,7 +451,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

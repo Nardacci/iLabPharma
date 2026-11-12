@@ -45,18 +45,87 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="disponibilidade-por-local-analise.html">Análise</a><a href="disponibilidade-por-local-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="disponibilidade-por-local-fluxos.html">Fluxos</a><a href="disponibilidade-por-local-regras-de-negocio.html">Regras de negócio</a><a href="disponibilidade-por-local-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-disponibilidade-por-local.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-5-disponibilidade-por-local">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Não testada</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Não precisa de preparação. A consulta mostra os locais dos almoxarifados ligados ao seu grupo de usuário; sem almoxarifado no grupo, a tela vem vazia.</p>
-<h4 id="consultar-o-saldo-por-local">Consultar o saldo por local</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Disponibilidade por Local</strong> (título na tela: "DISPONIBILIDADE DO LOTE POR LOCAL") mostra o <strong>saldo de cada lote em cada local de armazenagem</strong>: onde, dentro do armazém, está cada quantidade e em que condição. Uma linha por local, item e lote, com Disponível, Vencido / Reanálise, Bloqueado / Inventário, Quarentena, Separação e Saldo Total (disponibilidade_local_lst.aspx:113-195). É a visão "por prateleira grande": fica entre a Disponibilidade do Lote (soma tudo) e a Consulta Endereço Item (endereço por endereço). Usam o almoxarifado (onde está cada lote) e a Garantia da Qualidade (o que está em quarentena e em refugo) (leitura da área, a validar). <strong>A tela só consulta: não grava nada.</strong> Situação no inventário: não testada; foi vista uma vez em CT-EST-041 (22/10/2026).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Almoxarifado ligado ao grupo do usuário</strong></td>
+<td>O saldo é limitado aos almoxarifados do grupo (dalItem.cs:2123-2130); sem almoxarifado no grupo, a tela vem vazia (CT-EST-041). Usuário sem grupo também recebe a lista vazia</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Lote que já teve saldo em algum endereço do local</strong></td>
+<td>Só aparece quem já teve saldo</td>
+<td>Estoque › Entrada de Material / Endereçamento</td>
+</tr>
+</tbody>
+</table></div>
+<p>Não precisa de outra preparação.</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>No menu Estoque, abra <strong>Disponibilidade por Local</strong>. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
+<li>Filtros (nenhum obrigatório): Código do Item (até 12 caracteres), Descrição do Item (até 100), Código do Lote (até 40), Item de Entrada (até 40), Itens com saldo (TODOS, SIM ou NÃO), Grupo e Subgrupo. Clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra Local, Item, Lote (código e validade), Item de Entrada e as colunas de saldo, 15 linhas por página. Clique no título para ordenar.</li>
+<li>Como ler as colunas: <strong>Disponível</strong> (pode ser usado agora), <strong>Vencido / Reanálise</strong>, <strong>Bloqueado / Inventário</strong> (somados), <strong>Quarentena</strong>, <strong>Separação</strong> (em separação ou ligado a solicitação) e <strong>Saldo Total</strong>. As regras são as da Disponibilidade do Lote.</li>
+<li><strong>Não há as colunas Reprovado nem Solicitação, nem coluna para retenção, referência e estabilidade.</strong> O material reprovado em local de refugo aparece como Bloqueado / Inventário (se o lote está bloqueado) ou só no Saldo Total.</li>
+<li>"Itens com saldo = SIM" mostra só o que tem saldo; TODOS mostra também lotes e locais já zerados (a captura de 22/10/2026 tem várias linhas zeradas do local de quarentena). Saldo negativo não aparece.</li>
+<li><strong>Imprimir</strong> gera um PDF "DISPONIBILIDADE DO LOTE POR LOCAL" em paisagem e o ícone do Excel gera a planilha, para quem tem a função de imprimir. <strong>Limpar</strong> esvazia filtros e lista.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>Nada é gravado. Imprimir e Excel apenas abrem o relatório com os filtros usados (disponibilidade_local_lst.aspx.cs:213-252 e 243-326).</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>A tela não tem validações nem mensagens próprias. Uma pesquisa sem resultado mostra "A pesquisa não retornou nenhum resultado." (vista em teste, CT-EST-041, com o grupo sem almoxarifado). Falha de consulta: o código lança o erro e a página de erro do sistema mostra o texto técnico.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 1. No menu, abra Disponibilidade por Local. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
-<li>Passo 2. Filtros: Código do Item (parte, até 12 caracteres), Descrição do Item (parte, até 100), Código do Lote (parte, até 40), Item de Entrada (parte, até 40), Itens com saldo (TODOS, SIM ou NÃO), Grupo e Subgrupo. Nenhum é obrigatório. Clique em Pesquisar.</li>
-<li>Passo 3. A lista mostra, por local, item e lote: Local, Item, Lote (código e validade), Item de Entrada e as colunas de saldo, 15 linhas por página. Clique no título para ordenar.</li>
-<li>Passo 4. Como ler as colunas: <strong>Disponível</strong> (pode ser usado agora), <strong>Vencido / Reanálise</strong>, <strong>Bloqueado / Inventário</strong> (bloqueado mais inventário somados), <strong>Quarentena</strong>, <strong>Separação</strong> (em separação ou ligado a solicitação) e <strong>Saldo Total</strong>. As regras são as mesmas da Disponibilidade do Lote.</li>
-<li>Passo 5. <strong>Esta tela não tem as colunas Reprovado nem Solicitação</strong>, e não tem coluna para retenção, referência e estabilidade. O material reprovado em local de refugo aparece como Bloqueado / Inventário (se o lote está bloqueado) ou só no Saldo Total.</li>
-<li>Passo 6. Itens com saldo = SIM mostra só o que tem saldo; TODOS mostra também lotes e locais já zerados (a captura de 22/10/2026 mostra várias linhas zeradas do local de quarentena). Saldo negativo não aparece.</li>
-<li>Passo 7. Imprimir gera um PDF e o ícone do Excel gera a planilha, para quem tem a função de imprimir. Limpar esvazia filtros e lista.</li>
+<li>A tela usa a função de código <strong>321</strong>. Pesquisar só aparece para quem tem a função de consultar; Imprimir e Excel, para quem tem a de imprimir (ClassePaiLst.cs:195-201; disponibilidade_local_lst.aspx.cs:85-86).</li>
+<li>A conferência que mandaria para o acesso negado está <strong>comentada</strong> (ClassePaiLst.cs:69-81): quem digita o endereço da página abre a tela (DV-EST-008, Alta, confirmado em outras telas; sem teste por endereço aqui).</li>
+<li>O <strong>grupo de usuário limita o saldo</strong> a seus almoxarifados (diferente das telas de item e de lote, que só limitam os itens).</li>
+<li>A consulta não registra quem consultou, imprimiu ou exportou.</li>
 </ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum defeito foi registrado em nome desta tela. As sobreposições do DV-EST-029 (o mesmo material em quarentena e em bloqueado) também valem aqui, e a falta da coluna Reprovado esconde parte do problema. É a única tela de saldo por local e a mais próxima de "onde está o reprovado".</li>
+<li>Pelo código, ainda sem teste: Separação e o desconto da solicitação são calculados de outro jeito que na Disponibilidade do Lote, e os números das duas telas podem não fechar em lote com solicitação em andamento; saldo negativo some desta tela; o Excel usa o texto de "Ordem" do endereço da página como coluna de ordenação (a mais exposta das três consultas de saldo).</li>
+<li>Com "TODOS" a lista traz linhas zeradas; use "Itens com saldo = SIM" para achar o que está lá de fato.</li>
+<li>O nome do menu difere do título da tela. O formato da data e o usuário do relatório não foram vistos.</li>
+<li>Ponto para validar com a área: a tela deve mostrar o saldo reprovado e o de retenção, referência e estabilidade? Esconder lotes zerados por padrão? Os números de Separação e Disponível devem fechar com a Disponibilidade do Lote? Mostrar também o endereço?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Imprimir</td>
+<td>Gera o PDF do relatório com os filtros</td>
+<td>Depois de pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>Abre o relatório em planilha</td>
+<td>Igual ao Imprimir</td>
+</tr>
+<tr>
+<td>Títulos da grade</td>
+<td>Ordenam a lista; clicar de novo inverte</td>
+<td>Depois de uma pesquisa</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -188,7 +257,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

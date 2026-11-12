@@ -45,21 +45,104 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="aprovacao-de-solicitacao-analise.html">Análise</a><a href="aprovacao-de-solicitacao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="aprovacao-de-solicitacao-fluxos.html">Fluxos</a><a href="aprovacao-de-solicitacao-regras-de-negocio.html">Regras de negócio</a><a href="aprovacao-de-solicitacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-aprovacao-de-solicitacao.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-e-atendimento-a-producao-passo-a-passo.html#tela-2-aprovacao-de-solicitacao">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>O almoxarifado precisa ter a marca "Obriga aprovação" no cadastro e estar ligado ao grupo do usuário que aprova. A solicitação precisa estar Concluída (SALVAR E CONCLUIR na Solicitação de Material).</p>
-<h4 id="aprovar">Aprovar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Aprovação de Solicitação</strong> permite que uma pessoa responsável confirme a solicitação de material já concluída pelo setor que pediu, antes de o Almoxarifado atender. Só aparecem as solicitações de almoxarifados cujo cadastro marca "Obriga aprovação". A tela é só uma <strong>lista</strong>, sem formulário de edição: cada linha tem Exibir Itens, Confirmar (aprova) e Cancelar (desfaz a aprovação). <strong>Não há recusa nem reprovação.</strong></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Almoxarifado com a marca "Obriga aprovação"</strong></td>
+<td>Só solicitações desses almoxarifados entram (dalSolicitacao.cs:1126-1245; TBL_ALMOXARIFADO.sql:15)</td>
+<td>Estoque › Cadastros › Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado ligado ao grupo do usuário que aprova</strong></td>
+<td>A lista só mostra os almoxarifados do grupo (dalSolicitacao.cs:1163-1169). Quem pode aprovar é definido por essa ligação, não pelo tipo de solicitação do perfil</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Solicitação Concluída</strong>, de consumo ou de outro tipo que não Produção nem Análise Qualidade</td>
+<td>Pendentes e Canceladas não entram; Produção e Análise Qualidade dispensam aprovação (dalSolicitacao.cs:1071-1082 e 1147-1153)</td>
+<td>Estoque › Solicitação de Material (Consumo) (SALVAR E CONCLUIR)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>No menu Estoque, abra <strong>Aprovação de Solicitação</strong> e clique em <strong>Pesquisar</strong>. O filtro "Solicitação" procura pelo código; "Aprovado" aceita TODAS, NÃO e SIM.</li>
+<li>A lista mostra Código, Data da Solicitação, Centro de Custo, Almoxarifado, Situação, Data da Aprovação e Aprovado Por. As linhas Concluídas ainda sem aprovação aparecem em vermelho.</li>
+<li>Clique em <strong>Exibir Itens</strong> para ver Código, Data, Centro de Custo, Almoxarifado, Solicitado Por e os itens com unidade, quantidade solicitada e atendida. Clique em VOLTAR.</li>
+<li>Clique no ícone <strong>Confirmar</strong>. A tela pergunta "Confirma a aprovação ?"; com SIM responde "Aprovação confirmada!" e a lista passa a mostrar data e aprovador (vista em teste, CT-EST-071).</li>
+<li>Para desfazer, na linha aprovada clique em <strong>Cancelar</strong>. A tela pergunta "Confirma a cancelamento ?"; com SIM responde "Aprovação cancelada!". Não pede justificativa.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu Estoque, abra Aprovação de Solicitação e clique em Pesquisar. O filtro "Solicitação" procura pelo código; "Aprovado" aceita TODAS, NÃO e SIM.</li>
-<li>Passo 2. A lista mostra Código, Data da Solicitação, Centro de Custo, Almoxarifado, Situação, Data da Aprovação e Aprovado Por. As linhas Concluídas ainda sem aprovação aparecem em vermelho (aprovacao_solicitacao_lst.aspx.cs:218-221).</li>
-<li>Passo 3. Clique em Exibir Itens para ver Código, Data, Centro de Custo, Almoxarifado, Solicitado Por e os itens com unidade, quantidade solicitada e atendida (:392-446). Clique em VOLTAR.</li>
-<li>Passo 4. Clique no ícone Confirmar. A tela pergunta "Confirma a aprovação ?"; com SIM, responde "Aprovação confirmada!" e a lista passa a mostrar a data e quem aprovou (visto em teste, CT-EST-071, 22/10/2026).</li>
+<li><strong>Confirmar:</strong> grava a data e o usuário da aprovação e <strong>não muda a situação</strong> da solicitação: ela segue Concluída e passa a ser vista pelo Atendimento (aprovacao_solicitacao_lst.aspx.cs:292-299; dalSolicitacao.cs:1071-1082). As situações "Aprovada" e "Aguardando aprovação" nunca são usadas.</li>
+<li><strong>Cancelar:</strong> apaga a data e o usuário da aprovação; a solicitação volta a esperar aprovação (:289-294).</li>
+<li>A aprovação grava data e usuário na solicitação e passa pelo log; o cancelamento apaga esses campos. Qualquer outra gravação da solicitação a partir da leitura simples também zera a aprovação (dalSolicitacao.cs:129-130 e 186-205): esperado ao reabrir, a validar nos demais casos.</li>
+<li>O próximo passo é o Atendimento de Solicitação. Ninguém é avisado por e-mail.</li>
 </ul>
-<h4 id="cancelar-a-aprovacao">Cancelar a aprovação</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 5. Na linha aprovada, clique em Cancelar. A tela pergunta "Confirma a cancelamento ?"; com SIM, responde "Aprovação cancelada!". Não pede justificativa.</li>
+<li>Quase nada: a tela só pergunta e grava. Mensagens: "A pesquisa não retornou nenhum resultado.", "Nenhum item foi encontrado" (detalhe sem itens), "Erro ao consultar registro!".</li>
+<li><strong>Não recusa</strong> aprovação feita por quem criou a solicitação (DV-EST-070). O servidor não testa a situação da solicitação, o grupo nem a função ao confirmar (aprovacao_solicitacao_lst.aspx.cs:274-307). Pela leitura do código; não testado.</li>
+<li>Não existe recusa (reprovação) da solicitação nem justificativa.</li>
 </ul>
-<h4 id="o-que-nao-existe">O que não existe</h4>
-<p>Não há recusa (reprovação), nem justificativa, nem aviso por e-mail ao aprovador. A solicitação aprovada não muda de situação.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função da tela é a <strong>324</strong>, registrada com o conjunto padrão de funções (dml.sql:1906).</li>
+<li>Os ícones <strong>Confirmar</strong> e <strong>Cancelar</strong> aparecem pelo estado da solicitação e <strong>não consultam a função de alterar nem a de excluir</strong>: quem abre a página pode aprovar (aprovacao_solicitacao_lst.aspx.cs:203-215). Imprimir e Excel dependem da função de imprimir; Incluir fica escondido.</li>
+<li>A conferência que barraria a abertura da página está <strong>comentada</strong> (ClassePaiLst.cs:68-81; ClassePaiEd.cs:49-61) (DV-EST-008, Alta).</li>
+<li>O <strong>grupo de usuário</strong> limita a lista. Mas o número a aprovar vai num campo escondido do navegador: um valor alterado aprovaria outra solicitação, inclusive de outro almoxarifado. Não testado.</li>
+<li>A aprovação não confere se quem aprova é quem criou (DV-EST-070).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A mesma pessoa que criou e concluiu a solicitação pode aprová-la</strong> (DV-EST-070, Média): o usuário de teste aprovou a solicitação 00066 que ele mesmo criou. O Recebimento, ao contrário, recusa o cadastrante.</li>
+<li><strong>Sem recusa, sem justificativa e sem aviso por e-mail aos aprovadores</strong>: a função de e-mail existe na Solicitação de Consumo e nunca é chamada. O fluxo da equipe prevê aprovação, reprovação e cancelamento com justificativa.</li>
+<li>Cancelar a aprovação não pede motivo nem guarda quem aprovou antes, além do log.</li>
+<li>Erro de português: "Confirma a cancelamento ?".</li>
+<li>Ponto para validar com a área: deve haver recusa com justificativa? Quem cria pode aprovar? O cancelamento deve pedir motivo? Os aprovadores devem ser avisados? A situação "Aprovada" deve passar a ser usada?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exibir Itens</td>
+<td>Abre o detalhe com os itens</td>
+<td>Todas as linhas</td>
+</tr>
+<tr>
+<td>Confirmar</td>
+<td>Pergunta e grava data e usuário da aprovação</td>
+<td>Solicitação Concluída e ainda sem aprovação</td>
+</tr>
+<tr>
+<td>Cancelar</td>
+<td>Pergunta e apaga data e usuário da aprovação</td>
+<td>Solicitação Concluída já aprovada</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Imprime ou exporta a lista</td>
+<td>Lista com resultado, para quem pode imprimir</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -237,7 +320,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

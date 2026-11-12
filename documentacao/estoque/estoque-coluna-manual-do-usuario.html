@@ -45,42 +45,136 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="estoque-coluna-analise.html">Análise</a><a href="estoque-coluna-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="estoque-coluna-fluxos.html">Fluxos</a><a href="estoque-coluna-regras-de-negocio.html">Regras de negócio</a><a href="estoque-coluna-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-estoque-coluna.html">Erros (3)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-de-apoio-passo-a-passo.html#tela-5-estoque-coluna">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Estoque (Coluna)</strong> cadastra as colunas do armazém: a coluna é a posição ao longo da rua, de uma ponta à outra da fileira (leitura da área). Rua, coluna e andar formam o <strong>endereço</strong> do estoque, escrito como L (local) - R (rua) - C (coluna) - A (andar), por exemplo <code>L905-R905-C905-A905</code>. O código digitado aqui aparece no endereço (a coluna <code>901</code> vira <code>C901</code>), por isso <strong>não muda depois de salvo</strong>.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nenhum outro cadastro</td>
+<td>A coluna é cadastro de partida; depois vêm o Andar e o Endereço do Estoque, que junta local, rua, coluna e andar</td>
+<td>Cadastros › Estoque Coluna</td>
+</tr>
+<tr>
+<td>Verificação de que a coluna ainda não existe</td>
+<td>O código tem 3 dígitos (001, 002...); menos dígitos são completados com zeros à esquerda</td>
+<td>A própria lista da tela</td>
+</tr>
+</tbody>
+</table></div>
+<p>Não use o código <code>000</code>: ele é do registro de sistema "PADRÃO", escondido das listas e usado pelo endereço padrão que o banco cria para cada local novo.</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu <strong>Cadastros</strong>, abra <strong>Estoque Coluna</strong> (o título no alto é "ESTOQUE (COLUNA)"). A tela mostra o quadro "Pesquisa".</li>
+<li>Use os filtros <strong>Código</strong> (3 dígitos, procura o código exato; menos dígitos são completados com zeros), <strong>Descrição</strong> (procura o texto dentro da descrição) e <strong>Ativo</strong> (Todos, Sim, Não) e clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra Código, Descrição e Ativo, 15 linhas por página, com os ícones Editar, Excluir e Ver Log. Os títulos ordenam a lista. <strong>Imprimir</strong> e Excel só aparecem depois de uma pesquisa com resultado; <strong>Limpar</strong> esvazia filtros e lista.</li>
+</ol>
+<p><strong>Incluir a coluna</strong></p>
+<ol start="4">
+<li>Clique no sinal de mais com a palavra <strong>Incluir</strong>. Informe o <strong>Código</strong> (obrigatório, só números, até 3 dígitos), a <strong>Descrição</strong> (obrigatória, até 30 letras e números, gravada em maiúsculas) e a situação <strong>Ativo</strong> (Sim já vem marcado).</li>
+<li>Clique em <strong>SALVAR</strong>. A tela pergunta "Confirma a inclusão do item?" (texto fixo do código). Com <strong>SIM</strong>, mostra "Inclusão realizada com sucesso!"; <strong>OK</strong> volta para a lista.</li>
+<li><strong>Não digite código zero.</strong> A tela o aceita e grava como 000 (visto em teste, CT-EST-013, 22/10/2026), colidindo com o registro de sistema "PADRÃO".</li>
+</ol>
+<p><strong>Alterar a coluna</strong></p>
+<ol start="7">
+<li>Na lista, clique no lápis. O <strong>Código</strong> fica travado. A <strong>Descrição</strong> só pode ser mudada se a coluna estiver ativa. A <strong>Justificativa</strong> aparece e é obrigatória.</li>
+<li>Escreva a justificativa (até 255 letras), clique em <strong>SALVAR</strong> e <strong>SIM</strong>: "Alteração realizada com sucesso!".</li>
+<li>Para inativar (Ativo = Não), a tela <strong>não confere</strong> se há endereços usando a coluna. Uma coluna inativa deixa de ser oferecida ao criar endereços novos, mas os endereços que já existem continuam em todas as consultas.</li>
+</ol>
+<p><strong>Excluir a coluna</strong></p>
+<ol start="10">
+<li>Na lista, clique na lixeira, escreva a justificativa e clique em <strong>EXCLUIR REGISTRO</strong>; responda <strong>SIM</strong> a "Confirma a exclusão do item?". A tela mostra "Exclusão realizada com sucesso!".</li>
+</ol>
+<p><strong>Ver o histórico</strong></p>
+<ol start="11">
+<li>Na lista, clique em <strong>LOG</strong>. Abre "Log Alteração - Estoque Coluna" com o campo mudado, valor antigo, valor novo, data, hora, usuário e justificativa. O histórico da coluna excluída não pode ser consultado pela tela.</li>
+</ol>
+<h4 id="o-que-acontece-ao-salvar">O que acontece ao salvar</h4>
 <ul>
-<li>Confira, na lista, se a coluna já existe. O código tem 3 dígitos (001, 002...). Se digitar menos dígitos, o sistema completa com zeros à esquerda.</li>
-<li><strong>O código não muda depois de salvo</strong>: ele aparece em todo endereço (por exemplo, a coluna <code>901</code> aparece como <code>C901</code>). Escolha com cuidado.</li>
-<li>Não use o código <code>000</code>: ele é do registro de sistema "PADRÃO".</li>
+<li><strong>Incluir:</strong> grava a coluna (código completado com zeros até 3 dígitos, data e usuário) e a linha de histórico "INCLUSÃO DO REGISTRO" (dalEstoqueColuna.cs:16; dalLogAlteracaoEstoqueColuna.cs:66-78).</li>
+<li><strong>Alterar:</strong> atualiza descrição e situação (o código fica como está); o histórico ganha uma linha por campo mudado (dalEstoqueColuna.cs:47-50).</li>
+<li><strong>Excluir:</strong> exclusão lógica (marca de excluído) e "EXCLUSÃO DO REGISTRO" (dalEstoqueColuna.cs:77; bllEstoqueColuna.cs:162).</li>
+<li><strong>Onde a coluna é usada:</strong> na escolha do endereço em 11 formulários do Estoque: Endereço do Estoque, Endereçamento de Material, Movimentação de Material, Movimentação de Quarentena, Devolução, Devolução da Produção, Entrada de Material, Entrada de Produção e Saída de Material (endereco_ed.aspx.cs:198; enderecamento_ed.aspx.cs:839; movimentacao_ed.aspx.cs:919). Também compõe o código do endereço em todas as consultas e relatórios (VW_ENDERECO.sql:23). Visto em teste: a coluna <code>901</code> criou os endereços de teste (CT-EST-030) e a Movimentação de Material usou o <code>L905-R905-C905-A905</code> (CT-EST-034).</li>
+<li><strong>Se a coluna está em uso:</strong> a exclusão é recusada quando algum endereço a usa (inclusive endereços já excluídos, que só ficam marcados: inferência, CT-EST-CAD06-08). A <strong>inativação não é conferida</strong>.</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu Cadastros, abra Estoque Coluna. A tela mostra o quadro "Pesquisa".</li>
-<li>Passo 2. Filtros: Código (3 dígitos, procura o código exato; se digitar menos, o sistema completa com zeros à esquerda), Descrição (procura o texto dentro da descrição) e Ativo (Todos, Sim, Não). Clique em Pesquisar.</li>
-<li>Passo 3. A lista mostra Código, Descrição e Ativo, 15 linhas por página, e três ícones por linha: lápis (Editar), lixeira (Excluir) e LOG (Ver Log). Os títulos ordenam a lista.</li>
-<li>Passo 4. Imprimir e o ícone do Excel só aparecem depois de uma pesquisa com resultado e geram o relatório com os filtros usados.</li>
-<li>Passo 5. Limpar esvazia os filtros e a lista. O sinal de mais com a palavra "Incluir" abre o formulário vazio.</li>
+<li>"O Código é obrigatório!", "A Descrição é obrigatória!" e "A Situação é obrigatória!".</li>
+<li>"A Justificativa é obrigatória!" ao alterar ou excluir sem justificativa.</li>
+<li>"Esse código já está cadastrado." está no código, mas a conferência da Coluna <strong>não funciona</strong> (compara o código com o número da empresa; veja os cuidados). <strong>Não conte com essa recusa.</strong></li>
+<li><strong>Código zero não é recusado</strong> (a trava está desligada no código).</li>
+<li>"Exclusão inválida, existem referências com outras tabelas." ao excluir a coluna usada por endereço; não diz qual (não testado, para não quebrar os endereços de teste).</li>
 </ul>
-<h4 id="incluir-a-coluna">Incluir a coluna</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 6. Informe o Código (obrigatório, só números, até 3 dígitos), a Descrição (obrigatória, até 30 letras e números, gravada em maiúsculas) e a situação Ativo (Sim já vem marcado).</li>
-<li>Passo 7. Clique em SALVAR. A tela pergunta "Confirma a inclusão do item?". Com SIM, mostra "Inclusão realizada com sucesso!"; ao clicar em OK volta para a lista.</li>
-<li>Passo 8. Sem código, a tela mostra "O Código é obrigatório!"; sem descrição, "A Descrição é obrigatória!"; com código já usado, "Esse código já está cadastrado.".</li>
-<li>Passo 9. <strong>Código zero é aceito</strong>: a tela completa com zeros e grava (visto em teste, CT-EST-013, 22/10/2026: gravou <code>TESTE COLUNA ZERO</code> com o código 000). Não use; o código 000 é do registro de sistema "PADRÃO".</li>
+<li>A lista e o formulário usam a <strong>função 207 (Estoque Coluna)</strong>. O perfil precisa da função de <strong>consultar</strong> para ver o botão Pesquisar, de <strong>incluir</strong> para ver Incluir, de <strong>alterar</strong> para o lápis, de <strong>excluir</strong> para a lixeira, de <strong>imprimir ou exportar</strong> para Imprimir e Excel e de <strong>consultar log</strong> para o ícone LOG (o menu mostra ou esconde cada botão conforme a função do perfil).</li>
+<li><strong>Cuidado:</strong> a conferência que mandaria quem não tem a função para a página de acesso negado está <strong>comentada</strong> no código; só se escondem botões e quem abrir o endereço da página não é barrado (DV-EST-008, Alta; nos cadastros é leitura do código, a confirmar). O formulário também não esconde o botão SALVAR de quem não pode incluir ou alterar (a confirmar, caso S1 desta tela).</li>
+<li>Quem cadastra e quem confere são a mesma pessoa: não há assinatura nem segunda conferência.</li>
 </ul>
-<h4 id="alterar-a-coluna">Alterar a coluna</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 10. Na lista, clique no lápis. O Código fica travado (cinza). A Descrição só pode ser mudada se a coluna estiver ativa. A área "Justificativa" aparece e é obrigatória.</li>
-<li>Passo 11. Escreva a justificativa (até 255 letras) e clique em SALVAR, depois em SIM: "Alteração realizada com sucesso!".</li>
-<li>Passo 12. Para inativar (Ativo = Não), a tela <strong>não confere</strong> se há endereços usando a coluna. Uma coluna inativa deixa de ser oferecida ao criar endereços novos, mas os endereços que já existem continuam.</li>
+<li><strong>DV-EST-059 (Média):</strong> a Coluna aceitou o código 0 e o gravou como 000 ("Inclusão realizada com sucesso!", registro <code>TESTE COLUNA ZERO</code>). A Rua recusa e o Andar diz "Esse código já está cadastrado."; o esperado é recusar o zero em todas, com a mesma mensagem.</li>
+<li><strong>Código repetido pode não ser barrado</strong> na Coluna: a leitura do código mostra que a consulta compara a empresa com o código, no lugar do número da empresa (dalEstoqueColuna.cs:373); isso explica por que o 000 foi aceito ao lado do registro de sistema (CT-EST-CAD06-03, falta teste). O manual do Resumo e as mensagens listam "Esse código já está cadastrado." como recusa desta tela; trate-a como <strong>não garantida</strong>.</li>
+<li>Também valem aqui, por vir da mesma base: <strong>DV-EST-053</strong> (pesquisa sem acento, Baixa), <strong>DV-EST-057</strong> (relatório com usuário cortado, Baixa) e <strong>DV-EST-008</strong> (acesso pelo endereço, Alta).</li>
+<li><strong>Inativar sem conferir uso, e as listas de colunas livres das telas de entrada e movimentação não conferem a situação:</strong> uma coluna inativa pode continuar aparecendo como destino (CT-EST-CAD06-06, falta teste). É diferente da Rua.</li>
+<li>A mensagem de erro de alteração da Coluna fala em "Rua"; erro de redação.</li>
+<li>Ponto para validar com a área: a regra do código é a mesma nas três telas? O 000 deve ficar reservado ao sistema? Pode-se inativar coluna com endereços? Duas colunas podem ter a mesma descrição?</li>
 </ul>
-<h4 id="excluir-a-coluna">Excluir a coluna</h4>
-<ul>
-<li>Passo 13. Na lista, clique na lixeira, escreva a justificativa e clique em EXCLUIR REGISTRO; responda SIM à pergunta "Confirma a exclusão do item?". Mostra "Exclusão realizada com sucesso!".</li>
-<li>Passo 14. Se algum endereço usa a coluna, a tela recusa com "Exclusão inválida, existem referências com outras tabelas." (a mensagem não diz qual endereço; este caso não foi testado para não quebrar os endereços de teste).</li>
-</ul>
-<h4 id="ver-o-historico">Ver o histórico</h4>
-<ul>
-<li>Passo 15. Na lista, clique no ícone LOG. Abre "Log Alteração - Estoque Coluna" com o campo mudado, valor antigo, valor novo, data, hora, usuário e justificativa. O histórico da coluna excluída não pode ser consultado pela tela.</li>
-</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura os registros pelos filtros</td>
+<td>Para quem tem a função de consultar</td>
+</tr>
+<tr>
+<td>Incluir (sinal de mais)</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a função de incluir</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário com o registro</td>
+<td>Em cada linha, para quem tem a função de alterar</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir)</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Em cada linha, para quem tem a função de excluir</td>
+</tr>
+<tr>
+<td>LOG (Ver Log)</td>
+<td>Abre o histórico do registro</td>
+<td>Em cada linha, para quem tem a função de consultar o log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Geram o relatório da tela com os filtros usados</td>
+<td>Depois de uma pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -388,7 +482,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

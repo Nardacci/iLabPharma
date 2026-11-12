@@ -45,26 +45,117 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-material-consumo-analise.html">Análise</a><a href="solicitacao-de-material-consumo-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="solicitacao-de-material-consumo-fluxos.html">Fluxos</a><a href="solicitacao-de-material-consumo-regras-de-negocio.html">Regras de negócio</a><a href="solicitacao-de-material-consumo-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-solicitacao-de-material-consumo.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-e-atendimento-a-producao-passo-a-passo.html#tela-1-solicitacao-de-material-consumo">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Cadastre ou confirme: o almoxarifado, o centro de custo, o cliente (se for o caso), os itens e a ligação do seu grupo ao almoxarifado. Os itens que aparecem na busca são os do grupo e do almoxarifado escolhidos (dalItem.cs:2324-2359).</p>
-<h4 id="incluir-uma-solicitacao">Incluir uma solicitação</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Solicitação de Material (Consumo)</strong> é o pedido de material de uso interno, sem ordem de produção: um setor pede ao Almoxarifado itens de um almoxarifado para um centro de custo. O usuário preenche o cabeçalho (data, tipo, centro de custo, almoxarifado, prioridade, cliente), monta a lista de itens com quantidade, escreve a justificativa e conclui. A solicitação concluída segue para a Aprovação de Solicitação (se o almoxarifado obriga) e para o Atendimento de Solicitação. A lista é a mesma página da Solicitação de Material (Produção), com o tipo trocado, e mostra só o tipo Consumo (dalSolicitacao.cs:549-558).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Almoxarifado ligado ao grupo do usuário</strong></td>
+<td>A busca de item respeita grupo e almoxarifado escolhidos (dalItem.cs:2324-2359). Atenção: a lista de almoxarifados do formulário <strong>não</strong> é filtrada pelo grupo (DV-EST-069)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td><strong>Centro de custo</strong></td>
+<td>Campo obrigatório</td>
+<td>Cadastros › Centro de Custo</td>
+</tr>
+<tr>
+<td><strong>Itens</strong> do grupo e do almoxarifado</td>
+<td>Montam a lista do pedido</td>
+<td>Estoque › Cadastro de Item</td>
+</tr>
+<tr>
+<td><strong>Cliente</strong> (opcional)</td>
+<td>O campo não é obrigatório: o validador não dispara</td>
+<td>Cadastros de pessoa jurídica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Incluir</strong></p>
+<ol>
+<li>No menu Estoque, abra <strong>Solicitação de Material (Consumo)</strong> e clique em <strong>Incluir</strong>.</li>
+<li>Confira a Data (não pode ser posterior a hoje), o Tipo e o Status (travados). Escolha Centro de Custo, Almoxarifado e Prioridade; o Cliente é opcional (solicitacao_consumo_ed.aspx:182-190).</li>
+<li>No quadro de itens, procure o Item, confira a Unid. Med. e informe a Quantidade (só dígitos e vírgula, sem máscara de casas decimais). Clique em <strong>SALVAR ITEM</strong> e responda SIM em "Confirma a inclusão do item?".</li>
+<li>Repita para os demais itens. Eles ficam só na memória da sessão até gravar a solicitação (solicitacao_consumo_ed.aspx.cs:18-56).</li>
+<li>Clique em <strong>GRAVAR SOLICITAÇÃO</strong>, responda SIM em "Confirma a inclusão da solicitação?" e veja "Inclusão realizada com sucesso!". A situação fica Pendente.</li>
+</ol>
+<p><strong>Concluir e reabrir</strong></p>
+<ol start="6">
+<li>Na edição, escreva a Justificativa e clique em <strong>SALVAR E CONCLUIR</strong>. A tela pergunta "Deseja encerrar a Solicitação?" e responde "Solicitação encerrada com sucesso!". Sem item: "A Solicitação não possui nenhum item!".</li>
+<li><strong>REABRIR SOLICITAÇÃO</strong> só vale se a situação é Concluída e nenhum item foi atendido.</li>
+</ol>
+<p><strong>Editar e excluir</strong></p>
+<ol start="8">
+<li>Na lista, clique em Editar; ao gravar, a Justificativa passa a ser obrigatória. <strong>Excluir</strong> só aparece na situação Pendente, com justificativa; a exclusão é lógica e fica no histórico (solicitacao_lst.aspx.cs:262-263 e 322-388; dalSolicitacao.cs:156-184).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu Estoque, abra Solicitação de Material (Consumo) e clique em Incluir.</li>
-<li>Passo 2. Confira a Data (não pode ser posterior a hoje), o Tipo e o Status, que vêm travados. Escolha Centro de Custo, Almoxarifado e Prioridade; o Cliente é opcional pelo código (o validador não dispara) (solicitacao_consumo_ed.aspx:182-190).</li>
-<li>Passo 3. No quadro de itens, procure o Item, confira a Unid. Med. e informe a Quantidade (o campo aceita só dígitos e vírgula, sem máscara de casas decimais). Clique em SALVAR ITEM; o sistema pergunta "Confirma a inclusão do item?".</li>
-<li>Passo 4. Repita para os demais itens. Os itens ficam só na memória da sessão até gravar a solicitação (solicitacao_consumo_ed.aspx.cs:18-56).</li>
-<li>Passo 5. Clique em GRAVAR SOLICITAÇÃO. O sistema pergunta "Confirma a inclusão da solicitação?" e responde "Inclusão realizada com sucesso!". A situação fica Pendente.</li>
+<li><strong>GRAVAR SOLICITAÇÃO / SALVAR:</strong> grava o cabeçalho e os itens com a situação <strong>Pendente</strong> (solicitacao_consumo_ed.aspx.cs:273-346 e 400-404).</li>
+<li><strong>SALVAR E CONCLUIR:</strong> grava e muda a situação para <strong>Concluída</strong> (Fechado = 5; Constantes.cs:30-36) (solicitacao_consumo_ed.aspx.cs:407-457).</li>
+<li><strong>REABRIR:</strong> volta de Concluída para Pendente, se ainda não houve atendimento (bllSolicitacao.cs:758-776); só o histórico de campos guarda a mudança, sem motivo próprio.</li>
+<li>O próximo passo é a Aprovação de Solicitação (se o almoxarifado obriga) e depois o Atendimento de Solicitação. O e-mail aos aprovadores nunca é enviado (solicitacao_consumo_ed.aspx.cs:459-466).</li>
 </ul>
-<h4 id="concluir">Concluir</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 6. Na edição, escreva a Justificativa e clique em SALVAR E CONCLUIR. A tela pergunta "Deseja encerrar a Solicitação?" e responde "Solicitação encerrada com sucesso!". Sem item, recusa com "A Solicitação não possui nenhum item!".</li>
-<li>Passo 7. Se precisar mudar, clique em REABRIR SOLICITAÇÃO. A tela só deixa se a situação é Concluída e não há item atendido ("Somente solicitações concluídas podem ser reabertas!"; "Solicitação já possui itens atendidos!").</li>
+<li>Cabeçalho vazio: "O código é obrigatório!", "Data da solicitação não inforada!", "O Tipo da Solicitação é obrigatório!", "A Situação é obrigatória!", "O Centro de custo não foi informado!", "Almoxarifado não informado.!", "A prioridade não foi informada!", "A Justificativa é obrigatória!" (vistas em teste, CT-EST-070).</li>
+<li>Item: "Quantidade Inválida.", "Item não informado!". Concluir sem itens: "A Solicitação não possui nenhum item!".</li>
+<li>Reabrir fora das condições: "Somente solicitações concluídas podem ser reabertas!", "Solicitação já possui itens atendidos!".</li>
+<li>Falhas: "Erro ao consultar registro!", "Erro na inclusão do registro.", "Erro na alteração do Registro.", "Erro ao gerar o código da solicitação.".</li>
+<li>A quantidade acima do saldo <strong>não é recusada</strong>: a pergunta "Saldo insuficiente. Deseja continuar?" existe no código, mas nunca dispara (solicitacao_consumo_ed.aspx.cs:545).</li>
 </ul>
-<h4 id="editar-e-excluir">Editar e excluir</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Editar: na lista, clique em Editar; ao gravar, a Justificativa passa a ser obrigatória.</li>
-<li>Excluir: só na situação Pendente, com justificativa; a exclusão é lógica e fica no histórico (solicitacao_lst.aspx.cs:262-263 e 322-388; dalSolicitacao.cs:156-184).</li>
+<li>A função da tela é a <strong>317</strong>; a carga do menu registra o conjunto padrão (dml.sql:1896 e 2157-2235). Incluir, Editar e Excluir dependem das funções correspondentes; Excluir só na situação Pendente.</li>
+<li>A tela <strong>não confere a permissão ao abrir</strong> (ClassePaiLst.cs:68-81; ClassePaiEd.cs:49-61) e as permissões da edição começam verdadeiras (ClassePaiEd.cs:79-93) (DV-EST-008, Alta; CT-EST-083).</li>
+<li>O tipo da solicitação vem do endereço (<code>TipoSolic</code>) e define a função conferida (301 ou 317): quem altera o endereço troca a tela.</li>
+<li>O número da solicitação vem do endereço e a página abre qualquer solicitação, sem conferir o almoxarifado do usuário. Pela leitura do código; não testado.</li>
+<li>Tipo, status e código são campos travados na tela, mas o servidor os lê do formulário. Não testado.</li>
 </ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Almoxarifado fora do grupo</strong> (DV-EST-069, Média): a tela ofereceu todos os almoxarifados (12) e aceitou gravar a solicitação 00067 em um almoxarifado fora do grupo, enquanto outras telas mostram lista vazia para o mesmo usuário (CT-EST-041, 22/10/2026).</li>
+<li><strong>Quantidade sem conferência de saldo</strong>, e os itens só vivem na memória da sessão: se a sessão expirar antes de gravar, se perdem sem aviso.</li>
+<li>A quantidade não tem máscara de 3 casas (na rodada 8, "3000" gravou 3.000,000, três mil); o inventário citava o DV-EST-002, o que o código e o teste contradizem.</li>
+<li>O Cliente não é validado. A Aprovação de Solicitação só grava data e usuário e não muda a situação.</li>
+<li>Nenhum outro defeito de funcionamento foi confirmado: CT-EST-070 passou em 22/10/2026. Reabrir e excluir pelo formulário não foram registrados nas rodadas.</li>
+<li>Ponto para validar com a área: conferir a quantidade contra o saldo (avisar ou impedir)? Cliente obrigatório em algum caso? Quem pode reabrir? Justificativa também na inclusão?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário vazio</td>
+<td>Lista de Consumo, para quem pode incluir</td>
+</tr>
+<tr>
+<td>Editar / Visualizar</td>
+<td>Abre o formulário</td>
+<td>Na linha</td>
+</tr>
+<tr>
+<td>Excluir (lixeira)</td>
+<td>Exclusão lógica, com justificativa</td>
+<td>Linha de solicitação Pendente</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>"Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -360,7 +451,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

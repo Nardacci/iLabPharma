@@ -45,15 +45,135 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="historico-do-item-historico-do-lote-etiquetas-e-relatorios-de-impressao-analise.html">Análise</a><a href="historico-do-item-historico-do-lote-etiquetas-e-relatorios-de-impressao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="historico-do-item-historico-do-lote-etiquetas-e-relatorios-de-impressao-fluxos.html">Fluxos</a><a href="historico-do-item-historico-do-lote-etiquetas-e-relatorios-de-impressao-regras-de-negocio.html">Regras de negócio</a><a href="historico-do-item-historico-do-lote-etiquetas-e-relatorios-de-impressao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-historico-do-item-historico-do-lote-etiquetas-e-relatorios-de-impressao.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-7-historico-do-lote">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Não testada</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<p><strong>Nada abaixo foi visto em tela neste grupo</strong> (exceto o Histórico do Lote, ver o documento dele). Tenha o item ou o Item de Entrada do lote (por exemplo <code>TA0006/26</code>).</p>
-<h4 id="consultar-o-historico-de-um-item">Consultar o histórico de um item</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Este grupo reúne as páginas de <strong>consulta e impressão</strong> que ficam fora do menu do Estoque (só o Histórico do Lote tem item de menu). Todas <strong>só leem: nada é gravado</strong>. Quem usa são a Garantia da Qualidade, o Controle da Qualidade e o almoxarifado (leitura da área, a validar).</p>
 <ul>
-<li>Passo 1. Na Disponibilidade de Estoque, clique no ícone de detalhe da linha. Abre "HISTÓRICO DO ITEM".</li>
-<li>Passo 2. Confira os dados do item e os saldos (Disponível, Vencido/Reanálise, Reprovado, Bloq./Inventário, Solic./Separação, Quarentena, Total).</li>
-<li>Passo 3. Leia as quatro listas, 5 linhas por página: movimentações (<strong>só as 10 mais recentes</strong>), solicitações, lotes (<strong>só com saldo</strong>) e endereços.</li>
-<li>Passo 4. Clique no detalhe de um lote para abrir o Histórico do Lote já pesquisado. VOLTAR retorna à origem.</li>
+<li><strong>Histórico do Item</strong> (título "HISTÓRICO DO ITEM"): ficha do item com saldos por condição, as 10 últimas movimentações, solicitações, lotes que ainda têm saldo e endereços.</li>
+<li><strong>Histórico do Lote</strong> (título "HISTÓRICO DO LOTE"): ficha do lote (dados, última análise do CQ, saldos, movimentações, endereços, solicitações). É o registro que reconstrói o caminho do lote, exigido pela RDC 658/2022 (art. 12, § 2º, VIII). Está documentado à parte, com testes, em <code>menu-estoque/telas/11-historico-do-lote.md</code> (<strong>Funciona com falhas</strong>).</li>
+<li><strong>Etiquetas:</strong> impressos que identificam o material e o seu estado: <strong>quarentena</strong> (recebimento e entradas), <strong>aprovado</strong> ou <strong>reprovado</strong> (depois do laudo), e etiquetas de volume, de item, de pesagem e de inventário.</li>
+<li><strong>Relatórios de impressão:</strong> a página <code>VisualizaRelatorio</code> desenha, numa só tela, os relatórios chamados por outras telas (etiquetas, listas de movimentação, inventário, kits, reanálise).</li>
 </ul>
-<p>As etiquetas são impressas por botões das telas de origem (tabela de páginas, no Resumo); o sistema escolhe o modelo de aprovado ou reprovado pelo resultado da análise.</p>
+<p><strong>Nada neste grupo foi visto em tela</strong>, exceto o Histórico do Lote pelo menu.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se faz ou cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item ou Item de Entrada do lote</strong> (por exemplo <code>TA0006/26</code>)</td>
+<td>É o que se consulta</td>
+<td>Cadastros › Item; Recebimento ou Entrada de Material</td>
+</tr>
+<tr>
+<td><strong>Sessão aberta</strong> no sistema</td>
+<td>Os relatórios exigem sessão aberta (não conferem a função)</td>
+<td>Login</td>
+</tr>
+<tr>
+<td><strong>Para a etiqueta de quarentena:</strong> recebimento ou entrada com volumes</td>
+<td>A etiqueta sai uma por volume</td>
+<td>Recebimento, Entrada de Material e de Produção, Agenda de Reanálise</td>
+</tr>
+<tr>
+<td><strong>Para a etiqueta de aprovado ou reprovado:</strong> análise do CQ com resultado</td>
+<td>Botão IMPRIMIR ETIQUETA na Análise de Controle</td>
+<td>Controle da Qualidade › Análise de Controle</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado liberado ao seu grupo</strong></td>
+<td>O grupo filtra endereços e solicitações (não as movimentações)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar o histórico de um item</strong></p>
+<ol>
+<li>Na <strong>Disponibilidade de Estoque</strong>, clique no ícone de detalhe da linha. Abre "HISTÓRICO DO ITEM". Ele também abre a partir da Análise do Planejamento, da Curva ABC e do Gerar Pedido pela OP, pelo número da análise.</li>
+<li>Confira os dados do item (Item, Unid. Medida, Grupo, SubGrupo e Custo Médio) e os saldos (Disponível, Vencido/Reanálise, Reprovado, Bloq./Inventário, Solic./Separação, Quarentena, Total).</li>
+<li>Leia as quatro listas, 5 linhas por página: <strong>movimentações</strong> (só as 10 mais recentes, sem as movimentações internas), <strong>solicitações</strong>, <strong>lotes</strong> (só com saldo) e <strong>endereços</strong> (filtrados pelo grupo do usuário).</li>
+<li>Clique no detalhe de um lote para abrir o <strong>Histórico do Lote</strong> já pesquisado. <strong>VOLTAR</strong> (rodapé) retorna à Disponibilidade, ou à Análise quando o item veio dela; o VOLTAR do topo não tem ação.</li>
+</ol>
+<p><strong>Consultar o histórico de um lote</strong></p>
+<ol>
+<li>Abra <strong>Histórico do Lote</strong> pelo menu do Estoque, pelo detalhe de um lote do Histórico do Item ou pela Consulta Disponibilidade do Regulatório. Veja o passo a passo e as falhas na tela <code>11-historico-do-lote</code>.</li>
+</ol>
+<p><strong>Imprimir etiquetas e relatórios</strong></p>
+<ol>
+<li>As etiquetas são impressas por <strong>botões das telas de origem</strong>; o sistema abre o PDF ou o relatório em janela própria.</li>
+<li><strong>Quarentena:</strong> no Recebimento, Entrada de Material, Entrada de Produção ou Agenda de Reanálise, imprima a etiqueta de quarentena (uma por volume).</li>
+<li><strong>Aprovado ou reprovado:</strong> na <strong>Análise de Controle</strong>, clique em <strong>IMPRIMIR ETIQUETA</strong>. O sistema escolhe o modelo <strong>só pelo status da análise</strong>: "R" imprime REPROVADO; <strong>qualquer outro status imprime APROVADO</strong> (ver os cuidados).</li>
+<li><strong>Item, volume de entrada e pesagem:</strong> saem do Cadastro de Item, Recebimento, Entrada de Material, Devolução e Pesagem; gravam o PDF numa pasta do site e o abrem em outra janela.</li>
+<li><strong>Inventário:</strong> a etiqueta de contagem sai pela tela Inventário (IMPRIMIR ETIQUETA).</li>
+<li>Os demais relatórios (mais de 25: listas, kits, reanálise, inventário, entrada de NF, remessa) saem dos botões Imprimir das telas de origem.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>Nada é gravado:</strong> consulta e impressão não gravam log. <strong>Não se sabe quem imprimiu uma etiqueta nem quantas vezes</strong>, e a segunda via sai igual à primeira, sem marca de reimpressão (inferência pelo código; CT-EST-F02-07).</li>
+<li>A <strong>etiqueta de quarentena</strong> traz o texto fixo QUARENTENA, uma por volume, com material, fabricante, fornecedor, lote, item de entrada, volume, peso, responsável e data, e campos AMOSTRADO/REAMOSTRADO e rubrica; <strong>não consulta o estado real do lote</strong>.</li>
+<li>A <strong>etiqueta de resultado</strong> traz laudo, validade, teor, responsável e data (aprovado) ou o motivo (reprovado).</li>
+<li>A <strong>versão impressa</strong> em cada etiqueta (CQ, aprovado, reprovado) vem dos parâmetros do Estoque.</li>
+<li>Os saldos e listas vêm direto do banco; o Histórico do Lote é chamado também pelo Regulatório (CQ).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>Histórico do Item: "Nenhuma movimentação encontrada para o item", "Nenhuma solicitação encontrada para o item", "Nenhum lote foi encontrado para o item" (<strong>também quando todos os lotes têm saldo zero</strong>) e "Nenhum endereço encontrado para o item".</li>
+<li><strong>Item inexistente não gera aviso:</strong> o código monta "Item não encontrado!" mas não o lança; a tela abre vazia, sem mensagem.</li>
+<li><strong>Nas etiquetas, nenhuma mensagem de erro chega ao usuário:</strong> a etiqueta de volume engole qualquer erro.</li>
+<li>A mensagem "Confirma a alteração do item?" é de uma janela copiada de outra tela e nunca dispara aqui.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>O Histórico do Item usa o código de tela <strong>314</strong> (o da Disponibilidade) e o do Lote, o <strong>341</strong>; só o Histórico do Lote está no menu.</li>
+<li><strong>A base das telas não barra a abertura:</strong> a conferência da função está comentada (DV-EST-008, SEG-EST-03; sem teste nestas páginas). Como só leem, o risco é de <strong>consulta indevida</strong>, não de gravação.</li>
+<li><strong><code>VisualizaRelatorio</code> confere só a sessão aberta, não a função.</strong> A página <code>etiqueta_volume_rpt</code> <strong>não confere sessão</strong> nem tem página mestra: depende de quem digitar o endereço (e nenhuma tela a chama).</li>
+<li>Item, lote, análise, recebimento e movimentação chegam como número no endereço: trocar o número mostra outro item ou etiqueta. O grupo de usuário filtra endereços e solicitações, <strong>não</strong> as movimentações.</li>
+<li>As etiquetas em PDF ficam numa pasta do site, com nome aleatório, e abrem por endereço direto, fora do login da página (ponto para a TI validar; CT-EST-F02-08).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A etiqueta de resultado não confere a análise:</strong> qualquer status diferente de "R" imprime APROVADO, e não confere se a análise terminou nem se o laudo foi emitido. Uma análise em andamento pode, em tese, gerar etiqueta de aprovado. <strong>É o ponto de maior risco do grupo</strong>, porque a etiqueta é o aviso físico de que o material pode ser usado (RN-EST-F02-005; CT-EST-F02-06 a confirmar). Em CT-EST-206 as três análises apareceram como "Laudo liberado", <strong>inclusive a reprovada</strong>, e o conteúdo da etiqueta não foi conferido.</li>
+<li><strong>A etiqueta de quarentena sai com texto fixo:</strong> reimpressa depois da aprovação, sai "QUARENTENA" (inferência).</li>
+<li><strong>O Histórico do Lote não mostra usuário, hora, análise, laudo, aprovador nem reprovação</strong> (DV-EST-034, Média). O Histórico do Item também não traz usuário, hora, justificativa, análise ou aprovador (RN-EST-F02-003).</li>
+<li><strong>A saída por remessa aparece como atendimento de solicitação do tipo Cliente, sem remessa nem destino</strong> (DV-EST-073, Baixa) e <strong>depois de um Endereçamento que não grava o lote fica sem histórico</strong> (DV-EST-016, Alta, efeito de outra tela).</li>
+<li><strong>Lotes sem saldo somem do Histórico do Item</strong> (reprovados e consumidos), justamente para quem investiga um desvio; e só aparecem <strong>10 movimentações, sem as internas</strong>: o histórico completo exige abrir cada lote.</li>
+<li><strong>A etiqueta de volume (<code>etiqueta_volume_rpt</code>) é código sem uso:</strong> nenhuma tela a chama e ela não devolve o PDF.</li>
+<li>Na rodada 8 (22/10/2026), a janela do PDF da etiqueta derrubou o navegador do robô três vezes: é limite do teste, não defeito confirmado. A "Versão Etiqueta CQ" foi alterada e gravada (CT-EST-CAD22-11), mas a impressão não foi conferida.</li>
+<li><strong>Ponto para validar com a área:</strong> a etiqueta deve registrar quem imprimiu e marcar reimpressão? O Histórico do Item deve mostrar lotes sem saldo?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>O Histórico do Item não tem lista de pesquisa; abre pelo detalhe da Disponibilidade de Estoque.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detalhe do lote (ícone)</td>
+<td>Abre o Histórico do Lote daquele lote</td>
+<td>Em toda linha da lista de lotes do Histórico do Item</td>
+</tr>
+<tr>
+<td>Troca de página</td>
+<td>Mostra as 5 linhas seguintes de cada lista</td>
+<td>Em cada lista (movimentações, solicitações, lotes, endereços)</td>
+</tr>
+<tr>
+<td>VOLTAR (rodapé)</td>
+<td>Volta à Disponibilidade ou à Análise; o do topo não tem ação</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Histórico do Item: nenhum campo é editável. O Histórico do Lote tem os campos no documento próprio. Fonte: <code>historico_item_lst.aspx(.cs)</code>.</p>
 <div class="tabela"><table>
@@ -175,7 +295,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

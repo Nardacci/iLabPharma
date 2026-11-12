@@ -45,30 +45,106 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-material-producao-analise.html">Análise</a><a href="solicitacao-de-material-producao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="solicitacao-de-material-producao-fluxos.html">Fluxos</a><a href="solicitacao-de-material-producao-regras-de-negocio.html">Regras de negócio</a><a href="solicitacao-de-material-producao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-solicitacao-de-material-producao.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-e-atendimento-a-producao-passo-a-passo.html#tela-1-solicitacao-de-material-consumo">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>A solicitação de Produção vem da Produção. Se a lista estiver vazia, a causa mais provável é que a Produção ainda não gerou nenhum pedido. Quem precisa criar um pedido de material por conta própria usa a tela Solicitação de Material (Consumo).</p>
-<h4 id="consultar-os-pedidos">Consultar os pedidos</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Solicitação de Material (Produção)</strong> é a lista das solicitações de material dos tipos <strong>Produção</strong> e <strong>Cliente (Comercial)</strong>. A solicitação de Produção é o pedido de insumos que a Produção faz ao Estoque para fabricar um lote. Pelo código, ela <strong>não nasce nesta tela</strong>: o botão Incluir é escondido de propósito no tipo Produção (solicitacao_lst.aspx.cs:46-50). Quem cria o pedido é o módulo Produção, que o grava como "reserva" (situação Pendente), com produto, lote de produção e insumos (bllItemIntegracao.cs:210-290). Esta tela serve para <strong>consultar, imprimir, ver o histórico e excluir</strong> o que ainda está Pendente. No alto da tela o título é "SOLICITAÇÃO DE MATERIAL (PRODUÇÃO / COMERCIAL)". Usam o Almoxarifado (acompanha os pedidos antes do Atendimento e da Separação), a Produção (cria e confirma, por outro módulo) e o Comercial (a mesma lista mostra as do tipo Cliente).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pedido gerado pela Produção</strong></td>
+<td>Sem ele a lista fica vazia. No ambiente de teste isso não foi possível: o Lote Padrão não é aprovado, então a solicitação de autorizações não abre (DV-EST-076)</td>
+<td>Módulo Produção</td>
+</tr>
+<tr>
+<td><strong>Centro de custo</strong> (para o filtro)</td>
+<td>Filtro opcional da lista</td>
+<td>Cadastros › Centro de Custo</td>
+</tr>
+<tr>
+<td><strong>Perfil com as funções da tela 301</strong> (consultar, alterar, excluir, imprimir, ver log)</td>
+<td>Mostram os ícones da linha</td>
+<td>Cadastros › Perfil</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quem precisa criar um pedido por conta própria usa a tela Solicitação de Material (Consumo).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>No menu Estoque, abra <strong>Solicitação de Material (Produção)</strong>. A lista vem vazia.</li>
+<li>Filtros: Código (só números), Período (data inicial e final; as duas precisam estar preenchidas, senão o filtro de data é ignorado) e Centro de Custo. Clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra Código, Data, Centro de Custo, Lote de Produção, Produto e Status, com os ícones Editar (ou Visualizar), Excluir, Imprimir e Ver log. Sem resultado: "A pesquisa não retornou nenhum resultado.". <strong>Limpar</strong> esvazia filtros e lista.</li>
+<li><strong>Editar</strong> abre o formulário só para consulta quando a solicitação não está Pendente (o ícone vira "Visualizar"). <strong>Imprimir</strong> abre o relatório em outra janela. <strong>Ver log</strong> mostra o histórico.</li>
+<li><strong>Excluir</strong> (só para Pendente): informe a justificativa e confirme.</li>
+<li>Não há botão Incluir nem Salvar nesta tela, e não há aprovação: a solicitação de Produção não passa pela tela Aprovação de Solicitação e dispensa a aprovação no Atendimento (dalSolicitacao.cs:947 e 1152).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>A tela não salva. As saídas possíveis, pelo código:</p>
 <ul>
-<li>Passo 1. No menu Estoque, abra Solicitação de Material (Produção). A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
-<li>Passo 2. Filtros: Código (só números), Período (data inicial e final; as duas precisam estar preenchidas, senão o filtro de data é ignorado) e Centro de Custo (solicitacao_lst.aspx.cs:75-85; dalSolicitacao.cs:523-527).</li>
-<li>Passo 3. Clique em Pesquisar. A lista mostra, para os tipos Produção e Cliente: Código, Data, Centro de Custo, Lote de Produção, Produto e Status, com os ícones Editar (ou Visualizar), Excluir, Imprimir e Ver log (solicitacao_lst.aspx.cs:149-160 e 228-285).</li>
-<li>Passo 4. Sem resultado, a tela escreve "A pesquisa não retornou nenhum resultado." (solicitacao_lst.aspx.cs:177).</li>
-<li>Passo 5. Limpar esvazia os filtros e a lista (solicitacao_lst.aspx.cs:87-109).</li>
+<li><strong>Editar ou Visualizar</strong> abre o formulário comum <code>solicitacao_consumo_ed.aspx</code> com o tipo Produção (solicitacao_lst.aspx.cs:202-206), descrito na tela Solicitação de Material (Consumo).</li>
+<li><strong>Excluir</strong> (só Pendente) marca a solicitação como lixeira e grava no histórico, com justificativa (bllSolicitacao.cs:270-303; dalSolicitacao.cs:156-184).</li>
+<li>Quando a Produção confirma o pedido, ele passa a "Concluída" e fica disponível para o Atendimento. Se a Produção cancela antes da separação, o pedido é <strong>apagado do banco</strong> (bllItemIntegracao.cs:316-331; dalSolicitacao.cs:2084-2125).</li>
 </ul>
-<h4 id="abrir-imprimir-e-ver-o-historico">Abrir, imprimir e ver o histórico</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Editar abre o formulário só para consulta quando a solicitação não está Pendente. O ícone muda de lápis para "Visualizar" (solicitacao_lst.aspx.cs:241-250).</li>
-<li>Imprimir abre o relatório da solicitação em outra janela (solicitacao_lst.aspx.cs:220-224).</li>
-<li>Log mostra o histórico de alterações da solicitação (solicitacao_lst.aspx.cs:207-219).</li>
-<li>Excluir só aparece para solicitação Pendente; pede justificativa e confirmação (solicitacao_lst.aspx.cs:262-263 e 322-335).</li>
+<li>Período com uma data só: "Data inicial não informada" / "Data final não informada".</li>
+<li>Excluir sem justificativa: "A Justificativa é obrigatória!". A confirmação diz "Confirma a exclusão do item?" (o texto fala em "item"). Falhas: "Erro na Exclusão do Registro." e "Erro na consulta.".</li>
+<li>Formulário antigo <code>solicitacao_ed.aspx</code>, aberto só pelo endereço: a busca de item respondeu "Nenhum item foi encontrado" (CT-EST-091). Não use essa página para criar pedidos.</li>
 </ul>
-<h4 id="o-que-nao-existe-nesta-tela">O que não existe nesta tela</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Não há botão Incluir nem Salvar. O botão Incluir é escondido no código para o tipo Produção (solicitacao_lst.aspx.cs:46-50). Foi o que se viu no teste de 22/10/2026 (CT-EST-091, rodada 8; rodada 11).</li>
-<li>Não há aprovação: a solicitação de Produção não passa pela tela Aprovação de Solicitação (dalSolicitacao.cs:1152) e dispensa a aprovação no Atendimento (dalSolicitacao.cs:947).</li>
+<li>A função da tela é a <strong>301</strong>; a carga do menu registra as funções padrão (consultar, incluir, alterar, excluir, imprimir e ver log) (dml.sql:1882 e 2157-2235). Editar/Visualizar depende de "alterar"; Excluir, de "excluir" mais a situação Pendente; Imprimir, de "imprimir"; Ver log, de "consultar histórico" (solicitacao_lst.aspx.cs:252-283). Incluir não aparece no tipo Produção, para nenhum perfil.</li>
+<li>A conferência que barraria a abertura da página está <strong>comentada</strong> (ClassePaiLst.cs:68-81; ClassePaiEd.cs:49-61): quem conhece o endereço abre a lista (DV-EST-008, Alta). Nos formulários as permissões começam verdadeiras (ClassePaiEd.cs:79-93).</li>
+<li><strong>O grupo de usuário não limita a lista</strong>: quem abre vê todas as solicitações Produção e Cliente da empresa (dalSolicitacao.cs:500-560).</li>
+<li>Não houve teste de acesso nesta tela.</li>
 </ul>
-<h4 id="formulario-antigo-aberto-pelo-endereco">Formulário antigo aberto pelo endereço</h4>
-<p>O formulário <code>solicitacao_ed.aspx</code> (fora do menu) tem Tipo livre, busca de item e escolha de lote. No teste de 22/10/2026 a busca de item respondeu "Nenhum item foi encontrado" para o código, para "INSUMO" e para "TESTE" (CT-EST-091, DV-EST-063). Não use essa página para criar pedidos.</p>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A solicitação de Produção nunca nasce no ambiente de teste</strong> (DV-EST-076, Alta): ninguém aprova o Lote Padrão e a Produção não gera o pedido. Por isso a tela ficou "Bloqueada no teste".</li>
+<li><strong>Sem Incluir e com formulário antigo sem busca de item</strong> (DV-EST-063, Média). A área deve dizer se a solicitação de Produção deve ser criada por tela ou só pela Produção.</li>
+<li><strong>Cancelar pela Produção apaga o registro</strong> em vez de marcar "Cancelada": perde-se a rastreabilidade (RDC 658/2022, arts. 124 e 125). Ponto para validar com a área e o prazo de guarda.</li>
+<li>A criação pela Produção usa o usuário padrão da integração; o histórico não diz quem de fato pediu. Ponto para validar com a área.</li>
+<li>O serviço <code>SolicitarProducao</code> monta a solicitação sem tipo, situação, prioridade nem usuário; pela leitura, a gravação provavelmente falha. Não testado; ponto para validar com o desenvolvimento.</li>
+<li>O título da lista ("Produção / Comercial") é diferente do nome do menu.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar) / Olho (Visualizar)</td>
+<td>Abre o formulário comum com o tipo Produção; só edita se Pendente</td>
+<td>Em toda linha, se o usuário tem a função de alterar</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir)</td>
+<td>Pede justificativa e marca a solicitação como lixeira</td>
+<td>Linha Pendente, se o usuário pode excluir</td>
+</tr>
+<tr>
+<td>Impressora (Imprimir)</td>
+<td>Abre o relatório da solicitação em outra janela</td>
+<td>Em toda linha, se o usuário pode imprimir</td>
+</tr>
+<tr>
+<td>Ver log</td>
+<td>Abre o histórico de alterações</td>
+<td>Em toda linha, se o usuário pode consultar o histórico</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -297,7 +373,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

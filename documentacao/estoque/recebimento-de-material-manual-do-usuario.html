@@ -45,41 +45,136 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="recebimento-de-material-analise.html">Análise</a><a href="recebimento-de-material-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="recebimento-de-material-fluxos.html">Fluxos</a><a href="recebimento-de-material-regras-de-negocio.html">Regras de negócio</a><a href="recebimento-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-recebimento-de-material.html">Erros (11)</a><a class="aba-extra" href="roteiro-de-execucao-recebimento-quarentena-e-conferencia-passo-a-passo.html#tela-2-recebimento-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A tela <strong>Recebimento de Material</strong> é onde o almoxarifado registra a chegada de uma entrega: transportadora, veículo, nota fiscal, itens da nota e lotes que vieram (código do lote, validade, fabricante, quantidade e volumes). Depois de salvo, o recebimento passa por duas fases: <strong>Finalizar</strong> (encerra o cadastro) e, depois que outra pessoa autoriza, <strong>Confirmar recebimento</strong>, que gera o identificador interno do lote ("item de entrada"), os volumes, a pesagem e as etiquetas (recebimento_ed2.aspx.cs:360-417; dalRecebimento.cs:522-736). Usam o almoxarifado (que cadastra) e uma segunda pessoa (que autoriza). A conferência, o endereçamento e a análise acontecem depois, em outras telas.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Transportadora, fornecedor e fabricante</strong> como pessoas jurídicas</td>
+<td>As listas só oferecem os já cadastrados (recebimento_ed2.aspx.cs:146-150; recebimentoNfItemLote_ed.aspx.cs:163-167)</td>
+<td>Módulo Principal (cadastro de pessoa jurídica)</td>
+</tr>
+<tr>
+<td><strong>Item</strong> com <strong>almoxarifado padrão</strong> preenchido e, se for o caso, controle de lote, de validade e de qualidade</td>
+<td>Sem o almoxarifado padrão o botão CONFIRMAR RECEBIMENTO falha (DV-EST-010)</td>
+<td>Estoque › Cadastro de Item</td>
+</tr>
+<tr>
+<td><strong>Checklist de inspeção do veículo</strong> (opcional no sistema)</td>
+<td>Alimenta o campo "Veículo (Checklist)", que traz placa e motorista. O formulário deixa salvar sem ele (DV-EST-012), mas a norma pede a verificação documentada de cada entrega (RDC 658/2022, art. 183, parágrafo único)</td>
+<td>Estoque › Checklist de Inspeção Veicular</td>
+</tr>
+<tr>
+<td><strong>Uma segunda pessoa com login e senha</strong></td>
+<td>Autoriza o recebimento; tem de ser diferente de quem concluiu o cadastro</td>
+<td>Cadastro de usuários</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado liberado ao grupo do usuário</strong></td>
+<td>A lista só mostra os recebimentos dos almoxarifados do grupo da pessoa (recebimento_lst.aspx.cs:86-87)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No Menu Estoque, abra <strong>Recebimento de Material</strong>. A tela mostra os filtros e uma área vazia. Clique em <strong>PESQUISAR</strong> para listar.</li>
+<li>Filtros: Código, Nota Fiscal, Transportadora, Período (data inicial e final) e Status (TODOS, EM RECEBIMENTO, RECEBIDO, CONFERIDO, FINALIZADO) (recebimento_lst.aspx:44-115).</li>
+<li>A lista mostra Código, Data, Placa e Status, mais os ícones (veja o último bloco). <strong>LIMPAR</strong> esvazia filtros e lista. <strong>IMPRIMIR</strong> e o ícone de Excel só aparecem depois de uma pesquisa com resultado (recebimento_lst.aspx.cs:89-105).</li>
+<li><strong>Incluir</strong> abre o formulário em branco.</li>
+</ol>
+<p><strong>Cadastrar o recebimento</strong></p>
+<ol start="5">
+<li>Preencha a <strong>Data do Recebimento</strong> (não pode ser futura), a <strong>Transportadora</strong> e, se quiser, o <strong>Veículo (Checklist)</strong>: ao escolher o checklist, a placa e o motorista vêm dele (recebimento_ed2.aspx.cs:259-271). Clique em <strong>SALVAR</strong> e responda SIM em "Confirma a inclusão?". Aparece "Recebimento gerado!".</li>
+<li>Depois de salvo, aparece o quadro de notas fiscais. Clique em <strong>INCLUIR NOTA FISCAL</strong> (ou em <strong>IMPORTAR XML</strong>, com o arquivo da NF-e) e preencha número, <strong>série</strong>, fornecedor, tipo de documento, situação, tipo de frete, tipo de pagamento, tipo de movimentação, datas e todos os valores. Salve: "NF Cadastrada com sucesso!".</li>
+<li>Na nota, inclua cada <strong>item</strong> (nº do item, item, NCM, CFOP, quantidade, unidade de recebimento, valores e impostos). O item não pode se repetir na nota.</li>
+<li>Em cada item que tem controle de lote, inclua os <strong>lotes</strong>: fabricante, código do lote, validade, quantidade, número de volumes e unidade de recebimento. Salve: "Inclusão realizada!".</li>
+<li>Volte ao recebimento e clique em <strong>FINALIZAR RECEBIMENTO</strong>. O sistema confere se há nota, se todas têm item, se a soma dos itens fecha com a nota e se todos os itens têm lote; pergunta "Deseja encerrar o Cadastro?" e mostra "Cadastro Finalizado!". O status continua EM RECEBIMENTO.</li>
+<li><strong>Outra pessoa</strong> abre o recebimento, clica em <strong>AUTORIZAR RECEBIMENTO</strong> e informa usuário e senha. Aparece "Recebimento Autorizado!". Quem concluiu o cadastro recebe "Usuário não pode autorizar!".</li>
+<li>Depois da autorização, o botão vira <strong>CONFIRMAR RECEBIMENTO</strong> ("Deseja finalizar o Recebimento?"). Aparece "Recebimento finalizado!", o status passa a RECEBIDO e saem as etiquetas de volume e de quarentena. A nota segue para a Conferência de Recebimento.</li>
+<li><strong>REABRIR RECEBIMENTO</strong> (enquanto a nota não foi endereçada) desfaz a confirmação, a autorização, a conferência e as pesagens. Use só com a orientação da Qualidade (veja os cuidados).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Cadastre (ou confira) no módulo Principal a transportadora, o fornecedor e o fabricante; no Estoque, o item com <strong>almoxarifado padrão</strong> preenchido e, se for o caso, controle de lote, de validade e de qualidade.</li>
-<li>Faça antes a inspeção do veículo na tela Checklist de Inspeção Veicular. O recebimento deixa salvar sem ela, mas a norma pede a verificação documentada de cada entrega (RDC 658/2022, art. 183, parágrafo único).</li>
-<li>Combine quem vai <strong>autorizar</strong> o recebimento: tem de ser outra pessoa, que não concluiu o cadastro.</li>
+<li><strong>Salvar o cabeçalho:</strong> gera o código do recebimento (sequência do sistema, bllRecebimento.cs:12-20 e 167-189) e o status passa a EM RECEBIMENTO (Recebimento.cs:155-169).</li>
+<li><strong>Finalizar (cadastro):</strong> marca o cadastro como concluído, grava quem concluiu e a data (recebimento_ed2.aspx.cs:409-417).</li>
+<li><strong>Autorizar:</strong> grava quem autorizou e quando (recebimento_ed2.aspx.cs:1066-1082).</li>
+<li><strong>Confirmar recebimento:</strong> gera o item de entrada (sigla do almoxarifado padrão + sequência + "/" + ano), os volumes e a pesagem do recebimento, marca "Recebido" e imprime as etiquetas de volume e de quarentena (esta só se algum item tem controle de qualidade). O status passa a RECEBIDO e a nota aparece na Conferência de Recebimento (dalRecebimento.cs:522-736; dalNotaFiscal.cs:803).</li>
+<li><strong>Reabrir:</strong> apaga pesagens e endereços do recebimento e zera conferência, autorização e confirmação, sem justificativa e sem histórico (dalRecebimento.cs:768-874).</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No Menu Estoque, abra Recebimento de Material. A tela mostra o quadro de filtros e uma área vazia. Clique em PESQUISAR para listar.</li>
-<li>Passo 2. Filtros: Código, Nota Fiscal, Transportadora, Período (data inicial e final) e Status (TODOS, EM RECEBIMENTO, RECEBIDO, CONFERIDO, FINALIZADO) (recebimento_lst.aspx:44-115).</li>
-<li>Passo 3. A lista mostra Código, Data, Placa e Status. Cada linha tem o lápis (Editar; vira "Visualizar" depois que o recebimento é confirmado), a lixeira (Excluir, só enquanto não confirmado) e o histórico (Ver Log Alteração) (recebimento_lst.aspx.cs:170-221).</li>
-<li>Passo 4. LIMPAR esvazia os filtros e a lista. IMPRIMIR e o ícone de Excel só aparecem depois de uma pesquisa com resultado (recebimento_lst.aspx.cs:89-105).</li>
-<li>Passo 5. Incluir abre o formulário em branco.</li>
+<li>Data de recebimento futura: "Data de Recebimento inválida!". Sem data, o botão SIM não faz nada e não mostra mensagem (DV-EST-003).</li>
+<li>Ao finalizar o cadastro: "Recebimento sem Nota Fiscal!", "Nota Fiscal sem item!", "Nota Fiscal com divergência no total dos produto!" e "Item com divergência na quantidade do lote!".</li>
+<li>Finalizar antes de salvar: "Recebimento não foi salvo!".</li>
+<li>Autorizar: "Usuário não informado!" / "Senha não informada!" (campo vazio), "Usuário não pode autorizar!" (mesma pessoa que concluiu) e "Usuário/Senha inválido!".</li>
+<li>Nota: "Nota fiscal já foi informada!" (mesmo fornecedor, número e série); sem a série, a nota não grava e não avisa (DV-EST-013).</li>
+<li>Item: "Item já existe na Nota Fiscal!".</li>
+<li>Lote: "Item não possui controle de Lote", "Quantidade informada maior que o total pendente do Item", "Lote já foi informado para a Nota Fiscal!", "Esse item exige que o Fabricante seja informado!", "O Item possui controle de validade!", "Quantidade de volumes inválida!" e "Data de Validade inválida!".</li>
+<li>Confirmar com falha: "Erro ao Finalizar Recebimento!" ou "Ocorreram problemas ao finalizar o recebimento!". Importar arquivo que não é XML: "Tipo de Arquivo inválido". Excluir sem justificativa: "A Justificativa é obrigatório!".</li>
 </ul>
-<h4 id="cadastrar-o-recebimento-formulario">Cadastrar o recebimento (formulário)</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 6. Preencha a <strong>Data do Recebimento</strong> (não pode ser futura), a <strong>Transportadora</strong> e, se quiser, o <strong>Veículo (Checklist)</strong>: ao escolher o checklist, a placa e o motorista vêm dele (recebimento_ed2.aspx.cs:259-271). Clique em SALVAR e responda SIM em "Confirma a inclusão?". Aparece "Recebimento gerado!".</li>
-<li>Passo 7. Depois de salvo, aparece o quadro de notas fiscais. Clique em INCLUIR NOTA FISCAL (ou em IMPORTAR XML, com o arquivo da NF-e) e preencha número, <strong>série</strong>, fornecedor, tipo de documento, situação, tipo de frete, tipo de pagamento, tipo de movimentação, datas e todos os valores. Salve: "NF Cadastrada com sucesso!".</li>
-<li>Passo 8. Na nota, inclua cada <strong>item</strong> (nº do item, item, NCM, CFOP, quantidade, unidade de recebimento, valores e impostos). O item não pode se repetir na nota.</li>
-<li>Passo 9. Em cada item que tem controle de lote, inclua os <strong>lotes</strong>: fabricante, código do lote, validade, quantidade, número de volumes e unidade de recebimento. Salve: "Inclusão realizada!".</li>
-<li>Passo 10. Volte ao recebimento e clique em FINALIZAR RECEBIMENTO. O sistema confere se há nota, se todas têm item, se a soma dos itens fecha com a nota e se todos os itens têm lote; pergunta "Deseja encerrar o Cadastro?" e mostra "Cadastro Finalizado!".</li>
-<li>Passo 11. <strong>Outra pessoa</strong> abre o recebimento, clica em AUTORIZAR RECEBIMENTO e informa usuário e senha. Aparece "Recebimento Autorizado!". Quem concluiu o cadastro recebe "Usuário não pode autorizar!".</li>
-<li>Passo 12. Depois da autorização, o botão vira CONFIRMAR RECEBIMENTO ("Deseja finalizar o Recebimento?"). Aparece "Recebimento finalizado!", o status passa a RECEBIDO e saem as etiquetas de volume e de quarentena. A nota segue para a Conferência de Recebimento.</li>
-<li>Passo 13. REABRIR RECEBIMENTO (enquanto a nota não foi endereçada) desfaz a confirmação, a autorização, a conferência e as pesagens. Use só com a orientação da Qualidade (ver Falhas e pontos de atenção).</li>
+<li>A lista e o formulário usam a mesma função, a de código de tela <strong>302</strong> (recebimento_lst.aspx.cs:15; recebimento_ed2.aspx.cs:20). Os ícones de editar, excluir, imprimir e histórico dependem das marcas Alterar, Excluir, Imprimir e Consultar log do perfil (recebimento_lst.aspx.cs:194-221).</li>
+<li><strong>Não existe função própria para autorizar.</strong> A autorização é feita por usuário e senha digitados no quadro, e o sistema só confere se são válidos e se a pessoa é diferente de quem concluiu o cadastro: <strong>qualquer usuário com login e senha válidos autoriza</strong>, mesmo sem nenhuma permissão no Estoque (DV-EST-009).</li>
+<li>O <strong>grupo de usuário</strong> limita a lista aos almoxarifados do grupo.</li>
+<li>A tela <strong>não confere a permissão ao abrir</strong>: quem digita o endereço da página consegue abri-la (DV-EST-008). A mensagem de acesso negado não diz qual função falta, e um perfil novo com todas as funções do Estoque também não abriu o módulo (DV-EST-005).</li>
 </ul>
-<h4 id="atencao-ao-usar">Atenção ao usar</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>O código do lote perde os hífens: <code>TESTE-LOTE-001</code> vira <code>TESTELOTE001</code> (DV-EST-001). Anote o código original do fabricante na observação da nota.</li>
-<li>Digitar <code>100</code> no campo de quantidade grava <code>0,100</code> (DV-EST-002). Digite sempre a vírgula e as três casas: <code>100,000</code>.</li>
-<li>A tela aceita lote com validade vencida, sem aviso (DV-EST-014). Confira a validade na embalagem antes de gravar.</li>
-<li>Sem a Data do Recebimento, o botão SIM não faz nada e não mostra mensagem (DV-EST-003). Sem a série da nota, a nota não grava e não avisa (DV-EST-013).</li>
-<li>O recebimento salva sem checklist, sem placa e sem motorista (DV-EST-012), e um checklist reprovado aparece na lista de veículos (DV-EST-011). Confira o checklist antes.</li>
-<li>"Erro ao Finalizar Recebimento!" ao confirmar quase sempre quer dizer que o item não tem almoxarifado padrão (DV-EST-010).</li>
-<li>O fornecedor reprovado na Avaliação do Fornecedor recebe normalmente, sem aviso (DV-EST-022).</li>
+<li><strong>Código do lote perde os hífens:</strong> <code>TESTE-LOTE-001</code> vira <code>TESTELOTE001</code> (DV-EST-001). Anote o código original do fabricante na observação da nota.</li>
+<li><strong>Quantidade:</strong> digitar <code>100</code> grava <code>0,100</code> (DV-EST-002). Digite sempre a vírgula e as três casas: <code>100,000</code>.</li>
+<li><strong>Lote vencido é aceito sem aviso</strong> (DV-EST-014, Alta). Confira a validade na embalagem antes de gravar.</li>
+<li><strong>Fornecedor reprovado na Avaliação do Fornecedor recebe normalmente</strong>, sem aviso nem bloqueio (DV-EST-022, Alta).</li>
+<li><strong>Salva sem checklist, sem placa e sem motorista</strong> (DV-EST-012), e um checklist reprovado aparece na lista de veículos (DV-EST-011). Confira o checklist antes.</li>
+<li><strong>"Erro ao Finalizar Recebimento!"</strong> ao confirmar quase sempre quer dizer que o item não tem almoxarifado padrão (DV-EST-010).</li>
+<li>Sem a série da nota, nada é gravado e nada é avisado, e os avisos de Frete e Data de Entrada apontam para o campo errado (DV-EST-013).</li>
+<li><strong>Reabrir apaga registros</strong> sem justificativa e sem histórico; pela norma (art. 125) o valor original deveria continuar legível. Ponto para validar com a área: reabrir um recebimento confirmado deve ser permitido?</li>
+<li>O recebimento não consulta nem confere pedido de compra. Ponto para validar com a área.</li>
+<li>Existe uma versão antiga do formulário (<code>recebimento_ed.aspx</code>) sem uso pela lista; a que vale é a aberta pela lista.</li>
+<li>Há erros de digitação em mensagens ("dos produto", "Tipo de Movimentacao", "A Justificativa é obrigatório!").</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário; vira "Visualizar" depois que o recebimento é confirmado</td>
+<td>Na linha, conforme a marca Alterar do perfil</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir)</td>
+<td>Pede justificativa e exclui</td>
+<td>Só enquanto o recebimento não foi confirmado, e conforme a marca Excluir do perfil</td>
+</tr>
+<tr>
+<td>Histórico (Ver Log Alteração)</td>
+<td>Abre o histórico do recebimento</td>
+<td>Na linha, conforme a marca Consultar log do perfil</td>
+</tr>
+<tr>
+<td>IMPRIMIR / Excel</td>
+<td>Abre o relatório da lista ou baixa o Excel</td>
+<td>Só depois de uma pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. A coluna "Obrigatório" diz o que a tela exige de fato, não só o que o rótulo mostra.</p>
 <h4 id="lista">Lista</h4>
@@ -741,7 +836,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

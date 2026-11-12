@@ -45,25 +45,98 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="disponibilidade-do-lote-analise.html">Análise</a><a href="disponibilidade-do-lote-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="disponibilidade-do-lote-fluxos.html">Fluxos</a><a href="disponibilidade-do-lote-regras-de-negocio.html">Regras de negócio</a><a href="disponibilidade-do-lote-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-disponibilidade-do-lote.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-movimentacao-interna-passo-a-passo.html#tela-4-disponibilidade-do-lote">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Não precisa de preparação. A consulta mostra os lotes dos itens ligados aos almoxarifados do seu grupo de usuário.</p>
-<h4 id="consultar-o-saldo-dos-lotes">Consultar o saldo dos lotes</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Disponibilidade do Lote</strong> mostra o <strong>saldo de cada lote</strong> dividido em categorias: Disponível, Vencido / Reanálise, Quarentena, Reprovado, Bloqueado / Inventário, Solicitação, Separação e Saldo Total (disponibilidade_lote_lst.aspx:112-200). Uma linha por lote (item, lote com validade e Item de Entrada). É por aqui que se confere se um lote está liberado para uso, em quarentena, bloqueado, reprovado ou vencido. Usam almoxarifado, Controle da Qualidade e Garantia da Qualidade (leitura da área, a validar). <strong>A tela só consulta: não grava nada.</strong></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lote com saldo em algum endereço</strong></td>
+<td>O lote só aparece depois de entrada de material, endereçamento ou movimentação</td>
+<td>Estoque › Entrada de Material / Endereçamento</td>
+</tr>
+<tr>
+<td><strong>Item com grupo e subgrupo</strong></td>
+<td>A consulta exige grupo e subgrupo; item sem subgrupo some (dalItem.cs:2025-2031)</td>
+<td>Estoque › Cadastro de Item</td>
+</tr>
+<tr>
+<td><strong>Almoxarifado ligado ao grupo do usuário</strong></td>
+<td>O filtro de grupo limita os lotes por almoxarifado do item (dalItem.cs:2057-2064); grupo sem almoxarifado vê a lista vazia (CT-EST-041)</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>No menu Estoque, abra <strong>Disponibilidade do Lote</strong>. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
+<li>Filtros (nenhum obrigatório): Código do Item (até 12 caracteres), Descrição do Item (até 100), Código do Lote (até 40), Item de Entrada (até 40), Itens com saldo (TODOS, SIM ou NÃO), Grupo e Subgrupo. Clique em <strong>Pesquisar</strong>.</li>
+<li>A lista mostra, por lote: Item, Lote (código e validade), Item Entrada e as colunas de saldo, 15 lotes por página. Clique no título para ordenar.</li>
+<li>Como ler as colunas:
+   - <strong>Disponível:</strong> pode ser usado agora (já descontado o solicitado e ainda não atendido).
+   - <strong>Vencido / Reanálise:</strong> validade vencida ou em reanálise, sem estar em quarentena, bloqueado nem em refugo.
+   - <strong>Quarentena:</strong> em local de quarentena. <strong>Reprovado:</strong> em local de refugo.
+   - <strong>Bloqueado / Inventário:</strong> lote bloqueado ou endereço em inventário (somados).
+   - <strong>Solicitação:</strong> quantidade ligada ao lote em solicitações ainda não concluídas. <strong>Separação:</strong> atendida e ainda não separada.
+   - <strong>Saldo Total:</strong> tudo o que está nos endereços mais o que está em separação.</li>
+<li>As colunas <strong>não são excludentes</strong>, e retenção, referência e estabilidade não têm coluna: o mesmo material pode aparecer em quarentena e em bloqueado, e a amostra guardada entra só no total.</li>
+<li><strong>Imprimir</strong> gera um PDF e o ícone do Excel gera a planilha (só para quem tem a função de imprimir). <strong>Limpar</strong> esvazia filtros e lista.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>Nada é gravado. <strong>Imprimir</strong> gera o PDF "DISPONIBILIDADE DO LOTE" em paisagem, com os filtros usados (disponibilidade_lote_lst.aspx.cs:242-322); <strong>Excel</strong> gera o mesmo relatório pela página <code>disponibilidade_lote_rel</code> (210-251). Não há ligação direta daqui para o Histórico do Lote.</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>A tela não tem validações próprias. Uma pesquisa sem resultado mostra "A pesquisa não retornou nenhum resultado." (vista em teste, CT-EST-197 e CT-EST-041). Falhas de consulta sobem como erro do servidor e a página de erro mostra o texto técnico.</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 1. No menu, abra Disponibilidade do Lote. A tela mostra o quadro "Pesquisa" e uma área vazia.</li>
-<li>Passo 2. Filtros: Código do Item (parte, até 12 caracteres), Descrição do Item (parte, até 100), Código do Lote (parte, até 40), Item de Entrada (parte, até 40), Itens com saldo (TODOS, SIM ou NÃO), Grupo e Subgrupo. Nenhum é obrigatório. Clique em Pesquisar.</li>
-<li>Passo 3. A lista mostra, por lote: Item, Lote (código e validade), Item Entrada e as colunas de saldo, 15 lotes por página. Clique no título para ordenar.</li>
-<li>Passo 4. Como ler as colunas:</li>
-<li><strong>Disponível:</strong> pode ser usado agora (já descontado o que foi solicitado e ainda não atendido).</li>
-<li><strong>Vencido / Reanálise:</strong> lote com validade vencida ou em reanálise, que não está em quarentena, nem bloqueado, nem em local de refugo.</li>
-<li><strong>Quarentena:</strong> está em local de quarentena.</li>
-<li><strong>Reprovado:</strong> está em local de refugo.</li>
-<li><strong>Bloqueado / Inventário:</strong> lote bloqueado, ou endereço em inventário (somados).</li>
-<li><strong>Solicitação:</strong> quantidade ligada ao lote em solicitações cujo atendimento ainda não foi concluído.</li>
-<li><strong>Separação:</strong> quantidade atendida e ainda não separada.</li>
-<li><strong>Saldo Total:</strong> tudo o que está nos endereços, mais o que está em separação.</li>
-<li>Passo 5. As colunas <strong>não são excludentes</strong> e a retenção, a referência e a estabilidade não têm coluna: o mesmo material pode aparecer em quarentena e em bloqueado, e a amostra guardada entra só no total (ver Falhas e pontos de atenção).</li>
-<li>Passo 6. Imprimir gera um PDF e o ícone do Excel gera a planilha. Os dois só aparecem para quem tem a função de imprimir. Limpar esvazia filtros e lista.</li>
+<li>A tela usa a função de código <strong>315</strong>. Pesquisar só aparece para quem tem a função de consultar (ClassePaiLst.cs:195-201); Imprimir e Excel, para quem tem a de imprimir (disponibilidade_lote_lst.aspx.cs:85-86).</li>
+<li>A conferência que mandaria para o acesso negado está comentada (ClassePaiLst.cs:69-81): quem digita o endereço da página abre a tela (DV-EST-008, Alta, confirmado em outras telas; sem teste por endereço nesta tela).</li>
+<li>O <strong>grupo de usuário</strong> limita os lotes, mas <strong>o saldo do lote soma todos os almoxarifados</strong>, inclusive os que o usuário não enxerga. A confirmar (CT-EST-E10-08).</li>
+<li>A consulta não registra quem consultou, imprimiu ou exportou.</li>
 </ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Lote reprovado aparece em duas situações</strong> (DV-EST-029, Média): Quarentena 90 e Bloqueado 90 ao mesmo tempo, com Reprovado em 0; no lote já no refugo, Reprovado 90 e Bloqueado 90. Antes de alguém atualizar o resultado na tela Controle da Qualidade, o Estoque nem sabe do laudo.</li>
+<li>Lote vencido pode passar a aparecer como Bloqueado / Inventário, porque o bloqueio vem antes na regra; a tela não diz o motivo (CT-EST-062 e rodada 11).</li>
+<li>A data de reteste vencida não tira o lote do Disponível (regra comentada na visão); só valem validade e marcador de reanálise. Item sem controle de validade nunca vence. Ponto para validar com a área.</li>
+<li>A Disponibilidade mostra a validade da última análise (revalidação) e o Histórico do Lote mostra a validade original: dois números para o mesmo lote.</li>
+<li>Pelo código, ainda sem teste: ordenar por "Vencido / Reanálise" deve falhar (erro de digitação no nome da coluna); o Excel ignora o filtro Item de Entrada; a soma das colunas pode passar do total; Disponível mais as outras colunas não fecha com o total.</li>
+<li>Ponto para validar com a área: o saldo deve somar todos os almoxarifados? A tela deve mostrar o motivo do bloqueio? Onde devem aparecer retenção, referência e estabilidade?</li>
+<li>Falhas de outras telas aparecem aqui: o Endereçamento que não grava deixa o lote sem saldo (DV-EST-016) e a Movimentação de Quarentena com destino incompleto zera o saldo (DV-EST-044).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Imprimir</td>
+<td>Gera o PDF do relatório com os filtros</td>
+<td>Depois de pesquisa com resultado, para quem tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>Abre o relatório em planilha</td>
+<td>Igual ao Imprimir</td>
+</tr>
+<tr>
+<td>Títulos da grade</td>
+<td>Ordenam a lista; clicar de novo inverte</td>
+<td>Depois de uma pesquisa</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -195,7 +268,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

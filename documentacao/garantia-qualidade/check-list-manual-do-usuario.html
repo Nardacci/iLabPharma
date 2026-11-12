@@ -45,14 +45,123 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="check-list-analise.html">Análise</a><a href="check-list-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="check-list-fluxos.html">Fluxos</a><a href="check-list-regras-de-negocio.html">Regras de negócio</a><a href="check-list-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-check-list.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-assuntos-regulatorios-passo-a-passo.html#tela-4-check-list">Passo a passo</a><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#3f6aa0;margin-right:6px"></span>Situação da tela: <strong>Protótipo</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<p>Passo a passo <strong>pelo que o código mostra</strong>; ninguém executou a tela. Ela não aparece no menu: quem for usá-la precisa do endereço.</p>
+<p>Passo a passo <strong>pelo que o código mostra</strong>; ninguém executou a tela (Bloqueada no teste, DV-GQ-015). Ela não aparece no menu: quem for usá-la precisa do endereço da área (<code>/AssRegulatorios/ChecklistPadrao</code>).</p>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastrar <strong>modelos de lista de documentos</strong> ("check-list padrão") para pedidos à ANVISA: registro novo, renovação, alteração, lote piloto, HMP (sigla que o código usa para um tipo de processo; ponto para validar com a área o significado) ou outro. Cada modelo tem descrição, tipo de processo, tipo e grau do produto, Status e uma lista de documentos com observação e anexos. Quem faz a <strong>Solicitação de Registro</strong> usa os modelos sem abrir esta tela (ChecklistPadraoController.cs:520; SolicitacaoRegistroController.cs:432-495).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Grupo de perfil</strong> para o seu usuário</td>
+<td>É a única coisa que faz o botão <strong>Incluir</strong> aparecer na lista (ChecklistPadraoIndexModel.cs:326-329)</td>
+<td>Configuração › Grupo Perfil</td>
+</tr>
+<tr>
+<td><strong>O endereço da tela</strong></td>
+<td>A tela não tem entrada no menu (DV-GQ-015)</td>
+<td>Não se cadastra: abrir pelo endereço da área</td>
+</tr>
+<tr>
+<td>Nada mais</td>
+<td>Tipo de processo e tipo de produto são listas fixas do próprio sistema; o modelo não guarda produto</td>
+<td>(não há cadastro de apoio)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>Abra o endereço. O quadro "Pesquisa" tem Cód. Checklist, Descrição, Data Início (e "até"), Tipo Produto, Grau Produto e Tipo Processo. <strong>Pesquisar</strong> lista; <strong>Limpar</strong> esvazia tudo. Código e Descrição são buscas <strong>exatas</strong> (a confirmar no teste).</li>
+<li><strong>Incluir</strong> (aparece se o usuário tem grupo de perfil) abre a inclusão; o lápis abre a edição.</li>
+<li>Preencha <strong>Check-list</strong> (descrição), <strong>Tipo Processo</strong> e <strong>Tipo Produto</strong> (obrigatórios), Grau Produto e Status. Clique em "Incluir Checklist" e confirme. Aparece "Inclusão efetuada com sucesso." e abre a parte dos documentos.</li>
+<li>Para cada documento: nome em <strong>Documento</strong> (obrigatório), Observação e anexos. O Seq. é travado e sai sozinho. Clique em "Salvar Documento" e confirme; o documento entra na lista (SEQ, DOCUMENTO, DATA REGISTRO).</li>
+<li>Para tirar um documento do modelo, use a lixeira do documento: ele fica inativo e some da lista.</li>
+<li>Na edição, altere o cabeçalho e clique em "Salvar Checklist". A pergunta é "Confirma a inclusão do item?", mesmo sendo alteração. <strong>Não há justificativa.</strong> <strong>Voltar</strong> sai sem gravar.</li>
+<li>Para tirar o modelo de uso, mude o <strong>Status</strong> para Inativo (não existe exclusão que funcione).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. Abra o endereço. O quadro "Pesquisa" tem Cód. Checklist, Descrição, Data Início (e "até"), Tipo Produto, Grau Produto e Tipo Processo. Pesquisar lista; Limpar esvazia tudo.</li>
-<li>Passo 2. Incluir (aparece se o usuário tem grupo de perfil) abre a inclusão; o lápis abre a edição.</li>
-<li>Passo 3. Preencha Check-list (descrição), <strong>Tipo Processo</strong> e <strong>Tipo Produto</strong> (obrigatórios), Grau Produto e Status. Clique em "Incluir Checklist" e confirme. Aparece "Inclusão efetuada com sucesso." e abre a parte dos documentos.</li>
-<li>Passo 4. Para cada documento: nome em Documento (obrigatório), Observação e anexos. O Seq. é travado e sai sozinho. Clique em "Salvar Documento" e confirme; o documento entra na lista (SEQ, DOCUMENTO, DATA REGISTRO).</li>
-<li>Passo 6. Na edição, altere o cabeçalho e clique em "Salvar Checklist". A pergunta é "Confirma a inclusão do item?", mesmo sendo alteração. <strong>Não há justificativa.</strong> Voltar sai sem gravar.</li>
+<li><strong>Incluir Checklist</strong> grava o cabeçalho com código sequencial (4 dígitos) e abre a parte dos documentos; é a <strong>única</strong> gravação que deixa histórico (ChecklistPadraoController.cs:169-219).</li>
+<li><strong>Salvar Documento</strong> acrescenta um documento, <strong>sem histórico</strong>. O documento grava Seção 0, Responsável 0 e Situação "Nenhum", porque esses campos estão desligados.</li>
+<li><strong>Salvar Checklist</strong> grava o cabeçalho alterado e volta à lista, <strong>sem histórico</strong>.</li>
+<li>O modelo passa a ser oferecido na Solicitação de Registro, que <strong>copia</strong> os documentos para o check-list próprio dela. Solicitações que já copiaram <strong>não mudam</strong> se o modelo for alterado (SolicitacaoRegistroController.cs:634-640).</li>
+<li>Nada é gravado em outro módulo.</li>
 </ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Tipo Processo é obrigatório." (e a opção TODAS também é recusada).</li>
+<li>"Tipo Produto é obrigatório."</li>
+<li>"Documento é obrigatório." ao salvar documento sem nome.</li>
+<li>"Ocorreu um erro inesperado." em falha não prevista.</li>
+<li><strong>Não recusa:</strong> descrição vazia (o asterisco existe, mas o servidor não confere; a confirmar no teste), documento repetido nem só com espaços, nem Grau do Produto em branco (CheckListValidator.cs:25-65; DocCheckListValidator.cs:32-37).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela <strong>não tem função própria no perfil</strong>, porque não tem menu: não há o que marcar (<code>execucao/2026-10-16/resultado.md</code>).</li>
+<li>O <strong>grupo de perfil</strong> só decide se o botão <strong>Incluir</strong> aparece. Gravar, alterar e tirar documento <strong>não conferem nível, área nem responsável</strong> no servidor.</li>
+<li>O controlador não tem o filtro de autorização do sistema: quem souber o endereço abre a tela, mesmo sem perfil (ligado a SEG-GQ-01 e SEG-GQ-02; a confirmar no teste).</li>
+<li>Os níveis 1, 2 e 3 veem a lista inteira e gravam do mesmo jeito (<code>02-matriz-de-permissoes.md</code>).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Tela fora do menu</strong> (DV-GQ-015): sem o endereço, o usuário não chega a ela.</li>
+<li><strong>Alterar um modelo, incluir ou tirar documento não deixa histórico nem justificativa</strong> (RN-GQ-ARF01-006; Risco R-GQ-22). Não se descobre quem mudou um modelo que alimenta pedidos à ANVISA.</li>
+<li><strong>Visualizar e Excluir da lista não funcionam:</strong> chamam ações que não existem; o resultado exato (erro de página ou nada) é a confirmar no teste. Para tirar o modelo de uso, só o Status Inativo.</li>
+<li>A pergunta ao alterar é "Confirma a inclusão do item?", mesmo sendo alteração.</li>
+<li><strong>Seção, responsável, situação e datas do documento estão desligados:</strong> o modelo não diz quem entrega o quê nem até quando.</li>
+<li><strong>O código do modelo é o maior código mais 1:</strong> dois usuários ao mesmo tempo podem receber o mesmo código (inferência, a confirmar).</li>
+<li>A lista <strong>não mostra o código</strong> do modelo, embora ele exista e possa ser pesquisado.</li>
+<li>O botão <strong>Imprimir</strong> está desligado.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>As linhas da lista <strong>não conferem situação nem nível</strong>: todas mostram os mesmos ícones (a regra de acesso está comentada no código; <code>regras-de-botoes-bloco2.md</code>, item 4).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre a edição do modelo</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Lupa (Visualizar)</td>
+<td>Chama uma ação que <strong>não existe</strong> no controlador (provável erro; a confirmar no teste)</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Lixeira (Excluir ou "Cancelar")</td>
+<td>Chama <code>CancelarChecklist</code>, que não existe: nada acontece (a confirmar no teste)</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico do modelo (classe "Checklist"; pode vir vazio até na inclusão, a confirmar)</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Impressora</td>
+<td><strong>Não há ícone</strong>: a linha está comentada no código</td>
+<td>Nunca</td>
+</tr>
+<tr>
+<td>Botão <strong>Incluir</strong> (acima da lista)</td>
+<td>Abre a inclusão</td>
+<td>Só se o usuário tem grupo de perfil</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -212,7 +321,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

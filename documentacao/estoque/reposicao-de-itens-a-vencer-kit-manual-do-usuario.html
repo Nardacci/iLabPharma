@@ -45,32 +45,121 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="reposicao-de-itens-a-vencer-kit-analise.html">Análise</a><a href="reposicao-de-itens-a-vencer-kit-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="reposicao-de-itens-a-vencer-kit-fluxos.html">Fluxos</a><a href="reposicao-de-itens-a-vencer-kit-regras-de-negocio.html">Regras de negócio</a><a href="reposicao-de-itens-a-vencer-kit-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-reposicao-de-itens-a-vencer-kit.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-kits-passo-a-passo.html#tela-8-reposicao-de-itens-a-vencer">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Reposição de Itens a Vencer (Kit)</strong> é um relatório de consulta que lista os <strong>lotes de componentes já enviados a clientes dentro de kits</strong> e que estão vencidos ou vão vencer, para saber quais itens precisam ser repostos. Cada linha traz tipo do kit, item, lote, item de entrada, validade, unidade, quantidade, guia (GMM) e a faixa "A VENCER" (VENCIDO, ATÉ 1 MÊS, ATÉ 3 MESES, ATÉ 6 MESES, ATÉ 1 ANO ou ACIMA DE 1 ANO). Só entram componentes <strong>com controle de validade</strong>. O relatório <strong>não repõe nada</strong> e não calcula quanto repor: a reposição é feita na tela Controle de Kits. Não grava nada. Abre numa segunda janela, com visualizador de relatórios.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Kits remetidos a clientes</strong>, com lotes dos componentes na remessa</td>
+<td>São as linhas do relatório. Em 22/10/2026 abriu vazio porque nenhum kit tinha sido remetido (a Remessa comum estava travada, DV-EST-046)</td>
+<td>Menu Kits (Solicitação de Kits) e Estoque › Remessa de Material (ver fluxo de Kits)</td>
+</tr>
+<tr>
+<td><strong>Componente com controle de validade</strong></td>
+<td>Só esses entram</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Cliente, item, GMM e tipo de kit</strong> (se quiser filtrar)</td>
+<td>Filtros opcionais</td>
+<td>Cadastros › Pessoa Jurídica; Remessa; cadastros de Kit</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório</strong></p>
+<ol>
+<li>No menu Relatórios, abra <strong>Reposição de Itens a Vencer (Kit)</strong>. A tela mostra o quadro "Filtros".</li>
+<li>Preencha os filtros que quiser; todos são opcionais: <strong>Cliente</strong>, <strong>Item</strong> (parte do código ou do nome), <strong>GMM</strong> (parte do código da guia), <strong>Tipo de Kit</strong> e <strong>Período a Vencer</strong>. Vazio traz tudo.</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. Abre uma nova janela. No alto, a linha "FILTROS:" repete o que foi escolhido, ou "SEM FILTRO".</li>
+<li><strong>LIMPAR</strong> volta todos os filtros ao estado inicial.</li>
+<li>Na janela, use a barra do componente para trocar de página, procurar texto, imprimir e exportar.</li>
+</ol>
+<p><strong>Ler o relatório</strong></p>
 <ul>
-<li>Tenha kits <strong>remetidos</strong> a clientes, com lotes dos componentes registrados na remessa (Solicitação de Kits e Remessa de Material; ver <code>fluxos/kits.md</code>).</li>
-<li>Só aparecem componentes com controle de validade.</li>
+<li>Colunas: <strong>TIPO</strong> (letra "I" ou "C" do tipo do kit, sem legenda), <strong>ITEM</strong>, <strong>LOTE</strong>, <strong>ITEM ENTRADA</strong>, <strong>VALIDADE</strong>, <strong>UNID.</strong>, <strong>QTDE</strong>, <strong>GMM</strong> e <strong>A VENCER</strong>. As linhas vêm da mais vencida para a que vence mais tarde.</li>
+<li>O relatório <strong>não mostra o cliente nem o código do kit</strong> em cada linha. Para saber em que cliente está o lote, filtre por cliente ou use a guia (GMM) no Controle de Kits.</li>
 </ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>Passo 1. No menu Relatórios, abra Reposição de Itens a Vencer (Kit). A tela mostra o quadro "Filtros".</li>
-<li>Passo 2. Preencha os filtros que quiser; todos são opcionais: <strong>Cliente</strong>, <strong>Item</strong> (parte do código ou do nome), <strong>GMM</strong> (parte do código da guia), <strong>Tipo de Kit</strong> e <strong>Período a Vencer</strong>. Vazio traz tudo.</li>
-<li>Passo 3. Clique em GERAR RELATÓRIO. Abre uma nova janela com o relatório. No alto, a linha "FILTROS:" repete o que foi escolhido, ou "SEM FILTRO".</li>
-<li>Passo 4. LIMPAR volta todos os filtros ao estado inicial.</li>
-<li>Passo 5. Na janela, use a barra do componente para trocar de página, procurar texto, imprimir e exportar.</li>
+<li><strong>Não grava nada</strong>: só lê.</li>
+<li>Lista lotes enviados em kits com controle de validade, com a faixa "A VENCER". <strong>Não filtra por remessa já embarcada</strong>: lotes de remessas que ainda não saíram também podem aparecer (ponto para validar).</li>
+<li>Sem lotes, só o cabeçalho das colunas aparece, <strong>sem mensagem</strong> de "nenhum resultado" (visto em 22/10/2026).</li>
 </ul>
-<h4 id="ler-o-relatorio">Ler o relatório</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Colunas: <strong>TIPO</strong> (letra "I" ou "C" do tipo do kit), <strong>ITEM</strong>, <strong>LOTE</strong>, <strong>ITEM ENTRADA</strong>, <strong>VALIDADE</strong>, <strong>UNID.</strong>, <strong>QTDE</strong>, <strong>GMM</strong> e <strong>A VENCER</strong>. As linhas vêm da mais vencida para a que vence mais tarde (<code>dalRelatorio.cs:2372</code>).</li>
-<li>O relatório <strong>não mostra o cliente nem o código do kit</strong> em cada linha (a consulta traz os dois, o desenho não os usa; <code>RPT_RELACAO_KITS_VENCER.rdlc</code>). Para saber em que cliente está o lote, filtre por cliente ou use a guia (GMM) no Controle de Kits.</li>
+<li>A tela <strong>não tem validação de preenchimento</strong>: não confere nada antes de abrir a janela.</li>
+<li>Falha da consulta: "Erro ao gerar dados do Relatório!", na janela do relatório.</li>
+<li>Texto com apóstrofo ou "&amp;" nos filtros Item e GMM pode quebrar a abertura da janela (leitura do código).</li>
 </ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Em 22/10/2026, sem nenhum kit remetido, o relatório abriu <strong>só com o cabeçalho das colunas</strong>, sem mensagem de "nenhum resultado" (<code>CT-EST-157-rel_kit_lote_vencer_lst.png</code>).</li>
-<li>O "Emitido em" saiu em formato americano (10/22/2026): DV-EST-057.</li>
-<li>O relatório não filtra por remessa já embarcada: lista também lotes de remessas que ainda não saíram (ponto para validar; ver Falhas).</li>
+<li>A tela se identifica pelo código <code>relKitLoteVencer</code>. No script de menu (dml.sql:1940) as marcas de incluir, alterar, excluir, imprimir e ver log estão em "N": <strong>não há funções internas</strong> para esta tela. Quem vê o item no menu é decidido pelo perfil de cada pessoa. O botão GERAR RELATÓRIO não depende de função.</li>
+<li>Este relatório <strong>não recorta por grupo de usuário nem por almoxarifado</strong>: quem o abre vê os lotes de kit de todos os clientes da empresa.</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta; visto em outras telas, CT-EST-065, 13/10/2026) é esperado aqui, mas <strong>não foi visto nesta tela</strong>.</li>
 </ul>
-</div>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-EST-046 (Alta, é da Remessa, não deste relatório):</strong> a Remessa comum não se finalizava ("Erro ao gerar a solicitação do material!"), e por isso o relatório abriu vazio em 22/10/2026 (CT-EST-157 e 156). A rodada 10 contornou pelo tipo GMM; esta tela ainda não foi reaberta com linhas.</li>
+<li><strong>DV-EST-057 (Baixa):</strong> "Emitido em" sai em formato americano ("10/22/2026").</li>
+<li><strong>Cliente e kit não saem</strong> no relatório, o que dificulta um recolhimento.</li>
+<li>As faixas "A VENCER" usam diferença de <strong>mês de calendário</strong>, não 30 dias: uma validade a cerca de 60 dias pode cair em "ATÉ 1 MÊS" (a confirmar na tela).</li>
+<li>Este relatório filtra o cliente da remessa; os de planejamento e reposição usam o cliente de entrega. O mesmo cliente pode dar resultados diferentes.</li>
+<li>O texto do filtro entra no comando de busca sem tratamento (padrão do SEG-EST-02).</li>
+<li>O título diz "Reposição", mas só lista.</li>
+<li>Pontos para validar com a área: a remessa embarcada é o critério certo? o relatório deve mostrar cliente e kit? faixa por 30 dias ou por mês de calendário? qual a diferença para o Controle de Kits e a Análise de Componentes?</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Monta o endereço com os filtros e abre a janela</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Volta os filtros ao estado inicial</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Detalhe do erro (+) / (-)</td>
+<td>Mostra ou esconde o texto da causa interna</td>
+<td>Quando a falha traz uma causa interna</td>
+</tr>
+<tr>
+<td>Barra do relatório (páginas, busca, atualizar)</td>
+<td>Navega pelo relatório; componente padrão</td>
+<td>Na janela do relatório</td>
+</tr>
+<tr>
+<td>Exportar (disquete da barra)</td>
+<td>Abre o menu de exportação; os formatos não estão no código (a conferir na tela)</td>
+<td>Na janela do relatório</td>
+</tr>
+<tr>
+<td>Imprimir</td>
+<td>Liga o botão de impressão do componente</td>
+<td>Na janela do relatório</td>
+</tr>
+</tbody>
+</table></div>
+<p>A tela de filtros não tem botão próprio de Excel nem de PDF.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: <code>rel_kit_lote_vencer_lst.aspx</code> e <code>.aspx.cs</code> (caminho na seção Resumo da tela). Nenhum campo é obrigatório.</p>
 <h4 id="filtros">Filtros</h4>
@@ -285,7 +374,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

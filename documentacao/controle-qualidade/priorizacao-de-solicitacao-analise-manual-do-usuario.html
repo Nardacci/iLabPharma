@@ -45,27 +45,95 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="priorizacao-de-solicitacao-analise-analise.html">Análise</a><a href="priorizacao-de-solicitacao-analise-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="priorizacao-de-solicitacao-analise-fluxos.html">Fluxos</a><a href="priorizacao-de-solicitacao-analise-regras-de-negocio.html">Regras de negócio</a><a href="priorizacao-de-solicitacao-analise-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-priorizacao-de-solicitacao-analise.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-analise-e-laudo-passo-a-passo.html#tela-3-priorizacao-de-solicitacao-analise">Passo a passo</a><a class="aba-extra" href="o-controle-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>A solicitação precisa existir (ela chega do Estoque ou da Produção, ou foi aberta na tela Solicitação de Análise) e ser de <strong>produto ou material</strong>. Solicitações de água e ambiente não aparecem aqui.</p>
-<h4 id="priorizar">Priorizar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Priorização de Solicitação Análise</strong> marca ou desmarca a <strong>urgência</strong> de solicitações de análise de <strong>produto e material</strong> que ainda não terminaram. A urgência não tem prazo, motivo nem aprovador: é só uma marca que faz a solicitação aparecer <strong>separada, em cima, em "Urgentes!"</strong> nas filas seguintes do CQ (programar a amostragem, amostragens pendentes, programar a análise, digitar resultados, laudo e etiqueta). Quem usa é a chefia do CQ ou a Garantia da Qualidade, quando um lote precisa passar à frente (leitura da área; o sistema não diz quem prioriza). Água e ambiente <strong>não passam por esta tela</strong>.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Solicitação de análise</strong> de matéria-prima, material de embalagem, granel, semielaborado, produto acabado ou padrão secundário, <strong>não cancelada, não concluída e fora da lixeira</strong></td>
+<td>É o que a pesquisa traz (SolicitacaoAnaliseRepository.cs:286-290 e 318-335)</td>
+<td>Chega do Estoque ou da Produção, ou é aberta em Solicitação de Análise (menu Solicitação)</td>
+</tr>
+<tr>
+<td><strong>Item de entrada (lote) do Estoque</strong></td>
+<td>Aparece na lista e serve de filtro</td>
+<td>Estoque (recebimento)</td>
+</tr>
+</tbody>
+</table></div>
+<p>A tela abre com os filtros e <strong>sem lista</strong>: é preciso clicar em Pesquisar.</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>Abra <strong>Priorização de Solicitação Análise</strong> (menu Controle da Qualidade › Solicitação de Análise). Os filtros ficam no alto; a lista fica escondida.</li>
+<li>Filtre, se quiser: Data da solicitação (de e até), Situação, Número da solicitação, Item Entrada e, em "Filtro Produto / Material", Código e Descrição.</li>
+<li>Atenção à caixa <strong>Priorizadas</strong>. <strong>Desmarcada</strong>, a pesquisa traz só as solicitações que <strong>não</strong> são urgentes; <strong>marcada</strong>, traz só as que <strong>já são</strong> urgentes (SolicitacaoAnaliseRepository.cs:316).</li>
+<li>Clique em <strong>Pesquisar</strong>. A lista mostra 10 linhas por página com número, data, situação, item de entrada, código do produto, produto, uma caixa de marcar e o ícone <strong>Ver log</strong>.</li>
+<li>Marque a caixa das solicitações que passam a ser urgentes e desmarque as que deixam de ser. Clique em <strong>Salvar</strong>.</li>
+<li>Confirme "Confirma a priorização do(s) item(s)?" (ou "Confirma o cancelamento da priorização do(s) item(s)?" quando você desmarcou alguma que já era urgente). O sistema mostra "Alteração efetuada com sucesso." e a tela volta ao início, vazia.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. Abra Priorização de Solicitação Análise. Os filtros ficam no alto; a lista fica escondida.</li>
-<li>Passo 2. Filtre, se quiser: Data da solicitação (de e até), Situação, Número da solicitação, Item Entrada, e, em "Filtro Produto / Material", Código e Descrição.</li>
-<li>Passo 3. Atenção à caixa <strong>Priorizadas</strong>. <strong>Desmarcada</strong>, a pesquisa traz só as solicitações que <strong>não</strong> são urgentes; <strong>marcada</strong>, traz só as que <strong>já são</strong> urgentes (SolicitacaoAnaliseRepository.cs:316).</li>
-<li>Passo 4. Clique em <strong>Pesquisar</strong>. A lista mostra 10 linhas por página (UI/Web.config:15) com número, data, situação, item de entrada, código do produto, produto, uma caixa de marcar (coluna do ícone de alerta) e o ícone <strong>Ver log</strong>.</li>
-<li>Passo 5. Marque a caixa das solicitações que passam a ser urgentes e desmarque as que deixam de ser. Clique em <strong>Salvar</strong>.</li>
-<li>Passo 6. Confirme "Confirma a priorização do(s) item(s)?" (ou "Confirma o cancelamento da priorização do(s) item(s)?" quando você desmarcou alguma que já era urgente). O sistema mostra "Alteração efetuada com sucesso." e a tela volta ao início.</li>
+<li>Grava a marca "Urgente" de <strong>todas as linhas da página</strong> (marcadas = urgente, desmarcadas = não urgente), uma por uma, e escreve <strong>uma linha de histórico por solicitação</strong>, com a justificativa fixa "ALTERAR" (PriorizarSolicitacaoAnaliseController.cs:62-76).</li>
+<li>A solicitação urgente passa a aparecer em "Urgentes!" na <strong>Programação de Amostragem</strong> e nas filas seguintes (CT-CQ-N-25 viu a 019/26 aparecer lá).</li>
+<li>A tela não avisa o laboratório nem o Estoque e <strong>não grava em outros módulos</strong>.</li>
 </ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>O <strong>Salvar grava a página inteira</strong>: toda linha visível recebe a marca conforme a caixa, mesmo as que você não tocou. Se você mudar de página sem salvar, a mudança da página anterior se perde.</li>
-<li>A tela <strong>aceita priorizar uma solicitação com laudo liberado</strong> (DV-CQ-026): a marca não tem efeito útil nessa situação.</li>
-<li>Quem prioriza e por quê <strong>não fica visível</strong> na própria tela: o motivo da urgência não é pedido.</li>
+<li>Quase nada: não há campo obrigatório nem regra de situação além de a solicitação não estar cancelada, concluída ou na lixeira.</li>
+<li><strong>Não recusa</strong> priorizar solicitação com <strong>laudo liberado</strong> (DV-CQ-026).</li>
+<li>Se a gravação falhar, o sistema mostra ao usuário o <strong>texto técnico da própria exceção</strong> (não visto em teste); falha de comunicação: "Ocorreu um erro interno não esperado.". Lista sem linhas: "A pesquisa não retornou nenhum resultado.".</li>
 </ul>
-</div>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
-<p>Não define prazo, não pede motivo, não avisa o laboratório nem o Estoque, e não prioriza água e ambiente. Não muda a ordem de nenhuma lista além de separar as urgentes em "Urgentes!".</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela é a função <code>solicitacaoanalise/priorizarsolicitacaoanalise</code> (DB/dml.sql:169). Para abrir, o perfil precisa da permissão de <strong>consultar</strong>.</li>
+<li>Só a <strong>abertura</strong> da tela tem conferência de permissão, e ela confere só "consultar". <strong>Pesquisar e Salvar não conferem permissão</strong> (SEG-CQ-01). Salvar e a caixa de marcar aparecem para quem abre a tela, sem conferir "alterar".</li>
+<li>No teste, o usuário de <strong>perfil só de consulta</strong> abriu a tela pelo endereço, marcou a 006/26 como priorizada, salvou e recebeu "Alteração efetuada com sucesso." (DV-CQ-028, Alta; CT-CQ-R2-AC-02).</li>
+<li>O servidor não exige função de chefia nem de Garantia de quem prioriza. Chefe de subdivisão: o código não exige.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>O Salvar grava a página inteira:</strong> toda linha visível recebe a marca conforme a caixa, mesmo as que você não tocou. Se mudar de página sem salvar, a mudança da página anterior se perde.</li>
+<li><strong>Laudo liberado aceita prioridade</strong> (DV-CQ-026, Baixa): a marca não tem efeito útil nessa situação.</li>
+<li><strong>Acesso:</strong> perfil só de consulta consegue priorizar (DV-CQ-028, Alta).</li>
+<li>A urgência não pede <strong>motivo</strong> nem mostra <strong>quem priorizou</strong>; o histórico só diz "ALTERAR".</li>
+<li>Não define prazo e não muda a ordem de nenhuma lista além de separar as urgentes em "Urgentes!".</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caixa de marcar (coluna do alerta)</td>
+<td>Marca ou desmarca a urgência (só vale ao salvar)</td>
+<td>Em cada linha</td>
+</tr>
+<tr>
+<td>LOG (Ver log)</td>
+<td>Abre o histórico da solicitação</td>
+<td>Em cada linha (_GridPriorizacaoSolicitacaoAnalise.cshtml:75)</td>
+</tr>
+<tr>
+<td>Lápis, lupa, lixeira</td>
+<td>—</td>
+<td>Não existem nesta lista (a regra de botões não mapeou ícones de edição para esta tela)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Botões da tela: <strong>Pesquisar</strong> e <strong>Limpar</strong> (sempre); <strong>Salvar</strong> só depois de uma pesquisa com linhas; paginação quando há mais de uma página.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: Area/Views/PriorizarSolicitacaoAnalise/Index.cshtml e _GridPriorizacaoSolicitacaoAnalise.cshtml.</p>
 <h4 id="pesquisa">Pesquisa</h4>
@@ -274,7 +342,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

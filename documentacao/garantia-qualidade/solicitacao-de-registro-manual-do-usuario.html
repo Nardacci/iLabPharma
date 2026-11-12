@@ -45,15 +45,131 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-registro-analise.html">Análise</a><a href="solicitacao-de-registro-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="solicitacao-de-registro-fluxos.html">Fluxos</a><a href="solicitacao-de-registro-regras-de-negocio.html">Regras de negócio</a><a href="solicitacao-de-registro-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-solicitacao-de-registro.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-assuntos-regulatorios-passo-a-passo.html#tela-5-solicitacao-de-registro">Passo a passo</a><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#3f6aa0;margin-right:6px"></span>Situação da tela: <strong>Protótipo</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<p>Como a tela não abre pelo menu, o passo a passo abaixo vem do código e <strong>não foi executado</strong>. Para chegar a ela seria preciso abrir o endereço da área AssRegulatorios, o que ficou fora do escopo das rodadas (resultado de 24/10/2026).</p>
-<h4 id="passo-a-passo-do-codigo-nao-executado">Passo a passo (do código, não executado)</h4>
+<p>Como a tela não abre pelo menu, o passo a passo abaixo vem do código e <strong>não foi executado</strong> (Bloqueada no teste; CT-GQ-097 Bloqueado em 15/10, 16/10 e 24/10/2026). Para chegar a ela seria preciso abrir o endereço da área AssRegulatorios, o que ficou fora do escopo das rodadas.</p>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Registrar o <strong>pedido interno de registro, renovação ou alteração de registro</strong> de um produto na ANVISA: número da solicitação, descrição, produto, tipos, área solicitante, responsável, justificativa e um <strong>check-list de documentos</strong>. Depois permite <strong>Fechar</strong> a solicitação e <strong>Enviar à ANVISA</strong>; o envio cria uma linha no Controle de Produtos Enviados para Registro Anvisa. Quem usa: a área de Assuntos Regulatórios (inferência pelo nome; o código não restringe a tela a ela).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Grupo de usuário</strong> do seu usuário</td>
+<td>Faz o botão <strong>Incluir</strong> aparecer na lista (IndexModel.cs:35-39)</td>
+<td>Configuração › Grupo Perfil</td>
+</tr>
+<tr>
+<td><strong>Área Solicitante e Responsável</strong></td>
+<td>Listas vindas do Principal; são obrigatórias</td>
+<td>Módulo Principal (áreas e usuários)</td>
+</tr>
+<tr>
+<td><strong>Produto</strong></td>
+<td>O botão buscar consulta a Produção, mas os campos aceitam <strong>texto livre</strong>: nada obriga o produto a existir. Para o teste, o plano diz que não existe produto <code>TESTE</code> na Produção (<code>08-plano-de-testes.md</code>)</td>
+<td>Produção (cadastro de produto)</td>
+</tr>
+<tr>
+<td><strong>Modelo de check-list padrão</strong> (opcional)</td>
+<td>Vincular Checklist copia os documentos dele; sem modelo, preenche-se o check-list à mão</td>
+<td>Tela Check-list (também fora do menu)</td>
+</tr>
+<tr>
+<td><strong>O endereço da tela</strong></td>
+<td>Não há entrada no menu (DV-GQ-015)</td>
+<td>Abrir pelo endereço da área</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>Na lista, filtre (número, descrição, produto, datas, situação, tipos) e clique em <strong>Pesquisar</strong>; <strong>Incluir</strong> abre a inclusão.</li>
+<li>Preencha o quadro de cima (número, descrição, produto, tipos, área, responsável, justificativa). O botão buscar procura o produto na Produção, mas os campos aceitam texto livre.</li>
+<li>No quadro Checklist, use <strong>Vincular Checklist</strong> (copia o check-list padrão) ou preencha o seu e grave ao menos um documento com <strong>Salvar Documento</strong>. Salvar Documento grava a solicitação junto.</li>
+<li>Clique em <strong>Incluir Solicitação</strong> (ou <strong>Alterar Solicitação</strong>, na edição) e confirme "Confirma a inclusão do item?".</li>
+<li>Na edição, com situação Criado, clique em <strong>Fechar Solicitação</strong> e confirme "Confirma o fechamento do item?".</li>
+<li>Depois de fechada, aparece <strong>Enviar Anvisa</strong>; confirme "Confirma o envio do item?". <strong>Voltar</strong> sai sem gravar.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. Na lista, filtre (número, descrição, produto, datas, situação, tipos) e clique em Pesquisar; Incluir abre a inclusão.</li>
-<li>Passo 2. Preencha o quadro de cima (número, descrição, produto, tipos, área, responsável, justificativa). O botão buscar procura o produto na Produção, mas os campos aceitam texto livre.</li>
-<li>Passo 3. No quadro Checklist, use Vincular Checklist (copia o check-list padrão) ou preencha o seu e grave ao menos um documento com Salvar Documento.</li>
-<li>Passo 4. Clique em Incluir Solicitação (ou Alterar Solicitação, na edição) e confirme "Confirma a inclusão do item?".</li>
-<li>Passo 5. Na edição, com situação Criado, Fechar Solicitação; depois de fechada, aparece Enviar Anvisa.</li>
+<li><strong>Incluir:</strong> a solicitação nasce <strong>Criado</strong> (SolicitacaoRegistroController.cs:181) e grava histórico de inclusão (:193). Volta para a lista.</li>
+<li><strong>Alterar Solicitação:</strong> grava os dados e <strong>volta a situação para Criado</strong> (RN-GQ-SR-002), sem histórico.</li>
+<li><strong>Fechar:</strong> muda para <strong>Fechada</strong>, sem conferir o check-list e sem histórico (:503-531).</li>
+<li><strong>Enviar Anvisa:</strong> muda para <strong>Enviada para ANVISA</strong> e grava uma linha em TBL_HISTORICO_PRODUTO_ANVISA só com produto, tipo e grau (registro, validade e situação ficam vazios). Essa linha é lida pelo Controle de Produtos Enviados para Registro Anvisa (:535-578). Sem histórico.</li>
+<li>Salvar Documento grava um documento do check-list, que vale só para esta solicitação.</li>
 </ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Número é obrigatório.", "Descrição é obrigatório.", mensagens de Código do Produto, Produto, Tipo Produto, Área Solicitante, Responsável, Tipo Processo e "Justificativa é obrigatório." (campo vazio).</li>
+<li>"Documento é obrigatório." ao gravar sem nenhum documento no check-list.</li>
+<li>"Ocorreu um erro inesperado." em falha não prevista.</li>
+<li><strong>Não recusa:</strong> número repetido; produto que não existe; envio com documento pendente; envio sem fechar (a regra "só envia depois de fechar" existe só no navegador); envio repetido (RN-GQ-142, SR-003, SR-004).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>Não há função própria no menu, porque a tela não tem menu. O grupo de usuário só decide se <strong>Incluir</strong> aparece. Não há conferência de nível, de área nem de responsável nas gravações; Fechar e Enviar aceitam <strong>qualquer número de solicitação</strong> (:503-578).</li>
+<li>Matriz: linha "Check-list, Solicitação de Registro, Controle de Produtos" em <code>02-matriz-de-permissoes.md</code> (Sim* para os níveis 1 e 2, Sim para o 3; a confirmar no teste).</li>
+<li>Nenhum controlador dessas telas tem o filtro de autorização: abriria pelo endereço sem passar pelo menu (SEG-GQ-01, a confirmar). Não há assinatura eletrônica no envio (SEG-GQ-04 e 05).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-GQ-015</strong> (Média): a tela não tem entrada no menu.</li>
+<li><strong>Envio à ANVISA sem conferir o check-list</strong>: um pedido com documento "Com Pendências" seguiria (CT-GQ-097, Alta).</li>
+<li><strong>Fechar e Enviar não deixam histórico</strong> (quem, quando, motivo); o mesmo vale para alterar e excluir documento.</li>
+<li><strong>Alterar reabre a solicitação</strong> (volta a Criado), apagando na prática o fato de ter sido enviada.</li>
+<li><strong>Cada clique em Enviar cria uma nova linha</strong> no Controle de Produtos, sempre com Seq 1: não clique duas vezes.</li>
+<li><strong>Visualizar, Cancelar e Imprimir da lista não funcionam</strong> (apontam para ações que não existem; o Excluir do script chama outra tela, a Solicitação de Mudança). Não há como cancelar nem visualizar a solicitação.</li>
+<li><strong>Filtro "Cód. Produto" provavelmente não funciona</strong> e o filtro Situação só oferece situações que esta tela não grava (Arquivo Temporário e Cancelada); as usadas (Criado, Fechada, Enviada) não podem ser filtradas. A confirmar no teste.</li>
+<li>A mensagem após Fechar e Enviar é "Alteração efetuada com sucesso."</li>
+<li>Defeitos de envio sem conferência e sem histórico ainda não foram abertos, porque a tela não foi executada.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>A regra de acesso das linhas está <strong>comentada</strong> no código: todas as linhas mostram os ícones, <strong>sem conferir situação nem nível</strong>; só o botão <strong>Incluir</strong> muda, por grupo de perfil (<code>regras-de-botoes-bloco2.md</code>, item 4).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre a edição</td>
+<td>Em todas as linhas, inclusive Fechada e Enviada</td>
+</tr>
+<tr>
+<td>Lupa (Visualizar)</td>
+<td>Aponta para ação que não existe no controlador</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Lixeira (Cancelar)</td>
+<td>Aponta para ação que não existe</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico, mas o script usa nomes de objeto de outras telas ("SolicitacaoRegistro" e "solicitacao_mudanca"); o que mostra é a confirmar</td>
+<td>Em todas as linhas</td>
+</tr>
+<tr>
+<td>Impressora</td>
+<td><strong>Não há ícone</strong> (linha comentada)</td>
+<td>Nunca</td>
+</tr>
+<tr>
+<td>Botão <strong>Incluir</strong> (acima da lista)</td>
+<td>Abre a inclusão</td>
+<td>Só com grupo de usuário e fora da lixeira</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>

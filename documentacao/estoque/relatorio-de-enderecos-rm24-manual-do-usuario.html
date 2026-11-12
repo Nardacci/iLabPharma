@@ -45,27 +45,126 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="relatorio-de-enderecos-rm24-analise.html">Análise</a><a href="relatorio-de-enderecos-rm24-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="relatorio-de-enderecos-rm24-fluxos.html">Fluxos</a><a href="relatorio-de-enderecos-rm24-regras-de-negocio.html">Regras de negócio</a><a href="relatorio-de-enderecos-rm24-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-relatorio-de-enderecos-rm24.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-relatorios-passo-a-passo.html#tela-6-relatorio-de-enderecos-rm24">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar-leitura-do-codigo-nada-foi-testado">Antes de começar (leitura do código; nada foi testado)</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Relatório de Endereços (RM24)</strong> é um relatório de consulta que responde "onde está cada lote": uma linha por lote e endereço, com Grupo, Código, Descrição, Lote, Validade e Endereço. É usado pelo almoxarifado para localizar o material e pela Garantia da Qualidade para conferir a separação dos lotes (leitura da área, a validar). Mostra na tela (VISUALIZAR) e gera PDF em A4 deitado. Não grava nada. <strong>Não traz quantidade</strong> nem a condição do local.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lote guardado em um endereço cadastrado</strong></td>
+<td>O relatório lista os lotes por endereço</td>
+<td>Estoque › Endereçamento de Material ou Movimentação de Material</td>
+</tr>
+<tr>
+<td><strong>Endereço</strong> (local, rua, coluna e andar)</td>
+<td>Aparece no formato <code>L110-R001-C001-A001</code></td>
+<td>Cadastros › Local de Armazenagem, Rua, Coluna e Andar</td>
+</tr>
+<tr>
+<td><strong>Item ligado a um almoxarifado do seu grupo de usuário</strong></td>
+<td>O relatório só mostra os itens dos almoxarifados do grupo</td>
+<td>Cadastros › Grupo Usuário - Almoxarifado</td>
+</tr>
+<tr>
+<td>Nenhum filtro é obrigatório</td>
+<td>Todos os filtros são opcionais</td>
+<td>Não se aplica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Ver a lista na tela (leitura do código; nada foi testado)</strong></p>
+<ol>
+<li>No Menu Relatórios, abra <strong>Relatório de Endereços (RM24)</strong>.</li>
+<li>Se quiser, escolha o <strong>Grupo</strong>, digite o <strong>Lote Fornecedor</strong> inteiro (o sistema compara o texto exato) e parte do <strong>Cód. do Item</strong>. Esta tela <strong>não tem filtro de período</strong>.</li>
+<li>Clique em <strong>VISUALIZAR</strong>. A grade mostra Grupo, Código, Descrição, Lote, Validade e Endereço.</li>
+<li>Se nada for encontrado, o código tenta mostrar "A pesquisa não retornou nenhum resultado.", mas pode parar com erro (ver Cuidados).</li>
+</ol>
+<p><strong>Imprimir</strong></p>
+<ol start="5">
+<li><strong>GERAR RELATÓRIO</strong> abre o PDF em outra janela e depois limpa filtros e grade. <strong>Imprimir</strong> (depois de um VISUALIZAR com resultado) gera o PDF com a lista da tela.</li>
+<li><strong>Limpar</strong> esvazia filtros e grade.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
 <ul>
-<li>Tenha lotes guardados em endereços (Endereçamento de Material ou Movimentação de Material).</li>
-<li>O item precisa estar ligado a um almoxarifado do seu grupo de usuário.</li>
+<li><strong>Não grava nada</strong>: só lê.</li>
+<li>Mostra onde cada lote está guardado. <strong>Não mostra</strong> quantidade por endereço, almoxarifado separado nem a condição do local (quarentena, refugo, retenção). Para o saldo, use a Disponibilidade por Local e a Consulta Endereço Item.</li>
 </ul>
-<h4 id="ver-a-lista-na-tela">Ver a lista na tela</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No Menu Relatórios, abra <strong>Relatório de Endereços (RM24)</strong>.</li>
-<li>Passo 2. Se quiser, escolha o <strong>Grupo</strong>, digite o <strong>Lote Fornecedor</strong> inteiro (o sistema compara o texto exato) e parte do <strong>Cód. do Item</strong>. Esta tela <strong>não tem filtro de período</strong>.</li>
-<li>Passo 3. Clique em <strong>VISUALIZAR</strong>. A grade mostra Grupo, Código, Descrição, Lote, Validade e Endereço (ex.: L110-R001-C001-A001: local, rua, coluna, andar).</li>
-<li>Passo 4. Se nada for encontrado, o código tenta mostrar "A pesquisa não retornou nenhum resultado.", mas pode parar com erro (ver Falhas).</li>
+<li>Sem linhas: "A pesquisa não retornou nenhum resultado." (VISUALIZAR, se a tela chegar até aí) ou "Nenhum registro foi encontrado!" (GERAR RELATÓRIO ou Imprimir).</li>
+<li>Qualquer erro da consulta vira "Erro ao gerar o relatório!", sem o motivo.</li>
 </ul>
-<h4 id="imprimir">Imprimir</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. <strong>GERAR RELATÓRIO</strong> abre o PDF em outra janela e depois limpa filtros e grade. <strong>Imprimir</strong> (depois de um VISUALIZAR com resultado) gera o PDF com a lista da tela.</li>
-<li>Passo 6. <strong>Limpar</strong> esvazia filtros e grade.</li>
+<li>A tela usa o identificador <strong>610</strong>. O script de carga do menu marca incluir, alterar, excluir, imprimir e ver log como "N" para ela (dml.sql:1924). Leitura do código, a confirmar (CT-EST-REL03-S1).</li>
+<li>O VISUALIZAR já nasce visível: a função de consultar não muda nada na tela. O ícone do Excel nasce escondido e nenhum código o liga.</li>
+<li>O <strong>grupo de usuário</strong> limita a lista: só aparecem itens dos almoxarifados do grupo da pessoa e da empresa da sessão. Se o grupo do usuário for "0", o filtro de grupo é pulado e a lista mostraria todos os grupos (a conferir).</li>
+<li><strong>Cuidado:</strong> a conferência "esta pessoa tem a função da tela?" para abrir a página está <strong>comentada no código</strong> (DV-EST-008, Alta, confirmado em outras telas do Estoque; <strong>não testado nesta tela</strong>). Quem digitar o endereço do relatório abre a página.</li>
 </ul>
-<h4 id="o-que-a-lista-nao-diz">O que a lista não diz</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Não há quantidade por endereço nem a condição do local (quarentena, refugo, retenção). Para o saldo, use a Disponibilidade por Local e a Consulta Endereço Item.</li>
+<li>Nenhum defeito DV-EST registrado: a tela nunca foi testada.</li>
+<li><strong>Possível erro no resultado vazio:</strong> a tela monta uma linha de apoio com colunas que a consulta não tem e pode parar com erro (CT-EST-REL03-02).</li>
+<li><strong>Sem quantidade e sem a condição do local:</strong> a Qualidade não vê onde estão os lotes retidos.</li>
+<li><strong>Possíveis linhas zeradas:</strong> a consulta não exige saldo maior que zero; se o banco mantém o lote no endereço depois da saída total, o endereço pode aparecer sem o lote. Ponto para validar com o DBA (CT-EST-REL03-03).</li>
+<li><strong>GERAR RELATÓRIO apaga os filtros</strong>; ao trocar de página, a ordem escolhida se perde.</li>
+<li>O rótulo "Lote Fornecedor" na tela vira "LOTE" no PDF; o filtro compara o lote do item. Ponto para validar o que a área espera digitar.</li>
 </ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VISUALIZAR</td>
+<td>Busca e mostra a grade</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Busca de novo e abre o PDF em nova janela</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Imprimir</td>
+<td>Gera o PDF com a lista da tela</td>
+<td>Só depois de um VISUALIZAR com resultado</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia os filtros e a grade</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Títulos das colunas</td>
+<td>Pedem ordenação por coluna</td>
+<td>Com resultado</td>
+</tr>
+<tr>
+<td>Paginação</td>
+<td>Muda de página (15 linhas por página)</td>
+<td>Com mais de 15 linhas</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>Existe, mas fica escondido e aponta para uma página que não existe no código entregue do Estoque</td>
+<td>Nunca aparece</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <h4 id="filtros">Filtros</h4>
 <div class="tabela"><table>
@@ -199,7 +298,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

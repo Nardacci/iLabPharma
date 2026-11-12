@@ -45,130 +45,110 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="grupo-perfil-analise.html">Análise</a><a href="grupo-perfil-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="grupo-perfil-fluxos.html">Fluxos</a><a href="grupo-perfil-regras-de-negocio.html">Regras de negócio</a><a href="grupo-perfil-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-grupo-perfil.html">Erros (2)</a><span class="aba-extra aba-apagada" aria-disabled="true" title="O roteiro de execução desta tela ainda não foi escrito">Passo a passo</span><a class="aba-extra" href="a-garantia-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Tenha em mãos o nome do usuário (como está no cadastro de usuários do Principal) e o nível que ele deve ter. Atenção: quem tem acesso a esta tela pode mudar o nível de qualquer pessoa, inclusive o próprio (CT-GQ-112, 12/10/2026; DV-GQ-009). Faça a alteração só se for a pessoa autorizada pela Qualidade.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Mostrar os <strong>grupos de perfil da Garantia da Qualidade</strong> e <strong>quem pertence a cada um</strong>. Há três grupos prontos, "Nível 01", "Nível 02" e "Nível 03"; a tela permite mudar o nome do grupo e colocar ou tirar usuários dele. O grupo a que o usuário pertence decide o que ele pode fazer nas telas da GQ: o nível 1 mexe no que criou; o nível 2 também no que é da sua área; o nível 3 em tudo e é o único que aprova, libera e finaliza em várias telas (RN-GQ-002). <strong>É a tela que define "quem aprova" no módulo.</strong> Deveria ser usada só pelo administrador do sistema ou pela Garantia da Qualidade, quando alguém entra, muda de função ou sai; o código, porém, não restringe quem a usa (ver Cuidados).</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Os três grupos (Nível 01, 02 e 03)</strong></td>
+<td>Nascem com o script de instalação; <strong>não há botão Incluir</strong> para criar grupos (dml.sql:53-63)</td>
+<td>Instalação do sistema</td>
+</tr>
+<tr>
+<td><strong>O usuário a colocar no grupo</strong></td>
+<td>A busca traz os usuários do módulo Principal (digite pelo menos 3 letras do nome)</td>
+<td>Módulo Principal (cadastro de usuários)</td>
+</tr>
+<tr>
+<td><strong>A autorização da Qualidade</strong> para a mudança</td>
+<td>Quem entra aqui pode mudar o nível de qualquer pessoa, inclusive o próprio (DV-GQ-009)</td>
+<td>Decisão da área (ponto para validar: quem deve poder mudar e com qual registro)</td>
+</tr>
+<tr>
+<td><strong>Item "Grupo Perfil" no menu do perfil</strong> (Configuração › Grupo Perfil)</td>
+<td>É a única barreira real da tela</td>
+<td>Módulo Principal (perfil); ponto para validar com o responsável</td>
+</tr>
+</tbody>
+</table></div>
+<p>Um usuário <strong>sem grupo</strong> perde os botões de editar e excluir nas telas da GQ que consultam o grupo (GerenciadorAcesso.cs:15-52).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Lista</strong></p>
+<ol>
+<li>No menu, abra Configuração › Grupo Perfil. A tela mostra o quadro "Pesquisa" com o campo Nome.</li>
+<li>Clique em <strong>Pesquisar</strong>. A lista mostra os grupos por nível e nome (Nível 01, Nível 02, Nível 03), com as colunas Nome e Nível e o ícone Editar. <strong>Não há botão Incluir, ícone Excluir nem Log</strong> (GrupoPerfilIndex.js:25-32). A lista mostra 3 linhas por página.</li>
+<li><strong>Limpar</strong> esvazia o Nome e esconde a lista.</li>
+</ol>
+<p><strong>Mudar os usuários de um grupo</strong></p>
+<ol start="4">
+<li>Clique no lápis do grupo desejado. O quadro "Dados" mostra o Nome (editável) e o Nível (travado). O quadro "Grupo Usuário" lista os usuários do grupo, com CÓDIGO e USUÁRIO.</li>
+<li>Para incluir alguém, digite pelo menos 3 letras do nome em "Nome Usuário" e clique em <strong>buscar</strong>; na janela, clique no nome. Só então o botão <strong>Adicionar</strong> aparece. Digitar de novo no campo apaga a escolha. Se o usuário já está no quadro: "Usuário já foi cadastrado.". (O código previa esconder o botão "Adicionar usuário", mas no teste de 11 e 12/11/2026 a busca e o Adicionar funcionaram, R39.)</li>
+<li>Para tirar alguém, clique no ícone de excluir da linha dele. Quem já estava gravado fica marcado como removido; quem acabou de ser adicionado some do quadro.</li>
+<li>Clique em <strong>Salvar</strong>. O sistema pergunta "Confirma a alteração do item?", <strong>sem pedir justificativa</strong>. Gravado, aparece "Alteração efetuada com sucesso." e a tela volta para a lista (CT-GQ-112). <strong>O grupo muda na hora.</strong></li>
+<li><strong>voltar</strong> retorna à lista sem gravar. Atenção: <strong>não há histórico visível</strong>: a tela não tem ícone Log e a alteração não passa pela gravação com histórico (GrupoPerfilController.cs:235).</li>
+</ol>
+<p>Visto na tela: a única gravação executada foi a de 12/10/2026 (incluir um usuário no Nível 3), desfeita em seguida pelo administrador. <strong>Não foram executados:</strong> mudar o nome do grupo, retirar usuários, usuário em mais de um grupo, o efeito de usuário sem grupo, o histórico e as chamadas diretas; esses passos vêm do código.</p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. No menu, abra Configuração › Grupo Perfil. A tela mostra o quadro "Pesquisa" com o campo Nome.</li>
-<li>Passo 2. Clique em Pesquisar. A lista mostra os grupos por nível e nome (Nível 01, Nível 02, Nível 03), com as colunas Nome e Nível e o ícone Editar. Não há botão Incluir, ícone Excluir nem Log (GrupoPerfilIndex.js:25-32). A lista mostra 3 linhas por página.</li>
-<li>Passo 3. Limpar esvazia o Nome e esconde a lista.</li>
+<li>Grava o <strong>nome</strong> do grupo e a <strong>lista de usuários</strong>; o efeito é <strong>imediato</strong>: na próxima tela da GQ que o usuário abrir, o sistema usa o <strong>maior nível</strong> entre os grupos a que ele pertence (GQControllerBase.cs:129-137). Nenhuma outra tela é alterada diretamente.</li>
+<li>A alteração <strong>não deixa histórico</strong> consultável, sem justificativa nem assinatura (RN-GQ-CFG01-006; SEG-GQ-04 e 05): não fica registrado quem mudou o nível de quem.</li>
+<li>O nível do grupo é lido do navegador e gravado como veio (inferência; a confirmar, CT-GQ-CFG01-S03).</li>
 </ul>
-<h4 id="o-que-cada-icone-da-lista-faz-e-quando-aparece">O que cada ícone da lista faz e quando aparece</h4>
-<p>Cada linha da lista pode ter alguns destes ícones. Eles aparecem ou somem conforme a <strong>situação do registro</strong> e o <strong>perfil</strong> de quem entra; <strong>a tela não explica por que um ícone some</strong>. A coluna "Regra do código" vem da leitura do código; a seção "O que a tela mostrou" vem do teste de 11 e 12/11/2026.</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Nome é obrigatório." (nome do grupo vazio; só a primeira mensagem aparece).</li>
+<li>"Nome Usuário: digite no minímo 3 caracteres." na busca; "Usuário já foi cadastrado." ao repetir o usuário no quadro (só no navegador).</li>
+<li>"Ocorreu um erro inesperado." em falha ao gravar.</li>
+<li><strong>Não recusa:</strong> nenhuma separação de funções: o próprio usuário se promove (DV-GQ-009); tirar todos do Nível 3; usuário inativo ou inexistente enviado à mão (inferência).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li><strong>O código não separa os usuários de forma alguma:</strong> nenhuma ação do controlador consulta o grupo de perfil nem a permissão do Principal (GrupoPerfilController.cs:36-341). Quem tem a tela no menu abre a lista, abre qualquer grupo, adiciona e remove usuários e salva, <strong>qualquer que seja o nível dele</strong> (SEG-GQ-02).</li>
+<li>Teste: o papel de <strong>consulta (Nível 1)</strong> abriu a tela, viu o ícone Editar nos três níveis, <strong>adicionou a si mesmo ao Nível 3 e salvou</strong> (CT-GQ-112, 12/10/2026; reconfirmado em 11 e 12/11/2026, R40, DV-GQ-009 e DV-GQ-341, desfeito pelo administrador). Os papéis de Nível 2 também abrem a tela e veem o Editar.</li>
+<li><strong>Ponto para validar:</strong> antes de tratar como falha só do sistema, conferir em Principal › Perfil se o perfil de consulta tinha a função desta tela marcada. A única barreira real é o item do menu.</li>
+<li>Editar (GET), as buscas e as ações de incluir, alterar e <strong>excluir grupo</strong> abrem pelo endereço e respondem a qualquer chamada autenticada; a exclusão não tem ícone na tela (a confirmar, CT-GQ-CFG01-07).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-GQ-009 (Crítica):</strong> qualquer usuário que chegue à tela, até o de consulta, pode se colocar no <strong>Nível 3</strong>, que aprova, libera e finaliza. <strong>Só entregue o acesso a esta tela a quem a Qualidade autorizou</strong> e confira os grupos depois de cada mudança.</li>
+<li><strong>Sem histórico</strong> da mudança de nível e de membros (art. 125 da RDC 658/2022 e Guia 33).</li>
+<li>O nível do grupo vem do navegador e a lista de usuários também: um pedido alterado poderia mudar o nível de um grupo inteiro (inferência).</li>
+<li><strong>Sem controle do último usuário do Nível 3:</strong> dá para tirar todos e ninguém mais aprova. O mesmo usuário pode estar em mais de um grupo e vale o maior nível, sem aviso. A lista de usuários não filtra inativos.</li>
+<li><strong>Os níveis só valem nas telas que os consultam:</strong> o papel de Nível 1 incluiu um tipo de treinamento (DV-GQ-326); mudar o nível de uma pessoa não limita o que ela faz nessas telas.</li>
+<li>O nome do grupo é livre: dá para chamar o "Nível 01" de "Diretoria" sem mudar o que ele pode. Abrir um grupo sem número dá erro do servidor.</li>
+<li>Pontos para validar com a área: quem deve poder mudar os níveis e com qual registro; quem deve estar em cada nível; se um usuário pode ter mais de um nível; se o nível 4, previsto no código e sem uso, deve existir.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Ícone</th>
 <th>O que faz</th>
+<th>Em que situação aparece</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Lápis (Editar)</td>
-<td>Abre a tela para executar a ação desta etapa</td>
+<td>Abre o grupo com os usuários</td>
+<td>Em todos os grupos, <strong>para todos os papéis</strong> (confirmado em 11 e 12/11/2026 para os quatro perfis)</td>
 </tr>
 <tr>
-<td>Lupa (Visualizar)</td>
-<td>Abre a mesma tela, só para ler; aparece quando o lápis não aparece</td>
-</tr>
-<tr>
-<td>LOG (Histórico)</td>
-<td>Abre a janela com quem alterou, quando, o campo e o valor antigo e o novo</td>
-</tr>
-<tr>
-<td>Impressora (Imprimir)</td>
-<td>Abre o relatório em PDF em outra aba</td>
-</tr>
-<tr>
-<td>Lixeira (Excluir ou Cancelar)</td>
-<td>Pede a justificativa e exclui ou cancela o registro</td>
+<td>Lupa, LOG, impressora, lixeira</td>
+<td>Não existem nesta lista</td>
+<td>Nunca</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Nesta tela a lista tem:</strong> Só o lápis.</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Ícone</th>
-<th>Regra do código</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Lápis</td>
-<td>A grid só tem o lápis; o que cada nível vê e faz na tela precisa ser mapeado (é por aqui que se dá o Nível 3).</td>
-</tr>
-<tr>
-<td>Impressora</td>
-<td>Não há.</td>
-</tr>
-<tr>
-<td>Lixeira</td>
-<td>Não há.</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>O que a tela mostrou em 11 e 12/11/2026</strong></p>
-<p>Ícones por situação e perfil (N3 = Nível 3; N2 A e N2 B = Nível 2 de duas áreas; N1 = Nível 1; — = o perfil não recebeu linha daquela situação, o que não prova a falta do ícone):</p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Situação do registro</th>
-<th>N3 (admin)</th>
-<th>N2 área A</th>
-<th>N2 área B</th>
-<th>N1 (consulta)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>(sem coluna de situação)</td>
-<td>lapis</td>
-<td>lapis</td>
-<td>lapis</td>
-<td>lapis</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Impressora:</strong> nenhuma (nem na linha nem no alto); o PDF abre? —; título do relatório: —.</p>
-<p><strong>Regras conferidas</strong></p>
-<div class="tabela"><table>
-<thead>
-<tr>
-<th>Regra</th>
-<th>Resultado</th>
-<th>O que a tela mostrou</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>R38: Grupo Perfil: cria grupos com nível e coloca usuários</td>
-<td>Confirmado</td>
-<td>Três grupos (Nível 01, 02 e 03) com a lista de usuários; o nível vem travado.</td>
-</tr>
-<tr>
-<td>R39: Grupo Perfil: botão "Adicionar usuário" e janela de usuários escondidos</td>
-<td>Não confirmado</td>
-<td>A tela mostra a busca (3 letras), o botão buscar e o adicionar, e eles funcionam.</td>
-</tr>
-<tr>
-<td>R40: Grupo Perfil: usuário de consulta altera o próprio nível</td>
-<td>Confirmado</td>
-<td>O N1 se adicionou ao Nível 03 e salvou ("Alteração efetuada com sucesso"); desfeito pelo administrador (DV-GQ-009, DV-GQ-341).</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Defeitos desta rodada:</strong> DV-GQ-341 (arquivo confidencial da rodada).</p>
-<h4 id="mudar-os-usuarios-de-um-grupo">Mudar os usuários de um grupo</h4>
-<ul>
-<li>Passo 4. Clique no lápis do grupo desejado. O quadro "Dados" mostra o Nome (editável) e o Nível (travado). O quadro "Grupo Usuário" lista os usuários do grupo, com CÓDIGO e USUÁRIO.</li>
-<li>Passo 5. Para incluir alguém, digite pelo menos 3 letras do nome em "Nome Usuário" e clique em "buscar"; na janela, clique no nome. Só então o botão "Adicionar" aparece. Digitar de novo no campo apaga a escolha. Se o usuário já está no quadro, aparece "Usuário já foi cadastrado.".</li>
-<li>Passo 6. Para tirar alguém, clique no ícone de excluir da linha dele. Quem já estava gravado fica marcado como removido; quem acabou de ser adicionado simplesmente some do quadro.</li>
-<li>Passo 7. Clique em "Salvar". O sistema pergunta "Confirma a alteração do item?", sem pedir justificativa. Gravado, aparece "Alteração efetuada com sucesso." e a tela volta para a lista (CT-GQ-112, 12/10/2026). O grupo muda na hora.</li>
-<li>Passo 8. Atenção: não há histórico visível. A tela não tem ícone Log e a alteração não passa pela gravação com histórico (GrupoPerfilController.cs:235).</li>
-</ul>
-<h4 id="o-que-ainda-nao-foi-visto-numa-tela">O que ainda não foi visto numa tela</h4>
-<p>A alteração do nome do grupo, a retirada de usuários, o usuário em mais de um grupo, o efeito de um usuário sem grupo nas outras telas, o histórico da alteração e as chamadas diretas de gravação e de exclusão. A única gravação executada foi a de 12/10/2026 (incluir um usuário no Nível 3), desfeita em seguida pelo administrador. Esses passos vêm do código.</p>
+<p>Não há ícone de excluir grupo (comentado no código; a ação do servidor existe, sem ícone) nem botão Incluir.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa.</p>
 <div class="tabela"><table>

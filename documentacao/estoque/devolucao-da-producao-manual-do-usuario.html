@@ -45,32 +45,119 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="devolucao-da-producao-analise.html">Análise</a><a href="devolucao-da-producao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="devolucao-da-producao-fluxos.html">Fluxos</a><a href="devolucao-da-producao-regras-de-negocio.html">Regras de negócio</a><a href="devolucao-da-producao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-devolucao-da-producao.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-devolucao-e-entradas-da-producao-passo-a-passo.html#tela-5-devolucao-da-producao">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela: <strong>Bloqueada no teste</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<p>Passo a passo montado pelo código; <strong>só o passo 3, até a recusa do lote, foi visto em tela</strong> (rodada 7, 13/10/2026).</p>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<blockquote>
+<p><strong>Aviso:</strong> nenhum lote foi aceito em teste; só se viu a recusa "Lote não encontrado ou não possui movimentação para produção!" (CT-EST-091, rodada 7, 13/10/2026). O passo a passo foi montado pelo código e está <strong>a confirmar em teste</strong> quando a Produção destravar (DV-EST-076).</p>
+</blockquote>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Devolução da Produção</strong> devolve ao estoque a <strong>sobra de material</strong> que saiu para uma ordem de produção e não foi usada. O usuário informa o "Item de Entrada" (o código do lote no estoque), a quantidade devolvida, o número da ordem de produção, o motivo e uma observação, e distribui a quantidade em endereços. Ao finalizar, o sistema grava uma movimentação "DEVOLUÇÃO DA PRODUÇÃO" (tipo 12) e o material volta direto ao saldo dos endereços, <strong>sem análise do CQ, sem volumes e sem etiqueta</strong> (devolucao_producao_ed.aspx.cs:167-200). Usa o almoxarifado; a Produção entrega a sobra, mas não opera a tela. É diferente da Devolução (outra origem) e da Entrada de Produção (produto acabado). Situação no inventário: bloqueada no teste.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lote que saiu por solicitação do tipo Produção</strong> (ligada a uma ordem de produção)</td>
+<td>Sem isso a tela recusa o lote (devolucao_producao_ed.aspx.cs:243; dalItemLote.cs:348-362). No ambiente de teste a solicitação de Produção não nasce (DV-EST-076 e DV-EST-063)</td>
+<td>Módulo Produção; Estoque › Solicitação de Material (Produção)</td>
+</tr>
+<tr>
+<td><strong>Item de Entrada do lote</strong>, a quantidade que sobrou e o número da ordem de produção</td>
+<td>São informados na tela; a ordem não é conferida</td>
+<td>Com a Produção</td>
+</tr>
+<tr>
+<td><strong>Endereço livre ou já com saldo do mesmo lote</strong>, no almoxarifado do grupo</td>
+<td>Para guardar a sobra (devolucao_producao_ed.aspx.cs:515-535)</td>
+<td>Estoque › Endereço do Estoque; Grupo Usuário - Almoxarifado</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu, abra Estoque › <strong>Devolução da Produção</strong> e clique em <strong>Pesquisar</strong>. Filtros: Período (<strong>só vale com as duas datas</strong>), Item de Entrada (código exato) e Item (o texto é procurado só no <strong>fim</strong> do nome) (dalMovimentacao.cs:537-547).</li>
+<li>A lista mostra Data, Item de Entrada, Item e Nº da OP, 15 linhas por página, com o ícone Visualizar. <strong>Limpar</strong>, <strong>Imprimir</strong> e Excel; <strong>Incluir</strong> para quem tem a função.</li>
+</ol>
+<p><strong>Registrar uma devolução (pelo código)</strong></p>
+<ol start="3">
+<li>Clique em Incluir. O formulário abre com código e data preenchidos e o tipo "DEVOLUÇÃO DE PRODUÇÃO".</li>
+<li>Escreva o número da ordem de produção, escolha o motivo e escreva a observação (até 300 caracteres), se quiser. <strong>O número da ordem não é conferido.</strong></li>
+<li>Escreva o "Item de Entrada" do lote e clique na lupa. A tela mostra item, fabricante, lote, validade, unidade e custo médio, ou recusa com "Lote não encontrado ou não possui movimentação para produção!" (<strong>este foi o único passo visto em tela</strong>).</li>
+<li>Escreva a <strong>Quantidade Devolvida</strong> (obrigatória) e clique em <strong>CONFIRMAR LOTE</strong>: lote e quantidade ficam travados e o painel de endereços aparece. <strong>CANCELAR LOTE</strong> ("Deseja cancelar a devolução?") reinicia sem gravar.</li>
+<li>Escolha almoxarifado, local, rua, coluna e andar, escreva a quantidade do endereço e clique em <strong>ADICIONAR ENDEREÇO</strong>. Repita para dividir. O total não pode passar da quantidade devolvida.</li>
+<li>Clique em <strong>FINALIZAR</strong> e responda SIM em "Deseja finalizar a devolução?". A soma dos endereços precisa ser igual à quantidade devolvida.</li>
+<li>A tela mostra "Devolução finanlizada!" e volta para a lista. Confira na Disponibilidade do Lote que a sobra voltou ao saldo. <strong>Não há análise no CQ</strong>: a Garantia da Qualidade precisa decidir se a sobra pode ser usada sem nova avaliação.</li>
+</ol>
+<p><strong>Consultar</strong></p>
+<ol start="10">
+<li>O ícone Visualizar abre os dados da movimentação (item, fabricante, lote, validade, quantidade, responsável e endereços), sem os botões de gravar.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>O lote a devolver precisa ter saído do estoque por uma <strong>solicitação do tipo Produção</strong> (ligada a uma ordem de produção). Sem isso, a tela recusa o lote (CT-EST-091, 13/10/2026).</li>
-<li>Anote o "Item de Entrada" do lote (o código do lote no estoque, como <code>TA0002/26</code>), a quantidade que sobrou e o número da ordem de produção.</li>
-<li>Deve haver um endereço livre, no almoxarifado do seu grupo, ou um endereço que já tenha saldo do mesmo lote (<code>devolucao_producao_ed.aspx.cs:515-535</code>).</li>
+<li>O material volta ao saldo dos endereços escolhidos, direto como disponível se o lote já estava liberado; <strong>não há análise nem quarentena</strong> (devolucao_producao_ed.aspx.cs:167-200; RN-EST-115).</li>
+<li>A tela mostra "Devolução finanlizada!" e volta para a lista. <strong>Não gera volumes nem imprime etiqueta</strong>, ao contrário da Devolução.</li>
+<li>O tipo de movimentação não atualiza o custo médio (dml.sql:1574-1580).</li>
 </ul>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 1. No menu, abra Estoque › Devolução da Produção. A tela mostra o quadro "Pesquisa" e uma área vazia: clique em Pesquisar para listar (<code>devolucao_producao_lst.aspx.cs:28-38</code>).</li>
-<li>Passo 2. Filtros: Período (data inicial e final), Item de Entrada (código exato do lote no estoque) e Item (código e nome). <strong>O filtro de período só vale se as duas datas forem preenchidas</strong>; o filtro de item procura o texto no <strong>fim</strong> do nome (<code>dalMovimentacao.cs:537-547</code>).</li>
-<li>Passo 3. A lista mostra Data, Item de Entrada, Item e Nº da OP, 15 linhas por página, com o ícone Visualizar (<code>devolucao_producao_lst.aspx:118-200</code>).</li>
-<li>Passo 4. Limpar esvazia os filtros; Imprimir e o ícone de Excel geram o relatório (<code>devolucao_producao_lst.aspx.cs:367-410</code>). O botão Incluir aparece para quem tem a função de incluir (<code>devolucao_producao_lst.aspx.cs:23</code>).</li>
+<li>Lote: "Lote não encontrado ou não possui movimentação para produção!" (vista em teste), "Lote não encontrado!", "Item não encontrado".</li>
+<li>Quantidade: "Quantidade não informada ou inválida!", "O Campo quantidade é obrigatório!", "Total de itens é maior que o total informado!".</li>
+<li>Endereço: avisos de almoxarifado a andar, "Este endereço já foi utilizado!", "Endereço informado não é válido para o Lote!" (ocupado por outro lote).</li>
+<li>Ao finalizar: "Nenhum endereço foi informado para o Lote!", "A soma do total endereçado está divergente do total do devolvido!".</li>
+<li>A tela <strong>não confere</strong> se o lote saiu para a mesma ordem digitada nem quanto saiu; o servidor também não confere o endereço ao gravar.</li>
+<li>Outras: "Data inicial inválida!" / "Data final inválida!" (lista), "Erro ao consultar registro!".</li>
 </ul>
-<h4 id="registrar-uma-devolucao-da-producao">Registrar uma devolução da produção</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 5. Clique em Incluir. O formulário abre com o código e a data preenchidos pelo sistema e o tipo "DEVOLUÇÃO DE PRODUÇÃO" (<code>devolucao_producao_ed.aspx.cs:122-143</code>).</li>
-<li>Passo 6. Escreva o número da ordem de produção, escolha o motivo e escreva a observação, se quiser (até 300 caracteres). <strong>O número da ordem não é conferido</strong> (<code>devolucao_producao_ed.aspx:86-103</code>).</li>
-<li>Passo 7. Escreva o "Item de Entrada" do lote e clique na lupa. O sistema mostra o item, o fabricante, o lote, a validade, a unidade e o custo médio, ou recusa: "Lote não encontrado ou não possui movimentação para produção!" (<code>devolucao_producao_ed.aspx.cs:230-267</code>; vista em teste, CT-EST-091, 13/10/2026).</li>
-<li>Passo 8. Escreva a <strong>Quantidade Devolvida</strong> (obrigatória) e clique em CONFIRMAR LOTE. O sistema trava o lote e a quantidade e mostra o painel de endereços (<code>devolucao_producao_ed.aspx.cs:739-770</code>). Para desistir, use CANCELAR LOTE ("Deseja cancelar a devolução?").</li>
-<li>Passo 9. Escolha almoxarifado, local, rua, coluna e andar, escreva a quantidade desse endereço e clique em ADICIONAR ENDEREÇO. Repita para dividir a sobra em mais de um endereço. O total dos endereços não pode passar da quantidade devolvida (<code>devolucao_producao_ed.aspx.cs:476-594</code>).</li>
-<li>Passo 10. Clique em FINALIZAR e confirme com SIM em "Deseja finalizar a devolução?". A soma dos endereços precisa ser igual à quantidade devolvida (<code>devolucao_producao_ed.aspx.cs:162-200</code>).</li>
-<li>Passo 11. A tela mostra "Devolução finanlizada!" e volta para a lista. Confira na Disponibilidade do Lote que a sobra voltou ao saldo. <strong>A devolução não abre análise no CQ</strong>: a Garantia da Qualidade precisa decidir se a sobra pode ser usada sem nova avaliação (ponto para validar).</li>
+<li>A lista e o formulário usam a função <strong>DevolucaoProducao</strong>; o catálogo marca "criar todas as funções" (incluir, alterar, excluir, imprimir e ver log) (dml.sql:1908 e 2058). Na lista, Incluir depende de "INCLUIR"; Visualizar, de "CONSULTAR"; Imprimir e Excel, de "IMPRIMIR_EXCEL". O Log está desligado.</li>
+<li>A lista traz só os almoxarifados do grupo (dalMovimentacao.cs:549-555).</li>
+<li>O formulário <strong>não confere a função ao abrir</strong> (ClassePaiEd.cs:44-105; BaseController.cs:33-39) (DV-EST-008, Alta; esta tela não foi testada), e a consulta (<code>?id=</code>) abre para qualquer número de movimentação, de qualquer tipo.</li>
+<li>A gravação não confere grupo nem função. <strong>Não há separação de funções</strong>: quem devolve, endereça e confere pode ser a mesma pessoa.</li>
+<li>O número do lote e do item vêm de campos ocultos da página.</li>
 </ul>
-<h4 id="consultar-uma-devolucao-gravada">Consultar uma devolução gravada</h4>
-<p>Pelo ícone Visualizar da lista, o formulário abre com os dados da movimentação, o item, o fabricante, o lote, a validade, a quantidade, o responsável e os endereços, sem os botões de gravar (<code>devolucao_producao_ed.aspx.cs:27-32</code> e <code>46-120</code>).</p>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A tela não pôde ser testada</strong> (DV-EST-076, Alta, e DV-EST-063, Média): sem lote padrão aprovado a Produção não gera ordem, então não há solicitação do tipo Produção nem devolução.</li>
+<li><strong>A sobra volta sem análise e nunca vai para a quarentena</strong>: a lista só oferece locais comuns, então até um lote reprovado ou em reanálise pode ser devolvido a endereço comum, se saiu por solicitação de produção. A Garantia da Qualidade decide (R-EST-11).</li>
+<li><strong>Sem limite pela quantidade que saiu e sem vínculo com a ordem</strong>: dá para devolver mais do que saiu (RDC 658/2022, art. 160).</li>
+<li><strong>Lote vencido</strong> pode voltar ao saldo (validade não comparada com hoje). O lote devolvido pode ficar com volumes que não somam o saldo.</li>
+<li>O catálogo chama o tipo 12 de "SAÍDA PARA PRODUÇÃO". Ponto para validar com o DBA.</li>
+<li>O Histórico do Lote não mostra usuário nem hora (DV-EST-034).</li>
+<li>Erros de digitação: "finanlizada".</li>
+<li>Ponto para validar com a área: precisa de nova análise e quarentena? Citar a ordem e limitar a quantidade? Pode voltar material reprovado, bloqueado, em reanálise ou vencido? A devolução precisa de justificativa (o fluxo da equipe diz que sim; o código não pede)?</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visualizar</td>
+<td>Abre a consulta da devolução</td>
+<td>Se o perfil tem a função de consultar</td>
+</tr>
+<tr>
+<td>Imprimir / Excel</td>
+<td>Relatório da lista</td>
+<td>Depois de pesquisar, se o perfil tem a função de imprimir</td>
+</tr>
+<tr>
+<td>Editar e Log</td>
+<td>Não existem na tela</td>
+<td><strong>Nunca aparecem</strong> (a lista não tem a coluna Editar; o Log está desligado)</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. Leitura do código; só o campo "Item de Entrada" e a recusa do lote foram vistos em tela (13/10/2026).</p>
 <h4 id="lista">Lista</h4>
@@ -459,7 +546,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

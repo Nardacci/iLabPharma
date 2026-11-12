@@ -45,39 +45,132 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="consultar-amostragem-analise.html">Análise</a><a href="consultar-amostragem-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="consultar-amostragem-fluxos.html">Fluxos</a><a href="consultar-amostragem-regras-de-negocio.html">Regras de negócio</a><a href="consultar-amostragem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-consultar-amostragem-registro.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-solicitacao-analise-e-laudo-passo-a-passo.html#tela-6-consultar-amostragem">Passo a passo</a><a class="aba-extra" href="o-controle-da-qualidade-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>A amostragem precisa estar programada para você (tela Programação de Amostragem) e a regra de amostragem do item precisa existir com checklist ativo (telas 01 e 02). Quem verifica e quem amostra devem ser <strong>pessoas diferentes</strong> e ter a função de amostrador no Principal.</p>
-<h4 id="registrar-a-amostragem">Registrar a amostragem</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Consultar Amostragem</strong> é onde a <strong>coleta da amostra é registrada</strong>: quem verificou, quem amostrou, data e hora de cada um, respostas do checklist, quantidade amostrada por regra (com o resultado "dentro ou fora da tolerância"), quantidades de retenção e referência, pontos de amostragem (ambiente), justificativa e observações. Ao salvar, a amostragem passa a <strong>Executada</strong>, a solicitação segue para a programação da análise e, para produto e material, o CQ <strong>pede ao Estoque</strong> a separação da amostra (RN-CQ-029). Nas coletas já executadas a tela vira somente leitura ("Visualizar Amostragem"). Quem usa é o amostrador e o verificador (duas pessoas diferentes, RN-CQ-024); a chefia confere e, pela Visão Administrador, reagenda. <strong>Esta tela não está no menu</strong> (o item está comentado, dml.sql:176): abre pelos ícones das listas Amostragens Pendentes e Visão Administrador; o endereço <code>Consultar</code> só redireciona para Amostragens Pendentes.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amostragem programada</strong> (Pendente ou Programada)</td>
+<td>É o que a tela abre</td>
+<td>Solicitação de Análise › Programação de Amostragem</td>
+</tr>
+<tr>
+<td><strong>Regra de amostragem</strong> do item, com <strong>checklist ativo</strong></td>
+<td>Traz a quantidade esperada, a tolerância e as perguntas; checklist inativo dá "Verificação de Amostragem inativa!"</td>
+<td>Amostragem › Regra Amostragem e Verificação de Amostragens</td>
+</tr>
+<tr>
+<td><strong>Duas pessoas diferentes</strong> com a função de amostrador (hoje a de número 34)</td>
+<td>Verificador e amostrador; só quem tem a função aparece nas listas (DV-CQ-022)</td>
+<td>Principal › usuários e funções</td>
+</tr>
+<tr>
+<td><strong>Lote no Estoque</strong> (produto e material)</td>
+<td>Dá lote, validade, quantidade, volumes, fabricante e fornecedor; o saldo é conferido ao salvar</td>
+<td>Estoque</td>
+</tr>
+<tr>
+<td><strong>Ponto de amostragem</strong> (ambiente)</td>
+<td>Ao menos um antes de salvar</td>
+<td>Informado na própria tela</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<ol>
+<li>Em Amostragens Pendentes, clique no lápis da coleta. A tela "Registro de Amostragem" mostra os dados da solicitação e do lote (somente leitura): item, situação, lote, validade, quantidade, número de volumes, fabricante, fornecedor; para ambiente, o grau microbiológico e o do ar.</li>
+<li>Em <strong>Qtd. Solicitação por Volume</strong>, o sistema preenche sozinho a quantidade amostrada dividida pelos volumes; quando houver, preencha <strong>Qtd. Retenção</strong> e <strong>Qtd. Referência</strong>.</li>
+<li>Responda cada pergunta do quadro <strong>Verificação de Amostragem</strong> com Sim ou Não (todas, para produto e material).</li>
+<li>No quadro <strong>Regras para Amostragem</strong>, digite em <strong>Qtde Amostrada Total</strong> o quanto foi retirado. O ícone da direita mostra se está dentro da tolerância (verde) ou fora (vermelho). A tolerância é sempre em percentual (DV-CQ-011).</li>
+<li>Se houver resultado fora ou resposta Não, escreva a <strong>Justificativa</strong> (produto e material).</li>
+<li>Para ambiente, informe ao menos um <strong>Ponto de Amostragem</strong> (INCLUIR) antes de salvar; o ponto é gravado na hora. Excluir ponto pede "Confirmar a exclusão do item?".</li>
+<li>Preencha <strong>Verificado Por</strong> e <strong>Amostrado Por</strong> (escolha na lista), com data e hora de cada um. A data de ontem é aceita; a futura é recusada.</li>
+<li>Clique em <strong>Salvar Registro</strong> e responda SIM a "Confirma a operação?". O sistema mostra a lista de pendências, se houver; se estiver tudo certo, grava. Depois, registre a pesagem e a separação no Estoque.</li>
+<li><strong>Ver amostragem já registrada:</strong> na lista, clique na lupa; "Visualizar Amostragem" mostra tudo travado e acrescenta quem registrou, a data e a hora.</li>
+<li><strong>Reagendar (só pela Visão Administrador):</strong> abra a coleta pelo lápis de lá, mude a data ou o responsável e clique em <strong>Alterar</strong>.</li>
+<li><strong>Imprimir Ficha</strong> (produto e material): abre a Ficha de Amostragem. Ela marca sempre "Análise" e deixa a nota fiscal em branco.</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 1. Em Amostragens Pendentes, clique no lápis da coleta. A tela "Registro de Amostragem" mostra os dados da solicitação e do lote (somente leitura): item, situação, lote, validade, quantidade, número de volumes, fabricante, fornecedor; para ambiente, o grau microbiológico e o do ar.</li>
-<li>Passo 2. Em <strong>Qtd. Solicitação por Volume</strong>, o sistema preenche sozinho a quantidade amostrada dividida pelos volumes; quando houver, preencha <strong>Qtd. Retenção</strong> e <strong>Qtd. Referência</strong>.</li>
-<li>Passo 3. Responda cada pergunta do quadro <strong>Verificação de Amostragem</strong> com Sim ou Não (todas, para produto e material).</li>
-<li>Passo 4. No quadro <strong>Regras para Amostragem</strong>, digite em <strong>Qtde Amostrada Total</strong> o quanto foi retirado. O ícone da direita mostra se está dentro da tolerância (verde) ou fora (vermelho). A tolerância é sempre em percentual (DV-CQ-011).</li>
-<li>Passo 5. Se houver resultado fora ou resposta Não, escreva a <strong>Justificativa</strong> (produto e material).</li>
-<li>Passo 6. Para ambiente, informe ao menos um <strong>Ponto de Amostragem</strong> (INCLUIR) antes de salvar.</li>
-<li>Passo 7. Preencha <strong>Verificado Por</strong> e <strong>Amostrado Por</strong> (escolha na lista), com data e hora de cada um. A data de ontem é aceita; a futura é recusada.</li>
-<li>Passo 8. Clique em <strong>Salvar Registro</strong> e responda SIM a "Confirma a operação?". O sistema mostra a lista de pendências, se houver; se estiver tudo certo, grava e mostra a mensagem de salvo. Depois, registre a pesagem e a separação no Estoque.</li>
+<li>Grava a amostragem como <strong>Executada</strong>, com verificador, amostrador, datas, respostas do checklist, quantidades por regra, justificativa e pontos.</li>
+<li>A solicitação <strong>segue para a programação da análise</strong>.</li>
+<li><strong>Estoque:</strong> para produto e material, o CQ pede ao Estoque a separação da amostra (usando o usuário da sessão). O sistema avisa: "Amostragem Salva. Favor registrar a pesagem (se necessário) e separação no módulo Estoque para finalizar o processo de desconto da Amostragem." Enquanto o Estoque não confirma, a digitação da análise mostra "Solicitação referente a amostra aguardando pesagem/separação." (CT-CQ-R2-B-SEP).</li>
+<li><strong>Alterar (reagendamento):</strong> troca data e responsável e a coleta volta a Pendente.</li>
 </ul>
-<h4 id="ver-uma-amostragem-ja-registrada">Ver uma amostragem já registrada</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 9. Na lista, clique na lupa. A tela "Visualizar Amostragem" mostra tudo travado e acrescenta quem registrou, a data e a hora.</li>
+<li>Checklist: "Não existe nenhum item de verificação marcado." e "Existe(m) item(s) de verificação sem preenchimento.".</li>
+<li>Regras: "Não existe nenhuma regra preenchida." e "Existe(m) regra(s) sem preenchimento."; "Quantidade da Solicitação deve ser preenchida!".</li>
+<li>Ambiente: "Nenhum Ponto de Amostragem foi informado.".</li>
+<li>Justificativa: "A justificativa deve ser preenchida, pois existe(m) resultado(s) negativo(s) na regra amostragem e/ou verificação amostragem .".</li>
+<li>Pessoas e datas: "Usuário verificador deve ser preenchido.", "Usuário amostrador deve ser preenchido.", "Usuário Verificador e Usuário Amostrador não podem ser iguais.", "Data/Hora ... deve ser preenchida.", "Data ... inválida.", "Data/Hora Amostrado (ou Verificado) maior que a data atual.", "Data/Hora Verificado deve ser maior que Data/Hora Amostrado.".</li>
+<li>Saldo: "Total amostrado/reservado superior ao saldo do lote!".</li>
+<li>Situação: "Situação de coleta inválida para Registrar", "Situação de solicitação análise inválida para Registrar", "Verificação de Amostragem inativa!".</li>
+<li>Reagendar: "Responsável inválido!". Falha: "Ocorreu um erro interno não esperado.".</li>
 </ul>
-<h4 id="reagendar-so-pela-visao-administrador">Reagendar (só pela Visão Administrador)</h4>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Passo 10. Abra a coleta pelo lápis da Visão Administrador, mude a data ou o responsável e clique em <strong>Alterar</strong>.</li>
+<li>A tela <strong>não é uma função do menu</strong> (item comentado). O controlador <strong>não tem filtro de autorização</strong>: o atributo está comentado e nenhuma ação o repete. <strong>Qualquer pessoa autenticada</strong> que alcance o endereço abre o registro, salva, reagenda, imprime e mexe nos pontos (SEG-CQ-01 e SEG-CQ-02).</li>
+<li>As listas de verificador e amostrador mostram só quem tem a função de amostrador no Principal (hoje a de número 34), mas <strong>a gravação aceita o número que vier no formulário</strong>.</li>
+<li><strong>Cuidado:</strong> o perfil <strong>só de consulta</strong> registrou a amostragem da 006/26 (produto) e da 1027/26 (ambiente) (DV-CQ-032, Alta; CT-CQ-R2-AC-08 e AC-12b). Os botões Salvar Registro, Alterar e Imprimir Ficha aparecem para esse perfil.</li>
+<li><strong>Alterar</strong> só aparece pela Visão Administrador (coleta Pendente ou Programada). Chefe de subdivisão: o código não exige.</li>
 </ul>
-<h4 id="imprimir-a-ficha">Imprimir a ficha</h4>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
 <ul>
-<li>Passo 11. Para produto e material, clique em <strong>Imprimir Ficha</strong>. A ficha marca sempre "Análise" e deixa a nota fiscal em branco.</li>
+<li><strong>Acesso:</strong> qualquer pessoa registra; a tela não confere se você é o responsável da coleta (DV-CQ-032, Alta).</li>
+<li><strong>Ambiente:</strong> a tela já mostrou "Ocorreu um erro interno não esperado." e <strong>mesmo assim gravou</strong> a amostragem; confira a lista antes de tentar de novo (DV-CQ-019, Média).</li>
+<li><strong>Tolerância:</strong> valor absoluto 10, tolerância 5: 14 unidades dão resultado negativo; o percentual não é calculado como esperado (DV-CQ-011, Média).</li>
+<li><strong>Função fixa:</strong> só aparece quem tem a função de número 34 (DV-CQ-022, Média).</li>
+<li><strong>Ficha impressa:</strong> não traz amostrador, verificador, quantidade amostrada nem data da amostragem; a "Quantidade" é a da solicitação; data de impressão em formato americano (DV-CQ-045, Média).</li>
+<li><strong>Estoque (outro módulo):</strong> o campo "Qtd. Estabilidade" está desligado, nenhuma entrada de estabilidade nasce (DV-EST-074); a amostra sai do estoque sem passar pela Central de Pesagem (DV-EST-032).</li>
+<li>Clique <strong>uma vez só</strong> em Salvar Registro: um segundo envio pode repetir o pedido ao Estoque (RN-CQ-A04-014, ponto para validar com a área).</li>
 </ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
-<ul>
-<li><strong>Em ambiente</strong>, a tela já mostrou "Ocorreu um erro interno não esperado." e mesmo assim gravou a amostragem (DV-CQ-019). Confira a lista antes de tentar de novo.</li>
-<li>A tela não confere se você é o responsável da coleta: qualquer pessoa com acesso registra (DV-CQ-032).</li>
-<li>Clique uma vez só em Salvar Registro; um segundo envio pode repetir o pedido ao Estoque (RN-CQ-A04-014, ponto para validar).</li>
-</ul>
-</div>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Esta tela é um formulário (não tem lista de linhas); os ícones de lista que levam até ela estão em Amostragens Pendentes e na Visão Administrador (lápis só em Pendente ou Programada; lupa só em Executada ou Cancelada). Botões e ícones desta tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Em que situação aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Salvar Registro</td>
+<td>Confirma, confere pendências e grava</td>
+<td>Só no "Registro" (coleta Pendente ou Programada); não aparece em "Visualizar"</td>
+</tr>
+<tr>
+<td>Alterar</td>
+<td>Troca data e responsável</td>
+<td>Só pela Visão Administrador, coleta Pendente ou Programada</td>
+</tr>
+<tr>
+<td>Imprimir Ficha</td>
+<td>Abre a Ficha de Amostragem</td>
+<td>Só produto e material</td>
+</tr>
+<tr>
+<td>INCLUIR (ponto) e lixeira do ponto</td>
+<td>Grava e apaga ponto de amostragem na hora</td>
+<td>Só ambiente, em modo registro</td>
+</tr>
+<tr>
+<td>Voltar</td>
+<td>Volta à lista de origem (comum ou administrador)</td>
+<td>Sempre</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: Views/Amostragem/_AmostragemFormulario.cshtml e Script/Amostragem.js (caminhos em UI/Areas/Coleta/).</p>
 <div class="tabela"><table>
@@ -402,7 +495,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

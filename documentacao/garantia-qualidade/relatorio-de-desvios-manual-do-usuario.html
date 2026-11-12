@@ -44,7 +44,54 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="relatorio-de-desvios-analise.html">Análise</a><a href="relatorio-de-desvios-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="relatorio-de-desvios-fluxos.html">Fluxos</a><a href="relatorio-de-desvios-regras-de-negocio.html">Regras de negócio</a><a href="relatorio-de-desvios-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-relatorio-de-desvios.html">Erros (17)</a><a class="aba-extra" href="roteiro-de-execucao-desvios-e-capa-passo-a-passo.html#tela-1-relatorio-de-desvios">Passo a passo</a><a class="aba-extra" href="relatorio-de-desvios-tela-a-criar.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<h3 id="a-lista-tela-inicial">A lista (tela inicial)</h3>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Relatório de Desvios</strong> é a porta de entrada do processo de desvios. Quem percebe uma ocorrência na fábrica (problema com produto, equipamento ou material) abre aqui o RD (Relatório de Desvios), dizendo o que aconteceu, onde e qual item foi afetado. A mesma tela lista todos os RDs do sistema, em qualquer situação, e permite consultar, editar, cancelar, ver o histórico e imprimir. Ao salvar, o desvio segue para a tela <strong>Registro Ação Corretiva Imediata</strong>.</p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<p>Para registrar um desvio, estes cadastros e ligações precisam existir (são lidos de outros módulos; a tela não os cadastra):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde vem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Usuário com grupo de perfil da GQ</strong> (Nível 1, 2 ou 3)</td>
+<td>Sem grupo, os ícones de editar, cancelar, histórico e imprimir não aparecem; o nível decide quem edita e cancela</td>
+<td>Configuração › Grupo Perfil da GQ</td>
+</tr>
+<tr>
+<td><strong>Função da tela no perfil do Principal</strong></td>
+<td>Para o item de menu aparecer</td>
+<td>Cadastro de perfis do módulo Principal</td>
+</tr>
+<tr>
+<td><strong>Área (local da ocorrência)</strong></td>
+<td>O "Local da ocorrência" é escolhido numa janela de busca; digitar o nome sem escolher não vale</td>
+<td>Áreas, lidas do módulo Principal</td>
+</tr>
+<tr>
+<td><strong>Área e responsável do usuário que registra</strong></td>
+<td>Aparecem preenchidos e travados em "Relatado por"</td>
+<td>Vêm do usuário conectado</td>
+</tr>
+<tr>
+<td><strong>Item afetado</strong> (opcional): produto, equipamento ou material</td>
+<td>Produto vem da Produção, Equipamento do Principal e Material do Estoque</td>
+<td>Cadastros desses módulos</td>
+</tr>
+<tr>
+<td><strong>Lote do item</strong> (opcional)</td>
+<td>Ligado ao desvio só como texto (número e descrição); o desvio não bloqueia o lote</td>
+<td>Produção ou Estoque</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ponto para validar com a área: o ambiente de teste só devolveu itens na busca de Equipamento (DV-GQ-010).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<h5 id="a-lista-tela-inicial">A lista (tela inicial)</h5>
 <ul>
 <li>Passo 1. No menu, abra Controle de Desvios › Relatório de Desvios. A tela mostra o quadro "Pesquisa" com os filtros e, abaixo, o botão Incluir (se o seu usuário tem acesso) e o espaço da lista. A lista começa vazia: ela só aparece depois de clicar em Pesquisar (HSolutions.GQ.UI/Areas/Bloco2/Script/RegistroNaoConformidadeIndex.js:9-11).</li>
 <li>Passo 2. Preencha os filtros que quiser, todos opcionais: RD/Nº (formato 000/00), Descrição (parte do texto), Data Início e Data Fim (dd/mm/aaaa, com calendário), Situação e Meios de Detecção. Clique em Pesquisar.</li>
@@ -56,15 +103,7 @@
 
 <figure><a href="../img/garantia-qualidade/t01-p08-lista-icones.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t01-p08-lista-icones.png" alt="Relatório de Desvios: Os ícones de cada linha da lista" loading="lazy"></a><figcaption>Relatório de Desvios: Os ícones de cada linha da lista · clique para ampliar</figcaption></figure>
 
-<h4 id="icones-de-cada-linha">Ícones de cada linha</h4>
-<ul>
-<li>Lápis (Editar): só aparece para desvios em Pendente Registro Ação Corretiva e para quem pode editar (criador do RD, GQ, ou responsável da mesma área do criador).</li>
-<li>Lupa (Visualizar): aparece no lugar do lápis quando o usuário não pode editar (HSolutions.GQ.UI/Scripts/HSGridApi.js:269-277).</li>
-<li>Lixeira com o título "Cancelar": mesmas condições do lápis.</li>
-<li>Histórico (Log): mostra todas as alterações gravadas do desvio.</li>
-<li>Impressora (Imprimir): abre o relatório do RD; só para RDs que já têm número. Em 21/10/2026 a impressão do RD deu página de erro ("Server Error ... The device is not ready") em todos os RDs testados (DV-GQ-018); a confirmar se o problema é do ambiente.</li>
-</ul>
-<h3 id="incluir-um-desvio">Incluir um desvio</h3>
+<h5 id="incluir-um-desvio">Incluir um desvio</h5>
 <ul>
 <li>Passo 1. Na lista, clique em Incluir. Abre a tela "Relatório de Desvios". O número do RD já aparece (por exemplo 007/2026) e é só de consulta: o número definitivo é calculado de novo ao salvar.</li>
 <li>Passo 2. Quadro "Dados". Em Local da ocorrência, digite pelo menos 3 letras e clique em buscar; escolha o local na janela "Locais". O local precisa ser escolhido na janela, não basta digitar.</li>
@@ -86,13 +125,13 @@
 
 <figure><a href="../img/garantia-qualidade/t01-p09-item-e-lote.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t01-p09-item-e-lote.png" alt="Relatório de Desvios: O item afetado e o lote" loading="lazy"></a><figcaption>Relatório de Desvios: O item afetado e o lote · clique para ampliar</figcaption></figure>
 
-<h3 id="editar-um-desvio">Editar um desvio</h3>
+<h5 id="editar-um-desvio">Editar um desvio</h5>
 <ul>
 <li>Passo 1. Na lista, clique no lápis de um desvio em Pendente Registro Ação Corretiva. Abre "Editar Relatório de Desvios", com os mesmos quadros do Incluir, já preenchidos, e um campo a mais no fim: Justificativa.</li>
 <li>Passo 2. Altere o que for preciso. O campo Justificativa vem preenchido com a justificativa da última edição; é obrigatório e deve ser atualizado.</li>
 <li>Passo 3. Clique em Salvar e responda SIM. Aparece "Alteração efetuada com sucesso." O desvio continua em Pendente Registro Ação Corretiva. A alteração vai para o histórico, com valor antigo, valor novo, usuário e justificativa. Confirmado em 21/10/2026: sem justificativa aparece "Justificativa é obrigatória."; com ela, o histórico mostra o valor antigo e o novo da descrição, a hora, o usuário e a justificativa.</li>
 </ul>
-<h3 id="cancelar-um-desvio">Cancelar um desvio</h3>
+<h5 id="cancelar-um-desvio">Cancelar um desvio</h5>
 <ul>
 <li>Passo 1. Na lista, clique na lixeira (título "Cancelar") de um desvio em Pendente Registro Ação Corretiva. Abre "Cancelar Relatório de Desvios", com todos os campos travados.</li>
 <li>Passo 2. Clique em Salvar (nesta tela o botão que confirma o cancelamento se chama Salvar). O sistema pergunta "Confirmar o cancelamento do item?". Responda SIM.</li>
@@ -101,20 +140,62 @@
 </ul>
 <figure><a href="../img/garantia-qualidade/t01-p10-cancelar.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t01-p10-cancelar.png" alt="Relatório de Desvios: A janela de cancelamento" loading="lazy"></a><figcaption>Relatório de Desvios: A janela de cancelamento · clique para ampliar</figcaption></figure>
 
-<h3 id="visualizar-um-desvio">Visualizar um desvio</h3>
+<h5 id="visualizar-um-desvio">Visualizar um desvio</h5>
 <ul>
 <li>Passo 1. Na lista, clique na lupa. Abre "Visualizar Relatório de Desvios": todos os campos travados, sem botão Salvar, sem ícone de excluir anexo e sem a área de envio de arquivo. Só é possível abrir os anexos e voltar.</li>
 </ul>
 <figure><a href="../img/garantia-qualidade/t01-p06-visualizar.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t01-p06-visualizar.png" alt="Relatório de Desvios: A tela de consulta (Visualizar)" loading="lazy"></a><figcaption>Relatório de Desvios: A tela de consulta (Visualizar) · clique para ampliar</figcaption></figure>
 
-<h3 id="historico-e-impressao">Histórico e impressão</h3>
+<h5 id="historico-e-impressao">Histórico e impressão</h5>
 <ul>
 <li>Histórico: clique no ícone de histórico. A janela "Log de Alteração" mostra, para cada alteração, o campo, o valor antigo, o valor novo, data, hora, usuário e justificativa. A inclusão aparece só como "INCLUSÃO DO REGISTRO". Em um desvio editado muitas vezes (25 entradas), o histórico abre em páginas, do mais novo para o mais antigo, mas não registra o texto da ação imediata, as observações das áreas, as áreas envolvidas, as causas do diagrama nem o conteúdo dos resultados (confirmado em 21/10/2026, DV-GQ-036).</li>
 <li>Imprimir: clique no ícone da impressora. O relatório do RD deveria abrir em outra janela; em 21/10/2026 abriu uma página de erro (DV-GQ-018).</li>
 </ul>
 <figure><a href="../img/garantia-qualidade/t01-p07-historico.png" target="_blank" rel="noopener"><img src="../img/garantia-qualidade/t01-p07-historico.png" alt="Relatório de Desvios: O histórico do desvio (Log de Alteração)" loading="lazy"></a><figcaption>Relatório de Desvios: O histórico do desvio (Log de Alteração) · clique para ampliar</figcaption></figure>
 
-<h4 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li>Grava o desvio com número sequencial do ano (formato nnn/AAAA na tela de inclusão e nnn/aa na lista), a descrição, o local, o item e os lotes (como texto), os anexos e o relator (usuário conectado e a área dele). Fonte: RegistroNaoConformidadeController.cs:278-282.</li>
+<li>A situação passa a <strong>Pendente Registro Ação Corretiva</strong> e o desvio aparece na tela Registro Ação Corretiva Imediata.</li>
+<li><strong>Editar</strong> devolve o desvio sempre a Pendente Registro Ação Corretiva e grava no histórico cada campo alterado (valor antigo, valor novo, usuário, hora e justificativa); a inclusão grava só "INCLUSÃO DO REGISTRO".</li>
+<li><strong>Cancelar</strong> leva o desvio a <strong>Cancelado</strong> (situação final) e guarda quem cancelou, quando e o motivo no próprio desvio, <strong>mas o cancelamento não entra no histórico</strong> (DV-GQ-001).</li>
+<li>O desvio <strong>não bloqueia nem muda nada no lote ou no equipamento</strong> em outros módulos: o lote é só copiado como texto.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li><strong>Local de Ocorrência é obrigatório.</strong> (local não escolhido na janela de busca; digitar o nome à mão não vale).</li>
+<li><strong>Descrição é obrigatória.</strong> (Não Conformidade vazia). Quando faltam várias coisas, aparece <strong>só uma mensagem por tentativa</strong> (DV-GQ-033).</li>
+<li><strong>Justificativa é obrigatória.</strong> (Editar sem justificativa) e <strong>A justificativa é obrigatória!</strong> (cancelamento: OK sem texto na janela "Informe a justificativa").</li>
+<li>Anexo: "Nenhuma informação foi enviada.", "O arquivo não foi informado." e "A descrição não foi informada." (o servidor exige arquivo e descrição em cada anexo).</li>
+<li>Buscas com menos de 3 letras: "Local ocorrência: digite no minímo 3 caracteres." e "Item: digite no minímo 3 caracteres." (a grafia "minímo" é a da tela).</li>
+<li>Em caso de erro não previsto: "Ocorreu um erro inesperado."; a busca de material mostrou "Ocorreu um erro interno não esperado." (DV-GQ-010).</li>
+<li>A tela <strong>não recusa</strong> desvio sem item nem sem lote, e aceita descrição só com um espaço (DV-GQ-051).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela usa <strong>grupo de perfil da GQ</strong>, com três níveis, e vale o maior nível do usuário. Não confere a função do perfil do Principal ao gravar (confirmado: usuário de nível 1 incluiu desvio, CT-GQ-111, DV-GQ-008).</li>
+<li><strong>Incluir:</strong> o botão aparece para quem tem grupo, de qualquer nível.</li>
+<li><strong>Ver a lista:</strong> todos os RDs de todas as áreas, sem filtro de área nem de dono.</li>
+<li><strong>Editar e Cancelar (lápis e lixeira):</strong> só em Pendente Registro Ação Corretiva e só para quem criou o desvio, Nível 2 da mesma área do criador ou Nível 3. Nível 1 que não criou e Nível 2 de outra área veem só a lupa (provado na tela em 11/11/2026).</li>
+<li><strong>Visualizar, Histórico e Imprimir:</strong> para quem tem grupo (Imprimir só em RD que já tem número).</li>
+<li><strong>Cuidado:</strong> o servidor só exige usuário conectado na gravação; não repete a regra de situação nem de dono. Quem digitar o endereço da ação pode editar ou cancelar fora das regras da lista (SEG-GQ-02, ponto de atenção 5 do fluxo). Detalhes na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>O cancelamento não aparece no histórico</strong> (DV-GQ-001, Alta): quem olhar o histórico não vê que o desvio foi cancelado.</li>
+<li><strong>Apóstrofo na descrição quebra a lista inteira</strong> (DV-GQ-017, Alta): a lista fica vazia e a paginação trava para todos os desvios. Evite apóstrofo, aspas e sinais como <code>&lt;B&gt;</code> na descrição.</li>
+<li><strong>Produto e Material não aparecem na busca</strong> (DV-GQ-010) e o código do item não é gravado: na prática só é possível ligar Equipamento; o desvio também grava sem item.</li>
+<li><strong>Salvar some sem aviso</strong> quando o tipo de item marcado difere do item escolhido; só volta ao escolher, na busca, um item do tipo marcado (DV-GQ-062). Sem busca que devolva Produto ou Material, esses desvios não podem ser salvos.</li>
+<li><strong>Imprimir o RD abre página de erro</strong> ("The device is not ready", DV-GQ-018): o relatório do RD não sai.</li>
+<li><strong>Data da abertura:</strong> a data gravada vem do navegador e, ao reabrir (Editar, Visualizar), a tela mostra a data e a hora de agora (DV-GQ-052).</li>
+<li>A edição só com a Justificativa alterada não deixa rastro no histórico (DV-GQ-053); quem edita passa a constar como responsável (DV-GQ-054).</li>
+<li><strong>Nº Tag</strong> do equipamento não aparece na tela Visualizar (DV-GQ-056).</li>
+<li>O filtro de datas ignora <strong>só Data Fim</strong>; com início e fim, o dia seguinte ao fim não entra (DV-GQ-027 e DV-GQ-028 tratam de data inválida e do filtro de situação incompleto).</li>
+<li>Clicar no título de uma coluna não reordena (DV-GQ-032); <strong>Limpar</strong> esvazia os filtros mas não a lista.</li>
+<li>Pontos para validar com a área: risco do desvio (a tela não pede classificação) e ligação com o lote (só texto).</li>
+</ul>
+<h5 id="registro-das-rodadas-de-teste-e-do-que-ainda-nao-foi-visto">Registro das rodadas de teste e do que ainda não foi visto</h5>
+<h6 id="rodada-2-22-10-2026">Rodada 2 (22/10/2026)</h6>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-2/resultado.md. Só o que a rodada mostrou de novo.</p>
 <ul>
 <li><strong>Incluir, salvar sem item.</strong> Salvar sem escolher tipo de item, item nem lote foi aceito: apareceu "Inclusão efetuada com sucesso." e o desvio entrou na lista (CT-GQ-N01-008). Nada no manual precisa mudar, mas vale o aviso: a tela não obriga a ligar o desvio a um item.</li>
@@ -122,7 +203,7 @@
 <li><strong>Cancelar.</strong> O cancelamento continua sem entrar no histórico (resultado de 21/10/2026, citado em 22/10/2026 no CT-GQ-006; DV-GQ-001).</li>
 <li><strong>Quem pode editar ou cancelar.</strong> As regras de acesso estão no documento interno.</li>
 </ul>
-<h4 id="rodada-3-22-10-2026">Rodada 3 (22/10/2026)</h4>
+<h6 id="rodada-3-22-10-2026">Rodada 3 (22/10/2026)</h6>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-3a/resultado.md. Só o que a rodada mostrou de novo ou contrariou.</p>
 <ul>
 <li><strong>Incluir, campos faltando.</strong> Salvar com tudo vazio mostra só "Local de Ocorrência é obrigatório."; a descrição não é cobrada junto (CT-GQ-N01-001; DV-GQ-033). Só com a descrição: "Local de Ocorrência é obrigatório." Local escolhido pela janela e descrição vazia: "Descrição é obrigatória." Nome do local digitado sem usar a busca: "Local de Ocorrência é obrigatório." e nada é gravado (CT-GQ-N01-002 a 004).</li>
@@ -136,7 +217,7 @@
 <li><strong>Lista, filtros.</strong> Por RD/Nº, por parte da descrição, por situação (Cancelado: 9 desvios) e por meio de detecção (Garantia da Qualidade: 26 desvios) só vêm os que combinam (CT-GQ-N01-022). Datas (CT-GQ-N01-023): só Data Início 21/10 traz 48 desvios, todos de 21/10; Início 21/10 e Fim 21/10 traz os mesmos 48; Início 20/10 e Fim 21/10 também os mesmos 48, ou seja, <strong>o dia seguinte ao fim não entra</strong>; só Data Fim é ignorada (85 desvios, todos).</li>
 <li><strong>Quem pode editar ou cancelar.</strong> As regras de acesso estão no documento interno.</li>
 </ul>
-<h4 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h4>
+<h6 id="rodada-4-22-10-2026">Rodada 4 (22/10/2026)</h6>
 <p>Fonte: execucao/2026-10-22-desvios-rodada-4/resultado.md. Só o que a rodada mostrou de novo ou contrariou.</p>
 <ul>
 <li><strong>Incluir, buscas.</strong> Digitar só duas letras em Local e buscar mostra "Local ocorrência: digite no minímo 3 caracteres."; o mesmo em Item mostra "Item: digite no minímo 3 caracteres." (CT-GQ-N01-005).</li>
@@ -146,7 +227,16 @@
 <li><strong>Lista.</strong> Limpar esvazia os filtros, mas a lista continua mostrando as linhas. São 3 desvios por página (CT-GQ-N01-024 e N01-025). Dois desvios incluídos em seguida recebem números consecutivos (CT-GQ-N01-014).</li>
 <li><strong>Visualizar (lupa).</strong> A tela não tem Salvar nem excluir anexo, mas o tipo de item e a Justificativa aparecem editáveis. Nada do que se digita ali é gravado (não há Salvar) (CT-GQ-N01-026).</li>
 </ul>
-<h4 id="o-que-cada-icone-da-lista-faz-e-quando-aparece">O que cada ícone da lista faz e quando aparece</h4>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<h5 id="icones-de-cada-linha">Ícones de cada linha</h5>
+<ul>
+<li>Lápis (Editar): só aparece para desvios em Pendente Registro Ação Corretiva e para quem pode editar (quem criou o RD, Nível 2 da mesma área de quem criou, ou Nível 3; provado na tela em 11/11/2026).</li>
+<li>Lupa (Visualizar): aparece no lugar do lápis quando o usuário não pode editar (HSolutions.GQ.UI/Scripts/HSGridApi.js:269-277).</li>
+<li>Lixeira com o título "Cancelar": mesmas condições do lápis.</li>
+<li>Histórico (Log): mostra todas as alterações gravadas do desvio.</li>
+<li>Impressora (Imprimir): abre o relatório do RD; só para RDs que já têm número. Em 21/10/2026 a impressão do RD deu página de erro ("Server Error ... The device is not ready") em todos os RDs testados (DV-GQ-018); a confirmar se o problema é do ambiente.</li>
+</ul>
+<h5 id="o-que-cada-icone-da-lista-faz-e-quando-aparece">O que cada ícone da lista faz e quando aparece</h5>
 <p>Cada linha da lista pode ter até cinco ícones. Eles aparecem ou somem conforme a <strong>situação do desvio</strong> e o <strong>perfil</strong> de quem entra; <strong>a tela não explica por que um ícone some</strong>.</p>
 <div class="tabela"><table>
 <thead>
@@ -204,6 +294,43 @@
 <tr>
 <td>Lixeira</td>
 <td>Mesma regra do lápis. O cancelamento pede justificativa e o desvio fica <em>Cancelado</em>, mas <strong>não aparece no LOG</strong> (DV-GQ-001).</td>
+</tr>
+</tbody>
+</table></div>
+<p>Os cinco ícones desta lista seguem as regras da tabela abaixo (lidas do código e provadas na tela em 11/11/2026). Resumo por ícone nesta tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre "Editar Relatório de Desvios"</td>
+<td>Pendente Registro Ação Corretiva e (criador do RD, Nível 2 da mesma área ou Nível 3)</td>
+</tr>
+<tr>
+<td>Lupa (Visualizar)</td>
+<td>Abre o desvio só para leitura</td>
+<td>No lugar do lápis, quando o usuário não pode editar</td>
+</tr>
+<tr>
+<td>LOG (Histórico)</td>
+<td>Abre o "Log de Alteração"</td>
+<td>Em todas as linhas (para quem tem grupo)</td>
+</tr>
+<tr>
+<td>Impressora (Imprimir)</td>
+<td>Deveria abrir o relatório do RD ("RNC / Pré-avaliação")</td>
+<td>Só para RD que já tem número; hoje dá erro de servidor (DV-GQ-018)</td>
+</tr>
+<tr>
+<td>Lixeira (Cancelar)</td>
+<td>Pede justificativa e leva o desvio a Cancelado; não apaga</td>
+<td>Mesma regra do lápis</td>
 </tr>
 </tbody>
 </table></div>
@@ -1087,7 +1214,7 @@
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="relatorio-de-desvios-analise.html"><small>← Anterior</small><strong>Relatório de Desvios: Análise</strong></a><a class="ap ap-prox" href="relatorio-de-desvios-fluxos.html"><small>Próximo →</small><strong>Relatório de Desvios: Fluxos</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#a-lista-tela-inicial">A lista (tela inicial)</a></li><li><a href="#incluir-um-desvio">Incluir um desvio</a></li><li><a href="#editar-um-desvio">Editar um desvio</a></li><li><a href="#cancelar-um-desvio">Cancelar um desvio</a></li><li><a href="#visualizar-um-desvio">Visualizar um desvio</a></li><li><a href="#historico-e-impressao">Histórico e impressão</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li class="sub"><a href="#lista-filtros-e-colunas">Lista (filtros e colunas)</a></li><li class="sub"><a href="#formulario-quadro-dados-incluir-editar-visualizar-e-cancelar">Formulário: quadro Dados (Incluir, Editar, Visualizar e Cancelar)</a></li><li class="sub"><a href="#formulario-quadros-descricao-de-desvio-e-anexos">Formulário: quadros Descrição de Desvio e Anexos</a></li><li class="sub"><a href="#formulario-quadro-relatado-por-justificativa-e-botoes">Formulário: quadro Relatado por, Justificativa e botões</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li class="sub"><a href="#lista">Lista</a></li><li class="sub"><a href="#formulario-incluir-editar-visualizar-e-cancelar">Formulário (Incluir, Editar, Visualizar e Cancelar)</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li class="sub"><a href="#lista-filtros-e-colunas">Lista (filtros e colunas)</a></li><li class="sub"><a href="#formulario-quadro-dados-incluir-editar-visualizar-e-cancelar">Formulário: quadro Dados (Incluir, Editar, Visualizar e Cancelar)</a></li><li class="sub"><a href="#formulario-quadros-descricao-de-desvio-e-anexos">Formulário: quadros Descrição de Desvio e Anexos</a></li><li class="sub"><a href="#formulario-quadro-relatado-por-justificativa-e-botoes">Formulário: quadro Relatado por, Justificativa e botões</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li class="sub"><a href="#lista">Lista</a></li><li class="sub"><a href="#formulario-incluir-editar-visualizar-e-cancelar">Formulário (Incluir, Editar, Visualizar e Cancelar)</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
