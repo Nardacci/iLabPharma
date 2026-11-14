@@ -42,9 +42,8 @@
       <div class="doc-acoes"><a class="botao" href="../arquivos/estoque/LabMedSys - Modulo Estoque - Menu Estoque - Tela 01 Recebimento de Material - Manual do usuário.docx" download>⤓ Baixar em Word</a><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div>
       
     </header>
-    <nav class="abas-tela" aria-label="Páginas desta tela"><a href="recebimento-de-material-analise.html">Análise</a><a href="recebimento-de-material-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="recebimento-de-material-fluxos.html">Fluxos</a><a href="recebimento-de-material-regras-de-negocio.html">Regras de negócio</a><a href="recebimento-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-recebimento-de-material.html">Erros (11)</a><a class="aba-extra" href="roteiro-de-execucao-recebimento-quarentena-e-conferencia-passo-a-passo.html#tela-2-recebimento-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
+    <nav class="abas-tela" aria-label="Páginas desta tela"><a href="recebimento-de-material-analise.html">Análise</a><a href="recebimento-de-material-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="recebimento-de-material-fluxos.html">Fluxos</a><a href="recebimento-de-material-regras-de-negocio.html">Regras de negócio</a><a href="recebimento-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-recebimento-de-material.html">Erros (14)</a><a class="aba-extra" href="roteiro-de-execucao-recebimento-quarentena-e-conferencia-passo-a-passo.html#tela-2-recebimento-de-material">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A tela <strong>Recebimento de Material</strong> é onde o almoxarifado registra a chegada de uma entrega: transportadora, veículo, nota fiscal, itens da nota e lotes que vieram (código do lote, validade, fabricante, quantidade e volumes). Depois de salvo, o recebimento passa por duas fases: <strong>Finalizar</strong> (encerra o cadastro) e, depois que outra pessoa autoriza, <strong>Confirmar recebimento</strong>, que gera o identificador interno do lote ("item de entrada"), os volumes, a pesagem e as etiquetas (recebimento_ed2.aspx.cs:360-417; dalRecebimento.cs:522-736). Usam o almoxarifado (que cadastra) e uma segunda pessoa (que autoriza). A conferência, o endereçamento e a análise acontecem depois, em outras telas.</p>
 <h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
@@ -109,22 +108,146 @@
 <h4 id="passo-a-passo">Passo a passo</h4>
 <p><strong>Consultar a lista</strong></p>
 <ol>
-<li>No Menu Estoque, abra <strong>Recebimento de Material</strong>. A tela mostra os filtros e uma área vazia. Clique em <strong>PESQUISAR</strong> para listar.</li>
+<li>No Menu Estoque, abra <strong>Recebimento de Material</strong>. A tela mostra os filtros e uma área vazia. Clique em <strong>PESQUISAR</strong> para listar. <strong>Escolha uma Transportadora antes</strong>: sem ela (sem filtro, ou só com Código ou Status) a consulta falha com "Erro na consulta!" e a lista não aparece nem mostra mensagem (DV-EST-172).</li>
 <li>Filtros: Código, Nota Fiscal, Transportadora, Período (data inicial e final) e Status (TODOS, EM RECEBIMENTO, RECEBIDO, CONFERIDO, FINALIZADO) (recebimento_lst.aspx:44-115).</li>
 <li>A lista mostra Código, Data, Placa e Status, mais os ícones (veja o último bloco). <strong>LIMPAR</strong> esvazia filtros e lista. <strong>IMPRIMIR</strong> e o ícone de Excel só aparecem depois de uma pesquisa com resultado (recebimento_lst.aspx.cs:89-105).</li>
+</ol>
+<figure><a href="../img/estoque/e201-p01-lista.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p01-lista.png" alt="Lista depois de PESQUISAR com a transportadora TRANSLOG TRANSPORTES escolhida: recebimentos 00016 a 00028 com ícones Visualizar, Editar, Excluir e Log" loading="lazy"></a><figcaption>Lista depois de PESQUISAR com a transportadora TRANSLOG TRANSPORTES escolhida: recebimentos 00016 a 00028 com ícones Visualizar, Editar, Excluir e Log · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-p09-imprimir.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p09-imprimir.png" alt="Relatório de Recebimento da lista filtrada (usuário coberto com cinza)" loading="lazy"></a><figcaption>Relatório de Recebimento da lista filtrada (usuário coberto com cinza) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x01-abrir-recebimento.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x01-abrir-recebimento.png" alt="Tela RECEBIMENTO DE MATERIAL com os filtros Código, Nota Fiscal, Transportadora, Período e Status e PESQUISAR marcado" loading="lazy"></a><figcaption>Tela RECEBIMENTO DE MATERIAL com os filtros Código, Nota Fiscal, Transportadora, Período e Status e PESQUISAR marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x41-clicar-imprimir.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x41-clicar-imprimir.png" alt="Lista com IMPRIMIR marcado" loading="lazy"></a><figcaption>Lista com IMPRIMIR marcado · clique para ampliar</figcaption></figure>
+<ol start="4">
 <li><strong>Incluir</strong> abre o formulário em branco.</li>
 </ol>
+<figure><a href="../img/estoque/e201-p02-form-vazio.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p02-form-vazio.png" alt="RECEBIMENTO DE MATERIAIS vazio: Código e Data Cadastro travados e demais campos em branco" loading="lazy"></a><figcaption>RECEBIMENTO DE MATERIAIS vazio: Código e Data Cadastro travados e demais campos em branco · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x02-botao-incluir.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x02-botao-incluir.png" alt="Tela com o botão Incluir marcado" loading="lazy"></a><figcaption>Tela com o botão Incluir marcado · clique para ampliar</figcaption></figure>
+
 <p><strong>Cadastrar o recebimento</strong></p>
 <ol start="5">
-<li>Preencha a <strong>Data do Recebimento</strong> (não pode ser futura), a <strong>Transportadora</strong> e, se quiser, o <strong>Veículo (Checklist)</strong>: ao escolher o checklist, a placa e o motorista vêm dele (recebimento_ed2.aspx.cs:259-271). Clique em <strong>SALVAR</strong> e responda SIM em "Confirma a inclusão?". Aparece "Recebimento gerado!".</li>
-<li>Depois de salvo, aparece o quadro de notas fiscais. Clique em <strong>INCLUIR NOTA FISCAL</strong> (ou em <strong>IMPORTAR XML</strong>, com o arquivo da NF-e) e preencha número, <strong>série</strong>, fornecedor, tipo de documento, situação, tipo de frete, tipo de pagamento, tipo de movimentação, datas e todos os valores. Salve: "NF Cadastrada com sucesso!".</li>
-<li>Na nota, inclua cada <strong>item</strong> (nº do item, item, NCM, CFOP, quantidade, unidade de recebimento, valores e impostos). O item não pode se repetir na nota.</li>
-<li>Em cada item que tem controle de lote, inclua os <strong>lotes</strong>: fabricante, código do lote, validade, quantidade, número de volumes e unidade de recebimento. Salve: "Inclusão realizada!".</li>
-<li>Volte ao recebimento e clique em <strong>FINALIZAR RECEBIMENTO</strong>. O sistema confere se há nota, se todas têm item, se a soma dos itens fecha com a nota e se todos os itens têm lote; pergunta "Deseja encerrar o Cadastro?" e mostra "Cadastro Finalizado!". O status continua EM RECEBIMENTO.</li>
-<li><strong>Outra pessoa</strong> abre o recebimento, clica em <strong>AUTORIZAR RECEBIMENTO</strong> e informa usuário e senha. Aparece "Recebimento Autorizado!". Quem concluiu o cadastro recebe "Usuário não pode autorizar!".</li>
-<li>Depois da autorização, o botão vira <strong>CONFIRMAR RECEBIMENTO</strong> ("Deseja finalizar o Recebimento?"). Aparece "Recebimento finalizado!", o status passa a RECEBIDO e saem as etiquetas de volume e de quarentena. A nota segue para a Conferência de Recebimento.</li>
-<li><strong>REABRIR RECEBIMENTO</strong> (enquanto a nota não foi endereçada) desfaz a confirmação, a autorização, a conferência e as pesagens. Use só com a orientação da Qualidade (veja os cuidados).</li>
+<li>Preencha a <strong>Data do Recebimento</strong> (não pode ser futura), a <strong>Transportadora</strong> e, se quiser, o <strong>Veículo (Checklist)</strong>: ao escolher o checklist, a placa e o motorista vêm dele (recebimento_ed2.aspx.cs:259-271). Clique em <strong>SALVAR</strong> e responda SIM em "Confirma a inclusão?". Aparece "Recebimento gerado!". Atenção: o sistema grava mesmo sem Transportadora (DV-EST-173), mas esse recebimento não aparece na lista (DV-EST-172); escolha sempre a transportadora.</li>
 </ol>
+<figure><a href="../img/estoque/e201-p03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p03-form-preenchido.png" alt="Formulário com data, TRANSLOG TRANSPORTES, checklist 00006 (placa e motorista vieram do checklist) e SALVAR marcado" loading="lazy"></a><figcaption>Formulário com data, TRANSLOG TRANSPORTES, checklist 00006 (placa e motorista vieram do checklist) e SALVAR marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-p04-sucesso.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p04-sucesso.png" alt="Janela Alerta &quot;Recebimento gerado!&quot;" loading="lazy"></a><figcaption>Janela Alerta &quot;Recebimento gerado!&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-p05-erro.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p05-erro.png" alt="Mensagem &quot;Data de Recebimento inválida!&quot; com data futura 14/12/2027" loading="lazy"></a><figcaption>Mensagem &quot;Data de Recebimento inválida!&quot; com data futura 14/12/2027 · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x03-confirma-inclusao.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x03-confirma-inclusao.png" alt="Janela &quot;Confirma a inclusão?&quot; com SIM e NÃO" loading="lazy"></a><figcaption>Janela &quot;Confirma a inclusão?&quot; com SIM e NÃO · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x42-sem-transportadora.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x42-sem-transportadora.png" alt="Salvar sem transportadora: janela &quot;Recebimento gerado!&quot; (a tela deixou gravar)" loading="lazy"></a><figcaption>Salvar sem transportadora: janela &quot;Recebimento gerado!&quot; (a tela deixou gravar) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x43-sem-data.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x43-sem-data.png" alt="Salvar sem data: janela &quot;Confirma a inclusão?&quot; e o SIM não grava nem avisa" loading="lazy"></a><figcaption>Salvar sem data: janela &quot;Confirma a inclusão?&quot; e o SIM não grava nem avisa · clique para ampliar</figcaption></figure>
+<ol start="6">
+<li>Depois de salvo, aparece o quadro de notas fiscais. Clique em <strong>INCLUIR NOTA FISCAL</strong> (ou em <strong>IMPORTAR XML</strong>, com o arquivo da NF-e) e preencha número, <strong>série</strong>, fornecedor, tipo de documento, situação, tipo de frete, tipo de pagamento, tipo de movimentação, datas e todos os valores. Salve: "NF Cadastrada com sucesso!".</li>
+</ol>
+<figure><a href="../img/estoque/e201-x04-quadro-notas.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x04-quadro-notas.png" alt="Recebimento aberto com o quadro de notas fiscais e INCLUIR NOTA FISCAL marcado" loading="lazy"></a><figcaption>Recebimento aberto com o quadro de notas fiscais e INCLUIR NOTA FISCAL marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x05-nf-vazia.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x05-nf-vazia.png" alt="Formulário da nota fiscal vazio" loading="lazy"></a><figcaption>Formulário da nota fiscal vazio · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x06-nf-preenchida.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x06-nf-preenchida.png" alt="Nota 9701 série 1 preenchida (fornecedor, tipos, datas e valores) com SALVAR marcado" loading="lazy"></a><figcaption>Nota 9701 série 1 preenchida (fornecedor, tipos, datas e valores) com SALVAR marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x07-confirma-nf.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x07-confirma-nf.png" alt="Janela &quot;Deseja salvar a Nota Fiscal?&quot;" loading="lazy"></a><figcaption>Janela &quot;Deseja salvar a Nota Fiscal?&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x08-nf-sucesso.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x08-nf-sucesso.png" alt="Janela &quot;NF Cadastrada com sucesso!&quot;" loading="lazy"></a><figcaption>Janela &quot;NF Cadastrada com sucesso!&quot; · clique para ampliar</figcaption></figure>
+<ol start="7">
+<li>Na nota, inclua cada <strong>item</strong> (nº do item, item, NCM, CFOP, quantidade, unidade de recebimento, valores e impostos: ICMS, IPI, PIS e COFINS são todos exigidos). O item não pode se repetir na nota. Ao salvar, o sistema pergunta "Deseja incluir o Item?"; responda SIM e aparece "Inclusão realizada!".</li>
+</ol>
+<figure><a href="../img/estoque/e201-x09-nf-salva-itens.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x09-nf-salva-itens.png" alt="Nota aberta com INCLUIR ITEM marcado" loading="lazy"></a><figcaption>Nota aberta com INCLUIR ITEM marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x10-item-vazio.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x10-item-vazio.png" alt="Formulário do item vazio" loading="lazy"></a><figcaption>Formulário do item vazio · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x11-item-preenchido.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x11-item-preenchido.png" alt="Item TST0001 com quantidade 100,000 e valores, SALVAR ITEM marcado" loading="lazy"></a><figcaption>Item TST0001 com quantidade 100,000 e valores, SALVAR ITEM marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x12-confirma-item.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x12-confirma-item.png" alt="Janela &quot;Deseja incluir o Item?&quot;" loading="lazy"></a><figcaption>Janela &quot;Deseja incluir o Item?&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x13-item-sucesso.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x13-item-sucesso.png" alt="Janela &quot;Inclusão realizada!&quot;" loading="lazy"></a><figcaption>Janela &quot;Inclusão realizada!&quot; · clique para ampliar</figcaption></figure>
+<ol start="8">
+<li>Em cada item que tem controle de lote, inclua os <strong>lotes</strong>: fabricante, código do lote, validade, quantidade, número de volumes e unidade de recebimento. Ao salvar, o sistema pergunta "Deseja salvar o Lote?"; responda SIM e aparece "Inclusão realizada!".</li>
+</ol>
+<figure><a href="../img/estoque/e201-x14-item-incluir-lote.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x14-item-incluir-lote.png" alt="Item aberto com INCLUIR LOTE marcado" loading="lazy"></a><figcaption>Item aberto com INCLUIR LOTE marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x15-lote-vazio.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x15-lote-vazio.png" alt="Formulário do lote vazio" loading="lazy"></a><figcaption>Formulário do lote vazio · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x16-lote-preenchido.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x16-lote-preenchido.png" alt="Lote TESTERC001, fabricante, validade, quantidade e volumes preenchidos, SALVAR marcado" loading="lazy"></a><figcaption>Lote TESTERC001, fabricante, validade, quantidade e volumes preenchidos, SALVAR marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x17-confirma-lote.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x17-confirma-lote.png" alt="Janela &quot;Deseja salvar o Lote?&quot;" loading="lazy"></a><figcaption>Janela &quot;Deseja salvar o Lote?&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x18-lote-sucesso.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x18-lote-sucesso.png" alt="Janela &quot;Inclusão realizada!&quot;" loading="lazy"></a><figcaption>Janela &quot;Inclusão realizada!&quot; · clique para ampliar</figcaption></figure>
+<ol start="9">
+<li>Volte ao recebimento e clique em <strong>FINALIZAR</strong>. O sistema confere se há nota, se todas têm item, se a soma dos itens fecha com a nota e se todos os itens têm lote; pergunta "Deseja encerrar o Cadastro?" e mostra "Cadastro Finalizado!". O status continua EM RECEBIMENTO.</li>
+</ol>
+<figure><a href="../img/estoque/e201-x19-nota-com-item-e-lote.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x19-nota-com-item-e-lote.png" alt="Recebimento com nota, item e lote e FINALIZAR marcado" loading="lazy"></a><figcaption>Recebimento com nota, item e lote e FINALIZAR marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x20-confirma-finalizar.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x20-confirma-finalizar.png" alt="Janela &quot;Deseja encerrar o Cadastro?&quot;" loading="lazy"></a><figcaption>Janela &quot;Deseja encerrar o Cadastro?&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x21-cadastro-finalizado.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x21-cadastro-finalizado.png" alt="Janela &quot;Cadastro Finalizado!&quot;" loading="lazy"></a><figcaption>Janela &quot;Cadastro Finalizado!&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x22-apos-finalizar.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x22-apos-finalizar.png" alt="Recebimento com os botões AUTORIZAR RECEBIMENTO e REABRIR RECEBIMENTO" loading="lazy"></a><figcaption>Recebimento com os botões AUTORIZAR RECEBIMENTO e REABRIR RECEBIMENTO · clique para ampliar</figcaption></figure>
+<ol start="10">
+<li><strong>Outra pessoa</strong> abre o recebimento, clica em <strong>AUTORIZAR RECEBIMENTO</strong> e informa usuário e senha. Aparece "Recebimento Autorizado!". Quem concluiu o cadastro recebe "Usuário não pode autorizar!".</li>
+</ol>
+<figure><a href="../img/estoque/e201-x23-autorizar-quadro.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x23-autorizar-quadro.png" alt="Quadro Autorizar com Usuário e Senha (campos mascarados)" loading="lazy"></a><figcaption>Quadro Autorizar com Usuário e Senha (campos mascarados) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x24-usuario-nao-informado.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x24-usuario-nao-informado.png" alt="Confirmar com os dois campos vazios: &quot;Senha não informada!&quot;" loading="lazy"></a><figcaption>Confirmar com os dois campos vazios: &quot;Senha não informada!&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x25-senha-nao-informada.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x25-senha-nao-informada.png" alt="Só o usuário preenchido: &quot;Senha não informada!&quot;" loading="lazy"></a><figcaption>Só o usuário preenchido: &quot;Senha não informada!&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x26-usuario-nao-pode-autorizar.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x26-usuario-nao-pode-autorizar.png" alt="Quem concluiu o cadastro tenta autorizar: &quot;Usuário não pode autorizar!&quot;" loading="lazy"></a><figcaption>Quem concluiu o cadastro tenta autorizar: &quot;Usuário não pode autorizar!&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x31-recebimento-autorizado.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x31-recebimento-autorizado.png" alt="Janela &quot;Recebimento Autorizado!&quot; (recebimento 00028)" loading="lazy"></a><figcaption>Janela &quot;Recebimento Autorizado!&quot; (recebimento 00028) · clique para ampliar</figcaption></figure>
+<ol start="11">
+<li>Depois da autorização, o botão vira <strong>CONFIRMAR RECEBIMENTO</strong> ("Deseja finalizar o Recebimento?"). Aparece "Recebimento finalizado!", o status passa a RECEBIDO e saem as etiquetas de volume e de quarentena. A nota segue para a Conferência de Recebimento.</li>
+</ol>
+<figure><a href="../img/estoque/e201-x27-autorizado-confirmar.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x27-autorizado-confirmar.png" alt="Recebimento autorizado: Autorizado por e data preenchidos, botão CONFIRMAR RECEBIMENTO" loading="lazy"></a><figcaption>Recebimento autorizado: Autorizado por e data preenchidos, botão CONFIRMAR RECEBIMENTO · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x28-confirma-recebimento.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x28-confirma-recebimento.png" alt="Janela &quot;Deseja finalizar o Recebimento?&quot; (recebimento 00027)" loading="lazy"></a><figcaption>Janela &quot;Deseja finalizar o Recebimento?&quot; (recebimento 00027) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x29-recebimento-finalizado.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x29-recebimento-finalizado.png" alt="Mensagem &quot;Erro ao Finalizar Recebimento!&quot; no recebimento 00027 (item TST0001)" loading="lazy"></a><figcaption>Mensagem &quot;Erro ao Finalizar Recebimento!&quot; no recebimento 00027 (item TST0001) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x32-botao-confirmar-recebimento.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x32-botao-confirmar-recebimento.png" alt="Recebimento 00028 autorizado com o botão CONFIRMAR RECEBIMENTO" loading="lazy"></a><figcaption>Recebimento 00028 autorizado com o botão CONFIRMAR RECEBIMENTO · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x33-confirma-recebimento.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x33-confirma-recebimento.png" alt="Janela &quot;Deseja finalizar o Recebimento?&quot; (00028)" loading="lazy"></a><figcaption>Janela &quot;Deseja finalizar o Recebimento?&quot; (00028) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x34-recebimento-finalizado.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x34-recebimento-finalizado.png" alt="Janela &quot;Recebimento finalizado!&quot; (00028)" loading="lazy"></a><figcaption>Janela &quot;Recebimento finalizado!&quot; (00028) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x35-etiqueta-volume-quarentena.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x35-etiqueta-volume-quarentena.png" alt="Etiqueta de volume com QUARENTENA, material, lote, item de entrada TA0041/26, peso e volume 001/002 (campo do responsável coberto com cinza)" loading="lazy"></a><figcaption>Etiqueta de volume com QUARENTENA, material, lote, item de entrada TA0041/26, peso e volume 001/002 (campo do responsável coberto com cinza) · clique para ampliar</figcaption></figure>
+<ol start="12">
+<li><strong>REABRIR RECEBIMENTO</strong> (enquanto a nota não foi endereçada) pergunta "Deseja reabrir o Recebimento?" e desfaz a confirmação, a autorização, a conferência e as pesagens. Reabrir também <strong>desfaz o encerramento do cadastro</strong>: o botão FINALIZAR volta e é preciso finalizar, autorizar e confirmar de novo (testado em 14/11/2026). Use só com a orientação da Qualidade (veja os cuidados).</li>
+</ol>
+<figure><a href="../img/estoque/e201-p06-visualizar.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p06-visualizar.png" alt="Recebimento 00028 confirmado aberto só para leitura com REABRIR RECEBIMENTO, ETIQUETA VOLUME e ETIQUETA QUARENTENA" loading="lazy"></a><figcaption>Recebimento 00028 confirmado aberto só para leitura com REABRIR RECEBIMENTO, ETIQUETA VOLUME e ETIQUETA QUARENTENA · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-p07-editar.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p07-editar.png" alt="Recebimento 00027 aberto para edição" loading="lazy"></a><figcaption>Recebimento 00027 aberto para edição · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-p08-excluir.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p08-excluir.png" alt="Página de exclusão com código, descrição, Justificativa e EXCLUIR REGISTRO (sem confirmar)" loading="lazy"></a><figcaption>Página de exclusão com código, descrição, Justificativa e EXCLUIR REGISTRO (sem confirmar) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-p10-historico.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-p10-historico.png" alt="Janela Log Alteração - Recebimento do 00027 com Data de Autorização e Inclusão do registro" loading="lazy"></a><figcaption>Janela Log Alteração - Recebimento do 00027 com Data de Autorização e Inclusão do registro · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x36-clicar-log.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x36-clicar-log.png" alt="Lista com o ícone Log marcado" loading="lazy"></a><figcaption>Lista com o ícone Log marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x37-clicar-lixeira.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x37-clicar-lixeira.png" alt="Lista com a lixeira do 00027 marcada" loading="lazy"></a><figcaption>Lista com a lixeira do 00027 marcada · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x44-excluir-clicar-excluir-registro.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x44-excluir-clicar-excluir-registro.png" alt="Exclusão com EXCLUIR REGISTRO marcado e justificativa vazia" loading="lazy"></a><figcaption>Exclusão com EXCLUIR REGISTRO marcado e justificativa vazia · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x45-confirma-exclusao-vazia.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x45-confirma-exclusao-vazia.png" alt="Janela &quot;Confirma a exclusão do item?&quot;" loading="lazy"></a><figcaption>Janela &quot;Confirma a exclusão do item?&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x46-justificativa-obrigatoria.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x46-justificativa-obrigatoria.png" alt="Mensagem &quot;A Justificativa é obrigatória!&quot;" loading="lazy"></a><figcaption>Mensagem &quot;A Justificativa é obrigatória!&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x39-clicar-visualizar.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x39-clicar-visualizar.png" alt="Lista com o ícone Visualizar marcado" loading="lazy"></a><figcaption>Lista com o ícone Visualizar marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x40-clicar-lapis.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x40-clicar-lapis.png" alt="Lista com o lápis do 00027 marcado" loading="lazy"></a><figcaption>Lista com o lápis do 00027 marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x47-clicar-reabrir.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x47-clicar-reabrir.png" alt="Recebimento 00028 com REABRIR RECEBIMENTO marcado" loading="lazy"></a><figcaption>Recebimento 00028 com REABRIR RECEBIMENTO marcado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x48-confirma-reabrir.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x48-confirma-reabrir.png" alt="Janela &quot;Deseja reabrir o Recebimento?&quot;" loading="lazy"></a><figcaption>Janela &quot;Deseja reabrir o Recebimento?&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x49-recebimento-reaberto.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x49-recebimento-reaberto.png" alt="Janela &quot;Recebimento reaberto!&quot;" loading="lazy"></a><figcaption>Janela &quot;Recebimento reaberto!&quot; · clique para ampliar</figcaption></figure>
+
+<figure><a href="../img/estoque/e201-x50-apos-reabrir.png" target="_blank" rel="noopener"><img src="../img/estoque/e201-x50-apos-reabrir.png" alt="Recebimento reaberto: volta com FINALIZAR (o cadastro também foi reaberto)" loading="lazy"></a><figcaption>Recebimento reaberto: volta com FINALIZAR (o cadastro também foi reaberto) · clique para ampliar</figcaption></figure>
+
 <h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
 <li><strong>Salvar o cabeçalho:</strong> gera o código do recebimento (sequência do sistema, bllRecebimento.cs:12-20 e 167-189) e o status passa a EM RECEBIMENTO (Recebimento.cs:155-169).</li>
@@ -138,11 +261,11 @@
 <li>Data de recebimento futura: "Data de Recebimento inválida!". Sem data, o botão SIM não faz nada e não mostra mensagem (DV-EST-003).</li>
 <li>Ao finalizar o cadastro: "Recebimento sem Nota Fiscal!", "Nota Fiscal sem item!", "Nota Fiscal com divergência no total dos produto!" e "Item com divergência na quantidade do lote!".</li>
 <li>Finalizar antes de salvar: "Recebimento não foi salvo!".</li>
-<li>Autorizar: "Usuário não informado!" / "Senha não informada!" (campo vazio), "Usuário não pode autorizar!" (mesma pessoa que concluiu) e "Usuário/Senha inválido!".</li>
+<li>Autorizar: "Senha não informada!" (campo vazio: com os dois campos vazios, ou só com o usuário, aparece só esta; "Usuário não informado!" não apareceu em teste em 14/11/2026), "Usuário não pode autorizar!" (mesma pessoa que concluiu) e "Usuário/Senha inválido!".</li>
 <li>Nota: "Nota fiscal já foi informada!" (mesmo fornecedor, número e série); sem a série, a nota não grava e não avisa (DV-EST-013).</li>
 <li>Item: "Item já existe na Nota Fiscal!".</li>
 <li>Lote: "Item não possui controle de Lote", "Quantidade informada maior que o total pendente do Item", "Lote já foi informado para a Nota Fiscal!", "Esse item exige que o Fabricante seja informado!", "O Item possui controle de validade!", "Quantidade de volumes inválida!" e "Data de Validade inválida!".</li>
-<li>Confirmar com falha: "Erro ao Finalizar Recebimento!" ou "Ocorreram problemas ao finalizar o recebimento!". Importar arquivo que não é XML: "Tipo de Arquivo inválido". Excluir sem justificativa: "A Justificativa é obrigatório!".</li>
+<li>Confirmar com falha: "Erro ao Finalizar Recebimento!" ou "Ocorreram problemas ao finalizar o recebimento!". Importar arquivo que não é XML: "Tipo de Arquivo inválido". Excluir sem justificativa: "A Justificativa é obrigatória!".</li>
 </ul>
 <h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
@@ -163,7 +286,7 @@
 <li><strong>Reabrir apaga registros</strong> sem justificativa e sem histórico; pela norma (art. 125) o valor original deveria continuar legível. Ponto para validar com a área: reabrir um recebimento confirmado deve ser permitido?</li>
 <li>O recebimento não consulta nem confere pedido de compra. Ponto para validar com a área.</li>
 <li>Existe uma versão antiga do formulário (<code>recebimento_ed.aspx</code>) sem uso pela lista; a que vale é a aberta pela lista.</li>
-<li>Há erros de digitação em mensagens ("dos produto", "Tipo de Movimentacao", "A Justificativa é obrigatório!").</li>
+<li>Há erros de digitação em mensagens ("dos produto", "Tipo de Movimentacao"). A mensagem de exclusão sem justificativa aparece correta ("A Justificativa é obrigatória!"), ao contrário do que o código sugere.</li>
 </ul>
 <h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
 <div class="tabela"><table>
@@ -355,7 +478,7 @@
 <td>Usuário e Senha (quadro Autorizar)</td>
 <td>Texto e senha</td>
 <td>Sim</td>
-<td>"Usuário não informado!" e "Senha não informada!"; vem preenchido com o usuário da sessão</td>
+<td>"Senha não informada!" (com os dois campos vazios aparece só esta; "Usuário não informado!" está no código mas não apareceu em teste); vem preenchido com o usuário da sessão</td>
 <td>recebimento_ed2.aspx:541-556; recebimento_ed2.aspx.cs:1007</td>
 </tr>
 </tbody>
@@ -639,7 +762,7 @@
 <td>recebimento_ed2.aspx.cs:630-684 e 745-777</td>
 </tr>
 <tr>
-<td>FINALIZAR RECEBIMENTO</td>
+<td>FINALIZAR</td>
 <td>Recebimento salvo, ainda não concluído</td>
 <td>Confere nota, itens, soma e lotes; pergunta "Deseja encerrar o Cadastro?" e conclui o cadastro</td>
 <td>Cadastro concluído (status continua EM RECEBIMENTO)</td>
@@ -784,7 +907,7 @@
 <td>recebimento_ed2.aspx.cs:707 e 722</td>
 </tr>
 <tr>
-<td>Confirma a exclusão do item? / Exclusão realizada com sucesso! / A Justificativa é obrigatório!</td>
+<td>Confirma a exclusão do item? / Exclusão realizada com sucesso! / A Justificativa é obrigatória!</td>
 <td>Exclusão do recebimento na lista</td>
 <td>recebimento_lst.aspx.cs:289 e 383; recebimento_lst.aspx:247</td>
 </tr>
