@@ -47,6 +47,25 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>O <strong>Centro de Custo</strong> guarda os centros de custo <strong>do Estoque</strong> (no ambiente de teste: ESTOQUE, CONTROLE QUALIDADE, PRODUÇÃO e COMERCIAL), que as solicitações, os atendimentos, os pedidos de compra, as remessas e os kits pedem para dizer <strong>quem consome</strong> o material. <strong>Não é o Centro de Custo do Módulo Principal</strong>: o Estoque tem cadastro próprio, com outros registros e outra tabela (CT-EST-022). O formulário também tem um quadro <strong>Itens</strong>, que associa a cada centro uma lista de itens com periodicidade e quantidade; <strong>nenhuma outra tela lê esses dados</strong> (veja os cuidados).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>(a confirmar com a área)</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 10 do menu Cadastros, módulo Estoque)</p>
+<ul>
+<li>Antes de abrir a primeira solicitação de material, pedido de compra ou remessa: todas pedem um centro de custo ativo (Solicitação de Material (Consumo), CT-EST-070, 22/10/2026; Pedido de Compra, CT-EST-162, 12/10/2026; Remessa, 13/10/2026).</li>
+<li>Para o CQ e a Produção o sistema usa centros "padrão" lidos da configuração; os centros marcados como de <strong>sistema</strong> não mostram Editar nem Excluir na lista.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>O centro é gravado na tabela <strong><code>TBL_CENTRO_CUSTO_ESTOQUE</code></strong> e, em seguida, cada item da lista vai para <code>TBL_CENTRO_CUSTO_ITEM</code>. A inclusão escreve a linha "INCLUSÃO" no log.</li>
+<li>Se o Código vier em branco, o programa <strong>gera o próximo</strong> pelo procedimento <code>pGeraCodigo</code> (4 posições).</li>
+<li>O centro ativo passa a ser oferecido nas telas que pedem centro de custo (lista no Dados).</li>
+<li>Não há aprovação nem segundo passo: vale na hora do SIM.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -540,7 +559,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

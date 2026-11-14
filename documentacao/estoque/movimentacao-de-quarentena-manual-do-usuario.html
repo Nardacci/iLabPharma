@@ -47,6 +47,26 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Movimentação de Quarentena</strong> é a tela em que o lote <strong>sai da quarentena depois do laudo</strong>. Para um lote com análise aprovada, o usuário escolhe de qual endereço de quarentena sai o material, quanto leva e para qual endereço comum vai; para um lote reprovado, o destino só pode ser um local de refugo. Ao finalizar, a tela grava a saída da origem e a entrada no destino, marca a análise como movimentada e registra o log da liberação (movimentacao_cq_ed2.aspx.cs:186-297). É a liberação para uso após a quarentena (RDC 658/2022, art. 157 e art. 189). Usa o almoxarifado; o laudo é decidido no Controle da Qualidade.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O almoxarifado, que leva o material para o endereço de uso (aprovado) ou de refugo (reprovado).</li>
+<li>O Controle da Qualidade decide o laudo no módulo dele; esta tela só executa a movimentação.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 6 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>A análise do lote foi finalizada no Estoque pela tela Controle da Qualidade (ATUALIZAR RESULTADO) com resultado Aprovado ou Reprovado; só então o ícone de abrir aparece.</li>
+<li>O lote tem saldo em endereço de quarentena.</li>
+<li>Não existe solicitação de amostra pendente para a análise.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>CONFIRMAR ENDEREÇO: grava na hora uma linha "origem, destino e quantidade" da análise, ainda sem mexer no saldo; ao reabrir a tela antes de finalizar, a linha continua lá.</li>
+<li>FINALIZAR ("Deseja finalizar a movimentação?"): confere que a soma endereçada fecha com o saldo a liberar, grava uma movimentação do tipo Movimentação de Quarentena (saída da origem e entrada no destino, sob o mesmo código), marca a análise como movimentada e grava o log. Aparece "Movimentação finalizada!". O lote aprovado passa de Quarentena a Disponível; o reprovado, de Bloqueado a Reprovado (CT-EST-207 e 051).</li>
+<li>Com destino incompleto (só almoxarifado e local) a saída é gravada e a entrada não aparece no histórico (DV-EST-044).</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -465,7 +485,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -47,6 +47,26 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Conversão de Unidade</strong> diz quantas unidades do estoque cabem em uma "apresentação" (por exemplo, uma caixa com 1.000 comprimidos tem fator 1000 e unidade de estoque COMPRIMIDO) e, quando o módulo de Produção está ligado, quanto vale uma unidade de produção em unidades de estoque. Quem cuida dos cadastros de apoio e do recebimento usa a tela. No código o cadastro se chama "Apresentação do item"; o usuário vê "Conversão de Unidade".</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>(a confirmar com a área)</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 4 do menu Cadastros, módulo Estoque)</p>
+<ul>
+<li>Depois de cadastrar a <strong>unidade</strong> (tela 03) e antes de receber uma nota fiscal cujo fornecedor vende em caixa, frasco ou outra embalagem diferente da unidade do estoque.</li>
+<li>Quando a Produção pede material em uma unidade diferente da do estoque (tipo Produção, só com o módulo ligado).</li>
+<li>Para ajustar o fator, o nome ou a situação de uma conversão existente.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Incluir:</strong> grava uma linha em <code>TBL_APRESENTACAO_PRODUTO</code> (nome, fator, unidade, tipo, unidade de produção, data e usuário) e uma linha de histórico "INCLUSÃO DO REGISTRO".</li>
+<li><strong>Alterar:</strong> atualiza nome, fator, unidade, situação, tipo e unidade de produção; grava no histórico uma linha por campo mudado entre unidade, nome, ativo e quantidade (fator), com a justificativa.</li>
+<li><strong>Excluir:</strong> marca a linha como excluída (<code>LIXEIRA = 1</code>) e grava "EXCLUSÃO DO REGISTRO".</li>
+<li><strong>Efeito nas outras telas:</strong> o <strong>Recebimento</strong> oferece as conversões da unidade do item e mostra o fator na nota e no lote; a leitura da nota fiscal em XML multiplica a quantidade pelo fator; ao finalizar o recebimento, o <strong>custo do item</strong> é o valor unitário da nota <strong>dividido pelo fator atual</strong>; a <strong>Apresentação do Fornecedor</strong> (menu Cadastros) escolhe uma conversão; a solicitação que vem da Produção multiplica a quantidade pelo fator.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -534,7 +554,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -47,6 +47,26 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>O <strong>Atendimento de Solicitação</strong> é a tela em que o Almoxarifado escolhe, para cada item de uma solicitação, <strong>de qual lote vai tirar o material</strong> e quanto, e finaliza o atendimento. Ao finalizar, o material sai do endereço de estoque e vai para o endereço de separação, a solicitação passa a "Atendida" e o sistema gera as pesagens de separação dos itens que exigem pesagem (pExecutaAtendimento.sql:51-216). É a etapa que decide <strong>qual lote será usado</strong>, por isso é onde mais importam "usar primeiro o que vence antes" e "só usar material liberado". A tela mostra pedidos de produção, consumo, cliente e do Controle da Qualidade (CQ); os do CQ abrem sem poder alterar, e os de cliente também, quando o módulo CQ está habilitado (atendimento_op.aspx.cs:50-51 e 81-88). O código consulta o módulo CQ ao decidir sobre pedidos de cliente: ponto para validar (talvez devesse ser o Comercial).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O Almoxarifado, que atende os pedidos.</li>
+<li>A tela mostra pedidos de produção, consumo, cliente e do Controle da Qualidade; os do CQ abrem sem poder alterar, e os do tipo Cliente também, quando o módulo Controle da Qualidade está habilitado. O código consulta o módulo CQ ao decidir sobre pedidos de cliente: ponto para validar (talvez devesse ser o Comercial).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 13 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>A solicitação existe e saiu de Pendente: a lista não mostra Pendente nem Cancelada.</li>
+<li>Se o almoxarifado da solicitação "obriga aprovação", ela só aparece depois de aprovada, exceto as de Produção e do CQ.</li>
+<li>O usuário só vê solicitações de almoxarifados ligados ao grupo dele.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Atender item</strong> grava o lote e a quantidade escolhidos para o item, ainda sem baixar o estoque. O saldo disponível já desconta o que foi atendido.</li>
+<li><strong>Finalizar</strong> executa o procedimento do banco que tira o material do endereço de estoque, põe no endereço de separação, marca a solicitação como "Atendida" e gera as pesagens de separação. Em seguida abre a lista de separação em outra janela. O próximo passo é a tela Separação de Material.</li>
+<li><strong>Cancelar o atendimento do item</strong> (ícone) apaga os lotes atendidos daquele item. <strong>Cancelar atendimento</strong> (botão) desfaz tudo: apaga movimentações e pesagens e volta a solicitação a Concluída.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -480,7 +500,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

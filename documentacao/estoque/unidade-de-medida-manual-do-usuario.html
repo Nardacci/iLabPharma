@@ -47,6 +47,25 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Unidade de Medida</strong> cadastra as unidades em que o estoque conta os itens (quilograma, grama, litro, unidade, comprimido, caixa). Quem mantém os cadastros de apoio do estoque usa a tela antes de cadastrar itens. Ao <strong>incluir</strong> uma unidade, o banco cria sozinho uma <strong>apresentação</strong> de estoque para ela (a mesma unidade, fator de conversão 1), que aparece na tela Conversão de Unidade.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>(a confirmar com a área)</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 3 do menu Cadastros, módulo Estoque)</p>
+<ul>
+<li>Antes de cadastrar o <strong>item</strong> (a unidade é obrigatória no item, tela 12) e antes de cadastrar uma <strong>conversão de unidade</strong> (tela 04). Os dados de teste de 07/10/2026 seguiram essa ordem (unidade <code>TST</code>, depois o item).</li>
+<li>Para ajustar a abreviatura, o nome ou a situação de uma unidade existente.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Incluir:</strong> grava uma linha na tabela de unidades (o código usa o nome <code>TBL_UNIDADE_MEDIDA_ESTOQUE</code>; o projeto de banco traz <code>TBL_UNIDADE_MEDIDA</code>, ponto para validar com o DBA) e uma linha de histórico "INCLUSÃO DO REGISTRO". O gatilho do banco cria a apresentação de estoque da unidade, sem passar pela tela. Visto em teste: <code>TST</code> criou "TESTE UNIDADE" (tipo ESTOQUE, fator 1), CT-EST-010, 07/10/2026.</li>
+<li><strong>Alterar:</strong> atualiza abreviatura, descrição e situação; grava no histórico uma linha por campo mudado.</li>
+<li><strong>Excluir:</strong> só se a unidade não é usada por item, nota fiscal ou conversão de produção; marca as apresentações dela e a própria unidade como excluídas e grava "EXCLUSÃO DO REGISTRO".</li>
+<li><strong>Efeito nas outras telas:</strong> a unidade aparece pela abreviatura na escolha do Item e como "ABREVIATURA - DESCRIÇÃO" na Conversão de Unidade; nas notas fiscais do recebimento, nos kits, nos inventários, nas solicitações, nas movimentações e nas remessas, a abreviatura e o nome são lidos da unidade (27 classes de acesso a dados fora desta tela leem a tabela de unidades).</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -472,7 +491,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

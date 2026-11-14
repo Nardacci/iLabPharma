@@ -45,31 +45,132 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="analise-de-componentes-kit-analise.html">Análise</a><a href="analise-de-componentes-kit-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="analise-de-componentes-kit-fluxos.html">Fluxos</a><a href="analise-de-componentes-kit-regras-de-negocio.html">Regras de negócio</a><a href="analise-de-componentes-kit-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-analise-de-componentes-kit.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-kits-passo-a-passo.html#tela-10-analise-de-componentes">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Análise de Componentes (Kit)</strong> é um relatório de consulta, que não grava nada. Compara, <strong>por componente de kit, o planejado, o enviado, o vencido e o pendente</strong>, e mostra o que vai vencer nos clientes (em 1, 3, 6 e 12 meses e mais de 1 ano). Quem usa: quem planeja o envio e a reposição de componentes de kits, almoxarifado e planejamento (inferência; ponto para validar com a área, que ainda precisa confirmar se os kits são usados). Não confundir com a tela <strong>Análise do Planejamento de Kits</strong> (menu Kits), que gera uma análise gravada; esta só consulta.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Tenha kits cadastrados e, para os números não ficarem zerados, planejamento e remessas de kit com embarque.</li>
+<li>Quem planeja o envio e a reposição de componentes de kits (almoxarifado e planejamento; inferência; ponto para validar com a área, que ainda precisa confirmar se os kits são usados, <code>fluxos/kits.md</code>).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="gerar-o-relatorio">Gerar o relatório</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 21 do menu Relatórios, módulo Estoque)</p>
 <ul>
-<li>Passo 1. No menu Relatórios, abra Análise de Componentes (Kit). A tela mostra o quadro "Filtros" com <strong>Tipo de Kit</strong>, <strong>Kit</strong> e <strong>Componente</strong> (visto em teste, <code>CT-EST-157-passo-0-rel-analise-componente.png</code>).</li>
-<li>Passo 2. Se quiser, escolha o <strong>Tipo de Kit</strong>: a lista de kits se recarrega com os kits do tipo. Escolha o <strong>Kit</strong>: a lista de componentes se recarrega com os componentes do kit (<code>rel_analise_componente_lst.aspx.cs:178-190</code>). Escolha o <strong>Componente</strong> se quiser um só.</li>
-<li>Passo 3. Clique em GERAR RELATÓRIO. A tela não confere nada: abre uma nova janela com o relatório. <strong>Sem filtro, traz todos os kits</strong> (visto em teste, 22/10/2026).</li>
-<li>Passo 4. LIMPAR volta o tipo para "SELECIONE" e recarrega kit e componente.</li>
+<li>Existem kits cadastrados com componentes (menu Kits › Cadastro de Kits). Para ter "planejado", precisa haver planejamento (Planejamento de Kits). Para ter "enviado", "vencido" e "a vencer", precisa haver remessa de kit com data de embarque e lotes ligados.</li>
+<li>A pessoa abre Relatórios › Análise de Componentes (Kit). No teste de 22/10/2026 havia planejamento (kit <code>00001</code>: 3 kits; kit <code>00002</code>: 1 componente com planejado 1) e nenhum envio.</li>
 </ul>
-<h4 id="ler-o-relatorio">Ler o relatório</h4>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
 <ul>
-<li>Uma faixa por <strong>tipo de kit</strong> (por exemplo "COLETIVO") e, dentro dela, um bloco por kit: "KIT: 00001 - TESTE KIT R8".</li>
+<li><strong>Não se aplica: relatório de consulta.</strong> GERAR RELATÓRIO não grava nada. O resultado aparece <strong>em uma nova janela do navegador</strong>, no leitor de relatórios, onde dá para imprimir e exportar. Não há arquivo guardado nem envio por e-mail.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Kits cadastrados com componentes</strong></td>
+<td>Sem kit o relatório sai vazio</td>
+<td>Kits › Cadastro de Kits</td>
+</tr>
+<tr>
+<td><strong>Planejamento de kits</strong></td>
+<td>Preenche a coluna PLANEJADO</td>
+<td>Kits › Planejamento de Kits</td>
+</tr>
+<tr>
+<td><strong>Remessa de kit com data de embarque e lotes ligados</strong></td>
+<td>Preenche ENVIADO, VENCIDO e A VENCER; sem remessa esses números ficam zerados</td>
+<td>Remessa de kit</td>
+</tr>
+<tr>
+<td><strong>Janelas abertas pelo sistema liberadas no navegador</strong></td>
+<td>O relatório abre em segunda janela</td>
+<td>Configuração do navegador</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar o relatório</strong> (visto em teste em 22/10/2026, caso CT-EST-157, com o relatório gerado sem filtro; os filtros vêm da leitura do código)</p>
+<ol>
+<li>No menu Relatórios, abra <strong>Análise de Componentes (Kit)</strong>. A tela mostra o quadro "Filtros" com <strong>Tipo de Kit</strong>, <strong>Kit</strong> e <strong>Componente</strong>. Nenhum é obrigatório.</li>
+<li>Se quiser, escolha o <strong>Tipo de Kit</strong>: a lista de kits se recarrega com os kits do tipo. Escolha o <strong>Kit</strong>: a lista de componentes se recarrega com os componentes do kit. Escolha o <strong>Componente</strong> se quiser um só.</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. A tela não confere nada: abre uma nova janela com o relatório. <strong>Sem filtro, traz todos os kits.</strong></li>
+<li><strong>LIMPAR</strong> volta o tipo para "SELECIONE" e recarrega kit e componente.</li>
+</ol>
+<p><strong>Ler o relatório</strong></p>
+<ol start="5">
+<li>Há uma faixa por <strong>tipo de kit</strong> (por exemplo "COLETIVO") e, dentro dela, um bloco por kit ("KIT: 00001 - ...").</li>
 <li>Colunas: <strong>COMPONENTE</strong> ("código - nome"), <strong>UNID.</strong>, <strong>PLANEJADO</strong>, <strong>ENVIADO</strong>, <strong>VENCIDO</strong>, <strong>PENDENTE</strong> e, sob "A VENCER", <strong>01 MÊS</strong>, <strong>03 MESES</strong>, <strong>06 MESES</strong>, <strong>12 MESES</strong> e <strong>MAIS DE 1 ANO</strong>.</li>
-<li>No alto: nome da empresa, logotipo, título e "Emitido em". No pé: "Página".</li>
-</ul>
-<div class="callout">
-<p class="callout-titulo">Atenção</p>
-<ul>
-<li><strong>PENDENTE</strong> é o planejado menos o enviado que ainda não venceu (RN-EST-REL21-007). Em 22/10/2026, sem envio, pendente = planejado (15, 30 e 1).</li>
+<li><strong>PENDENTE</strong> é o planejado menos o enviado que ainda não venceu. Em 22/10/2026, sem envio, pendente = planejado.</li>
 <li>Os números <strong>somam todos os clientes</strong>; o relatório não diz isso.</li>
-<li>O "Emitido em" saiu em formato americano (10/22/2026): DV-EST-057.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
+<ul>
+<li><strong>Não grava nada</strong>: só lê. Não há arquivo guardado nem envio por e-mail.</li>
+<li>No alto: nome da empresa, logotipo, título e "Emitido em". No pé: "Página". <strong>Não saem:</strong> cliente, filial, validade mínima, data dos envios, lote nem os filtros usados.</li>
+<li>A janela do relatório tem a barra do visualizador (páginas, busca, atualizar, imprimir e exportar); os formatos de exportação não estão no código e ficam a conferir na tela. A tela de filtros não tem botão próprio de Excel ou PDF.</li>
 </ul>
-</div>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>A tela não exige nem confere nada antes de abrir a janela (nenhuma validação de campo).</li>
+<li>Qualquer falha da consulta mostra "Erro ao gerar dados do Relatório!" na janela do relatório. Se a falha traz causa interna, a tela mostra o link <strong>Detalhe do erro (+)</strong>.</li>
+<li>Em 22/10/2026 o relatório abriu com linhas, sem mensagem.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>relAnaliseComp</code> e entra no menu Relatórios sem funções internas: todas as marcas (incluir, alterar, excluir, imprimir ou Excel, ver log) estão em "N". Quem vê o item no menu é decidido pelo perfil de cada pessoa.</li>
+<li>O botão GERAR RELATÓRIO não depende de função. A função CONSULTAR é dada a todo usuário, então a conferência não impede ninguém.</li>
+<li><strong>Cuidado:</strong> a página do relatório só confere a sessão aberta, e a abertura da tela pelo endereço não é barrada (DV-EST-008, Alta, visto em outras telas do Estoque e <strong>não testado aqui</strong>).</li>
+<li>O relatório <strong>não recorta por grupo de usuário, almoxarifado nem cliente</strong>: quem o abre vê o planejado e o enviado de todos os kits da empresa.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-EST-057</strong> (Baixa, visto em 22/10/2026): "Emitido em" sai com o mês antes do dia (10/22/2026).</li>
+<li><strong>Soma de todos os clientes</strong>, sem aviso e sem filtro por cliente. Para ver por cliente, use o relatório Reposição de Componentes do Kit.</li>
+<li><strong>Quantidades de origens diferentes na mesma conta:</strong> o "enviado" vem do item solicitado e o "vencido" do lote da remessa; se a remessa leva quantidade diferente da solicitada, o "pendente" mistura as duas.</li>
+<li><strong>"Vencido" volta a ser pendente:</strong> o cálculo trata o lote vencido no cliente como a repor. O Controle de Kits trata a reposição de outro modo (CT-EST-156). <strong>Ponto para validar com a área</strong> qual conta vale.</li>
+<li><strong>Kit inativo entra</strong>, diferente da Reposição de Componentes. <strong>Faixas por mês de calendário:</strong> um lote que vence daqui a cerca de 60 dias pode cair em "01 MÊS".</li>
+<li>A faixa do tipo ("COLETIVO") aparece sem legenda, e os filtros não aparecem no cabeçalho.</li>
+<li><strong>Pontos para validar com a área:</strong> somar ou separar por cliente; o pendente deve contar o vencido como a repor; kit inativo deve aparecer.</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Abre a janela do relatório com os filtros</td>
+<td>Sempre (não depende de função)</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Volta o tipo para "SELECIONE" e recarrega kit e componente</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Detalhe do erro (+) / (-)</td>
+<td>Mostra ou esconde a causa interna da falha</td>
+<td>Quando a falha traz causa interna</td>
+</tr>
+<tr>
+<td>Barra do visualizador: páginas, busca, atualizar, imprimir, exportar</td>
+<td>Navegar, procurar, imprimir e exportar</td>
+<td>Na janela do relatório</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Fontes: <code>rel_analise_componente_lst.aspx</code> e <code>.aspx.cs</code> (caminho na seção Resumo da tela). Nenhum campo é obrigatório.</p>
 <h4 id="filtros">Filtros</h4>
@@ -256,7 +357,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -50,6 +50,26 @@
 </blockquote>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Devolução da Produção</strong> devolve ao estoque a <strong>sobra de material</strong> que saiu para uma ordem de produção e não foi usada. O usuário informa o "Item de Entrada" (o código do lote no estoque), a quantidade devolvida, o número da ordem de produção, o motivo e uma observação, e distribui a quantidade em endereços. Ao finalizar, o sistema grava uma movimentação "DEVOLUÇÃO DA PRODUÇÃO" (tipo 12) e o material volta direto ao saldo dos endereços, <strong>sem análise do CQ, sem volumes e sem etiqueta</strong> (devolucao_producao_ed.aspx.cs:167-200). Usa o almoxarifado; a Produção entrega a sobra, mas não opera a tela. É diferente da Devolução (outra origem) e da Entrada de Produção (produto acabado). Situação no inventário: bloqueada no teste.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O almoxarifado, que recebe a sobra da produção e a endereça.</li>
+<li>A Produção entrega a sobra, mas não opera a tela.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 23 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>A produção terminou e sobrou material que tinha saído do estoque para ela. O sistema só aceita um lote que <strong>já saiu por uma solicitação do tipo Produção</strong> (ligada a uma ordem de produção).</li>
+<li>O sistema <strong>não confere</strong> se o lote saiu para a mesma ordem de produção digitada nem quanto saiu: qualquer lote que tenha saído alguma vez por uma solicitação de produção pode ser devolvido, em qualquer quantidade (RN-EST-E23-003 e 004).</li>
+<li>Há endereço compatível com o item: vazio ou já com saldo do mesmo lote.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>O material volta ao saldo dos endereços escolhidos, direto como disponível se o lote já estava liberado; <strong>não há análise</strong> nem quarentena.</li>
+<li>A tela mostra "Devolução finanlizada!" (com erro de digitação) e volta para a lista.</li>
+<li>O tipo de movimentação não atualiza o custo médio.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -546,7 +566,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
