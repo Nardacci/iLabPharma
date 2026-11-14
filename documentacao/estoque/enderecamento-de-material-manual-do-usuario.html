@@ -47,6 +47,25 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>O <strong>Endereçamento de Material</strong> é a tela em que o almoxarifado diz <strong>onde cada lote recebido foi guardado</strong>. Para uma nota conferida, o usuário escolhe item, lote, quantidade e endereço (almoxarifado, local, rua, coluna e andar), clica em ENDEREÇAR, repete até não sobrar pendente e clica em FINALIZAR. Ao finalizar, o sistema <strong>deveria</strong> criar o lote no estoque com saldo em quarentena, registrar a movimentação de entrada, marcar a nota como endereçada e abrir a solicitação de análise no Controle da Qualidade (enderecamento_ed.aspx.cs:108-133; pFinalizaRecebimento.sql:60-346). É a tela em que o material passa a existir no estoque e a ficar em quarentena (RDC 658/2022, art. 157). <strong>Atenção: hoje ela mostra "sucesso" sem gravar (DV-EST-016).</strong></p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O almoxarifado, que guarda o material.</li>
+<li>O Controle da Qualidade recebe o resultado (a solicitação de análise), mas não usa esta tela.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 4 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>A nota foi <strong>conferida</strong> na tela Conferência de Recebimento: a lista só traz notas conferidas.</li>
+<li>Existem endereços de estoque livres e compatíveis com o item (almoxarifado, local, rua, coluna e andar cadastrados). Os locais oferecidos respeitam as marcações do item: quarentena, umidade, refrigeração. Um endereço já usado por outro endereçamento é recusado.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>ENDEREÇAR (cada linha): grava a linha do lote no endereço escolhido, com o usuário que a incluiu. Ainda <strong>não é</strong> saldo em estoque.</li>
+<li>FINALIZAR: se não restar pendente, chama o procedimento <code>pFinalizaRecebimento</code> (cria o lote em estoque, a movimentação e o saldo no endereço, os volumes e marca nota e recebimento como endereçados), depois gera a análise do CQ e mostra "Endereçamento Finalizado com sucesso!".</li>
+<li><strong>O que se viu em tela:</strong> depois do "sucesso", a lista continua com Endereçado = NÃO, a Disponibilidade do Lote e o Histórico do Lote ficam vazios e nenhuma análise nasce (CT-EST-194 e 197, 08/10/2026; CT-EST-033, 22/10/2026; recebimentos novos 00020 e 00023, rodada 10).</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -488,7 +507,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

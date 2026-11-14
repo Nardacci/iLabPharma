@@ -47,6 +47,29 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Verificação de Amostragens</strong> cadastra os <strong>checklists de verificação da amostragem</strong>: listas de perguntas que quem confere a coleta responde "Sim" ou "Não" ao registrar a amostragem (por exemplo, se a embalagem está íntegra; os textos são livres). Cada checklist tem código automático, descrição, situação (ativo ou não) e perguntas numeradas. Quem define os checklists é a Garantia da Qualidade ou a chefia do CQ (leitura da área); quem responde é o verificador e o amostrador, na tela Consultar Amostragem. O checklist é ligado a uma <strong>Regra Amostragem</strong>; para produto e material, a regra só é salva se tiver um checklist (RN-CQ-058).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem define como a coleta é conferida: Garantia da Qualidade ou chefia do Controle da Qualidade (leitura da área; o sistema não diz).</li>
+<li>O verificador e o amostrador, que respondem as perguntas ao registrar a amostragem (tela 04).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 1 do menu Amostragem, módulo Controle da Qualidade)</p>
+<ul>
+<li>Antes de cadastrar uma Regra Amostragem de produto ou material, porque a regra pede o checklist.</li>
+<li>Quando o roteiro de conferência da coleta muda (perguntas novas, texto corrigido, checklist inativado).</li>
+<li>Para consultar ou imprimir a lista de checklists (inferência; ponto para validar com a área).</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Incluir ou alterar o checklist:</strong> grava a linha em <code>TBL_VERIFICACAO</code>; a tela recarrega e, só depois da primeira gravação, libera o quadro "Cadastro de Perguntas". Um checklist ativo e não excluído passa a aparecer na lista "Verif. Amostragem" da Regra Amostragem.</li>
+<li><strong>Salvar pergunta:</strong> grava em <code>TBL_VERIFICACAO_ITEM</code>, com o número de ordem seguinte; a inclusão e a alteração da pergunta entram no histórico do checklist.</li>
+<li><strong>Excluir pergunta:</strong> apaga a linha de verdade (não vai para a lixeira) e renumera as demais; entra no histórico. Se a pergunta já foi respondida em alguma amostragem, a exclusão deve falhar (chave estrangeira) e a tela responde "Ocorreu um erro interno não esperado."; ponto para validar.</li>
+<li><strong>Excluir checklist:</strong> manda para a lixeira; some da lista e da escolha nas regras; <strong>não grava histórico</strong>.</li>
+<li><strong>Duplicar:</strong> cria outro checklist com as mesmas perguntas e a descrição "DUPLICADO_CODIGO: <código do original>".</li>
+<li><strong>Imprimir:</strong> abre um relatório com a lista filtrada; não grava nada.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -458,7 +481,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 13/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

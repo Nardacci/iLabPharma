@@ -47,6 +47,27 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Solicitação de Material (Produção)</strong> é a lista das solicitações de material dos tipos <strong>Produção</strong> e <strong>Cliente (Comercial)</strong>. A solicitação de Produção é o pedido de insumos que a Produção faz ao Estoque para fabricar um lote. Pelo código, ela <strong>não nasce nesta tela</strong>: o botão Incluir é escondido de propósito no tipo Produção (solicitacao_lst.aspx.cs:46-50). Quem cria o pedido é o módulo Produção, que o grava como "reserva" (situação Pendente), com produto, lote de produção e insumos (bllItemIntegracao.cs:210-290). Esta tela serve para <strong>consultar, imprimir, ver o histórico e excluir</strong> o que ainda está Pendente. No alto da tela o título é "SOLICITAÇÃO DE MATERIAL (PRODUÇÃO / COMERCIAL)". Usam o Almoxarifado (acompanha os pedidos antes do Atendimento e da Separação), a Produção (cria e confirma, por outro módulo) e o Comercial (a mesma lista mostra as do tipo Cliente).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O Almoxarifado, que acompanha os pedidos da Produção antes de atendê-los (telas Atendimento de Solicitação e Separação de Material).</li>
+<li>A Produção, que é quem cria e confirma o pedido, por outro módulo.</li>
+<li>O Comercial: a mesma lista mostra as solicitações do tipo Cliente, como a 00033 vista no teste (CT-EST-091, rodada 8, 22/10/2026).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 12 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>O usuário abre o item do menu; a lista vem vazia e só mostra resultado depois de Pesquisar.</li>
+<li>A Produção precisa ter gerado o pedido. No ambiente de teste isso não foi possível: a Solicitação de Autorizações da Produção não abre sem um Lote Padrão aprovado, e ninguém consegue aprovar o Lote Padrão (DV-EST-076, rodada 11, 22/10/2026; CT-EST-082 e 091).</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>Esta tela não salva. As saídas possíveis, pelo código:</li>
+<li><strong>Editar ou Visualizar</strong> abre o formulário comum <code>solicitacao_consumo_ed.aspx</code> com o tipo Produção. Esse mesmo formulário é descrito na tela Solicitação de Material (Consumo).</li>
+<li><strong>Excluir</strong> (só para pedido Pendente) marca a solicitação como lixeira e grava no histórico, com justificativa.</li>
+<li>Quando a Produção confirma o pedido, ele passa a "Concluída" e fica disponível para o Atendimento. Se a Produção cancela antes da separação, o pedido é <strong>apagado do banco</strong>.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -373,7 +394,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

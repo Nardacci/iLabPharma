@@ -50,6 +50,28 @@
 </blockquote>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Entrada de Produção</strong> confirma no Estoque o produto acabado que a <strong>Produção</strong> enviou ao finalizar o lote. A Produção não grava o saldo: deixa uma entrada pendente com ordem de produção, item, lote, validade e quantidade (final_producao_ed.aspx.cs:439-478). O almoxarifado abre cada entrada pendente e informa volumes, custo do item e endereços. Ao salvar, o sistema grava a movimentação "ENTRADA DE PRODUÇÃO", gera os volumes, abre a análise no Controle da Qualidade (CQ), imprime a etiqueta de quarentena, cria a reserva de estabilidade quando houver e tira a entrada da lista (entrada_producao_servicos_ed.aspx.cs:191-258). Usa o almoxarifado de produto acabado; a Produção só envia. Situação no inventário: bloqueada no teste.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O almoxarifado de produto acabado, que confirma e endereça.</li>
+<li>A Produção, que envia a entrada (não opera esta tela).</li>
+<li>O Controle da Qualidade recebe a análise aberta; a Garantia da Qualidade acompanha a estabilidade.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 22 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>A Produção finalizou um lote e liberou o envio ao estoque na tela "Final da Produção", com o módulo do Estoque ativo. Quando o envio falha, a Produção engole o erro e devolve "falso", sem avisar quem finalizou.</li>
+<li>A entrada chega com código da produção, ordem de produção, item, lote, validade (31/12/2999 se vier vazia), quantidade, volumes (um, se vier zero) e, quando existir, a quantidade de estabilidade.</li>
+<li>A mesma entrada não pode ser enviada duas vezes: o Estoque recusa "Já existe um registro de entrada em produção para este lote/item".</li>
+<li>A lista traz só as entradas ainda pendentes (<code>LIXEIRA = 0</code>).</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>A entrada vira movimentação do tipo "ENTRADA DE PRODUÇÃO" no endereço escolhido; o produto fica em quarentena com análise no CQ quando o item tem controle de qualidade.</li>
+<li>A tela mostra "Inclusão realizada com sucesso!", abre a etiqueta de quarentena e volta para a lista; a entrada some da lista.</li>
+<li>O tipo "ENTRADA DE PRODUÇÃO" atualiza o custo médio do item.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -521,7 +543,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

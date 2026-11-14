@@ -47,6 +47,25 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>O <strong>Grupo Usuário - Almoxarifado</strong> define <strong>quais almoxarifados cada grupo de usuários enxerga</strong> no Estoque. O grupo de usuários é um cadastro do Módulo Principal; esta tela só liga o grupo aos almoxarifados (e desliga). Um almoxarifado recém-criado só aparece nas telas de local, movimentação, disponibilidade e consulta depois de ligado ao grupo de quem as usa (RN-EST-003; DV-EST-066). É a regra de visibilidade mais sensível do Estoque: quem a altera muda o que cada grupo vê na fábrica inteira.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem administra o Estoque e decide qual área pode movimentar qual armazém (leitura da área, a validar).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 16 do menu Cadastros, módulo Estoque)</p>
+<ul>
+<li>O grupo de usuários já existe no Principal e está ativo (a lista vem de <code>bllGrupoUsuario.retornaLista</code>, grupo_usuario_local_lst.aspx.cs:73-77; dalGrupoUsuario.cs:49-85).</li>
+<li>O almoxarifado já existe e está ativo (tela Almoxarifado, tela 17 deste menu): a lista só oferece almoxarifados ativos que o grupo ainda não tem.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Não há botão Salvar.</strong> O botão SALVAR do formulário está escondido e o método que ele chamaria está vazio. Cada ação grava na hora.</li>
+<li><strong>INCLUIR</strong> grava o vínculo grupo × almoxarifado como ativo, sem pedir confirmação nem justificativa, e a grade se atualiza.</li>
+<li><strong>Excluir (ícone da grade)</strong> pergunta "Confirma a exclusão do registro?" e marca o vínculo como excluído (lixeira), sem justificativa.</li>
+<li>Não há aprovação nem passo seguinte. O efeito é imediato nas telas que filtram pelo grupo.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -408,7 +427,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

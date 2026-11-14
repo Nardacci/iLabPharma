@@ -52,6 +52,31 @@
 <li><strong>Remessa comum</strong> (<code>remessa_ed</code>): o lote de cada item é escolhido na própria remessa. É a versão que vem ligada, mas o Finalizar dela <strong>nunca terminou em teste</strong> (DV-EST-046).</li>
 <li><strong>Remessa por guia, "GMM"</strong> (<code>remessa_gmm_ed</code>): gera-se uma guia (consignatário, centro de custo, local de entrega); a remessa leva só item e quantidade, e o lote sai no Atendimento e na Separação. Tem data e hora de embarque. Terminou e liberou o embarque em teste (rodada 10, 22/10/2026). A sigla GMM não está explicada no código (ponto para validar com a área).</li>
 </ul>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O almoxarifado e a expedição, que montam e liberam a remessa (inferência pelo teor da tela; ponto para validar com a área).</li>
+<li>A Garantia da Qualidade e a Qualidade, que precisam consultar para o recolhimento (norma, arts. 346 e 347).</li>
+<li>Os módulos de Kits e Comercial geram remessas por conta própria (ver "Em que situação chega aqui").</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 24 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>Pelo menu, o usuário abre a lista e clica em Incluir para uma remessa nova.</li>
+<li>Pela <strong>Solicitação de Kits</strong>, que gera a guia e a remessa do kit (CT-EST-153 e 154; DV-EST-058). A remessa de kit nasce sem Origem e sem Responsável (22/10/2026, rodada 8).</li>
+<li>Pelo <strong>Comercial</strong>, que pode criar a remessa já finalizada ou gerá-la quando a separação de uma solicitação do Comercial é confirmada. Não testado.</li>
+<li>Para ter o que remeter, é preciso haver lote com saldo disponível fora da quarentena.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Salvar remessa (nova):</strong> cria a remessa, sem solicitação ainda. A tela mostra "Inclusão realizada com sucesso!" e reabre a remessa para incluir os lotes.</li>
+<li><strong>Incluir lote:</strong> grava a linha (item, lote, quantidade, valor); o saldo ainda não é reservado.</li>
+<li><strong>Finalizar (comum):</strong> salva a remessa, cria uma solicitação do tipo Cliente com os lotes escolhidos e finaliza o atendimento dela, o que move o saldo do endereço de estoque para o endereço de separação. <strong>No teste esta etapa terminou em erro</strong> ("Erro ao gerar a solicitação do material!", DV-EST-046).</li>
+<li><strong>Finalizar (GMM):</strong> cria a solicitação de estoque da guia e para; o Estoque atende e separa depois.</li>
+<li><strong>Confirmar carga (comum) ou Confirmar embarque (GMM):</strong> grava a data de liberação, o responsável e, na GMM, a data e a hora do embarque. A remessa fica "Liberado = SIM" na lista.</li>
+<li>A saída definitiva do saldo vem da <strong>separação</strong> da solicitação, não do clique de confirmação. Ponto para validar.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -834,7 +859,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

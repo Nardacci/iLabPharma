@@ -45,23 +45,124 @@
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="relacao-de-lotes-reanalise-analise.html">Análise</a><a href="relacao-de-lotes-reanalise-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="relacao-de-lotes-reanalise-fluxos.html">Fluxos</a><a href="relacao-de-lotes-reanalise-regras-de-negocio.html">Regras de negócio</a><a href="relacao-de-lotes-reanalise-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-relacao-de-lotes-reanalise.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-relatorios-passo-a-passo.html#tela-4-relacao-de-lotes-reanalise">Passo a passo</a><a class="aba-extra" href="o-estoque-ideal.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Relação de Lotes - Reanálise</strong> é um relatório de consulta, que não grava nada. Lista os lotes de itens com controle de qualidade e saldo, com a <strong>data de reanálise</strong> de cada um, para o Estoque, o Controle da Qualidade e a Garantia da Qualidade saberem quais lotes já passaram da data (vencidos) e quais passam nos próximos meses. Reanálise é a análise feita em matéria-prima já aprovada para confirmar que ela continua dentro das especificações, dentro do prazo de validade (RDC 658/2022, art. 3º, XLIII). Quem usa: Garantia da Qualidade, Controle da Qualidade e o almoxarife responsável pela reanálise dos insumos (leitura da área, a validar). A <strong>Agenda de Reanálise - Relatório</strong> (tela 23) é outro relatório, mais ligado à agenda; esta lista os lotes e as datas.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Os lotes só aparecem se o item tiver controle de qualidade e o lote tiver saldo.</li>
-<li>O campo <strong>Vencido</strong> vem em "NÃO": o padrão mostra só os lotes que ainda <strong>não</strong> passaram da data de reanálise <strong>e os que não têm data</strong>. Para ver os vencidos, troque para "SIM".</li>
-<li>Lote sem data de reanálise aparece como não vencido e com 0 meses (ver Falhas); não o confunda com lote em dia.</li>
+<li>A Garantia da Qualidade, o Controle da Qualidade e o almoxarife responsável pela reanálise dos insumos (leitura da área, a validar).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="gerar-a-relacao">Gerar a relação</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 13 do menu Relatórios, módulo Estoque)</p>
 <ul>
-<li>Passo 1. No menu Relatórios, abra "Relação de Lotes - Reanálise". Aparece o quadro com Grupo, Item, Vencido e Qtd Meses.</li>
-<li>Passo 2. Se quiser, escolha o <strong>Grupo</strong> ("SELECIONE" = todos) e digite parte do código ou da descrição do <strong>Item</strong> (até 40 letras).</li>
-<li>Passo 3. Escolha <strong>Vencido</strong>: NÃO (padrão) ou SIM.</li>
-<li>Passo 4. Se quiser só os lotes que passam a determinada distância em meses, digite <strong>Qtd Meses</strong> (número exato de meses, ver Falhas).</li>
-<li>Passo 5. Clique em GERAR RELATÓRIO. Abre uma segunda janela com o relatório (visto na captura de 22/10/2026).</li>
-<li>Passo 6. Leia: uma linha por lote, ordenada por código do item, item de entrada e data de reanálise. A coluna QTD MESES é a distância, em meses, até a data (para a frente ou para trás), sem sinal.</li>
-<li>Passo 7. <strong>Não use LIMPAR FILTRO:</strong> pelo código ele tenta pôr "0" no campo Vencido, que só aceita NÃO e SIM, e deve dar erro (ver Falhas). Recarregue a página para limpar os campos.</li>
+<li>Existem lotes de itens com controle de qualidade e saldo maior que zero.</li>
+<li>Para o relatório trazer datas, os lotes precisam ter data de reanálise gravada. Pelas regras RN-EST-085 e RN-EST-019, a data vem da classificação de reanálise do item, que o cadastro de Item não consegue ligar (DV-EST-043); a captura de 22/10 mostra 4 lotes com data e 3 sem.</li>
+<li>A tela é aberta pelo menu Relatórios.</li>
 </ul>
-<p>Os passos 1 a 5 e a leitura do relatório seguem a captura de 22/10/2026; os filtros e o botão Limpar são leitura do código.</p>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Nada é gravado.</strong> O botão GERAR RELATÓRIO abre uma segunda janela com <code>VisualizaRelatorio.aspx?Relatorio=data_reanalise&amp;grupo=...&amp;item=...&amp;vencido=...&amp;qtdmeses=...</code>. Na captura de 22/10, a janela mostra a barra do visualizador (páginas, busca, exportar e atualizar) e o relatório em uma página.</li>
+<li>Não há aprovação, número de documento nem registro de quem emitiu.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra ou acontece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Item com controle de qualidade</strong></td>
+<td>Só os lotes desses itens entram</td>
+<td>Cadastros › Item</td>
+</tr>
+<tr>
+<td><strong>Lote com saldo maior que zero</strong></td>
+<td>Lote sem saldo não aparece</td>
+<td>Recebimento e movimentações do Estoque</td>
+</tr>
+<tr>
+<td><strong>Data de reanálise gravada no lote</strong></td>
+<td>Sem ela o lote sai como "NÃO vencido, 0 meses", parecendo em dia (DV-EST-043)</td>
+<td>Vem da classificação de reanálise do item (o cadastro de Item ainda não consegue ligá-la)</td>
+</tr>
+<tr>
+<td><strong>Janelas abertas pelo sistema liberadas no navegador</strong></td>
+<td>O relatório abre em segunda janela</td>
+<td>Configuração do navegador</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><strong>Gerar a relação</strong> (os passos 1 a 5 e a leitura do relatório seguem a captura da rodada 8, de 22/10/2026; os filtros e o botão Limpar vêm da leitura do código)</p>
+<ol>
+<li>No menu Relatórios, abra <strong>Relação de Lotes - Reanálise</strong>. Aparece o quadro com Grupo, Item, Vencido e Qtd Meses.</li>
+<li>Se quiser, escolha o <strong>Grupo</strong> ("SELECIONE" = todos) e digite parte do código ou da descrição do <strong>Item</strong> (até 40 letras).</li>
+<li>Escolha <strong>Vencido</strong>: NÃO (padrão: lotes que ainda não passaram da data de reanálise <strong>e os sem data</strong>) ou SIM (data anterior a hoje).</li>
+<li>Se quiser só os lotes que estão a determinada distância em meses, digite <strong>Qtd Meses</strong> (número exato de meses; ver Cuidados).</li>
+<li>Clique em <strong>GERAR RELATÓRIO</strong>. Abre uma segunda janela com o relatório.</li>
+<li>Leia: uma linha por lote, ordenada por código do item, item de entrada e data de reanálise. A coluna QTD MESES é a distância em meses até a data, sem sinal (vale para a frente e para trás).</li>
+<li><strong>Não use LIMPAR FILTRO:</strong> pelo código ele tenta pôr "0" no campo Vencido, que só aceita NÃO e SIM, e deve dar erro. Recarregue a página para limpar os campos.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
+<ul>
+<li><strong>Não grava nada</strong>: só lê. Não há aprovação, número de documento nem registro de quem emitiu.</li>
+<li>Mostra código e descrição do item, lote, quantidade (saldo total, inclusive o que está em quarentena, bloqueado ou reprovado), unidade, item de entrada, data de reanálise, vencido (SIM ou NÃO) e quantidade de meses.</li>
+<li>O papel não imprime usuário, data de emissão nem os filtros: com Vencido = NÃO, quem lê não vê que os vencidos ficaram de fora.</li>
+<li>A janela do relatório tem a barra do visualizador (páginas, busca, exportar, atualizar); os formatos de exportação não foram abertos em teste.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>A tela não tem validação de campo. Qualquer falha na consulta mostra "Erro ao gerar o relatório!" na segunda janela.</li>
+<li><strong>Qtd Meses</strong> que não for número é ignorado sem aviso, e o relatório sai sem esse filtro.</li>
+<li>Nenhuma mensagem foi vista em teste: a captura de 22/10/2026 não mostra mensagem de erro.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela se identifica pelo código <code>lotes_reanalise</code>. No catálogo de funções ela é só um ponto do menu Relatórios: todas as marcas de função (incluir, alterar, excluir, imprimir ou Excel, ver log, criar) estão em "N", então <strong>não existe função de consultar, de imprimir nem de ver log para esta tela</strong>. Quem tem o ponto de menu no perfil abre a tela; não há grau menor de permissão.</li>
+<li>O botão de gerar não depende das funções do usuário.</li>
+<li><strong>Cuidado:</strong> o acesso pelo endereço sem a função (DV-EST-008, Alta) foi visto em outras telas do Estoque e é esperado aqui, mas <strong>não foi testado nesta tela</strong>. A segunda janela só confere se há sessão aberta; não confere perfil.</li>
+<li>Não há filtro por almoxarifado nem pelo grupo do usuário: qualquer perfil com o ponto de menu vê todos os lotes.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum defeito registrado para esta tela. <strong>DV-EST-043</strong> (outra tela): sem a classificação de reanálise no Item, o lote fica sem data e a relação o mostra como "NÃO vencido, 0 meses" (Alta).</li>
+<li>Três dos sete lotes da captura de 22/10/2026 não tinham data e saíram iguais a um lote em dia (F-REL13-1, Média). Lotes em quarentena aparecem sem coluna de situação (F-REL13-2, Baixa).</li>
+<li><strong>Qtd Meses</strong> filtra pelo número exato: digitar 3 não traz os de 1 e 2 meses (F-REL13-5). A coluna QTD MESES é igual para "vence daqui a 3 meses" e "venceu há 3 meses" (F-REL13-8).</li>
+<li>O filtro Item entra na consulta sem tratamento (F-REL13-9, Alta, de acesso). O texto com "&amp;" ou "#" quebra o endereço da segunda janela.</li>
+<li><strong>Ponto para validar com a área:</strong> o fluxo de Reprovado, reanálise e revalidação chama esta tela de "Lotes em reanálise", mas ela lista lotes <strong>com data de reanálise</strong> (vencidos ou a vencer), não os que estão em reanálise.</li>
+</ul>
+<h4 id="icones-e-botoes">Ícones e botões</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GERAR RELATÓRIO</td>
+<td>Abre a segunda janela com o relatório e os quatro filtros</td>
+<td>Sempre (não depende de função)</td>
+</tr>
+<tr>
+<td>LIMPAR FILTRO</td>
+<td>Tenta voltar o Vencido para "0", o que deve dar erro; não use</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Barra do visualizador: páginas, busca, exportar, atualizar</td>
+<td>Navegar, procurar e exportar o relatório</td>
+<td>Na segunda janela</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -159,7 +260,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

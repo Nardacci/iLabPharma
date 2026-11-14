@@ -47,6 +47,26 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Entrada de Material - Outras</strong> registra a entrada no estoque de material que <strong>não vem de compra</strong> (sem nota fiscal e sem recebimento), nem é devolução nem produto acabado. O usuário informa item, lote, validade, fabricante, quantidade, custo, volumes e endereços, mais uma justificativa. Ao salvar, grava a movimentação, gera os volumes, abre a análise no Controle da Qualidade (CQ) para o item com controle de qualidade e imprime as etiquetas (entrada_material_ed.aspx.cs:316-331). Foi o caminho que a homologação usou para criar lote em quarentena enquanto o Endereçamento do recebimento não gravava (DV-EST-016; CT-EST-210). Usa o almoxarifado; a lista é a mesma da Devolução e da Entrada de Material - Produção, escolhida pelo parâmetro <code>dev</code>.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>O almoxarifado, que lança a entrada e a endereça.</li>
+<li>O Controle da Qualidade recebe a análise aberta quando o item tem controle de qualidade.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 20 do menu Estoque, módulo Estoque)</p>
+<ul>
+<li>Entra material que não passa pelo Recebimento de Material: amostra, doação, transferência de outra unidade, ajuste de implantação e outros casos. <strong>O sistema não pede a origem</strong>: não há fornecedor, nota fiscal nem pedido. Ponto para validar com a área quando se usa e quem pode usar (RDC 658/2022, art. 155: o recebimento deve ser verificado contra o pedido).</li>
+<li>O item está cadastrado e há endereço livre compatível com ele.</li>
+<li>A lista traz as movimentações de entrada dos tipos permitidos nesta tela, dos almoxarifados do grupo do usuário.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>O material entra no saldo dos endereços escolhidos; para item com controle de qualidade, o código oferece só locais de quarentena (e, para item sem controle de qualidade, só locais comuns), abre a análise no CQ e o lote fica em quarentena. Para item <strong>sem</strong> controle de qualidade, o saldo entra como disponível (CT-EST-062, 22/10/2026).</li>
+<li>A tela abre a etiqueta de quarentena (se algum item tem controle de qualidade) e a etiqueta de volume em outras janelas, mostra "Movimentação gerada!" e volta para a lista.</li>
+<li>A partir daí o lote segue o fluxo da Quarentena e do CQ (fluxo <code>fluxos/devolucao-entrada-producao.md</code>).</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -623,7 +643,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -47,6 +47,26 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>O <strong>Local de Armazenagem</strong> cadastra o <strong>local dentro do almoxarifado</strong> (por exemplo, "quarentena", "refugo", "refrigerado", "comum"). Quem decide se um lote está em quarentena, reprovado ou disponível é o <strong>local onde ele fica</strong>, porque a quarentena do sistema é uma marca do local. Quem organiza o armazém usa a tela antes de criar endereços e movimentar material.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>(a confirmar com a área)</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 9 do menu Cadastros, módulo Estoque)</p>
+<ul>
+<li>O <strong>almoxarifado</strong> já existe e está ligado ao grupo do usuário (tela Grupo Usuário - Almoxarifado); sem isso o almoxarifado não aparece na lista do formulário.</li>
+<li>Para recebimento com quarentena, o Endereçamento só oferece locais com a marca <strong>Quarentena</strong> (CT-EST-195, 22/10/2026); para o item refrigerado, a Movimentação de Material usa a marca <strong>Refrigerado</strong> (DV-EST-042).</li>
+<li>Depois de criar o local, o passo seguinte é o <strong>Endereço do Estoque</strong> (rua, coluna e andar): sem endereço o local não recebe lote (CT-EST-030, 12/10/2026).</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>O local é gravado em <code>TBL_STQ_LOCAL</code> com as cinco marcações, o almoxarifado, o grupo e o subgrupo de itens, o cliente e o usuário de criação. A inclusão escreve a linha "INCLUSÃO" no log.</li>
+<li><strong>O banco cria sozinho um endereço de sistema</strong> para o local novo (rua, coluna e andar 0, capacidade 9.000.000 em cada medida e no peso) pelo gatilho <code>tUpdCriaLocalPadrao</code>. O que esse endereço é na prática é ponto para validar com o DBA (ver Dados).</li>
+<li>O local ativo passa a ser oferecido ao <strong>Endereço do Estoque</strong>, ao <strong>Endereçamento de Material</strong>, à <strong>Movimentação de Material</strong>, à <strong>Movimentação de Quarentena</strong>, às <strong>Entradas</strong> e <strong>Saídas</strong> e ao <strong>Inventário</strong> (lista de quem chama <code>retornarListaPorAlmoxarifado</code>; ver Dados).</li>
+<li>Não há aprovação nem segundo passo: vale na hora do SIM.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -552,7 +572,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

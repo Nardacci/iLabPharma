@@ -47,6 +47,26 @@
 <div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
 <h4 id="para-que-serve">Para que serve</h4>
 <p>A <strong>Conversão Fornecedor</strong> (no alto da tela: "Conversão de Unidade do Fornecedor") liga o <strong>código que o fornecedor usa para um produto</strong> (o campo <code>cProd</code> da nota fiscal eletrônica) ao <strong>item do estoque</strong> e a uma <strong>apresentação</strong> (a embalagem da nota, com o fator que a converte para a unidade do estoque). Quem cuida de compras e recebimento usa a tela. Quando o Recebimento lê o XML da nota, o sistema procura aqui o par "fornecedor da nota + código do produto" para saber qual item do estoque é aquele e quanto vale cada unidade da nota na unidade do estoque (LerNFeItem.cs:61-69 e 85-181). Não confunda com a tela Conversão de Unidade, que cadastra as apresentações.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem cuida das compras e do recebimento e mantém o cadastro dos produtos de cada fornecedor (leitura da área, a validar).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 15 do menu Cadastros, módulo Estoque)</p>
+<ul>
+<li>O fornecedor já existe como pessoa jurídica do tipo Fornecedor no Principal (a lista vem de <code>bllPJ.retornaListaPJ</code>, apresentacao_fornecedor_ed.aspx.cs:39-44).</li>
+<li>O item existe no cadastro de Item.</li>
+<li>A apresentação existe e está ativa, cadastrada na tela Conversão de Unidade (tela 4 deste menu).</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Incluir:</strong> grava a ligação como ativa e volta à lista. Dali em diante, o Recebimento por XML reconhece o produto daquele fornecedor.</li>
+<li><strong>Alterar:</strong> muda fornecedor, código, item, apresentação ou situação e grava o log.</li>
+<li><strong>Excluir:</strong> marca a ligação como excluída (lixeira); ela some da lista e deixa de ser reconhecida no Recebimento.</li>
+<li>Não há aprovação nem passo seguinte nesta tela.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
 <h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <div class="tabela"><table>
 <thead>
@@ -473,7 +493,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
