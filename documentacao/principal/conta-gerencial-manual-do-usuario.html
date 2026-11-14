@@ -44,44 +44,203 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-gerencial-analise.html">Análise</a><a href="conta-gerencial-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="conta-gerencial-fluxos.html">Fluxos</a><a href="conta-gerencial-regras-de-negocio.html">Regras de negócio</a><a href="conta-gerencial-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-conta-gerencial.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-7-conta-gerencial">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra as <strong>contas gerenciais</strong> de cada empresa: um nome (por exemplo, um grupo de custos ou de bens) ligado a uma empresa do cadastro de Pessoa jurídica. É o nível acima do cadastro de <strong>Local físico</strong> (tela 10): cada local físico pertence a uma conta gerencial. O código mostra duas telas no mesmo cadastro:</p>
+<ol>
+<li><strong>Lista</strong> com pesquisa por código, nome, situação e empresa e ordenação (conta_gerencial_lst.aspx:45-78 e 106-148; conta_gerencial_lst.aspx.cs:54-100).</li>
+<li><strong>Formulário</strong> para incluir, alterar e consultar: o <strong>nome</strong>, a <strong>empresa</strong>, se está <strong>ativo</strong> e, na alteração, a <strong>justificativa</strong> (conta_gerencial_ed.aspx:58-112).</li>
+</ol>
+<p><strong>Fora do foco de Boas Práticas.</strong> As contas gerenciais e os locais físicos são lidos pelo módulo Patrimônio (bens, transferências, baixas, reavaliações, depreciação, inventário), que não faz parte dos sete módulos desta análise (HSolutions.Patrimonio.Domain: Transferencia.cs, Depreciacao.cs, Reavaliacao.cs; HSolutions.Patrimonio.Context: BemConfiguration.cs). Nenhum dos módulos fabris (Produção, Estoque, Controle da Qualidade, Garantia da Qualidade, Comercial, Rastreabilidade) lê estas tabelas (busca por nome no repositório). O valor para a ANVISA é só o de qualquer cadastro mestre: identificação única e rastro de alteração.</p>
+<p>Esta tela <strong>não tem relatório</strong>: os botões Imprimir e Excel existem na página, mas ficam sempre escondidos e a página de relatório não existe no código (ver falhas).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém o cadastro de bens e de custos da empresa: contabilidade, controladoria ou patrimônio (leitura da área, a validar).</li>
+<li>Quem consulta a lista e o histórico.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 7 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu superior <strong>Cadastros › Conta Gerencial</strong>, que abre a lista.</li>
+<li>Na lista, <strong>Pesquisar</strong> traz as contas (a lista não carrega sozinha); <strong>Incluir</strong> abre o formulário vazio e o lápis abre uma conta pelo endereço <code>conta_gerencial_ed.aspx?cod=</code>.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema grava e mostra "Conta Gerencial cadastrada com sucesso!" ou "Conta Gerencial atualizada com sucesso!"; o OK volta à lista.</li>
+<li>A conta gravada passa a ser oferecida no cadastro de <strong>Local físico</strong> (conta_gerencial pelo texto digitado, com a empresa escolhida) e no módulo Patrimônio.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <ul>
 <li>Entre no módulo Principal e abra <strong>Cadastros › Conta Gerencial</strong>.</li>
 <li>A <strong>empresa</strong> precisa existir em Cadastros › Pessoa jurídica, com o tipo <strong>Empresa</strong> (wsAutoComplete.asmx.cs:93-104).</li>
 <li>Quem não tem a função desta tela ("CONTA GERENCIAL") é levado à página de acesso negado ao abrir a lista (conta_gerencial_lst.aspx.cs:38; ClassePaiLst.cs:65). Incluir, Editar, Excluir e Ver Log só aparecem para quem tem a ação correspondente (ClassePaiLst.cs:111-255).</li>
 </ul>
-<h4 id="pesquisar">Pesquisar</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: a lista com a grade, o aviso de sucesso, a inativação, a exclusão recusada por uso no Local físico, a busca da empresa por sugestão.</em></p>
+<p><strong>Pesquisar</strong></p>
 <ol>
 <li>Abra a lista (vem vazia). Preencha, se quiser, <strong>Código</strong> (só números), <strong>Nome</strong>, <strong>Ativo</strong> e <strong>Empresa</strong> (digite pelo menos duas letras e escolha na sugestão) e clique em <strong>Pesquisar</strong> (conta_gerencial_lst.aspx:45-78).</li>
 <li>A grade mostra Código, Nome, Empresa e Ativo, com paginação e ordenação (conta_gerencial_lst.aspx:106-122; conta_gerencial_lst.aspx.cs:54-100).</li>
 <li><strong>Limpar</strong> esvazia filtros e grade (conta_gerencial_lst.aspx.cs:216-240).</li>
 </ol>
-<h4 id="incluir">Incluir</h4>
+<p><strong>Incluir</strong></p>
 <ol>
 <li>Clique em <strong>Incluir</strong>.</li>
 <li>Preencha <strong>Nome</strong> (obrigatório; só letras, números e espaço) e <strong>Empresa</strong> (obrigatória: digite e escolha na sugestão). Ativo vem como Sim (conta_gerencial_ed.aspx:58-87).</li>
+</ol>
+<figure><a href="../img/principal/ca07-r01-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca07-r01-form-preenchido.png" alt="Figura 1: O formulário de inclusão da Conta Gerencial preenchido: Nome, Empresa e Ativo = Sim, antes de salvar." loading="lazy"></a><figcaption>Figura 1: O formulário de inclusão da Conta Gerencial preenchido: Nome, Empresa e Ativo = Sim, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: O formulário de inclusão da Conta Gerencial preenchido: Nome, Empresa e Ativo = Sim, antes de salvar.</em></p>
+<ol start="3">
 <li>Clique em <strong>SALVAR</strong> e responda <strong>SIM</strong> a "Confirma a inclusão do item?" (conta_gerencial_ed.aspx.cs:104-128).</li>
 <li>Se já existir outra conta com o mesmo nome na mesma empresa, aparece "Esse Nome de Conta Gerencial já existe." (PessoaJuridica.cs:340-344 da biblioteca).</li>
 </ol>
-<h4 id="alterar-ou-inativar">Alterar ou inativar</h4>
+<p><strong>Alterar ou inativar</strong></p>
 <ol>
 <li>Clique no lápis. A empresa fica travada. Mude o <strong>Nome</strong> ou o <strong>Ativo</strong> e escreva a <strong>Justificativa</strong> (obrigatória na alteração) (conta_gerencial_ed.aspx.cs:73-100).</li>
 <li>Clique em SALVAR e confirme. O histórico guarda o valor antigo e o novo de Ativo e Nome, com usuário e justificativa (conta_gerencial_ed.aspx.cs:273-326).</li>
+</ol>
+<figure><a href="../img/principal/ca07-r02-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca07-r02-historico.png" alt="Figura 2: A janela &quot;Log Alteração - Conta Gerencial&quot;: a mudança de DESCRIÇÃO (dado antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;." loading="lazy"></a><figcaption>Figura 2: A janela &quot;Log Alteração - Conta Gerencial&quot;: a mudança de DESCRIÇÃO (dado antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: A janela "Log Alteração - Conta Gerencial": a mudança de DESCRIÇÃO (dado antigo e novo) com a justificativa e a linha "INCLUSÃO DO REGISTRO".</em></p>
+<ol start="3">
 <li>Um registro inativo abre travado, com só Ativo e Justificativa liberados (conta_gerencial_ed.aspx.cs:57-71).</li>
 </ol>
-<h4 id="excluir">Excluir</h4>
+<p><strong>Excluir</strong></p>
 <ol>
 <li>Na lista, clique no ícone de exclusão. A tela troca para o painel de exclusão, com o código, o nome e a <strong>Justificativa</strong> (conta_gerencial_lst.aspx.cs:117-125; conta_gerencial_lst.aspx:177-208).</li>
+</ol>
+<figure><a href="../img/principal/ca07-r03-excluir-painel.png" target="_blank" rel="noopener"><img src="../img/principal/ca07-r03-excluir-painel.png" alt="Figura 3: O painel de exclusão: código, nome, campo Justificativa e os botões VOLTAR e EXCLUIR REGISTRO." loading="lazy"></a><figcaption>Figura 3: O painel de exclusão: código, nome, campo Justificativa e os botões VOLTAR e EXCLUIR REGISTRO. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O painel de exclusão: código, nome, campo Justificativa e os botões VOLTAR e EXCLUIR REGISTRO.</em></p>
+<ol start="2">
 <li>Escreva a justificativa, clique em <strong>EXCLUIR REGISTRO</strong> e responda SIM a "Confirma a exclusão do item?" (conta_gerencial_lst.aspx.cs:304-346 e 448-456).</li>
 <li><strong>Atenção:</strong> o código <strong>não confere</strong> se a conta tem locais físicos ligados; ele só a manda para a lixeira (ver falhas).</li>
 </ol>
-<h4 id="ver-o-historico">Ver o histórico</h4>
+<p><strong>Ver o histórico</strong></p>
 <ul>
 <li>O ícone <strong>LOG</strong> abre o histórico da conta (conta_gerencial_lst.aspx.cs:132-145).</li>
 <li><strong>Imprimir</strong> e <strong>Excel</strong> não aparecem nesta tela (conta_gerencial_lst.aspx.cs:48-49 e 225-226).</li>
 </ul>
 <hr />
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema grava e mostra "Conta Gerencial cadastrada com sucesso!" ou "Conta Gerencial atualizada com sucesso!"; o OK volta à lista (conta_gerencial_ed.aspx.cs:104-128, 173-207 e 151-155).</li>
+<li>A conta gravada passa a ser oferecida no cadastro de <strong>Local físico</strong> (conta_gerencial pelo texto digitado, com a empresa escolhida) e no módulo Patrimônio (wsAutoComplete.asmx.cs:106-120).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"O Nome é obrigatório!" / "A Empresa é obrigatória." / "A Situação é obrigatório!": Campo em branco (conta_gerencial_ed.aspx:61, 75 e 85)</li>
+<li>"A Justificativa é obrigatória!": Alteração ou exclusão sem justificativa (conta_gerencial_ed.aspx:102; conta_gerencial_lst.aspx:192)</li>
+<li>"Esse Nome de Conta Gerencial já existe.": Outro nome igual na mesma empresa (PessoaJuridica.cs:344 e 378 (biblioteca))</li>
+<li>"Não é possível inserir espaços em branco repetidos no Nome!": Nome com dois espaços seguidos (ContaGerencial.cs:136 (biblioteca))</li>
+<li>"Erro ao efetuar a operação!" com o texto do erro entre colchetes: Qualquer falha ao gravar, inclusive nome acima de 50 caracteres (conta_gerencial_ed.aspx.cs:162-164 e 209-218)</li>
+<li>"A pesquisa não retornou nenhum resultado.": Pesquisa sem linhas (conta_gerencial_lst.aspx.cs:95)</li>
+<li>"Não há Conta Gerencial cadastrado com este código.": Código de conta que não existe ou foi excluído (PessoaJuridicaRepository.cs:242 (biblioteca))</li>
+</ul>
+<figure><a href="../img/principal/ca07-r04-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca07-r04-erro-obrigatorios.png" alt="Figura 4: Salvar com tudo em branco: mensagens vermelhas &quot;O Nome é obrigatório!&quot; e &quot;A Empresa é obrigatória.&quot;." loading="lazy"></a><figcaption>Figura 4: Salvar com tudo em branco: mensagens vermelhas &quot;O Nome é obrigatório!&quot; e &quot;A Empresa é obrigatória.&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Salvar com tudo em branco: mensagens vermelhas "O Nome é obrigatório!" e "A Empresa é obrigatória.".</em></p>
+<figure><a href="../img/principal/ca07-r05-erro-nome-repetido.png" target="_blank" rel="noopener"><img src="../img/principal/ca07-r05-erro-nome-repetido.png" alt="Figura 5: Salvar com nome já existente na mesma empresa: a tela mostra só &quot;Erro ao efetuar a operação!&quot; com o link &quot;Detalhe do erro (+)&quot;, sem dizer que o nome já existe." loading="lazy"></a><figcaption>Figura 5: Salvar com nome já existente na mesma empresa: a tela mostra só &quot;Erro ao efetuar a operação!&quot; com o link &quot;Detalhe do erro (+)&quot;, sem dizer que o nome já existe. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: Salvar com nome já existente na mesma empresa: a tela mostra só "Erro ao efetuar a operação!" com o link "Detalhe do erro (+)", sem dizer que o nome já existe.</em></p>
+<figure><a href="../img/principal/ca07-r06-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca07-r06-erro-justificativa.png" alt="Figura 6: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 6: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<figure><a href="../img/principal/ca07-r07-erro-excluir-sem-just.png" target="_blank" rel="noopener"><img src="../img/principal/ca07-r07-erro-excluir-sem-just.png" alt="Figura 7: Excluir sem Justificativa: o painel de exclusão mostra &quot;A Justificativa é obrigatória!&quot;." loading="lazy"></a><figcaption>Figura 7: Excluir sem Justificativa: o painel de exclusão mostra &quot;A Justificativa é obrigatória!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: Excluir sem Justificativa: o painel de exclusão mostra "A Justificativa é obrigatória!".</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A <strong>lista</strong> usa a função de tela "CONTA GERENCIAL" (conta_gerencial_lst.aspx.cs:38). A base das listas confere a função logo no início e leva quem não a tem à página de acesso negado (ClassePaiLst.cs:65; BaseController.cs:26-31). Incluir, Editar, Consultar, Excluir e Ver Log dependem de cada ação (ClassePaiLst.cs:111-255).</li>
+<li>O <strong>formulário</strong> usa a mesma função (conta_gerencial_ed.aspx.cs:23). A base do formulário só calcula as ações e <strong>não bloqueia a entrada</strong> (ClassePaiEd.cs:71-156). Esta tela trava o formulário e esconde o SALVAR para quem <strong>não tem Alterar</strong>, <strong>inclusive na conta nova</strong> (conta_gerencial_ed.aspx.cs:57-61): quem só tem Incluir veria o formulário novo sem SALVAR (inferência a confirmar). O formulário só confere se há sessão aberta (conta_gerencial_ed.aspx.cs:27-30).</li>
+<li>Não há página de relatório, portanto não há relatório sem conferência.</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum. A tela não foi testada. Nenhum DV-PRI registrado tem esta tela como alvo (<code>defeitos/defeitos-completo.json</code>, campo <code>tela</code>).</li>
+<li><strong>DV-PRI-009 (Alta)</strong>, visto em outro cadastro (Excluir Ambiente e Equipamento sem justificativa). Nesta tela: Esta tela <strong>pede</strong> justificativa na exclusão (conta_gerencial_lst.aspx:189-192). Situação aqui: Não se aplica pelo código.</li>
+<li><strong>DV-PRI-011 (Média)</strong>, visto em outro cadastro (Recusa de exclusão com mensagem genérica). Nesta tela: Esta tela <strong>nem recusa</strong>: não confere dependentes (conta_gerencial_lst.aspx.cs:304-346). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-014 (Alta)</strong>, visto em outro cadastro (Histórico de excluído não pode ser consultado). Nesta tela: Lista só com registros fora da lixeira (PessoaJuridicaRepository.cs:175). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-008 (Baixa)</strong>, visto em outro cadastro (Pesquisa não ignora acentos). Nesta tela: Pesquisa com Contains no banco (PessoaJuridicaRepository.cs:187-191). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-025 (Alta)</strong>, visto em outro cadastro (Telas de edição abrem pelo endereço sem permissão). Nesta tela: O formulário não bloqueia a entrada (ver segurança). Situação aqui: A confirmar no teste.</li>
+<li>(a confirmar no teste) <strong>A exclusão não confere locais físicos ligados.</strong> A conta vai para a lixeira mesmo com locais físicos dependendo dela.</li>
+<li>(a confirmar no teste) <strong>Nome com mais de 50 caracteres dá erro genérico</strong>: a tela aceita 255 e o banco guarda 50. O erro aparece como "Erro ao efetuar a operação!" com o texto técnico.</li>
+<li>(a confirmar no teste) <strong>Imprimir e Excel não existem de fato</strong>: os botões estão na página, mas ficam escondidos em todo carregamento e a página de relatório não existe. O inventário já anotava "Sem relatório".</li>
+<li>(a confirmar no teste) <strong>Código de pesquisa que não é número derruba a página</strong>: o texto é convertido sem tratamento. A tela filtra o digitado no navegador, mas não o envio direto.</li>
+<li>(a confirmar no teste) <strong>Código maior que 32767 não abre</strong>: o formulário converte o código para número de 16 bits. Com muitas contas, as últimas não abririam.</li>
+<li>(a confirmar no teste) <strong>Nome só com letras, números e espaço</strong>: não dá para escrever códigos contábeis com ponto ou hífen no nome. Pode obrigar a abreviar.</li>
+<li>(a confirmar no teste) <strong>Conta inativa continua escolhível no Local físico</strong>: a busca não filtra por situação, embora exista uma versão que filtra só as ativas.</li>
+<li>(a confirmar no teste) <strong>O histórico pode registrar alteração de caixa sem mudança real</strong> (ver "Situações e histórico").</li>
+<li>(a confirmar no teste) <strong>A alteração não registra a empresa porque ela é travada</strong>, mas o código do histórico prevê essa mudança: código sem uso.</li>
+<li>(a confirmar no teste) <strong>Mensagem com concordância errada</strong>: "A Situação é obrigatório!".</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura com os filtros, ordenando pelo nome</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e grade</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a ação Incluir</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>A lista esconde os dois botões em todo carregamento; o código leva a uma página de relatório que não existe</td>
+<td><strong>Nunca aparecem</strong></td>
+</tr>
+<tr>
+<td>Lápis (Editar) e lupa (Consultar)</td>
+<td>Abrem o formulário pelo endereço com <code>cod</code></td>
+<td>Conforme as ações do perfil</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Para quem tem Excluir</td>
+</tr>
+<tr>
+<td>EXCLUIR REGISTRO e VOLTAR (painel)</td>
+<td>EXCLUIR REGISTRO pede confirmação e exclui; VOLTAR sai</td>
+<td>No painel de exclusão</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico</td>
+<td>Para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>No formulário</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta à lista sem gravar</td>
+<td>No formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também confere; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -339,7 +498,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

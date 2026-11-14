@@ -44,34 +44,174 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-contabil-analise.html">Análise</a><a href="conta-contabil-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="conta-contabil-fluxos.html">Fluxos</a><a href="conta-contabil-regras-de-negocio.html">Regras de negócio</a><a href="conta-contabil-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-conta-contabil.html">Erros (4)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-6-conta-contabil">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra o <strong>plano de contas contábil</strong> em árvore (por exemplo, 1.1.1.0.0.00.00 como conta mãe e as contas filhas abaixo dela). Cada conta tem código no formato 9.9.9.9.9.99.99, nome, taxa, tipo (sintética, que agrupa, ou analítica, que recebe lançamentos), operação (depreciação ou amortização), conta principal (a conta mãe) e situação. O código e a taxa servem ao cálculo de depreciação e amortização de bens: a biblioteca de Patrimônio, usada pelo Principal e pela Produção, lê as contas para isso (DepreciacaoRepository.cs:24-31; ContaContabilRepository.cs:120-143). Não foi verificado se alguma tela de Patrimônio está ativa nesta versão.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Contabilidade ou Financeiro (leitura da área; o sistema não diz).</li>
+<li>A biblioteca de Patrimônio lê as contas e suas taxas.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 6 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu Cadastros. A lista abre vazia; é preciso clicar em Pesquisar.</li>
+<li>O formulário abre pela lista (Novo, Editar, Consultar).</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Salvar uma conta nova</strong> grava e mostra "Inclusão realizada com sucesso!".</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa e grava; o histórico é montado <strong>depois</strong> da gravação, comparando a conta com ela mesma (ver Falhas).</li>
+<li><strong>Excluir</strong> (na lista) pede a justificativa na tela, manda a conta para a lixeira e grava uma linha de histórico <strong>no objeto do Local físico</strong>, sem a justificativa.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <p>Tenha o plano de contas em mãos: código de 7 níveis (9.9.9.9.9.99.99), nome, taxa, tipo e, se não for conta de primeiro nível, a conta principal. As contas de primeiro nível não têm conta principal.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: a lista com a grade, o aviso de sucesso da inclusão, a conta analítica (a gravação deu erro), a inativação, a recusa de código repetido, o Excel e o relatório (a tela não os tem).</em></p>
+<p><strong>Tela de lista</strong></p>
 <ul>
 <li>Passo 1. No menu Cadastros, abra Conta contábil. A tela mostra o quadro de pesquisa e uma área vazia. Clique em Pesquisar para listar (conta_contabil_lst.aspx.cs:198-215).</li>
 <li>Passo 2. Filtros: Código da conta, Nome (até 100 caracteres), Conta principal (digite duas letras para buscar), Tipo (TODAS, SINTÉTICA, ANALÍTICA) e Ativo (TODAS, SIM, NÃO) (conta_contabil_lst.aspx:44-87).</li>
 <li>Passo 3. A lista mostra ID, Código da conta, Nome e Ativo, com os ícones Editar, Consultar, Excluir e Ver Log, conforme a permissão (conta_contabil_lst.aspx:115-157). Mostra 10 contas por vez; use Anterior e Próximo para trocar de página (conta_contabil_lst.aspx.cs:414-428).</li>
 <li>Passo 4. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (conta_contabil_lst.aspx.cs:97).</li>
 </ul>
-<h4 id="cadastrar-uma-conta">Cadastrar uma conta</h4>
+<p><strong>Cadastrar uma conta</strong></p>
 <ul>
 <li>Passo 5. Na lista, clique em Novo. Preencha o <strong>Código da conta</strong> (máscara 9.9.9.9.9.99.99), o <strong>Nome</strong> (até 255 caracteres), a <strong>Taxa</strong>, a <strong>Conta principal</strong> (digite duas letras e escolha na lista), a <strong>Operação</strong> (Depreciação ou Amortização), o <strong>Tipo</strong> (Sintética ou Analítica) e a <strong>Situação</strong> (conta_contabil_ed.aspx:48-111).</li>
+</ul>
+<figure><a href="../img/principal/ca06-r01-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca06-r01-form-preenchido.png" alt="Figura 1: O formulário de inclusão da Conta Contábil preenchido: Código da Conta, Nome, Taxa da Conta, Operação, Tipo e Ativo, antes de salvar." loading="lazy"></a><figcaption>Figura 1: O formulário de inclusão da Conta Contábil preenchido: Código da Conta, Nome, Taxa da Conta, Operação, Tipo e Ativo, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: O formulário de inclusão da Conta Contábil preenchido: Código da Conta, Nome, Taxa da Conta, Operação, Tipo e Ativo, antes de salvar.</em></p>
+<ul>
 <li>Passo 6. Clique em SALVAR e responda SIM a "Confirma a inclusão do item?" (conta_contabil_ed.aspx.cs:124-143). O sistema recusa, com mensagem de erro, código fora do formato, conta repetida, tipo incompatível com o nível do código e conta principal que não combina com o código (ContaContabilService.cs:31-42).</li>
 </ul>
-<h4 id="alterar-inativar-e-excluir">Alterar, inativar e excluir</h4>
+<p><strong>Alterar, inativar e excluir</strong></p>
 <ul>
 <li>Passo 7. Na lista, clique em Editar, mude o que precisar, preencha a <strong>Justificativa</strong> (obrigatória) e clique em SALVAR (conta_contabil_ed.aspx:129-130). Se a conta já tem contas filhas, o campo Código vem bloqueado (conta_contabil_ed.aspx.cs:94-105).</li>
+</ul>
+<figure><a href="../img/principal/ca06-r02-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca06-r02-historico.png" alt="Figura 2: A janela &quot;Log Alteração - Conta Contábil&quot; mostrando só a linha &quot;INCLUSÃO DO REGISTRO&quot; (a tela não registra no histórico a mudança de taxa e de operação)." loading="lazy"></a><figcaption>Figura 2: A janela &quot;Log Alteração - Conta Contábil&quot; mostrando só a linha &quot;INCLUSÃO DO REGISTRO&quot; (a tela não registra no histórico a mudança de taxa e de operação). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: A janela "Log Alteração - Conta Contábil" mostrando só a linha "INCLUSÃO DO REGISTRO" (a tela não registra no histórico a mudança de taxa e de operação).</em></p>
+<ul>
 <li>Passo 8. Para inativar, mude Ativo para Não, justifique e salve.</li>
 <li>Passo 9. Para excluir, clique no ícone de excluir, preencha a <strong>Justificativa da exclusão</strong>, clique em SALVAR e responda SIM a "Confirma a exclusão do item?" (conta_contabil_lst.aspx.cs:119-127, 347-353 e 443-451). O sistema não confere se a conta tem filhas nem se está em uso.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<figure><a href="../img/principal/ca06-r03-excluir-painel.png" target="_blank" rel="noopener"><img src="../img/principal/ca06-r03-excluir-painel.png" alt="Figura 3: O painel de exclusão: código, nome e o campo Justificativa, com os botões VOLTAR e EXCLUIR REGISTRO." loading="lazy"></a><figcaption>Figura 3: O painel de exclusão: código, nome e o campo Justificativa, com os botões VOLTAR e EXCLUIR REGISTRO. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O painel de exclusão: código, nome e o campo Justificativa, com os botões VOLTAR e EXCLUIR REGISTRO.</em></p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Não tem relatório nem exportação: os botões Imprimir e Excel nunca aparecem (conta_contabil_lst.aspx.cs:45-46).</li>
-<li>Não oferece as operações "Exaustão" e "Sem operação", embora o código as conheça (conta_contabil_ed.aspx:86-90; OperacaoContaContabilEnum.cs).</li>
-<li>Não mostra a taxa com as quatro casas que o banco guarda: mostra duas (conta_contabil_ed.aspx.cs:83; TBL_CONTA_CONTABIL.sql:16).</li>
-<li>Não registra a justificativa da exclusão nem a mudança da taxa e da operação no histórico (ver Falhas).</li>
+<li><strong>Salvar uma conta nova</strong> grava e mostra "Inclusão realizada com sucesso!" (conta_contabil_ed.aspx.cs:187-191 e 230-238).</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa e grava; o histórico é montado <strong>depois</strong> da gravação, comparando a conta com ela mesma (ver Falhas) (conta_contabil_ed.aspx.cs:240-253).</li>
+<li><strong>Excluir</strong> (na lista) pede a justificativa na tela, manda a conta para a lixeira e grava uma linha de histórico <strong>no objeto do Local físico</strong>, sem a justificativa (conta_contabil_lst.aspx.cs:306-345 e 397-411).</li>
 </ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Para excluir, clique no ícone de excluir, preencha a <strong>Justificativa da exclusão</strong>, clique em SALVAR e responda SIM a "Confirma a exclusão do item?". O sistema não confere se a conta tem filhas nem se está em uso.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>O Código da Conta é obrigatório! / O Nome da Conta é obrigatória! / A Taxa da Conta é obrigatória! / O Tipo da Conta Contábil é obrigatório! / A Situação é obrigatório! / A Operação da Conta Contábil é obrigatória!: Salvar sem o campo (conta_contabil_ed.aspx:52, 61, 69, 91, 101 e 111)</li>
+<li>A Justificativa é obrigatória!: Alterar sem justificativa (conta_contabil_ed.aspx:130)</li>
+<li>O campo Codigo é obrigatório. / O Codigo informado é inválido. / O campo Descrição é obrigatório.: Dados em branco ou fora do formato (ContaContabilFactory.cs:40-42)</li>
+<li>A Conta Contabil é inválida! / A Conta Contabil já foi cadastrada! / O Tipo da Conta Contabil é inválido! / A Conta Principal da Conta Contabil é inválida!: Regras de código, duplicidade, tipo e conta principal (ContaContabilService.cs:34, 37, 39 e 42 (inclusão); 71, 74, 76 e 79 (alteração))</li>
+<li>A Conta Contabil não foi encontrada.: Conta que não existe (ContaContabilService.cs:60)</li>
+<li>Erro ao processar a informação! (com "Detalhe do erro (+)"): Qualquer falha ao salvar (conta_contabil_ed.aspx.cs:198-203)</li>
+<li>Esta item já foi deletado anteriormente.: Excluir conta já na lixeira (Repository.cs:145-148 (framework))</li>
+</ul>
+<figure><a href="../img/principal/ca06-r04-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca06-r04-erro-obrigatorios.png" alt="Figura 4: Salvar com tudo em branco: mensagens vermelhas &quot;O Código da Conta é obrigatório!&quot;, &quot;O Nome da Conta é obrigatória!&quot; e &quot;A Taxa da Conta é obrigatória!&quot;." loading="lazy"></a><figcaption>Figura 4: Salvar com tudo em branco: mensagens vermelhas &quot;O Código da Conta é obrigatório!&quot;, &quot;O Nome da Conta é obrigatória!&quot; e &quot;A Taxa da Conta é obrigatória!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Salvar com tudo em branco: mensagens vermelhas "O Código da Conta é obrigatório!", "O Nome da Conta é obrigatória!" e "A Taxa da Conta é obrigatória!".</em></p>
+<figure><a href="../img/principal/ca06-r05-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca06-r05-erro-justificativa.png" alt="Figura 5: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 5: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<figure><a href="../img/principal/ca06-r06-erro-excluir-sem-just.png" target="_blank" rel="noopener"><img src="../img/principal/ca06-r06-erro-excluir-sem-just.png" alt="Figura 6: Excluir sem Justificativa: o painel de exclusão mostra &quot;A Justificativa é obrigatória!&quot;." loading="lazy"></a><figcaption>Figura 6: Excluir sem Justificativa: o painel de exclusão mostra &quot;A Justificativa é obrigatória!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: Excluir sem Justificativa: o painel de exclusão mostra "A Justificativa é obrigatória!".</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função da tela é <code>CONTA CONTÁBIL</code> (conta_contabil_lst.aspx.cs:36 e conta_contabil_ed.aspx.cs:28). Na árvore de permissões, o grupo Cadastros tem "Conta contábil (93)", com as ações Incluir, Alterar, Excluir, Imprimir/Excel e Consultar log (02-matriz-de-permissoes.md:157 e 103).</li>
+<li>Na lista, Editar depende de Alterar, Excluir de Excluir, Ver Log de Consultar log, Novo de Incluir (ClassePaiLst.cs:192-257). O Imprimir e o Excel não aparecem para ninguém (conta_contabil_lst.aspx.cs:45-46).</li>
+<li>Nenhum usuário de teste foi usado nesta tela.</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum defeito do registro DV-PRI está ligado a esta tela, porque ela não foi testada.</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) O histórico da alteração compara a conta com ela mesma: a conta "antiga" é lida depois de gravar</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A exclusão grava o histórico no objeto TBL_LOCAL_FISICO (cópia de outra tela) e sem justificativa; a exclusão não aparece no histórico da conta e pode poluir o de um Local físico</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A justificativa da exclusão é exigida na tela e não é gravada em lugar nenhum</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A mudança da taxa e da operação (que alteram o cálculo de depreciação e amortização) não é comparada para o histórico</li>
+<li><strong>A tela não faz:</strong> Não tem relatório nem exportação: os botões Imprimir e Excel nunca aparecem.</li>
+<li><strong>A tela não faz:</strong> Não oferece as operações "Exaustão" e "Sem operação", embora o código as conheça.</li>
+<li><strong>A tela não faz:</strong> Não mostra a taxa com as quatro casas que o banco guarda: mostra duas.</li>
+<li><strong>A tela não faz:</strong> Não registra a justificativa da exclusão nem a mudança da taxa e da operação no histórico (ver Falhas).</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Lista as contas não excluídas que batem com o filtro, 10 por página</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia os filtros e esconde a lista</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Anterior, Próximo</td>
+<td>Troca de página</td>
+<td>Depois de uma pesquisa com resultado</td>
+</tr>
+<tr>
+<td>Novo (Incluir)</td>
+<td>Abre o formulário vazio</td>
+<td>Lista, se o usuário tem Incluir</td>
+</tr>
+<tr>
+<td>Editar, Consultar</td>
+<td>Abrem o formulário</td>
+<td>Em toda linha (Editar com a ação Alterar)</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Abre o painel de justificativa; SALVAR pede confirmação e manda para a lixeira</td>
+<td>Em toda linha, se o usuário tem Excluir</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre a janela de histórico da conta</td>
+<td>Em toda linha, se o usuário tem Consultar log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Apontariam para uma página de relatório que não existe</td>
+<td><strong>Nunca aparecem</strong></td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>Formulário, se o usuário pode alterar</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta à lista sem gravar</td>
+<td>Sempre, no formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -352,7 +492,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

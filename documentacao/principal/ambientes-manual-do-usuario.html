@@ -44,40 +44,241 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="ambientes-analise.html">Análise</a><a href="ambientes-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="ambientes-fluxos.html">Fluxos</a><a href="ambientes-regras-de-negocio.html">Regras de negócio</a><a href="ambientes-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-ambientes.html">Erros (5)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-1-ambientes">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra as <strong>salas e áreas da fábrica</strong> (laboratório, sala de pesagem, corredor, câmara) e diz, para cada uma, o grau de contaminação do ar e o microbiológico, em que ponto da estrutura funcional ela está e quais <strong>equipamentos, utilidades e instrumentos</strong> estão instalados nela. É o cadastro-mãe do que a norma chama de "áreas": os outros cadastros (Pontos de água, Utilidades, Equipamentos) e os outros módulos se penduram nele (ponto de água de uma sala, programação de análise do ambiente, lote padrão). O cadastro guarda também o histórico de alterações campo a campo (ambiente_ed.aspx.cs:831-932 e dalLogAlteracaoAmbiente.cs:13-129).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém o cadastro de áreas e equipamentos: Engenharia, Manutenção ou Garantia da Qualidade, conforme a empresa (leitura da área; o sistema não diz).</li>
+<li>Os módulos Produção e, pela API, outros módulos leem a lista de ambientes.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 1 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu Cadastros. Antes de usar, convém ter cadastrados os <strong>graus de contaminação</strong> (tela 14 deste menu), a <strong>estrutura funcional</strong> (tela 09), os <strong>equipamentos</strong>, <strong>utilidades</strong> e <strong>instrumentos</strong> (telas 02, 13 e 08), porque o formulário só oferece o que já existe e está ativo.</li>
+<li>A lista abre vazia; é preciso clicar em Pesquisar.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Salvar um ambiente novo</strong> grava o registro com a data e o usuário de criação e uma linha "INCLUSÃO DO REGISTRO" no histórico. Em seguida o formulário recarrega e, só então, aparecem as áreas de <strong>Equipamentos, Utilidades e Instrumentos do ambiente</strong>.</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa, grava os campos e uma linha no histórico para cada campo mudado; volta à lista.</li>
+<li><strong>Adicionar ou excluir um equipamento, utilidade ou instrumento</strong> do ambiente grava na hora, sem botão Salvar e sem justificativa.</li>
+<li><strong>Excluir</strong> (na lista) manda o ambiente para a lixeira, sem justificativa, e escreve "EXCLUSÃO DO REGISTRO" no histórico, que depois não pode mais ser consultado pelas telas.</li>
+<li>O próximo passo da corrente é o uso do ambiente em outros cadastros e módulos: Pontos de água, Utilidades, programações de análise e lotes padrão.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <p>Tenha à mão a descrição da sala, uma tag (opcional, até 10 caracteres) e, se for informar, os graus de contaminação e o local da estrutura funcional. Os equipamentos, as utilidades e os instrumentos da sala só podem ser ligados <strong>depois</strong> que o ambiente estiver gravado.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 05/10/2026 (rodada 1), cada uma conferida contra o texto. Sem imagem: recusa de tag repetida ("Tag já existe!"), recusa de exclusão com dependente (a mensagem), ligar equipamento, utilidade e instrumento ao ambiente, ícone Consultar, o arquivo do Excel e o histórico de um ambiente excluído (a tela não oferece).</em></p>
+<p><strong>Tela de lista</strong></p>
 <ul>
 <li>Passo 1. No menu Cadastros, abra Ambientes. A tela mostra o quadro "Pesquisa" e uma área vazia. Clique em Pesquisar para listar (ambiente_lst.aspx.cs:64-71).</li>
 <li>Passo 2. Filtros: Código, Descrição (procura dentro do texto; <strong>acentos contam</strong>: "laboratorio" não acha "LABORATÓRIO"), Tag e Ativo (TODAS, SIM, NÃO) (ambiente_lst.aspx:39-59; dalAmbiente.cs:20-36; CT-PRI-096).</li>
 <li>Passo 3. A lista mostra Código, Descrição, Tag e Ativo, com os ícones Editar, Consultar, Excluir e Ver Log; só aparecem os ícones para os quais você tem permissão. Imprimir e Excel aparecem depois de uma pesquisa com resultado, se você pode imprimir (ambiente_lst.aspx:90-135; ambiente_lst.aspx.cs:46-61).</li>
+</ul>
+<figure><a href="../img/principal/ca01-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r01-lista.png" alt="Figura 1: A lista de Cadastro de Ambientes depois de Pesquisar com o filtro Descrição &quot;TESTE AMBIENTE&quot;: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e os ícones Editar, Excluir e LOG em cada linha." loading="lazy"></a><figcaption>Figura 1: A lista de Cadastro de Ambientes depois de Pesquisar com o filtro Descrição &quot;TESTE AMBIENTE&quot;: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e os ícones Editar, Excluir e LOG em cada linha. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: A lista de Cadastro de Ambientes depois de Pesquisar com o filtro Descrição "TESTE AMBIENTE": filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e os ícones Editar, Excluir e LOG em cada linha.</em></p>
+<ul>
 <li>Passo 4. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (ambiente_lst.aspx:78).</li>
 </ul>
-<h4 id="cadastrar-um-ambiente">Cadastrar um ambiente</h4>
+<figure><a href="../img/principal/ca01-r02-sem-resultado-sem-acento.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r02-sem-resultado-sem-acento.png" alt="Figura 2: Pesquisa por &quot;laboratorio&quot; (sem acento): a grade fica vazia e a tela diz &quot;A pesquisa não retornou nenhum resultado.&quot;, embora exista o ambiente &quot;LABORATÓRIO&quot; (DV-PRI-008)." loading="lazy"></a><figcaption>Figura 2: Pesquisa por &quot;laboratorio&quot; (sem acento): a grade fica vazia e a tela diz &quot;A pesquisa não retornou nenhum resultado.&quot;, embora exista o ambiente &quot;LABORATÓRIO&quot; (DV-PRI-008). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Pesquisa por "laboratorio" (sem acento): a grade fica vazia e a tela diz "A pesquisa não retornou nenhum resultado.", embora exista o ambiente "LABORATÓRIO" (DV-PRI-008).</em></p>
+<p><strong>Cadastrar um ambiente</strong></p>
 <ul>
 <li>Passo 5. Na lista, clique em Novo (ícone de adicionar). Preencha <strong>Descrição</strong> (obrigatória, até 255 caracteres) e, se quiser, Tag (até 10), Grau Microbiológico, Grau do Ar e o local na árvore de estrutura funcional (marque <strong>um só</strong> local). Ativo vem como Sim (ambiente_ed.aspx:47-104).</li>
+</ul>
+<figure><a href="../img/principal/ca01-r03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r03-form-preenchido.png" alt="Figura 3: O formulário de inclusão preenchido: Descrição, Tag, Grau Microbiológico, Grau do Ar, Ativo = Sim e o local &quot;EMBALAGEM&quot; marcado na árvore Direção/Sub-Direção/Seção." loading="lazy"></a><figcaption>Figura 3: O formulário de inclusão preenchido: Descrição, Tag, Grau Microbiológico, Grau do Ar, Ativo = Sim e o local &quot;EMBALAGEM&quot; marcado na árvore Direção/Sub-Direção/Seção. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O formulário de inclusão preenchido: Descrição, Tag, Grau Microbiológico, Grau do Ar, Ativo = Sim e o local "EMBALAGEM" marcado na árvore Direção/Sub-Direção/Seção.</em></p>
+<ul>
 <li>Passo 6. Clique em SALVAR e responda SIM a "Confirma a inclusão do item?". A tela diz "Inclusão realizada com sucesso!" (ambiente_ed.aspx.cs:872 e 1060). Os campos obrigatórios só são cobrados <strong>depois</strong> do SIM (OBS-03 da rodada 1).</li>
+</ul>
+<figure><a href="../img/principal/ca01-r04-sucesso-inclusao.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r04-sucesso-inclusao.png" alt="Figura 4: &quot;Inclusão realizada com sucesso!&quot; depois de SALVAR e SIM; atrás, o formulário recarregado já com os quadros Equipamentos, Utilidades e Instrumentos do Ambiente." loading="lazy"></a><figcaption>Figura 4: &quot;Inclusão realizada com sucesso!&quot; depois de SALVAR e SIM; atrás, o formulário recarregado já com os quadros Equipamentos, Utilidades e Instrumentos do Ambiente. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: "Inclusão realizada com sucesso!" depois de SALVAR e SIM; atrás, o formulário recarregado já com os quadros Equipamentos, Utilidades e Instrumentos do Ambiente.</em></p>
+<ul>
 <li>Passo 7. Depois de gravado, aparecem três quadros: Equipamentos do Ambiente, Utilidades do Ambiente e Instrumentos do Ambiente. Em cada um, escolha o item na lista e clique em ADICIONAR EQUIPAMENTO, ADICIONAR UTILIDADE ou ADICIONAR INSTRUMENTO. O item é gravado na hora. Um item só pode estar em <strong>um</strong> ambiente ativo: se já estiver em outro, o sistema recusa com "Equipamento já vinculado a um Ambiente!" (ou o equivalente para utilidade e instrumento) (ambiente_ed.aspx:116-117, 191-192 e 264-265).</li>
 </ul>
-<h4 id="alterar-inativar-e-consultar">Alterar, inativar e consultar</h4>
+<p><strong>Alterar, inativar e consultar</strong></p>
 <ul>
 <li>Passo 8. Na lista, clique em Editar. Mude o que precisar, preencha a <strong>Justificativa</strong> (obrigatória) e clique em SALVAR. O histórico passa a ter uma linha por campo mudado, com valor antigo, valor novo, usuário, data, hora e justificativa (ambiente_ed.aspx.cs:174-176 e 895-905; CT-PRI-092).</li>
+</ul>
+<figure><a href="../img/principal/ca01-r05-alterar-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r05-alterar-preenchido.png" alt="Figura 5: O formulário de alteração do ambiente com a Tag e o Grau Microbiológico mudados e o campo Justificativa ainda vazio, antes de salvar." loading="lazy"></a><figcaption>Figura 5: O formulário de alteração do ambiente com a Tag e o Grau Microbiológico mudados e o campo Justificativa ainda vazio, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: O formulário de alteração do ambiente com a Tag e o Grau Microbiológico mudados e o campo Justificativa ainda vazio, antes de salvar.</em></p>
+<figure><a href="../img/principal/ca01-r06-sucesso-alteracao.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r06-sucesso-alteracao.png" alt="Figura 6: &quot;Alteração realizada com sucesso!&quot; depois de salvar a alteração com justificativa." loading="lazy"></a><figcaption>Figura 6: &quot;Alteração realizada com sucesso!&quot; depois de salvar a alteração com justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: "Alteração realizada com sucesso!" depois de salvar a alteração com justificativa.</em></p>
+<ul>
 <li>Passo 9. Para tirar o ambiente de uso, mude Ativo para Não, justifique e salve. O ambiente inativo abre travado: só a situação e a justificativa podem ser mexidas (ambiente_ed.aspx.cs:163-176). Ele deixa de aparecer nas listas de escolha do Principal, como a de Ponto de água (CT-PRI-093).</li>
+</ul>
+<figure><a href="../img/principal/ca01-r07-inativar-form.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r07-inativar-form.png" alt="Figura 7: O formulário do ambiente com Ativo = Não marcado, antes de salvar." loading="lazy"></a><figcaption>Figura 7: O formulário do ambiente com Ativo = Não marcado, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: O formulário do ambiente com Ativo = Não marcado, antes de salvar.</em></p>
+<figure><a href="../img/principal/ca01-r08-lista-inativo.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r08-lista-inativo.png" alt="Figura 8: A lista filtrada mostrando o ambiente inativado com Ativo = NÃO." loading="lazy"></a><figcaption>Figura 8: A lista filtrada mostrando o ambiente inativado com Ativo = NÃO. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: A lista filtrada mostrando o ambiente inativado com Ativo = NÃO.</em></p>
+<ul>
 <li>Passo 10. Consultar abre o mesmo formulário (ambiente_lst.aspx.cs:171-173). Ver Log abre o histórico do registro em uma janela (ambiente_lst.aspx.cs:174-187).</li>
 </ul>
-<h4 id="excluir">Excluir</h4>
+<figure><a href="../img/principal/ca01-r09-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r09-historico.png" alt="Figura 9: A janela &quot;Log Alteração - Cadastro de Ambientes&quot;: as mudanças de GRAU MICROBIOLÓGICO e de TAG (valor antigo, valor novo, data, hora, usuário e justificativa) e a linha &quot;INCLUSÃO DO REGISTRO&quot;." loading="lazy"></a><figcaption>Figura 9: A janela &quot;Log Alteração - Cadastro de Ambientes&quot;: as mudanças de GRAU MICROBIOLÓGICO e de TAG (valor antigo, valor novo, data, hora, usuário e justificativa) e a linha &quot;INCLUSÃO DO REGISTRO&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 9: A janela "Log Alteração - Cadastro de Ambientes": as mudanças de GRAU MICROBIOLÓGICO e de TAG (valor antigo, valor novo, data, hora, usuário e justificativa) e a linha "INCLUSÃO DO REGISTRO".</em></p>
+<p><strong>Excluir</strong></p>
 <ul>
 <li>Passo 11. Na lista, clique no ícone de excluir e responda SIM a "Confirma a exclusão do item?". O sistema <strong>não pede justificativa</strong> (DV-PRI-009). O ambiente vai para a lixeira e sai da lista. Se outro cadastro o usa (por exemplo, um ponto de água), a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas.", sem dizer qual (CT-PRI-094 e 095).</li>
+</ul>
+<figure><a href="../img/principal/ca01-r10-excluir-sucesso.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r10-excluir-sucesso.png" alt="Figura 10: &quot;Exclusão realizada com sucesso!&quot; sobre a lista: a exclusão foi feita só com a pergunta de confirmação, sem pedir justificativa (DV-PRI-009)." loading="lazy"></a><figcaption>Figura 10: &quot;Exclusão realizada com sucesso!&quot; sobre a lista: a exclusão foi feita só com a pergunta de confirmação, sem pedir justificativa (DV-PRI-009). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 10: "Exclusão realizada com sucesso!" sobre a lista: a exclusão foi feita só com a pergunta de confirmação, sem pedir justificativa (DV-PRI-009).</em></p>
+<figure><a href="../img/principal/ca01-r11-lista-apos-excluir.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r11-lista-apos-excluir.png" alt="Figura 11: A lista filtrada pelo ambiente excluído: &quot;A pesquisa não retornou nenhum resultado.&quot;" loading="lazy"></a><figcaption>Figura 11: A lista filtrada pelo ambiente excluído: &quot;A pesquisa não retornou nenhum resultado.&quot; · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 11: A lista filtrada pelo ambiente excluído: "A pesquisa não retornou nenhum resultado."</em></p>
+<ul>
 <li>Passo 12. Depois de excluído, <strong>não há tela</strong> para consultar o histórico dele (DV-PRI-014).</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Não pede justificativa na exclusão do ambiente nem na inclusão ou retirada de equipamentos, utilidades e instrumentos (ambiente_lst.aspx.cs:397-437; ambiente_ed.aspx.cs:575, 734).</li>
-<li>Não confere se a descrição já existe: aceita duas salas com o mesmo nome (DV-PRI-007). A tag, sim, é conferida.</li>
-<li>Não guarda temperatura, umidade, classificação de limpeza (ISO), pressão diferencial ou data de qualificação do ambiente: só os dois graus (TBL_AMBIENTE.sql:1-23).</li>
-<li>Não impede a alteração de um ambiente já usado em programação de análise ou lote padrão: a verificação existe no código, mas está desligada (dalAmbiente.cs:458-513).</li>
+<li><strong>Salvar um ambiente novo</strong> grava o registro com a data e o usuário de criação e uma linha "INCLUSÃO DO REGISTRO" no histórico (bllAmbiente.cs:104-134). Em seguida o formulário recarrega e, só então, aparecem as áreas de <strong>Equipamentos, Utilidades e Instrumentos do ambiente</strong> (ambiente_ed.aspx.cs:130-142 e 873).</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa, grava os campos e uma linha no histórico para cada campo mudado; volta à lista (bllAmbiente.cs:136-166; ambiente_ed.aspx.cs:895-905 e 1001-1004).</li>
+<li><strong>Adicionar ou excluir um equipamento, utilidade ou instrumento</strong> do ambiente grava na hora, sem botão Salvar e sem justificativa (ambiente_ed.aspx.cs:575-577, 635-637, 695-697 e 734-736, 770-772, 806-808).</li>
+<li><strong>Excluir</strong> (na lista) manda o ambiente para a lixeira, sem justificativa, e escreve "EXCLUSÃO DO REGISTRO" no histórico, que depois não pode mais ser consultado pelas telas (ambiente_lst.aspx.cs:397-437; dalLogAlteracaoAmbiente.cs:118-129; DV-PRI-009 e DV-PRI-014).</li>
+<li>O próximo passo da corrente é o uso do ambiente em outros cadastros e módulos: Pontos de água, Utilidades, programações de análise e lotes padrão.</li>
 </ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Na lista, clique no ícone de excluir e responda SIM a "Confirma a exclusão do item?". O sistema <strong>não pede justificativa</strong> (DV-PRI-009). O ambiente vai para a lixeira e sai da lista. Se outro cadastro o usa (por exemplo, um ponto de água), a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas.", sem dizer qual (CT-PRI-094 e 095).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>A Descrição é obrigatória!: Salvar sem descrição (vista em teste, CT-PRI-091, 05/10/2026) (ambiente_ed.aspx:61)</li>
+<li>A Situação é obrigatório!: Salvar sem a situação (ambiente_ed.aspx:85)</li>
+<li>Tag já existe!: Tag repetida (bllAmbiente.cs:112 e 147)</li>
+<li>A Justificativa é obrigatória!: Alterar sem justificativa (vista em teste, CT-PRI-092, 05/10/2026) (ambiente_ed.aspx:351)</li>
+<li>Exclusão inválida, existem referências com outras tabelas.: Exclusão de ambiente com dependentes (vista em teste, CT-PRI-095, 05/10/2026) (bllAmbiente.cs:176)</li>
+<li>O Equipamento é obrigatório! / A Utilidade é obrigatória! / O Instrumento é obrigatório!: Adicionar sem escolher o item (ambiente_ed.aspx:129, 204 e 277)</li>
+<li>Equipamento já vinculado a um Ambiente! / Utilidade já vinculada a um Ambiente! / Instrumento já vinculado a um Ambiente!: O item já está em outro ambiente ativo (ambiente_ed.aspx:116, 191 e 264)</li>
+<li>Equipamento já cadastrado! / Utilidade já cadastrada! / Instrumento já cadastrado!: O item já está neste ambiente (ambiente_ed.aspx:117, 192 e 265)</li>
+<li>Erro na consulta de Ambiente. / Erro na inclusão de Ambiente. / Erro na alteração de Ambiente. / Erro na Exclusão de Ambiente.: Qualquer falha técnica (o detalhe fica no link "Detalhe do erro (+)") (bllAmbiente.cs:26, 130, 163 e 193)</li>
+</ul>
+<figure><a href="../img/principal/ca01-r12-erro-descricao.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r12-erro-descricao.png" alt="Figura 12: Salvar sem Descrição: mensagem vermelha &quot;A Descrição é obrigatória!&quot; no alto do quadro Ambiente." loading="lazy"></a><figcaption>Figura 12: Salvar sem Descrição: mensagem vermelha &quot;A Descrição é obrigatória!&quot; no alto do quadro Ambiente. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 12: Salvar sem Descrição: mensagem vermelha "A Descrição é obrigatória!" no alto do quadro Ambiente.</em></p>
+<figure><a href="../img/principal/ca01-r13-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r13-erro-justificativa.png" alt="Figura 13: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 13: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 13: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função da tela é a 93 (ambiente_lst.aspx.cs:19 e ambiente_ed.aspx.cs:19). Na árvore de permissões, o grupo Cadastros tem "Ambientes (69)" (o 69 é o número da linha na árvore e o 93 é o código que a página usa; a relação entre os dois é ponto para o DBA), com as ações Incluir, Alterar, Excluir, Imprimir/Excel e Consultar log (02-matriz-de-permissoes.md:157 e 160).</li>
+<li>Na lista, o ícone Editar depende de Alterar, Excluir de Excluir, Ver Log de Consultar log, Novo de Incluir e Imprimir e Excel de Imprimir/Excel (ClassePaiLst.cs:192-257). O ícone Consultar aparece para quem tem a ação CONSULTAR, que a árvore não oferece.</li>
+<li>Resultado dos testes: o usuário com Incluir e Alterar (e sem Excluir e Imprimir/Excel) viu Novo e Editar e não viu Excluir, Imprimir e Excel (CT-PRI-051, rodada 2). Sem estar logado, o endereço da lista leva à sessão expirada (CT-PRI-020). Não houve teste de usuário <strong>sem</strong> a função de Ambientes abrindo a lista ou o formulário.</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-PRI-009 (gravidade Alta):</strong> Exclui o ambiente só com as confirmações "Confirma a exclusão do item?" e "Exclusão realizada com sucesso!", sem justificativa. Esperado: Justificativa obrigatória, registrada no histórico (RN-PRI-070) (caso e data: CT-PRI-094 e CT-PRI-080, 05/10/2026).</li>
+<li><strong>DV-PRI-014 (gravidade Alta):</strong> O histórico do ambiente excluído não pode ser consultado: o registro e o ícone Ver Log somem juntos. Esperado: Histórico completo consultável, com inclusão, alterações e exclusão (caso e data: CT-PRI-080, 05/10/2026).</li>
+<li><strong>DV-PRI-011 (gravidade Média):</strong> A recusa de exclusão diz só "Exclusão inválida, existem referências com outras tabelas.". Esperado: Dizer qual cadastro depende do ambiente (caso e data: CT-PRI-095, 05/10/2026).</li>
+<li><strong>DV-PRI-007 (gravidade Baixa):</strong> Grava duas descrições iguais (códigos 14 e 15). Esperado: Recusar a repetição (regra a decidir) (caso e data: CT-PRI-091, 05/10/2026).</li>
+<li><strong>DV-PRI-008 (gravidade Baixa):</strong> A pesquisa por nome não ignora acentos ("laboratorio" não acha "LABORATÓRIO"). Esperado: Encontrar com ou sem acento (caso e data: CT-PRI-096, 05/10/2026).</li>
+<li><strong>DV-PRI-026 (gravidade Média):</strong> Um envio forçado de Excluir mostra a página técnica do ASP.NET, com rastro de chamadas. Esperado: Mensagem amigável (caso e data: CT-PRI-071, rodada 2 (05 e 06/10/2026)).</li>
+<li><strong>DV-PRI-025 (gravidade Alta):</strong> Telas de edição abrem pelo endereço sem permissão (confirmado em Profissional, Perfil, Configuração, Microservices e Grupo de usuários; o formulário de ambiente herda a mesma classe-base e não foi testado). Detalhe na seção "Segurança e acesso". Esperado: Acesso negado (caso e data: CT-PRI-061 a 068, rodada 2).</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) Ligar e desligar equipamento, utilidade ou instrumento grava sem justificativa e sem confirmação na inclusão</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) Quem só tem a tela marcada (sem Alterar) pode ver o formulário editável e o botão SALVAR: o código só trava quando há a ação CONSULTAR, que a árvore de permissões não tem</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) O formulário grava um ambiente novo sem conferir se o usuário tem Incluir (o botão Novo some da lista, mas o endereço do formulário abre)</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) Ambientes excluídos e inativos aparecem nas pesquisas dos outros módulos pelo serviço de consulta</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) O ambiente usado só por outros módulos (análise, lote padrão, Produção) pode ser excluído, porque o procedimento só enxerga o banco do Principal</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A pesquisa monta o comando com o texto digitado, inclusive o código sem aspas: uma entrada como <code>1 or 1=1</code> muda a consulta; o relatório faz o mesmo com os valores do endereço</li>
+<li><strong>A tela não faz:</strong> Não pede justificativa na exclusão do ambiente nem na inclusão ou retirada de equipamentos, utilidades e instrumentos.</li>
+<li><strong>A tela não faz:</strong> Não confere se a descrição já existe: aceita duas salas com o mesmo nome (DV-PRI-007). A tag, sim, é conferida.</li>
+<li><strong>A tela não faz:</strong> Não guarda temperatura, umidade, classificação de limpeza (ISO), pressão diferencial ou data de qualificação do ambiente: só os dois graus.</li>
+<li><strong>A tela não faz:</strong> Não impede a alteração de um ambiente já usado em programação de análise ou lote padrão: a verificação existe no código, mas está desligada.</li>
+<li>As imagens deste manual vêm do teste de 05/10/2026 (rodada 1). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Lista os ambientes não excluídos que batem com o filtro</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia os filtros e esconde a lista</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Novo</td>
+<td>Abre o formulário vazio</td>
+<td>Lista, se o usuário tem Incluir</td>
+</tr>
+<tr>
+<td>Editar (lápis)</td>
+<td>Abre o formulário</td>
+<td>Em toda linha, se o usuário tem Alterar</td>
+</tr>
+<tr>
+<td>Consultar (lupa)</td>
+<td>Abre o mesmo formulário</td>
+<td>Em toda linha</td>
+</tr>
+<tr>
+<td>Excluir (lixeira)</td>
+<td>Pede confirmação e manda para a lixeira</td>
+<td>Em toda linha, se o usuário tem Excluir</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre o histórico do ambiente</td>
+<td>Em toda linha, se o usuário tem Consultar log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Gera o relatório ou a planilha com o mesmo filtro</td>
+<td>Depois de uma pesquisa com resultado, se o usuário pode imprimir</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>Formulário, se o usuário não é só de consulta</td>
+</tr>
+<tr>
+<td>ADICIONAR EQUIPAMENTO, UTILIDADE, INSTRUMENTO</td>
+<td>Liga o item ao ambiente, sem confirmação</td>
+<td>Formulário de ambiente já gravado e ativo</td>
+</tr>
+<tr>
+<td>Excluir (item do ambiente)</td>
+<td>Pede confirmação e desfaz o vínculo</td>
+<td>Linha da grade, se o ambiente está ativo e o usuário tem Excluir</td>
+</tr>
+<tr>
+<td>Ver Log (item do ambiente)</td>
+<td>Mostra o histórico do vínculo</td>
+<td>Linha da grade, se o usuário tem Consultar log</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta à lista sem gravar</td>
+<td>Sempre, no formulário</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../img/principal/ca01-r14-relatorio.png" target="_blank" rel="noopener"><img src="../img/principal/ca01-r14-relatorio.png" alt="Figura 14: O &quot;RELATÓRIO DE CADASTRO DE AMBIENTES&quot; gerado por IMPRIMIR, com o filtro Descrição &quot;TESTE AMBIENTE&quot; e três linhas (código, descrição, tag e ativo)." loading="lazy"></a><figcaption>Figura 14: O &quot;RELATÓRIO DE CADASTRO DE AMBIENTES&quot; gerado por IMPRIMIR, com o filtro Descrição &quot;TESTE AMBIENTE&quot; e três linhas (código, descrição, tag e ativo). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 14: O "RELATÓRIO DE CADASTRO DE AMBIENTES" gerado por IMPRIMIR, com o filtro Descrição "TESTE AMBIENTE" e três linhas (código, descrição, tag e ativo).</em></p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -389,7 +590,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -44,45 +44,226 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="cadastro-de-instrumentos-analise.html">Análise</a><a href="cadastro-de-instrumentos-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="cadastro-de-instrumentos-fluxos.html">Fluxos</a><a href="cadastro-de-instrumentos-regras-de-negocio.html">Regras de negócio</a><a href="cadastro-de-instrumentos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-instrumentos.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-8-instrumentos">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra os <strong>instrumentos de medição</strong> da fábrica (balanças, termômetros, manômetros e similares; exemplos da leitura da área, a validar), com tag, patrimônio, marca/modelo, número de série, fabricante, fornecedor, datas de operação, tipo (móvel ou fixo) e a estrutura funcional proprietária. O código mostra duas telas no mesmo cadastro:</p>
+<ol>
+<li><strong>Lista</strong> com pesquisa por código, descrição, tag e situação, ordenação, impressão e Excel (instrumento_lst.aspx:41-69; instrumento_lst.aspx.cs:33-153).</li>
+<li><strong>Formulário</strong> para incluir, alterar e consultar (instrumento_ed.aspx:43-197).</li>
+</ol>
+<p>O cadastro <strong>não guarda calibração, qualificação nem periodicidade</strong>: isso é programado e registrado na Produção, que escolhe o instrumento daqui (calibracao_ed.aspx.cs:58-67 e 132-135; TBL_PROGRAMACAO_CALIBRACAO.sql:13; TBL_REGISTRO_CALIBRACAO.sql:5-6, módulo Produção).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém os cadastros da fábrica: engenharia, metrologia ou qualidade (leitura da área, a validar).</li>
+<li>Quem consulta a lista e o histórico.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 8 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu superior <strong>Cadastros › Cadastro de Instrumentos</strong>, que abre a lista.</li>
+<li>Na lista, <strong>Pesquisar</strong> traz os instrumentos (a lista não carrega sozinha); <strong>Incluir</strong> abre o formulário vazio e o lápis abre um instrumento.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere os obrigatórios, grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista.</li>
+<li>O instrumento ativo passa a ser oferecido no bloco "Instrumentos do Ambiente" do cadastro de Ambientes e, na Produção, nas telas de calibração, qualificação, limpeza, lubrificação e lote padrão (ver "Dados").</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <ul>
 <li>Entre no módulo Principal e abra <strong>Cadastros › Cadastro de Instrumentos</strong>.</li>
 <li>Quem não tem a função desta tela (código 89) é levado à página de acesso negado ao abrir a lista (instrumento_lst.aspx.cs:19; ClassePaiLst.cs:65). Incluir, Editar, Excluir, Imprimir e Ver Log só aparecem para quem tem a ação correspondente (ClassePaiLst.cs:111-255).</li>
 <li>Antes de cadastrar, confira se já existem o <strong>fabricante</strong> e o <strong>fornecedor</strong> em Pessoa jurídica (tipos Fabricante e Fornecedor) e a <strong>estrutura funcional</strong> (instrumento_ed.aspx.cs:42-66 e 134-167).</li>
 </ul>
-<h4 id="pesquisar">Pesquisar</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: o aviso de sucesso, a inativação, a recusa de exclusão com instrumento ligado a ambiente, o relatório e o Excel.</em></p>
+<p><strong>Pesquisar</strong></p>
 <ol>
 <li>Abra a lista (vem vazia). Preencha, se quiser, <strong>Código</strong> (só números), <strong>Descrição</strong>, <strong>Tag</strong> e <strong>Ativo</strong> e clique em <strong>Pesquisar</strong> (instrumento_lst.aspx:41-60).</li>
 <li>A grade mostra Código, Descrição, Tag e Ativo (instrumento_lst.aspx:95-109). Clique no título da coluna para ordenar.</li>
+</ol>
+<figure><a href="../img/principal/ca08-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r01-lista.png" alt="Figura 1: A lista de Cadastro de Instrumentos depois de Pesquisar: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade com os ícones Editar, Excluir e LOG." loading="lazy"></a><figcaption>Figura 1: A lista de Cadastro de Instrumentos depois de Pesquisar: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade com os ícones Editar, Excluir e LOG. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: A lista de Cadastro de Instrumentos depois de Pesquisar: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade com os ícones Editar, Excluir e LOG.</em></p>
+<ol start="3">
 <li><strong>Limpar</strong> esvazia filtros e grade (instrumento_lst.aspx.cs:76-79).</li>
 </ol>
-<h4 id="incluir">Incluir</h4>
+<p><strong>Incluir</strong></p>
 <ol>
 <li>Clique em <strong>Incluir</strong>.</li>
+</ol>
+<figure><a href="../img/principal/ca08-r02-nova.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r02-nova.png" alt="Figura 2: O formulário de inclusão de instrumento aberto, vazio: quadro Instrumento e quadro Direção/Sub-Direção/Seção Proprietária." loading="lazy"></a><figcaption>Figura 2: O formulário de inclusão de instrumento aberto, vazio: quadro Instrumento e quadro Direção/Sub-Direção/Seção Proprietária. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: O formulário de inclusão de instrumento aberto, vazio: quadro Instrumento e quadro Direção/Sub-Direção/Seção Proprietária.</em></p>
+<ol start="2">
 <li>Preencha <strong>Descrição</strong>, <strong>Tag</strong>, <strong>Tipo Instrumento</strong> (Móvel ou Fixo) e Ativo (obrigatórios) e, se quiser, Patrimônio, Marca/Modelo, Número de Série, Data de Fabricação, Fabricante, Fornecedor, datas de operação. Em "Direção/Sub-Direção/Seção Proprietária" marque <strong>uma</strong> estrutura (instrumento_ed.aspx:54-178).</li>
+</ol>
+<figure><a href="../img/principal/ca08-r03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r03-form-preenchido.png" alt="Figura 3: O formulário preenchido: Descrição, Tag, Marca/Modelo, Número de Série, Fornecedor, Fabricante e Tipo Instrumento, antes de salvar." loading="lazy"></a><figcaption>Figura 3: O formulário preenchido: Descrição, Tag, Marca/Modelo, Número de Série, Fornecedor, Fabricante e Tipo Instrumento, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O formulário preenchido: Descrição, Tag, Marca/Modelo, Número de Série, Fornecedor, Fabricante e Tipo Instrumento, antes de salvar.</em></p>
+<ol start="3">
 <li>Se o fabricante não está na lista, escolha <strong>OUTROS</strong>: o campo "Outros Fabricantes" é liberado e passa a ser obrigatório (instrumento_ed.aspx.cs:248-263).</li>
+</ol>
+<figure><a href="../img/principal/ca08-r04-outros-vazio.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r04-outros-vazio.png" alt="Figura 4: Fabricante OUTROS escolhido e o campo Outros Fabricantes em branco: mensagem vermelha &quot;Outros Fabricantes é obrigatório!&quot;." loading="lazy"></a><figcaption>Figura 4: Fabricante OUTROS escolhido e o campo Outros Fabricantes em branco: mensagem vermelha &quot;Outros Fabricantes é obrigatório!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Fabricante OUTROS escolhido e o campo Outros Fabricantes em branco: mensagem vermelha "Outros Fabricantes é obrigatório!".</em></p>
+<ol start="4">
 <li>Clique em <strong>SALVAR</strong> e responda <strong>SIM</strong>. Os obrigatórios só são cobrados depois do SIM (instrumento_ed.aspx.cs:191-230).</li>
 <li>Se a Tag já existir entre os instrumentos ativos, aparece "Tag já existe!" (bllInstrumento.cs:94-98).</li>
 </ol>
-<h4 id="alterar-ou-inativar">Alterar ou inativar</h4>
+<figure><a href="../img/principal/ca08-r05-tag-repetida.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r05-tag-repetida.png" alt="Figura 5: Salvar com uma Tag já existente: mensagem vermelha &quot;Tag já existe!&quot;." loading="lazy"></a><figcaption>Figura 5: Salvar com uma Tag já existente: mensagem vermelha &quot;Tag já existe!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: Salvar com uma Tag já existente: mensagem vermelha "Tag já existe!".</em></p>
+<p><strong>Alterar ou inativar</strong></p>
 <ol>
 <li>Clique no lápis, mude o que precisar e escreva a <strong>Justificativa</strong> (obrigatória só na alteração) (instrumento_ed.aspx.cs:101-118; instrumento_ed.aspx:183-197).</li>
 <li>Para inativar, mude <strong>Ativo</strong> para Não. Um instrumento inativo abre travado, com só Ativo e Justificativa liberados (instrumento_ed.aspx.cs:101-118).</li>
 <li>O histórico guarda o valor antigo e o novo de cada campo alterado, menos a data de fabricação e "Outros Fabricantes" (dalLogAlteracaoInstrumento.cs:26-201).</li>
 </ol>
-<h4 id="excluir">Excluir</h4>
+<figure><a href="../img/principal/ca08-r06-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r06-historico.png" alt="Figura 6: A janela &quot;Log Alteração - Cadastro de Instrumentos&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;." loading="lazy"></a><figcaption>Figura 6: A janela &quot;Log Alteração - Cadastro de Instrumentos&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: A janela "Log Alteração - Cadastro de Instrumentos": a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha "INCLUSÃO DO REGISTRO".</em></p>
+<p><strong>Excluir</strong></p>
 <ol>
 <li>Na lista, clique no ícone de exclusão. <strong>O sistema pede só a confirmação "Confirma a exclusão do item?"</strong>, sem justificativa (instrumento_lst.aspx.cs:161-165 e 506-515).</li>
+</ol>
+<figure><a href="../img/principal/ca08-r07-excluir-pergunta.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r07-excluir-pergunta.png" alt="Figura 7: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa." loading="lazy"></a><figcaption>Figura 7: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: Ao clicar em excluir, a pergunta "Confirma a exclusão do item?" (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa.</em></p>
+<ol start="2">
 <li>Se o instrumento está ligado a um ambiente, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas." e sem dizer qual (bllInstrumento.cs:224-229).</li>
 <li><strong>Atenção:</strong> as conferências que impediriam alterar ou excluir um instrumento com calibração, limpeza, lubrificação, qualificação ou lote padrão estão desligadas no código (ver falhas).</li>
 </ol>
-<h4 id="ver-o-historico-imprimir-e-exportar">Ver o histórico, imprimir e exportar</h4>
+<p><strong>Ver o histórico, imprimir e exportar</strong></p>
 <ul>
 <li>O ícone <strong>LOG</strong> abre o histórico (instrumento_lst.aspx.cs:172-182).</li>
 <li><strong>Imprimir</strong> e o Excel respeitam os filtros (instrumento_lst.aspx.cs:103-153).</li>
 </ul>
 <hr />
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere os obrigatórios, grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista (instrumento_ed.aspx.cs:191-230, 280-360 e 456-500).</li>
+<li>O instrumento ativo passa a ser oferecido no bloco "Instrumentos do Ambiente" do cadastro de Ambientes e, na Produção, nas telas de calibração, qualificação, limpeza, lubrificação e lote padrão (ver "Dados").</li>
+</ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Se o instrumento está ligado a um ambiente, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas." e sem dizer qual.</li>
+<li><strong>Atenção:</strong> as conferências que impediriam alterar ou excluir um instrumento com calibração, limpeza, lubrificação, qualificação ou lote padrão estão desligadas no código (ver falhas).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"A Situação é obrigatório!": Ativo sem escolha (concordância errada) (instrumento_ed.aspx:56)</li>
+<li>"A Descrição é obrigatória!" / "A Tag é obrigatória!": Campo em branco (instrumento_ed.aspx:66 e 74)</li>
+<li>"O Tipo Instrumento é obrigatório!": Sem Móvel/Fixo (instrumento_ed.aspx:157)</li>
+<li>"Outros Fabricantes é obrigatório!": Fabricante OUTROS sem texto (instrumento_ed.aspx:123)</li>
+<li>"A Data Início de Operação não pode ser maior que a Data Fim de Operação!" e "... maior que a data atual!": Datas incoerentes (instrumento_ed.aspx:133-134)</li>
+<li>"A Data Fim de Operação não pode ser menor que a Data Início de Operação!" e "... maior que a data atual!": Datas incoerentes (instrumento_ed.aspx:144-145)</li>
+<li>"A Justificativa é obrigatória!": Alteração sem justificativa (instrumento_ed.aspx:194)</li>
+<li>"Tag já existe!": Outra tag igual entre os ativos (bllInstrumento.cs:96 e 144)</li>
+<li>"Patrimônio já existe!" / "Número de série já existe!": <strong>Só na alteração</strong> (bllInstrumento.cs:150 e 156)</li>
+<li>"Erro na inclusão de Instrumento." / "Erro na alteração de Instrumento.": Falha inesperada (bllInstrumento.cs:127 e 173)</li>
+<li>"Exclusão inválida, existem referências com outras tabelas.": Instrumento usado em outra tabela do Principal; não diz qual (bllInstrumento.cs:228)</li>
+<li>"Erro na Exclusão de Instrumento.": Falha inesperada na exclusão (bllInstrumento.cs:245)</li>
+</ul>
+<figure><a href="../img/principal/ca08-r08-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r08-erro-obrigatorios.png" alt="Figura 8: Salvar com tudo em branco: mensagens vermelhas &quot;A Descrição é obrigatória!&quot;, &quot;A Tag é obrigatória!&quot; e &quot;O Tipo Instrumento é obrigatório!&quot;." loading="lazy"></a><figcaption>Figura 8: Salvar com tudo em branco: mensagens vermelhas &quot;A Descrição é obrigatória!&quot;, &quot;A Tag é obrigatória!&quot; e &quot;O Tipo Instrumento é obrigatório!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: Salvar com tudo em branco: mensagens vermelhas "A Descrição é obrigatória!", "A Tag é obrigatória!" e "O Tipo Instrumento é obrigatório!".</em></p>
+<figure><a href="../img/principal/ca08-r09-erro-datas-fim-antes.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r09-erro-datas-fim-antes.png" alt="Figura 9: Data de início maior que a data de fim: duas mensagens vermelhas dizendo que o início não pode ser maior que o fim e que o fim não pode ser menor que o início." loading="lazy"></a><figcaption>Figura 9: Data de início maior que a data de fim: duas mensagens vermelhas dizendo que o início não pode ser maior que o fim e que o fim não pode ser menor que o início. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 9: Data de início maior que a data de fim: duas mensagens vermelhas dizendo que o início não pode ser maior que o fim e que o fim não pode ser menor que o início.</em></p>
+<figure><a href="../img/principal/ca08-r10-erro-data-fim-futura.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r10-erro-data-fim-futura.png" alt="Figura 10: Data Fim de Operação no futuro: mensagem vermelha &quot;A Data Fim de Operação não pode ser maior que a data atual!&quot;." loading="lazy"></a><figcaption>Figura 10: Data Fim de Operação no futuro: mensagem vermelha &quot;A Data Fim de Operação não pode ser maior que a data atual!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 10: Data Fim de Operação no futuro: mensagem vermelha "A Data Fim de Operação não pode ser maior que a data atual!".</em></p>
+<figure><a href="../img/principal/ca08-r11-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca08-r11-erro-justificativa.png" alt="Figura 11: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 11: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 11: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A <strong>lista</strong> usa a função de tela "89" (instrumento_lst.aspx.cs:19). A base das listas confere a função logo no início e leva quem não a tem à página de acesso negado (ClassePaiLst.cs:65; BaseController.cs:26-31). Incluir, Editar, Consultar, Excluir, Imprimir e Ver Log dependem de cada ação (ClassePaiLst.cs:111-255).</li>
+<li>O <strong>formulário</strong> usa a mesma função (instrumento_ed.aspx.cs:20). A base do formulário só calcula as ações e <strong>não bloqueia a entrada</strong> (ClassePaiEd.cs:71-156). Para um instrumento existente sem a ação Alterar, a tela fica travada e sem SALVAR (instrumento_ed.aspx.cs:120-123). No formulário <strong>novo</strong> nada esconde o SALVAR (o ajuste só roda quando há um código: instrumento_ed.aspx.cs:70 e 125-130). Pelo código, quem abrir o formulário vazio pelo endereço poderia incluir um instrumento (a confirmar no teste; mesmo padrão do DV-PRI-025).</li>
+<li>O <strong>relatório</strong> (<code>instrumento_rel</code>) não tem conferência própria de permissão (instrumento_rel.aspx.cs:12-80; mesmo padrão do DV-PRI-025 para <code>usuario_rel</code> e <code>perfil_rel</code>).</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum. A tela não foi testada (inventário: Não testada). Nenhum DV-PRI registrado tem esta tela como alvo (<code>defeitos/defeitos-completo.json</code>, campo <code>tela</code>).</li>
+<li><strong>DV-PRI-009 (Alta)</strong>, visto em outro cadastro (Excluir Ambiente e Equipamento sem justificativa). Nesta tela: <strong>Mesmo comportamento</strong>: só a confirmação "Confirma a exclusão do item?" (instrumento_lst.aspx.cs:506-515). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-011 (Média)</strong>, visto em outro cadastro (Recusa de exclusão com mensagem genérica). Nesta tela: Mesma mensagem (bllInstrumento.cs:228). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-014 (Alta)</strong>, visto em outro cadastro (Histórico de excluído não pode ser consultado). Nesta tela: Lista só com LIXEIRA = 0 e ícone LOG na linha (dalInstrumento.cs:88-92). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-008 (Baixa)</strong>, visto em outro cadastro (Pesquisa não ignora acentos). Nesta tela: Pesquisa com LIKE no banco (dalInstrumento.cs:98-101). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-025 (Alta)</strong>, visto em outro cadastro (Telas de edição abrem pelo endereço sem permissão). Nesta tela: O formulário não bloqueia a entrada (ver segurança). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-026 (Média)</strong>, visto em outro cadastro (Erro técnico do ASP.NET em envio inválido). Nesta tela: A gravação da estrutura funcional pode derrubar a página (item 2 abaixo). Situação aqui: A confirmar no teste.</li>
+<li>(a confirmar no teste) <strong>Excluir sem justificativa</strong> (RN-PRI-070; DV-PRI-009 nos outros cadastros). A parte de justificativa da exclusão foi toda comentada.</li>
+<li>(a confirmar no teste) <strong>Duas estruturas marcadas na árvore derrubam a gravação com erro técnico.</strong> O código junta os códigos marcados com hífen (por exemplo "3-5") e converte em número fora do trecho que trata erros.</li>
+<li>(a confirmar no teste) <strong>A trava de alteração do instrumento está desligada.</strong> O código previa bloquear a alteração de instrumento com calibração, limpeza, lubrificação, qualificação, lote padrão ou autorização, mas as seis consultas estão comentadas e a função devolve sempre "pode alterar".</li>
+<li>(a confirmar no teste) <strong>Patrimônio e número de série repetidos são aceitos na inclusão</strong> e barrados na alteração: inconsistência.</li>
+<li>(a confirmar no teste) <strong>A data de fabricação e "Outros Fabricantes" não entram no histórico</strong>: podem ser mudados sem rastro.</li>
+<li>(a confirmar no teste) <strong>Data de fim de operação não pode ser futura</strong>: não dá para registrar a desativação programada.</li>
+<li>(a confirmar no teste) <strong>Reativar com tag repetida não é barrado</strong>: a tag só é conferida quando muda e só entre ativos.</li>
+<li>(a confirmar no teste) <strong>Pesquisa e relatório montados com o texto digitado</strong>. O filtro de caracteres da tela tira o apóstrofo ao digitar, mas só no navegador.</li>
+<li>(a confirmar no teste) <strong>Tag de pesquisa com 10 caracteres, tag do cadastro com 30</strong>: uma tag longa não pode ser digitada inteira no filtro.</li>
+<li>(a confirmar no teste) <strong>O cadastro não mostra calibração</strong>: não há data da última calibração, validade, periodicidade nem certificado nesta tela; para saber se o instrumento está calibrado é preciso abrir a Produção (ver exigências da norma).</li>
+<li>(a confirmar no teste) <strong>Mensagem com concordância errada</strong>: "A Situação é obrigatório!".</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura com os filtros</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e grade</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a ação Incluir</td>
+</tr>
+<tr>
+<td>Imprimir e ícone do Excel</td>
+<td>Abre o relatório com os filtros</td>
+<td>Depois de uma pesquisa com resultado, para quem tem Imprimir/Excel</td>
+</tr>
+<tr>
+<td>Lápis (Editar) e lupa (Consultar)</td>
+<td>Abrem o formulário</td>
+<td>Conforme as ações do perfil</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Pede só a confirmação e exclui</td>
+<td>Para quem tem Excluir</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico</td>
+<td>Para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>No formulário</td>
+</tr>
+<tr>
+<td>VOLTAR (alto e rodapé)</td>
+<td>Volta à lista sem gravar</td>
+<td>No formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também confere; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -436,7 +617,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

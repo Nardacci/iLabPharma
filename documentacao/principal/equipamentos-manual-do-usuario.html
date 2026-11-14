@@ -44,43 +44,212 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="equipamentos-analise.html">Análise</a><a href="equipamentos-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="equipamentos-fluxos.html">Fluxos</a><a href="equipamentos-regras-de-negocio.html">Regras de negócio</a><a href="equipamentos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-equipamentos.html">Erros (4)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-2-equipamentos">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra os <strong>equipamentos da fábrica</strong>: balanças, misturadores, comprimidoras, estufas, equipamentos de laboratório. Para cada um guarda a identificação (descrição, tag, patrimônio, marca ou modelo, número de série), a origem (fabricante e fornecedor, escolhidos no cadastro de Pessoa jurídica), a capacidade, o valor, as datas de fabricação e de operação, se está ligado ao sistema por rede (endereço IP e porta), a <strong>categoria</strong> e os <strong>tipos de manutenção</strong> previstos. É a base para o plano de manutenção, calibração e limpeza e para o registro do que cada lote usou, que ficam em outros módulos (equipamento_ed.aspx.cs:259-367; dalEquipamento.cs:272-319).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém o cadastro de equipamentos: Engenharia, Manutenção ou Garantia da Qualidade, conforme a empresa (leitura da área; o sistema não diz).</li>
+<li>A Produção lê os equipamentos pelo banco; outros módulos consultam pelo serviço <code>api/Equipamento</code>.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 2 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu Cadastros. Antes de usar, convém ter cadastrados a <strong>Categoria de equipamento</strong> (tela 04) com seus tipos de manutenção, as <strong>Pessoas jurídicas</strong> do tipo Fabricante e Fornecedor (tela 03) e a <strong>Estrutura funcional</strong> (tela 09).</li>
+<li>A lista abre vazia; é preciso clicar em Pesquisar.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Salvar um equipamento novo</strong> grava o registro, os tipos de manutenção marcados e uma linha "INCLUSÃO DO REGISTRO" no histórico; mostra "Inclusão realizada com sucesso!".</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa, grava e escreve uma linha de histórico por campo mudado; mostra "Alteração realizada com sucesso!".</li>
+<li><strong>Excluir</strong> (na lista) manda o equipamento para a lixeira, sem justificativa, se nenhum registro do banco do Principal o referenciar, e escreve "EXCLUSÃO DO REGISTRO" no histórico.</li>
+<li>O próximo passo da corrente é o uso do equipamento em outros módulos: Produção (autorização de equipamento, limpeza, pesagem) e Controle da Qualidade (calibração e manutenção, quando existem registros).</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <p>Tenha à mão a descrição do equipamento, a tag, a capacidade de produção, o valor e a <strong>categoria</strong>. Para informar o fabricante e o fornecedor, as empresas precisam estar cadastradas e ativas em Pessoa jurídica (como Fabricante e como Fornecedor).</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 05/10/2026 (rodada 1), cada uma conferida contra o texto. Sem imagem: interface com o sistema (endereço e porta), erro ao salvar sem Categoria (DV-PRI-010), marcação do local na árvore, exclusão e a recusa com dependente, ícone Consultar, o arquivo do Excel.</em></p>
+<p><strong>Tela de lista</strong></p>
 <ul>
 <li>Passo 1. No menu Cadastros, abra Equipamentos. A tela mostra o quadro "Pesquisa" e uma área vazia. Clique em Pesquisar para listar (equipamento_lst.aspx.cs:17-31).</li>
 <li>Passo 2. Filtros: Código, Descrição (procura dentro do texto; <strong>acentos contam</strong>: "pressao" não acha "PRESSÃO"), Tag e Ativo (TODAS, SIM, NÃO) (equipamento_lst.aspx:40-59; dalEquipamento.cs:18-33; CT-PRI-096).</li>
 <li>Passo 3. A lista mostra Código, Descrição, Tag e Ativo, com os ícones Editar, Consultar, Excluir e Ver Log, conforme a sua permissão. Imprimir e Excel aparecem depois de uma pesquisa com resultado, se você pode imprimir (equipamento_lst.aspx:91-135; equipamento_lst.aspx.cs:51-52).</li>
+</ul>
+<figure><a href="../img/principal/ca02-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r01-lista.png" alt="Figura 1: A lista de Cadastro de Equipamentos depois de Pesquisar com o filtro Descrição &quot;TESTE EQUIPAMENTO&quot;: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e os ícones Editar, Excluir e LOG em cada linha." loading="lazy"></a><figcaption>Figura 1: A lista de Cadastro de Equipamentos depois de Pesquisar com o filtro Descrição &quot;TESTE EQUIPAMENTO&quot;: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e os ícones Editar, Excluir e LOG em cada linha. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: A lista de Cadastro de Equipamentos depois de Pesquisar com o filtro Descrição "TESTE EQUIPAMENTO": filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e os ícones Editar, Excluir e LOG em cada linha.</em></p>
+<ul>
 <li>Passo 4. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (equipamento_lst.aspx:79).</li>
 </ul>
-<h4 id="cadastrar-um-equipamento">Cadastrar um equipamento</h4>
+<figure><a href="../img/principal/ca02-r02-sem-resultado-sem-acento.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r02-sem-resultado-sem-acento.png" alt="Figura 2: Pesquisa por &quot;pressao&quot; (sem acento): &quot;A pesquisa não retornou nenhum resultado.&quot;, embora exista o equipamento &quot;PRESSÃO&quot; (DV-PRI-008)." loading="lazy"></a><figcaption>Figura 2: Pesquisa por &quot;pressao&quot; (sem acento): &quot;A pesquisa não retornou nenhum resultado.&quot;, embora exista o equipamento &quot;PRESSÃO&quot; (DV-PRI-008). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: Pesquisa por "pressao" (sem acento): "A pesquisa não retornou nenhum resultado.", embora exista o equipamento "PRESSÃO" (DV-PRI-008).</em></p>
+<p><strong>Cadastrar um equipamento</strong></p>
 <ul>
 <li>Passo 5. Na lista, clique em Novo. Preencha Tipo de Equipamento (Móvel ou Fixo), Descrição, Tag, Capacidade de Produção e Valor (obrigatórios), e o restante que souber: Patrimônio, Marca/Modelo, Número de Série, Data de Fabricação, Fabricante (se o fabricante não estiver na lista, escolha OUTROS e escreva o nome), Fornecedor e as datas de operação (equipamento_ed.aspx:52-166).</li>
+</ul>
+<figure><a href="../img/principal/ca02-r03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r03-form-preenchido.png" alt="Figura 3: O formulário de inclusão com os campos obrigatórios preenchidos (Tipo de Equipamento, Descrição, Tag, Capacidade de Produção e Valor), os quadros Categoria e Tipos de Manutenção e Direção/Sub-Direção/Seção, antes de salvar." loading="lazy"></a><figcaption>Figura 3: O formulário de inclusão com os campos obrigatórios preenchidos (Tipo de Equipamento, Descrição, Tag, Capacidade de Produção e Valor), os quadros Categoria e Tipos de Manutenção e Direção/Sub-Direção/Seção, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O formulário de inclusão com os campos obrigatórios preenchidos (Tipo de Equipamento, Descrição, Tag, Capacidade de Produção e Valor), os quadros Categoria e Tipos de Manutenção e Direção/Sub-Direção/Seção, antes de salvar.</em></p>
+<ul>
 <li>Passo 6. Se o equipamento conversa com o sistema, marque "Interface com o sistema? Sim" e informe o endereço IP e a porta (equipamento_ed.aspx:171-190).</li>
 <li>Passo 7. <strong>Escolha a Categoria.</strong> Sem ela, o sistema dá erro de servidor ("Input string was not in a correct format") e a tela fica parada, sem mensagem (DV-PRI-010; equipamento_ed.aspx.cs:286). Ao escolher a categoria, os tipos de manutenção padrão dela vêm marcados; marque ou desmarque os que valem para este equipamento (equipamento_ed.aspx.cs:394-449).</li>
 <li>Passo 8. Marque o local da estrutura funcional ("Direção/Sub-Direção/Seção"). Escolha <strong>um só</strong> (equipamento_ed.aspx:224-232; equipamento_ed.aspx.cs:289-292).</li>
 <li>Passo 9. Clique em SALVAR e responda SIM a "Confirma a inclusão do item?". A tela diz "Inclusão realizada com sucesso!" (equipamento_ed.aspx.cs:322 e 578).</li>
 </ul>
-<h4 id="alterar-inativar-e-consultar">Alterar, inativar e consultar</h4>
+<figure><a href="../img/principal/ca02-r04-sucesso-inclusao.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r04-sucesso-inclusao.png" alt="Figura 4: &quot;Inclusão realizada com sucesso!&quot; depois de SALVAR e SIM." loading="lazy"></a><figcaption>Figura 4: &quot;Inclusão realizada com sucesso!&quot; depois de SALVAR e SIM. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: "Inclusão realizada com sucesso!" depois de SALVAR e SIM.</em></p>
+<p><strong>Alterar, inativar e consultar</strong></p>
 <ul>
 <li>Passo 10. Na lista, clique em Editar. Mude o que precisar, preencha a <strong>Justificativa</strong> (obrigatória) e clique em SALVAR. O histórico passa a ter uma linha por campo mudado, com valor antigo, valor novo, usuário, data, hora e justificativa (equipamento_ed.aspx.cs:120-138 e 338-364; CT-PRI-092).</li>
+</ul>
+<figure><a href="../img/principal/ca02-r05-alterar-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r05-alterar-preenchido.png" alt="Figura 5: O formulário de alteração do equipamento com Tag e Marca/Modelo mudados, a Categoria e a manutenção preventiva marcada, e o campo Justificativa vazio, antes de salvar." loading="lazy"></a><figcaption>Figura 5: O formulário de alteração do equipamento com Tag e Marca/Modelo mudados, a Categoria e a manutenção preventiva marcada, e o campo Justificativa vazio, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: O formulário de alteração do equipamento com Tag e Marca/Modelo mudados, a Categoria e a manutenção preventiva marcada, e o campo Justificativa vazio, antes de salvar.</em></p>
+<figure><a href="../img/principal/ca02-r06-sucesso-alteracao.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r06-sucesso-alteracao.png" alt="Figura 6: &quot;Alteração realizada com sucesso!&quot; depois de salvar com justificativa." loading="lazy"></a><figcaption>Figura 6: &quot;Alteração realizada com sucesso!&quot; depois de salvar com justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: "Alteração realizada com sucesso!" depois de salvar com justificativa.</em></p>
+<ul>
 <li>Passo 11. Para tirar o equipamento de uso, mude Ativo para Não, justifique e salve. O equipamento inativo abre travado (equipamento_ed.aspx.cs:127-130).</li>
+</ul>
+<figure><a href="../img/principal/ca02-r07-lista-inativo.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r07-lista-inativo.png" alt="Figura 7: A lista filtrada mostrando o equipamento inativado com Ativo = NÃO." loading="lazy"></a><figcaption>Figura 7: A lista filtrada mostrando o equipamento inativado com Ativo = NÃO. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: A lista filtrada mostrando o equipamento inativado com Ativo = NÃO.</em></p>
+<ul>
 <li>Passo 12. Consultar abre o mesmo formulário. Ver Log abre o histórico do equipamento.</li>
 </ul>
-<h4 id="excluir">Excluir</h4>
+<figure><a href="../img/principal/ca02-r08-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r08-historico.png" alt="Figura 8: A janela &quot;Log Alteração - Cadastro de Equipamentos&quot;: as mudanças de MODELO e de TAG (valor antigo, valor novo, data, hora, usuário e justificativa) e a linha &quot;INCLUSÃO DO REGISTRO&quot;." loading="lazy"></a><figcaption>Figura 8: A janela &quot;Log Alteração - Cadastro de Equipamentos&quot;: as mudanças de MODELO e de TAG (valor antigo, valor novo, data, hora, usuário e justificativa) e a linha &quot;INCLUSÃO DO REGISTRO&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: A janela "Log Alteração - Cadastro de Equipamentos": as mudanças de MODELO e de TAG (valor antigo, valor novo, data, hora, usuário e justificativa) e a linha "INCLUSÃO DO REGISTRO".</em></p>
+<p><strong>Excluir</strong></p>
 <ul>
 <li>Passo 13. Na lista, clique no ícone de excluir e responda SIM a "Confirma a exclusão do item?". O sistema <strong>não pede justificativa</strong> (DV-PRI-009).</li>
 <li>Passo 14. Se o equipamento tiver tipos de manutenção marcados ou estiver ligado a um ambiente, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas.", sem dizer qual. Desmarque antes os tipos de manutenção (com justificativa, salvando a alteração) e retire o equipamento do ambiente; depois exclua (reteste do DV-PRI-012, rodada 2; RN-PRI-071).</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Não guarda datas de calibração, de qualificação, de próxima manutenção nem o certificado: só os tipos de manutenção previstos. Os cinco tipos de fábrica são calibração, qualificação, limpeza, lubrificação e manutenção preventiva (TBL_EQUIPAMENTO.sql:1-27; dml.sql:10386-10399).</li>
-<li>Não pede justificativa na exclusão (DV-PRI-009).</li>
-<li>Não obriga a Categoria no formulário (DV-PRI-010), embora o código dependa dela.</li>
-<li>Não confere se a data final de operação é posterior à inicial nem se a data está no futuro: os avisos existem na página, mas a gravação não os executa (RN-PRI-CAD02-006).</li>
-<li>Não confere o formato do endereço IP nem da porta (equipamento_ed.aspx:180-189).</li>
+<li><strong>Salvar um equipamento novo</strong> grava o registro, os tipos de manutenção marcados e uma linha "INCLUSÃO DO REGISTRO" no histórico; mostra "Inclusão realizada com sucesso!" (bllEquipamento.cs:90-130; equipamento_ed.aspx.cs:317-337).</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa, grava e escreve uma linha de histórico por campo mudado; mostra "Alteração realizada com sucesso!" (bllEquipamento.cs:132-176; equipamento_ed.aspx.cs:338-364).</li>
+<li><strong>Excluir</strong> (na lista) manda o equipamento para a lixeira, sem justificativa, se nenhum registro do banco do Principal o referenciar, e escreve "EXCLUSÃO DO REGISTRO" no histórico (equipamento_lst.aspx.cs:382-410; bllEquipamento.cs:178-206).</li>
+<li>O próximo passo da corrente é o uso do equipamento em outros módulos: Produção (autorização de equipamento, limpeza, pesagem) e Controle da Qualidade (calibração e manutenção, quando existem registros).</li>
 </ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Se o equipamento tiver tipos de manutenção marcados ou estiver ligado a um ambiente, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas.", sem dizer qual. Desmarque antes os tipos de manutenção (com justificativa, salvando a alteração) e retire o equipamento do ambiente; depois exclua (reteste do DV-PRI-012, rodada 2; RN-PRI-071).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>O Tipo de Equipamento é obrigatório! / A Descrição é obrigatória! / A Tag é obrigatória! / A Capacidade de Produção é obrigatória! / O Valor é obrigatório!: Salvar sem o campo (vista em teste, CT-PRI-091, 05/10/2026) (equipamento_ed.aspx:53, 75, 82, 134 e 164)</li>
+<li>Outros Fabricantes é obrigatório!: Fabricante = OUTROS sem o nome (equipamento_ed.aspx:120)</li>
+<li>A Justificativa é obrigatória!: Alterar sem justificativa (vista em teste, CT-PRI-092, 05/10/2026) (equipamento_ed.aspx:244)</li>
+<li>Tag já existe! / Patrimônio já existe! / Número de série já existe!: Valor repetido (bllEquipamento.cs:96, 102 e 108)</li>
+<li>Input string was not in a correct format: Salvar sem Categoria (vista em teste, CT-PRI-090, 05/10/2026; a tela não mostra nada) (equipamento_ed.aspx.cs:286; DV-PRI-010)</li>
+<li>A Data de Fabricação é inválida! / A Data Início de Operação é inválida! / A Data Fim de Operação é inválida!: Aviso ao sair do campo de data com valor inválido (não bloqueia a gravação) (equipamento_ed.aspx:108, 143 e 153)</li>
+<li>Exclusão inválida, existem referências com outras tabelas.: Exclusão com dependentes (vista em teste, CT-PRI-094, 05/10/2026) (bllEquipamento.cs:185)</li>
+<li>Erro na consulta de Equipamento. / Erro na inclusão de Equipamento. / Erro na alteração de Equipamento. / Erro na Exclusão de Equipamento.: Qualquer falha técnica (detalhe no link "Detalhe do erro (+)") (bllEquipamento.cs:25, 126, 173 e 202)</li>
+</ul>
+<figure><a href="../img/principal/ca02-r09-erro-descricao.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r09-erro-descricao.png" alt="Figura 9: Salvar sem Descrição: mensagem vermelha &quot;A Descrição é obrigatória!&quot; no alto do quadro Equipamento." loading="lazy"></a><figcaption>Figura 9: Salvar sem Descrição: mensagem vermelha &quot;A Descrição é obrigatória!&quot; no alto do quadro Equipamento. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 9: Salvar sem Descrição: mensagem vermelha "A Descrição é obrigatória!" no alto do quadro Equipamento.</em></p>
+<figure><a href="../img/principal/ca02-r10-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r10-erro-justificativa.png" alt="Figura 10: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 10: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 10: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função da tela é a 94 (equipamento_lst.aspx.cs:19 e equipamento_ed.aspx.cs:19). Na árvore de permissões, o grupo Cadastros tem "Equipamentos (75)", com as ações Incluir, Alterar, Excluir, Imprimir/Excel e Consultar log (02-matriz-de-permissoes.md:157 e 160).</li>
+<li>Na lista, Editar depende de Alterar, Excluir de Excluir, Ver Log de Consultar log, Novo de Incluir, Imprimir e Excel de Imprimir/Excel (ClassePaiLst.cs:192-257).</li>
+<li>Resultado dos testes: o usuário com Incluir e Alterar (sem Excluir e Imprimir/Excel) viu Novo e Editar e não viu Excluir, Imprimir e Excel (CT-PRI-051, rodada 2). Não houve teste de usuário <strong>sem</strong> a função de Equipamentos.</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-PRI-009 (gravidade Alta):</strong> Exclui o equipamento só com as confirmações, sem justificativa. Esperado: Justificativa obrigatória, registrada no histórico (RN-PRI-070) (caso e data: CT-PRI-094 e reteste, 05/10/2026 e rodada 2 (06/10/2026)).</li>
+<li><strong>DV-PRI-010 (gravidade Média):</strong> Salvar sem Categoria devolve "Input string was not in a correct format" e a tela fica parada, sem mensagem; o equipamento não é gravado. Esperado: Marcar a Categoria como obrigatória e recusar com mensagem clara (ou gravar sem ela) (caso e data: CT-PRI-090, 05/10/2026).</li>
+<li><strong>DV-PRI-011 (gravidade Média):</strong> A recusa de exclusão diz só "Exclusão inválida, existem referências com outras tabelas.". Esperado: Dizer qual cadastro ou item impede (caso e data: CT-PRI-094, 05/10/2026, e reteste).</li>
+<li><strong>DV-PRI-008 (gravidade Baixa):</strong> A pesquisa não ignora acentos ("pressao" não acha "PRESSÃO"). Esperado: Encontrar com ou sem acento (caso e data: CT-PRI-096, 05/10/2026).</li>
+<li><strong>DV-PRI-012 (gravidade Média (descartado)):</strong> Equipamento recém-criado não podia ser excluído; explicado pela regra RN-PRI-071 (tipo de manutenção vinculado na própria tela). Defeito encerrado. Esperado: Orientar a remover o tipo antes (RF-PRI-041) (caso e data: Reteste, rodada 2 (06/10/2026)).</li>
+<li><strong>DV-PRI-026 (gravidade Média):</strong> Um envio inválido mostra a página técnica do ASP.NET (visto no ambiente e no usuário). Esperado: Mensagem amigável (caso e data: CT-PRI-070 e 071, rodada 2).</li>
+<li><strong>DV-PRI-025 (gravidade Alta):</strong> Telas de edição abrem pelo endereço sem permissão (confirmado em outras telas; o formulário de equipamento herda a mesma classe-base e não foi testado). Detalhe na seção "Segurança e acesso". Esperado: Acesso negado (caso e data: CT-PRI-061 a 068, rodada 2).</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) Não há data de calibração, de qualificação nem de próxima manutenção; a norma pede calibração em intervalos definidos e seu registro</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) Quem só tem a tela marcada, sem Alterar, abre o formulário travado e sem SALVAR (o código trata esse caso); quem tem Alterar sem Incluir pode abrir o formulário vazio pelo endereço e gravar</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A verificação "equipamento em uso" (calibração, limpeza, manutenção, pesagem, lote padrão, autorização de produção) não é chamada pelo formulário e suas consultas estão desligadas; o equipamento usado pode ser mudado e excluído</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A exclusão só considera o banco do Principal; o equipamento usado em Produção ou Controle da Qualidade pode ser excluído</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A pesquisa monta o comando com o texto digitado, inclusive o código sem aspas; o relatório usa os valores do endereço</li>
+<li><strong>A tela não faz:</strong> Não guarda datas de calibração, de qualificação, de próxima manutenção nem o certificado: só os tipos de manutenção previstos. Os cinco tipos de fábrica são calibração, qualificação, limpeza, lubrificação e manutenção preventiva.</li>
+<li><strong>A tela não faz:</strong> Não pede justificativa na exclusão (DV-PRI-009).</li>
+<li><strong>A tela não faz:</strong> Não obriga a Categoria no formulário (DV-PRI-010), embora o código dependa dela.</li>
+<li><strong>A tela não faz:</strong> Não confere se a data final de operação é posterior à inicial nem se a data está no futuro: os avisos existem na página, mas a gravação não os executa (RN-PRI-CAD02-006).</li>
+<li><strong>A tela não faz:</strong> Não confere o formato do endereço IP nem da porta.</li>
+<li>As imagens deste manual vêm do teste de 05/10/2026 (rodada 1). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Lista os equipamentos não excluídos que batem com o filtro</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia os filtros e esconde a lista</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Novo</td>
+<td>Abre o formulário vazio</td>
+<td>Lista, se o usuário tem Incluir</td>
+</tr>
+<tr>
+<td>Editar, Consultar</td>
+<td>Abrem o formulário</td>
+<td>Em toda linha (Editar com a ação Alterar)</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Pede confirmação e manda para a lixeira</td>
+<td>Em toda linha, se o usuário tem Excluir</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre o histórico</td>
+<td>Em toda linha, se o usuário tem Consultar log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Gera o relatório ou a planilha com o mesmo filtro</td>
+<td>Depois de uma pesquisa com resultado, se o usuário pode imprimir</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>Formulário, se o usuário pode alterar ou incluir</td>
+</tr>
+<tr>
+<td>Escolha de Categoria (lista)</td>
+<td>Ao trocar a categoria, recarrega os tipos de manutenção padrão</td>
+<td>Formulário</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta à lista sem gravar</td>
+<td>Sempre, no formulário</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../img/principal/ca02-r11-relatorio.png" target="_blank" rel="noopener"><img src="../img/principal/ca02-r11-relatorio.png" alt="Figura 11: O &quot;RELATÓRIO DE CADASTRO DE EQUIPAMENTOS&quot; gerado por IMPRIMIR, com o filtro Descrição &quot;TESTE EQUIPAMENTO&quot; e duas linhas (código, descrição, tag e ativo)." loading="lazy"></a><figcaption>Figura 11: O &quot;RELATÓRIO DE CADASTRO DE EQUIPAMENTOS&quot; gerado por IMPRIMIR, com o filtro Descrição &quot;TESTE EQUIPAMENTO&quot; e duas linhas (código, descrição, tag e ativo). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 11: O "RELATÓRIO DE CADASTRO DE EQUIPAMENTOS" gerado por IMPRIMIR, com o filtro Descrição "TESTE EQUIPAMENTO" e duas linhas (código, descrição, tag e ativo).</em></p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -436,7 +605,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -44,44 +44,219 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="local-fisico-analise.html">Análise</a><a href="local-fisico-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="local-fisico-fluxos.html">Fluxos</a><a href="local-fisico-regras-de-negocio.html">Regras de negócio</a><a href="local-fisico-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-local-fisico.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-10-local-fisico">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra os <strong>locais físicos</strong> onde ficam os bens da empresa (salas, prédios, almoxarifados no sentido patrimonial), cada um ligado a uma <strong>conta gerencial</strong> (tela 7) e, por ela, a uma empresa; com <strong>responsável</strong> (um usuário do sistema) e, se quiser, <strong>centro de custo</strong>. É a base do módulo Patrimônio. O código mostra duas telas no mesmo cadastro:</p>
+<ol>
+<li><strong>Lista</strong> com pesquisa por empresa, conta gerencial, código, nome e situação, com paginação própria (Anterior e Próximo) e ordenação (local_fisico_lst.aspx:46-165; local_fisico_lst.aspx.cs:37-78).</li>
+<li><strong>Formulário</strong> para incluir, alterar e consultar: nome, empresa, conta gerencial, centro de custo, responsável, situação e, na alteração, a justificativa (local_fisico_ed.aspx:49-140).</li>
+</ol>
+<p><strong>Não confundir</strong> com a Estrutura funcional (tela 9, árvore de setores usada em usuários, ambientes e equipamentos) nem com o Endereço do Estoque (almoxarifado, rua, coluna e andar). O Local Físico daqui é um cadastro patrimonial: nenhum módulo fabril o lê (busca por nome no repositório).</p>
+<p><strong>Fora do foco de Boas Práticas.</strong> O valor para a ANVISA é só o de qualquer cadastro mestre: identificação única e rastro de alteração. Esta tela <strong>não tem relatório</strong>: os botões Imprimir e Excel existem na página, mas ficam sempre escondidos (local_fisico_lst.aspx.cs:31-32, 55-56 e 173-189, comentados "vai entrar numa sprint futura").</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém o cadastro de bens da empresa: patrimônio, controladoria ou facilities (leitura da área, a validar).</li>
+<li>Quem consulta a lista e o histórico.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 10 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu superior <strong>Cadastros › Local Físico</strong>, que abre a lista.</li>
+<li>Na lista, <strong>Pesquisar</strong> traz os locais (a lista não carrega sozinha); <strong>Incluir</strong> abre o formulário vazio e o lápis abre um local pelo endereço <code>local_fisico_ed.aspx?id_local_fisico=</code>.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>SALVAR <strong>confere os obrigatórios antes</strong> de perguntar (diferente da maioria dos cadastros) e então pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista.</li>
+<li>O local gravado passa a ser oferecido no módulo Patrimônio (bens, transferências, baixas, inventário).</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <ul>
 <li>Entre no módulo Principal e abra <strong>Cadastros › Local Físico</strong>.</li>
 <li>Antes, cadastre a <strong>empresa</strong> (Pessoa jurídica, tipo Empresa), a <strong>conta gerencial</strong> (tela 7) e, se for usar, o <strong>centro de custo</strong>. O <strong>responsável</strong> é um usuário do sistema (local_fisico_ed.aspx.cs:77-110).</li>
 <li>Quem não tem a função desta tela ("LOCAL FÍSICO") é levado à página de acesso negado ao abrir a lista (local_fisico_lst.aspx.cs:27; ClassePaiLst.cs:65). Incluir, Editar, Excluir e Ver Log só aparecem para quem tem a ação correspondente (ClassePaiLst.cs:111-255).</li>
 </ul>
-<h4 id="pesquisar">Pesquisar</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: o aviso de sucesso, a inativação, a busca de Empresa e Conta Gerencial por sugestão, a recusa do nome repetido com a frase correta, o relatório (a tela não tem).</em></p>
+<p><strong>Pesquisar</strong></p>
 <ol>
 <li>Abra a lista (vem vazia). Preencha, se quiser, <strong>Empresa</strong> e <strong>Conta Gerencial</strong> (digite pelo menos duas letras e <strong>escolha na sugestão</strong>), <strong>Código</strong> (só números), <strong>Nome</strong> e <strong>Ativo</strong>, e clique em <strong>Pesquisar</strong> (local_fisico_lst.aspx:46-95).</li>
 <li>A grade mostra Código, Empresa, Conta Gerencial, Local Físico e Ativo, com o total de registros, as páginas e os botões Anterior e Próximo (local_fisico_lst.aspx:119-138; local_fisico_lst.aspx.cs:37-48 e 445-460).</li>
+</ol>
+<figure><a href="../img/principal/ca10-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r01-lista.png" alt="Figura 1: A lista de Local Físico depois de Pesquisar: filtros Empresa, Conta Gerencial, Código, Nome e Ativo, botões PESQUISAR, LIMPAR e Incluir, o total de registros e a grade com os ícones Editar, Excluir e LOG." loading="lazy"></a><figcaption>Figura 1: A lista de Local Físico depois de Pesquisar: filtros Empresa, Conta Gerencial, Código, Nome e Ativo, botões PESQUISAR, LIMPAR e Incluir, o total de registros e a grade com os ícones Editar, Excluir e LOG. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: A lista de Local Físico depois de Pesquisar: filtros Empresa, Conta Gerencial, Código, Nome e Ativo, botões PESQUISAR, LIMPAR e Incluir, o total de registros e a grade com os ícones Editar, Excluir e LOG.</em></p>
+<ol start="3">
 <li><strong>Limpar</strong> esvazia filtros e grade (local_fisico_lst.aspx.cs:192-226).</li>
 </ol>
-<h4 id="incluir">Incluir</h4>
+<p><strong>Incluir</strong></p>
 <ol>
 <li>Clique em <strong>Incluir</strong>.</li>
+</ol>
+<figure><a href="../img/principal/ca10-r02-nova.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r02-nova.png" alt="Figura 2: O formulário de inclusão de Local Físico aberto, vazio: Nome, Empresa, Conta Gerencial, Centro de Custo, Responsável e Ativo." loading="lazy"></a><figcaption>Figura 2: O formulário de inclusão de Local Físico aberto, vazio: Nome, Empresa, Conta Gerencial, Centro de Custo, Responsável e Ativo. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: O formulário de inclusão de Local Físico aberto, vazio: Nome, Empresa, Conta Gerencial, Centro de Custo, Responsável e Ativo.</em></p>
+<ol start="2">
 <li>Preencha <strong>Nome</strong>, <strong>Empresa</strong>, <strong>Conta Gerencial</strong> e <strong>Responsável</strong> (obrigatórios; escolha cada um na <strong>sugestão</strong>, não só digitando) e, se quiser, <strong>Centro de Custo</strong>. Ativo vem como Sim (local_fisico_ed.aspx:49-123).</li>
+</ol>
+<figure><a href="../img/principal/ca10-r03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r03-form-preenchido.png" alt="Figura 3: O formulário preenchido (Nome, Empresa, Conta Gerencial, Centro de Custo e Responsável), antes de salvar." loading="lazy"></a><figcaption>Figura 3: O formulário preenchido (Nome, Empresa, Conta Gerencial, Centro de Custo e Responsável), antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O formulário preenchido (Nome, Empresa, Conta Gerencial, Centro de Custo e Responsável), antes de salvar.</em></p>
+<ol start="3">
 <li>Clique em <strong>SALVAR</strong>. Se faltar um obrigatório, a mensagem aparece <strong>antes</strong> da confirmação. Depois responda <strong>SIM</strong> a "Confirma a inclusão do item?" (local_fisico_ed.aspx.cs:122-141).</li>
 <li>Se já existir outro local com o mesmo nome na mesma conta gerencial, aparece "Já existe um Local Físico com este Nome!" (ContaGerencial.cs:48-59, biblioteca).</li>
 </ol>
-<h4 id="alterar-ou-inativar">Alterar ou inativar</h4>
+<p><strong>Alterar ou inativar</strong></p>
 <ol>
 <li>Clique no lápis. A <strong>empresa e a conta gerencial ficam travadas</strong>. Mude o que precisar e escreva a <strong>Justificativa</strong> (obrigatória na alteração) (local_fisico_ed.aspx.cs:73-117).</li>
 <li>Clique em SALVAR e confirme. O histórico guarda o valor antigo e o novo de Situação, Nome, Conta Gerencial, Responsável e Centro de Custo (local_fisico_ed.aspx.cs:283-392).</li>
+</ol>
+<figure><a href="../img/principal/ca10-r04-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r04-historico.png" alt="Figura 4: A janela &quot;Log Alteração - Local Físico&quot;: a mudança de DESCRIÇÃO (dado antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;." loading="lazy"></a><figcaption>Figura 4: A janela &quot;Log Alteração - Local Físico&quot;: a mudança de DESCRIÇÃO (dado antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: A janela "Log Alteração - Local Físico": a mudança de DESCRIÇÃO (dado antigo e novo) com a justificativa e a linha "INCLUSÃO DO REGISTRO".</em></p>
+<ol start="3">
 <li>Um local inativo abre travado, com só Ativo e Justificativa liberados (local_fisico_ed.aspx.cs:56-71).</li>
 </ol>
-<h4 id="excluir">Excluir</h4>
+<p><strong>Excluir</strong></p>
 <ol>
 <li>Na lista, clique no ícone de exclusão. A tela troca para o painel de exclusão, com o código, o nome e a <strong>Justificativa</strong> (local_fisico_lst.aspx.cs:86-94; local_fisico_lst.aspx:192-217).</li>
+</ol>
+<figure><a href="../img/principal/ca10-r05-excluir-painel.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r05-excluir-painel.png" alt="Figura 5: O painel de exclusão: código, nome, campo Justificativa e os botões VOLTAR e EXCLUIR REGISTRO." loading="lazy"></a><figcaption>Figura 5: O painel de exclusão: código, nome, campo Justificativa e os botões VOLTAR e EXCLUIR REGISTRO. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: O painel de exclusão: código, nome, campo Justificativa e os botões VOLTAR e EXCLUIR REGISTRO.</em></p>
+<ol start="2">
 <li>Escreva a justificativa, clique em EXCLUIR e responda SIM. Se o módulo <strong>Patrimônio</strong> estiver ativo, o sistema confere se há bens, transferências, baixas, reavaliações, depreciações, amortizações ou inventários usando o local e recusa dizendo qual (local_fisico_lst.aspx.cs:296-381).</li>
 <li>Se o módulo Patrimônio <strong>não</strong> estiver ativo, o local é excluído sem essa conferência (local_fisico_lst.aspx.cs:303-307).</li>
 </ol>
-<h4 id="ver-o-historico">Ver o histórico</h4>
+<p><strong>Ver o histórico</strong></p>
 <ul>
 <li>O ícone <strong>LOG</strong> abre o histórico do local (local_fisico_lst.aspx.cs:101-109).</li>
 <li><strong>Imprimir</strong> e <strong>Excel</strong> não aparecem nesta tela.</li>
 </ul>
 <hr />
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li>SALVAR <strong>confere os obrigatórios antes</strong> de perguntar (diferente da maioria dos cadastros) e então pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista (local_fisico_ed.aspx.cs:122-162, 203-225 e 197-201).</li>
+<li>O local gravado passa a ser oferecido no módulo Patrimônio (bens, transferências, baixas, inventário) (local_fisico_lst.aspx.cs:352-381).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"O Nome é um campo obrigatório!" / "A Empresa é um campo obrigatório!" / "A Conta Gerencial é um campo obrigatório!" / "O Responsável é um campo obrigatório!" / "A Situação é um campo obrigatório!": Campo em branco (local_fisico_ed.aspx:52, 67, 82, 110 e 121)</li>
+<li>"A Justificativa é obrigatória!": Alteração ou exclusão sem justificativa (local_fisico_ed.aspx:137; local_fisico_lst.aspx:207)</li>
+<li>"Já existe um Local Físico com este Nome!": Outro local de mesmo nome na mesma conta, na inclusão (ContaGerencial.cs:55 (biblioteca))</li>
+<li>"Erro ao processar a informação!" com o texto do erro: Qualquer falha ao gravar (por exemplo, responsável digitado e não escolhido) (local_fisico_ed.aspx.cs:219-224)</li>
+<li>"Ocorreu um erro ao atualizar o Local Fisico.": Qualquer falha na alteração, inclusive nome repetido (ContaGerencial.cs:91-94 (biblioteca))</li>
+<li>"A pesquisa não retornou nenhum resultado.": Pesquisa sem linhas (local_fisico_lst.aspx.cs:64)</li>
+<li>"Este Local Físico não pode ser excluído pois está sendo usado no cadastro de bens / na Transferência / na Baixa / na Reavaliação / na Depreciação / na Amortização / no Inventário no sistema Patrimônio.": Local usado no Patrimônio, com o módulo ativo (local_fisico_lst.aspx.cs:355-381)</li>
+</ul>
+<figure><a href="../img/principal/ca10-r06-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r06-erro-obrigatorios.png" alt="Figura 6: Salvar com tudo em branco: mensagens vermelhas de campo obrigatório para Nome, Empresa, Conta Gerencial e Responsável." loading="lazy"></a><figcaption>Figura 6: Salvar com tudo em branco: mensagens vermelhas de campo obrigatório para Nome, Empresa, Conta Gerencial e Responsável. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: Salvar com tudo em branco: mensagens vermelhas de campo obrigatório para Nome, Empresa, Conta Gerencial e Responsável.</em></p>
+<figure><a href="../img/principal/ca10-r07-erro-nome-repetido.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r07-erro-nome-repetido.png" alt="Figura 7: Salvar com nome já existente: a tela mostra só &quot;Erro ao processar a informação!&quot; com o link &quot;Detalhe do erro (+)&quot;, sem dizer que o nome já existe." loading="lazy"></a><figcaption>Figura 7: Salvar com nome já existente: a tela mostra só &quot;Erro ao processar a informação!&quot; com o link &quot;Detalhe do erro (+)&quot;, sem dizer que o nome já existe. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: Salvar com nome já existente: a tela mostra só "Erro ao processar a informação!" com o link "Detalhe do erro (+)", sem dizer que o nome já existe.</em></p>
+<figure><a href="../img/principal/ca10-r08-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r08-erro-justificativa.png" alt="Figura 8: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 8: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<figure><a href="../img/principal/ca10-r09-erro-excluir-sem-just.png" target="_blank" rel="noopener"><img src="../img/principal/ca10-r09-erro-excluir-sem-just.png" alt="Figura 9: Excluir sem Justificativa: o painel de exclusão mostra &quot;A Justificativa é obrigatória!&quot;." loading="lazy"></a><figcaption>Figura 9: Excluir sem Justificativa: o painel de exclusão mostra &quot;A Justificativa é obrigatória!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 9: Excluir sem Justificativa: o painel de exclusão mostra "A Justificativa é obrigatória!".</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A <strong>lista</strong> usa a função de tela "LOCAL FÍSICO" (local_fisico_lst.aspx.cs:27). A base das listas confere a função logo no início e leva quem não a tem à página de acesso negado (ClassePaiLst.cs:65; BaseController.cs:26-31). Incluir, Editar, Consultar, Excluir e Ver Log dependem de cada ação (ClassePaiLst.cs:111-255).</li>
+<li>O <strong>formulário</strong> usa a mesma função (local_fisico_ed.aspx.cs:25). A base do formulário só calcula as ações e <strong>não bloqueia a entrada</strong> (ClassePaiEd.cs:71-156). Esta tela trava o formulário e esconde o SALVAR para quem <strong>não tem Alterar</strong>, <strong>inclusive no local novo</strong> (local_fisico_ed.aspx.cs:56-60): quem só tem Incluir veria o formulário novo sem SALVAR (inferência a confirmar). O formulário só confere se há sessão aberta (local_fisico_ed.aspx.cs:29-32).</li>
+<li>Não há página de relatório, portanto não há relatório sem conferência.</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum. A tela não foi testada. Nenhum DV-PRI registrado tem esta tela como alvo (<code>defeitos/defeitos-completo.json</code>, campo <code>tela</code>).</li>
+<li><strong>DV-PRI-009 (Alta)</strong>, visto em outro cadastro (Excluir Ambiente e Equipamento sem justificativa). Nesta tela: Esta tela <strong>pede</strong> justificativa na exclusão (local_fisico_lst.aspx:204-207). Situação aqui: Não se aplica pelo código.</li>
+<li><strong>DV-PRI-010 (Média)</strong>, visto em outro cadastro (Salvar equipamento sem a categoria dá "Input string was not in a correct format" e a tela fica parada). Nesta tela: <strong>Padrão parecido</strong>: empresa ou conta só digitadas deixam o código vazio e a gravação falha (local_fisico_ed.aspx.cs:229-231); para o responsável o script limpa o texto (local_fisico.js:60-71). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-011 (Média)</strong>, visto em outro cadastro (Recusa de exclusão com mensagem genérica). Nesta tela: Aqui a mensagem diz qual cadastro do Patrimônio impede (local_fisico_lst.aspx.cs:355-381). Situação aqui: Não se aplica pelo código.</li>
+<li><strong>DV-PRI-014 (Alta)</strong>, visto em outro cadastro (Histórico de excluído não pode ser consultado). Nesta tela: Lista só com locais fora da lixeira (PessoaJuridicaRepository.cs:285). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-008 (Baixa)</strong>, visto em outro cadastro (Pesquisa não ignora acentos). Nesta tela: Pesquisa com Contains no banco (PessoaJuridicaRepository.cs:303-306). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-025 (Alta)</strong>, visto em outro cadastro (Telas de edição abrem pelo endereço sem permissão). Nesta tela: O formulário não bloqueia a entrada (ver segurança). Situação aqui: A confirmar no teste.</li>
+<li>(a confirmar no teste) <strong>Nome repetido na alteração não é barrado</strong> e a mensagem vira genérica: a conferência olha o registro antes da troca e qualquer erro vira "Ocorreu um erro ao atualizar o Local Fisico.".</li>
+<li>(a confirmar no teste) <strong>Empresa e conta gerencial só digitadas dão erro ao gravar.</strong> O script do navegador só limpa o campo de empresa ou de conta quando o texto muda <strong>depois</strong> de uma escolha na sugestão; quem digita sem nunca escolher deixa o código vazio, a obrigatoriedade (que olha o texto) passa e a gravação falha com "Erro ao processar a informação!" e o texto "Id da Conta Gerencial não informado.".</li>
+<li>(a confirmar no teste) <strong>A exclusão só confere o Patrimônio se o módulo estiver ativo</strong>. Com o módulo desligado, o local é excluído sem conferência, e a tabela de bens não tem chave com esta tabela neste banco (inferência).</li>
+<li>(a confirmar no teste) <strong>Imprimir e Excel não existem de fato</strong>: botões escondidos e lógica comentada. O inventário já anotava "Sem relatório".</li>
+<li>(a confirmar no teste) <strong>O formulário não lê <code>consultar=1</code></strong>: a lupa e o lápis abrem o mesmo formulário; quem tem Alterar edita mesmo clicando em Consultar.</li>
+<li>(a confirmar no teste) <strong>Nome só com letras, números e espaço</strong>: não aceita hífen, ponto, vírgula nem barra.</li>
+<li>(a confirmar no teste) <strong>Pesquisa de nome com 100 caracteres, cadastro com 50</strong>: só diferença de tamanho, sem efeito.</li>
+<li>(a confirmar no teste) <strong>A trava SALVAR para quem não tem Alterar vale também no local novo</strong>: quem só tem Incluir não consegue salvar.</li>
+<li>(a confirmar no teste) <strong>O responsável não é protegido por chave no banco</strong>: o código do usuário é guardado sem chave, então um usuário pode ser removido sem aviso e o local fica com um responsável inexistente (inferência).</li>
+<li>(a confirmar no teste) <strong>Código do local no endereço sem tratamento</strong>: um valor que não seja número gera erro técnico.</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura com os filtros, ordenando pelo código</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e grade</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a ação Incluir</td>
+</tr>
+<tr>
+<td>Anterior e Próximo</td>
+<td>Navegam pelas páginas</td>
+<td>Depois de uma pesquisa com resultado</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Os dois botões são escondidos em todo carregamento; a lógica de relatório está comentada</td>
+<td><strong>Nunca aparecem</strong></td>
+</tr>
+<tr>
+<td>Lápis (Editar) e lupa (Consultar)</td>
+<td>Abrem o formulário; o endereço da lupa leva <code>consultar=1</code>, que o formulário não lê</td>
+<td>Conforme as ações do perfil</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Abre o painel de exclusão com justificativa</td>
+<td>Para quem tem Excluir</td>
+</tr>
+<tr>
+<td>EXCLUIR e VOLTAR (painel)</td>
+<td>EXCLUIR pede confirmação e exclui; VOLTAR sai</td>
+<td>No painel de exclusão</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico</td>
+<td>Para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Confere os obrigatórios, pede confirmação e grava</td>
+<td>No formulário</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta à lista sem gravar</td>
+<td>No formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também confere; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -373,7 +548,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -44,29 +44,143 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="notificacoes-do-sistema-analise.html">Análise</a><a href="notificacoes-do-sistema-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="notificacoes-do-sistema-fluxos.html">Fluxos</a><a href="notificacoes-do-sistema-regras-de-negocio.html">Regras de negócio</a><a href="notificacoes-do-sistema-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-notificacoes-do-sistema.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-administracao-passo-a-passo.html#tela-10-notificacoes-do-sistema">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Você só vê avisos se alguém ou alguma rotina os gerou para você. Não há botão para criar um aviso nesta tela. Se a lista vier vazia, confira se o filtro "Pendente leitura" está em SIM: ele mostra apenas o que você ainda não abriu.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>As <strong>Notificações do sistema</strong> são a caixa de entrada de avisos de cada pessoa. Quando outro módulo precisa chamar alguém para agir (por exemplo, um documento novo que alguém precisa revisar), ele manda um aviso ao Principal, e o aviso aparece aqui para os destinatários. A pessoa abre o aviso, lê a mensagem, pode <strong>responder</strong> e, depois, <strong>finalizar</strong>. Qualquer pessoa que seja destinatária de um aviso usa a tela; a lista mostra só os avisos de quem entrou. Hoje, pelo código, quem dispara avisos é o módulo Controle de Documentos, ao criar um documento (ponto para validar com a área se Garantia da Qualidade e Estoque deveriam avisar por aqui).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. No menu Administração, abra Notificações do sistema. A lista já vem pesquisada com os avisos ainda não lidos (gst_notificacao_usuario_lst.aspx.cs:21-25).</li>
-<li>Passo 2. Para ver também os que já leu, troque "Pendente leitura" para NÃO ou TODOS e clique em Pesquisar. Os outros filtros são "código" (só números; é o número do aviso) e "Status da Notificação" (lista de situações) (gst_notificacao_usuario_lst.aspx:36-52).</li>
-<li>Passo 3. A lista mostra Código, Data da Notificação, Data da sua Leitura, Tipo Notificação e Status Notificação, com um ícone no fim da linha (gst_notificacao_usuario_lst.aspx:87-134). Linhas em <strong>vermelho</strong> são avisos "Notificado" ou "Lido", isto é, que ainda esperam resposta (gst_notificacao_usuario_lst.aspx.cs:206-213).</li>
-<li>Passo 4. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (gst_notificacao_usuario_lst.aspx:71).</li>
+<li>Qualquer pessoa que seja destinatária de um aviso. A lista mostra <strong>só os avisos do usuário que entrou</strong>.</li>
+<li>Na prática, hoje, quem dispara avisos é o módulo Controle de Documentos, ao criar um documento. Os outros módulos não chamam o serviço de avisos no código analisado (busca por <code>NotificacaoSistema</code> em todos os módulos). Ponto para validar com a área se os módulos Garantia da Qualidade e Estoque deveriam avisar por aqui.</li>
+<li>O contador de avisos não lidos aparece no cabeçalho de todas as telas e leva a esta lista.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="ler-e-responder-um-aviso">Ler e responder um aviso</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 10 do menu Administração, módulo Principal)</p>
 <ul>
-<li>Passo 5. Clique no ícone da linha. Só de abrir, o sistema marca o aviso como lido para você e anota seu acesso (gst_notificacao_usuario_ed.aspx.cs:243-256).</li>
-<li>Passo 6. A tela mostra Código, Tipo de Notificação, Data da Notificação, Data de Conclusão, Título, Status, a Mensagem e, no fim, o "Log da Notificação" (quem abriu, respondeu ou finalizou, com data e hora) (gst_notificacao_usuario_ed.aspx:58-165).</li>
-<li>Passo 7. Se o aviso pede resposta, clique em RESPONDER e confirme em "Deseja responder a notificaçãoo?" (o texto do sistema tem um "o" a mais). A tela diz "Registro salvo com sucesso!" e volta à lista (gst_notificacao_usuario_ed.aspx.cs:311-312 e 94).</li>
-<li>Passo 8. Quando o status for "Respondido", aparece FINALIZAR. Confirme em "Deseja finalizar a notificação?" para encerrar (gst_notificacao_usuario_ed.aspx.cs:236 e 313-314).</li>
+<li>Pelo menu, pelo contador do cabeçalho ou pelo botão VOLTAR da tela de detalhe.</li>
+<li>Ao abrir, a lista já vem pesquisada com "Pendente leitura = SIM".</li>
+<li>Para existir aviso, é preciso que o tipo de aviso esteja <strong>configurado</strong> (evento ativo) e que haja destinatários definidos; sem isso o serviço recusa com "Evento não configurado" ou "Usuário não definido para o evento".</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
 <ul>
-<li>Não deixa escrever uma resposta, um comentário ou um motivo: RESPONDER e FINALIZAR são só confirmações (sem campo de texto, gst_notificacao_usuario_ed.aspx:180-187).</li>
-<li>Não pede senha nem assinatura. Existe um bloco de login e senha na página, mas ele fica sempre escondido (gst_notificacao_usuario_ed.aspx.cs:316; gst_notificacao_usuario_ed.aspx:206).</li>
-<li>Não tem botão de excluir, imprimir ou exportar; não tem tela de histórico além do pequeno log do próprio aviso (os botões de excluir, consultar e log estão comentados na lista, gst_notificacao_usuario_lst.aspx:135-160).</li>
+<li><strong>Abrir um aviso</strong> já grava coisas, sem o usuário clicar em nada: data de leitura do destinatário, status "Lido" (se estava "Notificado") e uma linha "ACESSO" no registro da notificação.</li>
+<li><strong>RESPONDER</strong> grava o status "Respondido", quem respondeu e a data de resposta, e marca o aviso como "atendido" para <strong>todos</strong> os destinatários. Depois volta à lista.</li>
+<li><strong>FINALIZAR</strong> (só aparece com status "Respondido") grava o status "Finalizado" e a data de conclusão do destinatário. Depois volta à lista.</li>
+<li>O próximo passo da corrente é o da área de origem do aviso (no caso do documento, a revisão ou aprovação no Controle de Documentos); esta tela não leva até lá.</li>
 </ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Um <strong>tipo de notificação configurado</strong> (evento ativo) com destinatários</td>
+<td>Sem isso o serviço recusa criar o aviso ("Evento não configurado" ou "Usuário não definido para o evento")</td>
+<td>Menu Administração › Configurar notificação e Notificações padrão</td>
+</tr>
+<tr>
+<td>Um módulo que dispare o aviso</td>
+<td>Não há botão para criar um aviso nesta tela</td>
+<td>Módulos de origem (hoje, Controle de Documentos)</td>
+</tr>
+<tr>
+<td>Você ser um dos destinatários</td>
+<td>A lista só mostra os avisos de quem entrou</td>
+<td>Configuração de destinatários (telas Notificações padrão e Configurar notificação)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: aviso em estado "Notificado" ou "Lido" (linha em vermelho), o botão RESPONDER, as perguntas de confirmação e o aviso "Registro salvo com sucesso!"; no ambiente havia um único aviso, já respondido.</em></p>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu Administração, abra <strong>Notificações do sistema</strong>. A lista já vem pesquisada com os avisos ainda não lidos ("Pendente leitura = SIM"). Sem avisos pendentes: "A pesquisa não retornou nenhum resultado.".</li>
+</ol>
+<figure><a href="../img/principal/ad10-r01-lista-pendentes.png" target="_blank" rel="noopener"><img src="../img/principal/ad10-r01-lista-pendentes.png" alt="Figura 1: lista ao abrir: Pendente leitura &quot;SIM&quot;, filtro de código e de Status da Notificação, e a frase &quot;A pesquisa não retornou nenhum resultado.&quot; sob as colunas Código, Data da Notificação, Data da sua Leitura, Tipo Notificação e Status Notificação." loading="lazy"></a><figcaption>Figura 1: lista ao abrir: Pendente leitura &quot;SIM&quot;, filtro de código e de Status da Notificação, e a frase &quot;A pesquisa não retornou nenhum resultado.&quot; sob as colunas Código, Data da Notificação, Data da sua Leitura, Tipo Notificação e Status Notificação. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: lista ao abrir: Pendente leitura "SIM", filtro de código e de Status da Notificação, e a frase "A pesquisa não retornou nenhum resultado." sob as colunas Código, Data da Notificação, Data da sua Leitura, Tipo Notificação e Status Notificação.</em></p>
+<ol start="2">
+<li>Para ver também os que já leu, troque "Pendente leitura" para NÃO ou TODOS e clique em <strong>PESQUISAR</strong>. Os outros filtros são "código" (só números) e "Status da Notificação" (Cancelado, Finalizado, Notificado, Pendente, Respondido). Linhas em <strong>vermelho</strong> são avisos "Notificado" ou "Lido", isto é, que ainda esperam resposta.</li>
+</ol>
+<figure><a href="../img/principal/ad10-r02-lista-todos.png" target="_blank" rel="noopener"><img src="../img/principal/ad10-r02-lista-todos.png" alt="Figura 2: lista com &quot;Pendente leitura = TODOS&quot;: um aviso (código 1, &quot;ALTERACAO DE PERFIL&quot;, de 21/07/2026, status RESPONDIDO) com a lupa para abrir." loading="lazy"></a><figcaption>Figura 2: lista com &quot;Pendente leitura = TODOS&quot;: um aviso (código 1, &quot;ALTERACAO DE PERFIL&quot;, de 21/07/2026, status RESPONDIDO) com a lupa para abrir. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: lista com "Pendente leitura = TODOS": um aviso (código 1, "ALTERACAO DE PERFIL", de 21/07/2026, status RESPONDIDO) com a lupa para abrir.</em></p>
+<p><strong>Ler, responder e finalizar um aviso</strong></p>
+<ol start="3">
+<li>Clique no ícone da linha. Só de abrir, o sistema marca o aviso como lido para você e anota o seu acesso. A tela mostra Código, Tipo de Notificação, Data da Notificação, Data de Conclusão, Título, Status, a Mensagem e, no fim, o "Log da Notificação" (quem abriu, respondeu ou finalizou, com data e hora).</li>
+</ol>
+<figure><a href="../img/principal/ad10-r03-aviso-respondido.png" target="_blank" rel="noopener"><img src="../img/principal/ad10-r03-aviso-respondido.png" alt="Figura 3: o aviso 1 aberto, com status RESPONDIDO: Data de Conclusão em branco, a Mensagem e o Log da Notificação, com uma linha ACESSO a cada abertura, em duas páginas; no rodapé os botões VOLTAR e FINALIZAR." loading="lazy"></a><figcaption>Figura 3: o aviso 1 aberto, com status RESPONDIDO: Data de Conclusão em branco, a Mensagem e o Log da Notificação, com uma linha ACESSO a cada abertura, em duas páginas; no rodapé os botões VOLTAR e FINALIZAR. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: o aviso 1 aberto, com status RESPONDIDO: Data de Conclusão em branco, a Mensagem e o Log da Notificação, com uma linha ACESSO a cada abertura, em duas páginas; no rodapé os botões VOLTAR e FINALIZAR.</em></p>
+<ol start="4">
+<li>Se o aviso pede resposta, clique em <strong>RESPONDER</strong> e confirme em "Deseja responder a notificaçãoo?" (o texto do sistema tem um "o" a mais). O código prevê "Registro salvo com sucesso!" e a volta à lista. Sem imagem: não havia aviso pendente no ambiente de teste.</li>
+<li>Quando o status for "Respondido", aparece <strong>FINALIZAR</strong>. Confirme em "Deseja finalizar a notificação?" para encerrar.</li>
+</ol>
+<figure><a href="../img/principal/ad10-r04-aviso-finalizado.png" target="_blank" rel="noopener"><img src="../img/principal/ad10-r04-aviso-finalizado.png" alt="Figura 4: o mesmo aviso depois de FINALIZAR: status FINALIZADO, uma linha &quot;FINALIZADO&quot; no log (usuário ADMIN), Data de Conclusão ainda em branco e o botão FINALIZAR já não aparece." loading="lazy"></a><figcaption>Figura 4: o mesmo aviso depois de FINALIZAR: status FINALIZADO, uma linha &quot;FINALIZADO&quot; no log (usuário ADMIN), Data de Conclusão ainda em branco e o botão FINALIZAR já não aparece. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: o mesmo aviso depois de FINALIZAR: status FINALIZADO, uma linha "FINALIZADO" no log (usuário ADMIN), Data de Conclusão ainda em branco e o botão FINALIZAR já não aparece.</em></p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>Abrir um aviso</strong> já grava, sem clicar em nada: data de leitura do destinatário, status "Lido" (se estava "Notificado") e uma linha "ACESSO" no log da notificação (gst_notificacao_usuario_ed.aspx.cs:243-256).</li>
+<li><strong>RESPONDER</strong> grava o status "Respondido", quem respondeu e a data, e marca o aviso como atendido para <strong>todos</strong> os destinatários (gst_notificacao_usuario_ed.aspx.cs:66-84). Depois volta à lista.</li>
+<li><strong>FINALIZAR</strong> (só com status "Respondido") grava o status "Finalizado" e escreve "FINALIZADO" no log; a Data de Conclusão continua em branco (Figura 4; DV-PRI-039).</li>
+<li>Não há nada a imprimir nem a exportar.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"A pesquisa não retornou nenhum resultado." (lista vazia, Figura 1).</li>
+<li>A tela <strong>não recusa</strong> responder ou finalizar sem texto, motivo, senha ou assinatura: RESPONDER e FINALIZAR são só confirmações, sem campo de texto.</li>
+<li>Aviso aberto com número inválido: o código tem as mensagens "Notificação do usuário não encontrada", "Identificador incorreto" e "Notificação não encontrada na base de dados"; no teste, abrir o endereço da notificação sem número, com <code>id=abc</code> ou <code>id=999999</code> levou de volta à lista, sem erro técnico (CT-PRI-103).</li>
+<li>Falhas do serviço ao criar o aviso ("Evento não configurado", "Usuário não definido para o evento", "Tipo Evento inválido") voltam ao módulo de origem, não aparecem aqui.</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A lista e o detalhe usam o código de função <code>ADMINISTRACAO/LISTA_NOTIFICACAO</code> (gst_notificacao_usuario_lst.aspx.cs:18; gst_notificacao_usuario_ed.aspx.cs:20). A lista não tem botões de Novo, Excluir, Imprimir ou Log; o ícone de abrir não depende de ação do perfil.</li>
+<li>A <strong>lista</strong> bloqueia quem não tem a função (CT-PRI-069: acesso negado). O <strong>detalhe não confere permissão</strong> (pelo código; a confirmar; mesma causa do DV-PRI-025, Alta). A lista mostra só os avisos de quem entrou, mas o detalhe lê o aviso pelo número, sem conferir se a pessoa é a destinatária (pelo código; a confirmar).</li>
+<li>Responder e finalizar não conferem se a pessoa é a destinatária nem pedem função própria.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Cadastrar um profissional não gerou aviso</strong> no teste de 26/10/2026: a única notificação do ambiente era antiga (DV-PRI-038). Não conte com este aviso para saber que há login e perfil a configurar.</li>
+<li><strong>FINALIZAR não preenche a Data de Conclusão</strong> e o botão some (DV-PRI-039, visto na Figura 4).</li>
+<li><strong>Cada abertura do aviso grava uma linha de acesso</strong> no log (Figura 3); não há situação separada de "nova" e "lida": o filtro "Pendente leitura = NÃO" mostra o aviso já lido. Nas capturas do teste a tela inicial não mostrava contador de avisos (o código prevê um contador no cabeçalho; ponto para validar).</li>
+<li><strong>Um destinatário responde por todos</strong> e qualquer destinatário finaliza, mesmo sem ter respondido (pelo código; a confirmar). A resposta não tem texto, motivo nem assinatura: o bloco de senha existe e fica sempre escondido.</li>
+<li>Textos do sistema com erro de digitação: "notificaçãoo", "NOtificação". Sem efeito nos dados.</li>
+<li>Pelo código (ainda não testado): a rotina que sobe o aviso para o nível 2 não funciona, então o prazo do aviso nunca escala; a mensagem do aviso é mostrada sem limpeza de HTML.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PESQUISAR</td>
+<td>Lista os avisos pelos filtros</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Esvazia os filtros</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Lupa (Visualizar notificação)</td>
+<td>Abre o aviso (e o marca como lido)</td>
+<td>Em cada linha</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Botões do detalhe:</strong> RESPONDER (se o aviso pede resposta), FINALIZAR (só com status "Respondido") e VOLTAR (volta à lista).</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -333,7 +447,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

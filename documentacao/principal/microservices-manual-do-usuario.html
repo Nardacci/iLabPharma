@@ -44,22 +44,105 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="microservices-analise.html">Análise</a><a href="microservices-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="microservices-fluxos.html">Fluxos</a><a href="microservices-regras-de-negocio.html">Regras de negócio</a><a href="microservices-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-microservices.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-administracao-passo-a-passo.html#tela-5-microservices">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Esta tela é para a TI. Ela abre sozinha as verificações, e cada abertura faz chamadas de rede para cada módulo, o que pode demorar. Se um serviço estiver parado, a linha dele demora a carregar.</p>
-<h4 id="ler-o-painel">Ler o painel</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Microservices</strong> é um <strong>painel de diagnóstico</strong> para a TI: mostra, para cada módulo ativo, a versão, o endereço do serviço de integração (o "microserviço") e três verificações: se o serviço responde (ON ou OFF), se as strings de conexão do módulo e do Principal coincidem com as que o serviço usa (OK ou ERROR, com lista das diferenças) e se o serviço consegue acessar o banco de dados (OK ou ERROR). Quem usa é a TI e o desenvolvimento, depois de uma instalação ou troca de servidor (leitura da área, a validar). A tela só consulta: não altera nada.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. No menu Administração, abra <strong>Microservices</strong>. A tela mostra uma tabela com uma linha por módulo ativo conhecido.</li>
-<li>Passo 2. Colunas: <strong>MÓDULO</strong> (nome, com link para a página de teste da API), <strong>VERSÃO</strong> (versão do módulo gravada no Principal), <strong>ENDEREÇO : PORTA</strong> (endereço do serviço, com link), <strong>MICROSERVICE</strong> (executa um "ping": ON em verde ou OFF em vermelho), <strong>MICROSERVICE CS</strong> (compara as strings de conexão do sistema web do Principal com as do serviço: OK em verde; se houver diferença, aparece o link ERROR que abre a janela "LISTA DE ERROS") e <strong>MICROSERVICE BD</strong> (testa o acesso ao banco pelo serviço: OK ou ERROR) (microservice_ed.aspx:48-53).</li>
-<li>Passo 3. Se algo estiver em OFF ou ERROR, avise o desenvolvimento. A tela não diz a causa, exceto na lista de diferenças das strings de conexão.</li>
+<li>A TI e o desenvolvimento, para conferir a saúde da integração entre os módulos depois de uma instalação ou de uma troca de servidor (leitura da área, a validar).</li>
+<li>Os módulos de negócio dependem dos microserviços para o login único, a consulta de usuários e as notificações.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 5 do menu Administração, módulo Principal)</p>
 <ul>
-<li>Não altera endereços, versões nem conexões.</li>
-<li>Não guarda resultado nem histórico das verificações.</li>
-<li>Não mostra os módulos Garantia da Qualidade, Controle de Documentos, Comercial e OPE.</li>
-<li>Não explica por que um serviço está em OFF.</li>
+<li>Pelo menu, ou pelo endereço. Ao abrir, a própria carga da página dispara as verificações; não há botão de pesquisa.</li>
+<li>Só aparecem os módulos que estão ativos na tabela de módulos e que o código conhece: Principal, Produção, Rastreabilidade, Controle da Qualidade e Estoque. Garantia da Qualidade, Controle de Documentos, Comercial e OPE não aparecem.</li>
 </ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>Não há salvar. A tela só consulta. Os links levam a páginas de teste dos serviços, em outra aba: o nome do módulo abre a página de teste da API (<code>/api/Teste/GetAPI</code>) e o endereço abre <code>/api/teste/get</code>.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Módulos ativos na tabela de módulos</td>
+<td>A tela mostra uma linha por módulo ativo que o código conhece (Principal, Produção, Rastreabilidade, Controle da Qualidade e Estoque)</td>
+<td>Instalação do sistema (com a TI)</td>
+</tr>
+<tr>
+<td>Os serviços de integração de cada módulo no ar, com endereço e porta configurados</td>
+<td>Sem eles, as verificações mostram OFF e ERROR</td>
+<td>Com a TI e o desenvolvimento</td>
+</tr>
+<tr>
+<td>Tempo</td>
+<td>A abertura faz chamadas de rede a cada módulo, uma depois da outra; com um serviço parado a tela demora</td>
+<td>Não se aplica</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagem reaproveitada do teste de 26/10/2026 (rodada 3), conferida contra o texto; os endereços do servidor aparecem cobertos. Sem imagem: painel com os serviços no ar (ON e OK) e a janela "LISTA DE ERROS".</em></p>
+<ol>
+<li>No menu Administração, abra <strong>Microservices</strong>. Não há botão de pesquisa: a própria abertura da página dispara as verificações. A tela mostra uma tabela com uma linha por módulo ativo conhecido.</li>
+</ol>
+<figure><a href="../img/principal/ad05-r01-painel.png" target="_blank" rel="noopener"><img src="../img/principal/ad05-r01-painel.png" alt="Figura 1: painel Microservices no ambiente de teste, com as cinco linhas (Principal, Produção, Estoque, Controle da Qualidade e Rastreabilidade), versão 3.5.1, a coluna de endereço em branco (coberta na captura) e as verificações em OFF e ERROR." loading="lazy"></a><figcaption>Figura 1: painel Microservices no ambiente de teste, com as cinco linhas (Principal, Produção, Estoque, Controle da Qualidade e Rastreabilidade), versão 3.5.1, a coluna de endereço em branco (coberta na captura) e as verificações em OFF e ERROR. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: painel Microservices no ambiente de teste, com as cinco linhas (Principal, Produção, Estoque, Controle da Qualidade e Rastreabilidade), versão 3.5.1, a coluna de endereço em branco (coberta na captura) e as verificações em OFF e ERROR.</em></p>
+<ol start="2">
+<li>Leia as colunas: <strong>MÓDULO</strong> (nome, com link para a página de teste da API), <strong>VERSÃO</strong> (versão do módulo gravada no Principal), <strong>ENDEREÇO : PORTA</strong> (com link), <strong>MICROSERVICE</strong> (ping: ON em verde ou OFF em vermelho), <strong>MICROSERVICE CS</strong> (compara as strings de conexão do sistema web do Principal com as do serviço: OK ou, se houver diferença, o link ERROR que abre a janela "LISTA DE ERROS") e <strong>MICROSERVICE BD</strong> (testa o acesso ao banco pelo serviço: OK ou ERROR).</li>
+<li>Se algo estiver em OFF ou ERROR, avise o desenvolvimento. A tela não diz a causa, exceto na lista de diferenças das strings de conexão.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
+<p>Nada é gravado: a tela só consulta. Ela mostra, por módulo, a versão, o endereço e o resultado das três verificações no momento da abertura. Não guarda resultado nem histórico, não altera endereços, versões nem conexões, e não mostra os módulos Garantia da Qualidade, Controle de Documentos, Comercial e OPE. Os links abrem páginas de teste dos serviços em outra aba.</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>Nada: a tela não tem campo nem ação de gravação. Qualquer falha de chamada vira OFF ou ERROR, sem mensagem de erro de página e sem motivo (microservice_ed.aspx.cs:86-89, 99-102 e 138-141).</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função da tela é <code>MICROSERVICES</code> (dml.sql:10509), que aparece no grupo Administração da árvore de permissões, mas a página <strong>não lê as permissões do usuário</strong> em nenhum ponto e não herda a base de telas do Principal (microservice_ed.aspx.cs:17-76).</li>
+<li>O usuário <code>t.semadmin</code>, que só tinha a tela Centro de custo, <strong>abriu a tela</strong> digitando o endereço (CT-PRI-066; DV-PRI-025, Alta). Sem login, a tela foi negada e levou à sessão expirada.</li>
+<li>Ponto para validar com a área: quem na empresa deve abrir esta tela (só a TI?).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Abre para quem não tem permissão</strong> (DV-PRI-025, Alta, CT-PRI-066).</li>
+<li><strong>Informações de infraestrutura expostas:</strong> os endereços e as portas dos serviços aparecem para quem abrir a tela (a captura da Figura 1 está com os endereços cobertos, de propósito).</li>
+<li>No ambiente de teste de 26/10/2026 todas as verificações vieram OFF e ERROR; o painel não explica a causa. Ponto para validar com a TI se os serviços estavam parados ou fora do alcance desse ambiente.</li>
+<li>Pelo código (ainda não testado): para comparar, a tela envia as strings de conexão (que trazem usuário e senha do banco) a cada serviço; sem conexão segura (https) elas viajam sem proteção; a lista de módulos é fixa em cinco; com um serviço parado a tela pode ficar lenta. Pontos para a TI verificar.</li>
+</ul>
+<h4 id="botoes-da-tela">Botões da tela</h4>
+<p>A tela não tem lista nem botões de ação; só links de leitura:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Link ou controle</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nome do módulo</td>
+<td>Abre a página de teste da API do serviço, em outra aba</td>
+</tr>
+<tr>
+<td>Endereço : porta</td>
+<td>Abre a página de teste do serviço, em outra aba</td>
+</tr>
+<tr>
+<td>ERROR (coluna MICROSERVICE CS)</td>
+<td>Abre a janela "LISTA DE ERROS" com as diferenças numeradas entre as strings de conexão</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>A tela não tem campos de entrada. Só tem uma tabela de leitura.</p>
 <div class="tabela"><table>
@@ -187,7 +270,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
