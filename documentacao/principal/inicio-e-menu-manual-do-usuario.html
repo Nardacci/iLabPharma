@@ -44,27 +44,148 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="inicio-e-menu-analise.html">Análise</a><a href="inicio-e-menu-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="inicio-e-menu-fluxos.html">Fluxos</a><a href="inicio-e-menu-regras-de-negocio.html">Regras de negócio</a><a href="inicio-e-menu-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-inicio-e-menu.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-acesso-ao-sistema-passo-a-passo.html#tela-3-inicio-e-menu">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Entre no sistema pela tela de Login. A tela inicial abre sozinha.</p>
-<h4 id="escolher-o-modulo">Escolher o módulo</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>É a tela que abre depois do login. Mostra o cabeçalho (nome do sistema, do cliente e do usuário), o <strong>menu</strong> do módulo com as telas a que o seu perfil tem direito e a <strong>grade de módulos</strong> do LabMedSys, de onde se chega a cada módulo já com o usuário autenticado. O rodapé traz os atalhos de início, de troca de senha e de topo da página. Todos os usuários usam.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. Na tela inicial, a grade mostra os módulos do LabMedSys como ícones com o nome. O módulo em que você está aparece destacado.</li>
-<li>Passo 2. Clique no ícone do módulo que deseja usar. O módulo abre já com o seu usuário.</li>
-<li>Passo 3. Se aparecer "Seu perfil não possuí permissão!" ao abrir um módulo, o seu perfil não tem nenhuma tela dele. Procure o administrador.</li>
+<li>Todos os usuários, depois de entrar.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="usar-o-menu">Usar o menu</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 3 do menu Acesso ao sistema, módulo Principal)</p>
 <ul>
-<li>Passo 4. O menu fica abaixo do cabeçalho. Cada título (por exemplo, ADMINISTRAÇÃO, CADASTROS, TABELAS DE APOIO) abre a lista de telas a que o seu perfil tem direito. Quando um título tem mais de 10 telas, o menu abre em colunas.</li>
-<li>Passo 5. O ícone da casa, no cabeçalho e no rodapé, volta à tela inicial. O ícone de saída, no canto superior direito, sai do sistema. O cadeado do rodapé troca a senha.</li>
-<li>Passo 6. Se houver avisos para você, o sino mostra a quantidade. Ao clicar, abre a lista de Notificações do sistema.</li>
+<li>Depois de um login aceito.</li>
+<li>Pelo ícone Início do cabeçalho ou do rodapé (cabecalho.html:3 e 11; rodape.html:7), que passam por <code>principal/inicio/default.aspx</code> e chegam aqui.</li>
+<li>Depois de abrir uma notificação, passando por <code>inicio.aspx?id=...&amp;redirect=...</code>.</li>
+<li>Pelo botão VOLTAR da Troca de senha, quando a troca não era obrigatória.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
 <ul>
-<li>Não esconde os módulos em que você não tem permissão: todos os módulos habilitados aparecem (ObterHTMLPadraoService.cs:150-160).</li>
-<li>Não avisa que a senha está perto de vencer (a função existe e ninguém a chama: mensagens.js:149-151).</li>
-<li>O link do módulo Patrimônio não abre (DV-PRI-018).</li>
+<li>A tela não grava dados de negócio. As saídas são:</li>
+<li><strong>Clicar em um módulo:</strong> abre o módulo escolhido, com o token do usuário no endereço.</li>
+<li><strong>Clicar em um item do menu:</strong> abre a tela correspondente.</li>
+<li><strong>Clicar em Sair:</strong> abre a tela Sair (cabecalho.html:17).</li>
+<li><strong>Clicar no cadeado do rodapé:</strong> abre a Troca de senha (rodape.html:8).</li>
+<li><strong>Clicar no sino:</strong> abre a lista de Notificações do sistema, da Administração.</li>
+<li><strong>Chegar com <code>redirect</code>:</strong> o sistema marca a notificação como clicada e lida e redireciona para o endereço informado.</li>
 </ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sessão aberta (login feito)</td>
+<td>A tela inicial exige sessão; sem ela vai à Sessão Expirada</td>
+<td>Login (tela 01)</td>
+</tr>
+<tr>
+<td>Perfil com funções</td>
+<td>O menu só mostra as telas a que o perfil tem função</td>
+<td>Administração › Perfil</td>
+</tr>
+<tr>
+<td>Módulo habilitado</td>
+<td>A grade mostra os módulos habilitados (campo HABILITADO)</td>
+<td>Configuração do cliente (a confirmar com a TI)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 05/10/2026 e 26/10/2026, cada uma conferida contra o texto. Sem imagem: o menu aberto com a lista de telas, o sino com número de avisos, o clique em módulo e o módulo Patrimônio.</em></p>
+<ol>
+<li>Depois do login, a tela inicial abre sozinha. A grade mostra os módulos como ícones com o nome; o módulo em que você está aparece destacado (no exemplo, PRINCIPAL).</li>
+</ol>
+<figure><a href="../img/principal/p103-p01-inicio.png" target="_blank" rel="noopener"><img src="../img/principal/p103-p01-inicio.png" alt="Figura 1: a tela inicial com a grade de módulos (PRINCIPAL em destaque), o menu CADASTROS e o rodapé com os ícones de cadeado, casa e topo (usuário TESTE CADASTRO)." loading="lazy"></a><figcaption>Figura 1: a tela inicial com a grade de módulos (PRINCIPAL em destaque), o menu CADASTROS e o rodapé com os ícones de cadeado, casa e topo (usuário TESTE CADASTRO). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: a tela inicial com a grade de módulos (PRINCIPAL em destaque), o menu CADASTROS e o rodapé com os ícones de cadeado, casa e topo (usuário TESTE CADASTRO).</em></p>
+<ol start="2">
+<li>Clique no ícone do módulo que deseja usar. O módulo abre já com o seu usuário.</li>
+<li>Se aparecer "Seu perfil não possuí permissão!" ao abrir um módulo, o seu perfil não tem nenhuma tela dele. Procure o administrador.</li>
+<li>O menu fica abaixo do cabeçalho. Cada título (por exemplo ADMINISTRAÇÃO, CADASTROS, TABELAS DE APOIO) abre a lista de telas liberadas ao seu perfil; com mais de 10 telas, o menu abre em colunas. O perfil do exemplo da Figura 1 só tem o título CADASTROS; o administrador vê três títulos.</li>
+</ol>
+<figure><a href="../img/principal/ac03-r02-inicio-administrador.png" target="_blank" rel="noopener"><img src="../img/principal/ac03-r02-inicio-administrador.png" alt="Figura 2: a mesma tela inicial com o perfil de administrador: o menu mostra ADMINISTRAÇÃO, CADASTROS e TABELAS DE APOIO, e o cabeçalho não mostra sino de avisos." loading="lazy"></a><figcaption>Figura 2: a mesma tela inicial com o perfil de administrador: o menu mostra ADMINISTRAÇÃO, CADASTROS e TABELAS DE APOIO, e o cabeçalho não mostra sino de avisos. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: a mesma tela inicial com o perfil de administrador: o menu mostra ADMINISTRAÇÃO, CADASTROS e TABELAS DE APOIO, e o cabeçalho não mostra sino de avisos.</em></p>
+<ol start="5">
+<li>O ícone da <strong>casa</strong> (cabeçalho e rodapé) volta à tela inicial. O ícone de <strong>saída</strong>, no canto superior direito, sai do sistema. O <strong>cadeado</strong> do rodapé troca a senha.</li>
+<li>Se houver avisos para você, o sino mostra a quantidade; ao clicar, abre a lista de Notificações do sistema (da Administração).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>A tela é só de consulta e navegação: <strong>nada é gravado</strong> nela. Ao clicar num módulo, o sistema abre o módulo levando o código de acesso (token) do usuário no endereço (ObterHTMLPadraoService.cs:33).</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>Sem sessão (ou depois de a sessão expirar): "Sessão Expirada! Faça login novamente." (tela 05; CT-PRI-020 e 021).</li>
+<li>Módulo aberto sem nenhuma tela liberada ao perfil: "Seu perfil não possuí permissão!" dentro do módulo (CT-PRI-023). Não há imagem desta recusa a partir da grade.</li>
+<li>Módulo Patrimônio: o navegador mostra "conexão recusada" (DV-PRI-018).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela inicial exige sessão, mas <strong>não exige função de perfil</strong> (LaboSys_UI.Master.cs:26-29).</li>
+<li><strong>Menu:</strong> mostra só as telas a que o perfil tem função (ObterHTMLPadraoService.cs:167-200). Esconder o menu <strong>não bloqueia</strong>: telas de edição, configuração, Microservices e relatórios abrem pelo endereço para quem não tem a função (DV-PRI-025, Alta; tela 05).</li>
+<li><strong>Grade de módulos:</strong> igual para todos: mostra todos os módulos habilitados, com ou sem permissão (CT-PRI-023).</li>
+<li><strong>Sino:</strong> aparece só para quem tem avisos pendentes; leva a uma lista da Administração que exige função própria.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-PRI-018 (Baixa):</strong> o ícone do módulo Patrimônio aponta para o próprio servidor local e o navegador mostra conexão recusada; os outros módulos abrem.</li>
+<li><strong>DV-PRI-019 (Média):</strong> o link de cada módulo leva o token no endereço; quem copia o endereço entra como você em outro navegador, sem senha.</li>
+<li>A grade mostra módulos em que você não tem permissão; o aviso só vem ao abrir.</li>
+<li>A tela não avisa que a senha está perto de vencer.</li>
+</ul>
+<h4 id="icones-e-botoes-da-tela">Ícones e botões da tela</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ícone de um módulo</td>
+<td>Abre o módulo com o seu usuário</td>
+<td>Para cada módulo habilitado</td>
+</tr>
+<tr>
+<td>Casa (Início)</td>
+<td>Volta à tela inicial</td>
+<td>Cabeçalho e rodapé</td>
+</tr>
+<tr>
+<td>Saída</td>
+<td>Sai do sistema (tela 04)</td>
+<td>Cabeçalho</td>
+</tr>
+<tr>
+<td>Sino com número</td>
+<td>Abre a lista de avisos</td>
+<td>Só quando há avisos pendentes (não aparece nas Figuras 1 e 2)</td>
+</tr>
+<tr>
+<td>Cadeado "Alterar Senha"</td>
+<td>Abre a Troca de senha (tela 02)</td>
+<td>Rodapé</td>
+</tr>
+<tr>
+<td>Seta para cima (Topo)</td>
+<td>Sobe para o alto da página</td>
+<td>Rodapé</td>
+</tr>
+<tr>
+<td>Item do menu</td>
+<td>Abre a tela escolhida</td>
+<td>Para cada tela liberada ao perfil</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Esta tela não tem campos de preenchimento. O que ela mostra:</p>
 <div class="tabela"><table>
@@ -240,7 +361,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

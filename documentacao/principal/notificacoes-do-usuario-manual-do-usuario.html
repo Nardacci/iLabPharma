@@ -44,24 +44,117 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="notificacoes-do-usuario-analise.html">Análise</a><a href="notificacoes-do-usuario-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="notificacoes-do-usuario-fluxos.html">Fluxos</a><a href="notificacoes-do-usuario-regras-de-negocio.html">Regras de negócio</a><a href="notificacoes-do-usuario-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-notificacoes-do-usuario.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-acesso-ao-sistema-passo-a-passo.html#tela-6-notificacoes-do-usuario">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<p>Este manual descreve o que o código permite. Nada foi executado numa tela real.</p>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Entre no sistema. Para abrir a página é preciso digitar o endereço <code>notificacao/</code> depois do endereço do sistema: não há link para ela no menu.</p>
-<h4 id="ver-os-avisos">Ver os avisos</h4>
+<p><em>Este manual descreve o que o código permite. A página não foi aberta em nenhum teste de tela.</em></p>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Mostrar ao usuário, em páginas de 10, os avisos que o sistema enviou a ele (por exemplo, "Novo Profissional foi cadastrado. Providenciar Criação de Login e Configuração de Perfil."). Cada aviso diz a origem, a mensagem, há quanto tempo foi enviado e se já foi lido. Clicar no aviso o marca como lido e leva ao assunto, se houver link. Quem recebe avisos usa; os destinatários de cada aviso são definidos na tela Notificações padrão (Administração).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. A página mostra o título "Notificações" e a lista de avisos, do mais recente para o mais antigo, 10 por página (NotificacoesRepository.cs:16-23).</li>
-<li>Passo 2. Cada aviso mostra o título (origem), o texto, há quanto tempo foi enviado e um círculo cheio (não lido) ou vazio (lido).</li>
-<li>Passo 3. Use os números de página no alto e no pé da lista para navegar.</li>
-<li>Passo 4. Clique no aviso para abri-lo: ele é marcado como lido e o sistema leva ao assunto. Os avisos criados pelas notificações padrão não têm link, então o clique só marca como lido (EnviarNotificacaoService.cs:97-100).</li>
+<li>Qualquer usuário que receba avisos. Os destinatários de cada aviso são definidos na tela Notificações padrão (Administração).</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 6 do menu Acesso ao sistema, módulo Principal)</p>
 <ul>
-<li>Os links "Marcar como lida" e "Configurações" no alto da lista não fazem nada: não têm ação (notificacoes.js:125).</li>
-<li>Não mostra avisos novos sozinha: é preciso recarregar a página.</li>
+<li>Pelo endereço <code>notificacao/</code>. Nenhum menu, cabeçalho ou rodapé do código leva a ela. O sino do cabeçalho leva a outra tela, a lista de Notificações do sistema, da Administração.</li>
+<li>A página <code>notificacoes.aspx</code> (protótipo) também só abre pelo endereço.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>A tela não grava dados de negócio. O clique em um aviso passa pela tela inicial, que grava a data do clique e da leitura do aviso e redireciona para o endereço do aviso.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sessão aberta</td>
+<td>A página exige sessão</td>
+<td>Login (tela 01)</td>
+</tr>
+<tr>
+<td>Destinatários configurados para cada tipo de aviso</td>
+<td>Sem destinatário ninguém recebe aviso: os destinatários padrão começam vazios na carga do banco</td>
+<td>Administração › Notificações padrão</td>
+</tr>
+<tr>
+<td>O endereço da página</td>
+<td>Não há menu, cabeçalho nem rodapé que leve a ela: é preciso digitar <code>notificacao/</code> depois do endereço do sistema</td>
+<td>Ponto para validar com a área (o menu vem do banco)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas do teste de 26/10/2026, cada uma conferida contra o texto. Sem imagem: toda a página de avisos (lista, paginação, círculo de lido, clique no aviso), porque a página nunca foi aberta em teste. As imagens de notificação dos testes são das telas Notificações do sistema e Notificações padrão, que são outras telas.</em></p>
+<ol>
+<li>Entre no sistema. A tela inicial não tem link nem contador de avisos para esta página.</li>
+</ol>
+<figure><a href="../img/principal/ac06-r01-inicio-sem-aviso.png" target="_blank" rel="noopener"><img src="../img/principal/ac06-r01-inicio-sem-aviso.png" alt="Figura 1: a tela inicial do administrador, sem sino nem link de avisos no cabeçalho, no menu ou no rodapé." loading="lazy"></a><figcaption>Figura 1: a tela inicial do administrador, sem sino nem link de avisos no cabeçalho, no menu ou no rodapé. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: a tela inicial do administrador, sem sino nem link de avisos no cabeçalho, no menu ou no rodapé.</em></p>
+<ol start="2">
+<li>Digite o endereço <code>notificacao/</code> depois do endereço do sistema. A página mostra o título "Notificações" e a lista de avisos, do mais recente para o mais antigo, 10 por página (NotificacoesRepository.cs:16-23).</li>
+<li>Cada aviso mostra o título (origem), o texto, há quanto tempo foi enviado e um círculo cheio (não lido) ou vazio (lido).</li>
+<li>Use os números de página no alto e no pé da lista para navegar.</li>
+<li>Clique no aviso para abri-lo: ele é marcado como lido e o sistema leva ao assunto. Os avisos criados pelas notificações padrão não têm link, então o clique só marca como lido (EnviarNotificacaoService.cs:97-100).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<p>A página não grava dados de negócio. O clique em um aviso passa pela tela inicial (<code>inicio.aspx?id=...&amp;redirect=...</code>), que grava a data do clique e da leitura do aviso e redireciona para o endereço dele (inicio.aspx.cs:18-35; MarcarNotificacaoService.cs:11-21).</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>Nada é validado pela página. Se a abertura de um aviso falhar, aparece "Erro ao redirecionar para o link de notificação" (inicio.aspx.cs:30-34; não vista). Usuário sem avisos vê a lista vazia, sem frase "nenhum aviso".</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A página usa a moldura padrão, que exige sessão, e <strong>não exige função de perfil</strong>: qualquer usuário logado a abre.</li>
+<li>O sino do cabeçalho leva a outra tela (Notificações do sistema, da Administração), que exige função própria.</li>
+<li>Pelo código, a chamada que entrega a lista <strong>não confere quem está logado</strong>: quem souber o número de outro usuário pode ler os avisos dele (RN-PRI-ACE06-010; não testado, CT-PRI-ACE06-01).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum defeito DV-PRI confirmado: a página não foi testada.</li>
+<li>Os links "Marcar como lida" e "Configurações" no alto da lista não fazem nada.</li>
+<li>A página não mostra avisos novos sozinha: é preciso recarregar.</li>
 <li>Não permite apagar, filtrar nem buscar avisos.</li>
-<li>Não mostra quem leu nem quando, além da última data de leitura.</li>
+<li>Existe também <code>notificacoes.aspx</code>, um protótipo só de desenho, com texto de exemplo e links vazios.</li>
+<li>O texto do aviso é inserido na página sem tratamento; pelo código, um nome digitado com marcação de página poderia ser executado no navegador de quem abre (não testado, CT-PRI-ACE06-02).</li>
 </ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou elemento</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Círculo cheio ou vazio</td>
+<td>Cheio: não lido. Vazio: lido</td>
+<td>Em cada aviso</td>
+</tr>
+<tr>
+<td>Clique no aviso (texto ou círculo)</td>
+<td>Marca como lido e abre o assunto, se houver link</td>
+<td>Em todo aviso</td>
+</tr>
+<tr>
+<td>Números de página</td>
+<td>Navegam de 10 em 10 avisos</td>
+<td>No alto e no pé da lista</td>
+</tr>
+<tr>
+<td>Marcar como lida | Configurações</td>
+<td>Sem ação</td>
+<td>No alto da lista</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Esta tela não tem campos de preenchimento. O que ela mostra:</p>
 <div class="tabela"><table>
@@ -197,7 +290,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

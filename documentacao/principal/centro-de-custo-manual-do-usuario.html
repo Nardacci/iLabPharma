@@ -44,34 +44,174 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="centro-de-custo-analise.html">Análise</a><a href="centro-de-custo-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="centro-de-custo-fluxos.html">Fluxos</a><a href="centro-de-custo-regras-de-negocio.html">Regras de negócio</a><a href="centro-de-custo-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-centro-de-custo.html">Erros (3)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-5-centro-de-custo">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra os <strong>centros de custo</strong> da empresa (código numérico de até 6 dígitos e nome), para dizer a que área se atribuem os gastos. No Principal, o centro de custo é escolhido no cadastro de Local físico (local_fisico_ed.aspx.cs:103-109) e fica disponível para outros módulos por um serviço de consulta (svcCentroCusto.cs:13-29). O Estoque tem <strong>outro</strong> cadastro de centro de custo, em tabela própria; um centro criado aqui não existe lá (3.estoque/01-cadastros-de-apoio.md:65).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém os cadastros de apoio: Contabilidade, Financeiro ou Administração (leitura da área; o sistema não diz).</li>
+<li>O Local físico usa o centro de custo do Principal; outros módulos o consultam pelo serviço de consulta.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 5 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu Cadastros. A lista abre vazia; é preciso clicar em Pesquisar.</li>
+<li>O formulário abre pela lista (Novo, Editar, Consultar).</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>Salvar um centro novo</strong> grava e mostra "Inclusão realizada com sucesso!". Com OK, volta à lista.</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa na tela, mas ela <strong>não chega ao histórico</strong> (ver Falhas).</li>
+<li><strong>Excluir</strong> (na lista) manda para a lixeira, sem justificativa, se o banco não achar dependência.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <p>Defina o código numérico (até 6 dígitos) e o nome do centro de custo. Os dois não podem repetir entre os centros não excluídos.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: a lista com a grade, o aviso de sucesso, a inativação, a exclusão recusada por uso no Local físico, o relatório e o Excel.</em></p>
+<p><strong>Tela de lista</strong></p>
 <ul>
 <li>Passo 1. No menu Cadastros, abra Centro de custo. A tela mostra o quadro de pesquisa e uma área vazia. Clique em Pesquisar para listar (centro_custo_lst.aspx.cs:204-216).</li>
 <li>Passo 2. Filtros: Id (só números), Código (só números), Nome (até 100 caracteres; só letras, números e espaço) e Ativo (TODAS, SIM, NÃO) (centro_custo_lst.aspx:45-67).</li>
 <li>Passo 3. A lista mostra Id, Código, Nome e Ativo, com os ícones Editar, Consultar, Excluir e Ver Log, conforme a permissão. Imprimir e Excel aparecem depois de uma pesquisa com resultado, se você pode imprimir (centro_custo_lst.aspx:95-134; centro_custo_lst.aspx.cs:50-51).</li>
 <li>Passo 4. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (centro_custo_lst.aspx.cs:74).</li>
 </ul>
-<h4 id="cadastrar-um-centro-de-custo">Cadastrar um centro de custo</h4>
+<p><strong>Cadastrar um centro de custo</strong></p>
 <ul>
 <li>Passo 5. Na lista, clique em Novo. Preencha o <strong>Código</strong> (obrigatório, só números, até 6 dígitos) e o <strong>Nome</strong> (obrigatório, até 255 caracteres; só letras, números e espaço). Ativo vem como Sim (centro_custo_ed.aspx:47-66).</li>
+</ul>
+<figure><a href="../img/principal/ca05-r01-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca05-r01-form-preenchido.png" alt="Figura 1: O formulário de inclusão do Centro de Custo preenchido (Código e Nome), com Ativo = Sim e a Data do Cadastro travada, antes de salvar." loading="lazy"></a><figcaption>Figura 1: O formulário de inclusão do Centro de Custo preenchido (Código e Nome), com Ativo = Sim e a Data do Cadastro travada, antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: O formulário de inclusão do Centro de Custo preenchido (Código e Nome), com Ativo = Sim e a Data do Cadastro travada, antes de salvar.</em></p>
+<ul>
 <li>Passo 6. Clique em SALVAR e responda SIM a "Confirma a inclusão do item?". Se o nome ou o código já existe, a tela diz "Nome já cadastrado!" ou "Código já cadastrado!" (centro_custo_ed.aspx.cs:170-181).</li>
 </ul>
-<h4 id="alterar-inativar-e-excluir">Alterar, inativar e excluir</h4>
+<p><strong>Alterar, inativar e excluir</strong></p>
 <ul>
 <li>Passo 7. Na lista, clique em Editar, mude o que precisar, preencha a <strong>Justificativa</strong> (obrigatória) e clique em SALVAR (centro_custo_ed.aspx:82-99). <strong>A justificativa não fica no histórico</strong> (ver Falhas).</li>
+</ul>
+<figure><a href="../img/principal/ca05-r02-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca05-r02-historico.png" alt="Figura 2: A janela &quot;Log Alteração - Centro de Custo&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) e a linha &quot;INCLUSÃO DO REGISTRO&quot;; a janela não traz linha de justificativa." loading="lazy"></a><figcaption>Figura 2: A janela &quot;Log Alteração - Centro de Custo&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) e a linha &quot;INCLUSÃO DO REGISTRO&quot;; a janela não traz linha de justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: A janela "Log Alteração - Centro de Custo": a mudança de DESCRIÇÃO (valor antigo e novo) e a linha "INCLUSÃO DO REGISTRO"; a janela não traz linha de justificativa.</em></p>
+<ul>
 <li>Passo 8. Para inativar, mude Ativo para Não, justifique e salve. A tela não confere se o centro está em uso por um Local físico.</li>
 <li>Passo 9. Para excluir, clique no ícone de excluir e responda SIM a "Confirma a exclusão do item?". <strong>Não pede justificativa.</strong> Se o banco achar dependência, recusa com "Esse Centro de Custo contém histórico no sistema e não poderá ser excluído." (centro_custo_lst.aspx.cs:395-413; dalCentroCusto.cs:293).</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<figure><a href="../img/principal/ca05-r03-excluir-pergunta.png" target="_blank" rel="noopener"><img src="../img/principal/ca05-r03-excluir-pergunta.png" alt="Figura 3: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa." loading="lazy"></a><figcaption>Figura 3: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: Ao clicar em excluir, a pergunta "Confirma a exclusão do item?" (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa.</em></p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Não pede justificativa na exclusão (centro_custo_lst.aspx.cs:395-428).</li>
-<li>Não registra no histórico a justificativa da alteração, nem a mudança do código, nem a exclusão (bllCentroCusto.cs:125-190).</li>
-<li>Não confere se o centro de custo está em uso antes de inativar.</li>
-<li>Não aceita apóstrofo, hífen, ponto ou acento fora da lista de letras permitidas no nome (centro_custo_ed.aspx:58).</li>
+<li><strong>Salvar um centro novo</strong> grava e mostra "Inclusão realizada com sucesso!" (centro_custo_ed.aspx.cs:196-216). Com OK, volta à lista.</li>
+<li><strong>Salvar uma alteração</strong> exige a justificativa na tela, mas ela <strong>não chega ao histórico</strong> (ver Falhas) (centro_custo_ed.aspx.cs:218-240; bllCentroCusto.cs:125-156).</li>
+<li><strong>Excluir</strong> (na lista) manda para a lixeira, sem justificativa, se o banco não achar dependência (centro_custo_lst.aspx.cs:395-428; dalCentroCusto.cs:257-299).</li>
 </ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Para inativar, mude Ativo para Não, justifique e salve. A tela não confere se o centro está em uso por um Local físico.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>O Código é obrigatório! / O Nome é obrigatório! / A Situação é obrigatório!: Salvar sem o campo (centro_custo_ed.aspx:48, 55 e 62)</li>
+<li>A Justificativa é obrigatória!: Alterar sem justificativa (centro_custo_ed.aspx:92)</li>
+<li>Nome já cadastrado! / Código já cadastrado!: Nome ou código igual ao de outro centro não excluído (centro_custo_ed.aspx.cs:172 e 178)</li>
+<li>Erro ao efetuar a inclusão! / Erro ao efetuar a alteração! (com "Detalhe do erro (+)"): Falha técnica ao gravar (centro_custo_ed.aspx.cs:202 e 225)</li>
+<li>Esse Centro de Custo contém histórico no sistema e não poderá ser excluído.: O banco achou dependência (dalCentroCusto.cs:293; centro_custo_lst.aspx.cs:401-405)</li>
+<li>Erro ao efetuar a exclusão!: Outra falha ao excluir (centro_custo_lst.aspx.cs:410)</li>
+<li>Erro no retorno do centro de custo!: Falha ao abrir o formulário de um centro (centro_custo_ed.aspx.cs:71)</li>
+<li>Não existe log de alteração para este registro.: Janela de histórico sem linhas (centro_custo_lst.aspx:198)</li>
+</ul>
+<figure><a href="../img/principal/ca05-r04-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca05-r04-erro-obrigatorios.png" alt="Figura 4: Salvar com tudo em branco: mensagens vermelhas &quot;O Código é obrigatório!&quot; e &quot;O Nome é obrigatório!&quot;." loading="lazy"></a><figcaption>Figura 4: Salvar com tudo em branco: mensagens vermelhas &quot;O Código é obrigatório!&quot; e &quot;O Nome é obrigatório!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Salvar com tudo em branco: mensagens vermelhas "O Código é obrigatório!" e "O Nome é obrigatório!".</em></p>
+<figure><a href="../img/principal/ca05-r05-erro-nome-repetido.png" target="_blank" rel="noopener"><img src="../img/principal/ca05-r05-erro-nome-repetido.png" alt="Figura 5: Salvar com nome já existente: mensagem vermelha &quot;Nome já cadastrado!&quot;." loading="lazy"></a><figcaption>Figura 5: Salvar com nome já existente: mensagem vermelha &quot;Nome já cadastrado!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: Salvar com nome já existente: mensagem vermelha "Nome já cadastrado!".</em></p>
+<figure><a href="../img/principal/ca05-r06-erro-codigo-repetido.png" target="_blank" rel="noopener"><img src="../img/principal/ca05-r06-erro-codigo-repetido.png" alt="Figura 6: Salvar com código já existente: mensagem vermelha &quot;Código já cadastrado!&quot;." loading="lazy"></a><figcaption>Figura 6: Salvar com código já existente: mensagem vermelha &quot;Código já cadastrado!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: Salvar com código já existente: mensagem vermelha "Código já cadastrado!".</em></p>
+<figure><a href="../img/principal/ca05-r07-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca05-r07-erro-justificativa.png" alt="Figura 7: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 7: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função da tela é <code>33</code> (centro_custo_lst.aspx.cs:22 e centro_custo_ed.aspx.cs:21). Na árvore de permissões, o grupo Cadastros tem "Centro de custo (33)", com as ações Incluir, Alterar, Excluir, Imprimir/Excel e Consultar log (02-matriz-de-permissoes.md:157 e 102).</li>
+<li>Na lista, Editar depende de Alterar, Excluir de Excluir, Ver Log de Consultar log, Novo de Incluir, Imprimir e Excel de Imprimir/Excel (ClassePaiLst.cs:192-257).</li>
+<li>O perfil de teste TESTESEMADMIN tem só esta tela, sem ações (02-matriz-de-permissoes.md:171). Com ele, a lista abriu (CT-PRI-037).</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum defeito do registro DV-PRI está ligado a esta tela, porque ela não foi testada nas operações. As falhas de acesso dos casos CT-PRI-060 a 069 (DV-PRI-025) valem para o formulário, ver a seção de segurança.</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A alteração pede justificativa na tela, mas ela não vai para o histórico: a camada de regras recebe o texto e não o repassa</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A mudança do código do centro de custo não gera linha de histórico</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A exclusão não pede justificativa e não grava nada no histórico (o método existe e nunca é chamado)</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) A pesquisa e o relatório montam o texto do comando com o código e o Id recebidos sem conferência no servidor; o nome tem as aspas dobradas apenas na lista</li>
+<li>(a confirmar no teste; gravidade proposta: Alta) O formulário trava para quem não tem Alterar só ao abrir um centro existente; abrir <code>centro_custo_ed.aspx</code> sem código mostra o formulário livre</li>
+<li><strong>A tela não faz:</strong> Não pede justificativa na exclusão.</li>
+<li><strong>A tela não faz:</strong> Não registra no histórico a justificativa da alteração, nem a mudança do código, nem a exclusão.</li>
+<li><strong>A tela não faz:</strong> Não confere se o centro de custo está em uso antes de inativar.</li>
+<li><strong>A tela não faz:</strong> Não aceita apóstrofo, hífen, ponto ou acento fora da lista de letras permitidas no nome.</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Lista os centros não excluídos que batem com o filtro</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia os filtros e esconde a lista</td>
+<td>Sempre, na lista</td>
+</tr>
+<tr>
+<td>Novo (Incluir)</td>
+<td>Abre o formulário vazio</td>
+<td>Lista, se o usuário tem Incluir</td>
+</tr>
+<tr>
+<td>Editar, Consultar</td>
+<td>Abrem o formulário</td>
+<td>Em toda linha (Editar com a ação Alterar)</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Pede confirmação e manda para a lixeira</td>
+<td>Em toda linha, se o usuário tem Excluir</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre a janela de histórico do centro</td>
+<td>Em toda linha, se o usuário tem Consultar log</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Gera o relatório ou a planilha com o mesmo filtro</td>
+<td>Depois de uma pesquisa com resultado, se o usuário pode imprimir</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>Formulário, se o usuário pode alterar (na alteração)</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta à lista sem gravar</td>
+<td>Sempre, no formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -308,7 +448,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

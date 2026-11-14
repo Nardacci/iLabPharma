@@ -44,44 +44,211 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="cadastro-de-pontos-de-agua-analise.html">Análise</a><a href="cadastro-de-pontos-de-agua-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="cadastro-de-pontos-de-agua-fluxos.html">Fluxos</a><a href="cadastro-de-pontos-de-agua-regras-de-negocio.html">Regras de negócio</a><a href="cadastro-de-pontos-de-agua-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-pontos-de-agua.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-11-pontos-de-agua">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra os <strong>pontos de água</strong> da fábrica (cada ponto de coleta ou uso de água), com descrição, tag, <strong>tipo de água</strong> (potável, purificada ou injetável) e, se quiser, a <strong>localização</strong>, que é um ambiente do cadastro de Ambientes. O código mostra duas telas no mesmo cadastro:</p>
+<ol>
+<li><strong>Lista</strong> com pesquisa por código, descrição, tag e situação, ordenação, impressão, Excel e histórico (ponto_agua_lst.aspx:46-66; ponto_agua_lst.aspx.cs:31-95).</li>
+<li><strong>Formulário</strong> para incluir, alterar e consultar (ponto_agua_ed.aspx:45-116).</li>
+</ol>
+<p>Os tipos de água não têm tela própria: são três valores fixos, <strong>POTÁVEL, PURIFICADA e INJETÁVEL</strong>, criados pelo script do banco (dml.sql:10171-10189; bllTipoAgua.cs:15-24). O cadastro <strong>não guarda</strong> limites microbiológicos, frequência de coleta, sanitização nem qualificação do sistema de água: isso fica nas telas de análise da Produção (analise_pontos_agua_ed e registro_analise_pontos_agua_ed, módulo Produção).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém os cadastros da fábrica: engenharia, utilidades ou qualidade (leitura da área, a validar).</li>
+<li>Quem consulta a lista e o histórico.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 11 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu superior <strong>Cadastros › Cadastro de Pontos de Água</strong>, que abre a lista.</li>
+<li>Na lista, <strong>Pesquisar</strong> traz os pontos (a lista não carrega sozinha); <strong>Incluir</strong> abre o formulário vazio e o lápis abre um ponto.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere os obrigatórios, grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista.</li>
+<li>O ponto ativo passa a ser oferecido na Produção: programação e registro de análise de pontos de água, autorização de produção e lote padrão (ver "Dados").</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <ul>
 <li>Entre no módulo Principal e abra <strong>Cadastros › Cadastro de Pontos de Água</strong>.</li>
 <li>Quem não tem a função desta tela (código 115) é levado à página de acesso negado ao abrir a lista (ponto_agua_lst.aspx.cs:19; ClassePaiLst.cs:65). Incluir, Editar, Excluir, Imprimir e Ver Log só aparecem para quem tem a ação correspondente (ClassePaiLst.cs:111-255).</li>
 <li>Cadastre antes o <strong>ambiente</strong> onde o ponto fica (Cadastros › Cadastro de Ambientes); só ambientes ativos aparecem na lista (ponto_agua_ed.aspx.cs:42-50).</li>
 </ul>
-<h4 id="pesquisar">Pesquisar</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: o aviso de sucesso, a inativação, a recusa de exclusão com ponto em uso, o relatório e o Excel.</em></p>
+<p><strong>Pesquisar</strong></p>
 <ol>
 <li>Abra a lista (vem vazia). Preencha, se quiser, <strong>Código</strong> (só números), <strong>Descrição</strong>, <strong>Tag</strong> e <strong>Ativo</strong> e clique em <strong>Pesquisar</strong> (ponto_agua_lst.aspx:46-66).</li>
 <li>A grade mostra Código, Descrição, Tag e Ativo (ponto_agua_lst.aspx:112-127). Clique no título da coluna para ordenar.</li>
+</ol>
+<figure><a href="../img/principal/ca11-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r01-lista.png" alt="Figura 1: A lista de Cadastro de Pontos de Água depois de Pesquisar: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade com os ícones Editar, Excluir e LOG." loading="lazy"></a><figcaption>Figura 1: A lista de Cadastro de Pontos de Água depois de Pesquisar: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade com os ícones Editar, Excluir e LOG. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: A lista de Cadastro de Pontos de Água depois de Pesquisar: filtros Código, Descrição, Tag e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade com os ícones Editar, Excluir e LOG.</em></p>
+<ol start="3">
 <li><strong>Limpar</strong> esvazia filtros e grade (ponto_agua_lst.aspx.cs:76-90).</li>
 </ol>
-<h4 id="incluir">Incluir</h4>
+<p><strong>Incluir</strong></p>
 <ol>
 <li>Clique em <strong>Incluir</strong>.</li>
+</ol>
+<figure><a href="../img/principal/ca11-r02-nova.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r02-nova.png" alt="Figura 2: O formulário de inclusão de ponto de água aberto, vazio: Descrição, Tag, Tipo de Água, Localização (Ambiente) e Ativo." loading="lazy"></a><figcaption>Figura 2: O formulário de inclusão de ponto de água aberto, vazio: Descrição, Tag, Tipo de Água, Localização (Ambiente) e Ativo. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: O formulário de inclusão de ponto de água aberto, vazio: Descrição, Tag, Tipo de Água, Localização (Ambiente) e Ativo.</em></p>
+<ol start="2">
 <li>Preencha <strong>Descrição</strong>, <strong>Tag</strong> e <strong>Tipo de Água</strong> (potável, purificada ou injetável) e escolha, se quiser, a <strong>Localização(Ambiente)</strong>. Ativo vem como Sim (ponto_agua_ed.aspx:53-93; ver imagem de 05/10/2026).</li>
+</ol>
+<figure><a href="../img/principal/ca11-r03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r03-form-preenchido.png" alt="Figura 3: O formulário preenchido (Descrição, Tag, Tipo de Água &quot;POTÁVEL&quot; e Localização no ambiente de teste), antes de salvar." loading="lazy"></a><figcaption>Figura 3: O formulário preenchido (Descrição, Tag, Tipo de Água &quot;POTÁVEL&quot; e Localização no ambiente de teste), antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O formulário preenchido (Descrição, Tag, Tipo de Água "POTÁVEL" e Localização no ambiente de teste), antes de salvar.</em></p>
+<ol start="3">
 <li>Clique em <strong>SALVAR</strong> e responda <strong>SIM</strong>. Os obrigatórios só são cobrados depois do SIM (ponto_agua_ed.aspx.cs:112-135 e 153-163).</li>
 <li>Se a Tag já existir em qualquer ponto (inclusive inativo ou excluído), aparece "TAG já cadastrada!" (ponto_agua_ed.aspx:77-78; bllPontoAgua.cs:120-130).</li>
 </ol>
-<h4 id="alterar-ou-inativar">Alterar ou inativar</h4>
+<figure><a href="../img/principal/ca11-r04-tag-repetida.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r04-tag-repetida.png" alt="Figura 4: Salvar com uma Tag já usada: mensagem vermelha &quot;TAG já cadastrada!&quot;." loading="lazy"></a><figcaption>Figura 4: Salvar com uma Tag já usada: mensagem vermelha &quot;TAG já cadastrada!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Salvar com uma Tag já usada: mensagem vermelha "TAG já cadastrada!".</em></p>
+<p><strong>Alterar ou inativar</strong></p>
 <ol>
 <li>Clique no lápis, mude o que precisar e escreva a <strong>Justificativa</strong>, obrigatória só na alteração (ponto_agua_ed.aspx.cs:61-92; ponto_agua_ed.aspx:111-116).</li>
 <li>Para inativar, mude <strong>Ativo</strong> para Não. Um ponto inativo abre travado, com só Ativo e Justificativa liberados (ponto_agua_ed.aspx.cs:76-91).</li>
 <li>O histórico (janela compartilhada) mostra, campo a campo, o valor antigo e o novo, usuário, data e justificativa (Repository.cs:309-435).</li>
 </ol>
-<h4 id="excluir">Excluir</h4>
+<figure><a href="../img/principal/ca11-r05-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r05-historico.png" alt="Figura 5: A janela &quot;Log Alteração - Cadastro de Pontos de Água&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;." loading="lazy"></a><figcaption>Figura 5: A janela &quot;Log Alteração - Cadastro de Pontos de Água&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: A janela "Log Alteração - Cadastro de Pontos de Água": a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha "INCLUSÃO DO REGISTRO".</em></p>
+<p><strong>Excluir</strong></p>
 <ol>
 <li>Na lista, clique no ícone de exclusão. <strong>O sistema pede só a confirmação "Confirma a exclusão do item?"</strong>, sem justificativa (ponto_agua_lst.aspx.cs:157-160 e 280-289).</li>
+</ol>
+<figure><a href="../img/principal/ca11-r06-excluir-pergunta.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r06-excluir-pergunta.png" alt="Figura 6: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa." loading="lazy"></a><figcaption>Figura 6: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: Ao clicar em excluir, a pergunta "Confirma a exclusão do item?" (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa.</em></p>
+<ol start="2">
 <li>Se o ponto é usado em outra tabela do Principal, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas." (bllPontoAgua.cs:57-61).</li>
 <li><strong>Atenção:</strong> as conferências que impediriam alterar ou excluir um ponto com análise registrada, lote padrão ou autorização de produção (tabelas da Produção) estão desligadas no código (ver falhas).</li>
 </ol>
-<h4 id="ver-o-historico-imprimir-e-exportar">Ver o histórico, imprimir e exportar</h4>
+<p><strong>Ver o histórico, imprimir e exportar</strong></p>
 <ul>
 <li>O ícone <strong>LOG</strong> abre a janela de histórico do ponto (ponto_agua_lst.aspx.cs:164-170).</li>
 <li><strong>Imprimir</strong> e o Excel respeitam os filtros e aparecem depois de uma pesquisa com resultado, para quem tem Imprimir/Excel (ponto_agua_lst.aspx.cs:54-55 e 113-147).</li>
 </ul>
 <hr />
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere os obrigatórios, grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista (ponto_agua_ed.aspx.cs:112-135, 153-209 e 225-273).</li>
+<li>O ponto ativo passa a ser oferecido na Produção: programação e registro de análise de pontos de água, autorização de produção e lote padrão (ver "Dados").</li>
+</ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Se o ponto é usado em outra tabela do Principal, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas.".</li>
+<li><strong>Atenção:</strong> as conferências que impediriam alterar ou excluir um ponto com análise registrada, lote padrão ou autorização de produção (tabelas da Produção) estão desligadas no código (ver falhas).</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"A Descrição é obrigatória!": Descrição em branco (ponto_agua_ed.aspx:54)</li>
+<li>"A Situação é obrigatória!": Ativo sem escolha (ponto_agua_ed.aspx:63)</li>
+<li>"TAG já cadastrada!": Outra tag igual, de ponto ativo, inativo ou excluído (ponto_agua_ed.aspx:78)</li>
+<li>"O tipo de Água é obrigatório!": Tipo em "SELECIONE" (ponto_agua_ed.aspx:87)</li>
+<li>"A Justificativa é obrigatória!": Alteração sem justificativa (ponto_agua_ed.aspx:113)</li>
+<li>"Exclusão inválida, existem referências com outras tabelas.": Ponto usado em outra tabela do Principal; não diz qual (bllPontoAgua.cs:59)</li>
+<li>"Erro na exclusão do ponto de água.": Falha inesperada na exclusão (bllPontoAgua.cs:73)</li>
+<li>Texto técnico do erro (com "Detalhe do erro (+)"): Falha ao gravar ou ao abrir o formulário (ponto_agua_ed.aspx.cs:94-104 e 197-207)</li>
+</ul>
+<figure><a href="../img/principal/ca11-r07-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r07-erro-obrigatorios.png" alt="Figura 7: Salvar com tudo em branco: mensagens vermelhas &quot;A Descrição é obrigatória!&quot; e &quot;O tipo de Água é obrigatório!&quot;." loading="lazy"></a><figcaption>Figura 7: Salvar com tudo em branco: mensagens vermelhas &quot;A Descrição é obrigatória!&quot; e &quot;O tipo de Água é obrigatório!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: Salvar com tudo em branco: mensagens vermelhas "A Descrição é obrigatória!" e "O tipo de Água é obrigatório!".</em></p>
+<figure><a href="../img/principal/ca11-r08-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca11-r08-erro-justificativa.png" alt="Figura 8: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 8: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A <strong>lista</strong> usa a função de tela "115" (ponto_agua_lst.aspx.cs:19). A base das listas confere a função logo no início e leva quem não a tem à página de acesso negado (ClassePaiLst.cs:65; BaseController.cs:26-31). Incluir, Editar, Consultar, Excluir, Imprimir e Ver Log dependem de cada ação (ClassePaiLst.cs:111-255).</li>
+<li>O <strong>formulário</strong> usa a mesma função (ponto_agua_ed.aspx.cs:19). A base do formulário só calcula as ações e <strong>não bloqueia a entrada</strong> (ClassePaiEd.cs:71-156). Esta tela trava o formulário e esconde o SALVAR para quem <strong>não tem Alterar</strong>, <strong>inclusive no ponto novo</strong> (ponto_agua_ed.aspx.cs:35-39). Ou seja, quem só tem Incluir e não tem Alterar vê o formulário novo sem SALVAR (inferência a confirmar). Quem tem Alterar abre o formulário novo pelo endereço sem conferência de Incluir.</li>
+<li>O <strong>relatório</strong> (<code>ponto_agua_rel</code>) não tem conferência própria de permissão (ponto_agua_rel.aspx.cs:12-100; mesmo padrão do DV-PRI-025 para <code>usuario_rel</code> e <code>perfil_rel</code>).</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum. A tela não foi testada como tela e nenhum DV-PRI registrado tem este cadastro como alvo (<code>defeitos/defeitos-completo.json</code>, campo <code>tela</code>). O DV-PRI-011 (recusa genérica na exclusão) foi visto <strong>no Ambiente</strong>, ao excluir um ambiente ligado a um ponto de água (CT-PRI-095, 05/10/2026).</li>
+<li><strong>DV-PRI-009 (Alta)</strong>, visto em outro cadastro (Excluir Ambiente e Equipamento sem justificativa). Nesta tela: <strong>Mesmo comportamento</strong>: só a confirmação "Confirma a exclusão do item?" (ponto_agua_lst.aspx.cs:280-289). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-011 (Média)</strong>, visto em outro cadastro (Recusa de exclusão com mensagem genérica). Nesta tela: Mesma mensagem (bllPontoAgua.cs:59). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-014 (Alta)</strong>, visto em outro cadastro (Histórico de excluído não pode ser consultado). Nesta tela: Lista só com LIXEIRA = 0 e ícone LOG na linha (dalPontoAgua.cs:32). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-008 (Baixa)</strong>, visto em outro cadastro (Pesquisa não ignora acentos). Nesta tela: Pesquisa com Contains no banco (dalPontoAgua.cs:34-35). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-025 (Alta)</strong>, visto em outro cadastro (Telas de edição abrem pelo endereço sem permissão). Nesta tela: O formulário não bloqueia a entrada (ver segurança). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-026 (Média)</strong>, visto em outro cadastro (Erro técnico do ASP.NET em envio inválido). Nesta tela: Pesquisa com código que não é número (item 5 abaixo). Situação aqui: A confirmar no teste.</li>
+<li>(a confirmar no teste) <strong>Excluir sem justificativa</strong> (RN-PRI-070; DV-PRI-009 nos outros cadastros).</li>
+<li>(a confirmar no teste) <strong>A trava de alteração do ponto está desligada e invertida.</strong> Em vez de bloquear só quando há análise, lote padrão ou autorização, a função <code>PodeAlterar</code> devolve sempre "não pode" e o formulário nem a chama.</li>
+<li>(a confirmar no teste) <strong>Abrir um ponto sem ambiente (ou com ambiente inativado) dá erro e esconde a justificativa.</strong> O formulário tenta escolher na lista o ambiente gravado; se o valor não está na lista (ponto sem ambiente tem código 0; ambiente inativo não é listado), o código lança erro nessa linha e <strong>pula o resto da carga</strong>, inclusive o painel de justificativa.</li>
+<li>(a confirmar no teste) <strong>Ponto sem tag pode sumir da lista.</strong> A pesquisa compara a tag com ela mesma (<code>x.TAG.Contains(x.TAG)</code> quando o filtro está vazio); para uma tag vazia (nula no banco), a comparação não devolve verdadeiro, e o ponto fica fora da lista, sem poder ser aberto, alterado nem excluído pela tela.</li>
+<li>(a confirmar no teste) <strong>Código de pesquisa que não é número derruba a página</strong>: o texto do filtro é convertido sem tratamento. A tela filtra o digitado no navegador, mas não o envio direto.</li>
+<li>(a confirmar no teste) <strong>A Tag parece obrigatória mas não é</strong>: o rótulo tem asterisco e não há conferência de obrigatoriedade; foi vista na tela em 05/10/2026 (CT-PRI-093, passo 4).</li>
+<li>(a confirmar no teste) <strong>Não é possível tirar a localização</strong> de um ponto já ligado: escolher "SELECIONE" deixa o ambiente antigo.</li>
+<li>(a confirmar no teste) <strong>Tag de ponto excluído continua ocupada</strong>: a conferência de tag repetida olha também os excluídos e os inativos.</li>
+<li>(a confirmar no teste) <strong>Relatório com consulta montada com texto do endereço</strong>: código, tag, descrição e ativo entram direto no comando. A <strong>lista</strong> usa consulta com parâmetros.</li>
+<li>(a confirmar no teste) <strong>O histórico mostra nomes de coluna</strong> (por exemplo ID_AMBIENTE) e a inclusão grava justificativa vazia; a tradução depende da janela de histórico compartilhada.</li>
+<li>(a confirmar no teste) <strong>Pesquisa carrega todos os pontos na memória</strong> para a lista de escolha (<code>Listar()</code>), sem filtro de banco: lento com muitos registros (inferência).</li>
+<li>(a confirmar no teste) <strong>Não guarda a frequência de coleta, os limites nem o estado de qualificação</strong> do sistema de água; isso está na Produção (ver exigências da norma).</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura com os filtros, ordenando pelo código</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e grade</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a ação Incluir</td>
+</tr>
+<tr>
+<td>Imprimir e ícone do Excel</td>
+<td>Abre o relatório com os filtros</td>
+<td>Depois de uma pesquisa com resultado, para quem tem Imprimir/Excel</td>
+</tr>
+<tr>
+<td>Lupa (Consultar) e lápis (Editar)</td>
+<td>Abrem o mesmo formulário</td>
+<td>Conforme as ações do perfil</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Pede só a confirmação e exclui</td>
+<td>Para quem tem Excluir</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre a janela de histórico</td>
+<td>Para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>No formulário</td>
+</tr>
+<tr>
+<td>VOLTAR (alto e rodapé)</td>
+<td>Volta à lista sem gravar</td>
+<td>No formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também confere; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -352,7 +519,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

@@ -44,47 +44,218 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-usuario-analise.html">Análise</a><a href="conta-usuario-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="conta-usuario-fluxos.html">Fluxos</a><a href="conta-usuario-regras-de-negocio.html">Regras de negócio</a><a href="conta-usuario-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-conta-usuario.html">Erros (4)</a><a class="aba-extra" href="roteiro-de-execucao-administracao-passo-a-passo.html#tela-2-conta-usuario">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>O profissional precisa estar cadastrado em Menu Administração › Profissional. Seu usuário precisa ter permissão de incluir ou alterar na tela Conta usuário (ver a seção de segurança). Tenha em mãos o login desejado, o período de validade e os perfis do usuário.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Conta usuário</strong> é a tela em que o administrador cria e mantém o <strong>acesso de um profissional ao sistema</strong>: login, período de validade da conta, prazo de validade da senha, perfis (conjuntos de permissões) e situação da conta (ativa ou inativa). Também é aqui que se <strong>redefine a senha</strong> de quem a esqueceu ou foi bloqueado por erros (botão RESET DE SENHA) e que se <strong>exclui a conta</strong> (o profissional continua cadastrado, só perde o acesso). Quem usa é o administrador do sistema (TI) e, conforme a política da empresa, a Garantia da Qualidade, que responde pelo controle de acesso (leitura da área, a validar).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. No menu Administração, abra <strong>Conta usuário</strong>. A tela mostra o quadro "Pesquisa" e nenhuma linha. Clique em PESQUISAR para listar (usuario_conta_lst.aspx.cs:85-91).</li>
-<li>Passo 2. Filtros: Nome (parte do nome), CPF, Ativo (Todas, Sim, Não) e Perfil. O filtro <strong>Ativo</strong> se refere à <strong>conta</strong>, não ao profissional (dalUsuario.cs:1522).</li>
-<li>Passo 3. A lista mostra Nome, CPF e Ativo, com os ícones: lápis (Editar), lupa (Consultar), X vermelho (Excluir conta), Log e Imprimir Perfils. Para o profissional que ainda não tem conta aparece o ícone <strong>Incluir</strong> no lugar do lápis (usuario_conta_lst.aspx.cs:252-277). Dez linhas por página.</li>
-<li>Passo 4. Sem resultado: "A pesquisa não retornou nenhum resultado." (usuario_conta_lst.aspx:111).</li>
+<li>O administrador do sistema (TI) e, conforme a política da empresa, a Garantia da Qualidade, que responde pelo controle de acesso (leitura da área, a validar; Guia 33, 11.12.3).</li>
+<li>Todos os módulos dependem do que se grava aqui: o login único do Principal vale para os nove módulos.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="criar-uma-conta">Criar uma conta</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 2 do menu Administração, módulo Principal)</p>
 <ul>
-<li>Passo 5. Na linha do profissional sem conta, clique em <strong>Incluir</strong>. A tela mostra os dados do profissional (somente leitura) e os quadros Conta e Perfil.</li>
-<li>Passo 6. Informe o <strong>Login</strong> (até 25 caracteres; letras sem acento, números e ponto). O sistema grava em MAIÚSCULAS e tira os espaços (usuario_conta_ed.aspx.cs:386; DV-PRI-002).</li>
-<li>Passo 7. Informe a <strong>Validade da Conta</strong>: a data inicial é obrigatória; a final é opcional e não pode ser anterior à data inicial nem à de hoje (usuario_conta_ed.aspx:162-193).</li>
-<li>Passo 8. Deixe em 60 o prazo da <strong>Validade da Senha</strong> (em dias), se a política da empresa não disser outra coisa. A "Data Expiração" é calculada pelo sistema e não pode ser digitada.</li>
-<li>Passo 9. Marque pelo menos um <strong>Perfil</strong>.</li>
-<li>Passo 10. Clique em SALVAR e confirme com SIM ("Confirma a inclusão do item?"). A mensagem de sucesso mostra a <strong>senha provisória</strong>: anote-a e entregue ao usuário de forma reservada. Ele terá de trocá-la no primeiro acesso, em até 5 dias (CT-PRI-038 e 039, 06/10/2026).</li>
+<li>O profissional já foi cadastrado na tela Profissional (Menu Administração › Profissional). A conta só existe para um profissional existente.</li>
+<li>A lista abre vazia; é preciso clicar em PESQUISAR. Para quem não é o usuário de código 1, o usuário 1 (administrador de fábrica do sistema) não aparece.</li>
+<li>Depois de criada a conta, o usuário recebe a senha provisória (que o administrador vê na tela) e é levado à troca de senha no primeiro acesso (CT-PRI-001, 06/10/2026).</li>
 </ul>
-<h4 id="alterar-uma-conta">Alterar uma conta</h4>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
 <ul>
-<li>Passo 11. Na lista, clique no lápis. Altere o que for preciso (situação, validades, prazo da senha, perfis).</li>
-<li>Passo 12. Preencha a <strong>Justificativa</strong> (obrigatória) e salve. O histórico registra cada campo alterado.</li>
-<li>Passo 13. Para desativar o acesso sem excluir, marque <strong>Ativo: Não</strong>. Com a conta inativa, o botão RESET DE SENHA e as demais edições ficam travados (Funcoes.cs:179-250 e usuario_conta_ed.aspx.cs:208-216).</li>
+<li><strong>Incluir conta</strong> grava login, validades, perfis e uma senha provisória; mostra "Inclusão realizada com sucesso!" <strong>com a senha provisória</strong> na mensagem. Ao clicar OK volta à lista. O usuário passa a poder entrar no sistema, dentro do período de validade e com as permissões dos perfis.</li>
+<li><strong>Alterar conta</strong> grava as novas validades, o prazo da senha, a situação e a lista de perfis (que é apagada e gravada de novo) e escreve o histórico. Não troca a senha.</li>
+<li><strong>Reset de senha</strong> grava uma nova senha provisória com validade de 5 dias, zera o contador de erros, marca a troca obrigatória e <strong>mostra a senha na tela</strong>. Não escreve no histórico.</li>
+<li><strong>Excluir conta</strong> apaga o login, a senha, as validades e <strong>todos os vínculos de perfil</strong>; o profissional permanece. A exclusão fica no histórico como "EXCLUSÃO DA CONTA", mas a tela de histórico da Conta não lista esse tipo de evento.</li>
+<li><strong>Imprimir / Excel</strong> abrem o relatório da lista (<code>usuario_conta_rel</code>); o ícone <strong>Imprimir Perfils</strong> de cada linha abre o relatório do usuário com os perfis dele.</li>
 </ul>
-<h4 id="redefinir-a-senha-e-desbloquear">Redefinir a senha e desbloquear</h4>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O <strong>profissional</strong> cadastrado</td>
+<td>A conta é a parte de acesso do mesmo registro do profissional; sem ele não há linha para criar conta</td>
+<td>Menu Administração › Profissional</td>
+</tr>
+<tr>
+<td>Um ou mais <strong>perfis</strong></td>
+<td>A conta exige pelo menos um perfil marcado; os perfis dão as permissões</td>
+<td>Menu Administração › Perfil</td>
+</tr>
+<tr>
+<td>O <strong>login desejado</strong> e o período de validade</td>
+<td>Campos da conta</td>
+<td>Combinados com o usuário e com a política da empresa</td>
+</tr>
+<tr>
+<td>Permissão de incluir ou alterar na tela Conta usuário</td>
+<td>Para ver o ícone Incluir ou o lápis</td>
+<td>Menu Administração › Perfil (ver "Quem pode usar")</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 05 e 06/10/2026 (rodadas 1 e 2), cada uma conferida contra o texto. Sem imagem: a lista de Pesquisa da Conta usuário, a lista com o ícone Incluir, o formulário de conta nova em branco, a exclusão da conta, o relatório Imprimir Perfils e a lupa Consultar. A senha provisória aparece mascarada nas imagens de teste.</em></p>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu Administração, abra <strong>Conta usuário</strong>. A tela mostra o quadro "Pesquisa" e nenhuma linha. Clique em <strong>PESQUISAR</strong> para listar (usuario_conta_lst.aspx.cs:85-91).</li>
+<li>Filtros: Nome (parte do nome), CPF, Ativo (Todas, Sim, Não) e Perfil. O filtro <strong>Ativo</strong> se refere à <strong>conta</strong>, não ao profissional (dalUsuario.cs:1522).</li>
+<li>A lista mostra Nome, CPF e Ativo, com os ícones: lápis (Editar), lupa (Consultar), X vermelho (Excluir conta), Log e Imprimir Perfils. Para o profissional que ainda não tem conta aparece o ícone <strong>Incluir</strong> no lugar do lápis. Dez linhas por página. Sem resultado: "A pesquisa não retornou nenhum resultado.".</li>
+</ol>
+<p><strong>Criar uma conta</strong></p>
+<ol start="4">
+<li>Na linha do profissional sem conta, clique em <strong>Incluir</strong>. A tela mostra os dados do profissional (somente leitura) e os quadros Conta e Perfil.</li>
+<li>Informe o <strong>Login</strong> (até 25 caracteres; letras sem acento, números e ponto). O sistema grava em MAIÚSCULAS e tira os espaços (usuario_conta_ed.aspx.cs:386; DV-PRI-002).</li>
+<li>Informe a <strong>Validade da Conta</strong>: a data inicial é obrigatória; a final é opcional e não pode ser anterior à inicial nem à de hoje.</li>
+<li>Deixe em 60 o prazo da <strong>Validade da Senha</strong> (em dias), se a política da empresa não disser outra coisa. A "Data Expiração" é calculada pelo sistema e não pode ser digitada.</li>
+<li>Marque pelo menos um <strong>Perfil</strong>.</li>
+<li>Clique em <strong>SALVAR</strong> e confirme com <strong>SIM</strong> ("Confirma a inclusão do item?"). A mensagem de sucesso mostra a <strong>senha provisória</strong>: anote-a e entregue ao usuário de forma reservada. Ele terá de trocá-la no primeiro acesso, em até 5 dias (CT-PRI-038 e 039).</li>
+</ol>
+<figure><a href="../img/principal/ad02-r01-inclusao-sucesso.png" target="_blank" rel="noopener"><img src="../img/principal/ad02-r01-inclusao-sucesso.png" alt="Figura 1: aviso &quot;Inclusão realizada com sucesso!&quot; com a linha &quot;Senha:&quot; (na imagem de teste a senha aparece coberta por asteriscos); clique em OK para voltar à lista." loading="lazy"></a><figcaption>Figura 1: aviso &quot;Inclusão realizada com sucesso!&quot; com a linha &quot;Senha:&quot; (na imagem de teste a senha aparece coberta por asteriscos); clique em OK para voltar à lista. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: aviso "Inclusão realizada com sucesso!" com a linha "Senha:" (na imagem de teste a senha aparece coberta por asteriscos); clique em OK para voltar à lista.</em></p>
+<p><strong>Alterar uma conta</strong></p>
+<ol start="10">
+<li>Na lista, clique no lápis. Altere o que for preciso (situação, validades, prazo da senha, perfis).</li>
+<li>Preencha a <strong>Justificativa</strong> (obrigatória) e salve. O histórico registra cada campo alterado.</li>
+</ol>
+<figure><a href="../img/principal/ad02-r02-alteracao-sucesso.png" target="_blank" rel="noopener"><img src="../img/principal/ad02-r02-alteracao-sucesso.png" alt="Figura 2: conta alterada (perfis TESTECADASTRO e TESTECONSULTA marcados, justificativa preenchida) e o aviso &quot;Alteração realizada com sucesso!&quot;." loading="lazy"></a><figcaption>Figura 2: conta alterada (perfis TESTECADASTRO e TESTECONSULTA marcados, justificativa preenchida) e o aviso &quot;Alteração realizada com sucesso!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: conta alterada (perfis TESTECADASTRO e TESTECONSULTA marcados, justificativa preenchida) e o aviso "Alteração realizada com sucesso!".</em></p>
+<ol start="12">
+<li>Para desativar o acesso sem excluir, marque <strong>Ativo: Não</strong>. Com a conta inativa, o botão RESET DE SENHA e as demais edições ficam travados (Funcoes.cs:179-250).</li>
+</ol>
+<p><strong>Ver o histórico da conta</strong></p>
+<ol start="13">
+<li>Na lista, clique no ícone <strong>Log</strong>. Abre a janela "Log Alteração - Conta Usuário", com o campo mudado, valor antigo e novo, data, hora, usuário e justificativa.</li>
+</ol>
+<figure><a href="../img/principal/ad02-r03-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ad02-r03-historico.png" alt="Figura 3: histórico da conta: &quot;NOVO PERFIL&quot; e &quot;PERFIL EXCLUÍDO&quot; (TESTECONSULTA) com justificativa, e &quot;VALIDADE INÍCIO&quot; com a mesma data nos dois valores (DV-PRI-005); duas páginas." loading="lazy"></a><figcaption>Figura 3: histórico da conta: &quot;NOVO PERFIL&quot; e &quot;PERFIL EXCLUÍDO&quot; (TESTECONSULTA) com justificativa, e &quot;VALIDADE INÍCIO&quot; com a mesma data nos dois valores (DV-PRI-005); duas páginas. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: histórico da conta: "NOVO PERFIL" e "PERFIL EXCLUÍDO" (TESTECONSULTA) com justificativa, e "VALIDADE INÍCIO" com a mesma data nos dois valores (DV-PRI-005); duas páginas.</em></p>
+<p><strong>Redefinir a senha e desbloquear</strong></p>
+<ol start="14">
+<li>Abra a conta e clique em <strong>RESET DE SENHA</strong>; confirme com <strong>SIM</strong> ("Confirma o reset de senha?"). O sistema gera uma nova senha provisória, válida por 5 dias, zera as tentativas erradas e mostra a senha na mensagem. O usuário será levado à troca de senha ao entrar.</li>
+</ol>
+<figure><a href="../img/principal/ad02-r04-reset-senha.png" target="_blank" rel="noopener"><img src="../img/principal/ad02-r04-reset-senha.png" alt="Figura 4: aviso &quot;Operação realizada com sucesso!&quot; depois do reset, com a linha &quot;Senha:&quot; coberta por asteriscos na imagem de teste." loading="lazy"></a><figcaption>Figura 4: aviso &quot;Operação realizada com sucesso!&quot; depois do reset, com a linha &quot;Senha:&quot; coberta por asteriscos na imagem de teste. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: aviso "Operação realizada com sucesso!" depois do reset, com a linha "Senha:" coberta por asteriscos na imagem de teste.</em></p>
+<ol start="15">
+<li><strong>Atenção:</strong> o reset <strong>não aparece no histórico da conta</strong> (DV-PRI-017).</li>
+</ol>
+<p><strong>Excluir a conta</strong></p>
+<ol start="16">
+<li>Na lista, clique no X vermelho da linha. A tela pede apenas a <strong>Justificativa</strong> e o botão EXCLUIR; confirme com <strong>SIM</strong> ("Confirma a exclusão do item?"). A conta e os perfis do usuário são apagados; o profissional continua cadastrado. Não foi testado (usuario_conta_ed.aspx.cs:44-55 e 483-524).</li>
+</ol>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 14. Abra a conta e clique em <strong>RESET DE SENHA</strong>; confirme com SIM ("Confirma o reset de senha?"). O sistema gera uma nova senha provisória, válida por 5 dias, zera as tentativas erradas e mostra a senha na mensagem. O usuário será levado à troca de senha ao entrar.</li>
-<li><strong>Atenção:</strong> este reset <strong>não aparece no histórico da conta</strong> (DV-PRI-017).</li>
+<li><strong>Incluir conta:</strong> grava login, validades, perfis e uma senha provisória e mostra "Inclusão realizada com sucesso!" com a senha. O usuário passa a poder entrar, dentro do período de validade e com as permissões dos perfis. O histórico registra "INCLUSÃO DA CONTA" (usuario_conta_ed.aspx.cs:413-414).</li>
+<li><strong>Alterar conta:</strong> grava validades, prazo da senha, situação e perfis (a lista de perfis é apagada e gravada de novo) e escreve o histórico. Não troca a senha (dalUsuario.cs:1604-1651).</li>
+<li><strong>Reset de senha:</strong> grava nova senha provisória com validade de 5 dias, zera o contador de erros, marca a troca obrigatória e mostra a senha na tela; não escreve no histórico (dalUsuario.cs:1126-1155; bllUsuario.cs:714-720).</li>
+<li><strong>Excluir conta:</strong> apaga login, senha, validades e todos os vínculos de perfil; o profissional permanece. O evento "EXCLUSÃO DA CONTA" é gravado, mas a tela de histórico da conta não o lista (dalUsuario.cs:1653-1689; bllUsuario.cs:1208-1213).</li>
+<li><strong>Imprimir, Excel e Imprimir Perfils:</strong> abrem relatórios e não gravam nada.</li>
 </ul>
-<h4 id="excluir-a-conta">Excluir a conta</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 15. Na lista, clique no X vermelho da linha. A tela pede apenas a <strong>Justificativa</strong> e o botão EXCLUIR; confirme com SIM ("Confirma a exclusão do item?"). A conta e os perfis do usuário são apagados; o profissional continua cadastrado. Não foi testado (usuario_conta_ed.aspx.cs:44-55 e 483-524).</li>
+<li>"O login do usuário é obrigatório!" e "A Situação é obrigatório!" (campos em branco).</li>
+<li>"O login informando já foi cadastrado: [nome]!" quando outro profissional já usa o login; a busca ignora maiúsculas e minúsculas (CT-PRI-042).</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<figure><a href="../img/principal/ad02-r05-login-repetido.png" target="_blank" rel="noopener"><img src="../img/principal/ad02-r05-login-repetido.png" alt="Figura 5: login repetido (t.cadastro): faixa vermelha &quot;O login informando já foi cadastrado: TESTE CADASTRO!&quot; no quadro Conta." loading="lazy"></a><figcaption>Figura 5: login repetido (t.cadastro): faixa vermelha &quot;O login informando já foi cadastrado: TESTE CADASTRO!&quot; no quadro Conta. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: login repetido (t.cadastro): faixa vermelha "O login informando já foi cadastrado: TESTE CADASTRO!" no quadro Conta.</em></p>
 <ul>
-<li>Não deixa o administrador escolher a senha: a senha é sempre gerada pelo sistema.</li>
-<li>Não envia a senha ao usuário: o administrador a vê na tela (DV-PRI-003).</li>
-<li>Não tem campo para o motivo do reset de senha nem registra quem o fez.</li>
-<li>Não oferece o perfil Administrador (código 1) a quem não é o usuário 1 (dalPerfil.cs:43-46).</li>
+<li>"O perfil do usuário é obrigatório!" quando nenhum perfil está marcado (CT-PRI-043).</li>
 </ul>
+<figure><a href="../img/principal/ad02-r06-sem-perfil.png" target="_blank" rel="noopener"><img src="../img/principal/ad02-r06-sem-perfil.png" alt="Figura 6: formulário de conta nova sem nenhum perfil marcado: faixa vermelha &quot;O perfil do usuário é obrigatório!&quot; no quadro Perfil." loading="lazy"></a><figcaption>Figura 6: formulário de conta nova sem nenhum perfil marcado: faixa vermelha &quot;O perfil do usuário é obrigatório!&quot; no quadro Perfil. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: formulário de conta nova sem nenhum perfil marcado: faixa vermelha "O perfil do usuário é obrigatório!" no quadro Perfil.</em></p>
+<ul>
+<li>Datas: "A data de validade inicial da conta é obrigatória!" / "...é inválida!"; "A data de validade final da conta é inválida!"; data inicial anterior à data atual (inclusão) ou ao cadastro (alteração); data final anterior à data atual ou à inicial.</li>
+<li>"A Justificativa é obrigatória!" ao alterar ou excluir sem justificativa.</li>
+<li>"O CPF informado é inválido!" no filtro da lista, com CPF mal formado.</li>
+<li>Falha de banco: "Erro na inclusão / alteração / Exclusão da Conta do Usuário.", com o link "Detalhe do erro (+)".</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela usa a <strong>função 95 (Conta usuário)</strong> (usuario_conta_lst.aspx.cs:22). Na lista, o lápis depende de <strong>Alterar</strong>; sem ela, quem pode incluir vê a lupa (Consultar). O X de Excluir depende de <strong>Excluir</strong> e nunca aparece na linha do usuário 1. O Log depende de <strong>Consultar log</strong>. Imprimir, Excel e Imprimir Perfils dependem de <strong>Imprimir</strong>. Quem não é o usuário 1 não vê o usuário 1 na lista.</li>
+<li>Ter a tela marcada no perfil já dá a consulta: a ação "Consultar" não existe na árvore de permissões.</li>
+<li>A <strong>lista</strong> bloqueia quem não tem a função: o usuário <code>t.semadmin</code> foi levado à página de acesso negado ao digitar o endereço (CT-PRI-064). O <strong>formulário</strong> e o <strong>relatório</strong> não foram testados pelo endereço; no código, a verificação do formulário está comentada e o relatório não confere permissão (DV-PRI-025, Alta; a confirmar).</li>
+</ul>
+<figure><a href="../img/principal/ad02-r07-acesso-negado.png" target="_blank" rel="noopener"><img src="../img/principal/ad02-r07-acesso-negado.png" alt="Figura 7: página &quot;O usuário não tem permissão para acessar esta página!&quot; mostrada ao abrir a lista da Conta usuário pelo endereço sem permissão (CT-PRI-064)." loading="lazy"></a><figcaption>Figura 7: página &quot;O usuário não tem permissão para acessar esta página!&quot; mostrada ao abrir a lista da Conta usuário pelo endereço sem permissão (CT-PRI-064). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: página "O usuário não tem permissão para acessar esta página!" mostrada ao abrir a lista da Conta usuário pelo endereço sem permissão (CT-PRI-064).</em></p>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>A senha provisória aparece na tela do administrador</strong>, na inclusão e no reset (DV-PRI-003, Alta). Entregue-a ao usuário de forma reservada; não a deixe na tela.</li>
+<li><strong>O reset de senha não deixa registro no histórico</strong> da conta (DV-PRI-017): não há como provar quem desbloqueou o usuário.</li>
+<li><strong>O histórico ganha "VALIDADE INÍCIO"</strong> com a mesma data nos dois valores a cada gravação, mesmo sem mudança (DV-PRI-005, visto na Figura 3).</li>
+<li><strong>O login é sempre gravado em maiúsculas</strong>, sem regra informada ao usuário (DV-PRI-002).</li>
+<li><strong>Telas administrativas abrem pelo endereço</strong> para quem não tem permissão (DV-PRI-025, Alta); para a Conta usuário só a lista foi testada e negou o acesso.</li>
+<li>Pelo código (ainda não testado): se o campo Validade da Senha for apagado ao incluir, a troca obrigatória pode não ser marcada; o perfil Administrador pode sumir ao alterar a conta de outra pessoa por um administrador que não seja o usuário 1; o evento "EXCLUSÃO DA CONTA" não aparece na consulta do histórico. Pontos para validar com a área.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PESQUISAR</td>
+<td>Lista os profissionais com ou sem conta, conforme os filtros</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Imprimir e Excel</td>
+<td>Abrem o relatório da lista (o Excel perde o filtro de Perfil)</td>
+<td>Depois de pesquisar, para quem pode imprimir</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário em branco da conta</td>
+<td>Linha de profissional sem conta</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o formulário da conta</td>
+<td>Linha com conta, para quem pode alterar</td>
+</tr>
+<tr>
+<td>Lupa (Consultar)</td>
+<td>Abre o formulário travado</td>
+<td>Linha com conta, quando o usuário só pode incluir</td>
+</tr>
+<tr>
+<td>X vermelho (Excluir)</td>
+<td>Abre a tela de exclusão (só justificativa)</td>
+<td>Linha com conta, para quem pode excluir; nunca na linha do usuário 1</td>
+</tr>
+<tr>
+<td>Log</td>
+<td>Abre o histórico da conta</td>
+<td>Linha com conta, para quem consulta o log</td>
+</tr>
+<tr>
+<td>Imprimir Perfils</td>
+<td>Abre o relatório do usuário com seus perfis</td>
+<td>Linha, para quem pode imprimir</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Botões do formulário:</strong> SALVAR (pede confirmação e grava, incluindo ou alterando), RESET DE SENHA (conta existente e ativa) e VOLTAR (sai sem gravar).</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -412,7 +583,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

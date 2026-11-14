@@ -44,22 +44,118 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="configuracao-analise.html">Análise</a><a href="configuracao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="configuracao-fluxos.html">Fluxos</a><a href="configuracao-regras-de-negocio.html">Regras de negócio</a><a href="configuracao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-configuracao.html">Erros (3)</a><a class="aba-extra" href="roteiro-de-execucao-administracao-passo-a-passo.html#tela-4-configuracao">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>A tela não está no menu. Peça à TI o endereço. Prepare os logotipos em arquivo de imagem (por exemplo, PNG), com nomes que não coincidam com imagens do sistema.</p>
-<h4 id="trocar-a-cor-e-os-logotipos">Trocar a cor e os logotipos</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>A <strong>Configuração</strong> é a tela de personalização visual do sistema para a empresa: escolhe a <strong>cor do layout</strong> (Cinza, Azul, Verde ou Vermelho) e troca o <strong>logotipo do sistema</strong> (o que aparece na tela de login) e o <strong>logotipo dos relatórios</strong>. Quem usa é o administrador do sistema (TI), na implantação ou quando a empresa muda de identidade visual (leitura da área, a validar). <strong>A tela não está no menu</strong>: só abre digitando o endereço.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. Abra a tela. Ela mostra a <strong>Cor do Layout</strong> (lista), o <strong>Logo Sistema</strong> e o <strong>Logo Relatório</strong>, cada um com uma imagem de 100 por 100 pontos e um botão para escolher arquivo (configuracao_ed.aspx:39-77).</li>
-<li>Passo 2. Escolha a cor. Para trocar um logotipo, clique em "Escolher arquivo" e selecione a imagem. Deixe o campo vazio para manter o logotipo atual.</li>
-<li>Passo 3. Clique em <strong>SALVAR REGISTRO</strong>. A tela recarrega sem mensagem. Saia e entre de novo para ver a cor e o logotipo do login.</li>
-<li><strong>Atenção:</strong> o sistema não confere o tipo do arquivo, não pede justificativa e não guarda histórico (configuracao_ed.aspx.cs:43-95).</li>
+<li>O administrador do sistema (TI), na implantação ou quando a empresa muda de identidade visual (leitura da área, a validar).</li>
+<li>A cor escolhida vale para os módulos que carregam o estilo centralizado do Principal.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 4 do menu Administração, módulo Principal)</p>
 <ul>
-<li>Não confirma a gravação nem avisa o resultado.</li>
-<li>Não permite voltar ao logotipo anterior (o arquivo antigo de mesmo nome é apagado).</li>
-<li>Não registra quem mudou a identidade visual.</li>
+<li>Digitando o endereço; não há menu nem link para ela (a busca no código não achou nenhum link).</li>
+<li>Quando há um registro de configuração do cliente; a tela usa o primeiro registro da tabela.</li>
 </ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li><strong>SALVAR REGISTRO</strong> grava a cor e os caminhos dos logotipos enviados, e volta para a mesma tela. Não pergunta nada antes, não mostra mensagem de sucesso e não escreve histórico.</li>
+<li>Os arquivos de logotipo são gravados na pasta de imagens do servidor com o nome original do arquivo, substituindo um arquivo de mesmo nome.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O endereço da tela (peça à TI)</td>
+<td>Não há item de menu nem link para ela (dml.sql:10510-10511, entrada comentada)</td>
+<td>Com a TI</td>
+</tr>
+<tr>
+<td>Os logotipos em arquivo de imagem (por exemplo PNG), com nomes que não coincidam com imagens do sistema</td>
+<td>O arquivo enviado é gravado com o nome original e substitui um arquivo de mesmo nome</td>
+<td>Com a área de comunicação ou a TI</td>
+</tr>
+<tr>
+<td>Um registro de configuração do cliente</td>
+<td>A tela usa o primeiro registro da tabela de configuração</td>
+<td>Já existe na instalação (ponto para validar com a TI)</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: troca de logotipo com arquivo escolhido, resultado da troca na tela de login e nos relatórios, e a abertura da tela por quem não tem permissão.</em></p>
+<ol>
+<li>Abra a tela pelo endereço informado pela TI. Ela mostra a <strong>Cor do Layout</strong> (lista), o <strong>Logo Sistema</strong> e o <strong>Logo Relatório</strong>, cada um com uma imagem de 100 por 100 pontos e um botão para escolher arquivo (configuracao_ed.aspx:39-77).</li>
+</ol>
+<figure><a href="../img/principal/ad04-r01-tela.png" target="_blank" rel="noopener"><img src="../img/principal/ad04-r01-tela.png" alt="Figura 1: a tela Configuração ao abrir: Cor do Layout &quot;Cinza&quot;, Logo Sistema e Logo Relatório (imagem &quot;SUA LOGO AQUI&quot;), botões de escolher arquivo e o botão SALVAR REGISTRO." loading="lazy"></a><figcaption>Figura 1: a tela Configuração ao abrir: Cor do Layout &quot;Cinza&quot;, Logo Sistema e Logo Relatório (imagem &quot;SUA LOGO AQUI&quot;), botões de escolher arquivo e o botão SALVAR REGISTRO. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: a tela Configuração ao abrir: Cor do Layout "Cinza", Logo Sistema e Logo Relatório (imagem "SUA LOGO AQUI"), botões de escolher arquivo e o botão SALVAR REGISTRO.</em></p>
+<ol start="2">
+<li>Escolha a cor. Para trocar um logotipo, clique em "Escolher arquivo" e selecione a imagem. Deixe o campo vazio para manter o logotipo atual.</li>
+<li>Clique em <strong>SALVAR REGISTRO</strong>. A tela recarrega <strong>sem nenhuma mensagem</strong>. Saia e entre de novo para ver a cor e o logotipo do login.</li>
+</ol>
+<figure><a href="../img/principal/ad04-r02-salvo-azul.png" target="_blank" rel="noopener"><img src="../img/principal/ad04-r02-salvo-azul.png" alt="Figura 2: a tela depois de salvar com a cor &quot;Azul&quot;: recarregou sem pedir confirmação nem mostrar mensagem de sucesso." loading="lazy"></a><figcaption>Figura 2: a tela depois de salvar com a cor &quot;Azul&quot;: recarregou sem pedir confirmação nem mostrar mensagem de sucesso. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: a tela depois de salvar com a cor "Azul": recarregou sem pedir confirmação nem mostrar mensagem de sucesso.</em></p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li><strong>SALVAR REGISTRO</strong> grava a cor e os caminhos dos logotipos enviados e volta para a mesma tela. Não pergunta nada antes, não mostra mensagem de sucesso e não escreve histórico (configuracao_ed.aspx.cs:43-95).</li>
+<li>Os arquivos de logotipo são gravados na pasta de imagens do servidor com o nome original do arquivo, substituindo um arquivo de mesmo nome (configuracao_ed.aspx.cs:47-60). O arquivo antigo é apagado e não há como voltar ao logotipo anterior.</li>
+<li>A cor escolhida vale para os módulos que carregam o estilo centralizado do Principal.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li><strong>Nada.</strong> A tela não confere o tipo nem o tamanho do arquivo, não pede justificativa e não escreve nenhuma mensagem própria: não há confirmação, aviso de sucesso nem tratamento de erro (configuracao_ed.aspx.cs:18-96).</li>
+<li>Qualquer falha (arquivo em uso, pasta sem permissão, registro de configuração ausente) termina na página de erro técnica do ASP.NET (SEG-PRI-10, DV-PRI-026).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A função usada pelo código é <code>CONFIGURACAO</code>, que <strong>não existe na árvore de permissões</strong> (a entrada de menu está comentada); por isso nenhum perfil pode ser autorizado ou barrado por esta tela (configuracao_ed.aspx.cs:20).</li>
+<li>O código não confere permissão nem ao abrir nem ao salvar, e o botão SALVAR REGISTRO aparece sempre (configuracao_ed.aspx:81). O usuário <code>t.semadmin</code>, que só tinha a tela Centro de custo, <strong>abriu a tela</strong> digitando o endereço (CT-PRI-065; DV-PRI-025, Alta). Não se testou se ele consegue salvar (a confirmar).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Qualquer usuário que souber o endereço abre a tela</strong> (DV-PRI-025, Alta) e, pelo código, pode salvar.</li>
+<li><strong>Mudança de identidade visual sem confirmação, justificativa nem histórico</strong> (DV-PRI-034, visto na Figura 2): ninguém registra quem mudou os logotipos dos relatórios oficiais.</li>
+<li>Pelo código (ainda não testado): o logotipo novo pode não aparecer em todos os relatórios, ou só depois de reiniciar o sistema, porque duas colunas diferentes são lidas; o envio aceita qualquer tipo de arquivo e substitui imagens do sistema de mesmo nome. <strong>Não teste com arquivos perigosos</strong>; basta um texto simples. Ponto para validar com a TI.</li>
+</ul>
+<h4 id="botoes-da-tela">Botões da tela</h4>
+<p>A tela não tem lista. Seus controles são:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Controle</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cor do Layout (lista)</td>
+<td>Escolhe Cinza, Azul, Verde ou Vermelho</td>
+</tr>
+<tr>
+<td>Escolher arquivo (Logo Sistema)</td>
+<td>Seleciona a imagem do logotipo da tela de login</td>
+</tr>
+<tr>
+<td>Escolher arquivo (Logo Relatório)</td>
+<td>Seleciona a imagem do logotipo dos relatórios</td>
+</tr>
+<tr>
+<td>SALVAR REGISTRO</td>
+<td>Grava a cor e os logotipos enviados, sem confirmação</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -126,7 +222,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

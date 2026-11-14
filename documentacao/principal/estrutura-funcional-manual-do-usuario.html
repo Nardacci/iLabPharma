@@ -44,40 +44,202 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="estrutura-funcional-analise.html">Análise</a><a href="estrutura-funcional-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="estrutura-funcional-fluxos.html">Fluxos</a><a href="estrutura-funcional-regras-de-negocio.html">Regras de negócio</a><a href="estrutura-funcional-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-estrutura-funcional.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-9-estrutura-funcional">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra o <strong>organograma da empresa</strong> como uma árvore: diretoria, divisão, seção e subníveis (por exemplo, Produção e Embalagem sob uma Diretoria). Cada nível tem <strong>descrição</strong>, <strong>sigla</strong> (até 5 letras), <strong>responsável</strong> (um usuário do sistema) e <strong>situação</strong>. A árvore é a base para: dizer a que setor cada usuário pertence (lotação), a que setores cada perfil se liga e <strong>quem é o dono</strong> de cada ambiente, equipamento, instrumento, utilidade e utensílio (SIS_USUARIO.sql:50 e 80; SIS_PERFIL_LOCAL.sql:1-12; TBL_AMBIENTE.sql:5 e 16; TBL_UTILIDADE.sql:13 e 25). O código mostra três telas no mesmo cadastro:</p>
+<ol>
+<li><strong>Árvore</strong> (lista) com caixas de marcação; o usuário marca <strong>um</strong> nível e usa <strong>Adicionar</strong> (filho), <strong>Editar</strong>, <strong>Excluir</strong>, <strong>Imprimir</strong> e <strong>Ver Log</strong> (local_lst.aspx:40-54; local_lst.aspx.cs:73-137).</li>
+<li><strong>Formulário</strong> de um nível: descrição, responsável, sigla e situação (local_ed.aspx:53-89).</li>
+<li><strong>Relatório</strong> da árvore inteira (local_rel.aspx.cs:12-70).</li>
+</ol>
+<p>O cadastro mostra quem é o responsável de cada nível, mas <strong>não guarda cargo, qualificação nem substituto</strong>; a lotação por pessoa está no cadastro de Profissional (Administração).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém o organograma e os cadastros de apoio: Recursos Humanos, qualidade ou diretoria (leitura da área, a validar).</li>
+<li>Quem consulta a árvore e o histórico.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 9 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu superior <strong>Cadastros › Estrutura Funcional</strong>, que abre a árvore.</li>
+<li><strong>Adicionar</strong> exige um nível marcado (o pai); com a árvore vazia, cria a primeira raiz. <strong>Editar</strong> e <strong>Excluir</strong> exigem um nível marcado.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere a sigla, grava o nível e o responsável e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à árvore.</li>
+<li>O nível gravado passa a ser oferecido como proprietário nos formulários de Ambiente, Equipamento, Instrumento, Utilidade e Utensílio e na lotação do Profissional (ver "Dados").</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <ul>
 <li>Entre no módulo Principal e abra <strong>Cadastros › Estrutura Funcional</strong>.</li>
 <li>Quem não tem a função desta tela (código 12) é levado à página de acesso negado ao abrir a árvore (local_lst.aspx.cs:21; ClassePaiLst.cs:65). Os botões Adicionar, Editar, Excluir, Imprimir e Ver Log só aparecem para quem tem a ação correspondente (local_lst.aspx.cs:29-33).</li>
 <li>Antes, tenha o <strong>responsável</strong> como usuário ativo do sistema (local_ed.aspx.cs:41-43).</li>
 </ul>
-<h4 id="ver-a-arvore">Ver a árvore</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: o aviso de sucesso, a inativação (nível em vermelho), a árvore depois de excluir, a recusa de exclusão de nível com filhos ou usuários, o relatório da árvore.</em></p>
+<p><strong>Ver a árvore</strong></p>
 <ol>
 <li>A árvore abre sozinha, com todos os níveis expandidos. Os níveis <strong>inativos</strong> aparecem em <strong>vermelho</strong> (local_lst.aspx.cs:253-254).</li>
+</ol>
+<figure><a href="../img/principal/ca09-r01-arvore.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r01-arvore.png" alt="Figura 1: A tela Estrutura Funcional: a árvore com os níveis expandidos e os botões ADICIONAR, EDITAR, EXCLUIR, IMPRIMIR e VER LOG (não há filtros nem grade)." loading="lazy"></a><figcaption>Figura 1: A tela Estrutura Funcional: a árvore com os níveis expandidos e os botões ADICIONAR, EDITAR, EXCLUIR, IMPRIMIR e VER LOG (não há filtros nem grade). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: A tela Estrutura Funcional: a árvore com os níveis expandidos e os botões ADICIONAR, EDITAR, EXCLUIR, IMPRIMIR e VER LOG (não há filtros nem grade).</em></p>
+<ol start="2">
 <li>Marque a caixa do nível que quer usar. <strong>Marque um só</strong>: com mais de um marcado, Editar, Excluir e Ver Log recebem os códigos juntos e falham (local_lst.aspx.cs:230-245).</li>
 </ol>
-<h4 id="adicionar-um-nivel">Adicionar um nível</h4>
+<p><strong>Adicionar um nível</strong></p>
 <ol>
 <li>Marque o nível que será o <strong>pai</strong> e clique em <strong>Adicionar</strong>. Sem nível marcado aparece "Selecione um item.", exceto quando a árvore está vazia (local_lst.aspx.cs:73-96).</li>
 <li>Preencha <strong>Descrição</strong>, <strong>Responsável</strong> e <strong>Sigla</strong> (até 5 caracteres) e deixe <strong>Ativo</strong> em Sim (local_ed.aspx:53-89).</li>
+</ol>
+<figure><a href="../img/principal/ca09-r02-nova.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r02-nova.png" alt="Figura 2: O formulário &quot;Novo&quot; para adicionar um nível sob DIRETORIA: Descrição, Responsável, Sigla e Ativo = Sim." loading="lazy"></a><figcaption>Figura 2: O formulário &quot;Novo&quot; para adicionar um nível sob DIRETORIA: Descrição, Responsável, Sigla e Ativo = Sim. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: O formulário "Novo" para adicionar um nível sob DIRETORIA: Descrição, Responsável, Sigla e Ativo = Sim.</em></p>
+<figure><a href="../img/principal/ca09-r03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r03-form-preenchido.png" alt="Figura 3: O formulário &quot;Novo&quot; preenchido (Descrição, Responsável e Sigla), antes de salvar." loading="lazy"></a><figcaption>Figura 3: O formulário &quot;Novo&quot; preenchido (Descrição, Responsável e Sigla), antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O formulário "Novo" preenchido (Descrição, Responsável e Sigla), antes de salvar.</em></p>
+<ol start="3">
 <li>Clique em <strong>SALVAR</strong> e responda <strong>SIM</strong>. Se a sigla já existir em outro nível ativo, aparece "Já existe outra estrutura com a sigla informada!" (local_ed.aspx.cs:136-147).</li>
 </ol>
-<h4 id="editar-um-nivel">Editar um nível</h4>
+<p><strong>Editar um nível</strong></p>
 <ol>
 <li>Marque o nível e clique em <strong>Editar</strong>. O pai não aparece e a <strong>sigla fica travada</strong>; dá para mudar descrição, responsável e situação (local_ed.aspx.cs:51-67).</li>
+</ol>
+<figure><a href="../img/principal/ca09-r04-editar.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r04-editar.png" alt="Figura 4: O formulário &quot;Editar&quot; do nível: a Sigla aparece travada (cinza); Descrição, Responsável e Ativo podem ser mudados; não há campo Justificativa." loading="lazy"></a><figcaption>Figura 4: O formulário &quot;Editar&quot; do nível: a Sigla aparece travada (cinza); Descrição, Responsável e Ativo podem ser mudados; não há campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: O formulário "Editar" do nível: a Sigla aparece travada (cinza); Descrição, Responsável e Ativo podem ser mudados; não há campo Justificativa.</em></p>
+<ol start="2">
 <li><strong>A tela não pede justificativa</strong> para alterar nem para inativar (local_ed.aspx.cs:79-95).</li>
 </ol>
-<h4 id="excluir-um-nivel">Excluir um nível</h4>
+<p><strong>Excluir um nível</strong></p>
 <ol>
 <li>Marque o nível e clique em <strong>Excluir</strong>; o sistema pergunta só "Confirma a exclusão do item?", sem justificativa (local_lst.aspx.cs:115-137).</li>
+</ol>
+<figure><a href="../img/principal/ca09-r05-excluir-pergunta.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r05-excluir-pergunta.png" alt="Figura 5: Ao clicar em EXCLUIR com um nível marcado, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece sobre a árvore, sem pedir justificativa." loading="lazy"></a><figcaption>Figura 5: Ao clicar em EXCLUIR com um nível marcado, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece sobre a árvore, sem pedir justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: Ao clicar em EXCLUIR com um nível marcado, a pergunta "Confirma a exclusão do item?" (SIM e NÃO) aparece sobre a árvore, sem pedir justificativa.</em></p>
+<ol start="2">
 <li>Se o nível tem níveis filhos ou usuários, ambientes, equipamentos, instrumentos ou utilidades ligados, a exclusão é recusada e aparece "Erro ao efetuar a exclusão!"; <strong>o motivo só aparece ao clicar em "Detalhe do erro (+)"</strong> (local_lst.aspx.cs:156-170; dalLocal.cs:421-491).</li>
 </ol>
-<h4 id="ver-o-historico-imprimir">Ver o histórico, imprimir</h4>
+<p><strong>Ver o histórico, imprimir</strong></p>
 <ul>
 <li><strong>Ver Log</strong> abre o histórico do nível marcado (local_lst.aspx.cs:308-330).</li>
+</ul>
+<figure><a href="../img/principal/ca09-r06-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r06-historico.png" alt="Figura 6: A janela &quot;Log Alteração - Estrutura Funcional&quot;: a mudança de ESTRUTURA FUNCIONAL (valor antigo e novo) e a linha &quot;INCLUSÃO DE ESTRUTURA FILHA&quot;." loading="lazy"></a><figcaption>Figura 6: A janela &quot;Log Alteração - Estrutura Funcional&quot;: a mudança de ESTRUTURA FUNCIONAL (valor antigo e novo) e a linha &quot;INCLUSÃO DE ESTRUTURA FILHA&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: A janela "Log Alteração - Estrutura Funcional": a mudança de ESTRUTURA FUNCIONAL (valor antigo e novo) e a linha "INCLUSÃO DE ESTRUTURA FILHA".</em></p>
+<ul>
 <li><strong>Imprimir</strong> abre o relatório da árvore inteira, sem filtro (local_lst.aspx.cs:302-306).</li>
 </ul>
 <hr />
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere a sigla, grava o nível e o responsável e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à árvore (local_ed.aspx.cs:79-95, 124-194 e 118-122).</li>
+<li>O nível gravado passa a ser oferecido como proprietário nos formulários de Ambiente, Equipamento, Instrumento, Utilidade e Utensílio e na lotação do Profissional (ver "Dados").</li>
+</ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Se o nível tem níveis filhos ou usuários, ambientes, equipamentos, instrumentos ou utilidades ligados, a exclusão é recusada e aparece "Erro ao efetuar a exclusão!"; <strong>o motivo só aparece ao clicar em "Detalhe do erro (+)"</strong>.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"Preencha o Local" / "Preencha o Responsável" / "Preencha a sigla" / "A Situação é obrigatório!": Campo em branco (local_ed.aspx:57, 66, 75 e 83)</li>
+<li>"Já existe outra estrutura com a sigla informada!": Sigla igual à de outro nível ativo (local_ed.aspx.cs:145)</li>
+<li>"Erro ao efetuar a alteração!" com o texto entre colchetes: Falha ao gravar a alteração (local_ed.aspx.cs:179-182)</li>
+<li>"Erro na inclusão da Estrutura Funcional.": Falha inesperada na inclusão (bllLocal.cs:109)</li>
+<li>"Selecione um item.": Adicionar (com árvore cheia), Editar, Excluir ou Ver Log sem nível marcado (local_lst.aspx.cs:86, 109, 133 e 326)</li>
+<li>"Estrutura possui profissional associado!": Nível com usuário (profissional) na divisão (local_lst.aspx.cs:149-152)</li>
+<li>"Erro ao efetuar a exclusão!" (motivo no "Detalhe do erro (+)"): Nível com filhas, usuários, ambientes, equipamentos, instrumentos ou utilidades ligados (local_lst.aspx.cs:164-169)</li>
+<li>"Existem Estruturas Funcionais filhas desta." / "Existem Usuários vinculados a esta Estrutura Funcional." / "Existem Ambientes vinculados a esta Estrutura Funcional." / "Existem Equipamentos vinculados..." / "Existem Instrumentos vinculados..." / "Existe Cadastro de Utilidades vinculados...": Motivos da recusa de exclusão, no detalhe (dalLocal.cs:432, 443, 454, 465, 476 e 487)</li>
+</ul>
+<figure><a href="../img/principal/ca09-r07-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r07-erro-obrigatorios.png" alt="Figura 7: Salvar com tudo em branco: caixa vermelha com &quot;Preencha o Local&quot;, &quot;Preencha o Responsável&quot; e &quot;Preencha a sigla&quot;." loading="lazy"></a><figcaption>Figura 7: Salvar com tudo em branco: caixa vermelha com &quot;Preencha o Local&quot;, &quot;Preencha o Responsável&quot; e &quot;Preencha a sigla&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: Salvar com tudo em branco: caixa vermelha com "Preencha o Local", "Preencha o Responsável" e "Preencha a sigla".</em></p>
+<figure><a href="../img/principal/ca09-r08-erro-sigla-repetida.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r08-erro-sigla-repetida.png" alt="Figura 8: Salvar com uma sigla já usada: mensagem vermelha &quot;Já existe outra estrutura com a sigla informada!&quot;." loading="lazy"></a><figcaption>Figura 8: Salvar com uma sigla já usada: mensagem vermelha &quot;Já existe outra estrutura com a sigla informada!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: Salvar com uma sigla já usada: mensagem vermelha "Já existe outra estrutura com a sigla informada!".</em></p>
+<figure><a href="../img/principal/ca09-r09-erro-sem-selecao.png" target="_blank" rel="noopener"><img src="../img/principal/ca09-r09-erro-sem-selecao.png" alt="Figura 9: Clicar em um botão sem marcar nível: mensagem vermelha &quot;Selecione um item.&quot;." loading="lazy"></a><figcaption>Figura 9: Clicar em um botão sem marcar nível: mensagem vermelha &quot;Selecione um item.&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 9: Clicar em um botão sem marcar nível: mensagem vermelha "Selecione um item.".</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A <strong>árvore</strong> usa a função de tela "12" (local_lst.aspx.cs:21). A base das listas confere a função logo no início e leva quem não a tem à página de acesso negado (ClassePaiLst.cs:65; BaseController.cs:26-31). Os botões Adicionar, Editar, Excluir, Imprimir e Ver Log são mostrados ou escondidos conforme as ações do perfil (local_lst.aspx.cs:29-33).</li>
+<li>O <strong>formulário</strong> usa a mesma função (local_ed.aspx.cs:23). A base do formulário só calcula as ações e <strong>não bloqueia a entrada</strong> (ClassePaiEd.cs:71-156), e esta página <strong>não esconde o SALVAR por permissão</strong>: o botão aparece para qualquer um que abra o endereço com os parâmetros <code>local</code>, <code>pai</code> e <code>acao</code> (local_ed.aspx.cs:21-49 e 79-95). A chamada de bloqueio do próprio arquivo está <strong>comentada</strong> (local_ed.aspx.cs:27). Mesmo padrão do DV-PRI-025.</li>
+<li>O <strong>relatório</strong> (<code>local_rel</code>) não tem conferência própria de permissão (local_rel.aspx.cs:12-70).</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum. A tela não foi testada como tela e nenhum DV-PRI registrado tem este cadastro como alvo (<code>defeitos/defeitos-completo.json</code>, campo <code>tela</code>). O DV-PRI-011 cita esta tela como exemplo do próprio sistema que "monta a mensagem dizendo o que impede" (<code>defeitos-completo.json</code>, DV-PRI-011, código dalLocal.cs:421-450); a conferência da mensagem na tela fica para o teste.</li>
+<li><strong>DV-PRI-009 (Alta)</strong>, visto em outro cadastro (Excluir Ambiente e Equipamento sem justificativa). Nesta tela: <strong>Mesmo comportamento</strong>: só a confirmação "Confirma a exclusão do item?" (local_lst.aspx.cs:115-137). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-013 (Média)</strong>, visto em outro cadastro (Alterar e inativar Pessoa Jurídica sem justificativa). Nesta tela: <strong>Mesmo comportamento</strong>: nenhum campo de justificativa na alteração nem na inativação (local_ed.aspx.cs:79-95). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-011 (Média)</strong>, visto em outro cadastro (Recusa de exclusão com mensagem genérica). Nesta tela: O motivo existe, mas só no "Detalhe do erro (+)" (local_lst.aspx.cs:164-169). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-014 (Alta)</strong>, visto em outro cadastro (Histórico de excluído não pode ser consultado). Nesta tela: O histórico da exclusão fica no código do pai e o nível some da árvore (dalLogAlteracaoLocal.cs:48-60). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-025 (Alta)</strong>, visto em outro cadastro (Telas de edição abrem pelo endereço sem permissão). Nesta tela: O formulário não bloqueia a entrada (ver segurança). Situação aqui: A confirmar no teste.</li>
+<li>(a confirmar no teste) <strong>Alterar, inativar e excluir sem justificativa</strong> (RN-PRI-070; DV-PRI-009 e DV-PRI-013 nos outros cadastros). A justificativa também é gravada vazia no histórico.</li>
+<li>(a confirmar no teste) <strong>O histórico só registra a troca do nome.</strong> Mudar o responsável, a sigla ou inativar um nível não deixa rastro.</li>
+<li>(a confirmar no teste) <strong>A exclusão não confere utensílios, perfis nem responsáveis ligados</strong>.</li>
+<li>(a confirmar no teste) <strong>Marcar mais de um nível quebra Editar, Excluir e Ver Log</strong>: o código junta os códigos com hífen e converte em número. Erro técnico (DV-PRI-026).</li>
+<li>(a confirmar no teste) <strong>A conferência de exclusão do profissional olha só a divisão</strong>, enquanto a conferência geral olha seção e divisão: <code>SetorPossuiUsuario</code> testa só <code>DIVISAO</code>, e <code>PossoExcluir</code> testa <code>SECAO</code> ou <code>DIVISAO</code>.</li>
+<li>(a confirmar no teste) <strong>A conferência de exclusão olha os itens já excluídos</strong>: as consultas não filtram LIXEIRA; um ambiente ou equipamento que está na lixeira ainda impede a exclusão do nível (inferência).</li>
+<li>(a confirmar no teste) <strong>Sigla só é única entre ativos</strong>: depois de inativar um nível, outro pode usar a sigla; reativar o antigo cria duas siglas iguais.</li>
+<li>(a confirmar no teste) <strong>A coluna SIGLA não está na definição da tabela do projeto de banco</strong>, mas é gravada e lida pelo código. Ponto para validar com o DBA.</li>
+<li>(a confirmar no teste) <strong>A procedure <code>pListaLocais</code> do projeto de banco não aceita situação vazia</strong>, mas o código a chama com NULL para montar a árvore.</li>
+<li>(a confirmar no teste) <strong>O código também aponta a tabela <code>TBL_EQUIPAMENTO_PRINCIPAL</code></strong>, enquanto o projeto de banco define <code>TBL_EQUIPAMENTO</code>.</li>
+<li>(a confirmar no teste) <strong>Tela repetida no Estoque</strong> (função 104), com as mesmas regras: mudanças feitas em uma das duas valem para a outra (mesma tabela), mas as permissões são conferidas por funções diferentes.</li>
+<li>(a confirmar no teste) <strong>Existe uma exclusão física sem uso</strong>: <code>excluiLocal(int IdLocal)</code> faz DELETE definitivo, mas nenhuma tela do Principal a chama.</li>
+<li>(a confirmar no teste) <strong>Mensagem com concordância errada</strong>: "A Situação é obrigatório!".</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adicionar</td>
+<td>Abre o formulário de um nível filho do marcado</td>
+<td>Para quem tem Incluir</td>
+</tr>
+<tr>
+<td>Editar</td>
+<td>Abre o nível marcado</td>
+<td>Para quem tem Alterar</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Pede a confirmação e exclui o nível marcado</td>
+<td>Para quem tem Excluir</td>
+</tr>
+<tr>
+<td>Imprimir</td>
+<td>Abre o relatório da árvore completa (não há Excel)</td>
+<td>Para quem tem Imprimir/Excel</td>
+</tr>
+<tr>
+<td>Ver Log</td>
+<td>Abre o histórico do nível marcado</td>
+<td>Para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>No formulário</td>
+</tr>
+<tr>
+<td>VOLTAR</td>
+<td>Volta à árvore sem gravar</td>
+<td>No formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também confere; "Só na tela" quando só o navegador confere.</p>
 <h4 id="arvore-lista">Árvore (lista)</h4>
@@ -294,7 +456,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

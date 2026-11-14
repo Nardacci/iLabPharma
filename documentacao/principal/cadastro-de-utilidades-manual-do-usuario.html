@@ -44,43 +44,212 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="cadastro-de-utilidades-analise.html">Análise</a><a href="cadastro-de-utilidades-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="cadastro-de-utilidades-fluxos.html">Fluxos</a><a href="cadastro-de-utilidades-regras-de-negocio.html">Regras de negócio</a><a href="cadastro-de-utilidades-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-utilidades.html">Erros (1)</a><a class="aba-extra" href="roteiro-de-execucao-cadastros-e-tabelas-de-apoio-passo-a-passo.html#tela-13-utilidades">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Cadastra as utilidades da fábrica (o documento do modelo de dados cita ar comprimido, vapor e água como exemplos; o código não fixa tipos, a descrição é livre), com tag, patrimônio, número de série, fabricante, fornecedor e datas de operação. O código mostra duas telas no mesmo cadastro:</p>
+<ol>
+<li><strong>Lista</strong> com pesquisa por código, descrição e situação, ordenação, impressão e Excel (utilidade_lst.aspx:35-59; utilidade_lst.aspx.cs:33-125).</li>
+<li><strong>Formulário</strong> para incluir, alterar e consultar um registro, com: situação, descrição, tag, patrimônio, marca/modelo, número de série, data de fabricação, fabricante, datas de início e fim de operação, fornecedor, a estrutura funcional proprietária (uma árvore) e a justificativa da alteração (utilidade_ed.aspx:51-185).</li>
+</ol>
+<p>Uma utilidade ativa pode ser ligada a um ambiente no cadastro de Ambientes (bloco "Utilidades do Ambiente", tabela TBL_UTILIDADE_AMBIENTE) e é escolhida na Produção em telas de qualificação e de manutenção (ver "Dados"). <strong>Não há campo de tipo de utilidade, de qualificação, de calibração nem de periodicidade de manutenção</strong>: o cadastro é só de identificação.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
+<ul>
+<li>Quem mantém os cadastros da fábrica: engenharia, manutenção ou qualidade (leitura da área, a validar).</li>
+<li>Quem consulta a lista e o histórico.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
+</ul>
+<p><strong>Em que etapa do processo entra</strong> (tela 13 do menu Cadastros, módulo Principal)</p>
+<ul>
+<li>Pelo menu superior <strong>Cadastros › Cadastro de Utilidades</strong>, que abre a lista.</li>
+<li>Na lista, <strong>Pesquisar</strong> traz os registros (a lista não carrega sozinha); <strong>Incluir</strong> abre o formulário vazio e o lápis abre um registro existente.</li>
+</ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere os obrigatórios, grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista.</li>
+<li>A utilidade ativa passa a ser oferecida no bloco "Utilidades do Ambiente" do cadastro de Ambientes e, na Produção, nas telas de qualificação e de manutenção preventiva e corretiva e no lote padrão. O serviço <code>api/Utilidade/ListUtilidadeAtivos</code> entrega a lista a outros módulos.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
 <ul>
 <li>Entre no módulo Principal e abra <strong>Cadastros › Cadastro de Utilidades</strong>.</li>
 <li>Quem não tem a função desta tela (código "91") é levado à página de acesso negado ao abrir a lista (utilidade_lst.aspx.cs:17; ClassePaiLst.cs:65). Incluir, Editar, Excluir, Imprimir e Ver Log só aparecem para quem tem a ação correspondente (ClassePaiLst.cs:111-255).</li>
 <li>Antes de cadastrar, confira se já existem o <strong>fabricante</strong> e o <strong>fornecedor</strong> no cadastro de Pessoa jurídica (tipos Fabricante e Fornecedor) e se a <strong>estrutura funcional</strong> existe (utilidade_ed.aspx.cs:101-125 e 180-213).</li>
 </ul>
-<h4 id="pesquisar">Pesquisar</h4>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: o aviso de sucesso, a inativação, a recusa de exclusão com registro ligado, o número de série repetido, o relatório e o Excel.</em></p>
+<p><strong>Pesquisar</strong></p>
 <ol>
 <li>Abra a lista. Ela vem vazia. Preencha, se quiser, <strong>Código</strong> (só números), <strong>Descrição</strong> e <strong>Ativo</strong> (TODAS, SIM, NÃO) e clique em <strong>Pesquisar</strong> (utilidade_lst.aspx:35-50).</li>
 <li>A grade mostra Código, Descrição e Ativo. A Tag não aparece na grade (utilidade_lst.aspx:85-95). Clique no título da coluna para ordenar.</li>
+</ol>
+<figure><a href="../img/principal/ca13-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r01-lista.png" alt="Figura 1: A lista de Cadastro de Utilidades depois de Pesquisar: filtros Código, Descrição e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade (Código, Descrição e Ativo; a Tag não aparece) com os ícones Editar, Excluir e LOG." loading="lazy"></a><figcaption>Figura 1: A lista de Cadastro de Utilidades depois de Pesquisar: filtros Código, Descrição e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade (Código, Descrição e Ativo; a Tag não aparece) com os ícones Editar, Excluir e LOG. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: A lista de Cadastro de Utilidades depois de Pesquisar: filtros Código, Descrição e Ativo, botões LIMPAR, PESQUISAR, IMPRIMIR, Excel e Incluir, e a grade (Código, Descrição e Ativo; a Tag não aparece) com os ícones Editar, Excluir e LOG.</em></p>
+<ol start="3">
 <li><strong>Limpar</strong> esvazia filtros e grade (utilidade_lst.aspx.cs:41-48).</li>
 </ol>
-<h4 id="incluir">Incluir</h4>
+<p><strong>Incluir</strong></p>
 <ol>
 <li>Na lista, clique em <strong>Incluir</strong>.</li>
+</ol>
+<figure><a href="../img/principal/ca13-r02-nova.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r02-nova.png" alt="Figura 2: O formulário de inclusão aberto, vazio, com o quadro de dados e o quadro Direção/Sub-Direção/Seção Proprietária." loading="lazy"></a><figcaption>Figura 2: O formulário de inclusão aberto, vazio, com o quadro de dados e o quadro Direção/Sub-Direção/Seção Proprietária. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: O formulário de inclusão aberto, vazio, com o quadro de dados e o quadro Direção/Sub-Direção/Seção Proprietária.</em></p>
+<ol start="2">
 <li>Preencha <strong>Descrição</strong> e <strong>Fabricante</strong> (obrigatórios) e, se quiser, Tag, Patrimônio, Marca/Modelo, Número de Série, Data de Fabricação, datas de operação e Fornecedor. Em "Direção/Sub-Direção/Seção Proprietária" marque <strong>uma</strong> estrutura (utilidade_ed.aspx:63-163).</li>
+</ol>
+<figure><a href="../img/principal/ca13-r03-form-preenchido.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r03-form-preenchido.png" alt="Figura 3: O formulário preenchido (Descrição, Tag, Marca/Modelo, Número de Série, Fabricante e Fornecedor), antes de salvar." loading="lazy"></a><figcaption>Figura 3: O formulário preenchido (Descrição, Tag, Marca/Modelo, Número de Série, Fabricante e Fornecedor), antes de salvar. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: O formulário preenchido (Descrição, Tag, Marca/Modelo, Número de Série, Fabricante e Fornecedor), antes de salvar.</em></p>
+<ol start="3">
 <li>Clique em <strong>SALVAR</strong> e responda <strong>SIM</strong>. Os campos obrigatórios só são cobrados depois do SIM (utilidade_ed.aspx.cs:51-79).</li>
 <li>Se a Tag ou o Número de Série já existir em outro registro, aparece "Tag já existe!" ou "Número de série já existe!" (bllUtilidade.cs:66 e 79).</li>
 </ol>
-<h4 id="alterar-ou-inativar">Alterar ou inativar</h4>
+<figure><a href="../img/principal/ca13-r04-tag-repetida.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r04-tag-repetida.png" alt="Figura 4: Salvar com uma Tag já existente: mensagem vermelha &quot;Tag já existe!&quot;." loading="lazy"></a><figcaption>Figura 4: Salvar com uma Tag já existente: mensagem vermelha &quot;Tag já existe!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: Salvar com uma Tag já existente: mensagem vermelha "Tag já existe!".</em></p>
+<p><strong>Alterar ou inativar</strong></p>
 <ol>
 <li>Na lista, clique no lápis, mude o que precisar e escreva a <strong>Justificativa</strong> (obrigatória só na alteração) (utilidade_ed.aspx.cs:151-162).</li>
 <li>Para inativar, mude <strong>Ativo</strong> para Não. Um registro inativo abre travado, com só Ativo e Justificativa liberados (utilidade_ed.aspx.cs:153-161).</li>
 <li>O histórico guarda o valor antigo e o novo de cada campo alterado, menos a data de fabricação (dalLogAlteracaoUtilidade.cs:26-186).</li>
 </ol>
-<h4 id="excluir">Excluir</h4>
+<figure><a href="../img/principal/ca13-r05-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r05-historico.png" alt="Figura 5: A janela &quot;Log Alteração - Cadastro de Utilidades&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;." loading="lazy"></a><figcaption>Figura 5: A janela &quot;Log Alteração - Cadastro de Utilidades&quot;: a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha &quot;INCLUSÃO DO REGISTRO&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: A janela "Log Alteração - Cadastro de Utilidades": a mudança de DESCRIÇÃO (valor antigo e novo) com a justificativa e a linha "INCLUSÃO DO REGISTRO".</em></p>
+<p><strong>Excluir</strong></p>
 <ol>
 <li>Na lista, clique no ícone de exclusão. <strong>O sistema pede só a confirmação "Confirma a exclusão do item?"</strong>, sem campo de justificativa (utilidade_lst.aspx.cs:133-137 e 353-363).</li>
+</ol>
+<figure><a href="../img/principal/ca13-r06-excluir-pergunta.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r06-excluir-pergunta.png" alt="Figura 6: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa." loading="lazy"></a><figcaption>Figura 6: Ao clicar em excluir, a pergunta &quot;Confirma a exclusão do item?&quot; (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: Ao clicar em excluir, a pergunta "Confirma a exclusão do item?" (SIM e NÃO) aparece direto sobre a lista, sem pedir justificativa.</em></p>
+<ol start="2">
 <li>Se o registro está ligado a outro cadastro, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas." e sem dizer qual (bllUtilidade.cs:156).</li>
 </ol>
-<h4 id="ver-o-historico-imprimir-e-exportar">Ver o histórico, imprimir e exportar</h4>
+<p><strong>Ver o histórico, imprimir e exportar</strong></p>
 <ul>
 <li>O ícone <strong>LOG</strong> abre o histórico do registro (utilidade_lst.aspx.cs:144-155).</li>
 <li><strong>Imprimir</strong> e o Excel respeitam os filtros e aparecem depois de uma pesquisa com resultado, para quem tem Imprimir/Excel (utilidade_lst.aspx.cs:75-125 e 273-274).</li>
 </ul>
 <hr />
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
+<ul>
+<li>SALVAR pergunta "Confirma a inclusão do item?" ou "Confirma a alteração do item?". Com SIM, o sistema confere os obrigatórios, grava e mostra "Inclusão realizada com sucesso!" ou "Alteração realizada com sucesso!"; o OK volta à lista (utilidade_ed.aspx.cs:51-79, 232-333 e 399-449).</li>
+<li>A utilidade ativa passa a ser oferecida no bloco "Utilidades do Ambiente" do cadastro de Ambientes (dalUtilidade.cs:65-97; ambiente_ed.aspx.cs:87-93) e, na Produção, nas telas de qualificação e de manutenção preventiva e corretiva e no lote padrão (qualificacao_ed.aspx.cs:81-84; manutencao_preventiva_ed.aspx.cs:49-50; lote_padrao_ed.aspx.cs:52, módulo Produção). O serviço <code>api/Utilidade/ListUtilidadeAtivos</code> entrega a lista a outros módulos (UtilidadeController.cs:15-29).</li>
+</ul>
+<p><strong>Registro em uso por outro cadastro (inativar ou excluir):</strong></p>
+<ul>
+<li>Se o registro está ligado a outro cadastro, a exclusão é recusada com "Exclusão inválida, existem referências com outras tabelas." e sem dizer qual.</li>
+</ul>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<ul>
+<li>"A Situação é obrigatório!": Ativo sem escolha (concordância errada no texto) (utilidade_ed.aspx:63)</li>
+<li>"A Descrição é obrigatória!": Descrição em branco (utilidade_ed.aspx:73)</li>
+<li>"O Fabricante é obrigatório!": Fabricante em "SELECIONE" (utilidade_ed.aspx:114)</li>
+<li>"A Data Início de Operação não pode ser maior que a Data Fim de Operação!" e "... maior que a data atual!": Datas incoerentes (utilidade_ed.aspx:125-126)</li>
+<li>"A Data Fim de Operação não pode ser menor que a Data Início de Operação!" e "... maior que a data atual!": Datas incoerentes (utilidade_ed.aspx:136-137)</li>
+<li>"A Justificativa é obrigatória!": Alteração sem justificativa (utilidade_ed.aspx:180)</li>
+<li>"Tag já existe!": Outra tag igual entre os registros ativos (bllUtilidade.cs:66 e 114)</li>
+<li>"Patrimônio já existe!": Só na alteração (bllUtilidade.cs:120)</li>
+<li>"Número de série já existe!": Outro número de série igual (bllUtilidade.cs:79 e 126)</li>
+<li>"Erro na inclusão de Utilidade." / "Erro na alteração de Utilidade.": Falha inesperada (bllUtilidade.cs:97 e 143)</li>
+<li>"Exclusão inválida, existem referências com outras tabelas.": O registro é usado em outra tabela; não diz qual (bllUtilidade.cs:156)</li>
+<li>"Erro na Exclusão de Utilidade.": Falha inesperada na exclusão (bllUtilidade.cs:173)</li>
+</ul>
+<figure><a href="../img/principal/ca13-r07-erro-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r07-erro-obrigatorios.png" alt="Figura 7: Salvar com tudo em branco: mensagens vermelhas &quot;A Descrição é obrigatória!&quot; e &quot;O Fabricante é obrigatório!&quot;." loading="lazy"></a><figcaption>Figura 7: Salvar com tudo em branco: mensagens vermelhas &quot;A Descrição é obrigatória!&quot; e &quot;O Fabricante é obrigatório!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: Salvar com tudo em branco: mensagens vermelhas "A Descrição é obrigatória!" e "O Fabricante é obrigatório!".</em></p>
+<figure><a href="../img/principal/ca13-r08-erro-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ca13-r08-erro-justificativa.png" alt="Figura 8: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa." loading="lazy"></a><figcaption>Figura 8: Alterar sem Justificativa: mensagem vermelha &quot;A Justificativa é obrigatória!&quot; sobre o campo Justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: Alterar sem Justificativa: mensagem vermelha "A Justificativa é obrigatória!" sobre o campo Justificativa.</em></p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A <strong>lista</strong> usa a função de tela "91" (utilidade_lst.aspx.cs:17). A base das listas confere a função logo no início e leva quem não a tem à página de acesso negado (ClassePaiLst.cs:65; BaseController.cs:26-31). Incluir, Editar, Consultar, Excluir, Imprimir e Ver Log dependem de cada ação (ClassePaiLst.cs:111-255).</li>
+<li>O <strong>formulário</strong> usa a mesma função (utilidade_ed.aspx.cs:18). A base do formulário só calcula as ações e <strong>não bloqueia a entrada</strong> (ClassePaiEd.cs:71-156). Para um registro existente sem a ação Alterar, a tela fica travada e sem SALVAR (utilidade_ed.aspx.cs:151-167). No formulário <strong>novo</strong> nada esconde o SALVAR (utilidade_ed.aspx.cs:129 e 171-175: o ajuste só roda quando há um código). Pelo código, quem abrir o formulário vazio pelo endereço poderia incluir um registro (a confirmar no teste; mesmo padrão do DV-PRI-025).</li>
+<li>O <strong>relatório</strong> (<code>utilidade_rel</code>) não tem conferência própria de permissão (utilidade_rel.aspx.cs:12-80; mesmo padrão do DV-PRI-025 para <code>usuario_rel</code> e <code>perfil_rel</code>).</li>
+<li>O detalhe da conferência de acesso está na seção "Segurança e acesso" desta tela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li>Nenhum. A tela não foi testada (inventário: Não testada). Nenhum DV-PRI registrado tem esta tela como alvo (<code>defeitos/defeitos-completo.json</code>, campo <code>tela</code>).</li>
+<li><strong>DV-PRI-009 (Alta)</strong>, visto em outro cadastro (Excluir Ambiente e Equipamento sem justificativa). Nesta tela: <strong>Mesmo comportamento</strong>: só a confirmação "Confirma a exclusão do item?" (utilidade_lst.aspx.cs:353-363). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-011 (Média)</strong>, visto em outro cadastro (Recusa de exclusão com mensagem genérica). Nesta tela: Mesma mensagem (bllUtilidade.cs:156). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-014 (Alta)</strong>, visto em outro cadastro (Histórico de excluído não pode ser consultado). Nesta tela: Mesma lista só com LIXEIRA = 0 e ícone LOG na linha (dalUtilidade.cs:19-21). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-008 (Baixa)</strong>, visto em outro cadastro (Pesquisa não ignora acentos). Nesta tela: Pesquisa com LIKE no banco (dalUtilidade.cs:30). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-025 (Alta)</strong>, visto em outro cadastro (Telas de edição abrem pelo endereço sem permissão). Nesta tela: O formulário não bloqueia a entrada (ver segurança). Situação aqui: A confirmar no teste.</li>
+<li><strong>DV-PRI-026 (Média)</strong>, visto em outro cadastro (Erro técnico do ASP.NET em envio inválido). Nesta tela: A gravação da estrutura funcional pode derrubar a página (item 1 abaixo). Situação aqui: A confirmar no teste.</li>
+<li>(a confirmar no teste) <strong>Duas estruturas marcadas na árvore derrubam a gravação com erro técnico.</strong> O código junta os códigos marcados com hífen (por exemplo "3-5") e converte o texto em número fora do trecho que trata erros.</li>
+<li>(a confirmar no teste) <strong>A opção "OUTROS" burla o fabricante obrigatório.</strong> A lista de fabricantes traz "OUTROS" com valor 0.</li>
+<li>(a confirmar no teste) <strong>Excluir sem justificativa</strong> (RN-PRI-070; DV-PRI-009 nos outros cadastros).</li>
+<li>(a confirmar no teste) <strong>A data de fabricação não entra no histórico</strong>: pode ser mudada sem rastro.</li>
+<li>(a confirmar no teste) <strong>Data de fim de operação não pode ser futura</strong>: não dá para registrar a desativação programada de um item.</li>
+<li>(a confirmar no teste) <strong>Reativar com tag repetida não é barrado</strong>: a tag só é conferida quando muda e só entre ativos. Dois ativos com a mesma tag podem existir depois de reativar (inferência).</li>
+<li>(a confirmar no teste) <strong>Patrimônio repetido é aceito na inclusão</strong> e barrado na alteração: inconsistência.</li>
+<li>(a confirmar no teste) <strong>Pesquisa e relatório montados com o texto digitado</strong>. O filtro de caracteres da tela tira o apóstrofo ao digitar, mas só no navegador.</li>
+<li>(a confirmar no teste) <strong>Grade sem a tag</strong>: a lista mostra código, descrição e ativo; para achar um item pela tag é preciso usar o filtro de descrição ou abrir o registro.</li>
+<li>(a confirmar no teste) <strong>Mensagem com concordância errada</strong>: "A Situação é obrigatório!".</li>
+<li>(a confirmar no teste) <strong>Não guarda o estado de qualificação nem a periodicidade</strong>: o cadastro é só de identificação (ver exigências da norma).</li>
+<li>As imagens deste manual vêm do teste de 26/10/2026 (rodada 3). Os resultados desse teste ainda precisam ser conferidos com a seção "Casos de teste" desta tela, que pode ter sido escrita antes dele.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<p>Inclui também os botões do formulário.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisar</td>
+<td>Procura com os filtros, ordenando pelo código</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Limpar</td>
+<td>Esvazia filtros e grade</td>
+<td>Na lista</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Abre o formulário vazio</td>
+<td>Para quem tem a ação Incluir</td>
+</tr>
+<tr>
+<td>Imprimir e ícone do Excel</td>
+<td>Abre o relatório com os filtros, em tela ou Excel</td>
+<td>Depois de uma pesquisa com resultado, para quem tem Imprimir/Excel</td>
+</tr>
+<tr>
+<td>Lápis (Editar) e lupa (Consultar)</td>
+<td>Abrem o formulário do registro</td>
+<td>Conforme as ações do perfil</td>
+</tr>
+<tr>
+<td>Excluir</td>
+<td>Pede só a confirmação e exclui</td>
+<td>Para quem tem Excluir</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico</td>
+<td>Para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>SALVAR</td>
+<td>Pede confirmação e grava</td>
+<td>No formulário</td>
+</tr>
+<tr>
+<td>VOLTAR (alto e rodapé)</td>
+<td>Volta à lista sem gravar</td>
+<td>No formulário</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também confere; "Só na tela" quando só o navegador confere.</p>
 <h4 id="lista">Lista</h4>
@@ -413,7 +582,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

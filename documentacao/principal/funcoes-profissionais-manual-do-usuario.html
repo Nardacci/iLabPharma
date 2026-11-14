@@ -44,44 +44,184 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="funcoes-profissionais-analise.html">Análise</a><a href="funcoes-profissionais-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="funcoes-profissionais-fluxos.html">Fluxos</a><a href="funcoes-profissionais-regras-de-negocio.html">Regras de negócio</a><a href="funcoes-profissionais-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-funcoes-profissionais.html">Erros (2)</a><a class="aba-extra" href="roteiro-de-execucao-administracao-passo-a-passo.html#tela-7-funcoes-profissionais">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Seu usuário precisa de permissão para a tela Funções profissionais. Tenha a lista dos papéis da fábrica e a decisão de quem precisa de cada um, definida com a Garantia da Qualidade.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>As <strong>Funções profissionais</strong> são os papéis de trabalho que uma pessoa exerce na fábrica (executor de limpeza, revisor de calibração, supervisor de almoxarifado, auditor, amostrador...). Os dados iniciais trazem 35 funções, entre elas "Autorizar início de produção" e "Cancelar solicitação para produção". Cada profissional pode ter várias funções, escolhidas na tela Profissional. Quem usa a tela é o administrador do sistema, com a Garantia da Qualidade e os responsáveis de cada área, que definem quem executa e quem revisa cada registro (leitura da área, a validar). Os outros módulos leem as funções para decidir quem aparece nas listas de executores, revisores e auditores.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. No menu, abra <strong>Funções profissionais</strong>. A tela mostra o quadro "Pesquisa" e nenhuma linha. Clique em Pesquisar (funcao_profissional_lst.aspx.cs:36-41).</li>
-<li>Passo 2. Filtros: Código (até 4 dígitos), Descrição (parte do nome, até 255 caracteres) e Ativo (Todas, Sim, Não) (funcao_profissional_lst.aspx:43-56).</li>
-<li>Passo 3. A lista mostra Código, Descrição e Ativo, com os ícones Editar, Excluir e Log, oito linhas por página (funcao_profissional_lst.aspx:77-118).</li>
-<li>Passo 4. Sem resultado: "A pesquisa não retornou nenhum resultado." (funcao_profissional_lst.aspx.cs:152).</li>
+<li>O administrador do sistema, com a Garantia da Qualidade e os responsáveis de cada área, que definem quem executa e quem revisa cada registro (leitura da área, a validar).</li>
+<li>Os módulos que registram limpeza, calibração, manutenção e qualificação leem as funções para decidir quem aparece nas listas de executores e revisores; a lista de auditores é oferecida aos outros módulos pela API do Principal.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="criar-uma-funcao">Criar uma função</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 7 do menu Administração, módulo Principal)</p>
 <ul>
-<li>Passo 5. Clique em <strong>Incluir</strong>. O código é gerado pelo sistema. Informe a <strong>Descrição</strong> (obrigatória, até 255; o sistema grava em maiúsculas), deixe <strong>Ativo: Sim</strong> e preencha a <strong>Justificativa</strong> (obrigatória também na inclusão).</li>
-<li>Passo 6. Clique em SALVAR REGISTRO e confirme ("Confirma a inclusão do item?"). Aparece "Inclusão realizada com sucesso!".</li>
-<li><strong>Atenção:</strong> o sistema não confere se já existe outra função com a mesma descrição (bllFuncaoProfissional.cs:19-24, conferência desligada no código).</li>
+<li>Pelo menu, com a lista vazia; é preciso clicar em Pesquisar.</li>
+<li>A função precisa existir e estar ativa antes de ser marcada no cadastro do profissional.</li>
 </ul>
-<h4 id="alterar-uma-funcao">Alterar uma função</h4>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
 <ul>
-<li>Passo 7. Na lista, clique em Editar. Altere a descrição ou a situação e informe a <strong>Justificativa</strong>. Salve e confirme.</li>
-<li>Passo 8. <strong>Cuidado com o nome.</strong> Algumas regras do sistema reconhecem uma função pelo nome (por exemplo, "AUDITOR"): trocar o nome pode tirar as pessoas dessa função de listas em outros módulos (dalAtividade.cs:104-113).</li>
-<li>Uma função inativa abre travada; só a situação e a justificativa podem ser mudadas, para reativá-la (funcao_profissional_ed.aspx.cs:56-64).</li>
+<li><strong>Incluir</strong> grava a função e o histórico "INCLUSÃO DO REGISTRO" com a justificativa; mostra "Inclusão realizada com sucesso!" e volta à lista ao clicar OK.</li>
+<li><strong>Alterar</strong> grava a descrição e a situação e escreve o histórico com a justificativa.</li>
+<li><strong>Excluir</strong> marca a função como excluída (lixeira), se nenhuma outra tabela a usa, e escreve "EXCLUSÃO DO REGISTRO" com a justificativa.</li>
+<li>O próximo passo é dar a função às pessoas na tela <strong>Profissional</strong> e, quando for o caso, configurar quem executa e revisa cada tipo de registro no módulo Produção.</li>
 </ul>
-<h4 id="excluir-uma-funcao">Excluir uma função</h4>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A lista dos papéis da fábrica e a decisão de quem precisa de cada um, definida com a Garantia da Qualidade</td>
+<td>É o conteúdo do cadastro</td>
+<td>Decisão da área (ponto para validar quem aprova a lista)</td>
+</tr>
+<tr>
+<td>Permissão para a tela Funções profissionais no seu perfil</td>
+<td>Para abrir a tela e ver Incluir, Editar, Excluir e Log</td>
+<td>Menu Administração › Perfil</td>
+</tr>
+</tbody>
+</table></div>
+<p>A função precisa existir e estar ativa <strong>antes</strong> de ser marcada no cadastro do profissional (tela Profissional).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: mensagem de sucesso da inclusão e da alteração (a tela volta à lista sem ela nas capturas), inativar função, exclusão concluída, imprimir e Excel.</em></p>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu, abra <strong>Funções profissionais</strong>. A tela mostra o quadro "Pesquisa". Clique em <strong>PESQUISAR</strong> (funcao_profissional_lst.aspx.cs:36-41).</li>
+<li>Filtros: Código (até 4 dígitos), Descrição (parte do nome, até 255 caracteres) e Ativo (Todas, Sim, Não). Sem resultado: "A pesquisa não retornou nenhum resultado.".</li>
+<li>A lista mostra Código, Descrição e Ativo, com os ícones Editar, Excluir e LOG, oito linhas por página. <strong>IMPRIMIR</strong> e o ícone do Excel aparecem depois de uma pesquisa com resultado.</li>
+</ol>
+<figure><a href="../img/principal/ad07-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r01-lista.png" alt="Figura 1: lista de Função Profissional: filtros Código, Descrição e Ativo, botões PESQUISAR, LIMPAR, IMPRIMIR e Excel, a grade com os ícones lápis, X vermelho e LOG e seis páginas." loading="lazy"></a><figcaption>Figura 1: lista de Função Profissional: filtros Código, Descrição e Ativo, botões PESQUISAR, LIMPAR, IMPRIMIR e Excel, a grade com os ícones lápis, X vermelho e LOG e seis páginas. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: lista de Função Profissional: filtros Código, Descrição e Ativo, botões PESQUISAR, LIMPAR, IMPRIMIR e Excel, a grade com os ícones lápis, X vermelho e LOG e seis páginas.</em></p>
+<p><strong>Criar uma função</strong></p>
+<ol start="4">
+<li>Clique em <strong>Incluir</strong>. O <strong>Código</strong> é gerado pelo sistema (campo travado), assim como a Data do Cadastro. Informe a <strong>Descrição</strong> (obrigatória, até 255; o sistema grava em maiúsculas) e deixe <strong>Ativo: Sim</strong>. O formulário de inclusão <strong>não tem campo de justificativa</strong> (ele só aparece na alteração e na exclusão).</li>
+</ol>
+<figure><a href="../img/principal/ad07-r02-form-vazio.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r02-form-vazio.png" alt="Figura 2: formulário de inclusão: Código e Data do Cadastro travados, Descrição, Ativo (Sim marcado) e os botões VOLTAR e SALVAR REGISTRO; não há campo de justificativa." loading="lazy"></a><figcaption>Figura 2: formulário de inclusão: Código e Data do Cadastro travados, Descrição, Ativo (Sim marcado) e os botões VOLTAR e SALVAR REGISTRO; não há campo de justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: formulário de inclusão: Código e Data do Cadastro travados, Descrição, Ativo (Sim marcado) e os botões VOLTAR e SALVAR REGISTRO; não há campo de justificativa.</em></p>
+<ol start="5">
+<li>Clique em <strong>SALVAR REGISTRO</strong> e confirme ("Confirma a inclusão do item?"). O sistema <strong>não confere</strong> se já existe outra função com a mesma descrição (veja os cuidados).</li>
+</ol>
+<p><strong>Alterar uma função</strong></p>
+<ol start="6">
+<li>Na lista, clique em Editar. Altere a descrição ou a situação e preencha a <strong>Justificativa</strong> (obrigatória). Salve e confirme. Cuidado com o nome: algumas regras reconhecem uma função pelo nome (por exemplo "AUDITOR"); trocar o nome pode tirar pessoas de listas de outros módulos (dalAtividade.cs:104-113). Uma função inativa abre travada; só a situação e a justificativa podem ser mudadas.</li>
+</ol>
+<figure><a href="../img/principal/ad07-r03-alterar-sem-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r03-alterar-sem-justificativa.png" alt="Figura 3: formulário de alteração da função 50: Código travado, Descrição &quot;TESTE FUNCAO A ALTERADA&quot;, campo Justificativa vazio e a faixa vermelha &quot;A Justificativa é obrigatória!&quot; depois de salvar sem justificativa." loading="lazy"></a><figcaption>Figura 3: formulário de alteração da função 50: Código travado, Descrição &quot;TESTE FUNCAO A ALTERADA&quot;, campo Justificativa vazio e a faixa vermelha &quot;A Justificativa é obrigatória!&quot; depois de salvar sem justificativa. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: formulário de alteração da função 50: Código travado, Descrição "TESTE FUNCAO A ALTERADA", campo Justificativa vazio e a faixa vermelha "A Justificativa é obrigatória!" depois de salvar sem justificativa.</em></p>
+<p><strong>Excluir uma função</strong></p>
+<ol start="7">
+<li>Na lista, clique no X vermelho. A tela mostra o código e a descrição e pede a <strong>Justificativa</strong>; clique em <strong>EXCLUIR REGISTRO</strong> e confirme ("Confirma a exclusão do item?"). Sem justificativa, a tela marca a falta com a faixa "A Justificativa é obrigatória!".</li>
+</ol>
+<figure><a href="../img/principal/ad07-r04-excluir-sem-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r04-excluir-sem-justificativa.png" alt="Figura 4: tela de exclusão da função 49: Código e Descrição, campo Justificativa vazio, faixa &quot;A Justificativa é obrigatória!&quot; e os botões VOLTAR e EXCLUIR REGISTRO." loading="lazy"></a><figcaption>Figura 4: tela de exclusão da função 49: Código e Descrição, campo Justificativa vazio, faixa &quot;A Justificativa é obrigatória!&quot; e os botões VOLTAR e EXCLUIR REGISTRO. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: tela de exclusão da função 49: Código e Descrição, campo Justificativa vazio, faixa "A Justificativa é obrigatória!" e os botões VOLTAR e EXCLUIR REGISTRO.</em></p>
+<p><strong>Ver o histórico</strong></p>
+<ol start="8">
+<li>Na lista, clique no ícone <strong>LOG</strong>. Abre a janela "Log Alteração - Cadastro de Funções Profissionais" com o item alterado, valor antigo e novo, data, hora, usuário e a linha Justificativa.</li>
+</ol>
+<figure><a href="../img/principal/ad07-r05-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r05-historico.png" alt="Figura 5: histórico de uma função: &quot;DESCRIÇÃO&quot; de &quot;TESTE FUNCAO A&quot; para &quot;TESTE FUNCAO A ALTERADA&quot; (com a justificativa visível) e &quot;INCLUSÃO DO REGISTRO&quot; (justificativa vazia)." loading="lazy"></a><figcaption>Figura 5: histórico de uma função: &quot;DESCRIÇÃO&quot; de &quot;TESTE FUNCAO A&quot; para &quot;TESTE FUNCAO A ALTERADA&quot; (com a justificativa visível) e &quot;INCLUSÃO DO REGISTRO&quot; (justificativa vazia). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: histórico de uma função: "DESCRIÇÃO" de "TESTE FUNCAO A" para "TESTE FUNCAO A ALTERADA" (com a justificativa visível) e "INCLUSÃO DO REGISTRO" (justificativa vazia).</em></p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 9. Na lista, clique no X. A tela mostra o código e a descrição e pede a <strong>Justificativa</strong>; clique em EXCLUIR REGISTRO e confirme ("Confirma a exclusão do item?").</li>
-<li>Passo 10. Se alguma pessoa ou configuração usa a função, a exclusão é recusada: "Exclusão inválida, existem referências com outras tabelas." (bllFuncaoProfissional.cs:128-132).</li>
+<li><strong>Incluir:</strong> grava a função e o histórico "INCLUSÃO DO REGISTRO" (funcao_profissional_ed.aspx.cs:149-168 e 219-224).</li>
+<li><strong>Alterar:</strong> grava a descrição e a situação e escreve o histórico com a justificativa; o texto da justificativa é posto em maiúsculas, cortado em 255 caracteres e com apóstrofo duplicado antes de ser guardado (bllFuncaoProfissional.cs:46-76; funcao_profissional_ed.aspx.cs:134-135).</li>
+<li><strong>Excluir:</strong> marca a função como excluída (lixeira), se nenhuma outra tabela a usa, e escreve "EXCLUSÃO DO REGISTRO" (bllFuncaoProfissional.cs:122-149).</li>
+<li><strong>Imprimir e Excel:</strong> abrem o "RELATÓRIO DE FUNÇÕES DE PROFISSIONAIS" e não gravam nada.</li>
 </ul>
-<h4 id="consultar-o-historico-e-imprimir">Consultar o histórico e imprimir</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 11. O ícone de Log mostra Alteração, Valor Antigo, Valor Novo, Data, Hora, Usuário e a Justificativa (funcao_profissional_lst.aspx:205-236).</li>
-<li>Passo 12. Depois de pesquisar, Imprimir e Excel abrem o "RELATÓRIO DE FUNÇÕES DE PROFISSIONAIS" (funcao_profissional_rel.aspx.cs:28).</li>
+<li>"A Descrição é obrigatória!" (descrição em branco; aparece depois do SIM da confirmação) e "A Situação é obrigatória!".</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<figure><a href="../img/principal/ad07-r06-descricao-obrigatoria.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r06-descricao-obrigatoria.png" alt="Figura 6: salvar a inclusão sem Descrição: faixa vermelha &quot;A Descrição é obrigatória!&quot; e o campo Descrição marcado." loading="lazy"></a><figcaption>Figura 6: salvar a inclusão sem Descrição: faixa vermelha &quot;A Descrição é obrigatória!&quot; e o campo Descrição marcado. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: salvar a inclusão sem Descrição: faixa vermelha "A Descrição é obrigatória!" e o campo Descrição marcado.</em></p>
 <ul>
-<li>Não mostra quantas pessoas têm cada função.</li>
-<li>Não impede inativar uma função em uso.</li>
-<li>Não descreve as responsabilidades da função (só o nome).</li>
+<li>"A Justificativa é obrigatória!" ao alterar ou excluir sem justificativa (Figuras 3 e 4). Em teste, o aviso apareceu só depois da pergunta de confirmação.</li>
+<li>"Exclusão inválida, existem referências com outras tabelas." quando alguma pessoa ou configuração usa a função; a mensagem não diz qual (DV-PRI-011).</li>
 </ul>
+<figure><a href="../img/principal/ad07-r07-excluir-em-uso.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r07-excluir-em-uso.png" alt="Figura 7: exclusão da função 50, que estava ligada a um profissional, com justificativa preenchida: faixa vermelha &quot;Exclusão inválida, existem referências com outras tabelas.&quot;." loading="lazy"></a><figcaption>Figura 7: exclusão da função 50, que estava ligada a um profissional, com justificativa preenchida: faixa vermelha &quot;Exclusão inválida, existem referências com outras tabelas.&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: exclusão da função 50, que estava ligada a um profissional, com justificativa preenchida: faixa vermelha "Exclusão inválida, existem referências com outras tabelas.".</em></p>
+<ul>
+<li>Falha de banco: "Erro na inclusão / alteração / Exclusão / consulta da Função Profissional.", com "Detalhe do erro (+)".</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela usa a <strong>função 92 (Funções profissionais)</strong> (funcao_profissional_lst.aspx.cs:20; funcao_profissional_ed.aspx.cs:15). A coluna Excluir segue a permissão de excluir; Editar e Log seguem as permissões de alterar e de consultar log; Imprimir e Excel aparecem sempre depois de pesquisar com resultado, sem conferir permissão (funcao_profissional_lst.aspx.cs:130-131).</li>
+<li>Pelo código, lista e formulário levam ao acesso negado quem não tem a função; o relatório (<code>funcao_profissional_rel</code>) não confere permissão e recebe os filtros pelo endereço. <strong>Nenhum teste de acesso por endereço incluiu esta tela</strong> (a confirmar).</li>
+<li>Quem cadastra uma função com poder de decisão (por exemplo "Autorizar início de produção") não precisa de aprovação de outra pessoa. Ponto para validar com a área.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Duas funções com a mesma descrição são aceitas</strong> (DV-PRI-028, Baixa): no teste, "TESTE FUNCAO A" ficou duplicada (códigos 49 e 50), o que pode confundir as listas de executores e revisores.</li>
+</ul>
+<figure><a href="../img/principal/ad07-r08-lista-duplicada.png" target="_blank" rel="noopener"><img src="../img/principal/ad07-r08-lista-duplicada.png" alt="Figura 8: última página da lista com duas funções &quot;TESTE FUNCAO A&quot; (códigos 49 e 50), as duas ativas." loading="lazy"></a><figcaption>Figura 8: última página da lista com duas funções &quot;TESTE FUNCAO A&quot; (códigos 49 e 50), as duas ativas. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: última página da lista com duas funções "TESTE FUNCAO A" (códigos 49 e 50), as duas ativas.</em></p>
+<ul>
+<li><strong>Justificativa no histórico</strong> (DV-PRI-027): o registro de defeitos diz que a linha "Justificativa:" sai em branco nesta tela; a captura da Figura 5 mostra o texto preenchido. Ponto para reconferir.</li>
+<li><strong>Exclusão de função em uso</strong> recusa com mensagem genérica (DV-PRI-011).</li>
+<li><strong>Inativar uma função em uso</strong> gravou sem aviso; a função inativa continua na lista do profissional e some da busca para novas escolhas (CT-PRI-093).</li>
+<li><strong>Nome que vale como chave:</strong> alterar "AUDITOR" muda quem aparece como auditor em outros módulos, sem aviso (pelo código; a confirmar).</li>
+<li>Nenhum campo liga a função a aprovar ou autorizar algo: a função é só um nome (confirma DV-EST-076 a partir do Principal, CT-PRI-ADM-29).</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PESQUISAR</td>
+<td>Lista as funções pelos filtros</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Incluir (ícone de mais)</td>
+<td>Abre o formulário em branco</td>
+<td>Para quem tem Incluir</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre a função para alterar (com Justificativa)</td>
+<td>Em cada linha, para quem tem Alterar</td>
+</tr>
+<tr>
+<td>X vermelho (Excluir)</td>
+<td>Abre a tela de exclusão com Justificativa</td>
+<td>Em cada linha, para quem tem Excluir</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico da função</td>
+<td>Em cada linha, para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>IMPRIMIR e Excel</td>
+<td>Geram o "RELATÓRIO DE FUNÇÕES DE PROFISSIONAIS"</td>
+<td>Depois de uma pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -313,7 +453,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

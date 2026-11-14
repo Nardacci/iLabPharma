@@ -44,31 +44,140 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="visualizacao-de-relatorios-analise.html">Análise</a><a href="visualizacao-de-relatorios-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="visualizacao-de-relatorios-fluxos.html">Fluxos</a><a href="visualizacao-de-relatorios-regras-de-negocio.html">Regras de negócio</a><a href="visualizacao-de-relatorios-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-visualizacao-de-relatorios.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-acesso-ao-sistema-passo-a-passo.html#tela-7-visualizacao-de-relatorios">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Faça a pesquisa na lista do cadastro: o relatório mostra o que você filtrou. Os botões <strong>IMPRIMIR</strong> e <strong>Excel</strong> só aparecem se o seu perfil tiver a função de impressão e exportação.</p>
-<h4 id="imprimir">Imprimir</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>Mostrar ao usuário, em tela, em papel ou em planilha, os dados que ele filtrou na lista de um cadastro: ambientes, equipamentos, pessoas jurídicas, profissionais, contas, perfis e os demais. Não é uma tela com item de menu: são páginas de apoio abertas pelos botões <strong>IMPRIMIR</strong> e <strong>Excel</strong> das listas e pelo botão "Imprimir Perfils" da Conta usuário. Cada relatório traz o nome do cliente, o usuário que o gerou, a data e hora e o filtro aplicado. Quem tem a função de impressão e exportação do cadastro usa.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. Na lista, preencha os filtros e clique em PESQUISAR.</li>
-<li>Passo 2. Clique em IMPRIMIR. Abre uma janela com o relatório, que traz o cliente, o usuário, a data e hora e o filtro.</li>
-<li>Passo 3. Use o recurso de imprimir do navegador.</li>
+<li>Quem tem a função de impressão e exportação em cada cadastro, ao clicar em Imprimir ou no ícone do Excel.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="exportar-para-excel">Exportar para Excel</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 7 do menu Acesso ao sistema, módulo Principal)</p>
 <ul>
-<li>Passo 1. Depois de pesquisar, clique no ícone do Excel.</li>
-<li>Passo 2. O navegador baixa um arquivo <code>.xls</code> com o título do relatório (por exemplo, <code>relatório_de_cadastro_de_ambientes.xls</code>). O arquivo é uma página de relatório gravada com a extensão do Excel: o Excel pode avisar sobre o formato ao abrir.</li>
+<li>Pelo botão <strong>Imprimir</strong> de qualquer lista com relatório: abre o <code>_rel.aspx</code> do cadastro em nova janela.</li>
+<li>Pelo botão do <strong>Excel</strong> da lista: baixa o arquivo.</li>
+<li>Pelo botão <strong>Imprimir Perfils</strong> da lista da Conta usuário: abre <code>VisualizaRelatorio.aspx?Relatorio=RPT_USUARIO_PERFIL&amp;idUsuario=...</code> em nova janela.</li>
+<li><code>viewRelatorios.aspx</code> não é chamada por nenhuma página (busca no código).</li>
 </ul>
-<h4 id="relatorio-de-perfil-de-um-usuario">Relatório de perfil de um usuário</h4>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
 <ul>
-<li>Passo 1. Na lista da Conta usuário, clique em "Imprimir Perfils" na linha do usuário.</li>
-<li>Passo 2. Abre o visualizador de relatórios com os dados do profissional (data de cadastro, nome, CPF, ativo) e a lista dos perfis dele.</li>
+<li>A tela não grava dados. A janela do relatório pode ser impressa pelo navegador, e o Excel é baixado pelo navegador.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Uma pesquisa feita na lista do cadastro, com resultado</td>
+<td>O relatório mostra o que você filtrou; IMPRIMIR e Excel só aparecem com resultado</td>
+<td>A lista de cada cadastro</td>
+</tr>
+<tr>
+<td>Função de impressão e exportação no cadastro</td>
+<td>Os botões só aparecem para quem a tem</td>
+<td>Administração › Perfil</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 05/10/2026 e 26/10/2026, cada uma conferida contra o texto. Sem imagem: os botões IMPRIMIR e Excel marcados em vermelho, o arquivo <code>.xls</code> baixado, o "Imprimir Perfils" com dados e a pergunta "Deseja imprimir este relatório?".</em></p>
+<p><strong>Imprimir</strong></p>
+<ol>
+<li>Na lista do cadastro, preencha os filtros e clique em <strong>PESQUISAR</strong>.</li>
+<li>Clique em <strong>IMPRIMIR</strong>. Abre uma janela com o relatório, que traz o cliente, o usuário, a data e hora e o filtro.</li>
+</ol>
+<figure><a href="../img/principal/p107-p01-relatorio.png" target="_blank" rel="noopener"><img src="../img/principal/p107-p01-relatorio.png" alt="Figura 1: o relatório de cadastro de ambientes aberto pelo IMPRIMIR da lista: cabeçalho com o cliente, a data e o usuário, o filtro &quot;Descrição TESTE AMBIENTE&quot; e as três linhas encontradas." loading="lazy"></a><figcaption>Figura 1: o relatório de cadastro de ambientes aberto pelo IMPRIMIR da lista: cabeçalho com o cliente, a data e o usuário, o filtro &quot;Descrição TESTE AMBIENTE&quot; e as três linhas encontradas. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: o relatório de cadastro de ambientes aberto pelo IMPRIMIR da lista: cabeçalho com o cliente, a data e o usuário, o filtro "Descrição TESTE AMBIENTE" e as três linhas encontradas.</em></p>
+<figure><a href="../img/principal/ac07-r02-relatorio-de-usuario.png" target="_blank" rel="noopener"><img src="../img/principal/ac07-r02-relatorio-de-usuario.png" alt="Figura 2: o relatório de usuário (profissional) com o filtro &quot;Descrição TESTE ADMIN&quot;: dados cadastrais da pessoa encontrada." loading="lazy"></a><figcaption>Figura 2: o relatório de usuário (profissional) com o filtro &quot;Descrição TESTE ADMIN&quot;: dados cadastrais da pessoa encontrada. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: o relatório de usuário (profissional) com o filtro "Descrição TESTE ADMIN": dados cadastrais da pessoa encontrada.</em></p>
+<figure><a href="../img/principal/ac07-r03-relatorio-de-perfil.png" target="_blank" rel="noopener"><img src="../img/principal/ac07-r03-relatorio-de-perfil.png" alt="Figura 3: o relatório de perfil: traz só o nome do perfil, sem as funções liberadas." loading="lazy"></a><figcaption>Figura 3: o relatório de perfil: traz só o nome do perfil, sem as funções liberadas. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: o relatório de perfil: traz só o nome do perfil, sem as funções liberadas.</em></p>
+<figure><a href="../img/principal/ac07-r04-relatorio-de-conta.png" target="_blank" rel="noopener"><img src="../img/principal/ac07-r04-relatorio-de-conta.png" alt="Figura 4: o relatório de conta de usuário com o filtro &quot;Nome TESTE&quot;: login, validade da conta, data de expiração, período da senha e perfil de cada conta." loading="lazy"></a><figcaption>Figura 4: o relatório de conta de usuário com o filtro &quot;Nome TESTE&quot;: login, validade da conta, data de expiração, período da senha e perfil de cada conta. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: o relatório de conta de usuário com o filtro "Nome TESTE": login, validade da conta, data de expiração, período da senha e perfil de cada conta.</em></p>
+<ol start="3">
+<li>Use o recurso de imprimir do navegador.</li>
+</ol>
+<p><strong>Exportar para Excel</strong></p>
+<ol>
+<li>Depois de pesquisar, clique no ícone do Excel.</li>
+<li>O navegador baixa um arquivo <code>.xls</code> com o título do relatório (por exemplo <code>relatório_de_cadastro_de_ambientes.xls</code>). É uma página de relatório gravada com a extensão do Excel: o Excel pode avisar sobre o formato ao abrir (sem imagem).</li>
+</ol>
+<p><strong>Relatório de perfil de um usuário</strong></p>
+<ol>
+<li>Na lista da Conta usuário, clique em "Imprimir Perfils" na linha do usuário.</li>
+<li>Abre o visualizador de relatórios com os dados do profissional (data de cadastro, nome, CPF, ativo) e a lista dos perfis dele (sem imagem com dados).</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
+<p>O relatório mostra o cabeçalho (cliente, usuário, data e hora), o filtro usado e as linhas da pesquisa; o Excel traz o mesmo conteúdo (CT-PRI-097: Ambiente, Equipamento e Pessoa jurídica, a lista e o arquivo com as mesmas linhas). <strong>Não grava nada</strong>, não registra quem imprimiu ou exportou e não mostra as funções liberadas em cada perfil nem a data da última alteração (CT-PRI-054).</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>Nenhuma mensagem de erro própria: se a consulta falhar, o erro sobe como exceção (usuario_rel.aspx.cs:103-106). Só existe a pergunta "Deseja imprimir este relatório?" (relatorio.aspx:77-83; não vista). Digitar o endereço do relatório direto, sem passar pela lista, devolve vazio ou "Exibir Tudo", conforme o filtro guardado na sessão (CT-PRI-054 e 068; as duas observações divergem, ver Divergências).</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
 <ul>
-<li>Não abre o relatório se você digitar o endereço: o filtro vem da lista. O relatório digitado direto vem vazio ou com tudo, conforme o que ficou guardado na sessão (CT-PRI-054 e 068).</li>
-<li>Nenhum relatório mostra as funções liberadas em cada perfil nem a data da última alteração (CT-PRI-054).</li>
+<li>Os botões IMPRIMIR e Excel das listas aparecem para quem tem a função de impressão e exportação do cadastro (CT-PRI-051).</li>
+<li>As páginas dos relatórios <strong>não conferem função nem sessão</strong> por conta própria (relatorio.aspx.cs:18; usuario_rel.aspx.cs:14-108): <strong>DV-PRI-025</strong> (Alta).</li>
+<li>O visualizador de perfil exige só que exista o usuário na sessão e recebe o número do usuário no endereço, sem conferir função (não testado).</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>DV-PRI-025 (Alta):</strong> os relatórios de usuário e de perfil abrem pelo endereço para quem não tem permissão de Administração (CT-PRI-068).</li>
+</ul>
+<figure><a href="../img/principal/ac07-r05-relatorio-sem-permissao.png" target="_blank" rel="noopener"><img src="../img/principal/ac07-r05-relatorio-sem-permissao.png" alt="Figura 5: o relatório de perfil aberto pelo usuário T.SEMADMIN (campo USUÁRIO do cabeçalho), que não tem permissão de Administração." loading="lazy"></a><figcaption>Figura 5: o relatório de perfil aberto pelo usuário T.SEMADMIN (campo USUÁRIO do cabeçalho), que não tem permissão de Administração. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: o relatório de perfil aberto pelo usuário T.SEMADMIN (campo USUÁRIO do cabeçalho), que não tem permissão de Administração.</em></p>
+<ul>
+<li>Nenhum relatório lista as funções de cada perfil nem a data da última alteração: serve mal para a revisão periódica de acessos.</li>
+<li>O Excel é uma página gravada como <code>.xls</code>.</li>
 <li>Não registra quem imprimiu ou exportou.</li>
+<li>Ponto para validar com a área: <code>viewRelatorios.aspx</code> é um visualizador sem relatório ligado e nenhuma página o chama.</li>
 </ul>
+<h4 id="botoes-da-tela">Botões da tela</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Botão ou ação</th>
+<th>Quando aparece</th>
+<th>O que faz</th>
+<th>Para onde leva</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IMPRIMIR (na lista do cadastro)</td>
+<td>Com resultado e função de impressão</td>
+<td>Abre o relatório em nova janela, com o filtro da lista</td>
+<td>Janela do relatório</td>
+</tr>
+<tr>
+<td>Ícone do Excel (na lista)</td>
+<td>Com resultado e função de impressão</td>
+<td>Baixa o relatório como <code>.xls</code></td>
+<td>Download</td>
+</tr>
+<tr>
+<td>Imprimir Perfils (Conta usuário)</td>
+<td>Em cada linha da lista</td>
+<td>Abre o relatório Usuário - Perfil</td>
+<td>Visualizador</td>
+</tr>
+<tr>
+<td>Botões do visualizador</td>
+<td>Na página do relatório de perfil</td>
+<td>Imprimir pelo visualizador</td>
+<td>Impressão</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Estas páginas não têm campos de preenchimento. O filtro vem da lista que as chamou. O que cada relatório traz:</p>
 <div class="tabela"><table>
@@ -210,7 +319,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

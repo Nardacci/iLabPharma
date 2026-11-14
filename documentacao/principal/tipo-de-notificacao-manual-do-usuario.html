@@ -44,23 +44,115 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="tipo-de-notificacao-analise.html">Análise</a><a href="tipo-de-notificacao-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="tipo-de-notificacao-fluxos.html">Fluxos</a><a href="tipo-de-notificacao-regras-de-negocio.html">Regras de negócio</a><a href="tipo-de-notificacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado aba-erros-zero" href="erros-tipo-de-notificacao.html">Erros</a><a class="aba-extra" href="roteiro-de-execucao-administracao-passo-a-passo.html#tela-11-tipo-de-notificacao">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b26a00;margin-right:6px"></span>Situação da tela: <strong>Funciona com falhas</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Esta tela só serve para encontrar o tipo de aviso que você quer configurar. Quem cria os tipos é o banco de dados; se um tipo que você espera não aparece, peça ao responsável pelo sistema.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Tipo de notificação</strong> é a lista dos <strong>tipos de aviso</strong> que o sistema sabe enviar, de todos os módulos. Para cada tipo (por exemplo, "Novo profissional") mostra o módulo e permite abrir a configuração dele (título, prazos, quem recebe, e-mail). Quem usa é o administrador que configura os avisos do sistema (leitura da área, a validar). A tela <strong>não cria, não altera e não exclui tipos</strong>: eles vêm do banco de dados. Sem um tipo configurado, nenhum módulo consegue criar aviso desse tipo.</p>
+<p>No ambiente de teste não existe um menu separado com este nome: o menu <strong>Configurar notificação</strong> abre esta lista, e o título no alto da tela é "CONFIGURAR NOTIFICAÇÃO", o mesmo da tela de configuração do tipo. Ponto para validar com a área e o DBA qual é o nome certo do menu.</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. No menu Administração, abra o item de configuração de notificações. A tela mostra o quadro "Pesquisa" com o campo <strong>Módulo</strong> e os botões Limpar e Pesquisar (gst_tipo_notificacao_lst.aspx:26-52).</li>
-<li>Passo 2. Clique em Pesquisar. A lista mostra <strong>todos</strong> os tipos de aviso, de todos os módulos (veja a observação abaixo sobre o filtro Módulo) (gst_tipo_notificacao_lst.aspx.cs:35).</li>
-<li>Passo 3. A grade traz Código, Módulo, Tipo de notificação e o ícone de editar (gst_tipo_notificacao_lst.aspx:76-94). Para um tipo ainda sem configuração o ícone é um "mais" e a dica diz "Configurar"; para um tipo já configurado, o lápis, e a dica diz "Alterar Configuração" (gst_tipo_notificacao_lst.aspx.cs:196-210).</li>
-<li>Passo 4. Clique no ícone para abrir a configuração do tipo.</li>
-<li>Passo 5. Sem resultado, a tela diz "A pesquisa não retornou nenhum resultado." (gst_tipo_notificacao_lst.aspx:64).</li>
+<li>O administrador que configura os avisos do sistema.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 11 do menu Administração, módulo Principal)</p>
 <ul>
-<li>O filtro <strong>Módulo</strong> (TODOS, PRINCIPAL, CONTROLE DE DOCUMENTOS, GARANTIA DA QUALIDADE) <strong>não filtra</strong>: o código pesquisa sempre todos os tipos (gst_tipo_notificacao_lst.aspx.cs:35). A confirmar numa tela.</li>
-<li>Não tem botão de Novo, Excluir, Imprimir, Excel ou Log (estão comentados, gst_tipo_notificacao_lst.aspx:96-118).</li>
-<li>A coluna Módulo fica em branco para tipos de módulos que não sejam Principal, Controle de Documentos ou Garantia da Qualidade (svcNotificacao.cs:18-28).</li>
+<li>Pelo menu de Administração. Ao abrir, a grade <strong>não</strong> vem preenchida: é preciso clicar em Pesquisar.</li>
+<li>Para o tipo existir, alguém o cadastrou direto no banco (não há tela para isso; ponto para validar com o DBA).</li>
 </ul>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
+<ul>
+<li>A tela não grava nada. O ícone Editar leva à tela Configurar notificação, que é a tela 09 deste menu.</li>
+</ul>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Os <strong>tipos de aviso</strong> cadastrados no banco</td>
+<td>A tela só lista; não há como criar um tipo</td>
+<td>Banco de dados (com o DBA); não há tela para isso</td>
+</tr>
+<tr>
+<td>Permissão para a tela de notificações no seu perfil</td>
+<td>Para abrir a lista e o ícone de configuração</td>
+<td>Menu Administração › Perfil</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagem reaproveitada do teste de 26/10/2026 (rodada 3), conferida contra o texto. Sem imagem: a tela ao abrir antes de pesquisar, a pesquisa sem resultado, o ícone de "mais" (Configurar) de um tipo ainda sem configuração e o uso do filtro Módulo.</em></p>
+<ol>
+<li>No menu Administração, abra <strong>Configurar notificação</strong>. A tela mostra o quadro "Pesquisa" com o campo <strong>Módulo</strong> (TODOS, PRINCIPAL, CONTROLE DE DOCUMENTOS, GARANTIA DA QUALIDADE) e os botões LIMPAR e PESQUISAR. A grade não vem preenchida.</li>
+<li>Clique em <strong>PESQUISAR</strong>. A lista mostra os tipos de aviso com <strong>Código</strong>, <strong>Módulo</strong>, <strong>Tipo de notificação</strong> e o ícone de editar. Sem resultado: "A pesquisa não retornou nenhum resultado.".</li>
+</ol>
+<figure><a href="../img/principal/ad11-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ad11-r01-lista.png" alt="Figura 1: lista de tipos de aviso depois de pesquisar: seis tipos (Principal: Alteração de perfil, Notificação legada e Novo profissional; Controle de Documentos: Documento criado; Garantia da Qualidade: Avaliação finalizada e Treinamento concluído), cada um com o lápis; só os botões LIMPAR e PESQUISAR." loading="lazy"></a><figcaption>Figura 1: lista de tipos de aviso depois de pesquisar: seis tipos (Principal: Alteração de perfil, Notificação legada e Novo profissional; Controle de Documentos: Documento criado; Garantia da Qualidade: Avaliação finalizada e Treinamento concluído), cada um com o lápis; só os botões LIMPAR e PESQUISAR. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: lista de tipos de aviso depois de pesquisar: seis tipos (Principal: Alteração de perfil, Notificação legada e Novo profissional; Controle de Documentos: Documento criado; Garantia da Qualidade: Avaliação finalizada e Treinamento concluído), cada um com o lápis; só os botões LIMPAR e PESQUISAR.</em></p>
+<ol start="3">
+<li>Clique no ícone da linha para abrir a configuração do tipo (tela Configurar notificação). Para um tipo ainda sem configuração o código mostra um "mais" (dica "Configurar"); para um tipo já configurado, o lápis (dica "Alterar Configuração"). No teste todos os seis tipos mostraram o lápis.</li>
+</ol>
+<h4 id="o-que-o-relatorio-mostra-e-o-que-ele-grava">O que o relatório mostra e o que ele grava</h4>
+<p>A tela é só de consulta: <strong>nada é gravado</strong> aqui. Ela lista os tipos de aviso com o módulo de cada um e leva à configuração. Não tem botão Incluir, Excluir, Imprimir, Excel nem Log (CT-PRI-ADM-46/47 e 097: não existe Incluir, nem Imprimir, nem Exportar). O que se grava, ao salvar, é na tela Configurar notificação.</p>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
+<p>Nada: a tela não tem campo de gravação. A única mensagem própria é "A pesquisa não retornou nenhum resultado." (gst_tipo_notificacao_lst.aspx:64).</p>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A lista declara o código de função <code>ADMINISTRACAO/TIPO_NOTIFICACAO</code> (gst_tipo_notificacao_lst.aspx.cs:18), que <strong>não aparece</strong> na árvore de permissões do Principal (a árvore traz "Configurar notificação" e "Notificações do sistema"). Falta saber, com o DBA, qual perfil de função dá acesso (ponto para validar).</li>
+<li>A <strong>lista</strong> bloqueia quem não tem a função: o usuário <code>t.semadmin</code> foi levado ao acesso negado ao digitar o endereço (CT-PRI-069). O ícone de editar depende da permissão de alterar.</li>
+<li>O formulário aberto pelo ícone é outra tela (Configurar notificação), com controle próprio descrito no manual dela.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<p>Nenhum defeito do registro (DV-PRI) está ligado a esta tela. Pontos de atenção:</p>
+<ul>
+<li><strong>O filtro Módulo pode não filtrar:</strong> pelo código, a pesquisa sempre traz todos os tipos (gst_tipo_notificacao_lst.aspx.cs:35). Não foi testado; confira na tela.</li>
+<li><strong>A coluna Módulo pode ficar em branco</strong> para tipos de módulos fora de Principal, Controle de Documentos e Garantia da Qualidade (por exemplo, Estoque) (svcNotificacao.cs:18-28).</li>
+<li><strong>Tipo "configurado" pode não enviar aviso:</strong> o código conta eventos inativos ou excluídos como configurados, então o lápis não garante que o aviso é enviado (a confirmar).</li>
+<li><strong>Tipos criados ou apagados pelo banco não deixam rastro:</strong> a tabela não tem usuário nem data (pelo código).</li>
+<li>Se um tipo que você espera não aparece, peça ao responsável pelo sistema (o DBA): não há tela para cadastrá-lo.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Módulo (lista)</td>
+<td>Escolhe o módulo (pelo código, pode não filtrar)</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>PESQUISAR</td>
+<td>Lista os tipos de aviso</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Esvazia filtro e lista</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Lápis (Alterar Configuração)</td>
+<td>Abre a tela Configurar notificação do tipo</td>
+<td>Em cada linha de tipo já configurado, para quem pode alterar</td>
+</tr>
+<tr>
+<td>Sinal de mais (Configurar)</td>
+<td>Abre a tela Configurar notificação de um tipo ainda sem configuração</td>
+<td>Em tipo sem configuração (pelo código; não visto em teste)</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela.</p>
 <div class="tabela"><table>
@@ -186,7 +278,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

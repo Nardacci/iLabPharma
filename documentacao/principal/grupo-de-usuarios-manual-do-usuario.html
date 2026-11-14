@@ -44,43 +44,196 @@
     </header>
     <nav class="abas-tela" aria-label="Páginas desta tela"><a href="grupo-de-usuarios-analise.html">Análise</a><a href="grupo-de-usuarios-manual-do-usuario.html" aria-current=page>Manual do usuário</a><a href="grupo-de-usuarios-fluxos.html">Fluxos</a><a href="grupo-de-usuarios-regras-de-negocio.html">Regras de negócio</a><a href="grupo-de-usuarios-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-legado" href="erros-grupo-de-usuarios.html">Erros (4)</a><a class="aba-extra" href="roteiro-de-execucao-administracao-passo-a-passo.html#tela-6-grupo-de-usuarios">Passo a passo</a><a class="aba-extra" href="o-principal-ideal-o-dono-do-que-e-global.html">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b3261e;margin-right:6px"></span>Situação da tela: <strong>Falha grave</strong> <span style="opacity:.75">(a partir do inventário de telas do módulo)</span></p>
     <article class="texto texto-largo">
-<div class="callout nv-aviso"><p class="callout-titulo">Este manual ainda não tem capturas de tela</p><p>O passo a passo está descrito em texto, a partir do código e dos testes. As imagens das telas serão acrescentadas quando forem feitas; até lá, use também o botão <strong>Passo a passo</strong> desta tela, quando houver.</p></div>
-<h4 id="antes-de-comecar">Antes de começar</h4>
-<p>Seu usuário precisa de permissão para a tela Grupo de usuários. Defina o código e o nome do grupo de acordo com a estrutura da empresa.</p>
-<h4 id="tela-de-lista">Tela de lista</h4>
+<h4 id="para-que-serve">Para que serve</h4>
+<p>O <strong>Grupo de usuário</strong> cadastra os grupos de usuários: pequenas áreas organizacionais (nos dados iniciais, "Grupo 1", "Paiol insumos" e "Administração") às quais cada profissional é ligado na tela Profissional, onde o grupo é obrigatório. No Estoque, o grupo decide quais almoxarifados e solicitações cada pessoa enxerga, e o usuário sem grupo nem entra no módulo. Quem usa é o administrador do sistema, quando a empresa muda a estrutura de áreas (leitura da área, a validar).</p>
+<h4 id="quem-usa-e-em-que-etapa-do-processo">Quem usa e em que etapa do processo</h4>
+<p><strong>Quem usa</strong></p>
 <ul>
-<li>Passo 1. No menu, abra <strong>Grupo de usuários</strong>. A tela mostra o quadro "Pesquisa" e nenhuma linha. Clique em Pesquisar (grupo_usuario_lst.aspx.cs:25-32).</li>
-<li>Passo 2. Filtros: Código (até 5 caracteres), Nome (até 255) e Ativo (Todas, Sim, Não) (grupo_usuario_lst.aspx:38-52).</li>
-<li>Passo 3. A lista mostra Código, Descrição e Ativo, com os ícones Editar, Excluir e Log, oito linhas por página (grupo_usuario_lst.aspx:73-118).</li>
-<li>Passo 4. Sem resultado: "A pesquisa não retornou nenhum resultado." (grupo_usuario_lst.aspx.cs:269).</li>
+<li>O administrador do sistema, quando a empresa muda a estrutura de áreas (leitura da área, a validar).</li>
+<li>O Estoque lê o grupo do usuário a cada login; o Principal o usa no cadastro do Profissional.</li>
+<li>Quem pode abrir, incluir, alterar, excluir, imprimir e ver o histórico está em "Quem pode usar (permissões)", mais abaixo.</li>
 </ul>
-<h4 id="criar-um-grupo">Criar um grupo</h4>
+<p><strong>Em que etapa do processo entra</strong> (tela 6 do menu Administração, módulo Principal)</p>
 <ul>
-<li>Passo 5. Clique em <strong>Incluir</strong> (ícone + no alto da lista). Informe <strong>Código</strong> e <strong>Nome</strong> (obrigatórios) e deixe <strong>Ativo: Sim</strong>. A data do cadastro vem preenchida.</li>
-<li>Passo 6. Clique em SALVAR e confirme ("Confirma a inclusão do grupo de usuário?"). Se o nome já existir: "Já existe um grupo cadastrado com o nome informado!".</li>
-<li><strong>Atenção:</strong> o campo Justificativa só aparece na alteração. O sistema não confere se o código já existe ao incluir (bllGrupoUsuario.cs:21-38).</li>
+<li>Pelo menu, com a lista vazia; é preciso clicar em Pesquisar.</li>
+<li>O grupo precisa existir antes de cadastrar o profissional, porque o campo Grupo do profissional é obrigatório (CT-PRI-041, 05/10/2026).</li>
+<li>Para o Estoque, o grupo precisa estar ligado aos almoxarifados (telas do Estoque; fora desta tela).</li>
 </ul>
-<h4 id="alterar-um-grupo">Alterar um grupo</h4>
+<p><strong>O que acontece depois (para onde o trabalho segue)</strong></p>
 <ul>
-<li>Passo 7. Na lista, clique em Editar. Altere o <strong>Nome</strong> ou a <strong>situação</strong> e preencha a <strong>Justificativa</strong> (obrigatória).</li>
-<li>Passo 8. Salve e confirme ("Confirma a alteração do grupo de usuário?"). <strong>Se você alterar o Código, o sistema ignora a mudança</strong> (grupo_usuario_ed.aspx.cs:137-146).</li>
+<li><strong>Incluir</strong> grava o grupo e escreve "INCLUSÃO DO REGISTRO" no histórico.</li>
+<li><strong>Alterar</strong> grava o nome e a situação, com a justificativa, e escreve no histórico. O código digitado é ignorado.</li>
+<li><strong>Excluir</strong> marca o grupo como excluído (lixeira), se nenhum profissional o usa; a justificativa digitada não é gravada.</li>
+<li>Depois de gravar, a tela volta à lista.</li>
 </ul>
-<h4 id="excluir-um-grupo">Excluir um grupo</h4>
+<p><em>Fonte: Resumo da tela e fluxo da tela (leitura do código e dos testes). O que for leitura da área precisa ser validado com a área.</em></p>
+<h4 id="antes-de-comecar-o-que-precisa-existir">Antes de começar (o que precisa existir)</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Precisa existir</th>
+<th>Para quê</th>
+<th>Onde se cadastra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A estrutura de áreas da empresa definida (código e nome de cada grupo)</td>
+<td>É o conteúdo do cadastro</td>
+<td>Decisão da área (ponto para validar se os grupos são áreas físicas, setores ou equipes)</td>
+</tr>
+<tr>
+<td>Permissão para a tela Grupo de usuários no seu perfil</td>
+<td>Para abrir a tela e ver Incluir, Editar, Excluir e Log</td>
+<td>Menu Administração › Perfil</td>
+</tr>
+<tr>
+<td>(Para o Estoque) o grupo ligado aos almoxarifados</td>
+<td>O grupo só limita o que a pessoa vê no Estoque se estiver ligado aos almoxarifados</td>
+<td>Telas do Estoque, fora desta tela</td>
+</tr>
+</tbody>
+</table></div>
+<p>O grupo precisa existir <strong>antes</strong> de cadastrar o profissional, porque o campo Grupo do profissional é obrigatório (CT-PRI-041).</p>
+<h4 id="passo-a-passo">Passo a passo</h4>
+<p><em>Situação das imagens (14/11/2026): imagens reaproveitadas dos testes de 26/10/2026 (rodada 3), cada uma conferida contra o texto. Sem imagem: mensagem de sucesso da inclusão (a tela volta à lista sem ela), inativar grupo em uso, recusa de exclusão de grupo em uso, imprimir e Excel.</em></p>
+<p><strong>Consultar a lista</strong></p>
+<ol>
+<li>No menu, abra <strong>Grupo de usuários</strong>. A tela mostra o quadro "Pesquisa". Clique em <strong>PESQUISAR</strong> (grupo_usuario_lst.aspx.cs:25-32).</li>
+<li>Filtros: Código (até 5 caracteres), Nome (até 255) e Ativo (Todas, Sim, Não). Sem resultado: "A pesquisa não retornou nenhum resultado.".</li>
+<li>A lista mostra Código, Descrição e Ativo, com os ícones Editar, Excluir e LOG, oito linhas por página. <strong>IMPRIMIR</strong> e o ícone do Excel aparecem depois de uma pesquisa com resultado.</li>
+</ol>
+<figure><a href="../img/principal/ad06-r01-lista.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r01-lista.png" alt="Figura 1: lista de Grupo de usuário depois de pesquisar: sete grupos com Código, Descrição e Ativo, os ícones lápis, X vermelho e LOG, e os botões PESQUISAR, LIMPAR, IMPRIMIR e Excel." loading="lazy"></a><figcaption>Figura 1: lista de Grupo de usuário depois de pesquisar: sete grupos com Código, Descrição e Ativo, os ícones lápis, X vermelho e LOG, e os botões PESQUISAR, LIMPAR, IMPRIMIR e Excel. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 1: lista de Grupo de usuário depois de pesquisar: sete grupos com Código, Descrição e Ativo, os ícones lápis, X vermelho e LOG, e os botões PESQUISAR, LIMPAR, IMPRIMIR e Excel.</em></p>
+<p><strong>Criar um grupo</strong></p>
+<ol start="4">
+<li>Clique em <strong>Incluir</strong>. Informe <strong>Código</strong> e <strong>Nome</strong> (obrigatórios) e deixe <strong>Ativo: Sim</strong>. A data do cadastro vem preenchida. Não há campo de justificativa na inclusão.</li>
+</ol>
+<figure><a href="../img/principal/ad06-r02-form-vazio.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r02-form-vazio.png" alt="Figura 2: formulário &quot;Dados do Grupo&quot; em branco: Código, Nome, Ativo (Sim marcado) e Data (travada), com VOLTAR e SALVAR." loading="lazy"></a><figcaption>Figura 2: formulário &quot;Dados do Grupo&quot; em branco: Código, Nome, Ativo (Sim marcado) e Data (travada), com VOLTAR e SALVAR. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 2: formulário "Dados do Grupo" em branco: Código, Nome, Ativo (Sim marcado) e Data (travada), com VOLTAR e SALVAR.</em></p>
+<ol start="5">
+<li>Clique em <strong>SALVAR</strong> e confirme ("Confirma a inclusão do grupo de usuário?"). No teste de 26/10/2026 a tela voltou à lista <strong>sem mostrar mensagem de sucesso</strong>; confira na lista.</li>
+</ol>
+<p><strong>Alterar um grupo</strong></p>
+<ol start="6">
+<li>Na lista, clique em Editar (lápis). Altere o <strong>Nome</strong> ou a <strong>situação</strong> e preencha a <strong>Justificativa</strong> (obrigatória). Salve e confirme ("Confirma a alteração do grupo de usuário?"). <strong>Se você alterar o Código, o sistema ignora a mudança</strong> (grupo_usuario_ed.aspx.cs:137-146).</li>
+</ol>
+<p><strong>Excluir um grupo</strong></p>
+<ol start="7">
+<li>Na lista, clique no X vermelho. A tela mostra o código, a descrição e o campo <strong>Justificativa</strong>; clique em <strong>EXCLUIR</strong> e confirme ("Confirma a exclusão do item?"). Atenção: o campo "Código" do quadro mostra o <strong>número interno</strong> do grupo, não o código que você cadastrou (grupo_usuario_lst.aspx.cs:205-207).</li>
+</ol>
+<figure><a href="../img/principal/ad06-r03-excluir.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r03-excluir.png" alt="Figura 3: quadro de exclusão do grupo: Código (aqui o número interno 11), Descrição &quot;TESTE GRUPO B&quot;, campo Justificativa marcado como obrigatório e botões VOLTAR e EXCLUIR." loading="lazy"></a><figcaption>Figura 3: quadro de exclusão do grupo: Código (aqui o número interno 11), Descrição &quot;TESTE GRUPO B&quot;, campo Justificativa marcado como obrigatório e botões VOLTAR e EXCLUIR. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 3: quadro de exclusão do grupo: Código (aqui o número interno 11), Descrição "TESTE GRUPO B", campo Justificativa marcado como obrigatório e botões VOLTAR e EXCLUIR.</em></p>
+<p><strong>Ver o histórico</strong></p>
+<ol start="8">
+<li>Na lista, clique no ícone <strong>LOG</strong>. Abre a janela "Log Alteração - Cadastro de Grupo de Usuário" com Item, Dado Antigo, Dado Novo, data, hora e usuário, e a linha Justificativa.</li>
+</ol>
+<figure><a href="../img/principal/ad06-r04-historico.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r04-historico.png" alt="Figura 4: histórico de um grupo: &quot;DESCRIÇÃO&quot; de &quot;TESTE GRUPO C&quot; para &quot;TESTE GRUPO C2&quot; e, abaixo, &quot;INCLUSÃO DO REGISTRO&quot;, cada um com a linha Justificativa (na alteração aparece o texto digitado)." loading="lazy"></a><figcaption>Figura 4: histórico de um grupo: &quot;DESCRIÇÃO&quot; de &quot;TESTE GRUPO C&quot; para &quot;TESTE GRUPO C2&quot; e, abaixo, &quot;INCLUSÃO DO REGISTRO&quot;, cada um com a linha Justificativa (na alteração aparece o texto digitado). · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 4: histórico de um grupo: "DESCRIÇÃO" de "TESTE GRUPO C" para "TESTE GRUPO C2" e, abaixo, "INCLUSÃO DO REGISTRO", cada um com a linha Justificativa (na alteração aparece o texto digitado).</em></p>
+<h4 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h4>
 <ul>
-<li>Passo 9. Na lista, clique no X. A tela mostra o código, a descrição e o campo <strong>Justificativa</strong> (obrigatório); clique em EXCLUIR e confirme ("Confirma a exclusão do item?").</li>
-<li>Passo 10. Se algum profissional usa o grupo, a exclusão é recusada: "Exclusão inválida, existem referências com outras tabelas." (bllGrupoUsuario.cs:116-120).</li>
-<li><strong>Atenção:</strong> a tela mostra o número interno do grupo no lugar do código no quadro de exclusão (grupo_usuario_lst.aspx.cs:205-207), e a justificativa não é guardada no histórico (dalLogAlteracaoGrupoUsuario.cs:77-88).</li>
+<li><strong>Incluir:</strong> grava o grupo e escreve "INCLUSÃO DO REGISTRO" no histórico (bllGrupoUsuario.cs:21-38).</li>
+<li><strong>Alterar:</strong> grava o nome e a situação, com a justificativa, e escreve no histórico; o código digitado é ignorado (bllGrupoUsuario.cs:40-62).</li>
+<li><strong>Excluir:</strong> o grupo some da lista ("Registro excluído com sucesso!"). Pelo código, a justificativa da exclusão é pedida e <strong>não é guardada</strong> no histórico (dalLogAlteracaoGrupoUsuario.cs:77-88; a confirmar).</li>
+<li><strong>Imprimir e Excel:</strong> abrem o relatório (que se chama "RELATÓRIO DE ENTRADA") e não gravam nada.</li>
 </ul>
-<h4 id="imprimir">Imprimir</h4>
+<h4 id="o-que-o-sistema-recusa">O que o sistema recusa</h4>
 <ul>
-<li>Passo 11. Depois de pesquisar, use Imprimir ou o ícone do Excel. O relatório se chama "RELATÓRIO DE ENTRADA" (grupo_usuario_rel.aspx.cs:27).</li>
+<li>"O campo Código é obrigatório!", "O campo Nome é obrigatório!" e "O campo Ativo é obrigatório!" (campos em branco). A justificativa não é cobrada na inclusão.</li>
 </ul>
-<h4 id="o-que-a-tela-nao-faz">O que a tela não faz</h4>
+<figure><a href="../img/principal/ad06-r05-obrigatorios.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r05-obrigatorios.png" alt="Figura 5: salvar o formulário vazio: faixa vermelha com &quot;O campo Código é obrigatório!&quot; e &quot;O campo Nome é obrigatório!&quot;." loading="lazy"></a><figcaption>Figura 5: salvar o formulário vazio: faixa vermelha com &quot;O campo Código é obrigatório!&quot; e &quot;O campo Nome é obrigatório!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 5: salvar o formulário vazio: faixa vermelha com "O campo Código é obrigatório!" e "O campo Nome é obrigatório!".</em></p>
 <ul>
-<li>Não mostra quantos profissionais usam o grupo.</li>
-<li>Não impede inativar um grupo em uso.</li>
-<li>Não grava a justificativa da exclusão.</li>
+<li>"Já existe um grupo cadastrado com o nome informado!" (nome repetido).</li>
 </ul>
+<figure><a href="../img/principal/ad06-r06-nome-repetido.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r06-nome-repetido.png" alt="Figura 6: inclusão com o nome &quot;TESTE GRUPO A&quot; já usado: faixa vermelha &quot;Já existe um grupo cadastrado com o nome informado!&quot;." loading="lazy"></a><figcaption>Figura 6: inclusão com o nome &quot;TESTE GRUPO A&quot; já usado: faixa vermelha &quot;Já existe um grupo cadastrado com o nome informado!&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 6: inclusão com o nome "TESTE GRUPO A" já usado: faixa vermelha "Já existe um grupo cadastrado com o nome informado!".</em></p>
+<ul>
+<li>"O campo justificativa é obrigatório!" ao alterar sem justificativa.</li>
+</ul>
+<figure><a href="../img/principal/ad06-r07-sem-justificativa.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r07-sem-justificativa.png" alt="Figura 7: alteração sem justificativa: faixa vermelha &quot;O campo justificativa é obrigatório!&quot; e o campo Justificativa vazio." loading="lazy"></a><figcaption>Figura 7: alteração sem justificativa: faixa vermelha &quot;O campo justificativa é obrigatório!&quot; e o campo Justificativa vazio. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 7: alteração sem justificativa: faixa vermelha "O campo justificativa é obrigatório!" e o campo Justificativa vazio.</em></p>
+<ul>
+<li>"Erro ao atualizar o grupo de usuário." ao alterar um dos dois grupos que têm o mesmo código (veja os cuidados).</li>
+</ul>
+<figure><a href="../img/principal/ad06-r08-erro-atualizar.png" target="_blank" rel="noopener"><img src="../img/principal/ad06-r08-erro-atualizar.png" alt="Figura 8: alteração do grupo TG01 (nome e justificativa preenchidos) recusada com a faixa vermelha &quot;Erro ao atualizar o grupo de usuário.&quot;." loading="lazy"></a><figcaption>Figura 8: alteração do grupo TG01 (nome e justificativa preenchidos) recusada com a faixa vermelha &quot;Erro ao atualizar o grupo de usuário.&quot;. · clique para ampliar</figcaption></figure>
+
+<p><em>Figura 8: alteração do grupo TG01 (nome e justificativa preenchidos) recusada com a faixa vermelha "Erro ao atualizar o grupo de usuário.".</em></p>
+<ul>
+<li>Exclusão de grupo em uso por profissional: o código prevê "Exclusão inválida, existem referências com outras tabelas."; no teste de 26/10/2026 apareceu "Erro ao excluir usuário.", sem dizer quem usa o grupo (DV-PRI-011). Sem imagem.</li>
+<li>Falhas de banco: "Erro ao incluir o registro de Grupo de usuário." (a mesma frase aparece na alteração).</li>
+</ul>
+<h4 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h4>
+<ul>
+<li>A tela usa a <strong>função 518 (Grupo de usuários)</strong> (grupo_usuario_lst.aspx.cs:14). <strong>O mesmo código 518 é usado também na tela Configurar notificação</strong>, o que mistura as permissões das duas telas (ponto para validar).</li>
+<li>Na lista, Editar, Excluir e Log seguem as permissões de alterar, excluir e consultar log; Imprimir e Excel aparecem depois de qualquer pesquisa com resultado, sem conferir permissão (grupo_usuario_lst.aspx.cs:247-248).</li>
+<li>A <strong>lista</strong> bloqueia quem não tem a função (CT-PRI-067: <code>t.semadmin</code> levado ao acesso negado). O <strong>formulário</strong> abre pelo endereço para quem não tem permissão (DV-PRI-025, Alta, CT-PRI-067); não se testou se grava. O relatório não foi aberto pelo endereço.</li>
+</ul>
+<h4 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h4>
+<ul>
+<li><strong>Dois grupos com o mesmo código</strong> são aceitos e depois <strong>nenhum dos dois pode ser alterado</strong>: aparece "Erro ao atualizar o grupo de usuário." (DV-PRI-035, Média; Figura 8).</li>
+<li><strong>Excluir não exige justificativa de fato:</strong> no teste, o grupo foi excluído sem texto, embora o quadro marque a justificativa como obrigatória (DV-PRI-036, Alta).</li>
+<li><strong>A justificativa não aparece no histórico:</strong> DV-PRI-027 registra a linha "Justificativa:" em branco para esta tela; a captura da Figura 4 mostra o texto preenchido na alteração de outro grupo. Ponto para reconferir.</li>
+<li><strong>Inativar um grupo em uso por um profissional</strong> gravou sem aviso, e o profissional continua com o grupo (CT-PRI-093).</li>
+<li><strong>Excluir grupo em uso</strong> dá mensagem genérica, sem dizer quem usa (DV-PRI-011).</li>
+<li><strong>Formulário abre pelo endereço</strong> para quem não tem permissão (DV-PRI-025, Alta).</li>
+<li>A inclusão volta à lista sem mensagem de sucesso, e o quadro de exclusão mostra o número interno no lugar do código.</li>
+<li>Pelo código (ainda não testado): código e nome sem limite na tela, mas 10 e 100 posições no banco (texto longo vira erro técnico); a pesquisa monta o comando com o texto digitado (mesma família do SEG-PRI-03). Pontos para validar com a área.</li>
+</ul>
+<h4 id="icones-e-botoes-da-lista">Ícones e botões da lista</h4>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ícone ou botão</th>
+<th>O que faz</th>
+<th>Quando aparece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PESQUISAR</td>
+<td>Lista os grupos pelos filtros</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>LIMPAR</td>
+<td>Esvazia filtros e lista</td>
+<td>Sempre</td>
+</tr>
+<tr>
+<td>Incluir (ícone de mais)</td>
+<td>Abre o formulário em branco</td>
+<td>Para quem tem Incluir</td>
+</tr>
+<tr>
+<td>Lápis (Editar)</td>
+<td>Abre o grupo para alterar (com Justificativa)</td>
+<td>Em cada linha, para quem tem Alterar</td>
+</tr>
+<tr>
+<td>X vermelho (Excluir)</td>
+<td>Abre o quadro de exclusão</td>
+<td>Em cada linha, para quem tem Excluir</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>Abre o histórico do grupo</td>
+<td>Em cada linha, para quem tem Consultar log</td>
+</tr>
+<tr>
+<td>IMPRIMIR e Excel</td>
+<td>Geram o relatório do grupo ("RELATÓRIO DE ENTRADA")</td>
+<td>Depois de uma pesquisa com resultado</td>
+</tr>
+</tbody>
+</table></div>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p>Caminhos das fontes na seção Resumo da tela. "Sim (servidor)" quando o servidor também recusa; "Só na tela" quando só o navegador confere.</p>
 <div class="tabela"><table>
@@ -324,7 +477,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#botoes-e-acoes">Botões e ações</a></li><li><a href="#mensagens-do-sistema">Mensagens do sistema</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 14/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
