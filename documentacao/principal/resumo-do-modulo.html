@@ -44,9 +44,9 @@
     </header>
     
     <article class="texto">
-<p><strong>Uso interno.</strong> Resumo para a diretoria. O detalhe técnico está no Dossiê de Homologação e na Análise de Requisitos do módulo Principal.</p>
+<p><strong>Uso interno.</strong> Resumo para a diretoria. O detalhe técnico está no Dossiê de Homologação, na Análise de Requisitos e nas Regras de Negócio do módulo Principal.</p>
 <h2 id="conclusao">Conclusão</h2>
-<p>O módulo Principal do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>funciona na maior parte das tarefas, mas não está em conformidade com as normas da ANVISA</strong>. O parecer é <strong>"não apto para uso em ambiente regulado"</strong>. A análise foi fechada em 26/10/2026, depois da terceira rodada de testes. As falhas estão principalmente no registro de quem alterou o quê e por quê, e no controle de acesso e de senhas. Os mecanismos essenciais existem, então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
+<p>O módulo Principal do LabMedSys (versão 3.5.1), como foi entregue pelo fornecedor, <strong>funciona na maior parte das tarefas, mas não está em conformidade com as normas da ANVISA</strong>. O parecer continua <strong>"não apto para uso em ambiente regulado"</strong>. Os novos testes de tela, feitos em 14/11/2026, <strong>confirmaram</strong> os defeitos de gravidade alta e <strong>acharam outros 0</strong>: hoje são <strong>90 defeitos abertos</strong>, 19 de gravidade alta.</p>
 <p>O Principal importa porque é a porta de entrada dos nove módulos (login, usuários, perfis, permissões) e a base da trilha de auditoria que a ANVISA verifica nas inspeções (RDC 658/2022, art. 125).</p>
 <h2 id="o-que-foi-feito">O que foi feito</h2>
 <div class="tabela"><table>
@@ -59,23 +59,23 @@
 <tbody>
 <tr>
 <td>Análise do código e documentação</td>
-<td>Regras, permissões, modelo de dados e cinco páginas para cada uma das 32 telas</td>
+<td>32 telas documentadas; 1.450 regras de negócio detalhadas, cada uma conferida no código, com a fonte, a mensagem exata e a norma</td>
 </tr>
 <tr>
-<td>Testes no ambiente de teste (05, 06 e 26/10/2026)</td>
-<td>3 rodadas; 197 de 216 linhas de resultado conclusivas. Na rodada 3: 140 passos, 48 passaram, 40 com ressalva, 33 falharam e 19 bloqueados</td>
+<td>Testes de tela (05, 06 e 26/10/2026)</td>
+<td>3 rodadas, 197 de 216 linhas de resultado conclusivas; na rodada 3, 140 passos: 48 passaram, 40 com ressalva, 33 falharam e 19 bloqueados</td>
 </tr>
 <tr>
-<td>Situação das 32 telas</td>
-<td>1 funciona, 11 funcionam com falhas, 20 com falha grave</td>
+<td>Testes de tela por robôs (14/11/2026)</td>
+<td>898 imagens nos manuais, conferidas uma a uma; os robôs executaram cada passo no ambiente de teste. Telas completas: Acesso 5 de 7, Administração 7 de 11, Cadastros 14 de 14</td>
+</tr>
+<tr>
+<td>Regras com resultado de teste</td>
+<td>693 das 1.450 regras já têm resultado do teste de 14/11; 1.094 estão lidas do código, 356 a confirmar no teste e <strong>nenhuma validada pela equipe</strong></td>
 </tr>
 <tr>
 <td>Defeitos encontrados</td>
-<td>51 (50 abertos): 16 de gravidade alta, 18 média e 16 baixa</td>
-</tr>
-<tr>
-<td>Requisitos para a nova versão</td>
-<td>90 corrigidos do sistema atual, com origem e prioridade</td>
+<td>92 registrados (90 abertos, 2 descartados como duplicados): 19 de gravidade alta, 38 média e 33 baixa</td>
 </tr>
 </tbody>
 </table></div>
@@ -90,12 +90,12 @@
 </thead>
 <tbody>
 <tr>
-<td>Excluir não pede justificativa em 10 cadastros (Ambiente, Equipamento, Grupo de usuários, Categoria, Centro de custo, Pontos de água, Instrumentos, Utensílios, Utilidades e Estrutura funcional)</td>
-<td>Registro sem motivo, item clássico de inspeção</td>
+<td>Excluir não pede justificativa em 10 cadastros, e uma conta gerencial ligada a um local é excluída sem nenhuma recusa</td>
+<td>Registro sem motivo e cadastro em uso apagado: item clássico de inspeção</td>
 <td>Alta</td>
 </tr>
 <tr>
-<td>Configuração, notificações, troca de grupo do profissional e alterações da Conta contábil ficam fora do histórico</td>
+<td>Alterações ficam fora do histórico: Conta contábil, troca e reset de senha, ligações do ambiente, filiais, tipos de manutenção, Configuração e notificações</td>
 <td>Não se sabe quem mudou o quê</td>
 <td>Alta</td>
 </tr>
@@ -105,41 +105,40 @@
 <td>Alta</td>
 </tr>
 <tr>
-<td>Telas de edição, configuração e relatório abrem pelo endereço, sem permissão</td>
+<td>Telas de edição, configuração e relatório abrem pelo endereço, sem conferir permissão</td>
 <td>Acesso e alteração indevidos de dados</td>
 <td>Alta</td>
 </tr>
 <tr>
-<td>O administrador vê a senha provisória, e a troca obrigatória de senha pode ser pulada</td>
-<td>Uma pessoa entra como outra; a autoria perde valor</td>
+<td>A troca de senha pode ser pulada, não limita tentativas e não invalida o acesso anterior; o administrador vê a senha provisória; o endereço com o token abre a sessão de outra pessoa sem senha</td>
+<td>Uma pessoa entra como outra; a autoria perde valor; sessão aproveitada por terceiros</td>
 <td>Alta</td>
 </tr>
 <tr>
-<td>O login leva o token da sessão a qualquer endereço informado em um parâmetro de desenvolvimento</td>
-<td>Sessão aproveitada por terceiros</td>
-<td>Alta</td>
+<td>Avisos do sistema nunca são gerados no ambiente de teste (os serviços de apoio aparecem desligados)</td>
+<td>Prazos e responsáveis não são notificados</td>
+<td>Alta (ambiente)</td>
 </tr>
 </tbody>
 </table></div>
 <div class="callout">
 <p class="callout-titulo">O que já funciona bem</p>
-<p>Bloqueio após tentativas erradas, validade de senha e de conta, perfis de acesso, botões que respeitam as permissões, exclusão sem apagar o dado e histórico campo a campo na maior parte dos cadastros. O Grau de contaminação é o modelo: pede justificativa e grava histórico em tudo.</p>
+<p>Bloqueio após 4 tentativas erradas de senha (reconfirmado), validade de senha e de conta, perfis de acesso, botões que respeitam as permissões, exclusão sem apagar o dado e histórico campo a campo na maior parte dos cadastros. O Grau de contaminação é o modelo: pede justificativa em toda gravação.</p>
 </div>
 <h2 id="correcoes-obrigatorias-para-a-conformidade">Correções obrigatórias para a conformidade</h2>
 <ul>
-<li>Exigir justificativa em toda alteração e exclusão de cadastro e manter consultável o histórico do registro excluído.</li>
-<li>Gravar no histórico todo campo alterado, com o valor antigo e o novo, inclusive na Configuração e nas notificações.</li>
+<li>Exigir justificativa em toda alteração e exclusão de cadastro, impedir a exclusão de registro em uso e manter consultável o histórico do registro excluído.</li>
+<li>Gravar no histórico todo campo e todo vínculo alterado, com o valor antigo e o novo, inclusive troca e reset de senha, Configuração e notificações.</li>
 <li>Pedir a senha de novo nas gravações críticas da Administração.</li>
 <li>Conferir a permissão do usuário em todas as telas e ações, no servidor, e deixar somente leitura a tela de quem só consulta.</li>
-<li>Exigir a troca de senha antes de qualquer outra tela e nunca mostrar a senha provisória, nem ao administrador.</li>
+<li>Exigir a troca de senha antes de qualquer outra tela, contar as tentativas também na troca, invalidar o acesso anterior ao trocar a senha e nunca mostrar a senha provisória.</li>
 <li>Aceitar no login só endereços do próprio sistema, encerrar a sessão após 10 minutos sem uso e, ao sair, em todos os módulos.</li>
 </ul>
-<h2 id="e-na-versao-nova-ilabpharma-novo">E na versão nova (iLabPharma Novo)</h2>
-<p>Mesmas regras, tela e API novas; duas rodadas de teste em 17/10/2026. <strong>Melhorou:</strong> bloqueio por tentativas, troca obrigatória de senha e exclusão de profissional com conta. <strong>Piorou:</strong> valor do equipamento multiplicado por 10 a cada edição, ambiente ligado a ponto de água excluído sem recusa, histórico sem usuário ou sem justificativa e CPF sem validação. <strong>Igual:</strong> exclusão sem justificativa.</p>
 <h2 id="limitacoes-e-o-que-muda-na-reabertura">Limitações e o que muda na reabertura</h2>
 <ul>
-<li>Na rodada 3 só o administrador foi usado, porque a senha provisória aparece na tela e não pode ser gravada; o acesso por perfil nas telas abertas só na rodada 3 ficou sem teste. Três casos dependem do DBA (registro de acessos e proteção do histórico).</li>
-<li>O módulo só volta a ser testado quando o DBA responder, o desenvolvimento corrigir os defeitos de gravidade alta ou houver um segundo usuário de teste. Aí se repetem os 16 defeitos de gravidade alta e os casos de acesso por perfil.</li>
+<li>O ambiente de teste não deixou provar: o sino e a lista de avisos (nenhum aviso é gerado), os serviços de apoio ligados, a busca de endereço por CEP (base vazia), o Excel aberto no Excel, a validade futura e o profissional inativo no login, e a recusa de inativar o perfil Administrador (exige outro administrador). Três casos dependem do DBA (registro de acessos e proteção do histórico).</li>
+<li>Também ficou sem prova a exclusão de registro em uso pelo Patrimônio e pela Produção (esses módulos não têm telas no ambiente de teste).</li>
+<li>O módulo volta a ser testado depois das correções do desenvolvimento e das respostas do DBA e da TI: aí se repetem os defeitos de gravidade alta.</li>
 </ul>
 <h2 id="decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</h2>
 <div class="tabela"><table>
@@ -158,13 +157,13 @@
 </tr>
 <tr>
 <td>2</td>
-<td>Pedir ao DBA três confirmações no banco de dados</td>
-<td>Fecha os testes bloqueados</td>
+<td>Pedir ao DBA e à TI: conteúdo do registro de acessos, base de CEPs e serviços de apoio do ambiente</td>
+<td>Fecha os testes que o ambiente não deixou fazer</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Indicar quem, na GQ, revisa e aprova o Dossiê e decide a assinatura eletrônica e a regra de justificativa</td>
-<td>Exigência do Guia 33/2020 da ANVISA</td>
+<td>Indicar quem, na GQ, valida as 1.450 regras e revisa o Dossiê, e escrever o critério de "apto para uso"</td>
+<td>Exigência do Guia 33/2020; hoje nenhuma regra está validada</td>
 </tr>
 <tr>
 <td>4</td>
@@ -176,10 +175,10 @@
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="../visao-geral/index.html"><small>← Módulo anterior</small><strong>Visão entre módulos</strong></a><a class="ap ap-prox" href="inventario-de-telas-e-situacao.html"><small>Próximo →</small><strong>Inventário de telas e situação</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#conclusao">Conclusão</a></li><li><a href="#o-que-foi-feito">O que foi feito</a></li><li><a href="#principais-problemas">Principais problemas</a></li><li><a href="#correcoes-obrigatorias-para-a-conformidade">Correções obrigatórias para a conformidade</a></li><li><a href="#e-na-versao-nova-ilabpharma-novo">E na versão nova (iLabPharma Novo)</a></li><li><a href="#limitacoes-e-o-que-muda-na-reabertura">Limitações e o que muda na reabertura</a></li><li><a href="#decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#conclusao">Conclusão</a></li><li><a href="#o-que-foi-feito">O que foi feito</a></li><li><a href="#principais-problemas">Principais problemas</a></li><li><a href="#correcoes-obrigatorias-para-a-conformidade">Correções obrigatórias para a conformidade</a></li><li><a href="#limitacoes-e-o-que-muda-na-reabertura">Limitações e o que muda na reabertura</a></li><li><a href="#decisoes-e-apoio-pedidos-a-diretoria">Decisões e apoio pedidos à diretoria</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 15/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
