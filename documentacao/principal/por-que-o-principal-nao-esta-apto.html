@@ -45,7 +45,7 @@
     
     <article class="texto">
 <p><strong>Em uma frase:</strong> o módulo Principal (versão 3.5.1, como foi entregue pelo fornecedor) <strong>funciona na maior parte das tarefas, mas não está em conformidade com as normas da ANVISA</strong>. O parecer é <strong>"não apto para uso em ambiente regulado"</strong> até as correções obrigatórias. Os mecanismos essenciais existem, então as falhas podem ser corrigidas sem reconstruir o módulo.</p>
-<p><strong>Atualização de 26/10/2026:</strong> com a terceira rodada de testes, as 32 telas do módulo passaram a ter resultado e o módulo foi fechado (decisão do responsável). O parecer não mudou, e o registro de defeitos cresceu de 26 para 51.</p>
+<p><strong>Atualização de 15/11/2026:</strong> os testes de tela por robôs (14/11/2026) repassaram as 32 telas, com as imagens conferidas, e o registro de defeitos chegou a 92 (90 abertos, 19 de gravidade alta). O parecer não mudou: <strong>continua "não apto"</strong>. Antes, em 26/10/2026, a terceira rodada de testes tinha dado resultado às 32 telas e o módulo foi fechado (decisão do responsável), com o registro em 51 defeitos.</p>
 <h2 id="1-por-que-o-principal-pesa-tanto-no-parecer">1. Por que o Principal pesa tanto no parecer</h2>
 <ul>
 <li><strong>É a porta de entrada dos nove módulos.</strong> O login, os usuários, os perfis e as permissões definidos nele valem para a produção, o estoque, a qualidade e os demais.</li>
@@ -67,19 +67,19 @@
 </tr>
 <tr>
 <td>Testes nas telas</td>
-<td><strong>3 rodadas</strong> (05, 06 e 26/10/2026): 197 de 216 linhas de resultado conclusivas. A rodada 3 teve 140 passos: 48 passaram, 40 com ressalva, 33 falharam e 19 ficaram bloqueados</td>
+<td><strong>3 rodadas</strong> (05, 06 e 26/10/2026): 197 de 216 linhas de resultado conclusivas. A rodada 3 teve 140 passos: 48 passaram, 40 com ressalva, 33 falharam e 19 ficaram bloqueados. Em 14/11/2026, quatro robôs repassaram as 32 telas e as imagens foram conferidas uma a uma</td>
 </tr>
 <tr>
 <td>Defeitos encontrados</td>
-<td><strong>51</strong> registrados, 50 abertos e 1 já explicado. Dos abertos, <strong>16 são de gravidade alta</strong>, 18 média e 16 baixa</td>
+<td><strong>92</strong> registrados, 90 abertos e 2 encerrados (um já explicado e um duplicado). Dos abertos, <strong>19 são de gravidade alta</strong>, 38 média e 33 baixa</td>
 </tr>
 <tr>
 <td>Requisitos corrigidos para a nova versão</td>
-<td><strong>90</strong> do sistema atual (77 anteriores e 13 novos), com origem e prioridade</td>
+<td><strong>97</strong> do sistema atual (77 anteriores e 20 novos), com origem e prioridade</td>
 </tr>
 <tr>
 <td>Documentação por tela</td>
-<td>Cinco páginas para cada uma das 32 telas (análise, manual, fluxos, regras e Anvisa)</td>
+<td>Cinco páginas para cada uma das 32 telas (análise, manual, fluxos, regras e Anvisa) e 1.450 regras de negócio detalhadas (nenhuma validada pela equipe)</td>
 </tr>
 </tbody>
 </table></div>
@@ -115,13 +115,13 @@
 </tr>
 <tr>
 <td><strong>Acesso ao sistema</strong></td>
-<td>As telas de edição, de configuração e de relatório abrem digitando o endereço, sem permissão. O administrador vê a senha provisória na tela. A troca obrigatória de senha pode ser pulada. O login leva o token da sessão a qualquer endereço informado em um parâmetro de desenvolvimento</td>
+<td>As telas de edição, de configuração e de relatório abrem digitando o endereço, sem permissão. O administrador vê a senha provisória na tela. A troca obrigatória de senha pode ser pulada (confirmado em tela em 14/11/2026), e a Troca de senha não limita tentativas nem invalida o acesso anterior. O login leva o token da sessão a qualquer endereço informado em um parâmetro de desenvolvimento, e o endereço com o token abre a sessão de outra pessoa sem senha</td>
 <td>Uma pessoa age como outra; a autoria perde valor</td>
 <td>Guia 33/2020, itens 9.3.2.3 e 9.7.7.1.2</td>
 </tr>
 <tr>
 <td><strong>Cadastros gerais</strong></td>
-<td>Incluem, editam e excluem, mas aceitam nomes e códigos repetidos em alguns cadastros, perdem letras e números digitados sem avisar e dão mensagens genéricas</td>
+<td>Incluem, editam e excluem, mas aceitam nomes e códigos repetidos em alguns cadastros (inclusive Local físico na alteração e Instrumentos na inclusão), excluem uma conta gerencial ligada a um local, inativam registros em uso sem aviso, perdem letras e números digitados sem avisar e dão mensagens genéricas</td>
 <td>Dado de referência com erro</td>
 <td>Integridade de dados</td>
 </tr>
@@ -148,7 +148,7 @@
 <p>O modelo de como o Principal deve funcionar está em <strong>"O Principal ideal"</strong> (passo 4 do roteiro).</p>
 <h2 id="6-limitacoes-desta-homologacao">6. Limitações desta homologação</h2>
 <ul>
-<li><strong>Só o administrador foi usado na rodada 3.</strong> Entrar como outro usuário exige o Reset de senha, e a senha provisória aparece na tela e não pode ser gravada. O acesso por perfil nas telas abertas só na rodada 3 ficou sem teste.</li>
+<li><strong>Só o administrador foi usado na rodada 3.</strong> Entrar como outro usuário exige o Reset de senha, e a senha provisória aparece na tela e não pode ser gravada. O acesso por perfil nas telas abertas só na rodada 3 ficou sem teste. Em 14/11/2026 os robôs criaram contas de teste e repetiram as telas, mas ainda faltam o sino e a lista de avisos (nenhum aviso é gerado: serviços de apoio desligados), a busca por CEP (base vazia), o Excel aberto, a recusa de inativar o perfil Administrador e as exclusões em uso pelo Patrimônio e pela Produção.</li>
 <li><strong>Casos que dependem do DBA</strong> (CT-PRI-012, 083 e 084): sem as respostas, a trilha de auditoria não pode ser dada como conforme.</li>
 <li><strong>Não feitos:</strong> excluir e inativar registro "em uso" nos cadastros, relacionamentos com Produção e CQ, relatório Usuário × Perfil, conteúdo de Imprimir e Excel, segurança da aplicação e carga de dados.</li>
 <li>O defeito do login (DV-PRI-050) foi observado só com destino dentro do próprio sistema.</li>
@@ -182,7 +182,7 @@
 </table></div>
 <p>São consultas, exceto o pedido 2 (alteração em registro de teste) e o 3 (usuário de teste).</p>
 <h2 id="8-o-que-muda-na-reabertura-e-como-o-modulo-passa-a-apto">8. O que muda na reabertura e como o módulo passa a "apto"</h2>
-<p>O módulo está fechado. Ele só volta a ser testado quando houver fato novo: o DBA responder, o desenvolvimento corrigir os defeitos de gravidade alta ou houver um segundo usuário de teste. Na reabertura, repetem-se os 16 defeitos de gravidade alta, executa-se o acesso por perfil e as exclusões em uso e, por risco, os casos novos propostos por tela.</p>
+<p>O módulo está fechado. Ele só volta a ser testado quando houver fato novo: o DBA responder, o desenvolvimento corrigir os defeitos de gravidade alta ou houver um segundo usuário de teste. Na reabertura, repetem-se os 19 defeitos de gravidade alta, executa-se o acesso por perfil e as exclusões em uso e, por risco, os casos novos propostos por tela.</p>
 <p>Para passar a "apto": executar novamente o plano de testes completo na nova versão, como teste de aceite. A aprovação exige <strong>100% dos casos de prioridade alta aprovados</strong>.</p>
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="achados-de-seguranca.html"><small>← Anterior</small><strong>Achados de segurança</strong></a><a class="ap ap-prox" href="dossie-de-homologacao.html"><small>Próximo →</small><strong>Dossiê de homologação</strong></a></nav>
@@ -190,7 +190,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#1-por-que-o-principal-pesa-tanto-no-parecer">1. Por que o Principal pesa tanto no parecer</a></li><li><a href="#2-os-numeros">2. Os números</a></li><li><a href="#3-por-que-nao-esta-apto">3. Por que não está apto</a></li><li><a href="#4-o-que-ja-funciona-e-vale-manter">4. O que já funciona (e vale manter)</a></li><li><a href="#5-o-que-precisa-ser-corrigido-para-uma-nova-homologacao">5. O que precisa ser corrigido para uma nova homologação</a></li><li><a href="#6-limitacoes-desta-homologacao">6. Limitações desta homologação</a></li><li><a href="#7-o-que-preciso-do-dba">7. O que preciso do DBA</a></li><li><a href="#8-o-que-muda-na-reabertura-e-como-o-modulo-passa-a-apto">8. O que muda na reabertura e como o módulo passa a &quot;apto&quot;</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 15/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>
