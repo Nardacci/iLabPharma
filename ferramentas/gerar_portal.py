@@ -2388,6 +2388,13 @@ def _dbr(iso):
     return f"{d.day:02d}/{d.month:02d}"
 
 
+def _barra3(feito, a_testar, a_dev, extra=""):
+    """Barra de três cores: azul = feito, rosa = a testar (e documentar), amarelo = a desenvolver. Rótulo só nos trechos de 12% ou mais."""
+    seg = lambda cls, v: f'<i class="{cls}" style="width:{v}%">{f"{v}%" if v >= 12 else ""}</i>' if v else ""
+    return (f'<div class="pf-barra {extra}" role="img" aria-label="{feito}% feito, {a_testar}% a testar, {a_dev}% a desenvolver">'
+            f'{seg("pf-feito", feito)}{seg("pf-testar", a_testar)}{seg("pf-dev", a_dev)}</div>')
+
+
 def pagina_cronograma(origem, novo=False):
     """Cronograma do Legado (novo=False) ou da versão nova (novo=True): mesma página, só a cor muda."""
     arq = Path(origem) / "homologacao" / ("versao-nova/cronograma-novo.json" if novo else "cronograma.json")
@@ -2445,8 +2452,9 @@ def pagina_cronograma(origem, novo=False):
             p = round(t["conclusivos"] / t["planejados"] * 100) if t["planejados"] else 0
             prog = f'<div class="cr-prog" title="{t["conclusivos"]} de {t["planejados"]} {"telas testadas" if novo else "casos conclusivos"}"><i style="width:{p}%;--cor:{cor}"></i></div><small>{t["conclusivos"]}/{t["planejados"]} {"telas testadas" if novo else "casos"}</small>'
             if novo:
-                prog = (f'<div class="pf-linha"><b class="pf-feito-t">{m["andamento"]}% feito</b><b class="pf-falta-t">{100 - m["andamento"]}% falta</b></div>'
-                        f'<div class="cr-prog pf-prog" title="{m["andamento"]}% feito, {100 - m["andamento"]}% falta"><i style="width:{m["andamento"]}%;--cor:{cor}"></i></div>' + prog.split("</div>", 1)[1])
+                bb = m["barra"]
+                prog = (f'<div class="pf-linha"><b class="pf-feito-t">{bb["feito"]}% feito</b><b class="pf-testar-t">{bb["a_testar"]}% a testar</b><b class="pf-dev-t">{bb["a_desenvolver"]}% a desenvolver</b></div>'
+                        + _barra3(bb["feito"], bb["a_testar"], bb["a_desenvolver"], "pf-prog") + prog.split("</div>", 1)[1])
         href = f'documentacao/{m["id"]}/index.html'
         linhas.append(
             f'<div class="cr-linha"><div class="cr-rotulo"><a href="{href}" style="--cor:{cor}">{E(m["nome"])}</a><em>{E(m["situacao"])}</em>{prog}</div>'
@@ -2495,28 +2503,35 @@ def pagina_cronograma(origem, novo=False):
                    f'<div class="numero"><strong>{tt["testadas"]}<small>/{tt["prontas"]}</small></strong><span>telas prontas (reais) testadas</span></div>'
                    f'<div class="numero"><strong>{tt["conferidas"]}<small>/{tt["manuais"]}</small></strong><span>manuais conferidos por robô</span></div>'
                    f'<div class="numero"><strong>{termino.day:02d}/{termino.month:02d}</strong><span>previsão de término ({termino.year})</span></div>')
-        def _barra(p):
-            return (f'<div class="pf-barra" role="img" aria-label="{p}% feito e {100 - p}% faltando"><i class="pf-feito" style="width:{p}%">{f"{p}%" if p >= 12 else ""}</i>'
-                    f'<i class="pf-falta" style="width:{100 - p}%">{f"{100 - p}%" if 100 - p >= 12 else ""}</i></div>')
-        HERO = (f'<section class="pf-hero" aria-label="Avanço geral"><div class="pf-grande"><div class="pf-n pf-n-feito"><strong>{tt["andamento"]}%</strong><span>feito</span></div>'
-                f'<div class="pf-n pf-n-falta"><strong>{100 - tt["andamento"]}%</strong><span>falta</span></div></div>{_barra(tt["andamento"])}'
-                f'<p>Média dos cinco módulos em seis etapas: telas testadas, fichas com evidência, manual escrito, manual conferido por robô, prints completos e documentos Word. '
+        LEG3 = ('<p class="pf-leg"><span><i class="pf-feito"></i>Feito</span><span><i class="pf-testar"></i>A testar e documentar (trabalho nosso: testes, evidências, manual, prints e Words)</span>'
+                '<span><i class="pf-dev"></i>A desenvolver (telas que o desenvolvimento ainda não entregou)</span></p>')
+        bt = tt["barra"]
+        a_dev_telas = tt["telas"] - tt["prontas"]
+        HERO = (f'<section class="pf-hero" aria-label="Avanço geral"><div class="pf-grande">'
+                f'<div class="pf-n pf-n-feito"><strong>{bt["feito"]}%</strong><span>feito</span></div>'
+                f'<div class="pf-n pf-n-testar"><strong>{bt["a_testar"]}%</strong><span>a testar</span></div>'
+                f'<div class="pf-n pf-n-dev"><strong>{bt["a_desenvolver"]}%</strong><span>a desenvolver</span></div></div>'
+                f'{_barra3(bt["feito"], bt["a_testar"], bt["a_desenvolver"])}{LEG3}'
+                f'<p>Média dos cinco módulos em sete etapas: telas implantadas, telas testadas, fichas com evidência, manual escrito, manual conferido por robô, prints completos e documentos Word. '
+                f'Em telas: <strong>{tt["prontas"]}</strong> de {tt["telas"]} estão implantadas e <strong>{a_dev_telas}</strong> ainda precisam ser desenvolvidas (a maior parte é do Estoque, com 68 provisórias). '
                 f'Faltam <strong>{tt["manuais"] - tt["conferidas"]}</strong> manuais para conferir e <strong>{tt["prints_faltam"]}</strong> prints.</p></section>')
-        POR_MOD = ('<section class="cr-sec"><h2>Quanto está feito e quanto falta, por módulo</h2><div class="pf-modulos">'
-                   + "".join(f'<a class="pf-mod" href="#cr-{m["id"]}" style="--cor:{cores[m["id"]]}"><div class="pf-mod-topo"><span>{E(m["nome"])}</span><span><b class="pf-feito-t">{m["andamento"]}% feito</b> · <b class="pf-falta-t">{100 - m["andamento"]}% falta</b></span></div>{_barra(m["andamento"])}</a>' for m in mods)
+        POR_MOD = ('<section class="cr-sec"><h2>Quanto está feito, a testar e a desenvolver, por módulo</h2>' + LEG3 + '<div class="pf-modulos">'
+                   + "".join(f'<a class="pf-mod" href="#cr-{m["id"]}" style="--cor:{cores[m["id"]]}"><div class="pf-mod-topo"><span>{E(m["nome"])}</span><span><b class="pf-feito-t">{m["barra"]["feito"]}% feito</b> · <b class="pf-testar-t">{m["barra"]["a_testar"]}% a testar</b> · <b class="pf-dev-t">{m["barra"]["a_desenvolver"]}% a desenvolver</b></span></div>{_barra3(m["barra"]["feito"], m["barra"]["a_testar"], m["barra"]["a_desenvolver"])}<small class="pf-tel">{m["telas"]["prontas"]} de {m["telas"]["total"]} telas implantadas · {m["telas"]["total"] - m["telas"]["prontas"]} a desenvolver</small></a>' for m in mods)
                    + '</div></section>')
         nomes_et = [e["nome"] for e in mods[0]["etapas"]]
         lin_et = ""
         for i, nome in enumerate(nomes_et):
             f_ = sum(m["etapas"][i]["feitos"] for m in mods); n_ = sum(m["etapas"][i]["total"] for m in mods)
             p_ = round(100 * f_ / n_) if n_ else 0
-            lin_et += f'<tr><td>{E(nome)}</td><td>{f_} de {n_}</td><td class="pf-celula">{_barra(p_)}</td><td><strong>{n_ - f_}</strong> ({100 - p_}%)</td></tr>'
+            falta_p = 100 - p_
+            barra_e = _barra3(p_, 0 if i == 0 else falta_p, falta_p if i == 0 else 0)
+            lin_et += f'<tr><td>{E(nome)}</td><td>{f_} de {n_}</td><td class="pf-celula">{barra_e}</td><td><strong>{n_ - f_}</strong> ({falta_p}%) {"a desenvolver" if i == 0 else "a testar"}</td></tr>'
         POR_ETAPA = ('<section class="cr-sec"><h2>Por etapa (cinco módulos somados)</h2><div class="tabela"><table><thead><tr><th>Etapa</th><th>Feito</th><th>Feito × falta</th><th>Falta</th></tr></thead><tbody>'
                      + lin_et + '</tbody></table></div></section>')
-        TABELA_TELAS = HERO + POR_MOD + ('<section class="cr-sec"><h2>Telas por módulo</h2><p class="cr-sub"><strong>Prontas</strong> são as telas reais; <strong>provisórias</strong> mostram só um cartão ("API conectada" ou "Tela em integração") e não têm o que testar; '
-                        '<strong>manual conferido</strong> é a tela executada passo a passo por robô, com print de cada passo.</p><div class="tabela"><table><thead><tr><th>Módulo</th><th>Telas no total</th><th>Prontas</th><th>Provisórias</th><th>Testadas</th><th>Manual escrito</th><th>Manual conferido</th><th>Fichas de defeito</th><th>Feito</th><th>Falta</th></tr></thead><tbody>'
-                        + "".join(f'<tr><td><a href="documentacao/{m["id"]}/index.html">{E(m["nome"])}</a></td><td>{m["telas"]["total"]}</td><td>{m["telas"]["prontas"]}</td><td>{m["telas"]["provisorias"]}</td><td>{m["telas"]["testadas"]}</td><td>{m["telas"]["manuais"]}</td><td>{m["telas"]["conferidas"]}</td><td>{m["fichas"]["total"]}</td><td><strong>{m["andamento"]}%</strong></td><td>{100 - m["andamento"]}%</td></tr>' for m in mods)
-                        + f'<tr><td><strong>Total</strong></td><td><strong>{tt["telas"]}</strong></td><td><strong>{tt["prontas"]}</strong></td><td><strong>{sum(m["telas"]["provisorias"] for m in mods)}</strong></td><td><strong>{tt["testadas"]}</strong></td><td><strong>{tt["manuais"]}</strong></td><td><strong>{tt["conferidas"]}</strong></td><td><strong>{tt["fichas"]}</strong></td><td><strong>{tt["andamento"]}%</strong></td><td><strong>{100 - tt["andamento"]}%</strong></td></tr></tbody></table></div></section>') + POR_ETAPA
+        TABELA_TELAS = HERO + POR_MOD + ('<section class="cr-sec"><h2>Telas por módulo</h2><p class="cr-sub"><strong>Prontas</strong> são as telas reais (implantadas); <strong>provisórias</strong> mostram só um cartão ("API conectada" ou "Tela em integração") e ainda precisam ser desenvolvidas; '
+                        '<strong>manual conferido</strong> é a tela executada passo a passo por robô, com print de cada passo.</p><div class="tabela"><table><thead><tr><th>Módulo</th><th>Telas no total</th><th>Prontas</th><th>Provisórias</th><th>Testadas</th><th>Manual escrito</th><th>Manual conferido</th><th>Fichas de defeito</th><th>Feito</th><th>A testar</th><th>A desenvolver</th></tr></thead><tbody>'
+                        + "".join(f'<tr><td><a href="documentacao/{m["id"]}/index.html">{E(m["nome"])}</a></td><td>{m["telas"]["total"]}</td><td>{m["telas"]["prontas"]}</td><td>{m["telas"]["provisorias"]}</td><td>{m["telas"]["testadas"]}</td><td>{m["telas"]["manuais"]}</td><td>{m["telas"]["conferidas"]}</td><td>{m["fichas"]["total"]}</td><td><strong>{m["barra"]["feito"]}%</strong></td><td>{m["barra"]["a_testar"]}%</td><td>{m["barra"]["a_desenvolver"]}%</td></tr>' for m in mods)
+                        + f'<tr><td><strong>Total</strong></td><td><strong>{tt["telas"]}</strong></td><td><strong>{tt["prontas"]}</strong></td><td><strong>{sum(m["telas"]["provisorias"] for m in mods)}</strong></td><td><strong>{tt["testadas"]}</strong></td><td><strong>{tt["manuais"]}</strong></td><td><strong>{tt["conferidas"]}</strong></td><td><strong>{tt["fichas"]}</strong></td><td><strong>{bt["feito"]}%</strong></td><td><strong>{bt["a_testar"]}%</strong></td><td><strong>{bt["a_desenvolver"]}%</strong></td></tr></tbody></table></div></section>') + POR_ETAPA
     else:
         TRILHA = '<span>Cronograma</span></nav>'
         TITULO = "Cronograma da homologação"
