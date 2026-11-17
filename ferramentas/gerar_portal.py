@@ -44,7 +44,6 @@ import higiene  # noqa: E402
 import menus_gq  # noqa: E402
 import telas_devs  # noqa: E402
 import versao_nova  # noqa: E402
-import cronograma_novo  # noqa: E402
 
 HOJE = datetime.date.today().strftime("%d/%m/%Y")
 
@@ -1198,7 +1197,7 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     cron = pagina_cronograma(origem)
     if cron:
         (destino / "cronograma.html").write_text(cron, encoding="utf-8")
-    cron_novo = cronograma_novo.pagina(origem, cabecalho, rodape, {m["id"]: m["cor"] for m in MODULOS})
+    cron_novo = pagina_cronograma(origem, novo=True)
     if cron_novo:
         (destino / "cronograma-novo.html").write_text(cron_novo, encoding="utf-8")
         print("Cronograma da versão nova: cronograma-novo.html")
@@ -2389,14 +2388,18 @@ def _dbr(iso):
     return f"{d.day:02d}/{d.month:02d}"
 
 
-def pagina_cronograma(origem):
-    arq = Path(origem) / "homologacao" / "cronograma.json"
+def pagina_cronograma(origem, novo=False):
+    """Cronograma do Legado (novo=False) ou da versão nova (novo=True): mesma página, só a cor muda."""
+    arq = Path(origem) / "homologacao" / ("versao-nova/cronograma-novo.json" if novo else "cronograma.json")
     if not arq.exists():
         return ""
     cr = json.loads(higiene.redigir(arq.read_text(encoding="utf-8")))
+    if novo:
+        cr["modulos"] = [dict(m, testes=dict(planejados=m["telas"]["prontas"], conclusivos=m["telas"]["testadas"], alta=m["fichas"]["alta"], alta_pendentes=m["fichas"]["sem_imagem"], rodadas_feitas=None,
+                                              nota="")) for m in cr["modulos"]]
     hoje = _dt.date.today()
     mods = cr["modulos"]
-    cores = {m["id"]: m["cor"] for m in MODULOS}
+    cores = {m["id"]: ("#1f6feb" if novo else m["cor"]) for m in MODULOS}
     datas = [_dt.date.fromisoformat(f[k]) for m in mods for f in m["fases"] for k in ("inicio", "fim")]
     datas += [_dt.date.fromisoformat(x["data"]) for x in cr.get("marcos", [])]
     ini = min(datas) - _dt.timedelta(days=(min(datas).weekday()))  # começa na segunda
@@ -2440,7 +2443,7 @@ def pagina_cronograma(origem):
         prog = ""
         if t:
             p = round(t["conclusivos"] / t["planejados"] * 100) if t["planejados"] else 0
-            prog = f'<div class="cr-prog" title="{t["conclusivos"]} de {t["planejados"]} casos conclusivos"><i style="width:{p}%;--cor:{cor}"></i></div><small>{t["conclusivos"]}/{t["planejados"]} casos</small>'
+            prog = f'<div class="cr-prog" title="{t["conclusivos"]} de {t["planejados"]} {"telas testadas" if novo else "casos conclusivos"}"><i style="width:{p}%;--cor:{cor}"></i></div><small>{t["conclusivos"]}/{t["planejados"]} {"telas testadas" if novo else "casos"}</small>'
         href = f'documentacao/{m["id"]}/index.html'
         linhas.append(
             f'<div class="cr-linha"><div class="cr-rotulo"><a href="{href}" style="--cor:{cor}">{E(m["nome"])}</a><em>{E(m["situacao"])}</em>{prog}</div>'
@@ -2468,7 +2471,7 @@ def pagina_cronograma(origem):
             for f in m["fases"])
         tnum = ""
         if t:
-            tnum = (f'<p class="cr-num"><strong>{t["conclusivos"]}</strong> de {t["planejados"]} casos com resultado · '
+            tnum = (f'<p class="cr-num"><strong>{t["conclusivos"]}</strong> de {t["planejados"]} telas reais testadas · <strong>{m["telas"]["manuais"]}</strong> manuais escritos, <strong>{m["telas"]["conferidas"]}</strong> conferidos por robô · <strong>{t["alta_pendentes"]}</strong> de {m["fichas"]["total"]} fichas de defeito ainda sem imagem ({t["alta"]} de gravidade Alta) · <strong>{m["manual"]["prints_que_faltam"]}</strong> prints por fazer</p>' if novo else f'<p class="cr-num"><strong>{t["conclusivos"]}</strong> de {t["planejados"]} casos com resultado · '
                     f'<strong>{t["alta_pendentes"]}</strong> de {t["alta"]} casos de prioridade Alta ainda por testar · '
                     f'{t["rodadas_feitas"]} rodada(s) feita(s)</p>' + (f'<p class="cr-nota">{E(t["nota"])}</p>' if t.get("nota") else ""))
         falta = "".join(f"<li>{E(x)}</li>" for x in m.get("falta", []))
@@ -2479,24 +2482,45 @@ def pagina_cronograma(origem):
     premissas = "".join(f"<li>{_inline(x)}</li>" for x in cr.get("premissas", []))
     leg = "".join(f'<span class="cr-leg cr-{k}">{E(v)}</span>' for k, v in legenda.items())
     raiz = ""
-    return (cabecalho("Cronograma da homologação · iLabMedSys", raiz, "cronograma") + f"""
-<main id="conteudo" class="cronograma">
+    if novo:
+        TRILHA = '<a href="cronograma.html">Cronograma</a> › <span>Novo</span></nav>'
+        TITULO = "Cronograma da versão nova"
+        INTRO = ("A versão nova é o sistema que a equipe de desenvolvimento está fazendo. Cinco módulos: Principal, Estoque, Controle da Qualidade, Garantia da Qualidade e Controle de Documentos. "
+                 "Onde cada um está, quantas telas existem, quais estão prontas e testadas e quanto falta. As datas futuras são previsão.")
+        tt = cr["total"]
+        NUMEROS = (f'<div class="numero"><strong>{tt["telas"]}</strong><span>telas no total (cinco módulos)</span></div>'
+                   f'<div class="numero"><strong>{tt["testadas"]}<small>/{tt["prontas"]}</small></strong><span>telas prontas (reais) testadas</span></div>'
+                   f'<div class="numero"><strong>{tt["conferidas"]}<small>/{tt["manuais"]}</small></strong><span>manuais conferidos por robô</span></div>'
+                   f'<div class="numero"><strong>{termino.day:02d}/{termino.month:02d}</strong><span>previsão de término ({termino.year})</span></div>')
+        TABELA_TELAS = ('<section class="cr-sec"><h2>Telas por módulo</h2><p class="cr-sub"><strong>Prontas</strong> são as telas reais; <strong>provisórias</strong> mostram só um cartão ("API conectada" ou "Tela em integração") e não têm o que testar; '
+                        '<strong>manual conferido</strong> é a tela executada passo a passo por robô, com print de cada passo.</p><div class="tabela"><table><thead><tr><th>Módulo</th><th>Telas no total</th><th>Prontas</th><th>Provisórias</th><th>Testadas</th><th>Manual escrito</th><th>Manual conferido</th><th>Fichas de defeito</th><th>Avanço</th></tr></thead><tbody>'
+                        + "".join(f'<tr><td><a href="documentacao/{m["id"]}/index.html">{E(m["nome"])}</a></td><td>{m["telas"]["total"]}</td><td>{m["telas"]["prontas"]}</td><td>{m["telas"]["provisorias"]}</td><td>{m["telas"]["testadas"]}</td><td>{m["telas"]["manuais"]}</td><td>{m["telas"]["conferidas"]}</td><td>{m["fichas"]["total"]}</td><td>{m["andamento"]}%</td></tr>' for m in mods)
+                        + f'<tr><td><strong>Total</strong></td><td><strong>{tt["telas"]}</strong></td><td><strong>{tt["prontas"]}</strong></td><td><strong>{sum(m["telas"]["provisorias"] for m in mods)}</strong></td><td><strong>{tt["testadas"]}</strong></td><td><strong>{tt["manuais"]}</strong></td><td><strong>{tt["conferidas"]}</strong></td><td><strong>{tt["fichas"]}</strong></td><td><strong>{tt["andamento"]}%</strong></td></tr></tbody></table></div></section>')
+    else:
+        TRILHA = '<span>Cronograma</span></nav>'
+        TITULO = "Cronograma da homologação"
+        INTRO = "Onde cada módulo está, o que já foi testado e quanto falta para fechar. As datas futuras são previsão."
+        NUMEROS = (f'<div class="numero"><strong>{fechados}<small>/{len(com_t)}</small></strong><span>módulos fechados</span></div>'
+                   f'<div class="numero"><strong>{conclusivos}<small>/{planejados}</small></strong><span>casos de teste com resultado</span></div>'
+                   f'<div class="numero"><strong>{alta_pend}</strong><span>casos de prioridade Alta por testar</span></div>'
+                   f'<div class="numero"><strong>{termino.day:02d}/{termino.month:02d}</strong><span>previsão de término ({termino.year})</span></div>')
+        TABELA_TELAS = ""
+    return (cabecalho("Cronograma da versão nova · iLabMedSys" if novo else "Cronograma da homologação · iLabMedSys", raiz, "cronograma-novo" if novo else "cronograma") + f"""
+<main id="conteudo" class="cronograma{" cronograma-novo" if novo else ""}">
   <section class="anv-faixa">
     <div class="anv-faixa-interna">
-      <nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <span>Cronograma</span></nav>
-      <h1>Cronograma da homologação</h1>
-      <p>Onde cada módulo está, o que já foi testado e quanto falta para fechar. As datas futuras são previsão. Atualizado em {E(cr.get("atualizado", HOJE))}.</p>
-      <p class="cn-seletor">{versao_nova.seletor("cronograma.html", "cronograma-novo.html", "legado")}</p>
+      <nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › {TRILHA}
+      <h1>{TITULO}</h1>
+      <p>{INTRO} Atualizado em {E(cr.get("atualizado", HOJE))}.</p>
+      <p class="cn-seletor">{versao_nova.seletor("cronograma.html", "cronograma-novo.html", "novo" if novo else "legado")}</p>
     </div>
   </section>
   <div class="cr-conteudo">
     <div class="cr-numeros" aria-label="Números gerais">
-      <div class="numero"><strong>{fechados}<small>/{len(com_t)}</small></strong><span>módulos fechados</span></div>
-      <div class="numero"><strong>{conclusivos}<small>/{planejados}</small></strong><span>casos de teste com resultado</span></div>
-      <div class="numero"><strong>{alta_pend}</strong><span>casos de prioridade Alta por testar</span></div>
-      <div class="numero"><strong>{termino.day:02d}/{termino.month:02d}</strong><span>previsão de término ({termino.year})</span></div>
+      {NUMEROS}
     </div>
 
+    {TABELA_TELAS}
     <section class="cr-sec">
       <h2>Linha do tempo</h2>
       <p class="cr-sub">Uma linha por módulo. Barra cheia: feito. Barra listrada: previsto. A linha vertical marca hoje. Passe o mouse sobre uma barra para ver o detalhe.</p>
