@@ -47,7 +47,7 @@
     <article class="texto">
 <h2 id="introducao">Introdução</h2>
 <h3 id="escopo">Escopo</h3>
-<p>Este dossiê registra os testes de homologação do <strong>módulo Estoque na versão nova</strong> do LabMedSys (o mesmo sistema com um front-end novo sobre o mesmo back-end), entre 05 e 10/11/2026. O objetivo é saber o que funciona, o que falha e o que ainda impede o uso em ambiente regulado (RDC 658/2022, Guia 33/2020). O foco é o comportamento das telas; a leitura do código novo é a Fase 2 do trabalho e ainda não foi feita.</p>
+<p>Este dossiê registra os testes de homologação do <strong>módulo Estoque na versão nova</strong> do LabMedSys (o mesmo sistema com um front-end novo sobre o mesmo back-end), entre 05 e 13/11/2026, com a conferência e a correção das fichas de 17/11/2026. O objetivo é saber o que funciona, o que falha e o que ainda impede o uso em ambiente regulado (RDC 658/2022, Guia 33/2020). O foco é o comportamento das telas; a leitura do código novo é a Fase 2 do trabalho e ainda não foi feita.</p>
 <h3 id="documentos-deste-pacote">Documentos deste pacote</h3>
 <div class="tabela"><table>
 <thead>
@@ -67,11 +67,11 @@
 </tr>
 <tr>
 <td>Manual da versão nova, por tela</td>
-<td>Uso de cada tela testada, com as capturas e os defeitos ligados</td>
+<td>Uso de cada tela testada, com as capturas e os defeitos ligados. <strong>25 manuais por tela, em rascunho; 0 conferidos por robô</strong></td>
 </tr>
 <tr>
 <td>Fichas de defeito DV-EST-N</td>
-<td>41 fichas, com passos, esperado, obtido, impacto e evidência</td>
+<td>52 fichas, com passos, esperado, obtido, impacto e evidência</td>
 </tr>
 <tr>
 <td>Documentos do Legado</td>
@@ -154,13 +154,13 @@
 <td>Cadastros</td>
 <td>Almoxarifado</td>
 <td>Real (testada)</td>
-<td>N-010, N-018, N-025, N-026, N-033, N-036</td>
+<td>N-010, N-018, N-025, N-026, N-033, N-036, N-052</td>
 </tr>
 <tr>
 <td>Cadastros</td>
 <td>Local de Armazenagem</td>
 <td>Real (testada)</td>
-<td>N-009, N-025</td>
+<td>N-009, N-025, N-053</td>
 </tr>
 <tr>
 <td>Cadastros</td>
@@ -311,11 +311,12 @@
 <h3 id="avaliacao-das-funcoes">Avaliação das funções</h3>
 <p>Não verificado na versão nova: depende da análise do código novo.</p>
 <h3 id="resumo-dos-riscos">Resumo dos riscos</h3>
-<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 11 defeitos de prioridade Alta (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
+<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 14 defeitos de prioridade Alta (12 abertos) (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
 <ul>
 <li><strong>Perfil com todas as funções do Estoque</strong> recebe 403 até para leitura (N-001, confirmado na Fase 2 B); sem token ou com token adulterado, 401; telas abertas sem login levam ao login; só o administrador de perfil 1 usa o módulo. A <strong>separação de funções</strong> (quem recebe não autoriza, quem conta não ajusta) <strong>continua sem teste</strong>: a autorização do recebimento segue bloqueada por configuração do ambiente (<code>Integracoes:Principal:BaseUrl</code>).</li>
 <li>A causa do 403 não está confirmada: o código lê <code>develop</code>, onde o módulo usa o mapeamento de funções do Principal; pode ser mapeamento de módulo/código ou versão publicada diferente. <strong>Pergunta aberta aos desenvolvedores.</strong></li>
+<li><strong>Grupo do usuário:</strong> o login não grava o grupo do usuário no token (N-049) e a Saída de Material trata a pessoa como "grupo zero" (N-050); por isso a lista de origem vem vazia e nenhuma saída grava. Defeito de código, não de dados do ambiente; quem corrige é o desenvolvimento.</li>
 <li><strong>Sessão:</strong> três sessões da mesma conta voltaram ao login aos 9,5 minutos, as ociosas e a em uso, sem mensagem (token de 10 minutos, sem renovação). Duas sessões da mesma conta convivem. Depois do Sair o token antigo continua respondendo 200 (repete DV-PRI-N-004).</li>
 </ul>
 <h3 id="trilha-de-auditoria">Trilha de auditoria</h3>
@@ -340,6 +341,38 @@
 <h3 id="quantidade-de-casos-por-classe">Quantidade de casos por classe</h3>
 <p>Igual ao Legado (inclusive a falha), Regressão, Melhoria, Novo, Provisória e Bloqueado no teste; as contagens estão no capítulo de resultados.</p>
 <h2 id="resultados-dos-testes">Resultados dos testes</h2>
+<h3 id="numeros-das-fichas-lidos-das-fichas-em-17-11-2026">Números das fichas (lidos das fichas em 17/11/2026)</h3>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Indicador</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fichas de defeito</td>
+<td>52</td>
+</tr>
+<tr>
+<td>Defeitos contados</td>
+<td>52</td>
+</tr>
+<tr>
+<td>Abertos / corrigidos ou fechados</td>
+<td>46 / 6</td>
+</tr>
+<tr>
+<td>Gravidade Alta / Média / Baixa</td>
+<td>14 / 26 / 12 (Alta abertas: 12)</td>
+</tr>
+<tr>
+<td>Classe na versão nova</td>
+<td>9 Igual ao legado, 6 Regressão, 26 Novo, 7 Bloqueado no teste, 4 A confirmar</td>
+</tr>
+</tbody>
+</table></div>
+<p>A classe de cada defeito é a da ficha, depois das correções de 17/11/2026 (marcadas com *). DV-EST-N-026: Item com saldo = Regressão a confirmar.</p>
 <h3 id="resumo-das-rodadas">Resumo das rodadas</h3>
 <div class="tabela"><table>
 <thead>
@@ -388,12 +421,27 @@
 <tr>
 <td>Repetição guiada pelo código</td>
 <td>11/11/2026</td>
-<td>Com o front novo já publicado: repetidos N-002, N-004, N-005, N-006, N-007, N-009, N-014, N-029, N-030 e N-031 (seis corrigidas ou fechadas); em segunda rodada, com endereços livres e um item de teste criados, provada a segunda trava do endereçamento (N-004), a entrada com item de controle de qualidade (N-030 deixa de se reproduzir), a validade vencida aceita (N-037 confirmada) e o lote vencido fora do atendimento; testadas as telas novas Aprovação de solicitação, Atendimento de solicitação e Entrada de material - outras; 5 defeitos novos (N-037 a N-041); 82 telas no menu, 29 reais e 52 provisórias</td>
+<td>Com o front novo já publicado: repetidos N-002, N-004, N-005, N-006, N-007, N-009, N-014, N-029, N-030 e N-031 (seis corrigidas ou fechadas); em segunda rodada, com endereços livres e um item de teste criados, provada a segunda trava do endereçamento (N-004), a entrada com item de controle de qualidade (N-030 deixa de se reproduzir), a validade vencida aceita (N-037 confirmada) e o lote vencido fora do atendimento; testadas as telas novas Aprovação de solicitação, Atendimento de solicitação e Entrada de material - outras; 5 defeitos novos (N-037 a N-041); 82 telas no menu naquela rodada (29 reais e 52 provisórias; contagem a refazer na conferência de telas)</td>
+</tr>
+<tr>
+<td>Saída de Material</td>
+<td>12/11/2026</td>
+<td>Tela real, mas nenhuma saída grava: 12 casos (1 Passou, 2 Passou com ressalva, 1 Falhou, 8 Bloqueado no teste); 6 defeitos novos (N-043 a N-048; o N-042 ficou livre porque a tela existe)</td>
+</tr>
+<tr>
+<td>Saída de Material, causa no código</td>
+<td>12 e 13/11/2026</td>
+<td>Leitura do código e testes pela API: o login não grava o grupo do usuário no token e a Saída não usa o plano B do banco (N-049 e N-050, causa de N-013, N-017, N-043 e N-044); criar conta de acesso pela API dá erro 500 (N-051); os casos seguem bloqueados</td>
 </tr>
 <tr>
 <td>Conferência da nuvem</td>
 <td>10/11/2026</td>
 <td>Revisão de segurança de 694 imagens (2 tarjadas); exclusão com justificativa conferida contra o legado (não é regressão); N-020 reclassificado; N-028 aberto</td>
+</tr>
+<tr>
+<td>Correção das fichas e manuais por tela</td>
+<td>17/11/2026</td>
+<td>Fichas conferidas contra as fontes do legado: <strong>N-018</strong> passa a <strong>Igual ao legado</strong> (o legado já escrevia "PROUÇÃO") e <strong>N-026</strong> é reclassificada (Item com saldo = Regressão a confirmar, porque o legado avisava "O Item possui saldo em estoque!"; Unidade, Classe, Rua e Almoxarifado = Igual). <strong>25 manuais por tela</strong> escritos em rascunho, ainda <strong>0 conferidos por robô</strong></td>
 </tr>
 </tbody>
 </table></div>
@@ -485,7 +533,7 @@
 </tr>
 <tr>
 <td>Média</td>
-<td>Campos decimais não guardam o que se digita (peso 1,5 vira 15); Item aceita mínimo maior que máximo e peso zero; Conta Financeira e Tipo de Referência aceitam duplicado; inativar em uso é aceito</td>
+<td>Campos decimais não guardam o que se digita (peso 1,5 vira 15); Item aceita mínimo maior que máximo e peso zero; Conta Financeira e Tipo de Referência aceitam duplicado; inativar em uso é aceito (no <strong>Item com saldo é Regressão a confirmar</strong>: o legado avisava; Unidade, Classe, Rua e Almoxarifado = Igual)</td>
 <td>N-022 a N-024, N-026</td>
 </tr>
 <tr>
@@ -525,13 +573,53 @@
 </tr>
 <tr>
 <td>Baixa</td>
-<td>Sigla do lote cortada em 2 caracteres; "PROUÇÃO"; mensagens genéricas; Descrição bloqueada na edição</td>
+<td>Sigla do lote cortada em 2 caracteres; "PROUÇÃO" (<strong>igual ao legado</strong>, N-018); mensagens genéricas; Descrição bloqueada na edição</td>
 <td>N-010, N-018, N-011, N-027, N-028</td>
+</tr>
+<tr>
+<td>Alta</td>
+<td><strong>O login não grava o grupo do usuário no token</strong> e a Saída de Material não usa o plano B do banco: com "grupo zero" a lista de origem vem vazia e nenhuma saída grava ("Almoxarifado de origem inválido para o lote."); mesma causa da movimentação interna</td>
+<td>N-049, N-050, N-043, N-013, N-017</td>
+</tr>
+<tr>
+<td>Média</td>
+<td>A mensagem única da Saída esconde os outros motivos de recusa; perfil sem acesso recebe 403 sem mensagem; criar conta de acesso pela API dá erro 500</td>
+<td>N-044, N-048, N-051</td>
+</tr>
+<tr>
+<td>Baixa</td>
+<td>Saída de Material: lista de lotes traz lotes sem saldo e vencidos; excluir sem corpo dá 415 técnico; data inválida mostra texto em inglês</td>
+<td>N-045, N-046, N-047</td>
 </tr>
 </tbody>
 </table></div>
+<p><strong>Correções de classe e unificações de 17/11/2026 estão no capítulo próprio abaixo.</strong></p>
 <p><strong>Corrigidas ou fechadas (verificadas em 09 e 11/11/2026):</strong> N-005 (reabrir o recebimento não dá mais erro 500), N-006 (conferência de recebimento não finalizado agora é recusada), N-007 (a Disponibilidade de Estoque lista itens), N-031 (Entrada de material - outras está real) e N-002 (fechada em favor da N-019: a rota recebe login e senha; o bloqueio é de configuração do ambiente). N-004: tentativas novas de misturar itens no mesmo endereço são recusadas; o dado antigo continua gravado.</p>
 <p><strong>Bloqueado no teste (ambiente/dados).</strong> O <strong>laudo do CQ</strong> continua sem teste pelo caminho completo: o endereçamento não finaliza porque a conferência dá erro (N-012). O CQ passou a ter 3 análises (geradas fora da rodada), uma delas de lote com validade vencida; o servidor recusa (404) gravar laudo e liberar lote pelo Estoque. O código mostra que a análise nasce quando o endereçamento da <strong>nota</strong> é finalizado (nota conferida e todos os itens endereçados); a massa foi endereçada lote a lote pela API e nunca finalizada, e a conferência, que seria o primeiro passo do caminho completo, responde 400 (N-012). A ficha N-020 foi reclassificada de Alta para <strong>Bloqueado no teste</strong>; se, com a conferência funcionando, a finalização não gerar a análise, abre-se defeito funcional Alta.</p>
+<h3 id="correcoes-de-17-11-2026">Correções de 17/11/2026</h3>
+<p>Cada ficha corrigida traz a seção "Correção de 17/11/2026" no fim, com a fonte do legado conferida.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ficha</th>
+<th>Antes</th>
+<th>Agora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DV-EST-N-018 ("PROUÇÃO" na lista de almoxarifados)</td>
+<td>Novo (verificar no legado)</td>
+<td><strong>Igual ao legado</strong>: a grade do legado já escrevia "PROUÇÃO" (validado em CT-EST-170); gravidade Baixa mantida</td>
+</tr>
+<tr>
+<td>DV-EST-N-026 (inativar cadastro em uso)</td>
+<td>Igual ao legado</td>
+<td><strong>Unidade, Classe, Rua e Almoxarifado: Igual</strong> (o legado também inativava em uso sem aviso). <strong>Item com saldo: Regressão a confirmar</strong>, porque o legado avisava "O Item possui saldo em estoque!" e a versão nova inativou o item com saldo 500 sem aviso; a classe do Item será confirmada no reteste do legado. Fornecedor em uso por recebimento: não comparado</td>
+</tr>
+</tbody>
+</table></div>
+<p>Na contagem por classe deste dossiê, a N-026 entra em <strong>Igual ao legado</strong> e leva a nota do Item.</p>
 <h3 id="regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</h3>
 <ul>
 <li><strong>Validade:</strong> o recebimento <strong>não compara a validade com a data de hoje</strong> e não confere a qualificação do fornecedor; lote vencido e fornecedor reprovado foram aceitos (igual ao legado, DV-EST-014). O banco também não confere (resposta do responsável).</li>
@@ -547,6 +635,7 @@
 <th>Defeito</th>
 <th>O que acontece</th>
 <th>Tela</th>
+<th>Classe</th>
 </tr>
 </thead>
 <tbody>
@@ -554,56 +643,85 @@
 <td>DV-EST-N-001</td>
 <td>Perfil com todas as funções do Estoque recebe 403 em toda rota do módulo, até na leitura</td>
 <td>Todas as telas do Estoque</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-002</td>
 <td>A autorização do recebimento não pode ser executada: o recebimento nunca chega ao estado "concluído" e a rota não pede login e senha de outro usuário</td>
 <td>Recebimento de Material (tela provisória; rota da API)</td>
+<td>A confirmar · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-003</td>
 <td>O lote vira "disponível" ou "reprovado" só pelo local do endereço, sem laudo do Controle da Qualidade</td>
 <td>Endereçamento de Material (rota da API); histórico do lote</td>
+<td>A confirmar</td>
 </tr>
 <tr>
 <td>DV-EST-N-012</td>
 <td>A finalização da conferência responde "Erro na consulta do registro!" (400) e o lote novo não entra no estoque</td>
 <td>Conferência de Recebimento (rota da API; tela provisória)</td>
+<td>Regressão</td>
 </tr>
 <tr>
 <td>DV-EST-N-013</td>
 <td>A lista de endereços de destino oferece endereços que a gravação da transferência recusa ("Endereço de destino inválido!")</td>
 <td>Movimentação de Material (rota da API; tela provisória)</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-019</td>
 <td>A autorização do recebimento falha por configuração do ambiente: "Integracoes:Principal:BaseUrl não configurada ou inválida."</td>
 <td>Recebimento de Material, autorização (rota da API)</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-021</td>
 <td>Reabrir o recebimento apaga a conferência e o endereçamento já feitos, sem justificativa e sem nenhuma linha no log</td>
 <td>Recebimento de Material (rota da API; tela provisória)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-025</td>
 <td>Cadastro em uso é excluído com "sucesso" (SJB usado por item; Local de Armazenagem com endereço ativo)</td>
 <td>SJB; Local de Armazenagem; Almoxarifado</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-030</td>
-<td>Entrada de Material - Outras responde "Erro na integração com o módulo do CQ." (409) e nenhum item com controle de qualidade entra (corrigida em 11/11/2026: não se reproduz mais)</td>
+<td>Entrada de Material - Outras responde "Erro na integração com o módulo do CQ." (409) e nenhum item com controle de qualidade entra</td>
 <td>Entrada de Material - Outras (chamada da API; a tela voltou a ser prov</td>
+<td>Bloqueado no teste · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-034</td>
 <td>O recebimento aceita fornecedor reprovado e lote com validade vencida, e finaliza o recebimento</td>
 <td>Recebimento de Material (rota da API; tela provisória)</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-037</td>
 <td>Entrada de Material - Outras aceita lote com validade vencida e o abre para análise do CQ como se fosse normal</td>
 <td>Entrada de Material - Outras (tela real desde 11/11/2026; chamada da A</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-043</td>
+<td>Saída de Material não consegue gravar nenhuma saída: o servidor recusa com "Almoxarifado de origem inválido para o lote."</td>
+<td>Saída de Material (Outras) (tela real; chamadas da API)</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-049</td>
+<td>O login não grava o grupo do usuário no token, e as telas do Estoque que dependem do grupo recusam tudo</td>
+<td>Login (Principal); afeta Saída de Material, Movimentação de Material e</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-050</td>
+<td>A Saída de Material exige o grupo do token, não usa o plano B do banco e se comporta de dois jeitos com grupo zero</td>
+<td>Saída de Material (Outras)</td>
+<td>Regressão</td>
 </tr>
 </tbody>
 </table></div>
@@ -615,6 +733,7 @@
 <th>O que acontece</th>
 <th>Gravidade</th>
 <th>Tela</th>
+<th>Classe</th>
 </tr>
 </thead>
 <tbody>
@@ -623,246 +742,364 @@
 <td>Perfil com todas as funções do Estoque recebe 403 em toda rota do módulo, até na leitura</td>
 <td>Alta</td>
 <td>Todas as telas do Estoque</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-002</td>
 <td>A autorização do recebimento não pode ser executada: o recebimento nunca chega ao estado "concluído" e a rota não pede login e senha de outro usuário</td>
 <td>Alta</td>
 <td>Recebimento de Material (tela provisória; rota da API)</td>
+<td>A confirmar · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-003</td>
 <td>O lote vira "disponível" ou "reprovado" só pelo local do endereço, sem laudo do Controle da Qualidade</td>
 <td>Alta</td>
 <td>Endereçamento de Material (rota da API); histórico do lote</td>
+<td>A confirmar</td>
 </tr>
 <tr>
 <td>DV-EST-N-004</td>
 <td>O endereçamento aceita lotes de itens diferentes no mesmo endereço (mistura de materiais)</td>
 <td>Média</td>
 <td>Endereçamento de Material (rota da API)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-005</td>
 <td>Reabrir recebimento dá "Ocorreu um erro interno no servidor" (500)</td>
 <td>Média</td>
 <td>Recebimento de Material (rota da API)</td>
+<td>Novo · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-006</td>
 <td>A conferência aceita um recebimento que ainda não foi finalizado</td>
 <td>Média</td>
 <td>Conferência de Recebimento (rota da API)</td>
+<td>Novo · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-007</td>
 <td>A tela Disponibilidade de Estoque não lista itens com saldo disponível</td>
 <td>Média</td>
 <td>Disponibilidade de Estoque</td>
+<td>Novo · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-008</td>
 <td>Nenhuma transferência nem entrada de produção consegue escolher um endereço: a lista de destinos vem vazia e o destino livre é recusado</td>
 <td>Média</td>
 <td>Movimentação de Material e Entrada de Material - Produção (rotas da AP</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-009</td>
 <td>Campos de código e de texto descartam ponto, hífen e letras em silêncio</td>
 <td>Média</td>
 <td>Local de Armazenagem, Estoque Rua, Coluna e Andar; Item (NEB)</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-010</td>
 <td>Almoxarifado: a sigla do lote fica cortada em 2 caracteres sem aviso e só há um almoxarifado por tipo especial (a recusa vem depois do preenchimento)</td>
 <td>Baixa</td>
 <td>Almoxarifado</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-011</td>
 <td>Mensagens enganosas ao cadastrar o lote no recebimento</td>
 <td>Baixa</td>
 <td>Recebimento de Material (rota da API)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-012</td>
 <td>A finalização da conferência responde "Erro na consulta do registro!" (400) e o lote novo não entra no estoque</td>
 <td>Alta</td>
 <td>Conferência de Recebimento (rota da API; tela provisória)</td>
+<td>Regressão</td>
 </tr>
 <tr>
 <td>DV-EST-N-013</td>
 <td>A lista de endereços de destino oferece endereços que a gravação da transferência recusa ("Endereço de destino inválido!")</td>
 <td>Alta</td>
 <td>Movimentação de Material (rota da API; tela provisória)</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-014</td>
 <td>Entrada de produção recusa todos os endereços ("Endereço inválido."), inclusive endereços livres de quarentena</td>
 <td>Média</td>
 <td>Entrada de Material - Produção (rota da API; tela provisória)</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-015</td>
 <td>"Confirmar todos" sobrescreve a quantidade divergente já conferida, sem aviso</td>
 <td>Média</td>
 <td>Conferência de Recebimento (rota da API)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-016</td>
 <td>O endereçamento aceita endereçar um lote cuja conferência não foi finalizada</td>
 <td>Média</td>
 <td>Endereçamento de Material (rota da API; tela provisória)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-017</td>
 <td>Saída de material: a lista de endereços de origem vem vazia, mesmo para lote com saldo disponível</td>
 <td>Média</td>
 <td>Saída de Material (rota da API; a tela é só um esqueleto)</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-018</td>
 <td>O tipo de almoxarifado aparece escrito "PROUÇÃO" na lista</td>
 <td>Baixa</td>
 <td>Almoxarifado (lista)</td>
+<td>Igual ao legado*</td>
 </tr>
 <tr>
 <td>DV-EST-N-019</td>
 <td>A autorização do recebimento falha por configuração do ambiente: "Integracoes:Principal:BaseUrl não configurada ou inválida."</td>
 <td>Alta</td>
 <td>Recebimento de Material, autorização (rota da API)</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-020</td>
 <td>Bloqueado no teste: não há análise do Controle da Qualidade para liberar (a massa nunca teve o endereçamento da nota finalizado)</td>
 <td>Média (provisória)</td>
 <td>Endereçamento de Material, Controle da Qualidade e Movimentação de Qua</td>
+<td>Bloqueado no teste</td>
 </tr>
 <tr>
 <td>DV-EST-N-021</td>
 <td>Reabrir o recebimento apaga a conferência e o endereçamento já feitos, sem justificativa e sem nenhuma linha no log</td>
 <td>Alta</td>
 <td>Recebimento de Material (rota da API; tela provisória)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-022</td>
 <td>Campos decimais não guardam o que foi digitado (vírgula some no Item; máscara desloca a vírgula em outras telas)</td>
 <td>Média</td>
 <td>Item (peso, custo inicial, dimensões); Subgrupo do Item (Diferença de</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-023</td>
 <td>Item aceita estoque mínimo maior que o máximo e peso zero</td>
 <td>Média</td>
 <td>Item</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-024</td>
 <td>Conta Financeira e Tipo de Referência aceitam cadastro duplicado</td>
 <td>Média</td>
 <td>Conta Financeira; Tipo de Referência</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-025</td>
 <td>Cadastro em uso é excluído com "sucesso" (SJB usado por item; Local de Armazenagem com endereço ativo)</td>
 <td>Alta</td>
 <td>SJB; Local de Armazenagem; Almoxarifado</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-026</td>
 <td>Inativar cadastro em uso é aceito sem aviso (Unidade, Classe, Rua)</td>
 <td>Média</td>
 <td>Unidade de Medida; Classe do Item; Estoque Rua; Almoxarifado; Item</td>
+<td>Igual ao legado (Item com saldo = Regressão a confirmar)</td>
 </tr>
 <tr>
 <td>DV-EST-N-027</td>
 <td>Mensagens de validação genéricas ou enganosas nos cadastros do Estoque</td>
 <td>Baixa</td>
 <td>Unidade de Medida, Classe, Classificação do Item, SJB, Nível de Segura</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-028</td>
 <td>Classe do Item, SJB e NCM não deixam corrigir a Descrição depois de gravada</td>
 <td>Baixa</td>
 <td>Classe do Item; SJB; NCM</td>
+<td>Regressão</td>
 </tr>
 <tr>
 <td>DV-EST-N-029</td>
 <td>A Aprovação de Solicitação aceita a mesma pessoa que criou e concluiu a solicitação</td>
 <td>Média</td>
 <td>Solicitação de Material (Consumo); Aprovação de Solicitação</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-030</td>
-<td>Entrada de Material - Outras responde "Erro na integração com o módulo do CQ." (409) e nenhum item com controle de qualidade entra (corrigida em 11/11/2026: não se reproduz mais)</td>
+<td>Entrada de Material - Outras responde "Erro na integração com o módulo do CQ." (409) e nenhum item com controle de qualidade entra</td>
 <td>Alta</td>
 <td>Entrada de Material - Outras (chamada da API; a tela voltou a ser prov</td>
+<td>Bloqueado no teste · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-031</td>
 <td>A tela Entrada de Material - Outras voltou a ser um cartão provisório</td>
 <td>Média</td>
 <td>Entrada de Material - Outras</td>
+<td>Regressão · corrigida/fechada</td>
 </tr>
 <tr>
 <td>DV-EST-N-032</td>
 <td>Solicitação de Material (Consumo): grava o cabeçalho sem nenhum item e a busca de item só responde com teclas e Enter e não acha códigos com ponto</td>
 <td>Baixa</td>
 <td>Solicitação de Material (Consumo)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-033</td>
 <td>Ligar e desligar um almoxarifado de um grupo de usuários não pede justificativa e não aparece no Log</td>
 <td>Média</td>
 <td>Grupo Usuário - Almoxarifado</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-034</td>
 <td>O recebimento aceita fornecedor reprovado e lote com validade vencida, e finaliza o recebimento</td>
 <td>Alta</td>
 <td>Recebimento de Material (rota da API; tela provisória)</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-035</td>
 <td>Finalizar, conferir e tentar autorizar um recebimento não deixam linha no log; a inclusão da nota e da conferência vem sem valor</td>
 <td>Média</td>
 <td>Recebimento de Material e Conferência de Recebimento (log; rota da API</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-036</td>
 <td>Gravação negada (403) aparece como "Não foi possível salvar..." e validações do servidor chegam em inglês</td>
 <td>Baixa</td>
 <td>Almoxarifado (conta sem acesso); Item (justificativa vazia)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-037</td>
 <td>Entrada de Material - Outras aceita lote com validade vencida e o abre para análise do CQ como se fosse normal</td>
 <td>Alta</td>
 <td>Entrada de Material - Outras (tela real desde 11/11/2026; chamada da A</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
 <td>DV-EST-N-038</td>
 <td>Aprovação de solicitação (aprovar e cancelar a aprovação) e Atendimento não deixam registro no histórico nem pedem justificativa</td>
 <td>Média</td>
 <td>Aprovação de Solicitação e Atendimento de Solicitação (telas novas)</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-039</td>
 <td>O relatório Insumos Reprovados (RM36) e a Disponibilidade do Lote não concordam sobre quais lotes estão reprovados</td>
 <td>Média</td>
 <td>Relatório Insumos Reprovados (RM36) e Disponibilidade do Lote</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-040</td>
 <td>Em Entrada de Material - Outras, PESQUISAR sem filtro não faz nada e não avisa</td>
 <td>Baixa</td>
 <td>Entrada de Material - Outras</td>
+<td>Novo</td>
 </tr>
 <tr>
 <td>DV-EST-N-041</td>
-<td>Atendimento de Solicitação: "Atender todos" atende só parte da quantidade e não avisa</td>
+<td>Atendimento de Solicitação - "Atender todos" atende só parte da quantidade pedida e não avisa</td>
 <td>Média</td>
-<td>Atendimento de Solicitação</td>
+<td>Atendimento de Solicitação (tela real desde 11/11/2026; chamada da API</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-043</td>
+<td>Saída de Material não consegue gravar nenhuma saída: o servidor recusa com "Almoxarifado de origem inválido para o lote."</td>
+<td>Alta</td>
+<td>Saída de Material (Outras) (tela real; chamadas da API)</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-044</td>
+<td>Saída de Material: a mesma mensagem "Almoxarifado de origem inválido para o lote." esconde os outros motivos de recusa</td>
+<td>Média</td>
+<td>Saída de Material (Outras) (tela real; chamadas da API)</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-045</td>
+<td>Saída de Material: a lista de lotes do item oferece lotes sem saldo e vencidos, sem mostrar lote nem validade</td>
+<td>Baixa</td>
+<td>Saída de Material (Outras) (tela real; chamadas da API)</td>
+<td>A confirmar</td>
+</tr>
+<tr>
+<td>DV-EST-N-046</td>
+<td>Saída de Material: excluir sem corpo na requisição devolve 415 técnico, não "justificativa obrigatória"</td>
+<td>Baixa</td>
+<td>Saída de Material (Outras) (tela real; chamadas da API)</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-047</td>
+<td>Saída de Material: data inválida devolve texto técnico em inglês com nome interno do sistema</td>
+<td>Baixa</td>
+<td>Saída de Material (Outras) (tela real; chamadas da API)</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-048</td>
+<td>Saída de Material: perfil sem acesso recebe 403 sem mensagem (t.ba20) e a função "saída" não pode ser testada sozinha</td>
+<td>Média</td>
+<td>Saída de Material (Outras) (tela real; chamadas da API)</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-049</td>
+<td>O login não grava o grupo do usuário no token, e as telas do Estoque que dependem do grupo recusam tudo</td>
+<td>Alta</td>
+<td>Login (Principal); afeta Saída de Material, Movimentação de Material e</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-050</td>
+<td>A Saída de Material exige o grupo do token, não usa o plano B do banco e se comporta de dois jeitos com grupo zero</td>
+<td>Alta</td>
+<td>Saída de Material (Outras)</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-051</td>
+<td>Criar conta de acesso de usuário responde erro 500 genérico (pela API)</td>
+<td>Média</td>
+<td>Profissional / Conta usuário (Principal), chamadas da API</td>
+<td>A confirmar</td>
+</tr>
+<tr>
+<td>DV-EST-N-052</td>
+<td>Almoxarifado: pesquisar pelo código de 6 dígitos devolve o registro antigo de 5 dígitos e não o registro pedido</td>
+<td>Baixa</td>
+<td>Almoxarifado</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-053</td>
+<td>Local de Armazenagem: trocar só o almoxarifado de um local que já tem endereços grava com sucesso</td>
+<td>Média</td>
+<td>Local de Armazenagem (edição)</td>
+<td>Novo</td>
 </tr>
 </tbody>
 </table></div>
@@ -898,7 +1135,7 @@
 <tr>
 <td>Controle de acesso e separação de funções</td>
 <td>Não atende</td>
-<td>Perfil com todas as funções recebe 403 (N-001); separação não testável</td>
+<td>Perfil com todas as funções recebe 403 (N-001); grupo do usuário fora do token (N-049, N-050); separação não testável</td>
 </tr>
 <tr>
 <td>Integridade e confiabilidade dos dados</td>
@@ -914,18 +1151,20 @@
 </table></div>
 <h2 id="pendencias">Pendências</h2>
 <ul>
-<li><strong>Telas provisórias (68 de 93):</strong> Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Saída, Devolução, Remessa, Inventário, Kits, Relatórios, Laudo do CQ e Avaliação do Fornecedor ainda serão desenvolvidos. Provisória <strong>não é defeito</strong>; os testes desse caminho foram pela API, com a mesma chamada que a tela faria.</li>
+<li><strong>Telas provisórias (68 de 93, contagem da rodada 1):</strong> Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Devolução, Remessa, Inventário, Kits, Relatórios, Laudo do CQ e Avaliação do Fornecedor ainda serão desenvolvidos. Provisória <strong>não é defeito</strong>; os testes desse caminho foram pela API, com a mesma chamada que a tela faria.</li>
 <li><strong>Código do front-end e da API nova:</strong> fotografado e lido só nos pontos de acesso e de regra do lote; a análise por tela do código é a Fase 2.</li>
-<li><strong>Perguntas para a equipe de desenvolvimento:</strong> o ambiente de teste roda <code>develop</code> com as permissões ativas (N-001)? Qual é o valor de <code>AUTORIZA_RECEBIMENTO</code> e quem configura <code>Integracoes:Principal:BaseUrl</code> (N-019)? Por que o grupo do usuário não vai no token (N-013)? O banco confere validade e qualificação do fornecedor (a resposta do responsável foi não)?</li>
-<li><strong>Executado em 10/11 (pendências):</strong> Almoxarifado, Item e fornecedor em uso (inativar é aceito sem aviso em todos; excluir é bloqueado para Local e Item com saldo, e aceito para Almoxarifado em uso por Item, N-025); a Entrada de Material - Outras <strong>não pôde ser concluída</strong> (integração com o CQ, N-030; a tela voltou a ser provisória, N-031).</li>
+<li><strong>Perguntas para a equipe de desenvolvimento:</strong> o ambiente de teste roda <code>develop</code> com as permissões ativas (N-001)? Qual é o valor de <code>AUTORIZA_RECEBIMENTO</code> e quem configura <code>Integracoes:Principal:BaseUrl</code> (N-019)? Por que o grupo do usuário não vai no token (N-013, N-049)? O banco confere validade e qualificação do fornecedor (a resposta do responsável foi não)?</li>
+<li><strong>Executado em 10/11 (pendências):</strong> Almoxarifado, Item e fornecedor em uso (inativar é aceito sem aviso em todos; excluir é bloqueado para Local e Item com saldo, e aceito para Almoxarifado em uso por Item, N-025); a Entrada de Material - Outras <strong>não pôde ser concluída</strong> naquele dia (integração com o CQ, N-030; tela provisória, N-031); em 11/11 a N-030 foi corrigida e a N-031 fechada (a tela está real).</li>
+<li><strong>Manuais por tela:</strong> 25 manuais em rascunho (um por tela real), escritos a partir das fontes e das capturas das rodadas; <strong>0 conferidos por robô</strong>. Prints que faltam e candidatos a defeito ainda sem ficha estão em <code>versao-nova/CANDIDATOS-A-DEFEITO-E-PONTOS-A-VALIDAR-17-11.md</code>.</li>
+<li><strong>Saída de Material:</strong> a tela é real, mas nenhuma saída gravou (N-043, N-049, N-050); os casos de saída parcial, total, acima do saldo, quarentena, lote vencido, exclusão, relatório e Excel continuam <strong>Bloqueados no teste</strong>. Ao corrigir o grupo no token, podem aparecer riscos novos já apontados no código (rua sem endereço vazio não oferece origem).</li>
 <li><strong>Responsável pela correção:</strong> não é indicado nas fichas: a Garantia da Qualidade avalia e simula primeiro, e só depois abre o reparo para os desenvolvedores.</li>
 <li><strong>Imagens:</strong> 694 conferidas; 2 tarjadas (senha e CPF); nenhuma com endereço de servidor, caminho de disco ou nome de pessoa real.</li>
 </ul>
 <h2 id="parecer-da-homologacao">Parecer da homologação</h2>
 <div class="callout">
 <p class="callout-titulo">Sem veredito novo</p>
-<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo está <strong>muito incompleto</strong>: das 93 entradas do menu, <strong>68 são telas provisórias</strong> e só 25 funcionam. O caminho do lote (Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Saída, Remessa, Inventário) <strong>não pôde ser percorrido pelas telas</strong>, e por isso o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
-<p>Fotografia do módulo na versão nova: 41 defeitos registrados (35 abertos e 6 corrigidos ou fechados), 11 de prioridade Alta (9 abertas). Não há veredito de "apto".</p>
+<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo está <strong>muito incompleto</strong>: das 93 entradas do menu (contagem da rodada 1), <strong>68 são telas provisórias</strong> e só 25 funcionam. O caminho do lote (Recebimento, Conferência, Endereçamento, Quarentena, Movimentação, Remessa, Inventário; a Saída de Material já tem tela, mas não grava) <strong>não pôde ser percorrido pelas telas</strong>, e por isso o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
+<p>Fotografia do módulo na versão nova: 52 defeitos contados (46 abertos), 14 de prioridade Alta (12 abertos). Não há veredito de "apto".</p>
 </div>
 <h2 id="fechamento-do-modulo">Fechamento do módulo</h2>
 <h3 id="o-que-foi-concluido">O que foi concluído</h3>
@@ -934,8 +1173,8 @@
 <p>Telas provisórias; código da API nova; perfis diferentes do administrador, quando o acesso é negado; o que está dito em Pendências.</p>
 <h3 id="o-que-muda-na-reabertura">O que muda na reabertura</h3>
 <ol>
-<li>Corrigir os itens de prioridade Alta (acesso, conferência, destinos, autorização, reabertura, exclusão em uso).</li>
-<li>Configurar o ambiente (autorização do recebimento, grupo no token, endereços de destino) e refazer o caso do laudo do CQ pelo caminho completo.</li>
+<li>Corrigir os itens de prioridade Alta (acesso, grupo do usuário no token, conferência, destinos, saída, autorização, reabertura, exclusão em uso).</li>
+<li>Configurar o ambiente (autorização do recebimento, endereços de destino) e corrigir o grupo no token e refazer o caso do laudo do CQ pelo caminho completo.</li>
 <li>Construir as telas provisórias do caminho do lote e repetir os testes por tela, com perfis diferentes (separação de funções).</li>
 <li>Definir com a Garantia da Qualidade o critério de "apto" e a regra de validade e qualificação do fornecedor.</li>
 <li>Receber e revisar o código do front-end e da API nova (Fase 2).</li>
@@ -983,7 +1222,7 @@
     </article>
     <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="regulatorio-visao-geral-versao-nova.html"><small>← Anterior</small><strong>Regulatório: visão geral (versão nova)</strong></a><a class="ap ap-prox" href="resumo-executivo-da-versao-nova.html"><small>Próximo →</small><strong>Resumo executivo da versão nova</strong></a></nav>
   </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#inventario-de-telas-e-situacao">Inventário de telas e situação</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li class="sub"><a href="#trilha-de-auditoria">Trilha de auditoria</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-por-classe">Quantidade de casos por classe</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#resultado-em-uma-frase-por-tema">Resultado em uma frase por tema</a></li><li class="sub"><a href="#regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</a></li><li><a href="#desvios">Desvios</a></li><li class="sub"><a href="#defeitos-de-gravidade-alta">Defeitos de gravidade Alta</a></li><li class="sub"><a href="#todos-os-defeitos">Todos os defeitos</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li class="sub"><a href="#defeito-tela-caso">Defeito → tela → caso</a></li><li class="sub"><a href="#aderencia-a-norma">Aderência à norma</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#fechamento-do-modulo">Fechamento do módulo</a></li><li class="sub"><a href="#o-que-foi-concluido">O que foi concluído</a></li><li class="sub"><a href="#limitacoes-o-que-o-teste-nao-cobriu">Limitações: o que o teste não cobriu</a></li><li class="sub"><a href="#o-que-muda-na-reabertura">O que muda na reabertura</a></li><li class="sub"><a href="#decisoes-e-pontos-para-validar">Decisões e pontos para validar</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#inventario-de-telas-e-situacao">Inventário de telas e situação</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li class="sub"><a href="#trilha-de-auditoria">Trilha de auditoria</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-por-classe">Quantidade de casos por classe</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#numeros-das-fichas-lidos-das-fichas-em-17-11-2026">Números das fichas (lidos das fichas em 17/11/2026)</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#resultado-em-uma-frase-por-tema">Resultado em uma frase por tema</a></li><li class="sub"><a href="#correcoes-de-17-11-2026">Correções de 17/11/2026</a></li><li class="sub"><a href="#regras-do-lote-vistas-no-codigo">Regras do lote vistas no código</a></li><li><a href="#desvios">Desvios</a></li><li class="sub"><a href="#defeitos-de-gravidade-alta">Defeitos de gravidade Alta</a></li><li class="sub"><a href="#todos-os-defeitos">Todos os defeitos</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li class="sub"><a href="#defeito-tela-caso">Defeito → tela → caso</a></li><li class="sub"><a href="#aderencia-a-norma">Aderência à norma</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#fechamento-do-modulo">Fechamento do módulo</a></li><li class="sub"><a href="#o-que-foi-concluido">O que foi concluído</a></li><li class="sub"><a href="#limitacoes-o-que-o-teste-nao-cobriu">Limitações: o que o teste não cobriu</a></li><li class="sub"><a href="#o-que-muda-na-reabertura">O que muda na reabertura</a></li><li class="sub"><a href="#decisoes-e-pontos-para-validar">Decisões e pontos para validar</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>
