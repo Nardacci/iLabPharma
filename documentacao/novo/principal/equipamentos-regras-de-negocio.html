@@ -40,92 +40,340 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 137 de 224</span><div class="prog-doc"><i style="width:61%"></i></div></div>
   <header class="doc-cabecalho"><h1>Equipamentos: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="equipamentos-analise.html">Análise</a><a href="equipamentos-manual-do-usuario.html">Manual do usuário</a><a href="equipamentos-fluxos.html">Fluxos</a><a href="equipamentos-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="equipamentos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="equipamentos-erros.html">Erros (6)</a><a class="aba-extra" href="equipamentos-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="equipamentos-analise.html">Análise</a><a href="equipamentos-manual-do-usuario.html">Manual do usuário</a><a href="equipamentos-fluxos.html">Fluxos</a><a href="equipamentos-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="equipamentos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="equipamentos-erros.html">Erros (6)</a><a class="aba-extra" href="equipamentos-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o equipamento (com ou sem categoria; no legado, sem categoria dava erro) e volta para a lista. O histórico deveria receber "INCLUSAO DO REGISTRO", mas em 17/11/2026 o Log do equipamento novo não trouxe essa linha (R2B-03).</li>
+<li><strong>Alterar:</strong> exige justificativa; o histórico guarda campo, valor antigo e novo e usuário, <strong>sem a justificativa</strong>. O Valor é multiplicado por 10 <strong>só na primeira edição</strong> (DV-PRI-N-013). Depois do OK, a tela volta à lista.</li>
+<li><strong>Inativar:</strong> grava; a lista mostra ATIVO = NÃO.</li>
+<li><strong>Excluir:</strong> remove o equipamento sem justificativa e sem mensagem. A fonte (rodada 2) não encontrou outro cadastro do módulo Principal que dependa do equipamento; a dependência só existe em outros módulos (caso bloqueado).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CT-PRI-090</td>
-<td>Incluir só obrigatórios e completo</td>
-<td>Falhou (DV-PRI-010)</td>
-<td>Sem categoria grava; sem fabricante não grava; completo grava</td>
-<td>Melhoria</td>
-<td>N-020</td>
+<td>Salvar vazio</td>
+<td>"Preencha os campos obrigatórios antes de salvar." (faixa) + "A descrição é obrigatória." + "A tag é obrigatória." + "A capacidade de produção é obrigatória." + "O valor é obrigatório."</td>
+<td>Visto no print do passo 3</td>
 </tr>
 <tr>
-<td>CT-PRI-091</td>
-<td>Obrigatórios, limites e datas</td>
-<td>Passou em parte</td>
-<td>Descrição, tag, capacidade e valor recusados; 256 e 31 recusados; data de fabricação futura aceita</td>
-<td>Igual</td>
-<td>N-020, N-022</td>
+<td>Salvar sem Fabricante</td>
+<td>"O fabricante e obrigatorio quando a opcao Outros e selecionada."</td>
+<td>Visto no print; fica visível (rodada 4)</td>
 </tr>
 <tr>
-<td>CT-PRI-092</td>
-<td>Alterar com justificativa e histórico</td>
-<td>Passou</td>
-<td>Histórico MODELO X1 → X2 com justificativa, mas VALOR 1500,5 → 15005 sem o usuário mexer</td>
-<td>Regressão</td>
-<td>DV-PRI-N-013</td>
+<td>Descrição com 256 caracteres ou mais</td>
+<td>"A descrição é obrigatória."</td>
+<td>Mensagem enganosa (DV-PRI-N-022)</td>
 </tr>
 <tr>
-<td>CT-PRI-093</td>
-<td>Inativar</td>
-<td>Passou em parte</td>
-<td>Grava; lista mostra Ativo = NÃO</td>
-<td>Igual</td>
-<td>—</td>
+<td>Tag com 31 caracteres ou mais</td>
+<td>"Preencha os campos obrigatórios antes de salvar."</td>
+<td>Sem dizer o campo</td>
 </tr>
 <tr>
-<td>CT-PRI-094</td>
-<td>Excluir sem uso</td>
-<td>Falhou (DV-PRI-012)</td>
-<td>Excluído (204) sem justificativa; o legado recusava</td>
-<td>Melhoria</td>
-<td>N-007</td>
+<td>Tag repetida</td>
+<td>"Tag ja existe!" (faixa)</td>
+<td>Sem acento; ver imagem abaixo</td>
 </tr>
 <tr>
-<td>CT-PRI-095</td>
-<td>Excluir com dependente</td>
-<td>Bloqueado</td>
-<td>Sem cadastro do Principal que dependa de equipamento</td>
-<td>Bloqueado</td>
-<td>—</td>
+<td>Data Fim de Operação anterior ao início</td>
+<td>"A data de inicio de operacao nao pode ser maior que a data de fim de operacao."</td>
+<td>Sem acento; ver imagem abaixo</td>
 </tr>
 <tr>
-<td>CT-PRI-096</td>
-<td>Pesquisa</td>
-<td>Falhou (DV-PRI-008)</td>
-<td>"pressao" não acha "PRESSÃO"</td>
-<td>Igual</td>
-<td>DV-PRI-008</td>
+<td>Data Fim de Operação no futuro</td>
+<td>"A data de fim de operacao nao pode ser maior que a data atual."</td>
+<td>Sem acento; ver imagem abaixo</td>
 </tr>
 <tr>
-<td>CT-PRI-097</td>
-<td>Excel e Imprimir</td>
-<td>Passou</td>
-<td>Excel com a lista; Imprimir devolve PDF</td>
-<td>Igual</td>
-<td>—</td>
+<td>Data de Fabricação futura (2031, 2099)</td>
+<td><strong>Aceita</strong>; reaberto, grava 01/01/2031</td>
+<td>Defeito DV-PRI-N-020; ver imagem abaixo</td>
+</tr>
+<tr>
+<td>Alterar sem justificativa</td>
+<td>Faixa + "A justificativa é obrigatória." sob o campo</td>
+<td>Sem o ponto e vírgula de Ambientes (imagem no passo 7)</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<figure><a href="../../img/principal/pnr2-equipamentos-15-tag-repetida.png" target="_blank" rel="noopener"><img src="../../img/principal/pnr2-equipamentos-15-tag-repetida.png" alt="Tag repetida" loading="lazy"></a><figcaption>Tag repetida · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a faixa "Tag ja existe!".</p>
+<figure><a href="../../img/principal/pnr2-equipamentos-16-data-fim-antes-do-inicio.png" target="_blank" rel="noopener"><img src="../../img/principal/pnr2-equipamentos-16-data-fim-antes-do-inicio.png" alt="Fim de operação antes do início" loading="lazy"></a><figcaption>Fim de operação antes do início · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a faixa "A data de inicio de operacao nao pode ser maior que a data de fim de operacao.".</p>
+<figure><a href="../../img/principal/pnr2-equipamentos-17-data-fim-no-futuro.png" target="_blank" rel="noopener"><img src="../../img/principal/pnr2-equipamentos-17-data-fim-no-futuro.png" alt="Fim de operação no futuro" loading="lazy"></a><figcaption>Fim de operação no futuro · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a faixa "A data de fim de operacao nao pode ser maior que a data atual.".</p>
+<figure><a href="../../img/principal/pnr2-equipamentos-18-data-fabricacao-futura-aceita.png" target="_blank" rel="noopener"><img src="../../img/principal/pnr2-equipamentos-18-data-fabricacao-futura-aceita.png" alt="Data de fabricação futura aceita" loading="lazy"></a><figcaption>Data de fabricação futura aceita · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra o equipamento reaberto com Data de Fabricação 01/01/2031 gravada (aceita, ver DV-PRI-N-020).</p>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Código, Descrição, Tag</td>
+<td>Texto</td>
+<td>(legado: 10, 100 e 10)</td>
+<td>Não</td>
+<td>Procura dentro do texto; não ignora acento</td>
+<td>Tamanhos do legado, não conferidos em 17/11/2026</td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODAS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
+<td>Código, Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Gerados pelo sistema</td>
+<td></td>
+</tr>
+<tr>
+<td>Tipo de Equipamento</td>
+<td>Móvel / Fixo</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Móvel já vem marcado</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Já vem "Sim"</td>
+<td></td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>Até 255 caracteres</td>
+<td>Sim</td>
+<td>256 ou mais é recusado com mensagem enganosa</td>
+<td></td>
+</tr>
+<tr>
+<td>Tag</td>
+<td>Texto</td>
+<td>Até 30 caracteres</td>
+<td>Sim</td>
+<td>Única</td>
+<td>31 é recusado</td>
+</tr>
+<tr>
+<td>Patrimônio</td>
+<td>Texto</td>
+<td>(legado: 30)</td>
+<td>Não</td>
+<td>(legado: único)</td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Marca / Modelo</td>
+<td>Texto</td>
+<td>(legado: 30)</td>
+<td>Não</td>
+<td></td>
+<td>(do legado)</td>
+</tr>
+<tr>
+<td>Número de Série</td>
+<td>Texto</td>
+<td>(legado: 30)</td>
+<td>Não</td>
+<td>(legado: único)</td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Data de Fabricação</td>
+<td>Data (calendário, dd/mm/aaaa)</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Data futura é aceita (defeito)</td>
+<td></td>
+</tr>
+<tr>
+<td>Fabricante</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td><strong>Sim, na prática</strong></td>
+<td>Pessoas jurídicas do tipo Fabricante, mais "OUTROS"</td>
+<td>Sem asterisco</td>
+</tr>
+<tr>
+<td>Outros Fabricantes</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Sim, se Fabricante = OUTROS</td>
+<td>Bloqueado até escolher "OUTROS"</td>
+<td></td>
+</tr>
+<tr>
+<td>Fornecedor</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Pessoas jurídicas do tipo Fornecedor</td>
+<td></td>
+</tr>
+<tr>
+<td>Capacidade de Produção</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Sim</td>
+<td>Texto livre</td>
+<td>Mensagem: "A capacidade de produção é obrigatória."</td>
+</tr>
+<tr>
+<td>Data Início de Operação / Data Fim de Operação</td>
+<td>Data</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Fim antes do início é recusado; fim no futuro é recusado (mensagens exatas na tabela de recusas)</td>
+<td></td>
+</tr>
+<tr>
+<td>Valor</td>
+<td>Número</td>
+<td>(legado: 21, 2 casas)</td>
+<td>Sim</td>
+<td>Formato com ponto ao abrir (12.5, 1500.5)</td>
+<td>Multiplicado por 10 só na 1ª edição (defeito); vazio: "O valor é obrigatório."</td>
+</tr>
+<tr>
+<td>Interface com o sistema?</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Não já vem marcado; Sim mostra IP e porta (do legado; não testado em 17/11/2026)</td>
+<td>Ponto para validar</td>
+</tr>
+<tr>
+<td>Categoria</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não (grava sem)</td>
+<td>Categorias ativas; ao escolher marca os tipos de manutenção</td>
+<td>Escolher uma categoria da lista não foi testado em 17/11/2026 (ponto para validar)</td>
+</tr>
+<tr>
+<td>Tipos de Manutenção</td>
+<td>Caixas de marcar</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>CALIBRAÇÃO, LIMPEZA, LUBRIFICAÇÃO, MANUTENÇÃO PREVENTIVA, QUALIFICAÇÃO</td>
+<td>Visto na imagem de evidência</td>
+</tr>
+<tr>
+<td>Direção/Sub-Direção/Seção</td>
+<td>Árvore com caixas</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Marcar um nível (legado)</td>
+<td></td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Sim, ao alterar ou inativar</td>
+<td>Mensagem: "A justificativa é obrigatória."</td>
+<td>Não vai para o histórico (conferido em 17/11/2026)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 08 a 09/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+<th>Incluir</th>
+<th>Editar</th>
+<th>Excluir e Histórico</th>
+<th>Imprimir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (T.ADMIN2)</td>
+<td>Permitido</td>
+<td>Permitido (5 linhas)</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitidos</td>
+<td>Habilitado</td>
+</tr>
+<tr>
+<td>Cadastro</td>
+<td>Permitido (no menu)</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td><strong>Negados</strong> ("Sem permissão")</td>
+<td>Habilitado</td>
+</tr>
+<tr>
+<td>Só consulta</td>
+<td>Abre mesmo fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado</td>
+<td>Não lido</td>
+<td>Não lido</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem permissão de administrador</td>
+<td>Abre mesmo fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado</td>
+<td>Não lido</td>
+<td>Não lido</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem login, ou sem nenhuma função</td>
+<td>Negado: volta para o login</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Na revalidação de 16/11/2026 do DV-PRI-N-035, a leitura pela API de <code>equipamentos</code> com a conta de consulta passou a ser recusada (403): <strong>corrigido</strong> para esta tela.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="equipamentos-fluxos.html"><small>← Anterior</small><strong>Fluxos · Equipamentos</strong></a><a class="ap ap-prox" href="equipamentos-anvisa.html"><small>Próximo →</small><strong>Anvisa · Equipamentos</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

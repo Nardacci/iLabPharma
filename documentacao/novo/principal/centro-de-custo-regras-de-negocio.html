@@ -40,92 +40,211 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 158 de 224</span><div class="prog-doc"><i style="width:71%"></i></div></div>
   <header class="doc-cabecalho"><h1>Centro de custo: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="centro-de-custo-analise.html">Análise</a><a href="centro-de-custo-manual-do-usuario.html">Manual do usuário</a><a href="centro-de-custo-fluxos.html">Fluxos</a><a href="centro-de-custo-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="centro-de-custo-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="centro-de-custo-erros.html">Erros (4)</a><a class="aba-extra" href="centro-de-custo-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="centro-de-custo-analise.html">Análise</a><a href="centro-de-custo-manual-do-usuario.html">Manual do usuário</a><a href="centro-de-custo-fluxos.html">Fluxos</a><a href="centro-de-custo-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="centro-de-custo-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="centro-de-custo-erros.html">Erros (4)</a><a class="aba-extra" href="centro-de-custo-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o centro com data e usuário de criação e uma linha "INCLUSAO DO REGISTRO" no histórico; o centro aparece na lista.</li>
+<li><strong>Alterar:</strong> exige justificativa. O histórico guarda campo, valor antigo, valor novo, usuário, data e hora, <strong>mas não a justificativa digitada</strong> (DV-PRI-N-029).</li>
+<li><strong>Inativar:</strong> exige justificativa; a lista passa a mostrar ATIVO = NÃO.</li>
+<li><strong>Excluir:</strong> remove da lista sem pedir justificativa. O histórico do registro excluído deixa de ser acessível (resposta 404 na rodada 1).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>RG-PRI-040</td>
-<td>Incluir e obrigatórios</td>
-<td>sem caso</td>
-<td>"O código é obrigatório e deve conter até 6 números."; duplicado recusado</td>
-<td>Igual</td>
-<td>N-003</td>
+<td>Salvar vazio</td>
+<td>"Preencha os campos obrigatórios antes de salvar." (faixa) + "O código é obrigatório e deve conter até 6 números." + "O nome é obrigatório e deve ter no máximo 255 caracteres."</td>
+<td>Visto no print</td>
 </tr>
 <tr>
-<td>RG-PRI-041</td>
-<td>Limites e formatos</td>
-<td>CT-PRI-091</td>
-<td>Código corta em 6; nome em 255. O ponto do nome é mantido</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>Código com letras (por exemplo "AB12" ou "ABC123")</td>
+<td>"O código é obrigatório e deve conter até 6 números."</td>
+<td>A recusa vem ao salvar, não ao digitar</td>
 </tr>
 <tr>
-<td>RG-PRI-042</td>
-<td>Alterar com justificativa e histórico</td>
-<td>sem caso</td>
-<td>Exige justificativa; histórico mostra o campo</td>
-<td>Igual</td>
-<td>—</td>
+<td>Código repetido</td>
+<td>"Codigo ja cadastrado."</td>
+<td>Sem acento; some em cerca de 3 segundos</td>
 </tr>
 <tr>
-<td>RG-PRI-043</td>
-<td>Inativar</td>
-<td>sem caso</td>
-<td>Grava (exige justificativa)</td>
-<td>Igual</td>
-<td>—</td>
+<td>Nome repetido</td>
+<td>"Nome ja cadastrado."</td>
+<td>Sem acento; some em cerca de 3 segundos</td>
 </tr>
 <tr>
-<td>RG-PRI-044</td>
-<td>Excluir</td>
-<td>sem caso</td>
-<td>Só confirmação, sem justificativa; histórico some</td>
-<td>Igual</td>
-<td>DV-PRI-N-007</td>
+<td>Alterar sem justificativa</td>
+<td>"A justificativa é obrigatória..." (texto completo a confirmar)</td>
+<td>Vale também para inativar</td>
 </tr>
 <tr>
-<td>RG-PRI-046</td>
-<td>Pesquisa com e sem acento</td>
-<td>sem caso</td>
-<td>"producao" não acha "PRODUÇÃO"</td>
-<td>Igual</td>
-<td>DV-PRI-N-009</td>
-</tr>
-<tr>
-<td>RG-PRI-047</td>
-<td>Excel e Imprimir</td>
-<td>sem caso</td>
-<td>Baixa .xlsx e gera PDF</td>
-<td>Igual</td>
-<td>—</td>
-</tr>
-<tr>
-<td>RG-PRI-048</td>
-<td>Histórico</td>
-<td>sem caso</td>
-<td>Inclusão, alteração, inativação; sem acento</td>
-<td>Igual</td>
-<td>N-002</td>
+<td>Excluir com histórico no sistema</td>
+<td>"Esse Centro de Custo contém histórico no sistema e não poderá ser excluído."</td>
+<td>(do legado; a confirmar na versão nova)</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Id</td>
+<td>Texto</td>
+<td>(a confirmar; legado: 6, só números)</td>
+<td>Não</td>
+<td>Procura o Id</td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Pesquisa: Código</td>
+<td>Texto</td>
+<td>(legado: 6, só números)</td>
+<td>Não</td>
+<td>Procura dentro do código</td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Pesquisa: Nome</td>
+<td>Texto</td>
+<td>(legado: 100)</td>
+<td>Não</td>
+<td>Não ignora acento (DV-PRI-N-009)</td>
+<td></td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODAS, SIM, NÃO</td>
+<td>Visto no print</td>
+</tr>
+<tr>
+<td>Id</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Gerado pelo sistema</td>
+<td></td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Data e hora da criação</td>
+<td></td>
+</tr>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>Até 6 caracteres</td>
+<td>Sim</td>
+<td>Só números; único; a tela corta em 6</td>
+<td>"AB12" só é recusado ao salvar</td>
+</tr>
+<tr>
+<td>Nome</td>
+<td>Texto</td>
+<td>Até 255 caracteres</td>
+<td>Sim</td>
+<td>Único; a tela corta em 255; o ponto do nome é mantido</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Já vem "Sim"</td>
+<td></td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Sim, ao alterar ou inativar</td>
+<td>Não aparece na inclusão; aparece depois de gravar e ao abrir um registro</td>
+<td>Não vai para o histórico</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 08 a 09/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+<th>Incluir</th>
+<th>Editar, Excluir e Histórico</th>
+<th>Imprimir e Excel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (T.ADMIN2)</td>
+<td>Permitido (no menu)</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitidos</td>
+<td>Habilitados</td>
+</tr>
+<tr>
+<td>Só consulta</td>
+<td>Abre pelo endereço, mesmo fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Desabilitado, "Sem permissão"</td>
+<td>Não lido (sem lista)</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Cadastro</td>
+<td>Abre pelo endereço, fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Desabilitado, "Sem permissão"</td>
+<td>Não lido</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Perfil só com esta tela e sem ações de escrita</td>
+<td>Permitido (no menu)</td>
+<td>Permitido (7 linhas)</td>
+<td>Desabilitado, "Sem permissão"</td>
+<td>Desabilitados, "Sem permissão"</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem login, ou sem nenhuma função</td>
+<td>Negado: volta para o login</td>
+<td>(não se aplica)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Ponto para validar: a leitura é pela tela (botão habilitado ou não). A conferência pelo servidor desta tela não foi testada: o DV-PRI-N-035 (16/11/2026) não lista a rota de Centro de custo.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="centro-de-custo-fluxos.html"><small>← Anterior</small><strong>Fluxos · Centro de custo</strong></a><a class="ap ap-prox" href="centro-de-custo-anvisa.html"><small>Próximo →</small><strong>Anvisa · Centro de custo</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

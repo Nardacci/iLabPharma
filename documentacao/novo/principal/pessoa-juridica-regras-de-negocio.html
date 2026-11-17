@@ -40,84 +40,348 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 144 de 224</span><div class="prog-doc"><i style="width:64%"></i></div></div>
   <header class="doc-cabecalho"><h1>Pessoa jurídica: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="pessoa-juridica-analise.html">Análise</a><a href="pessoa-juridica-manual-do-usuario.html">Manual do usuário</a><a href="pessoa-juridica-fluxos.html">Fluxos</a><a href="pessoa-juridica-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="pessoa-juridica-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="pessoa-juridica-erros.html">Erros (7)</a><a class="aba-extra" href="pessoa-juridica-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="pessoa-juridica-analise.html">Análise</a><a href="pessoa-juridica-manual-do-usuario.html">Manual do usuário</a><a href="pessoa-juridica-fluxos.html">Fluxos</a><a href="pessoa-juridica-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="pessoa-juridica-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="pessoa-juridica-erros.html">Erros (7)</a><a class="aba-extra" href="pessoa-juridica-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava a empresa e os tipos de cadastro, acrescenta "INCLUSAO DO REGISTRO" ao histórico, mostra "Inclusão realizada com sucesso!" e <strong>mantém a tela na edição da empresa</strong>, com Contatos e Filiais liberados (Filiais só para Cliente).</li>
+<li><strong>Contato e filial:</strong> gravam na hora. O contato mostra a faixa "Contato salvo com sucesso!" e o pop-up "Inclusão realizada com sucesso!"; a filial mostra só "Filial salva com sucesso!". O contato vai para o histórico; <strong>a filial não</strong> (R2B-05).</li>
+<li><strong>Alterar:</strong> grava e escreve uma linha de histórico por campo mudado, <strong>sem justificativa e com a coluna Usuário em branco</strong> (DV-PRI-N-014). Depois de "Alteração realizada com sucesso!" volta à lista.</li>
+<li><strong>Inativar:</strong> exige justificativa; a empresa some das listas de Fabricante e Fornecedor. O histórico traz "ATIVO SIM → NAO", <strong>sem a justificativa</strong>. <strong>O sistema não avisa se a empresa está em uso</strong>: um utensílio ou equipamento que a usa como fabricante fica sem fabricante e não salva mais (DV-PRI-N-041; não revalidado em 17/11/2026, ver "Prints que faltam").</li>
+<li><strong>Excluir:</strong> não existe para a empresa. Contatos e filiais têm o ícone Excluir.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CT-PRI-090</td>
-<td>Incluir só obrigatórios e completo</td>
-<td>Passou</td>
-<td>Gravam</td>
-<td>Igual</td>
-<td>—</td>
+<td>Salvar vazio</td>
+<td>Faixa: "Preencha todos os campos obrigatórios." Sob os campos: "O Tipo de Cadastro é obrigatório."; "O Nome/Razão Social é obrigatório."; "O CNPJ é obrigatório/inválido."; "O CEP é obrigatório/inválido."; "O Logradouro é obrigatório."; "O Número é obrigatório. Informe o número ou digite S/N."; "O Município é obrigatório."; "O Bairro é obrigatório."; "O País é obrigatório."; "A UF é obrigatória."</td>
+<td>10 mensagens sob os campos, conferidas em 17/11/2026</td>
 </tr>
 <tr>
-<td>CT-PRI-091</td>
-<td>Obrigatórios e formatos</td>
-<td>Passou</td>
-<td>10 mensagens; CNPJ inválido recusado; CNPJ repetido recusado</td>
-<td>Igual</td>
-<td>N-003, N-016</td>
+<td>CNPJ com dígito errado ou 11.111.111/1111-11</td>
+<td>"CNPJ invalido."</td>
+<td>Só aparece depois de responder SIM; sem acento; some em cerca de 4 segundos; a pergunta de confirmação continua aberta</td>
 </tr>
 <tr>
-<td>CT-PRI-092</td>
-<td>Alterar e histórico</td>
-<td>Falhou (DV-PRI-013)</td>
-<td>Sem justificativa (igual ao legado); a coluna Usuário vem em branco</td>
-<td>Regressão</td>
-<td>DV-PRI-N-014</td>
+<td>CNPJ com letras</td>
+<td>Nenhuma mensagem</td>
+<td>O campo filtra o que se digita: só ficam os números ("12ABC678000195" vira "12.678.000/195")</td>
 </tr>
 <tr>
-<td>CT-PRI-093</td>
-<td>Inativar</td>
-<td>Passou (DV-PRI-013)</td>
-<td>Exige justificativa; some de Fabricante e Fornecedor</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>CNPJ já cadastrado</td>
+<td>"CNPJ ja cadastrado!"</td>
+<td>Mesmo comportamento: sem acento, some em cerca de 4 segundos, pergunta aberta</td>
 </tr>
 <tr>
-<td>CT-PRI-094/095</td>
-<td>Excluir</td>
-<td>Bloqueado</td>
-<td>A tela não tem Excluir</td>
-<td>Bloqueado</td>
-<td>—</td>
+<td>Inativar sem justificativa</td>
+<td>Faixa "Preencha todos os campos obrigatórios." e, sob o campo, "A justificativa é obrigatória para desativar a empresa."</td>
+<td>O campo "Justificativa Inativo*" aparece ao marcar "Não"</td>
 </tr>
 <tr>
-<td>CT-PRI-096</td>
-<td>Pesquisa com e sem acento</td>
-<td>Falhou (DV-PRI-008)</td>
-<td>"farmaceutica" não acha "FARMACÊUTICA"; por CNPJ acha</td>
-<td>Igual</td>
-<td>DV-PRI-008</td>
+<td>Razão social com espaços repetidos</td>
+<td>"Nao e possivel inserir espacos em branco repetidos no campo Nome/Razao Social."</td>
+<td>Sem acento</td>
 </tr>
 <tr>
-<td>CT-PRI-097</td>
-<td>Excel e Imprimir</td>
-<td>Passou</td>
-<td>Excel com as linhas filtradas; Imprimir devolve PDF (200)</td>
-<td>Igual</td>
-<td>—</td>
+<td>Nome do contato com espaços repetidos</td>
+<td>Mensagem no mesmo padrão, terminada em "...no campo Nome."</td>
+<td>Sem acento; filiais não foram testadas</td>
+</tr>
+<tr>
+<td>Contato vazio</td>
+<td>"Preencha todos os campos obrigatórios do contato."</td>
+<td></td>
+</tr>
+<tr>
+<td>Filial vazia</td>
+<td>"Preencha todos os campos obrigatórios da filial."</td>
+<td></td>
+</tr>
+<tr>
+<td>CEP no botão PESQUISAR</td>
+<td>"CEP nao encontrado." (aparece na faixa da tela, mesmo para o CEP 20040002)</td>
+<td>O endereço não é preenchido; ponto para validar</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Tipo Cadastro</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODAS, CLIENTE, FORNECEDOR, TRANSPORTADORA, FABRICANTE</td>
+<td>Sem "EMPRESA", que existe no formulário</td>
+</tr>
+<tr>
+<td>Pesquisa: Código, Nome/Razão Social, Nome Fantasia, CNPJ</td>
+<td>Texto</td>
+<td>(legado: nome 100)</td>
+<td>Não</td>
+<td>Procura dentro do texto; não ignora acento</td>
+<td>"ACHE" acha 1 e "ACHÉ" acha 3</td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODAS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
+<td>Tipo de Cadastro</td>
+<td>Caixas de marcar</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>CLIENTE, FORNECEDOR, TRANSPORTADORA, FABRICANTE, EMPRESA; uma ou mais</td>
+<td>Define se aparece o quadro Filiais</td>
+</tr>
+<tr>
+<td>Código, Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Gerados pelo sistema</td>
+<td></td>
+</tr>
+<tr>
+<td>Nome/Razão Social</td>
+<td>Texto</td>
+<td>Corta em 255 (digitados 300, ficam 255)</td>
+<td>Sim</td>
+<td>Aceita apóstrofo e aspas; recusa espaços repetidos; duas empresas com a mesma razão social e CNPJ diferente são aceitas</td>
+<td></td>
+</tr>
+<tr>
+<td>Nome Fantasia</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CNPJ</td>
+<td>Texto com máscara</td>
+<td>(não se aplica)</td>
+<td>Sim (Brasil)</td>
+<td>Só números (letras são descartadas); validado; único</td>
+<td>Sem máscara logo depois de gravar e com máscara ao reabrir. Para outro país não é exigido (do legado; a confirmar, não testado)</td>
+</tr>
+<tr>
+<td>Inscrição Estadual, Inscrição Municipal</td>
+<td>Texto</td>
+<td>(legado: 12)</td>
+<td>Não</td>
+<td></td>
+<td>(do legado; não testado)</td>
+</tr>
+<tr>
+<td>Telefone, Celular, Fax</td>
+<td>DDI (55), DD e Número</td>
+<td>(legado: DDI 4, DDD 3, número 9)</td>
+<td>Não</td>
+<td></td>
+<td>(do legado; não testado)</td>
+</tr>
+<tr>
+<td>Ramal</td>
+<td>Texto</td>
+<td>(a confirmar)</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Operadora de Telefonia</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não (legado: o celular pede a operadora)</td>
+<td></td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>Home Page</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Banco, Agência, Conta Corrente</td>
+<td>Texto e autocompletar ("Pesquise o banco")</td>
+<td>(legado: agência 10, conta 15)</td>
+<td>Não</td>
+<td></td>
+<td>Não testado</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim (já vem "Sim")</td>
+<td>Ao marcar "Não" aparece o campo "Justificativa Inativo*"</td>
+<td></td>
+</tr>
+<tr>
+<td>CEP</td>
+<td>Texto + PESQUISAR e LIMPAR</td>
+<td>(não se aplica)</td>
+<td>Sim (Brasil)</td>
+<td>O CEP volta sem hífen ao reabrir</td>
+<td>PESQUISAR responde "CEP nao encontrado." e não preenche o endereço (ponto para validar)</td>
+</tr>
+<tr>
+<td>Logradouro, Número</td>
+<td>Texto</td>
+<td>(legado: complemento 60)</td>
+<td>Sim</td>
+<td>Número: informe o número ou S/N</td>
+<td></td>
+</tr>
+<tr>
+<td>Complemento</td>
+<td>Texto</td>
+<td>(legado: 60)</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Município, Bairro</td>
+<td>Listas</td>
+<td>(não se aplica)</td>
+<td>Sim (Brasil)</td>
+<td>Município só tem opções para RJ (DV-PRI-N-052)</td>
+<td></td>
+</tr>
+<tr>
+<td>País, UF</td>
+<td>Listas</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>País: Argentina e Brasil; UF: RJ e SP</td>
+<td></td>
+</tr>
+<tr>
+<td>Código Postal, Cidade</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td></td>
+<td>Servem para empresas de fora do Brasil (inferência; a confirmar)</td>
+</tr>
+<tr>
+<td>Justificativa Inativo</td>
+<td>Texto</td>
+<td>(a confirmar)</td>
+<td>Sim, só ao inativar</td>
+<td>Aparece ao marcar Ativo = Não</td>
+<td>Não vai para o histórico</td>
+</tr>
+<tr>
+<td>Contatos</td>
+<td>Quadro próprio</td>
+<td>(a confirmar)</td>
+<td>Nome e e-mail: sim</td>
+<td>Telefones, celulares (com operadora) e fax opcionais; grava na hora, sem o botão Salvar</td>
+<td>Existe na versão nova</td>
+</tr>
+<tr>
+<td>Filiais</td>
+<td>Quadro próprio</td>
+<td>(a confirmar)</td>
+<td>Código, CNPJ, ativo, razão social, nome fantasia e endereço</td>
+<td>Grava na hora; só para Cliente (Fornecedor não tem). Tipo Empresa: não testado</td>
+<td>Existe na versão nova</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 08 a 09/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+<th>Incluir</th>
+<th>Editar</th>
+<th>Histórico</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (T.ADMIN2)</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido</td>
+</tr>
+<tr>
+<td>Cadastro</td>
+<td>Permitido (no menu)</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td><strong>Negado</strong> (botão desabilitado, "Sem permissão")</td>
+</tr>
+<tr>
+<td>Só consulta</td>
+<td>Abre mesmo fora do menu</td>
+<td>Permitido (8 linhas)</td>
+<td>Negado ("Sem permissão")</td>
+<td>Negado</td>
+<td>Negado</td>
+</tr>
+<tr>
+<td>Sem permissão de administrador</td>
+<td>Abre mesmo fora do menu</td>
+<td>Permitido</td>
+<td>Negado</td>
+<td>Negado</td>
+<td>Negado</td>
+</tr>
+<tr>
+<td>Sem login, ou sem nenhuma função</td>
+<td>Negado: volta para o login</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Conferência de 17/11/2026 com o perfil só de consulta: o menu não tem CADASTROS, mas a tela abre pelo endereço; o ícone Incluir diz "Sem permissão para incluir pessoa jurídica", o lápis diz "Sem permissão para alterar" e o log diz "Sem permissão para consultar log"; não há os botões IMPRIMIR e X.</p>
+<figure><a href="../../img/principal/pnr2-pessoa-juridica-29-lista-perfil-consulta.png" target="_blank" rel="noopener"><img src="../../img/principal/pnr2-pessoa-juridica-29-lista-perfil-consulta.png" alt="Lista para o perfil só de consulta" loading="lazy"></a><figcaption>Lista para o perfil só de consulta · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a lista com Incluir, lápis e log desabilitados e sem IMPRIMIR e X.</p>
+<p>Observações: (1) a leitura da lista de empresas funciona mesmo para perfis que não têm esta tela no menu; (2) na revalidação de 16/11/2026 do DV-PRI-N-035, a leitura pela API de <code>pessoas-juridicas</code> com a conta de consulta ainda respondeu <strong>200, fora do perfil</strong>, enquanto as rotas de outros cadastros passaram a responder 403 (corrigido em parte; não refeito em 17/11/2026).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="pessoa-juridica-fluxos.html"><small>← Anterior</small><strong>Fluxos · Pessoa jurídica</strong></a><a class="ap ap-prox" href="pessoa-juridica-anvisa.html"><small>Próximo →</small><strong>Anvisa · Pessoa jurídica</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

@@ -40,108 +40,189 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 193 de 756</span><div class="prog-doc"><i style="width:26%"></i></div></div>
   <header class="doc-cabecalho"><h1>Tipo de Movimentação: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="tipo-de-movimentacao-analise.html">Análise</a><a href="tipo-de-movimentacao-manual-do-usuario.html">Manual do usuário</a><a href="tipo-de-movimentacao-fluxos.html">Fluxos</a><a href="tipo-de-movimentacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="tipo-de-movimentacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="tipo-de-movimentacao-erros.html">Erros</a><a class="aba-extra aba-sem" href="tipo-de-movimentacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="tipo-de-movimentacao-analise.html">Análise</a><a href="tipo-de-movimentacao-manual-do-usuario.html">Manual do usuário</a><a href="tipo-de-movimentacao-fluxos.html">Fluxos</a><a href="tipo-de-movimentacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="tipo-de-movimentacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="tipo-de-movimentacao-erros.html">Erros</a><a class="aba-extra" href="tipo-de-movimentacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o tipo com data e usuário; código gerado; histórico "INCLUSÃO DO REGISTRO".</li>
+<li><strong>Alterar:</strong> exige justificativa. Na rodada 2 (06/11/2026) o LOG mostrou o sentido ao contrário ("ENTRADA: NÃO para SIM" quando o tipo passou de entrada para saída): resultado citado pelo número do legado DV-EST-102, sem ficha DV-EST-N; não revalidado.</li>
+<li><strong>Excluir:</strong> exige justificativa.</li>
+<li><strong>Uso:</strong> o tipo novo e ativo aparece na Entrada de Material - Outras.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>—</td>
-<td>Confirma a inclusão do item?</td>
-<td>—</td>
+<td>Salvar vazio (depois do SIM)</td>
+<td>"A Descrição é obrigatória!"</td>
+<td>Visto no print</td>
+</tr>
+<tr>
+<td>Inativar sem justificativa</td>
+<td>"A Justificativa é obrigatória!"</td>
+<td>10/11/2026</td>
+</tr>
+<tr>
+<td>Código repetido, inclusive de inativo</td>
+<td>"Esse código do tipo de movimentação já está cadastrado para a empresa."</td>
+<td>10/11/2026</td>
+</tr>
+<tr>
+<td>Código fora do formato</td>
+<td>"O código deve possuir até cinco letras, números ou espaços."</td>
+<td>Caso com caracteres especiais</td>
+</tr>
+<tr>
+<td>Descrição acima de 100 caracteres</td>
+<td>"A Descrição deve ter no máximo 100 caracteres!"</td>
+<td>Limite do navegador removido</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Código</td>
+<td>Texto</td>
+<td>(legado: até 5)</td>
+<td>Não</td>
+<td></td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Pesquisa: Descrição</td>
+<td>Texto</td>
+<td>(legado: até 100)</td>
+<td>Não</td>
+<td>Procura dentro do texto</td>
 <td></td>
 </tr>
 <tr>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>—</td>
-<td>Confirma a inclusão do item? — "A Descrição é obrigatória!"</td>
-<td>—</td>
+<td>Pesquisa: Entrada/Saída</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODOS, Entrada, Saída</td>
 <td></td>
 </tr>
 <tr>
-<td>2 valor no limite (grava)</td>
-<td>2 valor no limite (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do item? → Inclusão realizada com sucesso!</td>
-<td>—</td>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODOS, SIM, NÃO</td>
 <td></td>
 </tr>
 <tr>
-<td>6 editar e conferir o valor gravado</td>
-<td>6 editar e conferir o valor gravado</td>
-<td>—</td>
-<td></td>
-<td>—</td>
+<td>Código</td>
+<td>Texto</td>
+<td>Até 5 caracteres (letras, números ou espaços)</td>
+<td>Não</td>
+<td>Vazio: o sistema gera (ex.: 00003)</td>
+<td>Travado na edição (do legado)</td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Data e hora da criação</td>
 <td></td>
 </tr>
 <tr>
-<td>5a inativar o registro (edição com justificativa)</td>
-<td>5a inativar o registro (edição com justificativa)</td>
-<td>—</td>
-<td>Confirma a alteração do tipo de movimentação? — "A Justificativa é obrigatória!"</td>
-<td>—</td>
+<td>Descrição</td>
+<td>Texto</td>
+<td>Até 100 caracteres</td>
+<td>Sim (asterisco)</td>
+<td>Editável na versão nova</td>
 <td></td>
 </tr>
 <tr>
-<td>5b reutilizar o código/nome do registro inativo</td>
-<td>5b reutilizar o código/nome do registro inativo</td>
-<td>—</td>
-<td>Confirma a inclusão do item? — "Esse código do tipo de movimentação já está cadastrado para a empresa."</td>
-<td>—</td>
+<td>Tipo</td>
+<td>Entrada / Saída</td>
+<td>(não se aplica)</td>
+<td>Sim (asterisco)</td>
+<td>Entrada já vem marcada</td>
+<td>Legado: Saída trava as duas escolhas seguintes em Não (a confirmar)</td>
+</tr>
+<tr>
+<td>Atualiza Custo Médio</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim (asterisco)</td>
+<td>Já vem Não (no legado vinha Sim)</td>
+<td>Sim recalcula o custo do item (legado)</td>
+</tr>
+<tr>
+<td>Entrada por Nota Fiscal</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim (asterisco)</td>
+<td>Já vem Não (no legado vinha Sim)</td>
+<td>Sim: aparece no Recebimento; Não: na Entrada - Outras (legado)</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim (asterisco)</td>
+<td>Já vem Sim</td>
 <td></td>
 </tr>
 <tr>
-<td>3a registro normal (grava)</td>
-<td>3a registro normal (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do item? → Inclusão realizada com sucesso!</td>
-<td>—</td>
-<td></td>
-</tr>
-<tr>
-<td>3b duplicidade: mesmos valores de um registro ativo</td>
-<td>3b duplicidade: mesmos valores de um registro ativo</td>
-<td>—</td>
-<td>Confirma a inclusão do item? — "Esse código do tipo de movimentação já está cadastrado para a empresa."</td>
-<td>—</td>
-<td></td>
-</tr>
-<tr>
-<td>4 caracteres especiais e acentos</td>
-<td>4 caracteres especiais e acentos</td>
-<td>—</td>
-<td>Confirma a inclusão do item? — "O código deve possuir até cinco letras, números ou espaços."</td>
-<td>—</td>
-<td></td>
-</tr>
-<tr>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>—</td>
-<td>Confirma a inclusão do item? — "A Descrição deve ter no máximo 100 caracteres!"</td>
-<td>—</td>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>(legado: até 255)</td>
+<td>Sim, ao alterar e excluir</td>
+<td>Gravada no histórico</td>
 <td></td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 05 a 09/11/2026 (<code>quem-pode.csv</code>, <code>execucao/2026-11-05-rodada-1/</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir e pesquisar</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (conta de perfil 1)</td>
+<td>Permitido: a lista e o formulário carregam</td>
+<td>Todas as ações do manual foram feitas com esta conta</td>
+</tr>
+<tr>
+<td>Perfil "T. BA PERFIL ESTOQUE" (login T.BA20)</td>
+<td><strong>Negado</strong>: erro 403 "Não foi possível consultar os tipos de movimentação."</td>
+<td>O perfil recebe 403 até para ler (DV-EST-N-001, Alta); foi 1 chamada com erro e nenhuma com sucesso</td>
+</tr>
+</tbody>
+</table></div>
+<p>Na versão nova, só o administrador (perfil 1) abre o Estoque. Não houve teste de perfis intermediários (por exemplo, só consulta) nesta tela.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="tipo-de-movimentacao-fluxos.html"><small>← Anterior</small><strong>Fluxos · Tipo de Movimentação</strong></a><a class="ap ap-prox" href="tipo-de-movimentacao-anvisa.html"><small>Próximo →</small><strong>Anvisa · Tipo de Movimentação</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

@@ -40,68 +40,167 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Administração</span><span>documento 116 de 224</span><div class="prog-doc"><i style="width:52%"></i></div></div>
   <header class="doc-cabecalho"><h1>Notificações do sistema: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="notificacoes-do-sistema-analise.html">Análise</a><a href="notificacoes-do-sistema-manual-do-usuario.html">Manual do usuário</a><a href="notificacoes-do-sistema-fluxos.html">Fluxos</a><a href="notificacoes-do-sistema-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="notificacoes-do-sistema-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="notificacoes-do-sistema-erros.html">Erros (1)</a><a class="aba-extra" href="notificacoes-do-sistema-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="notificacoes-do-sistema-analise.html">Análise</a><a href="notificacoes-do-sistema-manual-do-usuario.html">Manual do usuário</a><a href="notificacoes-do-sistema-fluxos.html">Fluxos</a><a href="notificacoes-do-sistema-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="notificacoes-do-sistema-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="notificacoes-do-sistema-erros.html">Erros (1)</a><a class="aba-extra" href="notificacoes-do-sistema-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Abrir o aviso</strong> grava, sem você clicar em nada, uma linha <strong>ACESSO</strong> no Log da Notificação e tira o aviso da condição "pendente de leitura".</li>
+<li><strong>Responder</strong> muda o status para <strong>RESPONDIDO</strong>, grava "Registro salvo com sucesso!" e acrescenta a linha RESPONDIDO ao log. A resposta não leva texto, motivo nem assinatura (DV-PRI-N-034).</li>
+<li><strong>Finalizar</strong> (disponível depois de responder) muda o status para <strong>FINALIZADO</strong> e grava "Registro salvo com sucesso!".</li>
+<li>O número do <strong>sino</strong> só baixa depois de recarregar a página (DV-PRI-N-034).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</h2>
+<ul>
+<li>"Nenhuma notificação encontrada." (filtro sem resultado, inclusive código inexistente).</li>
+<li>Código com letras: o campo <strong>não aceita</strong> o texto (campo numérico); nenhuma recusa foi provocada no teste de 17/11/2026, pois a tela não pede outro dado.</li>
+<li>Recusas ao responder (por exemplo, sem texto): a tela <strong>não recusa</strong>, pois não há campo de texto.</li>
+<li>Aviso aberto com número inválido pelo endereço: <strong>não testado</strong> na rodada de 17/11/2026. <strong>Ponto para validar com a área</strong> (no legado voltava à lista sem erro técnico; do legado; a confirmar na versão nova).</li>
+</ul>
+<h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>R3-NS-01</td>
-<td>Abertura</td>
-<td>não testada no legado</td>
-<td>Lista de 10 por página (Anterior e Próxima) com Código, Data da notificação, Data da sua leitura, Tipo, Status. Filtros: Pendente leitura (SIM, NÃO, TODOS; já abre em SIM), Código (número) e Status. Só o ícone Visualizar. Sem Excel e Imprimir</td>
-<td>Novo</td>
-<td>—</td>
+<td>Pendente leitura</td>
+<td>Lista</td>
+<td>n/a</td>
+<td>Não</td>
+<td>SIM (abre já em SIM), NÃO, TODOS</td>
+<td>A grade só aparece depois de PESQUISAR</td>
 </tr>
 <tr>
-<td>R3-NS-02</td>
-<td>Filtros</td>
-<td>não testada no legado</td>
-<td>SIM: 52; NÃO: 5; TODOS: 57 (52 + 5 fecham); o número do sino (52) é o das pendentes. Status: NOTIFICADO 10+, PENDENTE 1, FINALIZADO 2, CANCELADO e RESPONDIDO 0 (naquele momento). Código "abc" não é aceito (campo numérico); 999999: "Nenhuma notificação encontrada."</td>
-<td>Novo</td>
-<td>—</td>
+<td>Código</td>
+<td>Texto numérico</td>
+<td>n/i</td>
+<td>Não</td>
+<td>Só números (não aceita letras); 999999 não acha</td>
+<td></td>
 </tr>
 <tr>
-<td>R3-NS-03</td>
-<td>Visualizar</td>
-<td>não testada no legado</td>
-<td>Abre a notificação (Código, Tipo, Datas, Título, Status, Mensagem) e o Log da Notificação (CRIADO e ACESSO, com a data e hora). Ao abrir, a notificação sai de "pendente de leitura" e o status muda de NOTIFICADO (na lista) para PENDENTE (no detalhe); o número do sino só baixa ao recarregar</td>
-<td>Novo</td>
-<td>N-034</td>
+<td>Status da Notificação</td>
+<td>Lista</td>
+<td>n/a</td>
+<td>Não</td>
+<td>NOTIFICADO, PENDENTE, FINALIZADO, CANCELADO, RESPONDIDO</td>
+<td>Valores vistos no teste (RESPONDIDO e FINALIZADO conferidos em 17/11/2026)</td>
 </tr>
 <tr>
-<td>R3-NS-04</td>
-<td>Responder</td>
-<td>não testada no legado</td>
-<td>Pede "Deseja responder a notificação?" (SIM, NÃO) e não pede texto; grava "Registro salvo com sucesso!" e o status passa a RESPONDIDO</td>
-<td>Novo</td>
-<td>N-034</td>
+<td>Código (coluna)</td>
+<td>Coluna</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>Número do aviso</td>
+<td></td>
 </tr>
 <tr>
-<td>R3-NS-05</td>
-<td>Texto da mensagem gerada</td>
-<td>não testada no legado</td>
-<td>"Perfil alterado: 0.T.ESPELHO_ADMIN. Alteracoes: permissoes revisadas." (texto genérico, sem dizer o que mudou)</td>
-<td>Novo</td>
-<td>N-034</td>
+<td>Data da notificação (coluna)</td>
+<td>Coluna</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>Data em que o aviso chegou</td>
+<td></td>
+</tr>
+<tr>
+<td>Data da sua leitura (coluna)</td>
+<td>Coluna</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>Data em que você abriu o aviso</td>
+<td></td>
+</tr>
+<tr>
+<td>Tipo notificação (coluna)</td>
+<td>Coluna</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>Tipo do evento</td>
+<td></td>
+</tr>
+<tr>
+<td>Status notificação (coluna)</td>
+<td>Coluna</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>Situação atual</td>
+<td></td>
+</tr>
+<tr>
+<td>Detalhe: Código, Tipo de Notificação, Data da Notificação, Data de Conclusão, Título da Notificação, Status</td>
+<td>Texto em cinza</td>
+<td>n/i</td>
+<td>Não se aplica</td>
+<td>Informações do aviso</td>
+<td>Somente leitura (a confirmar)</td>
+</tr>
+<tr>
+<td>Detalhe: Mensagem</td>
+<td>Texto</td>
+<td>n/i</td>
+<td>Não se aplica</td>
+<td>Texto do aviso</td>
+<td></td>
+</tr>
+<tr>
+<td>Detalhe: Log da Notificação</td>
+<td>Grade (Data, Usuário, Ação)</td>
+<td>n/a</td>
+<td>Não se aplica</td>
+<td>CRIADO, ACESSO, RESPONDIDO</td>
+<td>Usuário aparece como "ADMIN" (DV-PRI-N-034)</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<p>(n/i = não informado nas fontes da versão nova.)</p>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Conforme <code>quem-pode.csv</code> (linhas ainda não revisadas pela Qualidade):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (t.admin2)</td>
+<td>Permitido (tela do menu do perfil)</td>
+<td>Permitido (1 linha)</td>
+</tr>
+<tr>
+<td>Só consulta (t.consulta)</td>
+<td>Abre, mesmo fora do menu do perfil</td>
+<td>Permitido (1 linha)</td>
+</tr>
+<tr>
+<td>Cadastro (t.cadastro)</td>
+<td>Abre, fora do perfil</td>
+<td>Permitido (1 linha)</td>
+</tr>
+<tr>
+<td>Sem permissão de administrador (t.semadmin)</td>
+<td>Abre, fora do perfil</td>
+<td>Permitido (1 linha)</td>
+</tr>
+<tr>
+<td>Sem login ou sem nenhuma função</td>
+<td>Negado: volta ao login</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table></div>
+<p>Como a lista é de avisos pessoais, abrir a tela fora do perfil tem efeito menor do que nas telas de cadastro, mas o defeito de acesso por endereço (DV-PRI-N-035) vale para o conjunto das telas de Administração. Se um usuário consegue abrir o aviso de outra pessoa pelo número: <strong>Ponto para validar</strong> (não testado).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="notificacoes-do-sistema-fluxos.html"><small>← Anterior</small><strong>Fluxos · Notificações do sistema</strong></a><a class="ap ap-prox" href="notificacoes-do-sistema-anvisa.html"><small>Próximo →</small><strong>Anvisa · Notificações do sistema</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

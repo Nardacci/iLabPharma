@@ -37,14 +37,220 @@
   </aside>
   <main class="doc" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../documentacao/garantia-qualidade/index.html">Garantia da Qualidade</a> › <a class="sit-trilha" href="../../../documentacao/garantia-qualidade/novo.html" style="--cor:#1f6feb">Novo</a> › <span>Cadastro de Treinamento</span></nav>
-  <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Treinamento Técnico</span><span>documento 221 de 469</span><div class="prog-doc"><i style="width:47%"></i></div></div>
+  <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Treinamento Técnico</span><span>documento 221 de 483</span><div class="prog-doc"><i style="width:46%"></i></div></div>
   <header class="doc-cabecalho"><h1>Cadastro de Treinamento: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="cadastro-de-treinamento-analise.html">Análise</a><a href="cadastro-de-treinamento-manual-do-usuario.html">Manual do usuário</a><a href="cadastro-de-treinamento-fluxos.html">Fluxos</a><a href="cadastro-de-treinamento-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="cadastro-de-treinamento-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="cadastro-de-treinamento-erros.html">Erros (4)</a><a class="aba-extra aba-sem" href="cadastro-de-treinamento-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2></article>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="cadastro-de-treinamento-analise.html">Análise</a><a href="cadastro-de-treinamento-manual-do-usuario.html">Manual do usuário</a><a href="cadastro-de-treinamento-fluxos.html">Fluxos</a><a href="cadastro-de-treinamento-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="cadastro-de-treinamento-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="cadastro-de-treinamento-erros.html">Erros (4)</a><a class="aba-extra" href="cadastro-de-treinamento-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o treinamento com data e usuário; o treinamento ativo passa a ser oferecido na Solicitação e na Programação.</li>
+<li><strong>Alterar ou inativar:</strong> exige justificativa; o histórico guarda os campos alterados (NOME, NUMERO_POP, VERSAO_POP, ID_DOCUMENTO), com nomes técnicos, e <strong>não mostra a justificativa</strong> (DV-GQ-N-018, DV-GQ-N-055). <strong>Inativar o Tipo</strong> de um treinamento (na tela do Tipo) é aceito sem aviso e pode deixar o campo Tipo sem seleção ao reabrir (DV-GQ-N-042).</li>
+<li><strong>Excluir:</strong> exige justificativa; é bloqueado quando o treinamento está em uso (a lixeira some).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sem tipo</td>
+<td>"O tipo de treinamento é obrigatório."</td>
+<td>Conferido em 17/11/2026 (passo 3)</td>
+</tr>
+<tr>
+<td>Sem nome</td>
+<td>"O nome é obrigatório e deve ter no máximo 255 caracteres."</td>
+<td>Conferido em 17/11/2026 (passo 3)</td>
+</tr>
+<tr>
+<td>Sem setor responsável</td>
+<td>"Adicione ao menos um Dpto/Setor responsável."</td>
+<td>Rodada de 20/10/2026; <strong>não apareceu</strong> ao salvar vazio em 17/11/2026 (ponto para validar)</td>
+</tr>
+<tr>
+<td>Sem setor vinculado (e sem "Todos")</td>
+<td>"Adicione ao menos um Dpto/Setor vinculado, ou marque "Todos"."</td>
+<td>Idem</td>
+</tr>
+<tr>
+<td>Setor digitado e não escolhido na lista</td>
+<td>"Selecione um setor na lista de sugestões antes de adicionar."</td>
+<td>Visto na tela em 17/11/2026, sem imagem</td>
+</tr>
+<tr>
+<td>Externo sem instituição</td>
+<td>"A instituição de origem é obrigatória para treinamento externo."</td>
+<td>Conferido em 17/11/2026 (passo 5)</td>
+</tr>
+<tr>
+<td>Externo sem CNPJ</td>
+<td>"O CNPJ da instituição é obrigatório para treinamento externo."</td>
+<td>Conferido em 17/11/2026 (passo 5)</td>
+</tr>
+<tr>
+<td>Validade negativa (-1 dia)</td>
+<td>"Preencha os campos obrigatórios antes de salvar." (sem dizer qual campo)</td>
+<td>Conferido em 17/11/2026 (passo 5)</td>
+</tr>
+<tr>
+<td>Validade com ponto ("1.5" ano)</td>
+<td>"Os dados informados são inválidos." (400)</td>
+<td>10/11/2026; não repetido em 17/11/2026</td>
+</tr>
+<tr>
+<td><strong>CNPJ inválido (dígitos errados, só zeros, letras)</strong></td>
+<td><strong>Não é recusado</strong>: grava</td>
+<td>DV-GQ-N-021 e DV-GQ-N-046; repetido em 17/11/2026 com 14 dígitos "1"</td>
+</tr>
+<tr>
+<td><strong>Nome repetido (mesmo tipo)</strong></td>
+<td><strong>Não é recusado</strong>: grava duas vezes</td>
+<td>DV-GQ-N-023 e DV-GQ-N-046; repetido em 17/11/2026</td>
+</tr>
+<tr>
+<td><strong>Validade absurda</strong> (13 meses, 400 dias, 1000 anos juntos)</td>
+<td><strong>Não é recusada</strong></td>
+<td>DV-GQ-N-022 e DV-GQ-N-046; repetido em 17/11/2026</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto bloqueado</td>
+<td>—</td>
+<td>Não se aplica</td>
+<td>Gerado ao gravar</td>
+<td></td>
+</tr>
+<tr>
+<td>Tipo de treinamento</td>
+<td>Lista</td>
+<td>—</td>
+<td>Sim</td>
+<td>Tipos ativos</td>
+<td></td>
+</tr>
+<tr>
+<td>Nome</td>
+<td>Texto</td>
+<td>255 (a tela corta acima)</td>
+<td>Sim</td>
+<td>Repetição aceita</td>
+<td></td>
+</tr>
+<tr>
+<td>Documento (código)</td>
+<td>Texto com lista suspensa ("Selecione um documento": código, título e revisão)</td>
+<td>—</td>
+<td>Não</td>
+<td>Digita-se parte do código e escolhe-se na lista; botão X retira. Se só documentos vigentes aparecem: não conferido (ponto para validar)</td>
+<td>Liga o treinamento à revisão usada na Programação</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>—</td>
+<td>Sim</td>
+<td>Já vem em Sim</td>
+<td></td>
+</tr>
+<tr>
+<td>Treinamento obrigatório</td>
+<td>Sim / Não</td>
+<td>—</td>
+<td>Não</td>
+<td>Já vem em Não</td>
+<td>Não testado em 17/11/2026: o efeito do Sim só aparece na Programação e na Conclusão (telas 07 e 09); ponto para validar</td>
+</tr>
+<tr>
+<td>Validade treinamento</td>
+<td>Três números: dia(s), mês(es), ano(s)</td>
+<td>—</td>
+<td>Não</td>
+<td>0, 0, 0 aceito; negativo recusado; sem limite superior</td>
+<td>Vencimento sai igual à data de conclusão se 0/0/0 (rodada de 10/11/2026)</td>
+</tr>
+<tr>
+<td>Dpto/Setor responsável</td>
+<td>Busca + ADICIONAR + quadro</td>
+<td>—</td>
+<td>Sim</td>
+<td>Setores do Principal; é preciso escolher o setor na lista de sugestões</td>
+<td></td>
+</tr>
+<tr>
+<td>Origem treinamento</td>
+<td>Interno / Externo</td>
+<td>—</td>
+<td>Sim</td>
+<td>Já vem em Interno</td>
+<td></td>
+</tr>
+<tr>
+<td>Nome Instituição, CNPJ</td>
+<td>Texto</td>
+<td>—</td>
+<td>Sim, se Externo</td>
+<td>CNPJ sem conferência</td>
+<td></td>
+</tr>
+<tr>
+<td>Dpto/Setor vinculado</td>
+<td>Busca + ADICIONAR + quadro + marca "Todos"</td>
+<td>—</td>
+<td>Sim, a menos que "Todos"</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Função vinculado</td>
+<td>Lista + ADICIONAR + marca "Todos"</td>
+<td>—</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Responsável Pelo Registro</td>
+<td>Campos bloqueados: data e hora, responsável, setor, cargo</td>
+<td>—</td>
+<td>Não se aplica</td>
+<td>Usuário conectado</td>
+<td></td>
+</tr>
+<tr>
+<td>Observação</td>
+<td>Texto</td>
+<td>Não verificado</td>
+<td>Não</td>
+<td>Livre</td>
+<td>Ponto para validar</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Teste de 09/11/2026 (<code>quem-pode.csv</code>): o <strong>administrador</strong> abre, pesquisa e inclui. <strong>t.consulta, t.semadmin e t.cadastro</strong> abrem a tela sem erro de servidor, com <strong>Pesquisar e Incluir desabilitados</strong>. Sem login, volta ao login.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="cadastro-de-treinamento-fluxos.html"><small>← Anterior</small><strong>Fluxos · Cadastro de Treinamento</strong></a><a class="ap ap-prox" href="cadastro-de-treinamento-anvisa.html"><small>Próximo →</small><strong>Anvisa · Cadastro de Treinamento</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

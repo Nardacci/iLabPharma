@@ -40,76 +40,233 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 116 de 756</span><div class="prog-doc"><i style="width:15%"></i></div></div>
   <header class="doc-cabecalho"><h1>Almoxarifado: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="almoxarifado-analise.html">Análise</a><a href="almoxarifado-manual-do-usuario.html">Manual do usuário</a><a href="almoxarifado-fluxos.html">Fluxos</a><a href="almoxarifado-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="almoxarifado-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="almoxarifado-erros.html">Erros (7)</a><a class="aba-extra aba-sem" href="almoxarifado-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="almoxarifado-analise.html">Análise</a><a href="almoxarifado-manual-do-usuario.html">Manual do usuário</a><a href="almoxarifado-fluxos.html">Fluxos</a><a href="almoxarifado-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="almoxarifado-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="almoxarifado-erros.html">Erros (7)</a><a class="aba-extra" href="almoxarifado-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> o sistema gera o código, grava o almoxarifado e acrescenta "INCLUSÃO DO REGISTRO" ao histórico; depois do OK a tela <strong>volta à lista</strong>.</li>
+<li><strong>Alterar:</strong> exige justificativa; o histórico guarda campo, valor antigo, valor novo e a justificativa digitada.</li>
+<li><strong>Inativar:</strong> aceito sem aviso, mesmo com <strong>local</strong> ou <strong>item</strong> usando o almoxarifado: o local continua ativo, ligado ao almoxarifado inativo, e o item mantém o almoxarifado inativo na grade (DV-EST-N-026, retestado em 10/11/2026).</li>
+<li><strong>Excluir:</strong> exige justificativa e depende do uso. <strong>Em uso por Local de Armazenagem: bloqueado</strong> com "O Almoxarifado possui dependências com o(s) processo(s): Local de Armazenagem.". <strong>Em uso por Item: excluído com sucesso</strong>, e o item reaberto mostra "Nenhum almoxarifado vinculado." (DV-EST-N-025, <strong>Alta</strong>).</li>
+</ul>
+<figure><a href="../../img/estoque/e1b-excluir-almox.png" target="_blank" rel="noopener"><img src="../../img/estoque/e1b-excluir-almox.png" alt="Almoxarifado em uso por item, excluído" loading="lazy"></a><figcaption>Almoxarifado em uso por item, excluído · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a lista depois da exclusão: a pesquisa por "T. ALM E1 ITEM2" não retorna resultado (o almoxarifado em uso por um item foi excluído).</p>
+<figure><a href="../../img/estoque/e1b-item-depois-excluir.png" target="_blank" rel="noopener"><img src="../../img/estoque/e1b-item-depois-excluir.png" alt="Item sem almoxarifado depois da exclusão" loading="lazy"></a><figcaption>Item sem almoxarifado depois da exclusão · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra o Item <code>T.E1-ITEM2</code> reaberto, com a grade "Almoxarifados (Movimentação)" dizendo "Nenhum almoxarifado vinculado.".</p>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>—</td>
-<td>Confirma a inclusão do registro?</td>
-<td>—</td>
-<td></td>
+<td>Salvar sem descrição</td>
+<td>"Descrição não informada"</td>
+<td>Vem depois do SIM da confirmação (DV-EST-N-027); sem "!"</td>
 </tr>
 <tr>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Descrição não informada"</td>
-<td>—</td>
-<td></td>
+<td>Segundo almoxarifado de um tipo especial (Produção, Comercial, Retenção, Referência)</td>
+<td>"Já existe um almoxarifado de Produção cadastrado." (e do tipo correspondente)</td>
+<td>Só aparece no fim do preenchimento (DV-EST-N-010)</td>
 </tr>
 <tr>
-<td>2 valor no limite (grava)</td>
-<td>2 valor no limite (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Já existe um almoxarifado de Produção cadastrado."</td>
-<td>—</td>
-<td></td>
+<td>Sigla repetida</td>
+<td>"Sigla já cadastrada."</td>
+<td>A sigla é cortada em 2 caracteres sem aviso (DV-EST-N-010)</td>
 </tr>
 <tr>
-<td>3a registro normal (grava)</td>
-<td>3a registro normal (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Já existe um almoxarifado de Produção cadastrado."</td>
-<td>—</td>
-<td></td>
+<td>Texto acima do limite (limite do navegador removido)</td>
+<td>"Os dados informados são inválidos."</td>
+<td>Não diz o campo (DV-EST-N-027)</td>
 </tr>
 <tr>
-<td>4 caracteres especiais e acentos</td>
-<td>4 caracteres especiais e acentos</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Já existe um almoxarifado de Produção cadastrado."</td>
-<td>—</td>
-<td></td>
+<td>Excluir em uso por Local</td>
+<td>"O Almoxarifado possui dependências com o(s) processo(s): Local de Armazenagem."</td>
+<td>Excluir em uso por Item não é recusado (DV-EST-N-025)</td>
 </tr>
 <tr>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Os dados informados são inválidos."</td>
-<td>—</td>
-<td></td>
+<td>Gravar com perfil sem acesso (T.BA20)</td>
+<td>"Não foi possível salvar o almoxarifado."</td>
+<td>A mensagem não diz que falta permissão (DV-EST-N-036)</td>
+</tr>
+<tr>
+<td>Alterar ou excluir sem justificativa</td>
+<td>"A justificativa é obrigatória!"</td>
+<td>Confirmado em 17/11/2026; na alteração e na exclusão vem depois do SIM da confirmação</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<figure><a href="../../img/estoque/bcef-b03b-ba20-apos-sim.png" target="_blank" rel="noopener"><img src="../../img/estoque/bcef-b03b-ba20-apos-sim.png" alt="Gravação negada com perfil sem acesso" loading="lazy"></a><figcaption>Gravação negada com perfil sem acesso · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra o formulário com a descrição preenchida, o campo Tipo vazio (as opções também deram 403) e a faixa "Não foi possível salvar o almoxarifado.".</p>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><strong>Lista (filtros)</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Valores e regra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>Procura o código igual ao digitado, não por parte (confirmado); com 6 dígitos devolve o registro de 5 dígitos (DV-EST-N-052)</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>Procura dentro da descrição</td>
+</tr>
+<tr>
+<td>Tipo</td>
+<td>Lista</td>
+<td>TODOS, PADRÃO, PRODUÇÃO, COMERCIAL, REFERÊNCIA, RETENÇÃO, ESTABILIDADE</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Lista</td>
+<td>TODAS, SIM, NÃO</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Formulário</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto bloqueado</td>
+<td>6 dígitos nos novos (000034), 5 nos antigos</td>
+<td>Não se aplica</td>
+<td>Gerado ao salvar; bloqueado na alteração</td>
+<td>O legado descreve 5 caracteres (ver Diferenças)</td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td></td>
+<td>Não se aplica</td>
+<td>Data e hora da abertura do formulário</td>
+<td></td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>até 100</td>
+<td>Sim (*)</td>
+<td>Mensagem "Descrição não informada"</td>
+<td>O ponto digitado foi mantido na inclusão e na alteração de 17/11/2026 (descartado na de 09/11/2026: ponto para validar); minúsculas viram maiúsculas</td>
+</tr>
+<tr>
+<td>Lote Identificado</td>
+<td>Escolha Sim / Não</td>
+<td></td>
+<td>Não marcado com asterisco</td>
+<td>Padrão Não; com Sim, a Sigla é exigida (confirmado em 17/11/2026)</td>
+<td><code>CAMPOS-DOS-14-CADASTROS.md</code> lista como obrigatórios também Lote identificado, Aprova solicitação e Tipo; na tela só Descrição e Ativo têm asterisco (ponto para validar)</td>
+</tr>
+<tr>
+<td>Sigla do lote</td>
+<td>Texto</td>
+<td>2 (o campo não deixa digitar a terceira letra)</td>
+<td>Sim (*), só com lote identificado</td>
+<td>Única entre os almoxarifados: "Sigla já cadastrada."</td>
+<td>Aparece ao marcar Lote Identificado = Sim</td>
+</tr>
+<tr>
+<td>Aprovar Solicitação</td>
+<td>Escolha Sim / Não</td>
+<td></td>
+<td>Não marcado com asterisco</td>
+<td>Padrão Não; com Sim, a solicitação desse armazém só é atendida depois de aprovada</td>
+<td>Efeito testado na Aprovação de Solicitação (outra tela)</td>
+</tr>
+<tr>
+<td>Tipo</td>
+<td>Lista</td>
+<td></td>
+<td>Não marcado com asterisco</td>
+<td>Padrão PADRÃO; os tipos especiais só existem uma vez</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Escolha Sim / Não</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão Sim</td>
+<td>Inativar em uso não avisa</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>não medido</td>
+<td>Sim, só ao alterar e ao excluir</td>
+<td>Aparece só na alteração e na tela de exclusão</td>
+<td>O histórico guarda o texto</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado dos testes de 09 e 10/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Ação</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (conta de perfil 1)</td>
+<td>Abrir a tela e pesquisar</td>
+<td>Permitido: lista e formulário carregam</td>
+</tr>
+<tr>
+<td>Perfil "T. BA PERFIL ESTOQUE" (conta T.BA20)</td>
+<td>Abrir a tela</td>
+<td>A tela <strong>abre</strong> e o Incluir continua visível, mas a lista falha: <strong>"Não foi possível carregar os almoxarifados."</strong> (403 nas rodadas de 09 e 10/11/2026; confirmado em 17/11/2026)</td>
+</tr>
+<tr>
+<td>Perfil "T. BA PERFIL ESTOQUE" (conta T.BA20)</td>
+<td>Incluir e salvar</td>
+<td><strong>Negado (403)</strong> "Não foi possível salvar o almoxarifado."</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Abrir a tela pelo endereço</td>
+<td>Leva à tela de login</td>
+</tr>
+</tbody>
+</table></div>
+<p>Na versão nova só o perfil 1 usa o Estoque (<strong>DV-EST-N-001</strong>, Alta). <strong>O que cada função do perfil libera não pôde ser testado</strong> (ponto para validar depois da correção).</p>
+<figure><a href="../../img/estoque/pnr2-almoxarifado-23-perfil-sem-acesso-lista.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-almoxarifado-23-perfil-sem-acesso-lista.png" alt="Conta T.BA20: lista sem registros e Incluir visível" loading="lazy"></a><figcaption>Conta T.BA20: lista sem registros e Incluir visível · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a tela aberta pela conta T.BA20, sem registros e com o Incluir visível.</p>
+<figure><a href="../../img/estoque/pnr2-almoxarifado-24-perfil-sem-acesso-pesquisa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-almoxarifado-24-perfil-sem-acesso-pesquisa.png" alt="Conta T.BA20: erro ao carregar" loading="lazy"></a><figcaption>Conta T.BA20: erro ao carregar · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a faixa "Não foi possível carregar os almoxarifados." ao pesquisar com a conta T.BA20.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="almoxarifado-fluxos.html"><small>← Anterior</small><strong>Fluxos · Almoxarifado</strong></a><a class="ap ap-prox" href="almoxarifado-anvisa.html"><small>Próximo →</small><strong>Anvisa · Almoxarifado</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

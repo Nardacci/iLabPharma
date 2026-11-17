@@ -40,116 +40,282 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 179 de 224</span><div class="prog-doc"><i style="width:80%"></i></div></div>
   <header class="doc-cabecalho"><h1>Instrumentos: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="instrumentos-analise.html">Análise</a><a href="instrumentos-manual-do-usuario.html">Manual do usuário</a><a href="instrumentos-fluxos.html">Fluxos</a><a href="instrumentos-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="instrumentos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="instrumentos-erros.html">Erros (5)</a><a class="aba-extra" href="instrumentos-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="instrumentos-analise.html">Análise</a><a href="instrumentos-manual-do-usuario.html">Manual do usuário</a><a href="instrumentos-fluxos.html">Fluxos</a><a href="instrumentos-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="instrumentos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="instrumentos-erros.html">Erros (5)</a><a class="aba-extra" href="instrumentos-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o instrumento (Tipo "Móvel" e Ativo "Sim" valem se você não escolher) e acrescenta "INCLUSAO DO REGISTRO" ao histórico.</li>
+<li><strong>Alterar:</strong> exige justificativa; o histórico guarda campo, valor antigo e novo, usuário, data, hora <strong>e a justificativa</strong>.</li>
+<li><strong>Inativar:</strong> exige justificativa; a lista mostra NÃO e o histórico "ATIVO SIM → NAO" com a justificativa.</li>
+<li><strong>Excluir:</strong> remove o instrumento sem justificativa.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>R3-IN-01</td>
-<td>Obrigatórios</td>
-<td>não testada no legado</td>
-<td>Vazio: "A descrição é obrigatória." e "A tag é obrigatória." (um a um, cada um com a sua). Tipo e Ativo já vêm marcados (Móvel e Sim): gravar sem escolher grava "Móvel"</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>Salvar vazio</td>
+<td>"Preencha os campos obrigatórios antes de salvar." (faixa) + "A descrição é obrigatória." + "A tag é obrigatória."</td>
+<td>Visto no print</td>
 </tr>
 <tr>
-<td>R3-IN-02</td>
-<td>Incluir só o obrigatório e completo</td>
-<td>não testada no legado</td>
-<td>Descrição e tag: grava. Completo (patrimônio, modelo, série, datas, fabricante, fornecedor): grava. Fabricante não é obrigatório aqui (é em Utilidades e Utensílios)</td>
-<td>Novo</td>
-<td>N-033</td>
+<td>Descrição com 256 caracteres ou mais</td>
+<td>"A descrição é obrigatória."</td>
+<td>Mensagem enganosa (DV-PRI-N-022)</td>
 </tr>
 <tr>
-<td>R3-IN-03</td>
-<td>Limites e tag única</td>
-<td>N-022</td>
-<td>Descrição 255 grava; 256 ou mais: "A descrição é obrigatória." (mensagem enganosa). Tag 30 grava; 31 ou mais: só o aviso geral, sem dizer o campo. Tag repetida: "Tag ja existe!"</td>
-<td>Igual</td>
-<td>N-022, N-027</td>
+<td>Tag com 31 caracteres ou mais</td>
+<td>Faixa "Preencha os campos obrigatórios antes de salvar." <strong>e</strong> "A tag é obrigatória." sob o campo</td>
+<td>Mensagem enganosa (DV-PRI-N-022)</td>
 </tr>
 <tr>
-<td>R3-IN-04</td>
-<td>Datas</td>
-<td>não testada no legado</td>
-<td>Fabricação futura (2031): "A data de fabricacao nao pode ser maior que a data atual." (recusa; o Equipamento aceita, N-020). Fim antes do início: "A data de inicio de operacao nao pode ser maior que a data de fim de operacao." Início antes da fabricação: aceito (ponto para validar)</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>Tag repetida</td>
+<td>"Tag ja existe!"</td>
+<td>Sem acento; se some sozinha: não medido</td>
 </tr>
 <tr>
-<td>R3-IN-05</td>
-<td>Duplicado (descrição)</td>
-<td>DV-PRI-007</td>
-<td>Mesma descrição com outra tag: aceita</td>
-<td>Igual</td>
-<td>—</td>
+<td>Data de Fabricação futura (testado com 2031)</td>
+<td>"A data de fabricacao nao pode ser maior que a data atual."</td>
+<td>Aparece <strong>depois</strong> de confirmar SIM; nada é gravado. Diferente de Equipamentos, que aceita</td>
 </tr>
 <tr>
-<td>R3-IN-06</td>
-<td>Alterar</td>
-<td>único cadastro, junto com Conta contábil, em que o histórico traz a justificativa</td>
-<td>Sem justificativa: "A justificativa é; obrigatória." (ponto e vírgula no meio do texto). Com justificativa: grava. Log mostra o campo, o valor antigo e novo, usuário, data e hora e a linha "Justificativa: ..."</td>
-<td>Melhoria</td>
-<td>N-027</td>
+<td>Data Fim de Operação anterior ao início</td>
+<td>"A data de inicio de operacao nao pode ser maior que a data de fim de operacao."</td>
+<td>Também só depois de confirmar SIM</td>
 </tr>
 <tr>
-<td>R3-IN-07</td>
-<td>Inativar</td>
-<td>não testada no legado</td>
-<td>Exige justificativa; lista "NÃO"; Log "ATIVO SIM → NAO" com a justificativa</td>
-<td>Novo</td>
-<td>—</td>
+<td>Fabricante "OUTROS" sem o nome</td>
+<td>"Outros fabricantes é obrigatório." (sob o campo, com a faixa geral)</td>
+<td>Texto conferido em 17/11/2026</td>
 </tr>
 <tr>
-<td>R3-IN-08</td>
-<td>Excluir sem uso</td>
-<td>DV-PRI-009, N-007</td>
-<td>"Confirma a exclusão do item?", sem campo de justificativa; 204 e "Exclusão realizada com sucesso." Excluir com uso: não há outra tela do Principal que use o instrumento (não conferido nos outros módulos)</td>
-<td>Igual</td>
-<td>—</td>
+<td>Alterar ou inativar sem justificativa</td>
+<td>Faixa geral e "A justificativa é; obrigatória." sob o campo</td>
+<td>Ponto e vírgula a mais; não pede confirmação</td>
 </tr>
 <tr>
-<td>R3-IN-09</td>
-<td>Pesquisa</td>
-<td>DV-PRI-008, não reproduzido nesta tela</td>
-<td>"INSTRUMENTO" e "instrumento" acham; sem acento não foi possível comparar (os instrumentos de teste não têm acento)</td>
-<td>Igual</td>
-<td>—</td>
+<td>Descrição repetida com outra tag</td>
+<td><strong>Não é recusada</strong></td>
+<td>Igual ao legado (DV-PRI-007)</td>
 </tr>
 <tr>
-<td>R3-IN-10</td>
-<td>Excel</td>
-<td>não testada no legado</td>
-<td>O botão chama-se "X" (não "EXCEL"); baixa <code>instrumentos_...xlsx</code>, respeita o filtro (1 linha) e traz o tipo (MOVEL)</td>
-<td>Novo</td>
-<td>N-027</td>
-</tr>
-<tr>
-<td>R3-IN-11</td>
-<td>Imprimir</td>
-<td>não testada no legado</td>
-<td>PDF "RELATÓRIO DE CADASTRO DE INSTRUMENTOS", respeita o filtro ("Descrição: T. INSTRUMENTO"); "SUA LOGO AQUI"</td>
-<td>Novo</td>
-<td>N-028</td>
+<td>Início de operação anterior à fabricação</td>
+<td><strong>Aceito</strong> (segue para a pergunta de confirmação; o robô clicou NÃO e não gravou)</td>
+<td>Ponto para validar com a área se é regra</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Código, Descrição, Tag</td>
+<td>Texto</td>
+<td>(legado: 10, 100 e 10; a confirmar na versão nova)</td>
+<td>Não</td>
+<td>Procura dentro do texto; não ignora acento</td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODAS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
+<td>Código, Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Gerados pelo sistema</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Já vem "Sim"</td>
+<td>Inativar exige justificativa</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>Até 255 caracteres</td>
+<td>Sim</td>
+<td>Pode repetir</td>
+<td>256 é recusado com mensagem enganosa</td>
+</tr>
+<tr>
+<td>Tag</td>
+<td>Texto</td>
+<td>Até 30 caracteres</td>
+<td>Sim</td>
+<td>Única</td>
+<td>31 é recusado ("A tag é obrigatória." sob o campo)</td>
+</tr>
+<tr>
+<td>Patrimônio</td>
+<td>Texto</td>
+<td>(legado: 30)</td>
+<td>Não</td>
+<td>(legado: conferido só na alteração)</td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Marca / Modelo</td>
+<td>Texto</td>
+<td>(legado: 30)</td>
+<td>Não</td>
+<td></td>
+<td>(do legado)</td>
+</tr>
+<tr>
+<td>Número de Série</td>
+<td>Texto</td>
+<td>(legado: 30)</td>
+<td>Não</td>
+<td>(legado: conferido só na alteração)</td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Data de Fabricação</td>
+<td>Data (calendário, dd/mm/aaaa)</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Não pode ser futura</td>
+<td></td>
+</tr>
+<tr>
+<td>Fornecedor</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Empresas do tipo Fornecedor</td>
+<td></td>
+</tr>
+<tr>
+<td>Fabricante</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Empresas do tipo Fabricante, mais "OUTROS"</td>
+<td></td>
+</tr>
+<tr>
+<td>Outros Fabricantes</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Sim, se Fabricante = OUTROS</td>
+<td>Bloqueado até escolher "OUTROS"</td>
+<td></td>
+</tr>
+<tr>
+<td>Data Início de Operação / Data Fim de Operação</td>
+<td>Data</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Fim antes do início é recusado</td>
+<td>Início antes da fabricação é aceito</td>
+</tr>
+<tr>
+<td>Tipo Instrumento</td>
+<td>Móvel / Fixo</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Móvel já vem marcado</td>
+<td>Gravar sem escolher grava "Móvel"</td>
+</tr>
+<tr>
+<td>Direção/Sub-Direção/Seção Proprietária</td>
+<td>Árvore com caixas</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Marcar um nível (legado)</td>
+<td></td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>(legado: 255)</td>
+<td>Sim, ao alterar ou inativar</td>
+<td></td>
+<td>Aparece no histórico</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 08 a 09/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+<th>Incluir</th>
+<th>Editar, Excluir, Histórico, Imprimir e Excel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (T.ADMIN2)</td>
+<td>Permitido (no menu)</td>
+<td>Permitido (8 linhas)</td>
+<td>Permitido</td>
+<td>Habilitados</td>
+</tr>
+<tr>
+<td>Cadastro</td>
+<td>Abre pelo endereço, <strong>fora do menu</strong> do perfil</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado ("Sem permissão")</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Só consulta</td>
+<td>Abre fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem permissão de administrador</td>
+<td>Abre fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem login, ou sem nenhuma função</td>
+<td>Negado: volta para o login</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Não testado em 17/11/2026:</strong> usuário sem permissão (o robô não tinha a senha de uma conta de consulta; o teste exigiria redefinir a senha de uma conta existente). O quadro acima é o da leitura anterior.</p>
+<p>Na revalidação de 16/11/2026 do DV-PRI-N-035, a leitura pela API de <code>instrumentos</code> com a conta de consulta passou a ser recusada (403): <strong>corrigido</strong> para esta tela.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="instrumentos-fluxos.html"><small>← Anterior</small><strong>Fluxos · Instrumentos</strong></a><a class="ap ap-prox" href="instrumentos-anvisa.html"><small>Próximo →</small><strong>Anvisa · Instrumentos</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

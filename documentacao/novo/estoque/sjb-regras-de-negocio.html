@@ -40,76 +40,189 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 130 de 756</span><div class="prog-doc"><i style="width:17%"></i></div></div>
   <header class="doc-cabecalho"><h1>SJB: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="sjb-analise.html">Análise</a><a href="sjb-manual-do-usuario.html">Manual do usuário</a><a href="sjb-fluxos.html">Fluxos</a><a href="sjb-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="sjb-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="sjb-erros.html">Erros</a><a class="aba-extra aba-sem" href="sjb-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="sjb-analise.html">Análise</a><a href="sjb-manual-do-usuario.html">Manual do usuário</a><a href="sjb-fluxos.html">Fluxos</a><a href="sjb-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="sjb-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="sjb-erros.html">Erros</a><a class="aba-extra" href="sjb-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o SJB com data e usuário e acrescenta "INCLUSÃO DO REGISTRO" ao histórico (sem valores). O SJB passa a ser oferecido no Item. Depois do OK a tela volta à lista.</li>
+<li><strong>Alterar (descrição ou Ativo):</strong> exige justificativa; o histórico guarda o campo alterado (valor antigo e novo) com a justificativa, usuário, data e hora.</li>
+<li><strong>Excluir:</strong> pede justificativa e remove o SJB da lista (exclusão lógica; o código fica preso). Em 10/11/2026 o item que usava o SJB <strong>perdeu o SJB sem aviso</strong> (DV-EST-N-025).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>—</td>
-<td>Confirma a inclusão do registro?</td>
-<td>—</td>
-<td></td>
+<td>Salvar vazio (depois do SIM da confirmação)</td>
+<td>"O Código é obrigatório!" e "A Descrição é obrigatória!"</td>
+<td>Conferido em 17/11/2026</td>
 </tr>
 <tr>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "O Código é obrigatório!; A Descrição é obrigatória!"</td>
-<td>—</td>
-<td></td>
+<td>Código só com letras</td>
+<td>"O Código é obrigatório!"</td>
+<td>A tela descarta as letras e trata o código como vazio (17/11/2026; DV-EST-N-009)</td>
 </tr>
 <tr>
-<td>2 valor no limite (grava)</td>
-<td>2 valor no limite (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Os dados informados são inválidos."</td>
-<td>—</td>
-<td></td>
+<td>Código já cadastrado (ativo ou inativo)</td>
+<td>"O código SJB já está cadastrado para a empresa."</td>
+<td>Conferido com um código ativo e com o 33, inativo</td>
 </tr>
 <tr>
-<td>3a registro normal (grava)</td>
-<td>3a registro normal (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "O código SJB já está cadastrado para a empresa."</td>
-<td>—</td>
-<td></td>
+<td>Código de um SJB já excluído</td>
+<td>"O código SJB já está cadastrado para a empresa."</td>
+<td>O SJB excluído não aparece na lista, e a mensagem não explica que o código está preso (ponto para validar com a área)</td>
 </tr>
 <tr>
-<td>4 caracteres especiais e acentos</td>
-<td>4 caracteres especiais e acentos</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "O Código é obrigatório!" A tela alterou o digitado: {"codigo":{"digitado":"TB","gravado":""},"descricao":{"digitado":"TÃ-Ç/&amp;%#é ñ71401","gravado":"TÃÇé ñ71401"}}</td>
-<td>—</td>
-<td></td>
+<td>Código "000"</td>
+<td>"O código SJB já está cadastrado para a empresa."</td>
+<td>O campo aceita só 2 caracteres e o 000 vira 00, que já existe</td>
 </tr>
 <tr>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "O Código deve conter 2 números!"</td>
-<td>—</td>
-<td></td>
+<td>Código com mais ou menos de 2 dígitos</td>
+<td>"O Código deve conter 2 números!"</td>
+<td>Registrado em 10/11/2026; <strong>não reproduzido em 17/11/2026</strong> (o campo limita a 2 caracteres)</td>
+</tr>
+<tr>
+<td>Descrição acima do limite (160 caracteres, limite do navegador removido)</td>
+<td>"Os dados informados são inválidos."</td>
+<td>Não diz qual campo (DV-EST-N-027)</td>
+</tr>
+<tr>
+<td>Alterar sem justificativa (depois do SIM)</td>
+<td>"A justificativa é obrigatória!"</td>
+<td>Conferido em 17/11/2026</td>
+</tr>
+<tr>
+<td>Excluir sem justificativa (depois do SIM)</td>
+<td>"A justificativa é obrigatória!"</td>
+<td>Conferido em 17/11/2026</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<figure><a href="../../img/estoque/pnr2-sjb-20-codigo-repetido-ativa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-sjb-20-codigo-repetido-ativa.png" alt="SJB: código repetido (ativo)" loading="lazy"></a><figcaption>SJB: código repetido (ativo) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-sjb-21-codigo-repetido-inativa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-sjb-21-codigo-repetido-inativa.png" alt="SJB: código repetido (inativo)" loading="lazy"></a><figcaption>SJB: código repetido (inativo) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-sjb-22-codigo-so-letras.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-sjb-22-codigo-so-letras.png" alt="SJB: código só com letras" loading="lazy"></a><figcaption>SJB: código só com letras · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-sjb-23-codigo-000.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-sjb-23-codigo-000.png" alt="SJB: código 000" loading="lazy"></a><figcaption>SJB: código 000 · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-sjb-24-descricao-acima-do-limite.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-sjb-24-descricao-acima-do-limite.png" alt="SJB: descrição de 160 caracteres" loading="lazy"></a><figcaption>SJB: descrição de 160 caracteres · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-sjb-35-reutilizar-codigo-excluido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-sjb-35-reutilizar-codigo-excluido.png" alt="SJB: reutilizar o código de um SJB excluído" loading="lazy"></a><figcaption>SJB: reutilizar o código de um SJB excluído · clique para ampliar</figcaption></figure>
+
+<p>As imagens acima mostram, na ordem, as recusas de código repetido ativo, código repetido inativo (33), só letras, "000", descrição de 160 caracteres e código de SJB excluído.</p>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Código</td>
+<td>Texto</td>
+<td>(do legado: até 5; a confirmar na versão nova)</td>
+<td>Não</td>
+<td>Procura dentro do código ("9" acha 93, 95 e 99)</td>
+<td>Conferido em 17/11/2026</td>
+</tr>
+<tr>
+<td>Pesquisa: Descrição</td>
+<td>Texto</td>
+<td>(do legado: até 255; a confirmar na versão nova)</td>
+<td>Não</td>
+<td>Procura dentro da descrição; não acha com ponto digitado (o ponto não é gravado)</td>
+<td></td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODOS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>2 dígitos (o campo não aceita mais)</td>
+<td>Sim (asterisco)</td>
+<td>Só números; letras são descartadas; não pode repetir (nem o de um SJB excluído)</td>
+<td>Bloqueado na edição</td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Data e hora da criação</td>
+<td>Bloqueado na edição</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>150 caracteres no navegador (acima disso, "Os dados informados são inválidos.")</td>
+<td>Sim (asterisco)</td>
+<td>Gravada sem ponto, hífen e barra; <strong>aceita repetir</strong> a descrição de outro SJB (DV-EST-N-056)</td>
+<td><strong>Editável</strong> na edição, com justificativa</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim (asterisco)</td>
+<td>Já vem Sim</td>
+<td>Editável na edição</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>(do legado: até 255; a confirmar na versão nova)</td>
+<td>Sim, ao alterar e ao excluir</td>
+<td>Gravada no histórico</td>
+<td>Só aparece na edição e na exclusão</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 05 a 09/11/2026 (<code>quem-pode.csv</code>, <code>execucao/2026-11-05-rodada-1/</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir e pesquisar</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (conta de perfil 1)</td>
+<td>Permitido: a lista e o formulário carregam</td>
+<td>Todas as ações do manual foram feitas com esta conta</td>
+</tr>
+<tr>
+<td>Perfil "T. BA PERFIL ESTOQUE" (login T.BA20)</td>
+<td><strong>Negado</strong> na rodada de 05 a 09/11/2026: erro 403 "Não foi possível carregar os SJBs."</td>
+<td><strong>Não testado em 17/11/2026</strong> (o robô só tem a conta de administrador). Nas telas Estoque (Rua), (Coluna), (Andar) e Unidade de Medida a tela abriu com a lista vazia e <strong>sem</strong> mensagem de acesso (DV-EST-N-054). Ponto para validar: se o SJB também abre vazio, a mensagem do 403 acima ficou desatualizada</td>
+</tr>
+</tbody>
+</table></div>
+<p>Na versão nova, só o administrador (perfil 1) usa o Estoque (DV-EST-N-001). Não houve teste de perfis intermediários (por exemplo, só consulta) nesta tela.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="sjb-fluxos.html"><small>← Anterior</small><strong>Fluxos · SJB</strong></a><a class="ap ap-prox" href="sjb-anvisa.html"><small>Próximo →</small><strong>Anvisa · SJB</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

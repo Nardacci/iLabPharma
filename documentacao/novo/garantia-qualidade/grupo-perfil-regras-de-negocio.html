@@ -37,14 +37,140 @@
   </aside>
   <main class="doc" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../documentacao/garantia-qualidade/index.html">Garantia da Qualidade</a> › <a class="sit-trilha" href="../../../documentacao/garantia-qualidade/novo.html" style="--cor:#1f6feb">Novo</a> › <span>Grupo Perfil</span></nav>
-  <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Configuração</span><span>documento 312 de 469</span><div class="prog-doc"><i style="width:67%"></i></div></div>
+  <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Configuração</span><span>documento 312 de 483</span><div class="prog-doc"><i style="width:65%"></i></div></div>
   <header class="doc-cabecalho"><h1>Grupo Perfil: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="grupo-perfil-analise.html">Análise</a><a href="grupo-perfil-manual-do-usuario.html">Manual do usuário</a><a href="grupo-perfil-fluxos.html">Fluxos</a><a href="grupo-perfil-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="grupo-perfil-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="grupo-perfil-erros.html">Erros (2)</a><a class="aba-extra aba-sem" href="grupo-perfil-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2></article>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="grupo-perfil-analise.html">Análise</a><a href="grupo-perfil-manual-do-usuario.html">Manual do usuário</a><a href="grupo-perfil-fluxos.html">Fluxos</a><a href="grupo-perfil-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="grupo-perfil-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="grupo-perfil-erros.html">Erros (2)</a><a class="aba-extra" href="grupo-perfil-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li>Grava o nome do grupo e a lista de usuários.</li>
+<li>O histórico registra todas as alterações com o motivo fixo <strong>"Atualizar Grupo Perfil"</strong> e <strong>sem valor antigo e novo</strong>: não dá para saber quem entrou ou saiu de um nível (DV-GQ-N-011 e N-012).</li>
+<li>Não há assinatura nem justificativa digitada.</li>
+<li>A rodada 7 mostrou que colocar o usuário de consulta nos Níveis 01, 02 e 03 <strong>não liberou</strong> as leituras da GQ (continuaram negadas, 403): o nível do grupo, sozinho, não abre as telas (DV-GQ-N-008).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Salvar com perfil sem permissão</td>
+<td>"Usuário sem permissão para salvar este grupo perfil."</td>
+<td>A própria tela recusou, sem enviar o pedido (rodada 5, usuário de consulta); o servidor também respondeu 403 na chamada direta</td>
+</tr>
+<tr>
+<td>Busca de usuário</td>
+<td>Pede pelo menos 3 letras ("digite 3 caracteres")</td>
+<td>Texto do rótulo do campo</td>
+</tr>
+<tr>
+<td>Lista sem linhas</td>
+<td>"A pesquisa não retornou nenhum resultado."</td>
+<td>Print P02</td>
+</tr>
+</tbody>
+</table></div>
+<p>Outras mensagens do legado (por exemplo "Nome é obrigatório." e "Usuário já foi cadastrado.") <strong>não foram testadas na versão nova</strong>: (do legado; a confirmar na versão nova).</p>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Nome</td>
+<td>Texto</td>
+<td>Não informado</td>
+<td>Não</td>
+<td>Procura no nome do grupo</td>
+<td>Print P01</td>
+</tr>
+<tr>
+<td>Grade</td>
+<td>Tabela</td>
+<td></td>
+<td>Não se aplica</td>
+<td>NOME, NÍVEL (ordenáveis), Editar</td>
+<td>Print P02</td>
+</tr>
+<tr>
+<td>Nome</td>
+<td>Texto</td>
+<td>Não informado</td>
+<td>Sim (do legado; a confirmar)</td>
+<td>Livre; não muda o nível</td>
+<td></td>
+</tr>
+<tr>
+<td>Nível</td>
+<td>Lista travada</td>
+<td></td>
+<td>Não se aplica</td>
+<td>1, 2 ou 3, vem do grupo</td>
+<td>Desabilitado (confidencial-grupo-perfil)</td>
+</tr>
+<tr>
+<td>Nome Usuário</td>
+<td>Texto + BUSCAR</td>
+<td>3 letras no mínimo</td>
+<td>Não</td>
+<td>Busca usuários pelo nome</td>
+<td>Rodada 5 e 7</td>
+</tr>
+<tr>
+<td>Tabela de usuários</td>
+<td>Tabela</td>
+<td></td>
+<td>Não se aplica</td>
+<td>Código, Usuário, Remover</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado de 09/11/2026 (<code>quem-pode.csv</code>):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Permitido</td>
+<td>Habilitado</td>
+</tr>
+<tr>
+<td>Consulta, sem administração, cadastro</td>
+<td>Permitido, sem erro de servidor</td>
+<td><strong>Desabilitado</strong></td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Negado: volta para o login</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Só o perfil de administrador usa a GQ na versão nova (DV-GQ-N-014). Em 17/10/2026 a conta de consulta (sem o módulo GQ) abriu a tela de edição do Nível 3, mas a gravação foi recusada pela tela e pelo servidor e o grupo não mudou. <strong>Limite da prova:</strong> esse teste não equivale ao cenário do legado, em que o perfil de consulta <strong>colocou a si mesmo no Nível 3</strong> (DV-GQ-009, Crítica); na versão nova os casos CT-GQ-111 e CT-GQ-112 ficaram <strong>inconclusivos/bloqueados</strong> (rodada 9).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="grupo-perfil-fluxos.html"><small>← Anterior</small><strong>Fluxos · Grupo Perfil</strong></a><a class="ap ap-prox" href="grupo-perfil-anvisa.html"><small>Próximo →</small><strong>Anvisa · Grupo Perfil</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

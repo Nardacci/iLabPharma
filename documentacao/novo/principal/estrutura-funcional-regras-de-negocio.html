@@ -40,100 +40,156 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 186 de 224</span><div class="prog-doc"><i style="width:83%"></i></div></div>
   <header class="doc-cabecalho"><h1>Estrutura funcional: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="estrutura-funcional-analise.html">Análise</a><a href="estrutura-funcional-manual-do-usuario.html">Manual do usuário</a><a href="estrutura-funcional-fluxos.html">Fluxos</a><a href="estrutura-funcional-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="estrutura-funcional-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="estrutura-funcional-erros.html">Erros (4)</a><a class="aba-extra" href="estrutura-funcional-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="estrutura-funcional-analise.html">Análise</a><a href="estrutura-funcional-manual-do-usuario.html">Manual do usuário</a><a href="estrutura-funcional-fluxos.html">Fluxos</a><a href="estrutura-funcional-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="estrutura-funcional-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="estrutura-funcional-erros.html">Erros (4)</a><a class="aba-extra" href="estrutura-funcional-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o nível sob o pai marcado, com o responsável escolhido, e mostra "Inclusão realizada com sucesso!". O nível passa a aparecer na árvore e nas árvores de área proprietária das outras telas.</li>
+<li><strong>Alterar:</strong> grava sem justificativa. O histórico guarda a troca (campo, valor antigo e novo, usuário, data e hora), sem o motivo.</li>
+<li><strong>Inativar:</strong> grava sem justificativa; o nível continua visível na árvore e <strong>aceita receber um filho</strong> (RG-PRI-043).</li>
+<li><strong>Excluir:</strong> remove o nível da árvore, sem justificativa. Se o nível tem filhos, a exclusão deve ser recusada (ver o próximo item).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>RG-PRI-040</td>
-<td>Incluir e campos obrigatórios</td>
-<td>sem caso</td>
-<td>Mensagens por campo; pede confirmação; sigla repetida recusada</td>
-<td>Igual</td>
-<td>N-003</td>
+<td>Salvar com campos em branco</td>
+<td>"Preencha o Local", "Preencha o Responsável", "Preencha a sigla"</td>
+<td>Uma mensagem por campo (rodada de 17/10/2026)</td>
 </tr>
 <tr>
-<td>RG-PRI-041</td>
-<td>Limites e formatos</td>
-<td>sem caso</td>
-<td>Local corta em 100; sigla em 5</td>
-<td>Igual</td>
-<td>—</td>
+<td>Sigla já usada em outro nível</td>
+<td>"Ja existe outra estrutura com a sigla informada!"</td>
+<td>Some da tela em cerca de 1 segundo e vem sem acento (DV-PRI-N-003)</td>
 </tr>
 <tr>
-<td>RG-PRI-042</td>
-<td>Alterar com justificativa e histórico</td>
-<td>sem caso</td>
-<td>Alterar não pede justificativa</td>
-<td>Igual</td>
-<td>—</td>
+<td>Excluir um nível que tem filhos</td>
+<td>"Existem Estruturas Funcionais filhas desta."</td>
+<td>Visto nas rodadas 1 e 4. <strong>Na Fase 2 (09/11/2026, caso BA-EF-21) a pergunta apareceu, o pai continuou na árvore e nenhuma mensagem foi mostrada</strong> (DV-PRI-N-024). Ponto para validar</td>
 </tr>
 <tr>
-<td>RG-PRI-043</td>
-<td>Inativar</td>
-<td>sem caso</td>
-<td>O inativo continua na árvore; aceitou criar filho sob local inativo</td>
-<td>Igual</td>
-<td>—</td>
+<td>Nível com usuário, ambiente, equipamento, instrumento ou utilidade ligados</td>
+<td>"Estrutura possui profissional associado!" e "Existem ... vinculados a esta Estrutura Funcional." (do legado; a confirmar na versão nova)</td>
+<td>Excluir "local usado por usuário" não foi testável na rodada 1</td>
 </tr>
 <tr>
-<td>RG-PRI-044</td>
-<td>Excluir</td>
-<td>sem caso</td>
-<td>Sem justificativa; histórico do excluído some</td>
-<td>Igual</td>
-<td>DV-PRI-N-007</td>
-</tr>
-<tr>
-<td>RG-PRI-045</td>
-<td>Excluir com dependentes</td>
-<td>sem caso</td>
-<td>Com filhos: recusado. Local usado por usuário: não testável</td>
-<td>Novo</td>
-<td>—</td>
-</tr>
-<tr>
-<td>RG-PRI-047</td>
-<td>Excel e Imprimir</td>
-<td>sem caso</td>
-<td>Baixa .xlsx (200) e gera PDF (200)</td>
-<td>Igual</td>
-<td>—</td>
-</tr>
-<tr>
-<td>RG-PRI-048</td>
-<td>Histórico</td>
-<td>sem caso</td>
-<td>Inclusão, alteração e inativação, sem justificativa; textos sem acento</td>
-<td>Igual</td>
-<td>N-002</td>
-</tr>
-<tr>
-<td>RG-PRI-049</td>
-<td>Hora do histórico</td>
-<td>sem caso</td>
-<td>É a hora do servidor</td>
-<td>Igual</td>
-<td>—</td>
+<td>Botão sem nível marcado</td>
+<td>"Selecione um item." (do legado; a confirmar na versão nova)</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Árvore</td>
+<td>Árvore com caixas de marcação</td>
+<td>(não se aplica)</td>
+<td>Sim, para Editar, Excluir e Ver log</td>
+<td>Mostra todos os níveis; sem filtro</td>
+<td>Confirmado no print da lista</td>
+</tr>
+<tr>
+<td>Estrutura Funcional Pai</td>
+<td>Texto de leitura</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Nome do nível marcado ao adicionar</td>
+<td>Visto na imagem do formulário "Novo"</td>
+</tr>
+<tr>
+<td>Descrição (mensagem: "Preencha o Local")</td>
+<td>Texto</td>
+<td>Até 100 caracteres</td>
+<td>Sim</td>
+<td>A tela corta em 100</td>
+<td>Tamanho confirmado em 17/10/2026; rótulo do campo no legado é "Descrição"</td>
+</tr>
+<tr>
+<td>Responsável</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Usuários do sistema</td>
+<td>Valores: do legado, só usuários ativos (a confirmar)</td>
+</tr>
+<tr>
+<td>Sigla</td>
+<td>Texto</td>
+<td>Até 5 caracteres</td>
+<td>Sim</td>
+<td>Única entre os níveis; a tela corta em 5</td>
+<td>Travada depois de gravada (do legado; a confirmar na versão nova)</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Já vem "Sim"</td>
+<td>Inativar não pede justificativa</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 08 a 09/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir pelo endereço</th>
+<th>Editar, Excluir, Histórico e Imprimir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (T.ADMIN2)</td>
+<td>Permitido (a tela está no menu)</td>
+<td>Botões habilitados</td>
+</tr>
+<tr>
+<td>Só consulta</td>
+<td>Abre mesmo estando <strong>fora</strong> do menu do perfil</td>
+<td>Desabilitados, com a dica "Sem permissão"</td>
+</tr>
+<tr>
+<td>Cadastro</td>
+<td>Abre mesmo estando fora do menu</td>
+<td>Desabilitados, "Sem permissão"</td>
+</tr>
+<tr>
+<td>Sem permissão de administrador</td>
+<td>Abre mesmo estando fora do menu</td>
+<td>Desabilitados, "Sem permissão"</td>
+</tr>
+<tr>
+<td>Sem login, ou sem nenhuma função</td>
+<td>Negado: volta para a tela de login</td>
+<td>(não se aplica)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ponto para validar: a leitura mostra só o botão desabilitado na tela; <strong>a conferência pelo servidor desta tela não foi testada</strong>. As correções de 16/11/2026 do DV-PRI-N-035 cobrem outras rotas (por exemplo ambientes e equipamentos) e não citam a Estrutura funcional. A linha de <strong>Incluir/Adicionar</strong> não consta do quadro de permissões.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="estrutura-funcional-fluxos.html"><small>← Anterior</small><strong>Fluxos · Estrutura funcional</strong></a><a class="ap ap-prox" href="estrutura-funcional-anvisa.html"><small>Próximo →</small><strong>Anvisa · Estrutura funcional</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

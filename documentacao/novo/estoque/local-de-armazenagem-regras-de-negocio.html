@@ -40,92 +40,262 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 60 de 756</span><div class="prog-doc"><i style="width:8%"></i></div></div>
   <header class="doc-cabecalho"><h1>Local de Armazenagem: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="local-de-armazenagem-analise.html">Análise</a><a href="local-de-armazenagem-manual-do-usuario.html">Manual do usuário</a><a href="local-de-armazenagem-fluxos.html">Fluxos</a><a href="local-de-armazenagem-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="local-de-armazenagem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="local-de-armazenagem-erros.html">Erros (4)</a><a class="aba-extra aba-sem" href="local-de-armazenagem-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="local-de-armazenagem-analise.html">Análise</a><a href="local-de-armazenagem-manual-do-usuario.html">Manual do usuário</a><a href="local-de-armazenagem-fluxos.html">Fluxos</a><a href="local-de-armazenagem-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="local-de-armazenagem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="local-de-armazenagem-erros.html">Erros (4)</a><a class="aba-extra" href="local-de-armazenagem-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o local com as marcações, o almoxarifado, o cliente e os grupos escolhidos, mostra "Inclusão realizada com sucesso!", volta à lista e acrescenta "INCLUSÃO DO REGISTRO" ao histórico.</li>
+<li><strong>Alterar:</strong> exige justificativa e grava em maiúsculas. Mudar marcação em local com endereços é recusado; <strong>trocar só o almoxarifado grava</strong> e o histórico registra a troca (DV-EST-N-053).</li>
+<li><strong>Excluir:</strong> exige justificativa. <strong>Um local com endereços é excluído com sucesso</strong>: o local some da lista e da pesquisa pelo código (reteste de 17/11/2026 com dois locais; DV-EST-N-025, <strong>Alta</strong>). Em 10/11/2026 o endereço que estava ativo (<code>L170-R170-C001-A001</code>) também deixou de aparecer na pesquisa por código; não se sabe se foi apagado junto ou ficou sem local.</li>
+</ul>
+<figure><a href="../../img/estoque/d2-local-apos-excluir.png" target="_blank" rel="noopener"><img src="../../img/estoque/d2-local-apos-excluir.png" alt="Local 170 excluído, com endereço ativo" loading="lazy"></a><figcaption>Local 170 excluído, com endereço ativo · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a pesquisa pelo código 170 sem resultado ("A pesquisa não retornou nenhum resultado."), depois da exclusão do local que tinha endereço gerado.
+- <strong>Inativar:</strong> grava "Alteração realizada com sucesso!" e a lista mostra ATIVO = NÃO. O efeito sobre endereço e lote armazenado <strong>não foi verificado</strong> (ponto para validar; depende do Endereço do Estoque).</p>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>—</td>
-<td>Confirma a inclusão do registro?</td>
-<td>—</td>
-<td></td>
+<td>Salvar vazio</td>
+<td>"O Código é obrigatório!", "A descrição é obrigatória!", "O Almoxarifado é obrigatório!"</td>
+<td>Vêm depois do SIM da confirmação (DV-EST-N-027)</td>
 </tr>
 <tr>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>—</td>
-<td>Confirma a inclusão do registro?</td>
-<td>—</td>
-<td></td>
+<td>Código repetido</td>
+<td>"Esse código já está cadastrado."</td>
+<td>Depois do SIM</td>
 </tr>
 <tr>
-<td>2 valor no limite (grava)</td>
-<td>2 valor no limite (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? → Inclusão realizada com sucesso!</td>
-<td>—</td>
-<td></td>
+<td>Código <code>000</code></td>
+<td>"O Código não pode ser igual a 000."</td>
+<td>Depois do SIM</td>
 </tr>
 <tr>
-<td>6 editar e conferir</td>
-<td>6 editar e conferir</td>
-<td>—</td>
-<td>registro não encontrado na lista depois de gravar</td>
-<td>—</td>
-<td></td>
+<td>Descrição acima do limite (limite do navegador removido)</td>
+<td>"Os dados informados são inválidos."</td>
+<td>Testado com 65 caracteres; nada gravado</td>
 </tr>
 <tr>
-<td>3a registro normal (grava)</td>
-<td>3a registro normal (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? → Inclusão realizada com sucesso!</td>
-<td>—</td>
-<td></td>
+<td>Alterar sem justificativa</td>
+<td>"A justificativa é obrigatória!"</td>
+<td>Depois do SIM da alteração</td>
 </tr>
 <tr>
-<td>3b duplicidade: mesmos valores de um registro ativo</td>
-<td>3b duplicidade: mesmos valores de um registro ativo</td>
-<td>—</td>
-<td>Confirma a inclusão do registro?</td>
-<td>—</td>
-<td></td>
+<td>Excluir sem justificativa</td>
+<td>"A Justificativa é obrigatória!"</td>
+<td>Na própria tela de exclusão; "Justificativa" com J maiúsculo</td>
 </tr>
 <tr>
-<td>4 caracteres especiais e acentos</td>
-<td>4 caracteres especiais e acentos</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? → Inclusão realizada com sucesso! A tela alterou o digitado: {"descricao":{"digitado":"TÃ-Ç/&amp;%#é ñ71453","gravado":"TÃÇé ñ71453"}}</td>
-<td>—</td>
-<td></td>
-</tr>
-<tr>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro?</td>
-<td>—</td>
-<td></td>
+<td>Mudar marcação em local com endereços</td>
+<td>"As características não podem ser alteradas porque o local possui endereços de estoque."</td>
+<td>O servidor recusa ao salvar; trocar só o almoxarifado <strong>não</strong> é recusado (DV-EST-N-053)</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><strong>Lista (filtros e colunas)</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Valores e regra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>Procura o código pelo valor inteiro (testado com R21; igual ao legado, que completa com zeros, não foi visto: R21 e R23 ficaram como digitados)</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>Procura dentro da descrição (do legado; a confirmar na versão nova)</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Lista</td>
+<td>TODAS, SIM, NÃO</td>
+</tr>
+<tr>
+<td>Colunas</td>
+<td></td>
+<td>CÓDIGO, DESCRIÇÃO, ALMOXARIFADO, ATIVO; 10 linhas por página</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Formulário</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>até 3</td>
+<td>Sim (*)</td>
+<td>Digitado (não gerado); bloqueado na alteração; recusa <code>000</code> e código repetido</td>
+<td><code>T.1</code> vira <code>0T1</code> ou <code>T1</code> (DV-EST-N-009); sem zeros à esquerda</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>até 40</td>
+<td>Sim (*)</td>
+<td>Ponto, barra e hífen são descartados; minúsculas viram maiúsculas</td>
+<td>Acima do limite: "Os dados informados são inválidos."</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Escolha Sim / Não</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão Sim</td>
+<td>Ativo = Não inativa o local</td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td></td>
+<td>Não se aplica</td>
+<td>Data e hora de abrir o formulário; bloqueada também na edição</td>
+<td></td>
+</tr>
+<tr>
+<td>Cliente</td>
+<td>Lista</td>
+<td></td>
+<td>Não</td>
+<td>Clientes cadastrados; "SELECIONE" = sem cliente</td>
+<td>Editável na alteração</td>
+</tr>
+<tr>
+<td>Grupo de Itens</td>
+<td>Lista</td>
+<td></td>
+<td>Não</td>
+<td>Grupos cadastrados (por exemplo "00001 - GRUPO MVS 001")</td>
+<td>Editável na alteração</td>
+</tr>
+<tr>
+<td>Subgrupo de Itens</td>
+<td>Lista</td>
+<td></td>
+<td>Não</td>
+<td>Com o grupo "00001 - GRUPO MVS 001" só havia "SELECIONE"; se a lista segue o grupo escolhido (como no legado) <strong>não foi possível confirmar</strong></td>
+<td>Ponto para validar com um grupo que tenha subgrupos</td>
+</tr>
+<tr>
+<td>Almoxarifado</td>
+<td>Lista</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Mostra "código - descrição"</td>
+<td><strong>Editável</strong> na alteração, mesmo com endereços (DV-EST-N-053)</td>
+</tr>
+<tr>
+<td>Controle de Acesso</td>
+<td>Sim / Não</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão Não</td>
+<td>Editável, mas a mudança é recusada se o local tem endereços; efeito não testado</td>
+</tr>
+<tr>
+<td>Local Refrigerado</td>
+<td>Sim / Não</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão Não</td>
+<td>Idem</td>
+</tr>
+<tr>
+<td>Local de Quarentena</td>
+<td>Sim / Não</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão Não; Sim desabilita o Refugo</td>
+<td>Idem</td>
+</tr>
+<tr>
+<td>Controle de Umidade</td>
+<td>Sim / Não</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão Não</td>
+<td>Idem</td>
+</tr>
+<tr>
+<td>Refugo</td>
+<td>Sim / Não</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão Não; fica cinza com Quarentena = Sim</td>
+<td>Idem</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>não medido</td>
+<td>Sim, só na alteração e na exclusão</td>
+<td>Gravada em maiúsculas</td>
+<td>O histórico guarda o texto</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado dos testes de 09 e 10/11/2026 (<code>quem-pode.csv</code>) e da conferência de 17/11/2026, pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir a tela</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (conta de perfil 1)</td>
+<td>Pelo endereço e pelo menu</td>
+<td>Permitido: lista e formulário carregam</td>
+</tr>
+<tr>
+<td>Perfil "T. BA PERFIL ESTOQUE" (conta T.BA20)</td>
+<td>Pelo endereço</td>
+<td>09 e 10/11/2026: negado (403), "Não foi possível carregar os locais de armazenagem." <strong>17/11/2026: a tela abriu, Incluir ficou visível e PESQUISAR mostrou "A pesquisa não retornou nenhum resultado." sem mensagem de erro</strong></td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Pelo endereço</td>
+<td>Leva à tela de login</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../../img/estoque/pnr2-local-de-armazenagem-36-perfil-sem-acesso-lista.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-local-de-armazenagem-36-perfil-sem-acesso-lista.png" alt="Perfil sem acesso: lista" loading="lazy"></a><figcaption>Perfil sem acesso: lista · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a tela aberta com a conta T.BA20, com PESQUISAR e Incluir visíveis.</p>
+<figure><a href="../../img/estoque/pnr2-local-de-armazenagem-37-perfil-sem-acesso-pesquisa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-local-de-armazenagem-37-perfil-sem-acesso-pesquisa.png" alt="Perfil sem acesso: pesquisa" loading="lazy"></a><figcaption>Perfil sem acesso: pesquisa · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a lista vazia ("A pesquisa não retornou nenhum resultado.") e nenhuma mensagem de erro.</p>
+<p><strong>Ponto para validar com a área:</strong> a diferença entre as rodadas (403 antes, lista vazia sem erro em 17/11/2026; no Almoxarifado a mesma conta recebeu a mensagem de erro) pode ser a mensagem ter sumido antes da captura (o robô esperou 8 segundos) ou uma mudança do sistema. Só o perfil 1 usa o Estoque na versão nova (<strong>DV-EST-N-001</strong>, Alta); o que cada função libera <strong>não pôde ser testado</strong>.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="local-de-armazenagem-fluxos.html"><small>← Anterior</small><strong>Fluxos · Local de Armazenagem</strong></a><a class="ap ap-prox" href="local-de-armazenagem-anvisa.html"><small>Próximo →</small><strong>Anvisa · Local de Armazenagem</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

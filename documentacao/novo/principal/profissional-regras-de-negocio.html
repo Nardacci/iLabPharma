@@ -40,84 +40,389 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Administração</span><span>documento 53 de 224</span><div class="prog-doc"><i style="width:24%"></i></div></div>
   <header class="doc-cabecalho"><h1>Profissional: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="profissional-analise.html">Análise</a><a href="profissional-manual-do-usuario.html">Manual do usuário</a><a href="profissional-fluxos.html">Fluxos</a><a href="profissional-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="profissional-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="profissional-erros.html">Erros (11)</a><a class="aba-extra" href="profissional-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="profissional-analise.html">Análise</a><a href="profissional-manual-do-usuario.html">Manual do usuário</a><a href="profissional-fluxos.html">Fluxos</a><a href="profissional-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="profissional-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="profissional-erros.html">Erros (11)</a><a class="aba-extra" href="profissional-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o profissional, as ocupações e as funções escolhidas e registra "INCLUSÃO DO REGISTRO" no histórico. Depois de salvar, a tela volta à lista (conferido em 17/11/2026; a rodada 2 havia visto a tela ficar na edição).</li>
+<li><strong>Alterar:</strong> grava os campos. Registram-se no histórico o cargo, a matrícula, o e-mail e a função alterados, mas <strong>não o telefone</strong>; a justificativa digitada aparece como "Justificativa: -". Salvar duas vezes seguidas sem mudar nada não cria linha no histórico.</li>
+<li><strong>Inativar:</strong> exige justificativa, registra "ATIVO SIM → NÃO" e "JUSTIFICATIVA INATIVO"; o usuário não entra mais.</li>
+<li><strong>Excluir:</strong> com justificativa, a pessoa some da lista e da pesquisa. Se ela tem conta, registros criados, função ou ocupação, a exclusão é recusada. Se o histórico dela continua acessível depois da exclusão, <strong>não foi possível verificar</strong> (o profissional some da lista e do histórico, e não há outro caminho na tela); falta também o DBA confirmar que o registro foi para a lixeira (a confirmar).</li>
+<li>Nome com apóstrofo e aspas é gravado como digitado.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Mensagem</th>
+<th>Quando aparece</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CT-PRI-040</td>
-<td>Incluir profissional e conta</td>
-<td>Passou (DV-PRI-003)</td>
-<td>Criados 11 vezes. Histórico: "INCLUSÃO DO REGISTRO" e "INCLUSÃO DA CONTA"</td>
-<td>Igual</td>
-<td>DV-PRI-003</td>
+<td>O nome do profissional é obrigatório.</td>
+<td>Nome em branco</td>
 </tr>
 <tr>
-<td>CT-PRI-041</td>
-<td>Campos obrigatórios e formatos</td>
-<td>Passou (12 obrigatórios)</td>
-<td>15 obrigatórios recusados um a um. CPF não validado</td>
-<td>Regressão</td>
-<td>DV-PRI-N-016</td>
+<td>A data de nascimento do profissional é obrigatória/inválida.</td>
+<td>Data em branco ou inválida</td>
 </tr>
 <tr>
-<td>CT-PRI-044</td>
-<td>Editar com justificativa e ver o histórico</td>
-<td>Falhou (DV-PRI-004)</td>
-<td>Grava sem pedir justificativa; a justificativa digitada não é gravada; telefone não entra no histórico. O cargo em branco do legado não se repete</td>
-<td>Regressão</td>
-<td>DV-PRI-N-015</td>
+<td>O sexo do profissional é obrigatório.</td>
+<td>Sexo em branco</td>
 </tr>
 <tr>
-<td>CT-PRI-045</td>
-<td>Inativar com justificativa</td>
-<td>Passou</td>
-<td>Exige justificativa; histórico "ATIVO SIM → NÃO"; o usuário não entra</td>
-<td>Igual</td>
-<td>—</td>
+<td>O nome da mãe do profissional é obrigatório.</td>
+<td>Nome da mãe em branco</td>
 </tr>
 <tr>
-<td>CT-PRI-047</td>
-<td>Excluir sem histórico</td>
-<td>Passou (falta DBA)</td>
-<td>Exclui com justificativa (204) e some da lista; o histórico do excluído deixa de ser acessível. Falta o DBA confirmar a lixeira</td>
-<td>Igual</td>
-<td>—</td>
+<td>A UF da naturalidade do profissional é obrigatória.</td>
+<td>UF da naturalidade em branco</td>
 </tr>
 <tr>
-<td>CT-PRI-048</td>
-<td>Excluir profissional com conta ou histórico</td>
-<td>Falhou (DV-PRI-006)</td>
-<td>Recusado: "existem associações para este usuário", sem dizer qual. O legado excluía sem avisar</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>O CPF informado é obrigatório/inválido.</td>
+<td>CPF em branco (um CPF com dígito errado <strong>não</strong> é recusado: DV-PRI-N-016)</td>
 </tr>
 <tr>
-<td>CT-PRI-049</td>
+<td>O CEP do profissional é obrigatório/inválido.</td>
+<td>CEP em branco</td>
+</tr>
+<tr>
+<td>O logradouro do profissional é obrigatório.</td>
+<td>Logradouro em branco</td>
+</tr>
+<tr>
+<td>O número é obrigatório. Informe o número ou digite S/N.</td>
+<td>Número em branco</td>
+</tr>
+<tr>
+<td>O país do profissional é obrigatório.</td>
+<td>País em branco</td>
+</tr>
+<tr>
+<td>O estado do profissional é obrigatório.</td>
+<td>UF do endereço em branco</td>
+</tr>
+<tr>
+<td>O município do profissional é obrigatório.</td>
+<td>Município em branco</td>
+</tr>
+<tr>
+<td>O bairro do profissional é obrigatório.</td>
+<td>Bairro em branco</td>
+</tr>
+<tr>
+<td>O grupo é obrigatório.</td>
+<td>Grupo em branco (com esta, são <strong>14 mensagens</strong> ao salvar vazio)</td>
+</tr>
+<tr>
+<td>Já existe um profissional cadastrado com esse CPF.</td>
+<td>CPF repetido (faixa; ela continua na tela depois de corrigir o CPF e salvar com outro erro: R2A-PRO-03)</td>
+</tr>
+<tr>
+<td>O e-mail do profissional é inválido.</td>
+<td>E-mail sem arroba (a mensagem aparece <strong>uma vez</strong>, sob o campo)</td>
+</tr>
+<tr>
+<td>A justificativa é obrigatória para desativar o profissional.</td>
+<td><strong>Ativo = Não</strong> sem justificativa</td>
+</tr>
+<tr>
+<td>A justificativa é obrigatória.</td>
 <td>Excluir sem justificativa</td>
-<td>Passou</td>
-<td>Profissional: "A justificativa é obrigatória."</td>
-<td>Igual</td>
-<td>—</td>
+</tr>
+<tr>
+<td>Não foi possível efetuar a exclusão, pois existem associações para este usuário.</td>
+<td>Excluir profissional com conta, com registros criados <strong>ou com função e ocupação</strong> (não diz qual associação)</td>
+</tr>
+<tr>
+<td>Erro ao salvar o profissional.</td>
+<td>Nome com 270 caracteres (250 gravam; conferido em 17/11/2026)</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lista: Nome</td>
+<td>Texto</td>
+<td>Sem limite informado (legado: 255)</td>
+<td>Não</td>
+<td>Procura dentro do nome; ignora acento e maiúsculas (Fase 2 de 09/11/2026)</td>
+<td></td>
+</tr>
+<tr>
+<td>Lista: CPF</td>
+<td>Máscara</td>
+<td>11 dígitos</td>
+<td>Não</td>
+<td>Igual ao CPF digitado</td>
+<td></td>
+</tr>
+<tr>
+<td>Lista: Grupo, Ativo, Função profissional</td>
+<td>Listas</td>
+<td>Não se aplica</td>
+<td>Não</td>
+<td>Grupos, TODAS/SIM/NÃO, funções</td>
+<td></td>
+</tr>
+<tr>
+<td>Nome</td>
+<td>Texto</td>
+<td>Até 270 na tela; o servidor grava até 250</td>
+<td>Sim</td>
+<td>Apóstrofo e aspas aceitos; nome repetido com CPF diferente é aceito (pode ser homonímia)</td>
+<td></td>
+</tr>
+<tr>
+<td>Data Nascimento</td>
+<td>Data</td>
+<td>dd/mm/aaaa</td>
+<td>Sim</td>
+<td>Datas impossíveis (2099, 1850) são aceitas (DV-PRI-N-047)</td>
+<td></td>
+</tr>
+<tr>
+<td>Sexo</td>
+<td>Lista</td>
+<td>Não se aplica</td>
+<td>Sim</td>
+<td>Lista de opções (a opção Masculino aparece nos prints; demais opções: Ponto para validar)</td>
+<td></td>
+</tr>
+<tr>
+<td>Data Cadastro</td>
+<td>Data e hora travada</td>
+<td>Não se aplica</td>
+<td>Não se aplica</td>
+<td>Preenchida pelo sistema</td>
+<td></td>
+</tr>
+<tr>
+<td>Nome da Mãe</td>
+<td>Texto</td>
+<td>Sem limite informado (legado: 255)</td>
+<td>Sim</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Nome do Pai</td>
+<td>Texto</td>
+<td>Sem limite informado (legado: 255)</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>UF Naturalidade e Naturalidade</td>
+<td>Listas ligadas</td>
+<td>Não se aplica</td>
+<td>UF: sim</td>
+<td></td>
+<td>Os documentos falavam em 15 obrigatórios; ao salvar vazio a tela mostra <strong>14</strong> mensagens (conferido em 17/11/2026)</td>
+</tr>
+<tr>
+<td>CPF</td>
+<td>Máscara</td>
+<td>11 dígitos</td>
+<td>Sim</td>
+<td>Único; <strong>dígitos não validados</strong> (DV-PRI-N-016); letras gravam só os números digitados</td>
+<td></td>
+</tr>
+<tr>
+<td>Identidade, Órgão Emissor, Data Emissão</td>
+<td>Texto, lista e data</td>
+<td>Sem limite informado (legado: até 15)</td>
+<td>Não</td>
+<td>Emissão antes do nascimento é aceita (DV-PRI-N-047)</td>
+<td></td>
+</tr>
+<tr>
+<td>Identidade Profissional e Órgão da Classe</td>
+<td>Texto e duas listas</td>
+<td>Sem limite informado (legado: até 15)</td>
+<td>Não (do legado: com identidade profissional, o órgão da classe passa a ser obrigatório; a confirmar)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Telefone 1 e 2, Celular 1 e 2</td>
+<td>DDI, DD e Número</td>
+<td>DDI vem 55</td>
+<td>Não</td>
+<td>Letras são removidas sem aviso (DV-PRI-N-048)</td>
+<td></td>
+</tr>
+<tr>
+<td>Operadora</td>
+<td>Lista</td>
+<td>Não se aplica</td>
+<td>Não</td>
+<td>Só habilita com DDD e número (do legado; a confirmar)</td>
+<td></td>
+</tr>
+<tr>
+<td>E-mail</td>
+<td>Texto</td>
+<td>Sem limite informado (legado: 255)</td>
+<td>Não</td>
+<td>Formato conferido ("O e-mail do profissional é inválido.", uma vez)</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Opção Sim/Não</td>
+<td>Não se aplica</td>
+<td>Sim (vem Sim)</td>
+<td>Não exige <strong>Justificativa Inativo*</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Justificativa Inativo</td>
+<td>Texto</td>
+<td>Sem limite informado (legado: 255)</td>
+<td>Sim, ao marcar Não</td>
+<td>"A justificativa é obrigatória para desativar o profissional."</td>
+<td></td>
+</tr>
+<tr>
+<td>CEP, Logradouro, Número, Complemento</td>
+<td>Máscara e textos</td>
+<td>Número aceita "S/N"</td>
+<td>CEP, Logradouro e Número: sim</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>País, UF, Município, Bairro</td>
+<td>Listas ligadas</td>
+<td>Não se aplica</td>
+<td>Sim</td>
+<td>Fora do Brasil valem Código Postal e Cidade</td>
+<td></td>
+</tr>
+<tr>
+<td>Setor, Cargo, Matrícula, Especialização</td>
+<td>Lista e textos</td>
+<td>Sem limite informado (legado: cargo 100, matrícula 12)</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Grupo</td>
+<td>Lista</td>
+<td>Não se aplica</td>
+<td>Sim</td>
+<td>A lista oferece grupos inativos (DV-PRI-N-033)</td>
+<td></td>
+</tr>
+<tr>
+<td>Ocupações e Funções</td>
+<td>Busca e grade</td>
+<td>Não se aplica</td>
+<td>Não</td>
+<td>Digite ao menos 2 letras (1 letra não acha nada; conferido em 17/11/2026), escolha e clique no +</td>
+<td></td>
+</tr>
+<tr>
+<td>Digite sua Justificativa</td>
+<td>Texto</td>
+<td>Sem limite informado (legado: 255)</td>
+<td>Marcada com asterisco, mas <strong>não é exigida</strong></td>
+<td>Não é gravada no histórico (DV-PRI-N-015)</td>
+<td></td>
+</tr>
+<tr>
+<td>Exclusão: Justificativa</td>
+<td>Texto</td>
+<td>Sem limite informado</td>
+<td>Sim</td>
+<td>"A justificativa é obrigatória."</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado dos testes de 08 e 09/11/2026 (quem-pode.csv), antes da revalidação de 16/11/2026; a linha "Só consulta" foi conferida de novo em 17/11/2026:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+<th>Incluir</th>
+<th>Editar</th>
+<th>Excluir</th>
+<th>Ver log</th>
+<th>Imprimir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido</td>
+<td>Permitido (abre confirmação)</td>
+<td>Permitido</td>
+<td>Permitido</td>
+</tr>
+<tr>
+<td>Só consulta</td>
+<td>Permitido (tela do menu)</td>
+<td>Permitido</td>
+<td>Negado (botão desabilitado: "Sem permissão para incluir profissional")</td>
+<td>Negado (lápis aparece <strong>apagado</strong>: "Sem permissão para alterar profissional")</td>
+<td>Negado ("Sem permissão para excluir profissional")</td>
+<td>Negado ("Sem permissão para consultar log")</td>
+<td>Negado (os botões IMPRIMIR e X não aparecem)</td>
+</tr>
+<tr>
+<td>Cadastro e "sem permissão de administrador"</td>
+<td>Abre pelo endereço, mesmo fora do menu</td>
+<td>Lista aparece</td>
+<td>Negado</td>
+<td>Negado</td>
+<td>Negado</td>
+<td>Negado</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Volta ao Login</td>
+<td>Não se aplica</td>
+<td>Não se aplica</td>
+<td>Não se aplica</td>
+<td>Não se aplica</td>
+<td>Não se aplica</td>
+<td>Não se aplica</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../../img/principal/pnr2-profissional-31-lista-perfil-consulta.png" target="_blank" rel="noopener"><img src="../../img/principal/pnr2-profissional-31-lista-perfil-consulta.png" alt="Lista do Profissional para o perfil só de consulta" loading="lazy"></a><figcaption>Lista do Profissional para o perfil só de consulta · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a lista para o perfil só de consulta: o lápis apagado, o ícone <strong>Incluir</strong> desabilitado e <strong>sem</strong> os botões IMPRIMIR e X. As mensagens de excluir e de log foram vistas por outra sessão do robô, sem print dedicado. O menu <strong>Administração</strong> desse perfil mostra Perfil, Profissional e Conta usuário.</p>
+<figure><a href="../../img/principal/pnr2-profissional-25-consulta-icones-sem-permissao.png" target="_blank" rel="noopener"><img src="../../img/principal/pnr2-profissional-25-consulta-icones-sem-permissao.png" alt="Perfil só de consulta: ícones apagados" loading="lazy"></a><figcaption>Perfil só de consulta: ícones apagados · clique para ampliar</figcaption></figure>
+
+<p>Esta imagem (registrada pela outra sessão do robô, fora do CSV) mostra os ícones apagados do perfil só de consulta.</p>
+<p>Revalidação de 16/11/2026 (DV-PRI-N-011): o servidor passou a recusar (403) a leitura de profissionais, perfis e contas por conta com perfil só de cadastros. O botão Imprimir some para quem não tem a função, mas o endereço das páginas de relatório abre mesmo assim (resultado de 10/11/2026).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="profissional-fluxos.html"><small>← Anterior</small><strong>Fluxos · Profissional</strong></a><a class="ap ap-prox" href="profissional-anvisa.html"><small>Próximo →</small><strong>Anvisa · Profissional</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>
