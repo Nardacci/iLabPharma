@@ -40,100 +40,306 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 81 de 756</span><div class="prog-doc"><i style="width:11%"></i></div></div>
   <header class="doc-cabecalho"><h1>Item: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="item-analise.html">Análise</a><a href="item-manual-do-usuario.html">Manual do usuário</a><a href="item-fluxos.html">Fluxos</a><a href="item-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="item-erros.html">Erros (9)</a><a class="aba-extra aba-sem" href="item-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="item-analise.html">Análise</a><a href="item-manual-do-usuario.html">Manual do usuário</a><a href="item-fluxos.html">Fluxos</a><a href="item-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="item-erros.html">Erros (9)</a><a class="aba-extra" href="item-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o item e os almoxarifados da grade; a inclusão vai para o histórico, com o dado novo (código e descrição) na linha de inclusão.</li>
+<li><strong>Alterar e inativar:</strong> exigem justificativa; o Log guarda campo, antes, depois, usuário, data, hora e a justificativa.</li>
+<li><strong>Excluir:</strong> bloqueado se há saldo ou referência; o Log do Almoxarifado e o do Item registraram inativação e reativação com justificativa.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Vazio</td>
-<td>Vazio</td>
-<td>—</td>
-<td>Não grava</td>
-<td>—</td>
-<td>N-027</td>
+<td>Salvar sem almoxarifado na grade</td>
+<td>"Item não foi vinculado a nenhum Almoxarifado!"</td>
+<td>Visto no print</td>
 </tr>
 <tr>
-<td>Mínimo válido (com almoxarifado na grade)</td>
-<td>Mínimo válido (com almoxarifado na grade)</td>
-<td>—</td>
-<td>Grava. Sem almoxarifado: "Item não foi vinculado a nenhum Almoxarifado!"</td>
-<td>—</td>
-<td>Igual</td>
-</tr>
-<tr>
-<td>Duplicidade de código</td>
-<td>Duplicidade de código</td>
-<td>—</td>
+<td>Código repetido</td>
 <td>"Esse código já está cadastrado."</td>
-<td>—</td>
-<td>Igual</td>
+<td>Igual ao legado</td>
 </tr>
 <tr>
-<td>Limite (código 10, descrição 100)</td>
-<td>Limite (código 10, descrição 100)</td>
-<td>—</td>
-<td>Grava</td>
-<td>—</td>
-<td>Igual</td>
+<td>Vazio</td>
+<td>Não grava; "Preencha os campos obrigatórios antes de salvar."</td>
+<td>DV-EST-N-027</td>
 </tr>
 <tr>
-<td>Especiais e acentos</td>
-<td>Especiais e acentos</td>
-<td>—</td>
-<td>Grava; ponto no código <code>T.IT...</code> é aceito</td>
-<td>—</td>
-<td>Igual (N-009 só em outros campos)</td>
+<td>Código acima de 10 caracteres (limite removido no navegador)</td>
+<td>"Preencha os campos obrigatórios antes de salvar."</td>
+<td>Mensagem enganosa (N-023)</td>
 </tr>
 <tr>
-<td>Mínimo 20 e máximo 5</td>
-<td>Mínimo 20 e máximo 5</td>
-<td>—</td>
-<td><strong>Grava</strong></td>
-<td>—</td>
-<td>N-023</td>
+<td>Excluir item com saldo</td>
+<td>"Exclusão inválida, existem referências com outras tabelas."</td>
+<td>Melhoria sobre o legado (N-026)</td>
 </tr>
 <tr>
-<td>Peso 0</td>
-<td>Peso 0</td>
-<td>—</td>
-<td><strong>Grava</strong></td>
-<td>—</td>
-<td>N-023</td>
-</tr>
-<tr>
-<td>Peso <code>-1</code>, estoque mínimo <code>-3</code>, custo <code>-5</code>, dias <code>-2</code></td>
-<td>Peso <code>-1</code>, estoque mínimo <code>-3</code>, custo <code>-5</code>, dias <code>-2</code></td>
-<td>—</td>
-<td>O sinal de menos é descartado em silêncio (viram 1, 3, 5, 2)</td>
-<td>—</td>
-<td>N-009</td>
-</tr>
-<tr>
-<td>Peso <code>1,5</code> e custo <code>1,555</code></td>
-<td>Peso <code>1,5</code> e custo <code>1,555</code></td>
-<td>—</td>
-<td>Gravados 15 e 1555; com ponto, mantém</td>
-<td>—</td>
-<td>N-022</td>
+<td>Alterar pela API sem justificativa</td>
+<td>"The Justificativa field is required." (inglês)</td>
+<td>DV-EST-N-036</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p>Asteriscos como aparecem nas imagens. Tamanhos e regras marcados "(legado)" não foram confirmados na versão nova.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>10</td>
+<td>Asterisco na tela</td>
+<td>Repetido recusado; aceita <code>T.MED-001</code></td>
+<td>No legado o asterisco aparecia, mas em branco o sistema gerava o código</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>100</td>
+<td><strong>Sim</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>NEB</td>
+<td>Texto</td>
+<td>—</td>
+<td>Não</td>
+<td></td>
+<td>Ver cuidado sobre NEB</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td></td>
+<td>Inativar pede justificativa</td>
+</tr>
+<tr>
+<td>Data Cadastro</td>
+<td>Travado</td>
+<td>—</td>
+<td>—</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Tipo do Item</td>
+<td>Lista</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td>Próprio ou Terceiro (legado)</td>
+<td></td>
+</tr>
+<tr>
+<td>Cliente</td>
+<td>Lista</td>
+<td>—</td>
+<td>Só Terceiro (legado)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Grupo</td>
+<td>Lista</td>
+<td>—</td>
+<td>Sem asterisco</td>
+<td></td>
+<td>No legado era obrigatório</td>
+</tr>
+<tr>
+<td>Subgrupo</td>
+<td>Lista</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td>Subgrupos do grupo</td>
+<td></td>
+</tr>
+<tr>
+<td>NCM</td>
+<td>Lista</td>
+<td>—</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Custo Inicial (R$)</td>
+<td>Número</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td>Vírgula descartada (N-022)</td>
+<td></td>
+</tr>
+<tr>
+<td>Último Custo, Custo Médio, Custo FR170, Custo FR180</td>
+<td>Travados</td>
+<td>—</td>
+<td>—</td>
+<td>Calculados</td>
+<td></td>
+</tr>
+<tr>
+<td>Conta Contábil</td>
+<td>Texto</td>
+<td>—</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Conta Financeira, Conta Corrente, Nível de Segurança, Classe do Item, Classificação, Condição de Armazenagem, SJB</td>
+<td>Listas</td>
+<td>—</td>
+<td>Não</td>
+<td>Registros ativos</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo Imobilizado</td>
+<td>Sim / Não</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Almoxarifado de Identificação</td>
+<td>Lista</td>
+<td>—</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Unid. de Medida</td>
+<td>Lista</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Est. Mínimo</td>
+<td>Número</td>
+<td>—</td>
+<td>Sem asterisco</td>
+<td>Pode passar do máximo (N-023)</td>
+<td>No legado era obrigatório</td>
+</tr>
+<tr>
+<td>Est. Máximo</td>
+<td>Número</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Peso (kg)</td>
+<td>Número</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td>Zero é aceito (N-023)</td>
+<td></td>
+</tr>
+<tr>
+<td>Altura, Largura, Profundidade (cm), Emp. Máximo</td>
+<td>Número</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Nº Dias Reposição</td>
+<td>Número</td>
+<td>—</td>
+<td>Não</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Refrigerado</td>
+<td>Sim / Não</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Controles</td>
+<td>Caixas de marcação</td>
+<td>—</td>
+<td>Não</td>
+<td>Lote, Validade, Quarentena (com Análise Físico-Química e Microbiológica), Referência, Retenção, Estabilidade, Umidade, Destruição, Polícia Federal, Exército, Item Produzido, Exigir Fabricante, Exigir Fornecedor, Obrigar Pesagem (Entrada e Saída), Teor, Portaria 344, Comercializado</td>
+<td>Nas imagens, Referência, Retenção, Estabilidade, Análises e Teor aparecem desabilitados com Quarentena desmarcada</td>
+</tr>
+<tr>
+<td>Almoxarifado (grade Movimentação)</td>
+<td>Lista, INCLUIR e grade</td>
+<td>—</td>
+<td><strong>Sim</strong>, ao menos um</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>—</td>
+<td><strong>Sim</strong> (asterisco também na inclusão)</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Resultado (<code>quem-pode.csv</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Abre, pesquisa e grava</td>
+</tr>
+<tr>
+<td>Perfil T.BA20</td>
+<td><strong>Negado</strong>: "Não foi possível carregar os itens." (403)</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login; nenhuma chamada ao Estoque</td>
+</tr>
+</tbody>
+</table></div>
+<p>Só o administrador passa (DV-EST-N-001, Alta).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="item-fluxos.html"><small>← Anterior</small><strong>Fluxos · Item</strong></a><a class="ap ap-prox" href="item-anvisa.html"><small>Próximo →</small><strong>Anvisa · Item</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

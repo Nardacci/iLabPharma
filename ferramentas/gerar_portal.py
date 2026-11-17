@@ -1058,6 +1058,15 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     versao_nova.preencher_estoque(NOVO, hom_, lambda md: limpar(md, "versao-nova/3.estoque", retirado), lambda md: conv.converter(md, "estoque", tirar_h1=True)[0])
     versao_nova.preencher_principal_modelo(NOVO, hom_, lambda md: limpar(md, "versao-nova/1.principal", retirado), lambda md: conv.converter(md, "principal", tirar_h1=True)[0])
     versao_nova.preencher_por_manifesto(NOVO, hom_, "garantia-qualidade", "versao-nova/5.garantia_qualidade/telas-modelo/manifest.json", lambda md: limpar(md, "versao-nova/5.garantia_qualidade", retirado), lambda md: conv.converter(md, "garantia-qualidade", tirar_h1=True)[0])
+    # Manuais atuais de cada tela (conferidos pelos robôs): por cima de tudo que as abas já tinham. Regra do responsável (17/11/2026):
+    # os artefatos do portal são atualizados a cada entrega dos robôs.
+    RESUMO_PAGINAS.clear()
+    for _mid, _pasta in versao_nova.PASTAS_NOVO.items():
+        RESUMO_PAGINAS[_mid] = versao_nova.preencher_por_paginas(
+            NOVO, hom_, _mid, lambda md, _p=_pasta: limpar(md, f"versao-nova/{_p}", retirado), lambda md, _m=_mid: conv.converter(md, _m, tirar_h1=True)[0])
+        _r = RESUMO_PAGINAS[_mid]
+        print(f"Manuais por tela da versão nova · {_mid}: {sum(1 for c in _r.values() if c != 'SEM MANUAL')} de {len(_r)} telas com manual publicado; "
+              f"{sum(1 for c in _r.values() if c.startswith('tela nova'))} telas acrescentadas ao inventário.")
     if (hom_ / "painel.json").exists() and (hom_ / "cronograma.json").exists():
         DADOS_PAINEL["pn"] = json.loads(higiene.redigir((hom_ / "painel.json").read_text(encoding="utf-8")))
         DADOS_PAINEL["cr"] = {m["id"]: m for m in json.loads(higiene.redigir((hom_ / "cronograma.json").read_text(encoding="utf-8")))["modulos"]}
@@ -1680,6 +1689,7 @@ MENUS_GQ_DESC = {
 SITUACAO_TELAS = {}  # preenchido em main() a partir dos inventários de telas
 ERROS = {}  # defeitos por tela (erros_tela.montar), preenchido em gerar()
 NOVO = {}  # telas da versão nova por módulo (versao_nova.registro), preenchido em gerar()
+RESUMO_PAGINAS = {}  # por módulo: como cada tela do mapa foi ligada ao portal (versao_nova.preencher_por_paginas)
 ABAS_DESVIOS = ["analise", "manual", "fluxos", "regras", "anvisa"]
 
 

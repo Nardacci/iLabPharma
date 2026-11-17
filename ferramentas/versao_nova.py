@@ -457,3 +457,158 @@ JS = """/* Seletor de versão: Legado | Novo. A escolha vem da URL (?versao=novo
   aplicar();
 })();
 """
+
+
+# ---------------------------------------------------------------------------------------------
+# Páginas por tela a partir dos manuais atuais (homologacao/versao-nova/<módulo>/paginas/**/manual.md)
+# Decisão do responsável (17/11/2026): os artefatos do portal são atualizados a cada entrega dos robôs.
+# ---------------------------------------------------------------------------------------------
+PASTAS_NOVO = {"principal": "1.principal", "estoque": "3.estoque", "controle-qualidade": "4.controle_qualidade",
+               "garantia-qualidade": "5.garantia_qualidade", "controle-documentos": "6.controle_documento"}
+# nome no mapa de telas -> nome no inventário do legado (quando o slug não bate)
+ALIAS_MAPA = {
+    ("estoque", "grupo de itens"): "Grupo do Item", ("estoque", "subgrupo de itens"): "Subgrupo do Item",
+    ("estoque", "grupo de usuario almoxarifado"): "Grupo Usuário - Almoxarifado",
+    ("controle-qualidade", "verificacao de amostragens"): "Verificação de Amostragens (checklist)",
+    ("garantia-qualidade", "cadastro treinamento"): "Cadastro de Treinamento", ("garantia-qualidade", "solicitacao treinamento"): "Solicitação de Treinamento",
+    ("garantia-qualidade", "programacao treinamento"): "Programação de Treinamento", ("garantia-qualidade", "matriz treinamento"): "Matriz de Treinamento",
+    ("garantia-qualidade", "conclusao treinamento"): "Conclusão do Treinamento",
+    ("garantia-qualidade", "planejamento de autoinspecao e auditorias"): "Planejamento de Autoinspeção e Auditorias (relatório)",
+    ("controle-documentos", "vigencia documento"): "Vigência de Documento",
+}
+SECOES_ABA = {
+    "manual-do-usuario": ["Para que serve", "Antes de começar", "Passo a passo", "Ícones e botões da lista", "Botões e ações", "Mensagens do sistema"],
+    "regras-de-negocio": ["O que acontece ao confirmar ou salvar", "O que o sistema recusa", "Campos da tela", "Quem pode usar"],
+    "fluxos": ["Quem usa e em que etapa do processo"],
+    "analise": ["Cuidados e falhas conhecidas", "Diferenças em relação ao legado", "Pontos para validar com a área", "Prints que faltam"],
+    "passo-a-passo": ["Passo a passo"],
+}
+
+
+def _secoes_do_manual(md):
+    """{título da seção (### ...): texto} e o cabeçalho (o que vem antes da primeira seção)."""
+    cab, secoes, atual, buf = [], {}, None, []
+    for l in md.splitlines():
+        m = re.match(r"^###\s+(.+?)\s*$", l)
+        if m:
+            if atual is not None:
+                secoes[atual] = "\n".join(buf).strip()
+            atual, buf = m.group(1), []
+            continue
+        (buf if atual is not None else cab).append(l)
+    if atual is not None:
+        secoes[atual] = "\n".join(buf).strip()
+    return "\n".join(cab).strip(), secoes
+
+
+def _pega(secoes, prefixo):
+    pf = _slug(prefixo)
+    for k, v in secoes.items():
+        if _slug(k).startswith(pf):
+            return k, v
+    return None, None
+
+
+def _tabela_anvisa(hom, pasta, fichas):
+    """Quadro 'Anvisa nesta tela' montado das fichas de defeito ligadas à tela (gravidade e dispositivo da norma, quando a ficha cita)."""
+    linhas = []
+    for f in fichas:
+        arq = next(iter((Path(hom) / "versao-nova" / pasta / "defeitos").glob(f"{f}.md")), None)
+        if not arq:
+            continue
+        t = arq.read_text(encoding="utf-8")
+        tit = re.match(r"^#\s+(DV-[A-Z]+-N-\d+):\s*(.+)", t)
+        grav = re.search(r"\*\*Gravidade\*\*\s*\|\s*([^|\n]+)", t)
+        norma = re.search(r"(?:Dispositivo da norma|\*\*Norma\*\*)[:\s|*]*([^\n|]{10,200})", t)
+        linhas.append((f, (tit.group(2).strip() if tit else ""), (grav.group(1).strip() if grav else ""), (norma.group(1).strip() if norma else "")))
+    if not linhas:
+        return "Nenhum defeito desta tela tem dispositivo da norma citado. O parecer de aderência (Atende, Atende em parte, Não atende) ainda não foi emitido para a versão nova e o critério de \"apto\" será escrito com a Qualidade."
+    corpo = ["Defeitos desta tela que tocam a Anvisa (RDC 658/2022 e Guia 33/2020). O parecer de aderência da versão nova ainda não foi emitido; o critério de \"apto\" será escrito com a Qualidade.", "",
+             "| Ficha | Defeito | Gravidade | Dispositivo da norma citado |", "|---|---|---|---|"]
+    for f, tit, grav, norma in linhas:
+        corpo.append(f"| {f} | {tit.replace('|', '/')} | {grav} | {(norma or 'não citado na ficha').replace('|', '/')} |")
+    return "\n".join(corpo)
+
+
+def preencher_por_paginas(reg, hom, mid, limpar, converter):
+    """Lê versao-nova/<módulo>/paginas/mapa-telas.json e cada manual.md e põe o conteúdo nas abas da tela. Telas fora do inventário do legado
+    (por exemplo as 'fora do menu' do CQ) são acrescentadas. Devolve {tela: como foi achada} para o relatório."""
+    import difflib
+    pasta = PASTAS_NOVO.get(mid)
+    base = Path(hom) / "versao-nova" / (pasta or "") / "paginas"
+    arq_mapa = base / "mapa-telas.json"
+    if not pasta or not arq_mapa.exists() or mid not in reg:
+        return {}
+    concl = {}
+    arq_c = next(iter(base.glob("CONCLUIDAS-NOVO-*.txt")), None)
+    if arq_c:
+        for l in arq_c.read_text(encoding="utf-8").splitlines():
+            p = l.split(";")
+            if len(p) >= 2:
+                concl[p[0].strip()] = p[1].strip()
+    telas = reg[mid]["telas"]
+    por_slug = {_slug(t["nome"]): t for t in telas}
+    por_chave = {t["chave"]: t for t in telas}
+    achadas = {}
+    pastas = {}
+    for m in base.glob("*/*/manual.md"):
+        pastas[_slug(re.sub(r"^\d+-", "", m.parent.name))] = m
+    for item in json.loads(arq_mapa.read_text(encoding="utf-8")):
+        nome = item["tela"]
+        manual = pastas.get(_slug(item.get("slug") or nome))
+        if not manual:
+            manual = next((p for s, p in pastas.items() if s.startswith(_slug(nome)[:12])), None)
+        if not manual:
+            achadas[nome] = "SEM MANUAL"
+            continue
+        alvo = por_slug.get(_slug(nome)) or por_chave.get(chave_tela(nome))
+        como = "nome"
+        if not alvo and (mid, _slug(nome).replace("-", " ")) in ALIAS_MAPA:
+            alvo, como = por_slug.get(_slug(ALIAS_MAPA[(mid, _slug(nome).replace('-', ' '))])), "alias"
+        if not alvo:
+            cand = difflib.get_close_matches(nome, [t["nome"] for t in telas], n=1, cutoff=0.82)
+            if cand:
+                alvo, como = next(t for t in telas if t["nome"] == cand[0]), f"parecido: {cand[0]}"
+        if not alvo:
+            menu = item.get("menu") or "Fora do menu"
+            alvo = {"nome": nome, "menu": menu, "slug": _slug(nome), "chave": chave_tela(nome), "abas": {a[0]: None for a in ABAS}, "validada": False, "situacao": ""}
+            telas.append(alvo)
+            for mn, lst in reg[mid]["menus"]:
+                if mn == menu:
+                    lst.append(alvo)
+                    break
+            else:
+                reg[mid]["menus"].append((menu, [alvo]))
+            como = "tela nova (fora do inventário do legado)"
+        achadas[nome] = como
+        texto = manual.read_text(encoding="utf-8")
+        cab, secoes = _secoes_do_manual(texto)
+        cab = re.sub(r"^#\s.*\n?", "", cab).strip()
+        usadas = set()
+
+        def monta(titulos, com_cab=False):
+            partes = [cab] if (com_cab and cab) else []
+            for tt in titulos:
+                k, v = _pega(secoes, tt)
+                if k and v:
+                    usadas.add(k)
+                    partes.append(f"## {k}\n\n{v}")
+            return "\n\n".join(partes)
+
+        abas = {"manual-do-usuario": monta(SECOES_ABA["manual-do-usuario"], com_cab=True), "regras-de-negocio": monta(SECOES_ABA["regras-de-negocio"]),
+                "fluxos": monta(SECOES_ABA["fluxos"]), "analise": monta(SECOES_ABA["analise"], com_cab=True), "passo-a-passo": monta(SECOES_ABA["passo-a-passo"])}
+        resto = [f"## {k}\n\n{v}" for k, v in secoes.items() if k not in usadas and v]
+        if resto:
+            abas["analise"] += "\n\n" + "\n\n".join(resto)
+        abas["anvisa"] = "## Anvisa nesta tela\n\n" + _tabela_anvisa(hom, pasta, item.get("fichas", []))
+        for aba, md in abas.items():
+            if not md.strip():
+                continue
+            md = limpar(md)
+            md = re.sub(r"^#(#+ )", r"\1", md, flags=re.M)
+            alvo["abas"][aba] = converter("# x\n" + md).replace('"../img/', '"../../img/')
+        rel = f"{manual.parent.parent.name}/{manual.parent.name}"
+        st = concl.get(rel, "")
+        alvo["situacao"] = {"completa": "Conferida por robô na versão nova (completa)", "parcial": "Conferida por robô na versão nova (parcial)"}.get(st, "Manual escrito; ainda não conferido por robô")
+        alvo["validada"] = True
+    return achadas

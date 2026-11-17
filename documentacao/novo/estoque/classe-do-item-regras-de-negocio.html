@@ -40,92 +40,175 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 158 de 756</span><div class="prog-doc"><i style="width:21%"></i></div></div>
   <header class="doc-cabecalho"><h1>Classe do Item: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="classe-do-item-analise.html">Análise</a><a href="classe-do-item-manual-do-usuario.html">Manual do usuário</a><a href="classe-do-item-fluxos.html">Fluxos</a><a href="classe-do-item-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="classe-do-item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="classe-do-item-erros.html">Erros (3)</a><a class="aba-extra aba-sem" href="classe-do-item-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="classe-do-item-analise.html">Análise</a><a href="classe-do-item-manual-do-usuario.html">Manual do usuário</a><a href="classe-do-item-fluxos.html">Fluxos</a><a href="classe-do-item-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="classe-do-item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="classe-do-item-erros.html">Erros (3)</a><a class="aba-extra" href="classe-do-item-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava a classe com data e usuário e acrescenta "INCLUSÃO DO REGISTRO" ao histórico. O texto é gravado em maiúsculas.</li>
+<li><strong>Alterar (só o Ativo):</strong> exige justificativa; o histórico guarda o campo, o valor antigo, o novo e a justificativa digitada (passo 7).</li>
+<li><strong>Inativar:</strong> aceito com justificativa; <strong>o aviso de classe em uso por Item não foi testado</strong> (ponto para validar; DV-EST-N-026).</li>
+<li><strong>Excluir:</strong> exige justificativa; classe com item vinculado é <strong>bloqueada</strong>; sem uso, é excluída.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>1a obrigatório vazio: o que a tela faz ao salvar</td>
-<td>—</td>
-<td>Confirma a inclusão do registro?</td>
-<td>—</td>
-<td></td>
+<td>Salvar vazio</td>
+<td>"O Código é obrigatório!" e "A Descrição é obrigatória!"</td>
+<td>Depois do SIM da confirmação (DV-EST-N-027)</td>
 </tr>
 <tr>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>1b obrigatório vazio: confirmando com SIM</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "O Código é obrigatório!; A Descrição é obrigatória!"</td>
-<td>—</td>
-<td></td>
+<td>Código só com letras</td>
+<td>"O Código é obrigatório!"</td>
+<td>As letras são descartadas e o campo fica vazio; em <code>9A4-0</code> as letras e o hífen somem e fica <code>940</code> (DV-EST-N-009)</td>
 </tr>
 <tr>
-<td>2 valor no limite (grava)</td>
-<td>2 valor no limite (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? → Inclusão realizada com sucesso!</td>
-<td>—</td>
-<td></td>
+<td>Código repetido (classe ativa ou inativa)</td>
+<td>"Esse código de classe do item já está cadastrado para a empresa."</td>
+<td>Visto para o 94001 (ativo) e para o 0001 (inativo)</td>
 </tr>
 <tr>
-<td>6 editar e conferir</td>
-<td>6 editar e conferir</td>
-<td>—</td>
-<td>registro não encontrado na lista depois de gravar</td>
-<td>—</td>
-<td></td>
+<td>Texto acima do limite (limite do navegador removido)</td>
+<td>"Os dados informados são inválidos."</td>
+<td>Não diz qual campo (DV-EST-N-027)</td>
 </tr>
 <tr>
-<td>3a registro normal (grava)</td>
-<td>3a registro normal (grava)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? → Inclusão realizada com sucesso!</td>
-<td>—</td>
-<td></td>
+<td>Alterar sem justificativa</td>
+<td>"A justificativa é obrigatória!"</td>
+<td>Depois do SIM</td>
 </tr>
 <tr>
-<td>3b duplicidade: mesmos valores de um registro ativo</td>
-<td>3b duplicidade: mesmos valores de um registro ativo</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Esse código de classe do item já está cadastrado para a empresa."</td>
-<td>—</td>
-<td></td>
+<td>Excluir sem justificativa</td>
+<td>"A justificativa é obrigatória!"</td>
+<td>Na tela de exclusão</td>
 </tr>
 <tr>
-<td>4 caracteres especiais e acentos</td>
-<td>4 caracteres especiais e acentos</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "O Código é obrigatório!" A tela alterou o digitado: {"codigo":{"digitado":"TÃ-JD","gravado":""},"descricao":{"digitado":"TÃ-Ç/&amp;%#é ñ71393","gravado":"TÃÇé ñ71393"}}</td>
-<td>—</td>
-<td></td>
+<td>Excluir classe com itens vinculados</td>
+<td>"A exclusão é inválida porque a classe do item possui itens vinculados."</td>
+<td>Passo 9</td>
 </tr>
 <tr>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>2b acima do limite (limite da tela removido pelo navegador)</td>
-<td>—</td>
-<td>Confirma a inclusão do registro? — "Os dados informados são inválidos."</td>
-<td>—</td>
-<td></td>
+<td>Código zero</td>
+<td><strong>Aceito</strong>: grava <code>000</code></td>
+<td>Falha: DV-EST-N-055</td>
+</tr>
+<tr>
+<td>Descrição repetida</td>
+<td><strong>Aceita</strong></td>
+<td>Falha: DV-EST-N-056</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<p>Exemplos de recusa:
+ <br />
+<figure><a href="../../img/estoque/pnr2-classe-do-item-20-codigo-repetido-ativa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-classe-do-item-20-codigo-repetido-ativa.png" alt="Classe do Item: código repetido (classe ativa)" loading="lazy"></a><figcaption>Classe do Item: código repetido (classe ativa) · clique para ampliar</figcaption></figure>
+</p>
+<figure><a href="../../img/estoque/pnr2-classe-do-item-21-codigo-repetido-inativa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-classe-do-item-21-codigo-repetido-inativa.png" alt="Classe do Item: código repetido (classe inativa)" loading="lazy"></a><figcaption>Classe do Item: código repetido (classe inativa) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-classe-do-item-22-codigo-so-letras.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-classe-do-item-22-codigo-so-letras.png" alt="Classe do Item: código só com letras" loading="lazy"></a><figcaption>Classe do Item: código só com letras · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-classe-do-item-24-descricao-acima-do-limite.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-classe-do-item-24-descricao-acima-do-limite.png" alt="Classe do Item: descrição acima do limite" loading="lazy"></a><figcaption>Classe do Item: descrição acima do limite · clique para ampliar</figcaption></figure>
+
+<p>As quatro imagens mostram, na ordem, a faixa de código repetido para o 94001, a mesma faixa para o 0001 (inativa), o código "AB" descartado (campo vazio e "O Código é obrigatório!") e a descrição de 60 caracteres com "Os dados informados são inválidos.".</p>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><strong>Lista (filtros e colunas):</strong> Código (casa o início do código), Descrição e Ativo (TODOS, SIM, NÃO). Colunas: CÓDIGO, DESCRIÇÃO, ATIVO. <strong>10 linhas por página</strong> (o legado mostra 15).</p>
+<p><strong>Formulário</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>até 5</td>
+<td><strong>Sim, pela regra</strong> (sem asterisco na tela)</td>
+<td>Só números (letras e hífen são descartados); digitado, <strong>não completa com zeros</strong>; bloqueado na alteração; repetido é recusado; <code>000</code> é aceito</td>
+<td><code>CAMPOS-DOS-14-CADASTROS.md</code> não o lista como obrigatório: contradiz o teste</td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td></td>
+<td>Não se aplica</td>
+<td>Data e hora de abrir o formulário</td>
+<td></td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>até 40</td>
+<td>Sim (*)</td>
+<td><strong>Bloqueada na alteração</strong> (DV-EST-N-028); gravada em maiúsculas; acentos mantidos; ponto, hífen, barra, "&amp;", "%", "#" descartados</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Escolha SIM / NÃO</td>
+<td></td>
+<td>Sim (*)</td>
+<td>Padrão SIM; <strong>único campo editável na alteração</strong></td>
+<td>Inativar em uso por Item: não testado em 17/11/2026</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>não medido</td>
+<td>Sim, só na alteração e na exclusão</td>
+<td>Escrita em maiúsculas no histórico</td>
+<td>O histórico guarda o texto</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado dos testes de 09, 10 e 17/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir a tela</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (conta de perfil 1)</td>
+<td>Pelo endereço e pelo menu</td>
+<td>Permitido</td>
+</tr>
+<tr>
+<td>Perfil "T. BA PERFIL ESTOQUE" (conta T.BA20)</td>
+<td>Pelo menu</td>
+<td><strong>A tela abre, o Incluir fica visível e a lista mostra "A pesquisa não retornou nenhum resultado." sem aviso de acesso negado</strong> (DV-EST-N-054)</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Pelo endereço</td>
+<td>Leva à tela de login</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../../img/estoque/pnr2-classe-do-item-42-perfil-sem-acesso-lista.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-classe-do-item-42-perfil-sem-acesso-lista.png" alt="Classe do Item: perfil sem acesso, tela aberta" loading="lazy"></a><figcaption>Classe do Item: perfil sem acesso, tela aberta · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-classe-do-item-43-perfil-sem-acesso-pesquisa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-classe-do-item-43-perfil-sem-acesso-pesquisa.png" alt="Classe do Item: perfil sem acesso, pesquisa sem aviso" loading="lazy"></a><figcaption>Classe do Item: perfil sem acesso, pesquisa sem aviso · clique para ampliar</figcaption></figure>
+
+<p>As duas imagens mostram, com a conta T.BA20, a tela aberta com Incluir visível e sem lista, e a pesquisa devolvendo "A pesquisa não retornou nenhum resultado." sem mensagem de erro. Os manuais anteriores diziam "Não foi possível carregar as classes do item." (403); em 17/11/2026 essa mensagem não apareceu (ponto para validar com o desenvolvimento). Só o perfil 1 usa o Estoque (<strong>DV-EST-N-001</strong>, Alta); o que cada função libera <strong>não pôde ser testado</strong> (ponto para validar).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="classe-do-item-fluxos.html"><small>← Anterior</small><strong>Fluxos · Classe do Item</strong></a><a class="ap ap-prox" href="classe-do-item-anvisa.html"><small>Próximo →</small><strong>Anvisa · Classe do Item</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

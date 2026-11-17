@@ -40,84 +40,244 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 193 de 224</span><div class="prog-doc"><i style="width:86%"></i></div></div>
   <header class="doc-cabecalho"><h1>Local físico: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="local-fisico-analise.html">Análise</a><a href="local-fisico-manual-do-usuario.html">Manual do usuário</a><a href="local-fisico-fluxos.html">Fluxos</a><a href="local-fisico-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="local-fisico-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="local-fisico-erros.html">Erros (6)</a><a class="aba-extra" href="local-fisico-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="local-fisico-analise.html">Análise</a><a href="local-fisico-manual-do-usuario.html">Manual do usuário</a><a href="local-fisico-fluxos.html">Fluxos</a><a href="local-fisico-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="local-fisico-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="local-fisico-erros.html">Erros (6)</a><a class="aba-extra" href="local-fisico-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Inclusão:</strong> grava o local e registra "INCLUSAO DO REGISTRO"; mostra "Inclusão realizada com sucesso!". Os dados de Empresa, Conta Gerencial e Responsável precisam ter sido <strong>escolhidos na sugestão</strong>.</li>
+<li><strong>Nome repetido na mesma conta gerencial:</strong> recusado ("Ja existe local fisico com este nome para a conta gerencial informada."). Nome com mais de 50 caracteres: o campo <strong>corta em 50</strong> sem avisar.</li>
+<li><strong>Alteração e inativação:</strong> exigem justificativa; o histórico mostra valor antigo e novo, usuário, data e hora, <strong>sem a justificativa</strong> (DV-PRI-N-029).</li>
+<li><strong>Exclusão:</strong> exige justificativa (SIM só habilita depois de digitá-la).</li>
+<li><strong>Conta gerencial excluída depois:</strong> se a conta gerencial usada pelo local for excluída, o local continua mostrando a conta e <strong>não salva mais</strong>: "Conta gerencial nao encontrada ou inativa para a empresa informada." (DV-PRI-N-023).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>R3-LF-01</td>
-<td>Obrigatórios</td>
-<td>Pontos de água e Categoria dizem o campo</td>
-<td>Vazio e um a um: só o aviso "Preencha os campos obrigatórios antes de salvar.", sem dizer qual campo (Nome, Empresa, Conta gerencial, Responsável). Ativo é marcado como obrigatório, mas gravar sem escolher grava como "Sim"</td>
-<td>Regressão</td>
-<td>N-033</td>
+<td>Qualquer obrigatório vazio (faixa no alto)</td>
+<td>"Preencha os campos obrigatórios antes de salvar."</td>
 </tr>
 <tr>
-<td>R3-LF-02</td>
-<td>Incluir</td>
-<td>não testada no legado</td>
-<td>Mínimo e completo (com Centro de custo, que é opcional) gravam; as caixas de Empresa, Conta gerencial, Centro de custo e Responsável sugerem os nomes ao digitar</td>
-<td>Novo</td>
-<td>—</td>
+<td>Nome vazio</td>
+<td>"O nome é obrigatório e deve ter no máximo 50 caracteres."</td>
 </tr>
 <tr>
-<td>R3-LF-03</td>
-<td>Limites e duplicado</td>
-<td>não testada no legado</td>
-<td>Nome 50 grava; passa disso o campo corta em 50. Nome repetido na mesma conta gerencial é recusado: "Ja existe local fisico com este nome para a conta gerencial informada."</td>
-<td>Melhoria</td>
-<td>N-027</td>
+<td>Empresa vazia</td>
+<td>"A empresa é obrigatória."</td>
 </tr>
 <tr>
-<td>R3-LF-04</td>
-<td>Alterar e inativar</td>
-<td>não testada no legado</td>
-<td>Sem justificativa: "A justificativa é obrigatória."; com justificativa grava; histórico sem justificativa</td>
-<td>Regressão</td>
-<td>N-029</td>
+<td>Conta gerencial vazia, ou empresa sem conta gerencial cadastrada</td>
+<td>"A conta gerencial é obrigatória."</td>
 </tr>
 <tr>
-<td>R3-LF-05</td>
-<td>Excluir</td>
-<td>não testada no legado</td>
-<td>O botão SIM fica desabilitado até digitar a justificativa; depois exclui (204)</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>Responsável vazio</td>
+<td>"O responsável é obrigatório."</td>
 </tr>
 <tr>
-<td>R3-LF-06</td>
-<td>Excel e Imprimir</td>
-<td>legado: "Sem relatório"</td>
-<td>Não existem (a lista só tem PESQUISAR e LIMPAR)</td>
-<td>Igual</td>
-<td>—</td>
+<td>Nome repetido na mesma conta gerencial</td>
+<td>"Ja existe local fisico com este nome para a conta gerencial informada."</td>
 </tr>
 <tr>
-<td>R3-LF-07</td>
-<td>Pesquisa</td>
-<td>DV-PRI-008</td>
-<td>Por Empresa, Conta gerencial, Código, Nome e Ativo. "AGUA" não acha "T. LOCAL FISICO COMPLETO ÁGUA"; "água" e "ÁGUA" acham</td>
-<td>Igual</td>
-<td>—</td>
+<td>Alterar ou inativar sem justificativa</td>
+<td>"A justificativa é obrigatória."</td>
+</tr>
+<tr>
+<td>Salvar local cuja conta gerencial foi excluída</td>
+<td>"Conta gerencial nao encontrada ou inativa para a empresa informada."</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<p>Observação: gravar sem escolher <strong>Ativo</strong> grava "Sim" (DV-PRI-N-033); o campo vem marcado.</p>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><strong>Lista</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Empresa</td>
+<td>Texto com sugestão</td>
+<td>–</td>
+<td>Não</td>
+<td>Escolher na sugestão</td>
+<td>Só fornecedores aparecem (DV-PRI-N-054)</td>
+</tr>
+<tr>
+<td>Conta Gerencial</td>
+<td>Texto com sugestão</td>
+<td>–</td>
+<td>Não</td>
+<td>Contas da empresa escolhida (do legado)</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>–</td>
+<td>Não</td>
+<td>Só números (do legado)</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Nome</td>
+<td>Texto</td>
+<td>–</td>
+<td>Não</td>
+<td>Procura dentro do nome</td>
+<td>Não ignora acento</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Lista</td>
+<td>–</td>
+<td>Não</td>
+<td>TODAS, Sim, Não</td>
+<td>–</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Formulário</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto bloqueado</td>
+<td>–</td>
+<td>Não se aplica</td>
+<td>Gerado pelo sistema</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>–</td>
+<td>Não se aplica</td>
+<td>Data da criação</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Nome</td>
+<td>Texto</td>
+<td>50</td>
+<td>Sim (*)</td>
+<td>Corta em 50; único dentro da conta gerencial</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Empresa</td>
+<td>Texto com sugestão</td>
+<td>–</td>
+<td>Sim (*)</td>
+<td>Escolher na sugestão</td>
+<td>Cinza na edição</td>
+</tr>
+<tr>
+<td>Conta Gerencial</td>
+<td>Texto com sugestão</td>
+<td>–</td>
+<td>Sim (*)</td>
+<td>Conta ativa da empresa escolhida</td>
+<td>Cinza na edição</td>
+</tr>
+<tr>
+<td>Centro de Custo</td>
+<td>Texto com sugestão</td>
+<td>–</td>
+<td>Não</td>
+<td>Centros de custo cadastrados; inativos não são sugeridos</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Responsável</td>
+<td>Texto com sugestão</td>
+<td>–</td>
+<td>Sim (*)</td>
+<td>Usuário do sistema (Conta usuário)</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Opção Sim / Não</td>
+<td>–</td>
+<td>Sim (*)</td>
+<td>Padrão Sim; gravar sem escolher grava "Sim"</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>255 (do legado)</td>
+<td>Sim, só ao alterar, inativar ou excluir</td>
+<td>"A justificativa é obrigatória."</td>
+<td>Aparece só em registro existente</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado do teste de acesso (arquivo <code>quem-pode.csv</code>, perfis de teste):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ação</th>
+<th>Administrador de teste (<code>t.admin2</code>)</th>
+<th>Perfis de teste "só consulta", "cadastro" e "sem permissão de administrador"</th>
+<th>Sem login</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abrir a tela pelo endereço</td>
+<td>Permitido</td>
+<td>Abre mesmo <strong>fora do menu</strong> do perfil</td>
+<td>Volta à tela de login</td>
+</tr>
+<tr>
+<td>Pesquisar</td>
+<td>Permitido (lista com 4 linhas)</td>
+<td><strong>Permitido</strong>, com 4 linhas (tela fora do perfil)</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Permitido</td>
+<td>Desabilitado ("Sem permissão")</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Editar, Excluir, Log</td>
+<td>Permitido</td>
+<td>Desabilitados ("Sem permissão")</td>
+<td>–</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ponto para validar: nesta tela os três perfis de teste conseguiram <strong>pesquisar e ver a lista</strong> mesmo estando fora do menu, ao contrário de Utilidades e Utensílios, onde o botão de pesquisa ficou desabilitado; as funções de cada perfil de teste não estão descritas nas fontes consultadas. <strong>DV-PRI-N-035 (Alta):</strong> corrigido em parte em 16/11/2026 (a leitura de Locais físicos pela API, com a conta de consulta, passou a ser recusada, 403).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="local-fisico-fluxos.html"><small>← Anterior</small><strong>Fluxos · Local físico</strong></a><a class="ap ap-prox" href="local-fisico-anvisa.html"><small>Próximo →</small><strong>Anvisa · Local físico</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

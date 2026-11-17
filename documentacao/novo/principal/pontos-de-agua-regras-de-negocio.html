@@ -40,108 +40,208 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 200 de 224</span><div class="prog-doc"><i style="width:89%"></i></div></div>
   <header class="doc-cabecalho"><h1>Pontos de água: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="pontos-de-agua-analise.html">Análise</a><a href="pontos-de-agua-manual-do-usuario.html">Manual do usuário</a><a href="pontos-de-agua-fluxos.html">Fluxos</a><a href="pontos-de-agua-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="pontos-de-agua-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="pontos-de-agua-erros.html">Erros (6)</a><a class="aba-extra" href="pontos-de-agua-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="pontos-de-agua-analise.html">Análise</a><a href="pontos-de-agua-manual-do-usuario.html">Manual do usuário</a><a href="pontos-de-agua-fluxos.html">Fluxos</a><a href="pontos-de-agua-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="pontos-de-agua-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="pontos-de-agua-erros.html">Erros (6)</a><a class="aba-extra" href="pontos-de-agua-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava o ponto e acrescenta "INCLUSAO DO REGISTRO" ao histórico. Tag e ambiente podem ficar vazios.</li>
+<li><strong>Alterar:</strong> exige justificativa; o histórico guarda campo, valor antigo e novo, usuário, data e hora, <strong>sem a justificativa</strong> (DV-PRI-N-029).</li>
+<li><strong>Inativar:</strong> exige justificativa; a lista mostra NÃO e o histórico "ATIVO SIM → NAO" (sem acento). Inativar ponto ligado a ambiente é aceito.</li>
+<li><strong>Excluir:</strong> remove o ponto sem justificativa (resposta 204), tanto o ponto sem uso quanto o ligado a ambiente.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>R3-PA-01</td>
-<td>Obrigatórios</td>
-<td>mensagem por campo, antes da pergunta de confirmação</td>
-<td>Vazio: "A Descrição é obrigatória." e "O Tipo de Água é obrigatório." (mais o aviso "Preencha os campos obrigatórios antes de salvar."); um a um, cada campo dá a sua mensagem antes da pergunta de confirmação</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>Salvar vazio</td>
+<td>"Preencha os campos obrigatórios antes de salvar." (faixa) + "A Descrição é obrigatória." + "O Tipo de Água é obrigatório."</td>
+<td>Visto no print</td>
 </tr>
 <tr>
-<td>R3-PA-02</td>
-<td>Incluir só o obrigatório e completo</td>
-<td>não testada no legado</td>
-<td>Só descrição e tipo: grava ("Inclusão realizada com sucesso."), ambiente e tag ficam vazios. Completo (tag, tipo Purificada, ambiente): grava e a lista mostra a tag</td>
-<td>Novo</td>
-<td>—</td>
+<td>Tag repetida</td>
+<td>"TAG ja cadastrada!"</td>
+<td>Sem acento; somem em poucos segundos</td>
 </tr>
 <tr>
-<td>R3-PA-03</td>
-<td>Limites</td>
-<td>não testada no legado</td>
-<td>Descrição passa de 255? O campo corta em 255 sem avisar; tag corta em 30. Tag repetida: "TAG ja cadastrada!" (tag única, sem acento)</td>
-<td>Novo</td>
-<td>N-027</td>
+<td>Alterar ou inativar sem justificativa</td>
+<td>"A Justificativa é obrigatória."</td>
+<td>O campo fica na própria tela</td>
 </tr>
 <tr>
-<td>R3-PA-04</td>
-<td>Duplicado</td>
-<td>DV-PRI-007</td>
-<td>Duas descrições iguais "T. PONTO AGUA MINIMO" foram aceitas</td>
-<td>Igual</td>
-<td>—</td>
+<td>Descrição com mais de 255 caracteres, tag com mais de 30</td>
+<td><strong>Não recusa</strong>: o campo corta em 255 e 30 sem avisar</td>
+<td>Rodada 3</td>
 </tr>
 <tr>
-<td>R3-PA-05</td>
-<td>Alterar</td>
-<td>o legado mostrava a justificativa no histórico</td>
-<td>Sem justificativa: "A Justificativa é obrigatória." (campo na própria tela). Com justificativa: pergunta e "Alteração realizada com sucesso." Log: DESCRICAO antigo e novo, usuário, data e hora; justificativa não aparece</td>
-<td>Regressão</td>
-<td>N-029</td>
-</tr>
-<tr>
-<td>R3-PA-06</td>
-<td>Inativar</td>
-<td>não testada no legado</td>
-<td>Exige justificativa; lista passa a "NÃO"; Log "ATIVO SIM → NAO" (sem acento). Inativar um ponto ligado a ambiente é aceito (reativei depois)</td>
-<td>Novo</td>
-<td>—</td>
-</tr>
-<tr>
-<td>R3-PA-07</td>
-<td>Excluir sem uso e ligado a ambiente</td>
-<td>DV-PRI-009, N-007</td>
-<td>Pergunta "Confirma a exclusão do ponto do item?" (erro de texto). Sem campo de justificativa (a API recebe <code>{}</code>); exclui (204) tanto o sem uso quanto o ligado a ambiente</td>
-<td>Igual</td>
-<td>N-027</td>
-</tr>
-<tr>
-<td>R3-PA-08</td>
-<td>Pesquisa</td>
-<td>DV-PRI-008</td>
-<td>"AGUA" acha "AGUAS DO RIO 2" mas não acha "ÁGUAS DO RIO" nem "T. PONTO AGUA COMPLETO ÁGUA"; "água" e "ÁGUA" acham os acentuados</td>
-<td>Igual</td>
-<td>—</td>
-</tr>
-<tr>
-<td>R3-PA-09</td>
-<td>Excel</td>
-<td>não testada no legado</td>
-<td>Respeita o filtro (2 linhas, igual à lista); colunas Código, Tag, Descrição, Ativo, Tipo de Água, Ambiente, datas e usuários de criação e alteração</td>
-<td>Novo</td>
-<td>—</td>
-</tr>
-<tr>
-<td>R3-PA-10</td>
-<td>Imprimir</td>
-<td>não testada no legado</td>
-<td>PDF de 1 página, 200: "RELATÓRIO DE PONTOS DE ÁGUA", filtro, data e usuário; traz "SUA LOGO AQUI" no cabeçalho (ver seção 5)</td>
-<td>Novo</td>
-<td>N-028</td>
+<td>Descrição repetida</td>
+<td><strong>Não é recusada</strong></td>
+<td>Igual ao legado (DV-PRI-007)</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Código</td>
+<td>Texto</td>
+<td>(legado: 10, só dígitos)</td>
+<td>Não</td>
+<td></td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Pesquisa: Descrição</td>
+<td>Texto</td>
+<td>(legado: 100)</td>
+<td>Não</td>
+<td>Não ignora acento</td>
+<td></td>
+</tr>
+<tr>
+<td>Pesquisa: Tag</td>
+<td>Texto</td>
+<td>(legado: 10)</td>
+<td>Não</td>
+<td></td>
+<td>(do legado; a confirmar)</td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODAS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
+<td>Código, Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Gerados pelo sistema</td>
+<td></td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>Corta em 255</td>
+<td>Sim</td>
+<td>Pode repetir</td>
+<td></td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Já vem "Sim"</td>
+<td>Inativar exige justificativa</td>
+</tr>
+<tr>
+<td>Tag</td>
+<td>Texto</td>
+<td>Corta em 30</td>
+<td>Não</td>
+<td>Única; letras, números e hífen (legado)</td>
+<td>Sem asterisco na versão nova</td>
+</tr>
+<tr>
+<td>Tipo de Água</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Sim</td>
+<td>Potável, Purificada ou Injetável (legado); nos testes apareceram INJETÁVEL e "Purificada"</td>
+<td>Confirmar a lista completa na tela</td>
+</tr>
+<tr>
+<td>Localização (Ambiente)</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>Só ambientes ativos</td>
+<td>Fica em branco se o ambiente for excluído</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto de várias linhas</td>
+<td>(legado: 255)</td>
+<td>Sim, ao alterar ou inativar</td>
+<td></td>
+<td>Não vai para o histórico</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado da leitura de 08 a 09/11/2026 (<code>quem-pode.csv</code>), pelo comportamento da tela:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil de teste</th>
+<th>Abrir</th>
+<th>Pesquisar</th>
+<th>Incluir</th>
+<th>Editar, Excluir, Histórico, Imprimir e Excel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador (T.ADMIN2)</td>
+<td>Permitido (no menu)</td>
+<td>Permitido (8 linhas)</td>
+<td>Permitido</td>
+<td>Habilitados</td>
+</tr>
+<tr>
+<td>Cadastro</td>
+<td>Abre pelo endereço, <strong>fora do menu</strong> do perfil</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado ("Sem permissão")</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Só consulta</td>
+<td>Abre fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem permissão de administrador</td>
+<td>Abre fora do menu</td>
+<td><strong>Desabilitado</strong></td>
+<td>Negado</td>
+<td>Não lido</td>
+</tr>
+<tr>
+<td>Sem login, ou sem nenhuma função</td>
+<td>Negado: volta para o login</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Na revalidação de 16/11/2026 do DV-PRI-N-035, a leitura pela API de <code>pontos-agua</code> com a conta de consulta passou a ser recusada (403): <strong>corrigido</strong> para esta tela.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="pontos-de-agua-fluxos.html"><small>← Anterior</small><strong>Fluxos · Pontos de água</strong></a><a class="ap ap-prox" href="pontos-de-agua-anvisa.html"><small>Próximo →</small><strong>Anvisa · Pontos de água</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>

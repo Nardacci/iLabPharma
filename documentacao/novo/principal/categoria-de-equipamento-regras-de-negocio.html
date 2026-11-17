@@ -40,100 +40,162 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros e tabelas de apoio</span><span>documento 151 de 224</span><div class="prog-doc"><i style="width:67%"></i></div></div>
   <header class="doc-cabecalho"><h1>Categoria de equipamento: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="categoria-de-equipamento-analise.html">Análise</a><a href="categoria-de-equipamento-manual-do-usuario.html">Manual do usuário</a><a href="categoria-de-equipamento-fluxos.html">Fluxos</a><a href="categoria-de-equipamento-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="categoria-de-equipamento-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="categoria-de-equipamento-erros.html">Erros (4)</a><a class="aba-extra" href="categoria-de-equipamento-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#2e7d32;margin-right:6px"></span>Situação da tela na versão nova: <strong>Testada</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><h2 id="casos-de-teste">Casos de teste</h2>
-<h4 id="casos-do-plano-e-das-rodadas">Casos do plano e das rodadas</h4>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="categoria-de-equipamento-analise.html">Análise</a><a href="categoria-de-equipamento-manual-do-usuario.html">Manual do usuário</a><a href="categoria-de-equipamento-fluxos.html">Fluxos</a><a href="categoria-de-equipamento-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="categoria-de-equipamento-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="categoria-de-equipamento-erros.html">Erros (4)</a><a class="aba-extra" href="categoria-de-equipamento-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../principal/o-principal-ideal-o-dono-do-que-e-global.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Inclusão:</strong> grava a categoria e os tipos marcados; mostra "Inclusão realizada com sucesso!".</li>
+<li><strong>Alteração:</strong> exige justificativa; no legado, os tipos eram apagados e regravados a cada alteração e a troca de tipos <strong>não</strong> entrava no histórico (do legado; a confirmar na versão nova). Os equipamentos que usam a categoria herdam os tipos dela (do legado; a confirmar quando o equipamento já existe).</li>
+<li><strong>Inativação:</strong> recusada se houver equipamento ativo; caso contrário exige justificativa. A categoria inativa deixa de ser oferecida no cadastro de Equipamento.</li>
+<li><strong>Exclusão:</strong> exige justificativa; recusada, <strong>sem mensagem na tela</strong>, se houver equipamento ativo.</li>
+<li><strong>Descrição repetida:</strong> é recusada ("Ja existe categoria de equipamento com esta descricao.").</li>
+<li><strong>Descrição acima de 100 caracteres:</strong> o campo <strong>corta em 100 sem avisar</strong>.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
-<th>Caso</th>
-<th>Cenário</th>
-<th>Legado</th>
-<th>Versão nova (o que a tela mostrou)</th>
-<th>Classe</th>
-<th>Defeito</th>
+<th>Situação</th>
+<th>Mensagem</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>R3-CE-01</td>
-<td>Obrigatórios</td>
-<td>não testada no legado</td>
-<td>Vazio: "Descrição é obrigatória e deve ter no máximo 100 caracteres." Sem tipo de manutenção: "Selecione ao menos um tipo de manutenção." (regra nova: pelo menos 1 dos 5 tipos)</td>
-<td>Novo</td>
-<td>—</td>
+<td>Descrição vazia</td>
+<td>"Descrição é obrigatória e deve ter no máximo 100 caracteres."</td>
 </tr>
 <tr>
-<td>R3-CE-02</td>
-<td>Incluir</td>
-<td>não testada no legado</td>
-<td>Mínimo (descrição e 1 tipo) e completo (2 tipos) gravam</td>
-<td>Novo</td>
-<td>—</td>
+<td>Nenhum tipo de manutenção marcado</td>
+<td>"Selecione ao menos um tipo de manutenção."</td>
 </tr>
 <tr>
-<td>R3-CE-03</td>
-<td>Limites e duplicado</td>
-<td>o legado não recusava repetidos, DV-PRI-007</td>
-<td>Descrição corta em 100 sem avisar. Descrição repetida é recusada: "Ja existe categoria de equipamento com esta descricao."</td>
-<td>Melhoria</td>
-<td>N-027</td>
+<td>Descrição repetida</td>
+<td>"Ja existe categoria de equipamento com esta descricao." (sem acento)</td>
 </tr>
 <tr>
-<td>R3-CE-04</td>
-<td>Alterar</td>
-<td>não testada no legado</td>
-<td>Sem justificativa: "Justificativa é obrigatória e deve ter no máximo 255 caracteres."; com justificativa grava; histórico sem justificativa</td>
-<td>Regressão</td>
-<td>N-029</td>
+<td>Alterar sem justificativa</td>
+<td>"Justificativa é obrigatória e deve ter no máximo 255 caracteres."</td>
 </tr>
 <tr>
-<td>R3-CE-05</td>
-<td>Inativar</td>
-<td>não testada no legado</td>
-<td>Exige justificativa. Categoria com equipamento ativo não pode ser inativada: "A Categoria possui equipamentos ativos. Nao e possivel inativar!"</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>Inativar categoria com equipamento ativo</td>
+<td>"A Categoria possui equipamentos ativos. Nao e possivel inativar!"</td>
 </tr>
 <tr>
-<td>R3-CE-06</td>
-<td>Excluir sem uso</td>
-<td>legado: DV-PRI-009, sem justificativa</td>
-<td>Exige justificativa ("A justificativa é obrigatória e deve ter no máximo 255 caracteres."); com justificativa: 204 e "Exclusão realizada com sucesso."</td>
-<td>Melhoria</td>
-<td>—</td>
+<td>Excluir sem justificativa</td>
+<td>"A justificativa é obrigatória e deve ter no máximo 255 caracteres."</td>
 </tr>
 <tr>
-<td>R3-CE-07</td>
-<td>Excluir com uso</td>
-<td>o legado, mesmo genérico, avisava, DV-PRI-011</td>
-<td>A API recusa (400) "A Categoria possui equipamentos ativos. Nao e possivel excluir!", mas a tela não mostra nada: a pergunta fecha e a categoria continua na lista</td>
-<td>Regressão</td>
-<td>N-024</td>
-</tr>
-<tr>
-<td>R3-CE-08</td>
-<td>Pesquisa</td>
-<td>DV-PRI-008</td>
-<td>"AGUA" não acha; "água" e "ÁGUA" acham</td>
-<td>Igual</td>
-<td>—</td>
-</tr>
-<tr>
-<td>R3-CE-09</td>
-<td>Excel e Imprimir</td>
-<td>não testada no legado</td>
-<td>Excel respeita o filtro (colunas extras: Fixo, Tipos de manutenção, exclusão); PDF "RELATÓRIO DE CATEGORIA DE EQUIPAMENTO", "SUA LOGO AQUI"</td>
-<td>Novo</td>
-<td>N-028</td>
+<td>Excluir categoria com equipamento ativo (a API recusa; a tela não mostra)</td>
+<td>"A Categoria possui equipamentos ativos. Nao e possivel excluir!"</td>
 </tr>
 </tbody>
 </table></div>
-<h4 id="casos-novos-propostos-ainda-nao-executados">Casos novos propostos (ainda não executados)</h4>
-<p>Nenhum além dos já listados; a combinação de campos (Fase 2) está nos blocos A, B e C do dossiê da versão nova.</p></article>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><strong>Lista:</strong> Código (texto, até 10, só números, do legado), Descrição (texto) e Ativo (TODAS, Sim, Não); nenhum obrigatório.</p>
+<p><strong>Formulário</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>Texto bloqueado</td>
+<td>–</td>
+<td>Não se aplica</td>
+<td>Gerado pelo sistema</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Descrição</td>
+<td>Texto</td>
+<td>100</td>
+<td>Sim (*)</td>
+<td>Única; corta em 100 sem avisar</td>
+<td>No legado eram 255 e repetida era aceita</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Opção Sim / Não</td>
+<td>–</td>
+<td>Sim (*)</td>
+<td>Padrão Sim; inativar exige justificativa e não pode haver equipamento ativo</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto bloqueado</td>
+<td>–</td>
+<td>Não se aplica</td>
+<td>Data e hora da criação</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Tipo de Manutenção</td>
+<td>5 caixas de marcar</td>
+<td>–</td>
+<td>Sim, ao menos 1</td>
+<td>CALIBRAÇÃO, LIMPEZA, LUBRIFICAÇÃO, MANUTENÇÃO PREVENTIVA, QUALIFICAÇÃO</td>
+<td>Lista fixa</td>
+</tr>
+<tr>
+<td>Justificativa</td>
+<td>Texto</td>
+<td>255</td>
+<td>Sim, na alteração, inativação e exclusão</td>
+<td>"Justificativa é obrigatória e deve ter no máximo 255 caracteres."</td>
+<td>Aparece só em registro existente</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p>Resultado do teste de acesso (arquivo <code>quem-pode.csv</code>, perfis de teste):</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Ação</th>
+<th>Administrador de teste (<code>t.admin2</code>)</th>
+<th>Perfis de teste "só consulta", "cadastro" e "sem permissão de administrador"</th>
+<th>Sem login</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Abrir a tela pelo endereço</td>
+<td>Permitido</td>
+<td>Abre mesmo <strong>fora do menu</strong> do perfil</td>
+<td>Volta à tela de login</td>
+</tr>
+<tr>
+<td>Pesquisar</td>
+<td>Permitido (lista com 5 linhas)</td>
+<td>Botão PESQUISAR <strong>desabilitado</strong></td>
+<td>–</td>
+</tr>
+<tr>
+<td>Incluir</td>
+<td>Permitido</td>
+<td>Desabilitado ("Sem permissão")</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Editar, Excluir, LOG, Imprimir, Excel</td>
+<td>Permitido</td>
+<td>Não foi possível ler (pesquisa desabilitada)</td>
+<td>–</td>
+</tr>
+</tbody>
+</table></div>
+<p>As funções de cada perfil de teste não estão descritas nas fontes consultadas: ponto para validar. <strong>DV-PRI-N-035 (Alta):</strong> corrigido em parte em 16/11/2026 (a leitura de categorias pela API, com a conta de consulta, passou a ser recusada, 403).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="categoria-de-equipamento-fluxos.html"><small>← Anterior</small><strong>Fluxos · Categoria de equipamento</strong></a><a class="ap ap-prox" href="categoria-de-equipamento-anvisa.html"><small>Próximo →</small><strong>Anvisa · Categoria de equipamento</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#casos-de-teste">Casos de teste</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa-mensagens-exatas">O que o sistema recusa (mensagens exatas)</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>
