@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../portal/portal.css?v=ef743450">
+<link rel="stylesheet" href="../../portal/portal.css?v=6f7b03f0">
 <link rel="stylesheet" href="../../portal/erros.css">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
@@ -19,7 +19,8 @@
     <a href="../../telas.html">Devs/QA</a>
     <a href="../../index.html#publicos">Por público</a>
     <a href="../../anvisa.html">ANVISA</a>
-    <a href="../../cronograma.html">Cronograma</a>
+    <span class="topo-sub"><a href="../../cronograma.html" aria-haspopup="true">Cronograma ▾</a>
+      <span class="topo-sub-menu"><a href="../../cronograma.html">Legado</a><a href="../../cronograma-novo.html">Novo</a></span></span>
     <a href="../../apresentacao.html">Apresentação</a>
   </nav>
   <div class="topo-acoes">
@@ -70,7 +71,7 @@
 </tr>
 <tr>
 <td>Fichas de defeito DV-PRI-N</td>
-<td>59 fichas, com passos, esperado, obtido, impacto e evidência</td>
+<td>74 fichas, com passos, esperado, obtido, impacto e evidência</td>
 </tr>
 <tr>
 <td>Documentos do Legado</td>
@@ -418,7 +419,7 @@
 <h3 id="avaliacao-das-funcoes">Avaliação das funções</h3>
 <p>Não verificado na versão nova: depende da análise do código novo.</p>
 <h3 id="resumo-dos-riscos">Resumo dos riscos</h3>
-<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 15 defeitos de prioridade Alta (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
+<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 16 defeitos de prioridade Alta (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
 <ul>
 <li><strong>Funções do perfil:</strong> a tela esconde botões, mas o servidor aceita a gravação sem a função correspondente (N-011, N-035). Regra de negócio que só existe no front não é regra.</li>
@@ -488,6 +489,16 @@
 <td>10/11/2026</td>
 <td>Visualização de relatórios e Tipo de notificação testadas; Microservices é provisória e <strong>Configuração não existe</strong> na versão nova; conta inativa, vencida e ainda não iniciada com a senha certa; cronometragem das quedas de sessão; log do perfil 20 lido até o fim (3.239 linhas); 2 defeitos novos (N-058 e N-059)</td>
 </tr>
+<tr>
+<td>Evidências e revalidação</td>
+<td>16/11/2026</td>
+<td>13 fichas sem imagem receberam evidência (31 imagens; 9 repetem, 1 em parte, 3 não reproduzem agora) e as 14 de gravidade Alta foram revalidadas com evidência nova (67 imagens): <strong>10 repetem, 3 corrigidas, 1 corrigida em parte, nenhuma piorou</strong>; 4 fichas novas (N-060 a N-063). <strong>A compilação mudou desde 04/11</strong> (o rodapé continua <code>0.0.1 \| Teste</code> e não a identifica)</td>
+</tr>
+<tr>
+<td>Manual por tela com robôs</td>
+<td>17/11/2026</td>
+<td>Passo a passo executado na versão nova em 8 telas (Login, Troca de senha, Profissional, Conta usuário, Perfil, Ambientes, Equipamentos e Pessoa jurídica): 200 prints novos, cada texto "a confirmar" respondido; 11 fichas novas (N-064 a N-074): contador de tentativas de senha, usuário comum sem troca de senha, conta criada à noite fora da validade (fuso), CEP sem efeito, histórico de Equipamento sem a linha de inclusão (Alta, N-072), histórico da Pessoa jurídica sem a filial. Corrigido o N-039: o Excel de Ambientes respeita o filtro, o de Equipamentos e o de Profissional não</td>
+</tr>
 </tbody>
 </table></div>
 <h3 id="resultados-da-fase-2">Resultados da Fase 2</h3>
@@ -522,13 +533,13 @@
 </tr>
 <tr>
 <td>Alta</td>
-<td>O servidor não confere as funções do perfil: quem só consulta consegue gravar</td>
-<td>N-011, N-035</td>
+<td>O servidor não confere as funções do perfil: <strong>corrigido na maioria das rotas (revalidação de 16/11)</strong>; ainda respondem 200 fora do perfil de consulta Tipos de evento, Pessoa jurídica e Opções de módulos; a tela de edição de Perfil abre com SALVAR ativo e a recusa não é avisada</td>
+<td>N-011 (corrigida), N-035 (em parte), N-063</td>
 </tr>
 <tr>
 <td>Alta</td>
-<td>Inativar um perfil não tira o acesso de quem o usa</td>
-<td>N-036</td>
+<td>Inativar um perfil não tira o acesso de quem o usa: <strong>corrigido em 16/11</strong> (o login é recusado), mas a tela de login não mostra a mensagem</td>
+<td>N-036 (corrigida), N-062</td>
 </tr>
 <tr>
 <td>Alta</td>
@@ -652,6 +663,11 @@
 <td>DV-PRI-N-057</td>
 <td>A API de login fica fora do ar e a tela de login não avisa</td>
 <td>Login (todas as telas)</td>
+</tr>
+<tr>
+<td>DV-PRI-N-072</td>
+<td>O histórico (Log) do Equipamento não tem a linha de inclusão do registro</td>
+<td>Equipamentos</td>
 </tr>
 </tbody>
 </table></div>
@@ -1020,6 +1036,96 @@
 <td>Média</td>
 <td>Perfil (botão Log)</td>
 </tr>
+<tr>
+<td>DV-PRI-N-060</td>
+<td>A tela "Alterar senha" mostra outro ambiente e outra versão</td>
+<td>Baixa</td>
+<td>Alterar senha (primeiro acesso com senha provisória)</td>
+</tr>
+<tr>
+<td>DV-PRI-N-061</td>
+<td>A senha provisória da inclusão da conta tem 8 caracteres e a do reset tem 10</td>
+<td>Baixa</td>
+<td>Conta usuário</td>
+</tr>
+<tr>
+<td>DV-PRI-N-062</td>
+<td>O login recusado por perfil inativo não mostra mensagem na tela</td>
+<td>Média</td>
+<td>Login</td>
+</tr>
+<tr>
+<td>DV-PRI-N-063</td>
+<td>A tela de edição de Perfil abre pelo endereço com SALVAR ativo e a recusa do servidor (403) não é avisada</td>
+<td>Baixa</td>
+<td>Perfil (edição)</td>
+</tr>
+<tr>
+<td>DV-PRI-N-064</td>
+<td>O aviso de tentativas do login chega a "mais 0 tentativa(s)" com a conta ainda ativa</td>
+<td>Baixa</td>
+<td>Login</td>
+</tr>
+<tr>
+<td>DV-PRI-N-065</td>
+<td>O Login diz "Usuário inativo." mesmo com a senha errada, revelando o estado do cadastro</td>
+<td>Média</td>
+<td>Login</td>
+</tr>
+<tr>
+<td>DV-PRI-N-066</td>
+<td>O usuário comum não tem como trocar a própria senha: o cadeado do rodapé não abre nada</td>
+<td>Média</td>
+<td>Troca de senha; Início e menu (rodapé)</td>
+</tr>
+<tr>
+<td>DV-PRI-N-067</td>
+<td>Conta criada à noite (depois das 21h de Brasília) fica "fora do período de validade": a data do servidor parece estar em horário de Greenwich</td>
+<td>Média</td>
+<td>Conta usuário; Login</td>
+</tr>
+<tr>
+<td>DV-PRI-N-068</td>
+<td>Pop-up de sucesso duplicado no Profissional (inclusão e exclusão): é preciso clicar OK duas vezes</td>
+<td>Baixa</td>
+<td>Profissional</td>
+</tr>
+<tr>
+<td>DV-PRI-N-069</td>
+<td>O botão PESQUISAR do CEP não preenche o endereço (Profissional e Pessoa jurídica)</td>
+<td>Média</td>
+<td>Profissional (quadro Endereço); Pessoa jurídica</td>
+</tr>
+<tr>
+<td>DV-PRI-N-070</td>
+<td>No Profissional, a faixa "Já existe um profissional cadastrado com esse CPF." não some quando surge outro erro</td>
+<td>Baixa</td>
+<td>Profissional</td>
+</tr>
+<tr>
+<td>DV-PRI-N-071</td>
+<td>O Excel da Conta usuário grava "NÃO" com a codificação duplicada ("NÃƒO")</td>
+<td>Baixa</td>
+<td>Conta usuário (botão Excel, "X")</td>
+</tr>
+<tr>
+<td>DV-PRI-N-072</td>
+<td>O histórico (Log) do Equipamento não tem a linha de inclusão do registro</td>
+<td>Alta</td>
+<td>Equipamentos</td>
+</tr>
+<tr>
+<td>DV-PRI-N-073</td>
+<td>Depois do erro de CNPJ a pergunta de confirmação continua aberta e a mensagem de erro some em cerca de 4 segundos</td>
+<td>Baixa</td>
+<td>Pessoa jurídica</td>
+</tr>
+<tr>
+<td>DV-PRI-N-074</td>
+<td>O histórico da Pessoa jurídica não registra a inclusão da filial</td>
+<td>Média</td>
+<td>Pessoa jurídica (Ver log; Filiais)</td>
+</tr>
 </tbody>
 </table></div>
 <p>Fichas completas, com passos, esperado, obtido e evidência, em <code>homologacao/versao-nova/1.principal/defeitos/</code>.</p>
@@ -1069,7 +1175,7 @@
 <li><strong>Perfil 20 (0.T.TESTE_ADMIN):</strong> o log mostra que só a conta exibida como T. ADMIN TESTE mexeu nele, em 08/11: marcou Cadastros às 19:20 e desmarcou às 19:31. A divergência entre as leituras do Codex e do Claude Code vem de horas diferentes. Quem usou essa conta nesse horário não está identificado. O log foi lido até a página 60 (240 registros), sem chegar ao fim.</li>
 <li><strong>Quadro "Quem pode":</strong> lidos o administrador, o perfil de consulta, o de cadastro e o sem acesso, e a leitura sem login (as 22 telas levam ao login). Um perfil sem nenhuma função <strong>não consegue entrar</strong> ("Usuário sem módulos de acesso."), e o cadastro da conta não avisa.</li>
 <li><strong>Contas e ambiente:</strong> a conta <code>t.admin</code> ficou sem uso (senha desatualizada, sem tentativas restantes) e a API de login ficou fora do ar de 12:02 a 13:08 de 09/11. O teste da conta inativa com a senha certa não foi feito.</li>
-<li><strong>Defeitos sem captura de tela publicada:</strong> alguns, porque a imagem mostrava senha ou CPF, ou o defeito não é de tela.</li>
+<li><strong>Defeitos e evidência:</strong> todas as fichas têm agora imagem, exceto as que dependem de ambiente (N-040, N-057, que não reproduziram) e o que é de API (N-005 e N-004, com transcrição da consulta, marcada como tal). A imagem da N-057 é simulada e não vale como prova da queda real.</li>
 <li>
 <p><strong>Responsável pela correção:</strong> não é indicado nas fichas (decisão de 08/11/2026): a Garantia da Qualidade avalia e simula primeiro, e só depois abre o reparo para os desenvolvedores.</p>
 </li>
@@ -1081,7 +1187,7 @@
 <div class="callout">
 <p class="callout-titulo">Sem veredito novo</p>
 <p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer de 18/10/2026 concluiu <strong>não apto</strong>. Esta rodada não encontrou a correção dos itens de prioridade Alta daquele parecer; por isso o veredito existente não muda, e este dossiê não cria outro.</p>
-<p>Fotografia do módulo na versão nova: 59 defeitos registrados, 15 de prioridade Alta. Não há veredito de "apto".</p>
+<p>Fotografia do módulo na versão nova: 74 defeitos registrados, 16 de prioridade Alta. Não há veredito de "apto".</p>
 </div>
 <h2 id="fechamento-do-modulo">Fechamento do módulo</h2>
 <h3 id="o-que-foi-concluido">O que foi concluído</h3>
@@ -1142,7 +1248,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#introducao">Introdução</a></li><li class="sub"><a href="#escopo">Escopo</a></li><li class="sub"><a href="#documentos-deste-pacote">Documentos deste pacote</a></li><li class="sub"><a href="#referencias">Referências</a></li><li><a href="#classificacao-do-sistema">Classificação do sistema</a></li><li><a href="#estrategia-de-homologacao">Estratégia de homologação</a></li><li class="sub"><a href="#correspondencia-com-os-documentos-do-guia-33">Correspondência com os documentos do Guia 33</a></li><li><a href="#inventario-de-telas-e-situacao">Inventário de telas e situação</a></li><li><a href="#analise-de-risco">Análise de risco</a></li><li class="sub"><a href="#avaliacao-inicial">Avaliação inicial</a></li><li class="sub"><a href="#escalas-usadas">Escalas usadas</a></li><li class="sub"><a href="#avaliacao-das-funcoes">Avaliação das funções</a></li><li class="sub"><a href="#resumo-dos-riscos">Resumo dos riscos</a></li><li><a href="#achados-de-seguranca">Achados de segurança</a></li><li class="sub"><a href="#trilha-de-auditoria">Trilha de auditoria</a></li><li><a href="#plano-de-testes">Plano de testes</a></li><li class="sub"><a href="#objetivo">Objetivo</a></li><li class="sub"><a href="#escopo_1">Escopo</a></li><li class="sub"><a href="#ambiente-e-preparacao">Ambiente e preparação</a></li><li class="sub"><a href="#evidencias-e-registro">Evidências e registro</a></li><li class="sub"><a href="#criterios-de-aceite">Critérios de aceite</a></li><li class="sub"><a href="#quantidade-de-casos-por-classe">Quantidade de casos por classe</a></li><li><a href="#resultados-dos-testes">Resultados dos testes</a></li><li class="sub"><a href="#resumo-das-rodadas">Resumo das rodadas</a></li><li class="sub"><a href="#resultados-da-fase-2">Resultados da Fase 2</a></li><li><a href="#desvios">Desvios</a></li><li class="sub"><a href="#defeitos-de-gravidade-alta">Defeitos de gravidade Alta</a></li><li class="sub"><a href="#todos-os-defeitos">Todos os defeitos</a></li><li><a href="#rastreabilidade">Rastreabilidade</a></li><li class="sub"><a href="#defeito-tela-caso">Defeito → tela → caso</a></li><li class="sub"><a href="#aderencia-a-norma">Aderência à norma</a></li><li><a href="#pendencias">Pendências</a></li><li><a href="#parecer-da-homologacao">Parecer da homologação</a></li><li><a href="#fechamento-do-modulo">Fechamento do módulo</a></li><li class="sub"><a href="#o-que-foi-concluido">O que foi concluído</a></li><li class="sub"><a href="#limitacoes-o-que-o-teste-nao-cobriu">Limitações: o que o teste não cobriu</a></li><li class="sub"><a href="#o-que-muda-na-reabertura">O que muda na reabertura</a></li><li class="sub"><a href="#decisoes-e-pontos-para-validar">Decisões e pontos para validar</a></li><li><a href="#aprovacoes">Aprovações</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 10/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../portal/portal.js"></script>

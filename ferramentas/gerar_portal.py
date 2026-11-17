@@ -44,6 +44,7 @@ import higiene  # noqa: E402
 import menus_gq  # noqa: E402
 import telas_devs  # noqa: E402
 import versao_nova  # noqa: E402
+import cronograma_novo  # noqa: E402
 
 HOJE = datetime.date.today().strftime("%d/%m/%Y")
 
@@ -891,7 +892,8 @@ def cabecalho(titulo, raiz, ativo=""):
     <a href="{raiz}telas.html"{' aria-current="page"' if ativo == 'telas' else ''}>Devs/QA</a>
     <a href="{raiz}index.html#publicos">Por público</a>
     <a href="{raiz}anvisa.html"{' aria-current="page"' if ativo == 'anvisa' else ''}>ANVISA</a>
-    <a href="{raiz}cronograma.html"{' aria-current="page"' if ativo == 'cronograma' else ''}>Cronograma</a>
+    <span class="topo-sub"><a href="{raiz}cronograma.html" aria-haspopup="true"{' aria-current="page"' if ativo in ('cronograma', 'cronograma-novo') else ''}>Cronograma ▾</a>
+      <span class="topo-sub-menu"><a href="{raiz}cronograma.html"{' aria-current="page"' if ativo == 'cronograma' else ''}>Legado</a><a href="{raiz}cronograma-novo.html"{' aria-current="page"' if ativo == 'cronograma-novo' else ''}>Novo</a></span></span>
     <a href="{raiz}apresentacao.html">Apresentação</a>
   </nav>
   <div class="topo-acoes">
@@ -1196,6 +1198,10 @@ def gerar(origem, destino, relatorio, atualizar_metadados=False, atualizar_equiv
     cron = pagina_cronograma(origem)
     if cron:
         (destino / "cronograma.html").write_text(cron, encoding="utf-8")
+    cron_novo = cronograma_novo.pagina(origem, cabecalho, rodape, {m["id"]: m["cor"] for m in MODULOS})
+    if cron_novo:
+        (destino / "cronograma-novo.html").write_text(cron_novo, encoding="utf-8")
+        print("Cronograma da versão nova: cronograma-novo.html")
     (destino / "portal/busca.json").write_text(json.dumps(busca, ensure_ascii=False), encoding="utf-8")
     normas = indice_normas(origem)
     if normas:
@@ -2480,6 +2486,7 @@ def pagina_cronograma(origem):
       <nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <span>Cronograma</span></nav>
       <h1>Cronograma da homologação</h1>
       <p>Onde cada módulo está, o que já foi testado e quanto falta para fechar. As datas futuras são previsão. Atualizado em {E(cr.get("atualizado", HOJE))}.</p>
+      <p class="cn-seletor">{versao_nova.seletor("cronograma.html", "cronograma-novo.html", "legado")}</p>
     </div>
   </section>
   <div class="cr-conteudo">
