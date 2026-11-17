@@ -6,7 +6,7 @@
 <meta name="description" content="iLabMedSys: documentação da homologação do LabMedSys, por módulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../portal/portal.css?v=ef743450">
+<link rel="stylesheet" href="../portal/portal.css?v=6f7b03f0">
 <link rel="stylesheet" href="../portal/erros.css">
 <script>try{var t=localStorage.getItem('ilms-tema');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
@@ -42,7 +42,8 @@ main.conteudo{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem}
     <a href="../telas.html">Devs/QA</a>
     <a href="../index.html#publicos">Por público</a>
     <a href="../anvisa.html">ANVISA</a>
-    <a href="../cronograma.html">Cronograma</a>
+    <span class="topo-sub"><a href="../cronograma.html" aria-haspopup="true">Cronograma ▾</a>
+      <span class="topo-sub-menu"><a href="../cronograma.html">Legado</a><a href="../cronograma-novo.html">Novo</a></span></span>
     <a href="../apresentacao.html">Apresentação</a>
   </nav>
   <div class="topo-acoes">
@@ -51,13 +52,13 @@ main.conteudo{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem}
   </div>
   <div class="busca-resultados" id="busca-resultados" role="listbox" hidden></div>
 </header>
-<main class="conteudo" id="conteudo"><p><a href="../erros-novo.html#estoque">← Erros: Estoque</a></p><h1>DV-EST-N-050: A Saída de Material exige o grupo do token, não usa o plano B do banco e se comporta de dois jeitos com grupo zero</h1><p class="en-meta">Versão nova · Estoque</p><p class="en-meta"><span class="en-grav" style="--cor:#b3261e">Alta</span> <b>Situação:</b> Aberta. Responsável: desenvolvimento · <b>Tipo:</b> funcional (código) · <b>Tela:</b> Saída de Material (Outras) · <b>Classe na versão nova:</b> Regressão · <b>Rodada:</b> Saída de Material, guiada pelo código, 12/11/2026</p><p><a class="botao" href="../documentacao/novo/estoque/saida-de-material-erros.html#dv-est-n-050">Ver a tela do erro, com as evidências</a></p><p class="en-rot">Passos para reproduzir</p><ol>
+<main class="conteudo" id="conteudo"><p><a href="../erros-novo.html#estoque">← Erros: Estoque</a></p><h1>DV-EST-N-050: A Saída de Material exige o grupo do token, não usa o plano B do banco e se comporta de dois jeitos com grupo zero</h1><p class="en-meta">Versão nova · Estoque</p><p class="en-meta"><span class="en-grav" style="--cor:#b3261e">Alta</span> <b>Situação:</b> Aberta. Responsável: desenvolvimento · <b>Tipo:</b> funcional (código) · <b>Tela:</b> Saída de Material (Outras) · <b>Classe na versão nova:</b> Regressão · <b>Rodada:</b> Saída de Material, guiada pelo código, 12/11/2026</p><div class="en-class"><p class="en-rot">Classificação do erro</p><ul class="en-lista"><li><b>É um erro novo?</b> Sim</li><li><b>Também acontece no legado?</b> Não: no legado funcionava</li><li><b>Contraria a norma da ANVISA?</b> A confirmar <i>(RDC 658/2022, arts. 124 e 125)</i></li></ul><p class="en-meta">Leitura da homologação, a confirmar com a Qualidade.</p></div><p><a class="botao" href="../documentacao/novo/estoque/saida-de-material-erros.html#dv-est-n-050">Ver a tela do erro, com as evidências</a></p><p class="en-rot">Passos para reproduzir</p><ol>
 <li>Entrar com o administrador de teste.</li>
 <li><code>GET /api/saida-material/lotes?idItem=20</code> devolve o lote TL021, de um almoxarifado (T.ALMOX 04 PADRAO APROV) que <strong>não</strong> está ligado ao grupo 1 do administrador: a lista de lotes não filtra por grupo.</li>
 <li><code>GET /api/saida-material/enderecos-origem?idItemLote=20</code> (e para o lote 46) devolve lista vazia, enquanto <code>GET /api/movimentacao-material/enderecos-origem?idItemLote=</code> devolve o endereço com saldo.</li>
 <li><code>POST /api/saida-material</code> com origem, lote e almoxarifado certos (com e sem <code>idAlmoxarifado</code>, duas vezes): 400 "Almoxarifado de origem inválido para o lote.".</li>
 </ol><p class="en-rot">Esperado</p><p>O mesmo critério de grupo em toda a tela: lotes, origens e gravação. Sem grupo no token, ler o grupo do banco (como outras telas do Estoque) ou recusar com mensagem clara.</p><p class="en-rot">Obtido</p><p>A lista de lotes aceita grupo zero (mostra tudo, <code>SaidaMaterial340Service.cs:51</code>); a lista de origens e a gravação exigem o grupo (<code>MovimentacaoMaterialRepository.cs:831</code> e <code>:857-862</code>) e com zero nunca encontram nada. O usuário vê o lote, não vê o endereço e, ao forçar, recebe uma mensagem que não diz a causa (ver N-044).</p><p class="en-rot">Impacto</p><p>Saída de Material inutilizável; a regra "só os almoxarifados do meu grupo" não se aplica nos lotes mas se aplica nas origens.</p></main><footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 12/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 17/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../portal/portal.js"></script>
