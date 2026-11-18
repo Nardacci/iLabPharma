@@ -40,12 +40,13 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 186 de 756</span><div class="prog-doc"><i style="width:25%"></i></div></div>
   <header class="doc-cabecalho"><h1>Conta Corrente: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-corrente-analise.html">Análise</a><a href="conta-corrente-manual-do-usuario.html">Manual do usuário</a><a href="conta-corrente-fluxos.html">Fluxos</a><a href="conta-corrente-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="conta-corrente-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="conta-corrente-erros.html">Erros (1)</a><a class="aba-extra" href="conta-corrente-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-corrente-analise.html">Análise</a><a href="conta-corrente-manual-do-usuario.html">Manual do usuário</a><a href="conta-corrente-fluxos.html">Fluxos</a><a href="conta-corrente-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="conta-corrente-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="conta-corrente-erros.html">Erros (4)</a><a class="aba-extra" href="conta-corrente-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Incluir:</strong> grava o registro (com código gerado se o campo ficou em branco) e acrescenta "INCLUSÃO DO REGISTRO" ao histórico, sem valores.</li>
-<li><strong>Alterar:</strong> exige justificativa; o histórico recebe uma linha por campo alterado, com valor antigo e novo, data, hora e usuário.</li>
-<li><strong>Excluir:</strong> pede justificativa; o registro some da lista. O histórico de um registro excluído <strong>não foi verificado</strong>.</li>
+<li><strong>Incluir:</strong> grava o registro (com código gerado se o campo ficou em branco) e acrescenta "INCLUSÃO DO REGISTRO" ao histórico, sem valores, com o usuário pelo nome.</li>
+<li><strong>Alterar:</strong> exige justificativa; o histórico recebe uma linha por campo alterado, com valor antigo e novo, data, hora, usuário pelo nome e <strong>a justificativa</strong>.</li>
+<li><strong>Inativar:</strong> aceito com justificativa. <strong>Mesmo em uso por um Item, sem aviso</strong>; o Item fica com o campo Conta Corrente em branco (DV-EST-N-026).</li>
+<li><strong>Excluir:</strong> pede justificativa e confirmação; o registro some da lista. <strong>Conta em uso por Item: recusado</strong> ("Exclusão inválida, existem referências com outras tabelas."). O histórico de um registro excluído <strong>não foi verificado</strong>.</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
@@ -59,42 +60,74 @@
 <tbody>
 <tr>
 <td>Salvar sem descrição</td>
-<td>"Preencha os campos obrigatórios antes de salvar." (faixa)</td>
-<td>Visto no print; vem antes da pergunta de confirmação</td>
+<td>Pergunta "Confirma a inclusão do registro?" e, depois do SIM, a faixa "A Descrição é obrigatória!"</td>
+<td>Prints 05 e 06; a confirmação vem antes da conferência (DV-EST-N-027)</td>
+</tr>
+<tr>
+<td>Alterar sem justificativa</td>
+<td>"A Justificativa é obrigatória!" (depois do SIM)</td>
+<td>Print 28</td>
+</tr>
+<tr>
+<td>Excluir sem justificativa</td>
+<td>"A justificativa é obrigatória!" (com "j" minúsculo; depois do SIM)</td>
+<td>Print 40</td>
 </tr>
 <tr>
 <td>Código repetido</td>
 <td>"Esse código de conta corrente já está cadastrado para a empresa."</td>
-<td>Testado com os mesmos valores de um registro ativo</td>
+<td>Print 14; a faixa aparece depois de cerca de 2 segundos, durante o aviso "SALVANDO..."</td>
 </tr>
 <tr>
-<td>Código de 10 caracteres com letras e números (<code>TBEBBXXXXX</code>)</td>
+<td>Código com símbolo ("Z@4")</td>
+<td>"O código deve possuir até 5 letras, números ou espaços."</td>
+<td>Print 22 (mesmo texto do Motivo da Movimentação)</td>
+</tr>
+<tr>
+<td>Código com 6 caracteres e descrição com 41 (limite do navegador removido)</td>
 <td>"Os dados informados são inválidos."</td>
-<td>Depois do SIM; não diz qual campo (DV-EST-N-027)</td>
+<td>Print 18; não diz qual campo (DV-EST-N-027). O campo do código corta em 5 caracteres</td>
 </tr>
 <tr>
-<td>Código só com números e 6 dígitos (<code>973165</code>)</td>
-<td>"Os dados informados são inválidos."</td>
-<td>A mesma tela aceitou <code>T165</code>; ver imagem abaixo</td>
-</tr>
-<tr>
-<td>Descrição com acentos e símbolos (<code>TÃ-Ç/&amp;%#é ñ</code>)</td>
-<td>"Os dados informados são inválidos."</td>
-<td>Código <code>TÃ-HBEBD</code> no mesmo teste; não diz qual campo</td>
-</tr>
-<tr>
-<td>Descrição acima do limite (limite do navegador removido)</td>
-<td>"Preencha os campos obrigatórios antes de salvar."</td>
-<td>Mensagem enganosa (DV-EST-N-027)</td>
+<td>Excluir conta em uso por Item</td>
+<td>"Exclusão inválida, existem referências com outras tabelas."</td>
+<td>Print 47; não diz qual Item</td>
 </tr>
 </tbody>
 </table></div>
-<figure><a href="../../img/estoque/v-conta-corrente-numero.png" target="_blank" rel="noopener"><img src="../../img/estoque/v-conta-corrente-numero.png" alt="Código numérico recusado" loading="lazy"></a><figcaption>Código numérico recusado · clique para ampliar</figcaption></figure>
+<figure><a href="../../img/estoque/pnr2-conta-corrente-13-repetido-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-13-repetido-preenchido.png" alt="Conta Corrente: código repetido, antes de salvar" loading="lazy"></a><figcaption>Conta Corrente: código repetido, antes de salvar · clique para ampliar</figcaption></figure>
 
-<p>A imagem mostra o formulário com código 973165 e a faixa "Os dados informados são inválidos.".</p>
-<figure><a href="../../img/estoque/a-conta-corrente-4-especiais.png" target="_blank" rel="noopener"><img src="../../img/estoque/a-conta-corrente-4-especiais.png" alt="Símbolos recusados" loading="lazy"></a><figcaption>Símbolos recusados · clique para ampliar</figcaption></figure>
+<figure><a href="../../img/estoque/pnr2-conta-corrente-14-repetido-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-14-repetido-resultado.png" alt="Conta Corrente: código repetido recusado" loading="lazy"></a><figcaption>Conta Corrente: código repetido recusado · clique para ampliar</figcaption></figure>
 
-<p>A imagem mostra descrição com acentos e símbolos e a mesma faixa de recusa.</p>
+<figure><a href="../../img/estoque/pnr2-conta-corrente-21-codigo-simbolo-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-21-codigo-simbolo-preenchido.png" alt="Conta Corrente: código com símbolo, antes de salvar" loading="lazy"></a><figcaption>Conta Corrente: código com símbolo, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-corrente-22-codigo-simbolo-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-22-codigo-simbolo-resultado.png" alt="Conta Corrente: código com símbolo recusado" loading="lazy"></a><figcaption>Conta Corrente: código com símbolo recusado · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-corrente-17-limite-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-17-limite-preenchido.png" alt="Conta Corrente: limite de tamanho, antes de salvar" loading="lazy"></a><figcaption>Conta Corrente: limite de tamanho, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-corrente-18-limite-mensagem.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-18-limite-mensagem.png" alt="Conta Corrente: limite de tamanho, mensagem genérica" loading="lazy"></a><figcaption>Conta Corrente: limite de tamanho, mensagem genérica · clique para ampliar</figcaption></figure>
+
+<p>As imagens mostram o código ZZ1 repetido e recusado, o código "Z@4" recusado e, no limite, o código "ABCDEF" com a descrição de 41 caracteres e a mensagem "Os dados informados são inválidos.".</p>
+<p><strong>O que o sistema aceita sem avisar:</strong></p>
+<ol>
+<li><strong>Descrição com acentos e símbolos.</strong> Ao contrário do que o manual anterior dizia, a descrição "T. R2 TÃ-Ç/&amp;%#é ñ" é <strong>aceita</strong> ("Inclusão realizada com sucesso!"), mas os símbolos "/ &amp; % #" somem em silêncio e o "é" vira "É": o registro grava como "T. R2 TÃ-ÇÉ Ñ" (DV-EST-N-009):</li>
+</ol>
+<figure><a href="../../img/estoque/pnr2-conta-corrente-19-simbolos-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-19-simbolos-preenchido.png" alt="Conta Corrente: descrição com símbolos, antes de salvar" loading="lazy"></a><figcaption>Conta Corrente: descrição com símbolos, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-corrente-20-simbolos-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-20-simbolos-resultado.png" alt="Conta Corrente: descrição com símbolos aceita" loading="lazy"></a><figcaption>Conta Corrente: descrição com símbolos aceita · clique para ampliar</figcaption></figure>
+
+<ol start="2">
+<li><strong>Descrição repetida com outro código.</strong> O ZZ2 foi gravado com a mesma descrição do ZZ1 e a lista mostra os dois (DV-EST-N-056):</li>
+</ol>
+<figure><a href="../../img/estoque/pnr2-conta-corrente-15-descricao-repetida-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-15-descricao-repetida-preenchido.png" alt="Conta Corrente: mesma descrição com outro código, antes de salvar" loading="lazy"></a><figcaption>Conta Corrente: mesma descrição com outro código, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-corrente-16-descricao-repetida-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-16-descricao-repetida-resultado.png" alt="Conta Corrente: descrição repetida aceita" loading="lazy"></a><figcaption>Conta Corrente: descrição repetida aceita · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-corrente-23-lista-apos-testes.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-corrente-23-lista-apos-testes.png" alt="Conta Corrente: duas contas com a mesma descrição" loading="lazy"></a><figcaption>Conta Corrente: duas contas com a mesma descrição · clique para ampliar</figcaption></figure>
+
+<ol start="3">
+<li><strong>Inativar a conta em uso por um Item</strong> (passo 12; DV-EST-N-026).</li>
+</ol>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -109,33 +142,57 @@
 </thead>
 <tbody>
 <tr>
-<td>Código (filtro e formulário)</td>
+<td>Pesquisa: Código</td>
 <td>Texto</td>
-<td>até 10 (limite do campo, lido da rodada de 10/11)</td>
+<td>(não conferido)</td>
 <td>Não</td>
-<td>Em branco, o sistema gera (ex.: 00003); travado ao editar</td>
-<td>Formatos aceitos são irregulares (ver recusas)</td>
+<td>Procura dentro do código (visto: "ZZ" achou ZZ1, ZZ2 e ZZ3)</td>
+<td>Visto em 18/11/2026</td>
+</tr>
+<tr>
+<td>Pesquisa: Descrição</td>
+<td>Texto</td>
+<td>(não conferido)</td>
+<td>Não</td>
+<td>Procura dentro do texto</td>
+<td>Visto em 18/11/2026</td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODOS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
+<td>Código</td>
+<td>Texto</td>
+<td>Até 5 caracteres (o campo corta no quinto)</td>
+<td>Não</td>
+<td>Letras, números ou espaços ("O código deve possuir até 5 letras, números ou espaços."); em branco, o sistema gera (ex.: 00006); não repete</td>
+<td>Travado ao editar. O manual anterior dizia "até 10", corrigido</td>
 </tr>
 <tr>
 <td>Data do Cadastro</td>
 <td>Texto travado</td>
-<td>—</td>
-<td>—</td>
-<td>Data e hora da criação</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Data e hora em que o formulário foi aberto; travado na inclusão e na edição</td>
 <td></td>
 </tr>
 <tr>
 <td>Descrição</td>
 <td>Texto</td>
-<td>até 40</td>
+<td>Até 40</td>
 <td><strong>Sim</strong></td>
+<td>Aceita acentos e símbolos, mas descarta os símbolos em silêncio e passa para maiúsculas (DV-EST-N-009); pode repetir (DV-EST-N-056)</td>
 <td></td>
-<td>Ponto e símbolos podem ser descartados</td>
 </tr>
 <tr>
 <td>Ativo</td>
 <td>Sim / Não</td>
-<td>—</td>
+<td>(não se aplica)</td>
 <td><strong>Sim</strong></td>
 <td>Sim já marcado</td>
 <td></td>
@@ -143,10 +200,10 @@
 <tr>
 <td>Justificativa</td>
 <td>Texto</td>
-<td>—</td>
+<td>(não conferido)</td>
 <td>Sim, ao alterar e ao excluir</td>
-<td></td>
-<td>Só aparece ao editar</td>
+<td>Gravada no histórico</td>
+<td>Aparece ao editar e na tela de exclusão</td>
 </tr>
 </tbody>
 </table></div>
@@ -161,11 +218,11 @@
 <tbody>
 <tr>
 <td>Administrador (perfil 1)</td>
-<td>Abre a tela, pesquisa e grava</td>
+<td>Abre a tela, pesquisa e grava (todas as ações do manual foram feitas com esta conta em 18/11/2026)</td>
 </tr>
 <tr>
 <td>Perfil de teste com os grupos do Estoque (T.BA20)</td>
-<td><strong>Negado</strong>: a tela mostra "Não foi possível carregar as contas correntes." (403)</td>
+<td><strong>Negado</strong>: a tela mostra "Não foi possível carregar as contas correntes." (403). <strong>Não foi possível refazer o print em 18/11/2026</strong> (sem senha local desse login)</td>
 </tr>
 <tr>
 <td>Sem login</td>
