@@ -40,7 +40,7 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Tabelas de Apoio e Regulatório</span><span>documento 113 de 203</span><div class="prog-doc"><i style="width:56%"></i></div></div>
   <header class="doc-cabecalho"><h1>Motivos: Análise</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="motivos-analise.html" aria-current=page>Análise</a><a href="motivos-manual-do-usuario.html">Manual do usuário</a><a href="motivos-fluxos.html">Fluxos</a><a href="motivos-regras-de-negocio.html">Regras de negócio</a><a href="motivos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="motivos-erros.html">Erros (3)</a><a class="aba-extra" href="motivos-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="motivos-analise.html" aria-current=page>Análise</a><a href="motivos-manual-do-usuario.html">Manual do usuário</a><a href="motivos-fluxos.html">Fluxos</a><a href="motivos-regras-de-negocio.html">Regras de negócio</a><a href="motivos-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="motivos-erros.html">Erros (4)</a><a class="aba-extra" href="motivos-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><p><strong>Menu:</strong> Controle da Qualidade › Tabelas de apoio › Motivos · <strong>Situação do manual:</strong> Em ajuste (prints da rodada 1 de 11/11/2026 e do robô de 17/11/2026; conferência de 17/11/2026) · <strong>Fonte dos prints:</strong> versão nova.</p>
 <h2 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h2>
 <ul>
@@ -48,6 +48,10 @@
 <li><strong>DV-CQ-N-006 (Média, norma, Novo):</strong> o histórico mostra "Usuário: 1" (número) e não o nome de quem fez a alteração.</li>
 <li><strong>DV-CQ-N-007 (Baixa, Novo):</strong> ao recarregar a página (F5) ou abrir por endereço, o cabeçalho e o menu passam a "PRINCIPAL"; a tela continua a mesma.</li>
 <li><strong>DV-CQ-N-008 (Baixa, Regressão provável):</strong> incluir e alterar gravam <strong>sem nenhuma mensagem de sucesso</strong> (só a exclusão mostra a faixa verde); o usuário não sabe se gravou sem pesquisar de novo. Evidência: <code>PNR2-motivos-07-apos-sim-inclusao.png</code> e <code>PNR2-motivos-19-sucesso-exclusao.png</code>.</li>
+<li><strong>DV-CQ-N-030 (Baixa, Melhoria sobre o legado):</strong> a conta sem acesso ao CQ abre esta tela pela rota, com Incluir visível, e vê uma lista que parece vazia ("A pesquisa não retornou nenhum resultado.") apesar da faixa de recusa; o servidor recusa tudo (403). <strong>Repete</strong> nesta tela (reteste de 18/11/2026; no Estoque é a DV-EST-N-054).</li>
+<li><strong>DV-CQ-N-031 (Baixa, Novo):</strong> o texto de recusa por falta de permissão não é padronizado entre as telas: aqui, no lugar de uma recusa clara, aparece a mensagem técnica sobre os almoxarifados do Estoque (com o nome de uma rota), também para a conta de consulta; a recusa de permissão só aparece na conta sem acesso, junto com ela.</li>
+<li><strong>DV-CQ-N-032 (Média, acesso):</strong> a conta de consulta vê Incluir, Editar e Excluir ativos; a recusa só vem do servidor (403), depois de preencher e SALVAR (ou da exclusão). Nenhuma gravação foi aceita.</li>
+<li><strong>DV-CQ-N-034 (Baixa, Regressão a confirmar):</strong> a árvore do Perfil não tem a ação "Consultar"; para montar o perfil de consulta foi preciso desmarcar 60 caixas uma a uma.</li>
 </ul>
 <h2 id="diferencas-em-relacao-ao-legado">Diferenças em relação ao legado</h2>
 <div class="tabela"><table>
@@ -117,9 +121,14 @@
 <td><strong>Não conferido:</strong> o navegador do robô não exibe o PDF; o servidor respondeu com sucesso</td>
 </tr>
 <tr>
-<td>Perfil sem permissão</td>
-<td>Tela e botões com perfil restrito</td>
-<td><strong>Não testado:</strong> falta perfil de teste</td>
+<td>Alterar e excluir pela tela com a conta sem acesso</td>
+<td>A recusa</td>
+<td><strong>Não foi possível:</strong> a lista vem vazia e não há linha para clicar; só a API foi testada (403)</td>
+</tr>
+<tr>
+<td>Incluir, alterar e excluir pela tela com a conta de consulta</td>
+<td>A recusa na tela</td>
+<td>Só pela API (403); a tela não foi usada nesta rodada (neste cadastro o SALVAR do formulário fica desabilitado, DV-CQ-N-031)</td>
 </tr>
 </tbody>
 </table></div></article>

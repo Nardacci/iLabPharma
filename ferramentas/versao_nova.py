@@ -371,10 +371,15 @@ def pagina_tela(mod, t, aba_atual, cabecalho, rodape, href_legado, href_ideal, r
         miolo = f'<article class="texto texto-largo">{corpo}</article>'
     else:
         aviso = AVISO_ABA if t["validada"] else AVISO_TELA
-        miolo = (f'<article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Ainda não validada nesta versão</p>'
+        _rota = ROTA_TEXTOS.get(t.get("rota"))
+        titulo_aviso = _rota[0] if _rota and not t["validada"] else "Ainda não validada nesta versão"
+        if _rota and not t["validada"]:
+            aviso = _rota[1]
+        miolo = (f'<article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">{titulo_aviso}</p>'
                  f'<p>{aviso}</p><p>Para ver como a tela é no sistema entregue, <a href="{E(href_legado)}">abra a página do Legado</a>.</p></div></article>')
-    _sit_txt = (t["situacao"] or "Testada") if t["validada"] else "ainda não validada"
-    _cor = {"Testada": "#2e7d32", "Validada nesta versão": "#2e7d32"}.get(_sit_txt, "#6b7785")
+    _rota_sit = ROTA_TEXTOS.get(t.get("rota"))
+    _sit_txt = (t["situacao"] or "Testada") if t["validada"] else (_rota_sit[2] if _rota_sit else "ainda não validada")
+    _cor = {"Testada": "#2e7d32", "Validada nesta versão": "#2e7d32"}.get(_sit_txt, (_rota_sit[3] if (_rota_sit and not t["validada"]) else "#6b7785"))
     situacao = (f'<p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:{_cor};margin-right:6px"></span>'
                 f'Situação da tela na versão nova: <strong>{E(_sit_txt)}</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>')
     _onde = f'Novo · menu {E(t["menu"])}'
@@ -463,6 +468,18 @@ JS = """/* Seletor de versão: Legado | Novo. A escolha vem da URL (?versao=novo
 # Páginas por tela a partir dos manuais atuais (homologacao/versao-nova/<módulo>/paginas/**/manual.md)
 # Decisão do responsável (17/11/2026): os artefatos do portal são atualizados a cada entrega dos robôs.
 # ---------------------------------------------------------------------------------------------
+ROTA_TEXTOS = {
+    "pronta": ("Tela pronta na versão nova, ainda sem manual",
+               "Segundo o código da versão nova (de 17/11/2026), esta tela já existe, mas ainda não foi testada pelos robôs. O manual por tela sai depois do teste.",
+               "Pronta na versão nova; falta testar", "#1d5fd0"),
+    "provisoria": ("Tela provisória na versão nova",
+                   "A versão nova reserva o lugar desta tela no menu, mas ela ainda não tem funcionalidade (o código mostra um aviso de que está em integração). Não há o que testar nem manual até o desenvolvimento entregá-la.",
+                   "Provisória na versão nova (sem funcionalidade ainda)", "#b45309"),
+    "sem_rota": ("Ainda não existe na versão nova",
+                 "Não encontramos rota parecida com esta tela no código da versão nova de 17/11/2026. Isso não prova que ela não será criada: confirmar com o desenvolvimento.",
+                 "Sem tela na versão nova (código de 17/11/2026)", "#6b7785"),
+}
+
 PASTAS_NOVO = {"principal": "1.principal", "estoque": "3.estoque", "controle-qualidade": "4.controle_qualidade",
                "garantia-qualidade": "5.garantia_qualidade", "controle-documentos": "6.controle_documento"}
 # nome no mapa de telas -> nome no inventário do legado (quando o slug não bate)
@@ -528,6 +545,35 @@ def _tabela_anvisa(hom, pasta, fichas):
     for f, tit, grav, norma in linhas:
         corpo.append(f"| {f} | {tit.replace('|', '/')} | {grav} | {(norma or 'não citado na ficha').replace('|', '/')} |")
     return "\n".join(corpo)
+
+
+def _aplicar_mapa_rotas(reg, hom, mid):
+    """Marca as telas sem manual com o que o código novo mostra (mapa-telas-inventario.csv, gerado por gerar_mapa_rotas.py).
+    Só 'confirmado' (pronta ou provisória) e 'sem rota' viram etiqueta; 'provável' e 'a classificar' ficam como estão (nunca palpite)."""
+    import csv
+    arq = Path(hom) / "versao-nova" / "mapa-telas-inventario.csv"
+    if not arq.exists():
+        return 0
+    mapa = {}
+    with open(arq, encoding="utf-8", newline="") as f:
+        for r in csv.DictReader(f, delimiter=";"):
+            if r["modulo"] == mid:
+                mapa[(r["menu"], r["tela_legado"])] = (r["decisao"], r["situacao_rota"])
+    n = 0
+    for t in reg[mid]["telas"]:
+        if t["validada"]:
+            continue
+        dec, sit = mapa.get((t["menu"], t["nome"]), ("", ""))
+        if dec == "confirmado" and sit == "pronta":
+            t["rota"] = "pronta"
+        elif dec == "confirmado" and sit == "provisória":
+            t["rota"] = "provisoria"
+        elif dec == "sem rota":
+            t["rota"] = "sem_rota"
+        else:
+            continue
+        n += 1
+    return n
 
 
 def preencher_por_paginas(reg, hom, mid, limpar, converter):
@@ -611,4 +657,5 @@ def preencher_por_paginas(reg, hom, mid, limpar, converter):
         st = concl.get(rel, "")
         alvo["situacao"] = {"completa": "Conferida por robô na versão nova (completa)", "parcial": "Conferida por robô na versão nova (parcial)"}.get(st, "Manual escrito; ainda não conferido por robô")
         alvo["validada"] = True
+    _aplicar_mapa_rotas(reg, hom, mid)
     return achadas
