@@ -40,13 +40,14 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 193 de 756</span><div class="prog-doc"><i style="width:26%"></i></div></div>
   <header class="doc-cabecalho"><h1>Tipo de Movimentação: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="tipo-de-movimentacao-analise.html">Análise</a><a href="tipo-de-movimentacao-manual-do-usuario.html">Manual do usuário</a><a href="tipo-de-movimentacao-fluxos.html">Fluxos</a><a href="tipo-de-movimentacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="tipo-de-movimentacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="tipo-de-movimentacao-erros.html">Erros</a><a class="aba-extra" href="tipo-de-movimentacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="tipo-de-movimentacao-analise.html">Análise</a><a href="tipo-de-movimentacao-manual-do-usuario.html">Manual do usuário</a><a href="tipo-de-movimentacao-fluxos.html">Fluxos</a><a href="tipo-de-movimentacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="tipo-de-movimentacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="tipo-de-movimentacao-erros.html">Erros (2)</a><a class="aba-extra" href="tipo-de-movimentacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Incluir:</strong> grava o tipo com data e usuário; código gerado; histórico "INCLUSÃO DO REGISTRO".</li>
-<li><strong>Alterar:</strong> exige justificativa. Na rodada 2 (06/11/2026) o LOG mostrou o sentido ao contrário ("ENTRADA: NÃO para SIM" quando o tipo passou de entrada para saída): resultado citado pelo número do legado DV-EST-102, sem ficha DV-EST-N; não revalidado.</li>
-<li><strong>Excluir:</strong> exige justificativa.</li>
-<li><strong>Uso:</strong> o tipo novo e ativo aparece na Entrada de Material - Outras.</li>
+<li><strong>Incluir:</strong> grava o tipo com data e usuário; código gerado quando vazio (ex.: 00004); histórico "INCLUSÃO DO REGISTRO".</li>
+<li><strong>Alterar:</strong> exige justificativa; o histórico guarda campo, dado antigo, dado novo, usuário, hora e justificativa. <strong>Mudar o Tipo de Entrada para Saída é aceito e o histórico mostra o sentido ao contrário</strong> ("ENTRADA: NÃO para SIM"; DV-EST-N-063).</li>
+<li><strong>Excluir:</strong> exige justificativa e a pergunta de confirmação; remove da lista. Tipo em uso: não testado.</li>
+<li><strong>Inativar:</strong> aceito com justificativa; o código de um tipo inativo continua ocupado (recusa de código repetido, imagem 31 do passo "O que o sistema recusa").</li>
+<li><strong>Uso:</strong> o tipo novo e ativo aparece na Entrada de Material - Outras (10/11/2026).</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
@@ -61,30 +62,47 @@
 <tr>
 <td>Salvar vazio (depois do SIM)</td>
 <td>"A Descrição é obrigatória!"</td>
-<td>Visto no print</td>
+<td>Print 06</td>
 </tr>
 <tr>
-<td>Inativar sem justificativa</td>
+<td>Alterar, inativar ou excluir sem justificativa</td>
 <td>"A Justificativa é obrigatória!"</td>
-<td>10/11/2026</td>
+<td>Prints 16, 26 e 41; a faixa continua na tela depois de a justificativa ser escrita, até o próximo SALVAR</td>
 </tr>
 <tr>
 <td>Código repetido, inclusive de inativo</td>
 <td>"Esse código do tipo de movimentação já está cadastrado para a empresa."</td>
-<td>10/11/2026</td>
+<td>Prints 30 (77601, ativo) e 31 (77602, inativo)</td>
 </tr>
 <tr>
 <td>Código fora do formato</td>
 <td>"O código deve possuir até cinco letras, números ou espaços."</td>
-<td>Caso com caracteres especiais</td>
+<td>Print 33, com "A@B"</td>
 </tr>
 <tr>
 <td>Descrição acima de 100 caracteres</td>
 <td>"A Descrição deve ter no máximo 100 caracteres!"</td>
-<td>Limite do navegador removido</td>
+<td>Print 35, com 101 caracteres (limite do navegador removido)</td>
 </tr>
 </tbody>
 </table></div>
+<figure><a href="../../img/estoque/pnr2-tipo-de-movimentacao-30-codigo-repetido-ativo.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-tipo-de-movimentacao-30-codigo-repetido-ativo.png" alt="Tipo de Movimentação: código repetido de tipo ativo" loading="lazy"></a><figcaption>Tipo de Movimentação: código repetido de tipo ativo · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-tipo-de-movimentacao-31-codigo-repetido-inativo.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-tipo-de-movimentacao-31-codigo-repetido-inativo.png" alt="Tipo de Movimentação: código repetido de tipo inativo" loading="lazy"></a><figcaption>Tipo de Movimentação: código repetido de tipo inativo · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-tipo-de-movimentacao-33-codigo-especial.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-tipo-de-movimentacao-33-codigo-especial.png" alt="Tipo de Movimentação: código com caractere especial" loading="lazy"></a><figcaption>Tipo de Movimentação: código com caractere especial · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-tipo-de-movimentacao-35-descricao-101-caracteres.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-tipo-de-movimentacao-35-descricao-101-caracteres.png" alt="Tipo de Movimentação: descrição de 101 caracteres" loading="lazy"></a><figcaption>Tipo de Movimentação: descrição de 101 caracteres · clique para ampliar</figcaption></figure>
+
+<p>As imagens mostram, na ordem, o código 77601 (ativo) recusado, o 77602 (inativo) recusado, "A@B" recusado e a descrição de 101 caracteres recusada.</p>
+<p><strong>O que o sistema aceita sem avisar:</strong> (1) <strong>código só com letras ("AB")</strong> e <strong>código "000"</strong>: os dois foram gravados com "Inclusão realizada com sucesso!", de acordo com a mensagem do formato; (2) <strong>descrição repetida</strong>: o 77603 foi gravado com a mesma descrição do 77601 ("T. R2 OUTRA"), sem aviso (DV-EST-N-056):</p>
+<figure><a href="../../img/estoque/pnr2-tipo-de-movimentacao-32-codigo-so-letras.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-tipo-de-movimentacao-32-codigo-so-letras.png" alt="Tipo de Movimentação: código só com letras aceito" loading="lazy"></a><figcaption>Tipo de Movimentação: código só com letras aceito · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-tipo-de-movimentacao-34-codigo-000.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-tipo-de-movimentacao-34-codigo-000.png" alt="Tipo de Movimentação: código 000 aceito" loading="lazy"></a><figcaption>Tipo de Movimentação: código 000 aceito · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-tipo-de-movimentacao-36-descricao-repetida.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-tipo-de-movimentacao-36-descricao-repetida.png" alt="Tipo de Movimentação: descrição repetida aceita" loading="lazy"></a><figcaption>Tipo de Movimentação: descrição repetida aceita · clique para ampliar</figcaption></figure>
+
+<p>A lista deixa dois tipos iguais na descrição e no comportamento; só o código os distingue.</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -101,18 +119,18 @@
 <tr>
 <td>Pesquisa: Código</td>
 <td>Texto</td>
-<td>(legado: até 5)</td>
+<td>(não conferido)</td>
 <td>Não</td>
-<td></td>
-<td>(do legado; a confirmar)</td>
+<td>Achou o tipo pelo código completo (77602)</td>
+<td>Visto em 18/11/2026</td>
 </tr>
 <tr>
 <td>Pesquisa: Descrição</td>
 <td>Texto</td>
-<td>(legado: até 100)</td>
+<td>(não conferido)</td>
 <td>Não</td>
 <td>Procura dentro do texto</td>
-<td></td>
+<td>Visto em 18/11/2026</td>
 </tr>
 <tr>
 <td>Pesquisa: Entrada/Saída</td>
@@ -120,7 +138,7 @@
 <td>(não se aplica)</td>
 <td>Não</td>
 <td>TODOS, Entrada, Saída</td>
-<td></td>
+<td>Visto em 18/11/2026</td>
 </tr>
 <tr>
 <td>Pesquisa: Ativo</td>
@@ -128,15 +146,15 @@
 <td>(não se aplica)</td>
 <td>Não</td>
 <td>TODOS, SIM, NÃO</td>
-<td></td>
+<td>Visto em 18/11/2026</td>
 </tr>
 <tr>
 <td>Código</td>
 <td>Texto</td>
 <td>Até 5 caracteres (letras, números ou espaços)</td>
 <td>Não</td>
-<td>Vazio: o sistema gera (ex.: 00003)</td>
-<td>Travado na edição (do legado)</td>
+<td>Vazio: o sistema gera (ex.: 00004); aceita só letras ("AB") e "000"; não repete (nem o de inativo)</td>
+<td>Somente leitura na edição (confirmado)</td>
 </tr>
 <tr>
 <td>Data do Cadastro</td>
@@ -151,8 +169,8 @@
 <td>Texto</td>
 <td>Até 100 caracteres</td>
 <td>Sim (asterisco)</td>
-<td>Editável na versão nova</td>
-<td></td>
+<td>Editável na edição; descrição repetida é aceita</td>
+<td>Confirmado com 101 caracteres</td>
 </tr>
 <tr>
 <td>Tipo</td>
@@ -160,7 +178,7 @@
 <td>(não se aplica)</td>
 <td>Sim (asterisco)</td>
 <td>Entrada já vem marcada</td>
-<td>Legado: Saída trava as duas escolhas seguintes em Não (a confirmar)</td>
+<td>Saída trava as duas escolhas seguintes em Não; voltar a Entrada as destrava (confirmado)</td>
 </tr>
 <tr>
 <td>Atualiza Custo Médio</td>
@@ -168,7 +186,7 @@
 <td>(não se aplica)</td>
 <td>Sim (asterisco)</td>
 <td>Já vem Não (no legado vinha Sim)</td>
-<td>Sim recalcula o custo do item (legado)</td>
+<td>Efeito no custo do item: não testado</td>
 </tr>
 <tr>
 <td>Entrada por Nota Fiscal</td>
@@ -176,7 +194,7 @@
 <td>(não se aplica)</td>
 <td>Sim (asterisco)</td>
 <td>Já vem Não (no legado vinha Sim)</td>
-<td>Sim: aparece no Recebimento; Não: na Entrada - Outras (legado)</td>
+<td>Efeito no Recebimento e na Entrada - Outras: não testado</td>
 </tr>
 <tr>
 <td>Ativo</td>
@@ -189,8 +207,8 @@
 <tr>
 <td>Justificativa</td>
 <td>Texto</td>
-<td>(legado: até 255)</td>
-<td>Sim, ao alterar e excluir</td>
+<td>(legado: até 255; não conferido)</td>
+<td>Sim, ao alterar, inativar e excluir</td>
 <td>Gravada no histórico</td>
 <td></td>
 </tr>
@@ -215,7 +233,7 @@
 <tr>
 <td>Perfil "T. BA PERFIL ESTOQUE" (login T.BA20)</td>
 <td><strong>Negado</strong>: erro 403 "Não foi possível consultar os tipos de movimentação."</td>
-<td>O perfil recebe 403 até para ler (DV-EST-N-001, Alta); foi 1 chamada com erro e nenhuma com sucesso</td>
+<td>O perfil recebe 403 até para ler (DV-EST-N-001, Alta); foi 1 chamada com erro e nenhuma com sucesso. <strong>Não foi possível refazer o print em 18/11/2026</strong> (sem senha local desse login; trocar a senha não é permitido nesta pista)</td>
 </tr>
 </tbody>
 </table></div>
