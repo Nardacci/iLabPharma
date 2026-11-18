@@ -25,7 +25,8 @@ PROVAVEL = [("garantia-qualidade", "Plano de Ação"), ("garantia-qualidade", "E
             ("garantia-qualidade", "Solicitação de Registro (antiga)"), ("garantia-qualidade", "Check-List (antigo)"),
             ("controle-qualidade", "Programação de Solicitação de Análise (água"), ("controle-documentos", "Aprovação de Documentos"),
             ("controle-documentos", "Vigência de Documentos"), ("estoque", "Saída de Material (Remessa)")]
-NAO_AUTO = [("estoque", "Demonstrativo Financeiro de Movimentação")]
+NAO_AUTO = [("estoque", "Demonstrativo Financeiro de Movimentação"), ("principal", "Início e menu"), ("principal", "Sair"),
+            ("principal", "Sessão expirada"), ("principal", "Notificações do usuário")]
 CAMPOS = ["modulo", "menu", "tela_legado", "rota", "nome_na_rota", "situacao_rota", "escore", "decisao", "revisado", "observacao"]
 
 
