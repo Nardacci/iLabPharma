@@ -40,12 +40,14 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Assuntos Regulatórios</span><span>documento 480 de 483</span><div class="prog-doc"><i style="width:99%"></i></div></div>
   <header class="doc-cabecalho"><h1>Monitoramento Regulatório: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="monitoramento-regulatorio-analise.html">Análise</a><a href="monitoramento-regulatorio-manual-do-usuario.html">Manual do usuário</a><a href="monitoramento-regulatorio-fluxos.html">Fluxos</a><a href="monitoramento-regulatorio-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="monitoramento-regulatorio-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="monitoramento-regulatorio-erros.html">Erros (2)</a><a class="aba-extra" href="monitoramento-regulatorio-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="monitoramento-regulatorio-analise.html">Análise</a><a href="monitoramento-regulatorio-manual-do-usuario.html">Manual do usuário</a><a href="monitoramento-regulatorio-fluxos.html">Fluxos</a><a href="monitoramento-regulatorio-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="monitoramento-regulatorio-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="monitoramento-regulatorio-erros.html">Erros (10)</a><a class="aba-extra" href="monitoramento-regulatorio-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Primeiro SALVAR:</strong> cria o monitoramento e a programação passa a <strong>Em Monitoramento</strong>. <strong>O status e a observação digitados nesse primeiro salvamento não são enviados</strong> (DV-GQ-N-038); salve e depois altere para registrar o andamento.</li>
-<li><strong>FINALIZAR:</strong> programação <strong>Finalizada</strong>, monitoramento só com Visualizar e Log.</li>
-<li><strong>CANCELAR MONITORAMENTO:</strong> programação <strong>Cancelada</strong>.</li>
+<li><strong>Primeiro SALVAR:</strong> cria o monitoramento e a programação passa a <strong>Em Monitoramento</strong>. Os anexos enviados antes só então vão ao servidor (os de tipo recusado ficam na grade sem aviso de sucesso, DV-GQ-N-082). O que ficou digitado no formulário de anexo e não foi enviado com ENVIAR <strong>não é gravado</strong> (DV-GQ-N-038). Depois do OK, a tela volta à lista.</li>
+<li><strong>Segundo SALVAR em diante:</strong> pergunta "Confirma a alteração do item?", grava e volta à lista; grava linha no histórico mesmo sem mudança.</li>
+<li><strong>ENVIAR (monitoramento já criado):</strong> grava o anexo na hora, com status e observação; <strong>alterar e excluir anexo não deixam registro</strong> (DV-GQ-N-084) e a exclusão grava a justificativa "Exclusão de anexo." escrita pelo próprio sistema (DV-GQ-N-083).</li>
+<li><strong>FINALIZAR:</strong> programação <strong>Finalizada</strong>; monitoramento só com Visualizar e Log; não exige anexo nem justificativa.</li>
+<li><strong>CANCELAR MONITORAMENTO:</strong> programação <strong>Cancelada</strong>; não exige justificativa.</li>
 <li>O histórico guarda só os códigos da situação ("2 → 4" ao finalizar, "2 → 3" ao cancelar) e não pede justificativa (DV-GQ-N-033, N-035).</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
@@ -59,9 +61,24 @@
 </thead>
 <tbody>
 <tr>
-<td>Anexar arquivo <code>.txt</code></td>
+<td>Anexar arquivo de tipo não permitido (txt, csv, zip, xml, html, js, bat, exe, "nome.pdf.exe", sem extensão)</td>
 <td>"Extensão de arquivo não permitida."</td>
-<td>Rodada 10 (R10-MN-03); sem print</td>
+<td>Faixa rosa. Só aparece <strong>no ENVIAR depois de o monitoramento existir</strong> ou <strong>no primeiro SALVAR</strong>; antes disso o ENVIAR diz "sucesso" até para .exe (DV-GQ-N-082). Aceitos: pdf (também PDF), doc, docx, xlsx, jpg e png</td>
+</tr>
+<tr>
+<td>ENVIAR sem escolher arquivo</td>
+<td>Nenhuma</td>
+<td>Nada acontece (DV-GQ-N-087). Com arquivo vazio (0 byte) e o monitoramento criado: "Arquivo do anexo não informado."</td>
+</tr>
+<tr>
+<td>CANCELAR MONITORAMENTO e FINALIZAR antes do primeiro SALVAR</td>
+<td>Botões desabilitados</td>
+<td>Título do botão: "Salve o registro antes de cancelar o monitoramento." / "Salve o registro antes de finalizar o monitoramento."</td>
+</tr>
+<tr>
+<td>Filtro Processo Regulatório com parte do nome</td>
+<td>"A pesquisa não retornou nenhum resultado."</td>
+<td>Só o nome inteiro acha (DV-GQ-N-088)</td>
 </tr>
 <tr>
 <td>Finalizar sem anexo</td>
@@ -76,7 +93,27 @@
 <tr>
 <td>Finalizar ou cancelar sem justificativa</td>
 <td><strong>Aceito</strong></td>
-<td>Não há campo de justificativa</td>
+<td>Não há campo de justificativa (DV-GQ-N-033)</td>
+</tr>
+<tr>
+<td>Anexo sem descrição</td>
+<td><strong>Aceito</strong></td>
+<td>A descrição não é obrigatória (no legado era: "A descrição não foi informada."; DV-GQ-N-087)</td>
+</tr>
+<tr>
+<td>Excluir anexo</td>
+<td><strong>Aceito, sem pergunta</strong></td>
+<td>Grava a justificativa "Exclusão de anexo." escrita pelo sistema (DV-GQ-N-083)</td>
+</tr>
+<tr>
+<td>Arquivo de 11,5 MB</td>
+<td><strong>Aceito</strong></td>
+<td>Não há limite de tamanho visível (ponto para validar com a área)</td>
+</tr>
+<tr>
+<td>Programação com datas incoerentes (prazo e validade antes da data programada)</td>
+<td><strong>Aceita</strong>, sem aviso</td>
+<td>DV-GQ-N-045</td>
 </tr>
 </tbody>
 </table></div>
@@ -94,44 +131,68 @@
 </thead>
 <tbody>
 <tr>
-<td>Lista: Tipo, Categoria, Situação</td>
-<td>Listas</td>
+<td>Lista: Tipo</td>
+<td>Lista</td>
 <td></td>
 <td>Não</td>
-<td>Situação: Programado, Em Monitoramento, Cancelado, Finalizado (rodada 10)</td>
+<td>Produto e Documento</td>
 <td></td>
+</tr>
+<tr>
+<td>Lista: Categoria</td>
+<td>Lista</td>
+<td></td>
+<td>Não</td>
+<td>As nove do cadastro</td>
+<td></td>
+</tr>
+<tr>
+<td>Lista: Situação</td>
+<td>Lista</td>
+<td></td>
+<td>Não</td>
+<td>Programada, Em Monitoramento, Cancelado, Finalizado</td>
+<td>O gênero é "Programada"</td>
 </tr>
 <tr>
 <td>Lista: Processo Regulatório</td>
-<td>Texto</td>
+<td>Texto com sugestões</td>
 <td></td>
 <td>Não</td>
-<td></td>
-<td></td>
+<td><strong>Só acha o nome inteiro</strong></td>
+<td>DV-GQ-N-088</td>
 </tr>
 <tr>
-<td>Dados da programação (Tipo ... Data)</td>
+<td>Dados da programação (Tipo ... Responsável)</td>
 <td>Texto travado</td>
 <td></td>
 <td>Não se aplica</td>
-<td>Vêm da programação</td>
-<td>Print P03</td>
+<td>Vêm da programação; o processo mostrado é o certo</td>
+<td>Print 03</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Texto travado</td>
+<td></td>
+<td>Não se aplica</td>
+<td>Hora em que a tela foi aberta; muda a cada abertura</td>
+<td>DV-GQ-N-089</td>
 </tr>
 <tr>
 <td>Arquivo</td>
 <td>Arquivo</td>
-<td>Não informado</td>
+<td>Sem limite visível (11,5 MB aceito)</td>
 <td>Sim, para enviar</td>
-<td>Só algumas extensões (<code>.txt</code> recusado; <code>.pdf</code> aceito)</td>
-<td>Tipos aceitos: ponto para validar</td>
+<td>Aceitos: pdf, doc, docx, xlsx, jpg e png; recusados: txt, csv, zip, xml, html, js, bat, exe e sem extensão</td>
+<td>A recusa só aparece no SALVAR ou depois de o monitoramento existir</td>
 </tr>
 <tr>
 <td>Descrição (anexo)</td>
 <td>Texto</td>
-<td>Não informado</td>
-<td>Sim, para enviar (do legado; a confirmar na versão nova)</td>
-<td></td>
-<td></td>
+<td>255</td>
+<td><strong>Não</strong></td>
+<td>Pode ficar vazia</td>
+<td>Diferente do legado (DV-GQ-N-087)</td>
 </tr>
 <tr>
 <td>Status (anexo)</td>
@@ -144,7 +205,7 @@
 <tr>
 <td>Observação (anexo)</td>
 <td>Texto</td>
-<td>Não informado</td>
+<td>255</td>
 <td>Não</td>
 <td></td>
 <td></td>
@@ -154,13 +215,13 @@
 <td>Tabela</td>
 <td></td>
 <td>Não se aplica</td>
-<td>CÓDIGO, DESCRIÇÃO, STATUS, RESPONSÁVEL, DATA, OBSERVAÇÃO; ícones editar, excluir, abrir</td>
-<td></td>
+<td>CÓDIGO, DESCRIÇÃO, STATUS, RESPONSÁVEL, DATA, OBSERVAÇÃO; ícones lápis, lixeira e Log</td>
+<td>Não mostra o nome do arquivo</td>
 </tr>
 </tbody>
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
-<p>Resultado de 09/11/2026 (<code>quem-pode.csv</code>):</p>
+<p>Resultado de 09/11/2026 (<code>quem-pode.csv</code>); os perfis sem permissão <strong>não foram retestados</strong> em 18/11/2026 (só havia a conta de administrador; fica para a rodada de perfil restrito):</p>
 <div class="tabela"><table>
 <thead>
 <tr>

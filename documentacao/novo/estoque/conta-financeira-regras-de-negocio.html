@@ -40,13 +40,13 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 95 de 756</span><div class="prog-doc"><i style="width:13%"></i></div></div>
   <header class="doc-cabecalho"><h1>Conta Financeira: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-financeira-analise.html">Análise</a><a href="conta-financeira-manual-do-usuario.html">Manual do usuário</a><a href="conta-financeira-fluxos.html">Fluxos</a><a href="conta-financeira-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="conta-financeira-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="conta-financeira-erros.html">Erros (1)</a><a class="aba-extra" href="conta-financeira-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conta-financeira-analise.html">Análise</a><a href="conta-financeira-manual-do-usuario.html">Manual do usuário</a><a href="conta-financeira-fluxos.html">Fluxos</a><a href="conta-financeira-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="conta-financeira-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="conta-financeira-erros.html">Erros (5)</a><a class="aba-extra" href="conta-financeira-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Incluir:</strong> grava e acrescenta "INCLUSÃO DO REGISTRO" ao histórico, sem valores.</li>
-<li><strong>Alterar:</strong> exige justificativa; histórico campo a campo.</li>
-<li><strong>Excluir:</strong> pede justificativa; o registro some da lista.</li>
-<li><strong>Inativar e reutilizar:</strong> inativar pede justificativa ("Alteração realizada com sucesso!"); depois, <strong>cadastrar de novo o mesmo número é aceito</strong>.</li>
+<li><strong>Incluir:</strong> grava o registro e acrescenta "INCLUSÃO DO REGISTRO" ao histórico, sem valores, com o usuário pelo nome. O número digitado é gravado <strong>só com os dígitos</strong>.</li>
+<li><strong>Alterar:</strong> exige justificativa; o histórico recebe uma linha por campo alterado (número, nome, ativo), com valor antigo e novo, data, hora, usuário pelo nome e <strong>a justificativa</strong>.</li>
+<li><strong>Inativar:</strong> aceito com justificativa. <strong>Mesmo em uso por um Item, sem aviso</strong>; o Item fica com o campo Conta Financeira em branco (DV-EST-N-026). Depois de inativar, <strong>o mesmo número pode ser cadastrado de novo</strong>.</li>
+<li><strong>Excluir:</strong> pede justificativa e confirmação; o registro some da lista. <strong>Conta em uso por Item: recusado</strong> ("Exclusão inválida, existem referências com outras tabelas."). O histórico de uma conta excluída <strong>não pôde ser verificado</strong>.</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
@@ -59,22 +59,81 @@
 </thead>
 <tbody>
 <tr>
-<td>Salvar vazio</td>
-<td>"Preencha os campos obrigatórios antes de salvar."</td>
-<td>Antes da pergunta de confirmação</td>
+<td>Salvar sem número e sem nome</td>
+<td>Pergunta "Confirma a inclusão do registro?" e, depois do SIM, a faixa com "O Número da Conta é obrigatório!" e "O Nome da Conta é obrigatório!"</td>
+<td>Prints 05 e 06; a confirmação vem antes da conferência (DV-EST-N-027)</td>
 </tr>
 <tr>
-<td>Número ou nome acima do limite (limite do navegador removido)</td>
-<td>"Preencha os campos obrigatórios antes de salvar."</td>
-<td>Mensagem enganosa (DV-EST-N-027)</td>
+<td>Salvar só com o número</td>
+<td>"O Nome da Conta é obrigatório!"</td>
+<td>Print 06c</td>
 </tr>
 <tr>
-<td>Número repetido</td>
-<td><strong>Não é recusado</strong></td>
-<td>Grava a segunda linha (DV-EST-N-024)</td>
+<td>Número só com letras e símbolos ("ABC-.")</td>
+<td>"O Número da Conta é obrigatório!"</td>
+<td>Prints 21 e 22; o campo fica vazio porque os caracteres são descartados (DV-EST-N-009)</td>
+</tr>
+<tr>
+<td>Alterar sem justificativa</td>
+<td>"A Justificativa é obrigatória!" (depois do SIM)</td>
+<td>Print 28</td>
+</tr>
+<tr>
+<td>Excluir sem justificativa</td>
+<td>"A justificativa é obrigatória!" (com "j" minúsculo; depois do SIM)</td>
+<td>Print 40</td>
+</tr>
+<tr>
+<td>Número com 41 dígitos ou nome com mais de 100 caracteres (limite do navegador removido)</td>
+<td>"Os dados informados são inválidos."</td>
+<td>Prints 17 e 18; não diz qual campo (DV-EST-N-027). O campo do número corta em 40</td>
+</tr>
+<tr>
+<td>Excluir conta em uso por Item</td>
+<td>"Exclusão inválida, existem referências com outras tabelas."</td>
+<td>Print 54; não diz qual Item</td>
 </tr>
 </tbody>
 </table></div>
+<p><strong>Não é recusado:</strong> número repetido (DV-EST-N-024), nome repetido (DV-EST-N-056) e inativar conta em uso por Item (DV-EST-N-026).</p>
+<figure><a href="../../img/estoque/pnr2-conta-financeira-13-repetido-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-13-repetido-preenchido.png" alt="Conta Financeira: número repetido, antes de salvar" loading="lazy"></a><figcaption>Conta Financeira: número repetido, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-14-repetido-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-14-repetido-resultado.png" alt="Conta Financeira: número repetido aceito" loading="lazy"></a><figcaption>Conta Financeira: número repetido aceito · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-17-limite-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-17-limite-preenchido.png" alt="Conta Financeira: limite de tamanho, antes de salvar" loading="lazy"></a><figcaption>Conta Financeira: limite de tamanho, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-18-limite-mensagem.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-18-limite-mensagem.png" alt="Conta Financeira: limite de tamanho, mensagem genérica" loading="lazy"></a><figcaption>Conta Financeira: limite de tamanho, mensagem genérica · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-21-numero-letras-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-21-numero-letras-preenchido.png" alt="Conta Financeira: número só com letras, antes de salvar" loading="lazy"></a><figcaption>Conta Financeira: número só com letras, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-22-numero-letras-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-22-numero-letras-resultado.png" alt="Conta Financeira: número só com letras, campo obrigatório" loading="lazy"></a><figcaption>Conta Financeira: número só com letras, campo obrigatório · clique para ampliar</figcaption></figure>
+
+<p>As imagens mostram o número 201 repetido e aceito, o limite (número de 41 dígitos e nome longo) com a mensagem "Os dados informados são inválidos." e o número "ABC-." que fica vazio.</p>
+<p><strong>O que o sistema aceita sem avisar:</strong></p>
+<ol>
+<li>
+<p><strong>Número da Conta só com dígitos.</strong> Ao digitar "T.R2.CF01", o campo mostra e grava <strong>"201"</strong>: letras, pontos e hífens somem à medida que se digita, e o sistema responde "Inclusão realizada com sucesso!". Um número de plano de contas com pontos ("1.01.02") seria gravado sem eles (DV-EST-N-009; no legado o número aceitava letras e <code>( ) + - .</code>).</p>
+</li>
+<li>
+<p><strong>Nome com símbolos.</strong> O nome "T. R2 TÃ-Ç/&amp;%#é ñ" é aceito, mas os símbolos "/ &amp; % #" já somem no campo e o "é" vira "É": grava como "T. R2 TÃ-ÇÉ Ñ" (DV-EST-N-009):</p>
+</li>
+</ol>
+<figure><a href="../../img/estoque/pnr2-conta-financeira-19-simbolos-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-19-simbolos-preenchido.png" alt="Conta Financeira: nome com símbolos, antes de salvar" loading="lazy"></a><figcaption>Conta Financeira: nome com símbolos, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-20-simbolos-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-20-simbolos-resultado.png" alt="Conta Financeira: nome com símbolos aceito" loading="lazy"></a><figcaption>Conta Financeira: nome com símbolos aceito · clique para ampliar</figcaption></figure>
+
+<ol start="3">
+<li><strong>Nome repetido com outro número.</strong> O 202 foi gravado com o mesmo nome do 201 (DV-EST-N-056):</li>
+</ol>
+<figure><a href="../../img/estoque/pnr2-conta-financeira-15-nome-repetido-preenchido.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-15-nome-repetido-preenchido.png" alt="Conta Financeira: mesmo nome com outro número, antes de salvar" loading="lazy"></a><figcaption>Conta Financeira: mesmo nome com outro número, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-16-nome-repetido-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-16-nome-repetido-resultado.png" alt="Conta Financeira: nome repetido aceito" loading="lazy"></a><figcaption>Conta Financeira: nome repetido aceito · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conta-financeira-23-lista-apos-testes.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conta-financeira-23-lista-apos-testes.png" alt="Conta Financeira: lista com as contas repetidas" loading="lazy"></a><figcaption>Conta Financeira: lista com as contas repetidas · clique para ampliar</figcaption></figure>
+
+<ol start="4">
+<li><strong>Inativar a conta em uso por um Item</strong> (passo 12; DV-EST-N-026) e <strong>cadastrar de novo o número de uma conta inativa</strong> (passo 11; DV-EST-N-024).</li>
+</ol>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -89,44 +148,68 @@
 </thead>
 <tbody>
 <tr>
+<td>Pesquisa: Número da Conta</td>
+<td>Texto (só dígitos)</td>
+<td>(não conferido)</td>
+<td>Não</td>
+<td>Procura o número <strong>exato</strong> (visto: "20" não achou 201)</td>
+<td>Visto em 18/11/2026</td>
+</tr>
+<tr>
+<td>Pesquisa: Nome da Conta (no manual anterior: "Descrição")</td>
+<td>Texto</td>
+<td>(não conferido)</td>
+<td>Não</td>
+<td>Procura dentro do texto</td>
+<td>Visto em 18/11/2026</td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>(não se aplica)</td>
+<td>Não</td>
+<td>TODOS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
 <td>Data do Cadastro</td>
 <td>Texto travado</td>
-<td>—</td>
-<td>—</td>
-<td>Data e hora</td>
+<td>(não se aplica)</td>
+<td>Não se aplica</td>
+<td>Data e hora em que o formulário foi aberto</td>
 <td></td>
 </tr>
 <tr>
 <td>Número da Conta</td>
-<td>Texto</td>
-<td>até 40</td>
+<td>Texto que só guarda dígitos</td>
+<td>Até 40 (o campo corta)</td>
 <td><strong>Sim</strong></td>
-<td>Digitado; editável ao alterar</td>
-<td>Repetição aceita (N-024)</td>
+<td>Letras, pontos e hífens digitados são descartados sem aviso (DV-EST-N-009); editável ao alterar; repetição aceita (DV-EST-N-024)</td>
+<td>O manual anterior dizia "digitado"</td>
 </tr>
 <tr>
-<td>Nome da Conta (na lista: Descrição)</td>
+<td>Nome da Conta</td>
 <td>Texto</td>
-<td>até 100</td>
+<td>Até 100</td>
 <td><strong>Sim</strong></td>
-<td>Gravado em maiúsculas</td>
+<td>Gravado em maiúsculas; os símbolos "/ &amp; % #" são descartados (DV-EST-N-009); repetição aceita (DV-EST-N-056)</td>
 <td></td>
 </tr>
 <tr>
 <td>Ativo</td>
 <td>Sim / Não</td>
-<td>—</td>
+<td>(não se aplica)</td>
 <td><strong>Sim</strong></td>
-<td></td>
+<td>Sim já marcado</td>
 <td></td>
 </tr>
 <tr>
 <td>Justificativa</td>
 <td>Texto</td>
-<td>—</td>
-<td>Sim, ao alterar e excluir</td>
-<td></td>
-<td></td>
+<td>(não conferido)</td>
+<td>Sim, ao alterar e ao excluir</td>
+<td>Gravada no histórico (na exclusão, não pôde ser conferida)</td>
+<td>Aparece ao editar e na tela de exclusão</td>
 </tr>
 </tbody>
 </table></div>
@@ -135,21 +218,25 @@
 <thead>
 <tr>
 <th>Perfil</th>
-<th>Resultado (<code>quem-pode.csv</code>)</th>
+<th>Resultado (teste de 08 a 09/11/2026, <code>quem-pode.csv</code>)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Administrador (perfil 1)</td>
-<td>Abre, pesquisa e grava</td>
+<td>Abre a tela, pesquisa e grava (todas as ações do manual foram feitas com esta conta em 18/11/2026)</td>
 </tr>
 <tr>
 <td>Perfil de teste com os grupos do Estoque (T.BA20)</td>
-<td><strong>Negado</strong>: "Não foi possível carregar as contas financeiras." (403)</td>
+<td><strong>Negado</strong>: a tela mostra "Não foi possível carregar as contas financeiras." (403). <strong>Não foi possível refazer o print em 18/11/2026</strong> (sem senha local desse login)</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login (testado só em Almoxarifado, Item e Disponibilidade; nesta tela <strong>não testado</strong>)</td>
 </tr>
 </tbody>
 </table></div>
-<p>Só o administrador passa (DV-EST-N-001, Alta); a separação de funções <strong>não pôde ser testada</strong>.</p></article>
+<p>Nenhum usuário que não seja o administrador consegue usar o Estoque (DV-EST-N-001, Alta); por isso a separação de funções desta tela <strong>não pôde ser testada</strong>.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="conta-financeira-fluxos.html"><small>← Anterior</small><strong>Fluxos · Conta Financeira</strong></a><a class="ap ap-prox" href="conta-financeira-anvisa.html"><small>Próximo →</small><strong>Anvisa · Conta Financeira</strong></a></nav>
 </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
