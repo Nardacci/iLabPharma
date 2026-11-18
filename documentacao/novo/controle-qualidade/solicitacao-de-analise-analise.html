@@ -40,10 +40,10 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Solicitação de Análise</span><span>documento 1 de 203</span><div class="prog-doc"><i style="width:0%"></i></div></div>
   <header class="doc-cabecalho"><h1>Solicitação de Análise: Análise</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-analise-analise.html" aria-current=page>Análise</a><a href="solicitacao-de-analise-manual-do-usuario.html">Manual do usuário</a><a href="solicitacao-de-analise-fluxos.html">Fluxos</a><a href="solicitacao-de-analise-regras-de-negocio.html">Regras de negócio</a><a href="solicitacao-de-analise-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="solicitacao-de-analise-erros.html">Erros (2)</a><a class="aba-extra" href="solicitacao-de-analise-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-analise-analise.html" aria-current=page>Análise</a><a href="solicitacao-de-analise-manual-do-usuario.html">Manual do usuário</a><a href="solicitacao-de-analise-fluxos.html">Fluxos</a><a href="solicitacao-de-analise-regras-de-negocio.html">Regras de negócio</a><a href="solicitacao-de-analise-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="solicitacao-de-analise-erros.html">Erros (7)</a><a class="aba-extra" href="solicitacao-de-analise-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><p><strong>Menu:</strong> Solicitação de Análise (primeira tela do menu, módulo Controle da Qualidade; o título no alto da tela é "SOLICITAÇÃO DE ANÁLISE") · <strong>Situação do manual:</strong> Em ajuste · <strong>Fonte dos prints:</strong> versão nova.</p>
 <blockquote>
-<p><strong>Aviso sobre as fontes.</strong> O comportamento vem da rodada 1 de testes da versão nova (11/11/2026, conta de administrador de teste; <code>resultado.md</code>, <code>casos.csv</code> e as onze capturas do manifesto de prints) e a especificação de campos, em parte, do manual do legado (marcada com <strong>"(do legado; a confirmar na versão nova)"</strong>). Na rodada 1 só foi testado o conjunto <strong>Produto / Material</strong> com matéria-prima; o conjunto <strong>Água / Ambiente</strong>, a <strong>Reanálise</strong> e o perfil sem permissão <strong>não foram testados</strong> na versão nova.</p>
+<p><strong>Aviso sobre as fontes.</strong> O comportamento vem da rodada 1 de testes da versão nova (11/11/2026, conta de administrador de teste; <code>resultado.md</code> e <code>casos.csv</code>) e da rodada do robô de 17 e 18/11/2026 (conta de administrador de teste e conta de perfil de consulta; 47 capturas <code>PNR2-solicitacao-de-analise-*</code>). A especificação de campos que ainda não foi conferida na versão nova continua marcada com <strong>"(do legado; a confirmar na versão nova)"</strong>. O manual está <strong>parcial</strong>: não foi possível (a) criar um lote novo pelas telas do Estoque (provisórias; foi reaproveitado o lote TA0008/26 e as solicitações que o Estoque já tinha gerado), (b) testar um perfil que enxergue o Controle da Qualidade só para consulta e (c) ver a Priorização e a Programação receberem a solicitação (telas provisórias).</p>
 </blockquote>
 <h2 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h2>
 <div class="tabela"><table>
@@ -57,32 +57,68 @@
 </thead>
 <tbody>
 <tr>
+<td>DV-CQ-N-028</td>
+<td><strong>Alta</strong></td>
+<td><strong>A reanálise cancela a solicitação de origem sem justificativa</strong> e com um histórico diferente do cancelamento normal (campo técnico "ID_SITUACAO_SOLICITACAO_ANALISE", valor anterior vazio). Sem justificativa não se sabe por que a solicitação sumiu da rotina (rastreabilidade das alterações, RDC 658/2022).</td>
+<td>Passo 12 (imagens 31, 32 e 33)</td>
+</tr>
+<tr>
+<td>DV-CQ-N-026</td>
+<td>Média</td>
+<td><strong>Salvar sem Motivo</strong> grava e mostra um aviso técnico do Estoque ("HTTP 409 ... Lote não possui nenhuma análise anterior."), com código e JSON na mensagem.</td>
+<td>Passo 6 (imagem 08)</td>
+</tr>
+<tr>
+<td>DV-CQ-N-027</td>
+<td>Média</td>
+<td><strong>INCLUIR com Água / Ambiente marcado</strong> abre o formulário de Produto / Material; não há como incluir solicitação de Água / Ambiente.</td>
+<td>Passo 4 (imagem 42)</td>
+</tr>
+<tr>
 <td>DV-CQ-N-006</td>
 <td>Média (norma)</td>
-<td>O histórico mostra <strong>"Usuário: 1"</strong> (número) e não o nome de quem incluiu ou cancelou; o histórico da inclusão traz só o número da solicitação. Dificulta saber quem fez (atribuição de dados, RDC 658/2022).</td>
-<td>Imagens dos passos 8 e 10 acima</td>
+<td>O histórico mostra <strong>"Usuário: 1"</strong> (número) e não o nome de quem incluiu ou cancelou, inclusive nas solicitações geradas pelo Estoque. <strong>Repete</strong> nesta tela.</td>
+<td>Passos 8, 10 e 12</td>
+</tr>
+<tr>
+<td>DV-CQ-N-002</td>
+<td>Média</td>
+<td>Incluir (com motivo), cancelar e reanalisar <strong>voltam sem pergunta de confirmação e sem mensagem de sucesso</strong>. <strong>Repete</strong> nesta tela.</td>
+<td>Passos 6, 10 e 12 (imagens 10, 21 e 29)</td>
+</tr>
+<tr>
+<td>DV-CQ-N-029</td>
+<td>Baixa</td>
+<td>A mesma solicitação (lote e tipo de análise) pode ser incluída mais de uma vez. <strong>Ponto para validar</strong> com a área.</td>
+<td>Passo 6 (imagem 30)</td>
+</tr>
+<tr>
+<td>DV-CQ-N-030</td>
+<td>Baixa</td>
+<td>Conta sem acesso ao CQ abre a tela pelo endereço e vê uma lista que parece vazia ("Nenhuma solicitação encontrada."), embora a faixa diga "Acesso negado ao módulo.".</td>
+<td>Imagens 43 a 47</td>
 </tr>
 <tr>
 <td>DV-CQ-N-001</td>
 <td>Alta</td>
-<td>A tela seguinte do processo, <strong>Priorização de Solicitação de Análise</strong>, <strong>não lista</strong> a solicitação (a pesquisa recebe 404 e a tela diz "Nenhuma solicitação encontrada."). Não há como priorizar.</td>
+<td>A tela seguinte do processo, <strong>Priorização de Solicitação de Análise</strong>, <strong>não lista</strong> a solicitação (rodada 1: a pesquisa recebe 404 e a tela diz "Nenhuma solicitação encontrada."). Não reexaminada na rodada do robô.</td>
 <td><code>homologacao/versao-nova/4.controle_qualidade/execucao/2026-11-11-rodada-1/evidencias/F0-priorizacao-pesquisar.png</code></td>
 </tr>
 <tr>
 <td>DV-CQ-N-007</td>
 <td>Baixa</td>
-<td>Ao recarregar a página ou abrir pelo endereço, o cabeçalho pode trocar para "PRINCIPAL" e o menu passa a ser o do Principal.</td>
+<td>Ao recarregar a página ou abrir pelo endereço, o cabeçalho pode trocar para "PRINCIPAL" e o menu passa a ser o do Principal. Não testada nesta rodada.</td>
 <td><code>homologacao/versao-nova/4.controle_qualidade/execucao/2026-11-11-rodada-1/evidencias/F1-cabecalho-pelo-menu.png</code></td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>Observações sem ficha (Pontos para validar):</strong></p>
 <ul>
-<li><strong>Solicitação parada:</strong> depois desta tela, a Programação de Solicitação de Análise e a Programação de Amostragem são provisórias; a solicitação criada fica em "Coleta pendente de programação" (<code>resultado.md</code>).</li>
-<li><strong>Sem pergunta de confirmação e sem mensagem de sucesso ao incluir e ao cancelar:</strong> nos registros do teste não foram vistas (no legado havia "Confirma a inclusão da solicitação?" e "Inclusão efetuada com sucesso."). A ficha DV-CQ-N-002 trata disso para outros cadastros do CQ, mas não lista esta tela.</li>
+<li><strong>Solicitação parada:</strong> depois desta tela, a Programação de Solicitação de Análise e a Programação de Amostragem são provisórias; as solicitações criadas ficam em "Coleta pendente de programação".</li>
 <li><strong>Cancelar sem mínimo de justificativa:</strong> uma letra basta (igual ao DV-CQ-007 do legado; a regra de negócio pede justificativa, não um tamanho).</li>
-<li><strong>Detalhe de solicitação com motivo:</strong> no legado, a solicitação com motivo abria um detalhe só de leitura, sem Reanálise e sem Cancelar; na versão nova, a 001/26 <strong>tem motivo</strong> e o detalhe mostra os três botões. Ver "Diferenças em relação ao legado".</li>
-<li><strong>Perfil sem permissão, Água / Ambiente e Reanálise:</strong> não testados.</li>
+<li><strong>Detalhe de solicitação com motivo:</strong> no legado só leitura, sem Reanálise e sem Cancelar; na versão nova mostra os três botões e <strong>não mostra o Motivo</strong>. Contradição com o manual do legado, a validar com a área.</li>
+<li><strong>Solicitação cancelada:</strong> o detalhe desabilita REANÁLISE e CANCELAR (no legado, DV-CQ-029, os dois apareciam em qualquer situação): melhoria.</li>
+<li><strong>Três limites desta rodada:</strong> criar lote novo pelo Estoque, perfil que só consulta o CQ, e a Priorização e a Programação recebendo a solicitação.</li>
 </ul>
 <h2 id="diferencas-em-relacao-ao-legado">Diferenças em relação ao legado</h2>
 <div class="tabela"><table>
@@ -95,24 +131,34 @@
 </thead>
 <tbody>
 <tr>
-<td>Lista, filtros e detalhe</td>
+<td>Lista, filtros, paginação e detalhe</td>
 <td><strong>Igual</strong></td>
-<td>Mesmos filtros e mesmo detalhe com título "CONSULTAR DETALHES DA SOLICITAÇÃO DE AMOSTRAGEM" (casos CQN-SO-1 a 5 classificados como Igual).</td>
+<td>Mesmos filtros e mesmo detalhe com título "CONSULTAR DETALHES DA SOLICITAÇÃO DE AMOSTRAGEM"; filtros e paginação conferidos em 18/11/2026.</td>
 </tr>
 <tr>
-<td>Salvar vazio</td>
+<td>Uma solicitação por tipo de análise</td>
 <td><strong>Igual</strong></td>
-<td>Mostra uma só mensagem; o legado listava várias mensagens de obrigatório (do legado; a confirmar).</td>
+<td>Físico-Químico e Microbiológico geram duas.</td>
+</tr>
+<tr>
+<td>Motivo na inclusão</td>
+<td><strong>Diferente</strong> (DV-CQ-N-026)</td>
+<td>Legado: obrigatório ("O motivo é obrigatório!"). Versão nova: opcional; sem motivo grava e mostra aviso técnico do Estoque.</td>
+</tr>
+<tr>
+<td>Mensagens de campo vazio</td>
+<td><strong>Diferente</strong></td>
+<td>Quatro mensagens, uma de cada vez, com texto novo (ver "O que o sistema recusa").</td>
 </tr>
 <tr>
 <td>Pergunta de confirmação e mensagem de sucesso ao incluir</td>
-<td><strong>Possível Regressão</strong> (Ponto para validar)</td>
-<td>Legado: "Confirma a inclusão da solicitação?" e "Inclusão efetuada com sucesso."; versão nova: nenhuma vista no teste.</td>
+<td><strong>Regressão</strong> (DV-CQ-N-002)</td>
+<td>Legado: "Confirma a inclusão da solicitação?" e "Inclusão efetuada com sucesso."; versão nova: nenhuma.</td>
 </tr>
 <tr>
 <td>Cancelar</td>
 <td><strong>Melhoria</strong></td>
-<td>Legado: mostrava "Ocorreu um erro inesperado." e cancelava sem gravar o histórico (DV-CQ-007). Versão nova: janela com justificativa, o cancelamento é gravado e <strong>entra no histórico</strong> com justificativa, situação e hora.</td>
+<td>Legado: "Ocorreu um erro inesperado." e cancelava sem gravar o histórico (DV-CQ-007). Versão nova: justificativa, histórico gravado com SITUACAO 700 para 500, detalhe da cancelada com a justificativa.</td>
 </tr>
 <tr>
 <td>Cancelar com justificativa de uma letra</td>
@@ -122,17 +168,37 @@
 <tr>
 <td>Histórico</td>
 <td><strong>Melhoria</strong>, com falha nova</td>
-<td>Legado: só a inclusão feita pelo Estoque, sem as decisões do CQ (DV-CQ-006). Versão nova: mostra inclusão e cancelamento; mas o autor é o número 1 (DV-CQ-N-006, <strong>Novo</strong>).</td>
+<td>Legado: só a inclusão feita pelo Estoque (DV-CQ-006). Versão nova: inclusão e cancelamento, mas o autor é o número 1 (DV-CQ-N-006).</td>
 </tr>
 <tr>
 <td>Detalhe de solicitação com motivo</td>
 <td><strong>Diferente (a validar)</strong></td>
-<td>Legado: só leitura, sem Reanálise nem Cancelar. Versão nova: a 001/26, com motivo, mostra REANÁLISE, CANCELAR e VOLTAR. Contradição entre as fontes (manual do legado x captura PCQ11-P07).</td>
+<td>Legado: só leitura. Versão nova: REANÁLISE, CANCELAR e VOLTAR, e sem o campo Motivo.</td>
 </tr>
 <tr>
-<td>Campo Motivo no detalhe</td>
-<td><strong>Diferente (a validar)</strong></td>
-<td>O legado traz o Motivo no detalhe de solicitação com motivo; na versão nova o detalhe não mostra o Motivo.</td>
+<td>Detalhe da cancelada</td>
+<td><strong>Melhoria</strong></td>
+<td>REANÁLISE e CANCELAR ficam desabilitados (no legado apareciam em qualquer situação, DV-CQ-029).</td>
+</tr>
+<tr>
+<td>Reanálise</td>
+<td><strong>Igual ao legado</strong> (DV-CQ-N-028)</td>
+<td>Como no código do legado (RN-CQ-S01-013), cria a nova solicitação e cancela a anterior sem justificativa; no legado "sem histórico", agora com histórico de formato técnico. No legado nunca foi testada na tela.</td>
+</tr>
+<tr>
+<td>Água / Ambiente: incluir</td>
+<td><strong>Regressão</strong> (DV-CQ-N-027)</td>
+<td>Legado: formulário próprio. Versão nova: INCLUIR abre o formulário de Produto / Material. A pesquisa funciona.</td>
+</tr>
+<tr>
+<td>Solicitações vindas do Estoque</td>
+<td><strong>Igual (confirmado pelo resultado)</strong></td>
+<td>O Estoque gera uma solicitação por tipo de análise, sem motivo.</td>
+</tr>
+<tr>
+<td>Perfil sem permissão</td>
+<td><strong>Melhoria</strong></td>
+<td>Legado: perfil de consulta incluía solicitação (DV-CQ-027). Versão nova: "Acesso negado ao módulo." e não inclui; a lista parece vazia (DV-CQ-N-030).</td>
 </tr>
 <tr>
 <td>Acesso sem login</td>
@@ -142,12 +208,7 @@
 <tr>
 <td>Priorização, Programação e laudo</td>
 <td><strong>Igual (não funciona) / provisória</strong></td>
-<td>Priorização não lista (DV-CQ-N-001, igual ao legado quanto ao resultado); as telas de programação e laudo são provisórias na versão nova.</td>
-</tr>
-<tr>
-<td>Água / Ambiente e Reanálise</td>
-<td><strong>Não testado</strong></td>
-<td></td>
+<td>Priorização não lista (DV-CQ-N-001); as telas de programação e laudo são provisórias na versão nova.</td>
 </tr>
 </tbody>
 </table></div>
@@ -162,54 +223,24 @@
 </thead>
 <tbody>
 <tr>
-<td>Mensagem de sucesso da inclusão</td>
+<td>Mensagem de sucesso da inclusão, do cancelamento e da reanálise</td>
 <td>Faixa ou pop-up depois de salvar</td>
-<td>PCQ11-P05 mostra o formulário com SALVAR cinza, sem mensagem; se a versão nova mostra algo, a captura não pegou</td>
+<td>Não existe: as telas voltam sem mensagem (imagens 10, 21 e 29).</td>
 </tr>
 <tr>
-<td>Pergunta de confirmação da inclusão</td>
-<td>Caixa "Confirma a inclusão...?"</td>
-<td>Não vista nos registros do teste</td>
+<td>Lote novo criado pelo Estoque e a solicitação nascendo</td>
+<td>A solicitação gerada logo depois do endereçamento</td>
+<td>Não foi possível: as telas de recebimento e endereçamento do Estoque novo são provisórias.</td>
 </tr>
 <tr>
-<td>Cancelar sem justificativa</td>
-<td>Alerta "Informe a justificativa do cancelamento."</td>
-<td>Só em texto (<code>casos.csv</code>, CQN-SO-7); PCQ11-P09 mostra a janela vazia</td>
-</tr>
-<tr>
-<td>Cancelar com sucesso</td>
-<td>Mensagem depois de confirmar</td>
-<td>Não registrada</td>
-</tr>
-<tr>
-<td>Detalhe da solicitação cancelada</td>
-<td>Detalhe com a justificativa de cancelamento</td>
-<td>Não capturado</td>
-</tr>
-<tr>
-<td>Salvar vazio com todas as mensagens</td>
-<td>Cada campo obrigatório com o seu aviso</td>
-<td>Só a primeira mensagem foi vista</td>
-</tr>
-<tr>
-<td>Filtro e inclusão de Água / Ambiente</td>
-<td>As duas telas</td>
-<td>Não testadas</td>
-</tr>
-<tr>
-<td>Reanálise</td>
-<td>Botão, tela e resultado</td>
-<td>Não testada</td>
-</tr>
-<tr>
-<td>Lista com várias páginas e filtros preenchidos</td>
-<td>Paginação e resultado de um filtro</td>
-<td>Só havia uma solicitação</td>
-</tr>
-<tr>
-<td>Perfil sem permissão</td>
+<td>Perfil que enxerga o CQ só para consulta</td>
 <td>Botões desabilitados ou recusa</td>
-<td>Sem perfil de teste (Fase 2-B)</td>
+<td>Não foi possível: não há perfil de teste assim; depende de rodada própria de perfil restrito.</td>
+</tr>
+<tr>
+<td>Solicitação chegando à Priorização e à Programação</td>
+<td>A solicitação nas telas seguintes</td>
+<td>Não foi possível: telas provisórias ("Tela em integração").</td>
 </tr>
 </tbody>
 </table></div></article>

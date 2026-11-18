@@ -40,8 +40,8 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 8 de 756</span><div class="prog-doc"><i style="width:1%"></i></div></div>
   <header class="doc-cabecalho"><h1>Subgrupo do Item: Análise</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="subgrupo-do-item-analise.html" aria-current=page>Análise</a><a href="subgrupo-do-item-manual-do-usuario.html">Manual do usuário</a><a href="subgrupo-do-item-fluxos.html">Fluxos</a><a href="subgrupo-do-item-regras-de-negocio.html">Regras de negócio</a><a href="subgrupo-do-item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="subgrupo-do-item-erros.html">Erros (1)</a><a class="aba-extra" href="subgrupo-do-item-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><p><strong>Menu:</strong> Cadastros (item do menu do Estoque; o título no alto da tela é "Subgrupo do Item") · <strong>Situação do manual:</strong> Em ajuste (prints do ambiente de teste de 09/11/2026; fontes conferidas em 17/11/2026) · <strong>Fonte dos prints:</strong> versão nova.</p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="subgrupo-do-item-analise.html" aria-current=page>Análise</a><a href="subgrupo-do-item-manual-do-usuario.html">Manual do usuário</a><a href="subgrupo-do-item-fluxos.html">Fluxos</a><a href="subgrupo-do-item-regras-de-negocio.html">Regras de negócio</a><a href="subgrupo-do-item-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="subgrupo-do-item-erros.html">Erros (1)</a><a class="aba-extra" href="subgrupo-do-item-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><p><strong>Menu:</strong> Cadastros (item do menu do Estoque; o título no alto da tela é "Subgrupo do Item") · <strong>Situação do manual:</strong> Em ajuste (tela testada em 17/11/2026 e 18/11/2026, com 52 prints; <strong>parcial</strong>: falta o efeito da Diferença de Pesagem na pesagem, que exige a Produção, e a troca do grupo de um subgrupo que já tem Item) · <strong>Fonte dos prints:</strong> versão nova.</p>
 <h2 id="cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</h2>
 <div class="tabela"><table>
 <thead>
@@ -54,26 +54,56 @@
 </thead>
 <tbody>
 <tr>
+<td>DV-EST-N-060</td>
+<td>Alta</td>
+<td>Mudar a Diferença de Pesagem não deixa nenhuma linha no histórico (só grupo e descrição aparecem), embora o percentual mude de verdade. Evidência: prints 15, 19 e 32. O legado tinha o mesmo defeito (DV-EST-090)</td>
+<td>17/11/2026</td>
+</tr>
+<tr>
+<td>DV-EST-N-061</td>
+<td>Média</td>
+<td>A Diferença de Pesagem (%) aceita qualquer valor: 22 dígitos viram 1234567890123,45 e texto vira "sem percentual", sem aviso. Evidência: prints 26, 27, 28 e 29. O legado também não tinha limite (DV-EST-089)</td>
+<td>17/11/2026</td>
+</tr>
+<tr>
 <td>DV-EST-N-022</td>
 <td>Média</td>
-<td>O campo Diferença de Pesagem (%) tem máscara que preenche da direita: 5 vira 0,05, 10 vira 0,10, 2,5 vira 0,25, 12,5 vira 1,25. Quem digita 5 % grava 0,05 %. (O mapa de telas não lista esta ficha para o Subgrupo, mas a ficha e a análise da tela a citam.)</td>
-<td>10/11/2026</td>
+<td>A máscara do percentual desloca a vírgula: 5 vira 0,05, 150 vira 1,50, "-5" vira 0,05. Quem digita 5 % grava 0,05 %. Evidência: prints 06, 26 e 29</td>
+<td>17/11/2026</td>
+</tr>
+<tr>
+<td>DV-EST-N-059</td>
+<td>Baixa</td>
+<td>O código só com letras (<code>AB</code>) e o <code>000</code> são <strong>gravados</strong> sem aviso; outras telas descartam as letras. Evidência: prints 22 e 23</td>
+<td>17/11/2026</td>
+</tr>
+<tr>
+<td>DV-EST-N-056</td>
+<td>Baixa</td>
+<td>Duas descrições iguais são aceitas sob o mesmo grupo; só o código distingue os subgrupos. Evidência: print 25</td>
+<td>17/11/2026</td>
+</tr>
+<tr>
+<td>DV-EST-N-054</td>
+<td>Média</td>
+<td>Perfil sem permissão vê a tela abrir, o Incluir visível e a lista "nenhum resultado" sem aviso de acesso negado. Evidência: prints 56 e 57</td>
+<td>17/11/2026</td>
+</tr>
+<tr>
+<td>DV-EST-N-027</td>
+<td>Baixa</td>
+<td>O excesso de tamanho vira "Os dados informados são inválidos." sem dizer o campo; salvar vazio e alterar sem justificativa <strong>não</strong> pedem confirmação antes (diferente das outras telas). Evidência: prints 05, 14 e 24</td>
+<td>17/11/2026</td>
 </tr>
 <tr>
 <td>DV-EST-N-001</td>
 <td>Alta</td>
-<td>Perfil com todas as funções do Estoque recebe 403 até para ler (duas chamadas com erro nesta tela).</td>
+<td>Perfil com todas as funções do Estoque recebe 403 até para ler</td>
 <td>05/11/2026</td>
-</tr>
-<tr>
-<td>Sem ficha N (itens da rodada 1)</td>
-<td>—</td>
-<td>Log não registra a mudança da Diferença de Pesagem; trocar o grupo de um subgrupo com item não avisa.</td>
-<td>05/11/2026, não revalidado</td>
 </tr>
 </tbody>
 </table></div>
-<p>Observação: A janela do LOG usa os títulos "Item / Dado Antigo / Dado Novo" (o SJB e o Motivo da Movimentação usam "Alteração / Valor Antigo / Valor Novo").</p>
+<p>Observações sem ficha: (1) a janela do LOG usa os títulos "Item / Dado Antigo / Dado Novo" (o SJB e o Motivo da Movimentação usam "Alteração / Valor Antigo / Valor Novo"); (2) o relatório impresso não traz a Diferença de Pesagem; (3) na Fase 2 (10/11/2026) um caso de "editar e conferir" registrou "registro não encontrado na lista depois de gravar"; em 17/11/2026 isso <strong>não se repetiu</strong>: a pesquisa achou o registro e a edição seguinte mostrou os valores novos.</p>
 <h2 id="diferencas-em-relacao-ao-legado">Diferenças em relação ao legado</h2>
 <div class="tabela"><table>
 <thead>
@@ -87,27 +117,39 @@
 <tbody>
 <tr>
 <td>Diferença de Pesagem</td>
-<td>Máscara de duas casas, sem limite (legado)</td>
-<td>Máscara que desloca a vírgula (DV-EST-N-022)</td>
-<td>Igual (mesmo comportamento; ficha nova)</td>
+<td>Máscara de duas casas, sem limite (CT-EST-CAD02-03; DV-EST-089)</td>
+<td>Máscara que desloca a vírgula e sem limite (DV-EST-N-022 e DV-EST-N-061)</td>
+<td>Igual</td>
 </tr>
 <tr>
 <td>Log da Diferença de Pesagem</td>
-<td>Não registrava</td>
-<td>Não registra (rodada 1)</td>
+<td>Não registrava (CT-EST-CAD02-05; DV-EST-090)</td>
+<td>Não registra (DV-EST-N-060)</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>Salvar vazio</td>
+<td>Faixa na hora</td>
+<td>Faixa na hora, sem pergunta antes (diferente das outras telas da versão nova)</td>
+<td>Igual</td>
+</tr>
+<tr>
+<td>Inativar ou excluir com Item</td>
+<td>Bloqueado (legado)</td>
+<td>Bloqueado, com os textos acima (18/11/2026)</td>
 <td>Igual</td>
 </tr>
 <tr>
 <td>Trocar o grupo com itens</td>
 <td>Sem aviso</td>
-<td>Sem aviso (rodada 1)</td>
-<td>Igual</td>
+<td>Sem aviso para a troca do grupo; com Item não foi testado</td>
+<td>A validar</td>
 </tr>
 <tr>
-<td>Excluir ou inativar com item</td>
-<td>Bloqueado (legado)</td>
-<td>Não testado</td>
-<td>A validar</td>
+<td>Grupo no formulário</td>
+<td>Só grupos ativos (leitura do código)</td>
+<td>Só grupos ativos (conferido)</td>
+<td>Igual</td>
 </tr>
 <tr>
 <td>Mensagem de grupo vazio</td>
@@ -116,13 +158,28 @@
 <td>Diferença de texto</td>
 </tr>
 <tr>
+<td>Pesquisa por código</td>
+<td>Completa com zeros e procura o valor exato (do legado)</td>
+<td>Procura o valor exato (conferido: "7720" não achou)</td>
+<td>Igual</td>
+</tr>
+<tr>
 <td>Quem abre a tela</td>
-<td>Qualquer um pelo endereço</td>
-<td>Só o administrador (DV-EST-N-001)</td>
+<td>Qualquer um pelo endereço (DV-EST-008)</td>
+<td>Perfil sem permissão abre a tela e a consulta é recusada sem aviso (DV-EST-N-054); só o administrador usa com sucesso (DV-EST-N-001)</td>
 <td>Novo</td>
 </tr>
 </tbody>
 </table></div>
+<h2 id="pontos-para-validar-com-a-area">Pontos para validar com a área</h2>
+<ul>
+<li>Se a Diferença de Pesagem (%) deve ter um limite e como deve ser digitada (máscara que desloca a vírgula; DV-EST-N-022 e DV-EST-N-061).</li>
+<li>Se o código do subgrupo pode ter letras e se um código excluído pode ser reutilizado (DV-EST-N-059).</li>
+<li>Se descrição repetida sob o mesmo grupo deve ser recusada (DV-EST-N-056).</li>
+<li>Por que salvar vazio e alterar sem justificativa não pedem confirmação antes neste formulário, ao contrário das outras telas (DV-EST-N-027).</li>
+<li>O botão EXCEL entrega um arquivo CSV, e não uma planilha Excel.</li>
+<li>Perfil sem acesso: a tela abre e a lista vem vazia sem aviso (DV-EST-N-054).</li>
+</ul>
 <h2 id="prints-que-faltam">Prints que faltam</h2>
 <div class="tabela"><table>
 <thead>
@@ -134,50 +191,35 @@
 </thead>
 <tbody>
 <tr>
-<td>Salvar vazio: pergunta de confirmação</td>
-<td>A janela 'Confirma a inclusão...' com o formulário vazio</td>
-<td>PEC14-P04 não existe (o manifesto de prints do Subgrupo não tem P04)</td>
+<td>Efeito da Diferença de Pesagem na pesagem</td>
+<td>A quantidade aceita no Atendimento ou na Central de Pesagem</td>
+<td><strong>Não testado</strong>: exige a Produção</td>
 </tr>
 <tr>
-<td>Subgrupo com a diferença de pesagem digitada</td>
-<td>Valor digitado x valor mostrado</td>
-<td>As imagens V-subgrupo-pct*.png em <code>execucao/2026-11-10-fase2-ad/evidencias/</code> foram abertas (V-subgrupo-pct150) e mostram só a lista vazia, não o defeito</td>
+<td>Trocar o grupo de um subgrupo que já tem Item</td>
+<td>A troca aceita ou recusada</td>
+<td><strong>Não testado</strong></td>
 </tr>
 <tr>
-<td>Alterar: formulário com a justificativa preenchida e mensagem de sucesso</td>
-<td>Formulário de edição com a justificativa e o aviso 'Alteração realizada com sucesso!'</td>
-<td>O arquivo existe na pasta de prints (PEC14-P12-edicao-salva.png) mas <strong>não está no manifesto de prints</strong>; pela regra do manual só entram linhas do manifesto. Registrar no manifesto e incluir</td>
+<td>Item 77301 reaberto</td>
+<td>O campo Subgrupo do Item</td>
+<td>Não feito: o Item não foi reaberto em 18/11/2026</td>
 </tr>
 <tr>
-<td>Histórico depois da edição</td>
-<td>Janela LOG com a linha da alteração (valor antigo, valor novo, justificativa)</td>
-<td>Idem: PEC14-P10b-historico-apos-edicao.png existe, fora do manifesto</td>
+<td>Arquivo EXCEL aberto</td>
+<td>O CSV baixado com as colunas</td>
+<td>Só se confirmou o nome do arquivo; sem imagem do conteúdo</td>
 </tr>
 <tr>
-<td>Excluir: pedido de justificativa e confirmação</td>
-<td>Tela de exclusão com a justificativa e a pergunta de confirmação</td>
-<td>Idem: PEC14-P13-confirmar-exclusao.png e PEC14-P13c-confirmacao-exclusao.png existem, fora do manifesto</td>
-</tr>
-<tr>
-<td>Exclusão realizada</td>
-<td>Aviso de sucesso da exclusão e a lista sem o registro</td>
-<td>Idem: PEC14-P14-exclusao-resultado.png existe, fora do manifesto</td>
-</tr>
-<tr>
-<td>Imprimir e Excel</td>
-<td>PDF e planilha gerados com e sem filtro</td>
-<td>Não foram testados nesta tela na versão nova</td>
-</tr>
-<tr>
-<td>Tela negada para o perfil T.BA20</td>
-<td>Mensagem de erro 403 ao abrir pelo endereço</td>
-<td>Só há o registro em texto (quem-pode.csv), sem imagem</td>
+<td>O que cada função do perfil libera</td>
+<td>Perfis intermediários (por exemplo, só consulta)</td>
+<td><strong>Não testado</strong>: só o perfil 1 usa o Estoque (DV-EST-N-001)</td>
 </tr>
 </tbody>
 </table></div></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="grupo-do-item-passo-a-passo.html"><small>← Anterior</small><strong>Passo a passo · Grupo do Item</strong></a><a class="ap ap-prox" href="subgrupo-do-item-manual-do-usuario.html"><small>Próximo →</small><strong>Manual do usuário · Subgrupo do Item</strong></a></nav>
 </main>
-  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</a></li><li><a href="#diferencas-em-relacao-ao-legado">Diferenças em relação ao legado</a></li><li><a href="#prints-que-faltam">Prints que faltam</a></li></ul></nav>
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#cuidados-e-falhas-conhecidas">Cuidados e falhas conhecidas</a></li><li><a href="#diferencas-em-relacao-ao-legado">Diferenças em relação ao legado</a></li><li><a href="#pontos-para-validar-com-a-area">Pontos para validar com a área</a></li><li><a href="#prints-que-faltam">Prints que faltam</a></li></ul></nav>
 </div>
 <footer class="rodape">
   <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 18/11/2026</div>
