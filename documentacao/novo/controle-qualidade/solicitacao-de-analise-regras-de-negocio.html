@@ -40,11 +40,13 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Solicitação de Análise</span><span>documento 4 de 203</span><div class="prog-doc"><i style="width:2%"></i></div></div>
   <header class="doc-cabecalho"><h1>Solicitação de Análise: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-analise-analise.html">Análise</a><a href="solicitacao-de-analise-manual-do-usuario.html">Manual do usuário</a><a href="solicitacao-de-analise-fluxos.html">Fluxos</a><a href="solicitacao-de-analise-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="solicitacao-de-analise-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="solicitacao-de-analise-erros.html">Erros (2)</a><a class="aba-extra" href="solicitacao-de-analise-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-analise-analise.html">Análise</a><a href="solicitacao-de-analise-manual-do-usuario.html">Manual do usuário</a><a href="solicitacao-de-analise-fluxos.html">Fluxos</a><a href="solicitacao-de-analise-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="solicitacao-de-analise-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="solicitacao-de-analise-erros.html">Erros (7)</a><a class="aba-extra" href="solicitacao-de-analise-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Incluir:</strong> grava a solicitação (no teste, a 001/26) em <strong>"Coleta pendente de programação"</strong>, com o histórico da inclusão (só "INCLUSAO DO REGISTRO"). O próximo passo, a programação da amostragem, é uma <strong>tela provisória</strong>: a solicitação não anda.</li>
-<li><strong>Cancelar:</strong> muda a situação para <strong>"Cancelada"</strong> e grava o histórico com a justificativa, o código da situação antes e depois, a data e a hora. Diferente do legado, o histórico <strong>foi gravado</strong> no teste.</li>
+<li><strong>Incluir com motivo:</strong> grava a solicitação em <strong>"Coleta pendente de programação"</strong> (uma por tipo de análise marcado), com o histórico da inclusão (só "INCLUSAO DO REGISTRO") e <strong>volta à pesquisa</strong>, sem pergunta e sem mensagem. O próximo passo, a programação da amostragem, é uma <strong>tela provisória</strong>: a solicitação não anda.</li>
+<li><strong>Incluir sem motivo:</strong> grava do mesmo jeito, mas o formulário fica na tela com o aviso técnico do Estoque ("HTTP 409 ... Lote não possui nenhuma análise anterior."); o usuário não sabe se algo ficou pendente (DV-CQ-N-026).</li>
+<li><strong>Cancelar:</strong> muda a situação para <strong>"Cancelada"</strong>, grava o histórico com a justificativa, o código da situação antes e depois (700 para 500), a data e a hora, e volta à pesquisa sem mensagem. Diferente do legado, o histórico <strong>é gravado</strong>.</li>
+<li><strong>Reanálise:</strong> cria a nova solicitação em <strong>"Em Coleta"</strong> (fase Amostragem) e <strong>cancela a original sem justificativa</strong>, com histórico de formato diferente do cancelamento normal (DV-CQ-N-028). Não há pergunta de confirmação nem mensagem de sucesso.</li>
 <li><strong>Ver detalhes e ver histórico:</strong> só leitura.</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
@@ -60,12 +62,37 @@
 <tr>
 <td>Salvar a inclusão vazia</td>
 <td>"Selecione Tipo Item Análise." (faixa rosa)</td>
-<td>Só a primeira conferência; as demais mensagens da versão nova são desconhecidas. Na tela, exigir tipo de item e tipo de análise foi visto nos testes</td>
+<td>Primeira conferência</td>
+</tr>
+<tr>
+<td>Salvar só com o tipo de item</td>
+<td>"Selecione um Item Análise válido na busca inteligente."</td>
+<td>Segunda conferência</td>
+</tr>
+<tr>
+<td>Salvar sem Tipo Análise</td>
+<td>"Selecione pelo menos um Tipo Análise."</td>
+<td>Terceira conferência</td>
+</tr>
+<tr>
+<td>Salvar sem Item Entrada</td>
+<td>"Selecione Item Entrada para o tipo de item escolhido."</td>
+<td>Quarta conferência</td>
+</tr>
+<tr>
+<td>Salvar sem Motivo</td>
+<td><strong>Não recusa</strong>: grava e mostra o aviso técnico do Estoque ("... HTTP 409 ... Lote não possui nenhuma análise anterior.")</td>
+<td>Diferente do legado ("O motivo é obrigatório!"); DV-CQ-N-026</td>
+</tr>
+<tr>
+<td>Salvar a reanálise sem fase</td>
+<td>"Selecione a Fase de Reanálise."</td>
+<td></td>
 </tr>
 <tr>
 <td>Cancelar sem justificativa</td>
 <td>"Informe a justificativa do cancelamento."</td>
-<td>Visto no teste; sem captura</td>
+<td>A janela continua aberta</td>
 </tr>
 <tr>
 <td>Cancelar com uma letra de justificativa</td>
@@ -73,13 +100,23 @@
 <td>Sem tamanho mínimo (igual ao DV-CQ-007 do legado, quanto a não ter mínimo)</td>
 </tr>
 <tr>
+<td>Repetir o mesmo lote e tipo de análise</td>
+<td><strong>Aceita</strong></td>
+<td>Ponto para validar (DV-CQ-N-029)</td>
+</tr>
+<tr>
+<td>Conta sem acesso ao módulo (aberta pelo endereço)</td>
+<td>"Acesso negado ao módulo." (faixa rosa)</td>
+<td>A tela abre mesmo assim; ver "Quem pode usar"</td>
+</tr>
+<tr>
 <td>Buscar, gravar ou cancelar sem login ou com chave de acesso inválida</td>
 <td>Recusado (401)</td>
-<td>Visto no teste, nas rotas de lista e de cancelamento; nada foi gravado</td>
+<td>Visto na rodada 1, nas rotas de lista e de cancelamento; nada foi gravado</td>
 </tr>
 </tbody>
 </table></div>
-<p>As mensagens do legado para campos vazios na inclusão de produto/material ("O motivo é obrigatório!", "Tipo de análise é obrigatório!", "Item análise é obrigatório!", "Item entrada é obrigatório!", "Tipo item análise é obrigatório!") (do legado; a confirmar na versão nova): na versão nova só foi vista a primeira conferência.</p>
+<p>Comparação com as mensagens do legado para campos vazios na inclusão de produto/material: "Tipo item análise é obrigatório!" virou <strong>"Selecione Tipo Item Análise."</strong>; "Item análise é obrigatório!" virou <strong>"Selecione um Item Análise válido na busca inteligente."</strong>; "Tipo de análise é obrigatório!" virou <strong>"Selecione pelo menos um Tipo Análise."</strong>; "Item entrada é obrigatório!" virou <strong>"Selecione Item Entrada para o tipo de item escolhido."</strong>; "O motivo é obrigatório!" <strong>deixou de existir</strong> (do legado; comparado nesta rodada).</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <p><strong>Filtro (Produto / Material):</strong></p>
 <div class="tabela"><table>
@@ -113,6 +150,13 @@
 <td>Não</td>
 <td>Procura o item (do legado: a busca só começa com 3 letras; a confirmar)</td>
 <td></td>
+</tr>
+<tr>
+<td>Filtro Água / Ambiente</td>
+<td>Quadro</td>
+<td>—</td>
+<td>Tipo Item Análise, Item Análise, Tipo Análise, Data Solicitação, Nº Solicitação, Item Entrada e Situação</td>
+<td>Pesquisa funciona; ver DV-CQ-N-027</td>
 </tr>
 <tr>
 <td>Código</td>
@@ -160,8 +204,8 @@
 <td>Situação</td>
 <td>Lista</td>
 <td>Não</td>
-<td>"SELECIONE" e as situações</td>
-<td>As situações listadas não foram conferidas na versão nova</td>
+<td>"SELECIONE", Pendente, Em Coleta, Análise Parcial, Concluída, Cancelada, Em Análise, Coleta pendente de programação, Análise pendente de programação e Laudo Liberado</td>
+<td>Conferida em 18/11/2026</td>
 </tr>
 </tbody>
 </table></div>
@@ -198,17 +242,17 @@
 <td>Motivo</td>
 <td>Lista</td>
 <td>—</td>
-<td>Esperado obrigatório (no legado: "O motivo é obrigatório!"; a confirmar)</td>
+<td><strong>Não</strong> (no legado era obrigatório: "O motivo é obrigatório!")</td>
 <td>Motivos cadastrados</td>
-<td>Mensagem da versão nova ao faltar: não vista</td>
+<td>Sem motivo, grava e mostra aviso técnico do Estoque (DV-CQ-N-026)</td>
 </tr>
 <tr>
 <td>Tipo Análise</td>
 <td>Duas caixas</td>
 <td>—</td>
-<td>Esperado: pelo menos uma</td>
+<td>Sim (pelo menos uma)</td>
 <td>Físico-Químico, Microbiológico</td>
-<td>Mensagem ao faltar: não vista</td>
+<td>"Selecione pelo menos um Tipo Análise."</td>
 </tr>
 <tr>
 <td>Item Análise</td>
@@ -216,15 +260,15 @@
 <td>Não informado</td>
 <td>Sim</td>
 <td>Escolher na lista; no teste, "T.INS-001 - T PARACETAMOL MATÉRIA-PRIMA"</td>
-<td></td>
+<td>"Selecione um Item Análise válido na busca inteligente."</td>
 </tr>
 <tr>
 <td>Item Entrada</td>
 <td>Lista de lotes</td>
 <td>—</td>
-<td>Sim (no legado)</td>
+<td>Sim</td>
 <td>Lotes do item; no teste, "TA0008/26"</td>
-<td>Vem do Estoque</td>
+<td>Vem do Estoque; "Selecione Item Entrada para o tipo de item escolhido."</td>
 </tr>
 <tr>
 <td>Lote, Validade, Data Entrada, Quantidade, Unidade, Nº Volumes, Fabricante, Fornecedor</td>
@@ -246,10 +290,26 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li>Testada só com a conta de <strong>administrador de teste</strong>, que abre a lista e usa incluir, detalhe, histórico e cancelar. <strong>Não há quadro de quem pode</strong> (<code>quem-pode.csv</code>) para o CQ novo; o teste com perfil restrito ficou <strong>Bloqueado no teste</strong> por falta de perfil de teste (Fase 2-B).</li>
-<li>No legado, um perfil só de consulta conseguiu incluir uma solicitação (DV-CQ-027, Alta; do legado). <strong>Na versão nova isso não foi testado</strong>: Ponto para validar com um perfil de teste restrito.</li>
-<li>Sem login ou com chave inválida, a lista e o cancelamento são recusados (401), uma melhoria sobre o legado.</li>
-</ul></article>
+<li>Com a conta de <strong>administrador de teste</strong>, a tela abre a lista e usa incluir, detalhe, histórico, cancelar e reanálise. <strong>Não há quadro de quem pode</strong> (<code>quem-pode.csv</code>) para o CQ novo.</li>
+<li><strong>Perfil sem permissão (conta T.R2.CQSP, perfil de consulta 0.T.TESTE_CONSULTA, testada em 18/11/2026):</strong> o <strong>menu não mostra o Controle da Qualidade</strong> (só Administração e Principal). Abrindo a tela <strong>pelo endereço</strong>, ela aparece com a faixa <strong>"Acesso negado ao módulo."</strong>; as listas Tipo Item Análise e Motivo vêm vazias (só "SELECIONE..."); PESQUISAR mostra a faixa e "Nenhuma solicitação encontrada.", o que <strong>parece uma lista vazia, e não um acesso negado</strong> (DV-CQ-N-030); <strong>não dá para incluir</strong> (SALVAR só recusa "Selecione Tipo Item Análise.", pois não há como escolher o tipo). Isto é uma <strong>melhoria</strong> sobre o legado, em que um perfil só de consulta conseguiu incluir uma solicitação (DV-CQ-027, Alta; do legado).</li>
+<li><strong>Não testado:</strong> um perfil que <strong>enxergue o CQ só para consulta</strong> (não há perfil assim de teste); vale uma rodada própria de perfil restrito.</li>
+<li><strong>Sem login ou com chave inválida</strong>, a lista e o cancelamento são recusados (401), uma melhoria sobre o legado.</li>
+</ul>
+<figure><a href="../../img/controle-qualidade/pnr2-solicitacao-de-analise-43-perfil-consulta-menu-sem-cq.png" target="_blank" rel="noopener"><img src="../../img/controle-qualidade/pnr2-solicitacao-de-analise-43-perfil-consulta-menu-sem-cq.png" alt="Menu da conta de consulta, sem o Controle da Qualidade" loading="lazy"></a><figcaption>Menu da conta de consulta, sem o Controle da Qualidade · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra o menu da conta com perfil de consulta: só Administração (e o ícone de início), sem o Controle da Qualidade.</p>
+<figure><a href="../../img/controle-qualidade/pnr2-solicitacao-de-analise-44-perfil-consulta-acesso-negado-ao-modulo.png" target="_blank" rel="noopener"><img src="../../img/controle-qualidade/pnr2-solicitacao-de-analise-44-perfil-consulta-acesso-negado-ao-modulo.png" alt="Tela aberta pelo endereço: Acesso negado ao módulo" loading="lazy"></a><figcaption>Tela aberta pelo endereço: Acesso negado ao módulo · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a tela de Solicitação de Análise com a faixa "Acesso negado ao módulo." acima do filtro.</p>
+<figure><a href="../../img/controle-qualidade/pnr2-solicitacao-de-analise-45-perfil-consulta-pesquisa.png" target="_blank" rel="noopener"><img src="../../img/controle-qualidade/pnr2-solicitacao-de-analise-45-perfil-consulta-pesquisa.png" alt="PESQUISAR sem acesso: lista que parece vazia" loading="lazy"></a><figcaption>PESQUISAR sem acesso: lista que parece vazia · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a faixa "Acesso negado ao módulo." e, abaixo, "Nenhuma solicitação encontrada." depois de PESQUISAR (marcado).</p>
+<figure><a href="../../img/controle-qualidade/pnr2-solicitacao-de-analise-46-perfil-consulta-incluir-sem-acesso.png" target="_blank" rel="noopener"><img src="../../img/controle-qualidade/pnr2-solicitacao-de-analise-46-perfil-consulta-incluir-sem-acesso.png" alt="Inclusão sem acesso: listas vazias" loading="lazy"></a><figcaption>Inclusão sem acesso: listas vazias · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra o formulário de inclusão com a faixa "Acesso negado ao módulo." e as listas Tipo Item Análise e Motivo sem opções.</p>
+<figure><a href="../../img/controle-qualidade/pnr2-solicitacao-de-analise-47-perfil-consulta-apos-salvar.png" target="_blank" rel="noopener"><img src="../../img/controle-qualidade/pnr2-solicitacao-de-analise-47-perfil-consulta-apos-salvar.png" alt="SALVAR sem acesso" loading="lazy"></a><figcaption>SALVAR sem acesso · clique para ampliar</figcaption></figure>
+
+<p>A imagem mostra a faixa "Selecione Tipo Item Análise." depois de SALVAR: não há como escolher o tipo, então nada é gravado.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="solicitacao-de-analise-fluxos.html"><small>← Anterior</small><strong>Fluxos · Solicitação de Análise</strong></a><a class="ap ap-prox" href="solicitacao-de-analise-anvisa.html"><small>Próximo →</small><strong>Anvisa · Solicitação de Análise</strong></a></nav>
 </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
