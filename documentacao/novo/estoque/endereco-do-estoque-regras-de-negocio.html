@@ -40,10 +40,12 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 228 de 756</span><div class="prog-doc"><i style="width:30%"></i></div></div>
   <header class="doc-cabecalho"><h1>Endereço do Estoque: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="endereco-do-estoque-analise.html">Análise</a><a href="endereco-do-estoque-manual-do-usuario.html">Manual do usuário</a><a href="endereco-do-estoque-fluxos.html">Fluxos</a><a href="endereco-do-estoque-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="endereco-do-estoque-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="endereco-do-estoque-erros.html">Erros</a><a class="aba-extra" href="endereco-do-estoque-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="endereco-do-estoque-analise.html">Análise</a><a href="endereco-do-estoque-manual-do-usuario.html">Manual do usuário</a><a href="endereco-do-estoque-fluxos.html">Fluxos</a><a href="endereco-do-estoque-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="endereco-do-estoque-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="endereco-do-estoque-erros.html">Erros (3)</a><a class="aba-extra" href="endereco-do-estoque-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Gerar:</strong> cria um endereço para cada combinação de coluna e andar marcada, com a mesma capacidade, ativo e livre; os endereços passam a existir para a escolha de destino.</li>
+<li><strong>Gerar:</strong> cria um endereço para cada combinação de coluna e andar marcada que ainda não existe, com a mesma capacidade, ativo e livre; os endereços passam a existir para a escolha de destino. As combinações repetidas são ignoradas sem aviso quando há ao menos uma nova.</li>
+<li><strong>Editar:</strong> grava a nova capacidade e o Ativo; o histórico só guarda a troca de Ativo (N-078).</li>
+<li><strong>Excluir:</strong> remove o registro e o histórico dele, sem justificativa (N-079).</li>
 <li><strong>Servidor:</strong> na repetição de 11/11/2026 o servidor recusou endereçar dois produtos no mesmo endereço ("Endereço ocupado por outro produto!") e reaproveitar um endereço já usado em outro endereçamento ("Endereço de destino já foi utilizado em outro Endereçamento!"). Isso é do Endereçamento, não desta tela.</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
@@ -57,22 +59,49 @@
 </thead>
 <tbody>
 <tr>
-<td>Qualquer campo de capacidade ausente</td>
-<td>O Estoque exige altura, largura, profundidade e peso máximo (Fase 2)</td>
-<td>Texto da mensagem <strong>não capturado</strong></td>
+<td>Pesquisar sem local</td>
+<td>Selecione o local de armazenagem</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>Formulário de geração vazio</td>
+<td>Faixa com nove avisos: "O Local de Armazenagem é obrigatório!", "A Altura é obrigatória!", "A Largura é obrigatória!", "A Profundidade é obrigatória!", "O Peso Máximo é obrigatório!", "A Rua é obrigatória!", "Selecione ao menos uma Coluna!", "Selecione ao menos um Andar!", "A justificativa é obrigatória!"</td>
+<td>A pergunta "Confirma a inclusão do registro?" vem <strong>antes</strong> da validação, mesmo com o formulário vazio</td>
 </tr>
 <tr>
 <td>Combinação já existente, sem nenhum endereço novo</td>
-<td>No legado: "Não foi possível inlcuir o endereço. Verifique se o mesmo já existe" <em>(do legado; a confirmar na versão nova)</em></td>
+<td>Não foi possível incluir o endereço. Verifique se o mesmo já existe.</td>
+<td>Grafia corrigida em relação ao legado</td>
+</tr>
+<tr>
+<td>Edição sem justificativa</td>
+<td>A justificativa é obrigatória!</td>
 <td></td>
 </tr>
 <tr>
-<td>Excluir endereço com saldo</td>
-<td>No legado: "O Registro não pode ser excluido pois possui item em estoque associado" <em>(do legado; a confirmar)</em></td>
-<td>Exclusão de endereço não foi testada na versão nova</td>
+<td>Edição com capacidade vazia</td>
+<td>A Altura é obrigatória! / A Largura é obrigatória! / A Profundidade é obrigatória! / O Peso Máximo é obrigatório!</td>
+<td>Capacidade <strong>zero</strong> é aceita (N-077)</td>
+</tr>
+<tr>
+<td>Excluir endereço com saldo ou em uso</td>
+<td><strong>Bloqueado no teste:</strong> a recusa não pôde ser vista</td>
+<td>O Endereçamento não grava saldo (DV-EST-016); no legado a recusa era "O Registro não pode ser excluido pois possui item em estoque associado" <em>(do legado)</em></td>
 </tr>
 </tbody>
 </table></div>
+<figure><a href="../../img/estoque/pnr2-endereco-do-estoque-05-gerar-vazio.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-endereco-do-estoque-05-gerar-vazio.png" alt="Formulário vazio com a pergunta de confirmação" loading="lazy"></a><figcaption>Formulário vazio com a pergunta de confirmação · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-endereco-do-estoque-06-recusa-vazio.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-endereco-do-estoque-06-recusa-vazio.png" alt="Nove avisos de campo obrigatório" loading="lazy"></a><figcaption>Nove avisos de campo obrigatório · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-endereco-do-estoque-07-recusa-sem-rua.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-endereco-do-estoque-07-recusa-sem-rua.png" alt="Sem rua, colunas e andares" loading="lazy"></a><figcaption>Sem rua, colunas e andares · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-endereco-do-estoque-08-recusa-sem-colunas.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-endereco-do-estoque-08-recusa-sem-colunas.png" alt="Sem colunas" loading="lazy"></a><figcaption>Sem colunas · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-endereco-do-estoque-09-recusa-sem-andares.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-endereco-do-estoque-09-recusa-sem-andares.png" alt="Sem andares" loading="lazy"></a><figcaption>Sem andares · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-endereco-do-estoque-10-recusa-sem-justificativa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-endereco-do-estoque-10-recusa-sem-justificativa.png" alt="Só a justificativa" loading="lazy"></a><figcaption>Só a justificativa · clique para ampliar</figcaption></figure>
+
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -90,9 +119,9 @@
 <td>Local de Armazenagem (filtro)</td>
 <td>Lista</td>
 <td>—</td>
-<td>No legado, obrigatório para pesquisar</td>
+<td><strong>Sim</strong> para pesquisar</td>
 <td></td>
-<td>Na imagem começa em "SELECIONE"</td>
+<td>Começa em "SELECIONE"</td>
 </tr>
 <tr>
 <td>Código do Endereço</td>
@@ -139,7 +168,7 @@
 <td>Número</td>
 <td>—</td>
 <td><strong>Sim</strong></td>
-<td></td>
+<td>Aceita zero (N-077); vírgula e ponto descartados</td>
 <td>Lista mostra 3 casas (50,000)</td>
 </tr>
 <tr>
@@ -147,7 +176,7 @@
 <td>Número</td>
 <td>—</td>
 <td><strong>Sim</strong></td>
-<td></td>
+<td>Idem</td>
 <td></td>
 </tr>
 <tr>
@@ -156,7 +185,7 @@
 <td>—</td>
 <td><strong>Sim</strong></td>
 <td></td>
-<td></td>
+<td>Travada na edição</td>
 </tr>
 <tr>
 <td>Ativo</td>
@@ -170,31 +199,31 @@
 <td>Coluna</td>
 <td>Caixas de marcação</td>
 <td>—</td>
-<td>Pelo menos uma (legado)</td>
+<td>Pelo menos uma</td>
 <td>"Selecionar todos"</td>
-<td></td>
+<td>Travada na edição</td>
 </tr>
 <tr>
 <td>Andar</td>
 <td>Caixas de marcação</td>
 <td>—</td>
-<td>Pelo menos um (legado)</td>
+<td>Pelo menos um</td>
 <td>"Selecionar todos"</td>
-<td></td>
+<td>Travada na edição</td>
 </tr>
 <tr>
 <td>Justificativa</td>
 <td>Texto</td>
 <td>—</td>
-<td>Sim no legado</td>
+<td><strong>Sim</strong> (geração e edição)</td>
 <td></td>
-<td>Não aparece na imagem</td>
+<td>Não existe na exclusão (N-079)</td>
 </tr>
 </tbody>
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <p><strong>Teste com perfil restrito (18/11/2026, rodada <code>execucao/2026-11-18-perfil-restrito-estoque/</code>):</strong> com três contas de teste (sem acesso, só consulta e só Incluir em Unidade de Medida), <strong>nenhuma conta que não seja administradora usou esta tela</strong>: o menu obedece ao perfil (consulta mostra a tela; sem acesso e "uma tela" não), mas a API recusa leitura e gravação com 403 (DV-EST-N-001, reteste de 19/11/2026: repete). A tela abre pela rota com a lista vazia, sem aviso de falta de permissão (DV-EST-N-054).</p>
-<p>Quadro <code>quem-pode.csv</code>: o administrador abre a tela e pesquisa; o perfil T.BA20 recebe <strong>403</strong> (a mensagem da tela não foi registrada, só "negado (403)"). Só o administrador passa (DV-EST-N-001, Alta).</p></article>
+<p>Quadro <code>quem-pode.csv</code>: o administrador abre a tela e pesquisa; o perfil T.BA20 recebe <strong>403</strong> (a mensagem da tela não foi registrada, só "negado (403)"). Só o administrador passa (DV-EST-N-001, Alta). Em 18/11/2026 a tela com outro perfil <strong>não foi possível</strong> de novo (o T.BA20 está sem senha local no computador do robô).</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="endereco-do-estoque-fluxos.html"><small>← Anterior</small><strong>Fluxos · Endereço do Estoque</strong></a><a class="ap ap-prox" href="endereco-do-estoque-anvisa.html"><small>Próximo →</small><strong>Anvisa · Endereço do Estoque</strong></a></nav>
 </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
