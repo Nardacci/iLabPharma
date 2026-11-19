@@ -47,7 +47,7 @@
     <article class="texto">
 <h2 id="introducao">Introdução</h2>
 <h3 id="escopo">Escopo</h3>
-<p>Este dossiê registra os testes de homologação do <strong>módulo Garantia da Qualidade (GQ) na versão nova</strong> do LabMedSys (o mesmo sistema com um front-end novo sobre o mesmo back-end), de 17/10 a 11/11/2026, com a conferência e a correção das fichas de 17/11/2026. O objetivo é saber o que funciona, o que falha e o que ainda impede o uso em ambiente regulado (RDC 658/2022, Guia 33/2020). O foco é o comportamento das telas; a leitura do código novo é a Fase 2 do trabalho e ainda não foi feita.</p>
+<p>Este dossiê registra os testes de homologação do <strong>módulo Garantia da Qualidade (GQ) na versão nova</strong> do LabMedSys (o mesmo sistema com um front-end novo sobre o mesmo back-end), de 17/10 a 19/11/2026, com a conferência e a correção das fichas de 17/11/2026 e a incorporação dos lotes de 18 e 19/11 (pista das 19 telas reais concluída e rodada de perfil restrito). O objetivo é saber o que funciona, o que falha e o que ainda impede o uso em ambiente regulado (RDC 658/2022, Guia 33/2020). O foco é o comportamento das telas; o código novo (telas em Angular e API) já foi recebido e fotografado em 11 e 18/11/2026, mas a análise dele por tela é a Fase 2 do trabalho e ainda não foi feita.</p>
 <h3 id="documentos-deste-pacote">Documentos deste pacote</h3>
 <div class="tabela"><table>
 <thead>
@@ -67,11 +67,11 @@
 </tr>
 <tr>
 <td>Manual da versão nova, por tela</td>
-<td>Uso de cada tela testada, com as capturas e os defeitos ligados. <strong>19 manuais por tela, em rascunho; 0 conferidos por robô</strong></td>
+<td>Uso de cada tela testada, com as capturas e os defeitos ligados. <strong>19 manuais por tela, em rascunho; 19 conferidos por robô</strong></td>
 </tr>
 <tr>
 <td>Fichas de defeito DV-GQ-N</td>
-<td>89 fichas, com passos, esperado, obtido, impacto e evidência (87 defeitos contados; DV-GQ-N-041 é repetição de outra ficha e conta uma só vez; DV-GQ-N-006 descartada)</td>
+<td>97 fichas, com passos, esperado, obtido, impacto e evidência (95 defeitos contados; DV-GQ-N-041 é repetição de outra ficha e conta uma só vez; DV-GQ-N-006 descartada)</td>
 </tr>
 <tr>
 <td>Documentos do Legado</td>
@@ -275,15 +275,16 @@
 <h3 id="avaliacao-das-funcoes">Avaliação das funções</h3>
 <p>Não verificado na versão nova: depende da análise do código novo.</p>
 <h3 id="resumo-dos-riscos">Resumo dos riscos</h3>
-<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 17 defeitos de prioridade Alta (17 abertos) (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
+<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 18 defeitos de prioridade Alta (18 abertos) (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
 <ul>
-<li><strong>Perfis:</strong> só o administrador de perfil 1 usa a GQ (N-008 e N-014). Os três perfis de teste que não são administrador veem as telas, em geral com Pesquisar e Incluir desabilitados, e o <strong>servidor recusa a gravação forçada</strong> (403); sem login, 401. Tipo e Motivo de Treinamento mostram o botão Incluir habilitado para esses perfis (N-039).</li>
+<li><strong>Perfis:</strong> só o administrador de perfil 1 usa a GQ (N-008 e N-014). Na rodada de perfil restrito (18/11) três contas foram testadas nas 19 telas. <strong>Sem acesso:</strong> o menu não mostra a GQ, mas pela rota as 19 telas abrem inteiras (a API recusa tudo com 403). <strong>Só consulta:</strong> o menu mostra as 40 telas e nenhuma lista carrega (403; N-093). <strong>Uma tela (INCLUIR em Tipo de Treinamento):</strong> a conta não lista nem inclui (N-094). <strong>Nenhuma gravação foi aceita</strong> em nenhuma conta; sem login, 401. Tipo e Motivo de Treinamento deixam o Incluir ativo para as três contas e só recusam depois do SALVAR (N-039). A mensagem de recusa muda de tela para tela (N-095), a faixa de erro de algumas telas mostra o endereço do servidor (N-096) e Registro, Avaliação e Planejamento deixam Pesquisar e Imprimir ativos (N-097).</li>
+<li><strong>Cabeçalho depois de recarregar:</strong> o defeito do CQ (DV-CQ-N-007) não se reproduziu na GQ.</li>
 <li><strong>Sair:</strong> depois de Sair, o token antigo continua aceito (igual ao DV-PRI-N-004).</li>
 <li><strong>Sessão:</strong> duas sessões da mesma conta convivem; não houve queda de sessão na rodada.</li>
 </ul>
 <h3 id="trilha-de-auditoria">Trilha de auditoria</h3>
-<p>O histórico dos cadastros guarda quem, quando e o valor antigo e novo, <strong>mas não mostra a justificativa digitada</strong> em quase todas as telas (N-018); o histórico do Processo Regulatório vem com "Alteração" = "-" e valores iguais (N-035); o da Programação de Autoinspeção deixa o usuário em branco (N-019); <strong>depois de excluir não dá para ver o histórico</strong> (N-027); o Grupo Perfil não tem tela de Log (N-012). Um cadastro grava sozinho a justificativa "Alteração de registro." (N-020).</p>
+<p>O histórico dos cadastros guarda quem, quando e o valor antigo e novo, <strong>mas não mostra a justificativa digitada</strong> em quase todas as telas (N-018); o histórico do Processo Regulatório vem com "Alteração" = "-" e valores iguais (N-035); o da Programação de Autoinspeção deixa o usuário em branco (N-019); <strong>depois de excluir não dá para ver o histórico</strong> (N-027); o Grupo Perfil não tem tela de Log (N-012, repete no reteste de 19/11) e salvar o Nível 01 não pede justificativa, gravando o texto fixo "Atualizar Grupo Perfil" (N-011, repete). No Monitoramento, alterar ou excluir um anexo não deixa registro (N-084) e a exclusão grava uma justificativa escrita pelo próprio sistema (N-083). Na Solicitação de Mudanças o histórico melhorou (mostra a situação por nome, a justificativa e o usuário), mas o primeiro registro vem com valores vazios (N-035, repete em parte). Um cadastro grava sozinho a justificativa "Alteração de registro." (N-020).</p>
 <h2 id="plano-de-testes">Plano de testes</h2>
 <h3 id="objetivo">Objetivo</h3>
 <p>Saber o que funciona, o que falha e o que ainda impede o uso do Garantia da Qualidade da versão nova em ambiente regulado, em comparação com o sistema entregue.</p>
@@ -292,10 +293,10 @@
 <h3 id="ambiente-e-preparacao">Ambiente e preparação</h3>
 <ul>
 <li><strong>Ambiente:</strong> ambiente de teste da versão nova ("Teste", versão 0.0.1 no rodapé). <strong>Todas as informações do ambiente são de teste</strong> (nomes, CPF, CNPJ e e-mails fictícios); não há dado real nem usuário real.</li>
-<li><strong>Quem testou:</strong> robôs (Claude Code) pelas telas, no navegador, com a conta de administrador (perfil 1) e, para o acesso, contas de teste de outros perfis, mais a API quando a tela é provisória. A VPN caiu duas vezes na rodada 2; isso não gerou resultado. Na rodada 3 o robô usou Playwright por script (senhas só por variável de ambiente).</li>
+<li><strong>Quem testou:</strong> robôs (Claude Code) pelas telas, no navegador, com a conta de administrador (perfil 1) e, para o acesso, contas de teste de outros perfis, mais a API quando a tela é provisória. A VPN caiu duas vezes na rodada 2; isso não gerou resultado. Na rodada 3 e na pista das 19 telas o robô usou Playwright por script (senhas só por variável de ambiente). Na rodada de perfil restrito (18/11) foram criados três perfis (sem acesso, só consulta e uma tela) e as contas T.R2GQ01, T.R2GQ02 e T.R2GQ03, cada uma com seu profissional de teste.</li>
 <li><strong>Registros:</strong> todo registro criado começa com "T." ou "T. BA" e permanece no ambiente.</li>
 <li><strong>Classes de resultado:</strong> Igual ao legado (inclusive a falha), Regressão, Melhoria, Novo, Provisória (tela sem lógica, <strong>não é defeito</strong>) e Bloqueado no teste.</li>
-<li><strong>Dados que não foram vistos:</strong> o banco, o código do front-end novo e o código da API nova.</li>
+<li><strong>Dados que não foram vistos:</strong> o banco; o código do front-end novo e o da API nova foram fotografados (18/11), mas não lidos tela a tela.</li>
 </ul>
 <h3 id="evidencias-e-registro">Evidências e registro</h3>
 <p>Capturas das telas (com manifesto), resultados por rodada em <code>execucao/</code> e uma ficha por defeito (<code>defeitos/</code>). Imagens revisadas antes da publicação; registros de teste com o prefixo "T.".</p>
@@ -315,23 +316,23 @@
 <tbody>
 <tr>
 <td>Fichas de defeito</td>
-<td>89</td>
+<td>97</td>
 </tr>
 <tr>
 <td>Defeitos contados</td>
-<td>87</td>
+<td>95</td>
 </tr>
 <tr>
 <td>Abertos / corrigidos ou fechados</td>
-<td>86 / 1</td>
+<td>94 / 1</td>
 </tr>
 <tr>
 <td>Gravidade Alta / Média / Baixa</td>
-<td>17 / 35 / 35 (Alta abertas: 17)</td>
+<td>18 / 38 / 39 (Alta abertas: 18)</td>
 </tr>
 <tr>
 <td>Classe na versão nova</td>
-<td>7 Igual ao legado, 5 Regressão, 68 Novo, 6 Conhecido do legado, reconfirmado, 1 A confirmar</td>
+<td>10 Igual ao legado, 5 Regressão, 73 Novo, 6 Conhecido do legado, reconfirmado, 1 A confirmar</td>
 </tr>
 </tbody>
 </table></div>
@@ -379,9 +380,19 @@
 <td>R1 a R6, sem bloqueios: ciclo do documento até vigente (3 documentos chegaram a vigente), auditoria completa, Solicitação de Mudanças, Monitoramento com anexo, roteiro em uso e treinamento na Produção e no Estoque; fichas N-048 e N-049 (e DV-DOC-N-008 a 011, do Controle de Documentos)</td>
 </tr>
 <tr>
+<td>Manual por tela, pista de 19 telas</td>
+<td>17 a 19/11/2026</td>
+<td>O robô percorreu as <strong>19 telas reais</strong> na ordem do menu, com o passo a passo do manual e as imagens; ao todo o manual tem 697 imagens e 75 ainda precisam ser feitas ou refeitas. Retestou as fichas antigas tela a tela e abriu as fichas <strong>N-050 a N-092</strong>. Os lotes finais (19/11): Monitoramento Regulatório (N-082 a N-089), <strong>Solicitação de Mudanças (tela 18; N-090 a N-092)</strong> e <strong>Grupo Perfil (tela 19; nenhum defeito novo)</strong>. Retestes: <strong>N-034 e N-036 não se repetem</strong>; N-035 repete em parte; N-011, N-012 e N-049 repetem</td>
+</tr>
+<tr>
+<td>Perfil restrito</td>
+<td>18/11/2026 (incorporado em 19/11)</td>
+<td>As 19 telas com três contas (sem acesso, só consulta, uma tela): <strong>nenhuma conta não administradora lista ou grava em nenhuma das 19 telas</strong> (403 na API; nenhuma gravação aceita); fichas <strong>N-093 (Alta) a N-097</strong>; reteste da N-014 (repete e amplia) e da N-039 (repete). Alterar e excluir pela tela ficaram <strong>Bloqueados no teste</strong></td>
+</tr>
+<tr>
 <td>Correção das fichas e manuais por tela</td>
 <td>17/11/2026</td>
-<td><strong>N-041 é repetição da N-032</strong> (excluir ou inativar Motivo de Treinamento em uso): a <strong>N-032 é a ficha principal</strong> e passa a reunir o detalhe da N-041 (solicitação 000020, resposta 204, campo em branco); a N-041 fica só como nota de duplicidade e <strong>não é contada</strong>. Classe do defeito a confirmar: a ficha diz Regressão, mas o código do legado não confere uso na exclusão do Motivo, o que sugere Igual ao legado. <strong>19 manuais por tela</strong> escritos em rascunho, ainda <strong>0 conferidos por robô</strong></td>
+<td><strong>N-041 é repetição da N-032</strong> (excluir ou inativar Motivo de Treinamento em uso): a <strong>N-032 é a ficha principal</strong> e passa a reunir o detalhe da N-041 (solicitação 000020, resposta 204, campo em branco); a N-041 fica só como nota de duplicidade e <strong>não é contada</strong>. Classe do defeito a confirmar: a ficha diz Regressão, mas o código do legado não confere uso na exclusão do Motivo, o que sugere Igual ao legado. <strong>19 manuais por tela</strong> escritos em rascunho (depois conferidos por robô na pista de 17 a 19/11, linha acima)</td>
 </tr>
 </tbody>
 </table></div>
@@ -411,8 +422,13 @@
 </tr>
 <tr>
 <td>Alta</td>
-<td><strong>Só o administrador (perfil 1) usa a GQ</strong>: um perfil com as funções da GQ aparece no menu e o servidor recusa tudo; a tela de Perfil não governa o acesso aos módulos novos</td>
+<td><strong>Só o administrador (perfil 1) usa a GQ</strong>: um perfil com as funções da GQ aparece no menu e o servidor recusa tudo; a tela de Perfil não governa o acesso aos módulos novos. Na rodada de perfil restrito, nenhuma conta não administradora lista ou grava nas 19 telas</td>
 <td>N-008, N-014</td>
+</tr>
+<tr>
+<td>Alta</td>
+<td><strong>Perfil só de consulta não consegue consultar</strong>: a lista é recusada (403) nas 19 telas, e a árvore de permissões não tem a ação "Consultar". Auditor ou inspetor não têm acesso só de leitura</td>
+<td>N-093</td>
 </tr>
 <tr>
 <td>Alta</td>
@@ -431,8 +447,8 @@
 </tr>
 <tr>
 <td>Alta</td>
-<td>O <strong>histórico não mostra a justificativa</strong> (exceto no Tipo de Treinamento)</td>
-<td>N-018</td>
+<td>O <strong>histórico não mostra a justificativa</strong> (exceto no Tipo de Treinamento); reabrir o roteiro concluído e finalizar a avaliação não deixam registro</td>
+<td>N-018, N-072, N-079</td>
 </tr>
 <tr>
 <td>Alta</td>
@@ -443,6 +459,11 @@
 <td>Alta</td>
 <td><strong>Monitoramento regulatório finaliza sem anexo</strong>, e finalizar ou cancelar não pedem justificativa</td>
 <td>N-033</td>
+</tr>
+<tr>
+<td>Alta</td>
+<td><strong>Anexo do Monitoramento:</strong> excluir não pede confirmação (o sistema grava sozinho a justificativa "Exclusão de anexo."), e alterar ou excluir um anexo não deixa registro</td>
+<td>N-083, N-084</td>
 </tr>
 <tr>
 <td>Alta</td>
@@ -465,13 +486,33 @@
 <td>N-021 a N-024, N-042, N-044, N-046, N-047</td>
 </tr>
 <tr>
+<td>Média</td>
+<td><strong>Monitoramento:</strong> o ENVIAR diz "Arquivo enviado com sucesso." antes do primeiro SALVAR sem enviar nada, o Log de anexo ainda não gravado mostra a hora 3 horas à frente e não há como abrir nem baixar o arquivo anexado</td>
+<td>N-082, N-085, N-086</td>
+</tr>
+<tr>
+<td>Média</td>
+<td><strong>Solicitação de Mudanças:</strong> com "Outros" marcado e o campo "Qual?" vazio o SALVAR não responde; o PDF mostra o código interno no lugar do número da solicitação</td>
+<td>N-091, N-092</td>
+</tr>
+<tr>
+<td>Média</td>
+<td>Conta com INCLUIR só em Tipo de Treinamento não lista nem inclui: a permissão concedida não é honrada</td>
+<td>N-094</td>
+</tr>
+<tr>
 <td>Baixa</td>
 <td>Textos e confirmações antes da validação; perfil sem acesso vê Incluir habilitado</td>
 <td>N-024, N-025, N-039, N-040</td>
 </tr>
+<tr>
+<td>Baixa</td>
+<td>Monitoramento: ENVIAR sem arquivo não responde, filtro só acha o nome inteiro, campo Data muda a cada abertura (a confirmar); "Ultilidades" na Solicitação de Mudanças; recusa de permissão sem texto padrão, endereço do servidor na faixa de erro 403 e Pesquisar ativo para quem não pode</td>
+<td>N-087 a N-090, N-095 a N-097</td>
+</tr>
 </tbody>
 </table></div>
-<p><strong>Bloqueado no teste (ambiente/dados).</strong> Nada na rodada 3: o ciclo do documento que parou na Revisão na rodada 2 foi resolvido com contas de revisor e aprovador, e três documentos chegaram a <strong>vigente</strong>. O que continua aberto está nas fichas DV-DOC-N-008 a 011 do Controle de Documentos (etapa exige a função Documento; vigência sem tela para ligar o treinamento; vínculo aceita treinamento de outro documento; mesma pessoa em todas as etapas). A ficha N-031 está fechada: o treinamento ligado ao documento destrava a vigência.</p>
+<p><strong>Bloqueado no teste (ambiente/dados).</strong> Dois casos ficaram bloqueados nos lotes de 18 e 19/11: <strong>alterar e excluir pela tela com perfil restrito</strong> (nenhuma conta restrita carrega linha na lista para clicar; só foi possível pela API, e o DELETE devolve 405 até para o administrador, então é inconclusivo; responsável: robô, depois da decisão do desenvolvimento sobre a ação Consultar) e <strong>escolher produto na Solicitação de Mudanças</strong> (catálogo de produtos vazio no ambiente; dados). Na rodada 3 não houve bloqueio: o ciclo do documento que parou na Revisão na rodada 2 foi resolvido com contas de revisor e aprovador, e três documentos chegaram a <strong>vigente</strong>. O que continua aberto está nas fichas DV-DOC-N-008 a 011 do Controle de Documentos (etapa exige a função Documento; vigência sem tela para ligar o treinamento; vínculo aceita treinamento de outro documento; mesma pessoa em todas as etapas). A ficha N-031 está fechada: o treinamento ligado ao documento destrava a vigência.</p>
 <h2 id="desvios">Desvios</h2>
 <h3 id="defeitos-de-gravidade-alta">Defeitos de gravidade Alta</h3>
 <div class="tabela"><table>
@@ -585,6 +626,12 @@
 <td>No Monitoramento, alterar ou excluir um anexo não deixa registro: o Log do anexo diz "Não existe log de alteração para este anexo." e o histórico do monitoramento não cit</td>
 <td>Monitoramento Regulatório</td>
 <td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-GQ-N-093</td>
+<td>Perfil só de consulta não consegue consultar nenhuma tela da GQ: a lista é recusada (403) nas 19 telas</td>
+<td>As 19 telas da Garantia da Qualidade (lista e relatório)</td>
+<td>Novo</td>
 </tr>
 </tbody>
 </table></div>
@@ -1209,6 +1256,62 @@
 <td>Monitoramento Regulatório</td>
 <td>Novo</td>
 </tr>
+<tr>
+<td>DV-GQ-N-090</td>
+<td>Solicitação de Mudanças: a caixa "Utilidades" do item a ser alterado está escrita "Ultilidades"</td>
+<td>Baixa</td>
+<td>Solicitação de Mudanças (formulário de inclusão, edição e visualização</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-GQ-N-091</td>
+<td>Solicitação de Mudanças: com "Outros" marcado e o campo "Qual? (Outros)" vazio, o SALVAR não responde e não há mensagem</td>
+<td>Média</td>
+<td>Solicitação de Mudanças</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-GQ-N-092</td>
+<td>Solicitação de Mudanças: o PDF mostra "CM Nº: 43" (código interno, a solicitação é 0042/26) e não traz a Observação nem os anexos</td>
+<td>Média</td>
+<td>Solicitação de Mudanças (impressora da lista e IMPRIMIR da edição)</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-GQ-N-093</td>
+<td>Perfil só de consulta não consegue consultar nenhuma tela da GQ: a lista é recusada (403) nas 19 telas</td>
+<td>Alta</td>
+<td>As 19 telas da Garantia da Qualidade (lista e relatório)</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-GQ-N-094</td>
+<td>Tipo de Treinamento: a conta com INCLUIR marcado só nessa tela não lista nem inclui (GET e POST recusados com 403)</td>
+<td>Média</td>
+<td>Tipo de Treinamento</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-GQ-N-095</td>
+<td>A recusa por falta de permissão na GQ não tem texto padrão: muda de tela para tela e nenhum texto diz que falta permissão</td>
+<td>Baixa</td>
+<td>Avaliação e Registro de Autoinspeção e Auditoria, Cadastro de Roteiro,</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-GQ-N-096</td>
+<td>Avaliação e Registro de Autoinspeção e Auditoria: a faixa de erro 403 mostra o endereço do servidor e o caminho da API</td>
+<td>Baixa</td>
+<td>Avaliação Autoinspeção e Auditoria e Registro Autoinspeção e Auditoria</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-GQ-N-097</td>
+<td>Registro, Avaliação e Planejamento de Autoinspeção e Auditoria deixam PESQUISAR e IMPRIMIR ativos para quem não tem função</td>
+<td>Baixa</td>
+<td>Registro, Avaliação e Planejamento de Autoinspeção e Auditoria</td>
+<td>Novo</td>
+</tr>
 </tbody>
 </table></div>
 <p>Não aparecem nas tabelas: DV-GQ-N-041 (repetição de outra ficha, que é a principal) e DV-GQ-N-006 (descartada).</p>
@@ -1229,12 +1332,12 @@
 <tr>
 <td>Rastreabilidade e trilha de auditoria</td>
 <td>Atende em parte</td>
-<td>Histórico com quem, quando e antes e depois; sem justificativa na tela; excluído não se consulta (N-018, N-027, N-035)</td>
+<td>Histórico com quem, quando e antes e depois; sem justificativa na tela; excluído não se consulta; anexo do Monitoramento sem registro (N-018, N-027, N-035, N-072, N-079, N-083, N-084)</td>
 </tr>
 <tr>
 <td>Controle de acesso</td>
 <td>Não atende</td>
-<td>Só o perfil 1 usa o módulo; o servidor recusa corretamente quem não tem permissão (N-008, N-014, N-039)</td>
+<td>Só o perfil 1 usa o módulo, nem a consulta funciona para outro perfil; o servidor recusa corretamente a gravação de quem não tem permissão (N-008, N-014, N-039, N-093, N-094)</td>
 </tr>
 <tr>
 <td>Independência do auditor e separação de funções</td>
@@ -1266,19 +1369,19 @@
 <h2 id="pendencias">Pendências</h2>
 <ul>
 <li><strong>Telas provisórias (21 de 40, mais as 4 de registro de produto):</strong> Controle de Desvio (14), Controle de Mudanças (7 de 8) e registro de produto não são testadas por tela; provisória <strong>não é defeito</strong>.</li>
-<li><strong>Código do front-end e da API nova:</strong> não revisado (Fase 2 do trabalho).</li>
+<li><strong>Código do front-end e da API nova:</strong> fotografado em 11 e 18/11/2026 e lido só nos pontos de mudança; a análise por tela é a Fase 2. A foto de 18/11 mostra mais coisas no código do que o ambiente de teste mostra (por exemplo, o plano de ação do Controle de Mudanças); a conferir quando o ambiente for atualizado.</li>
 <li><strong>Ciclo do documento até vigente:</strong> feito na rodada 3 (3 documentos vigentes); a mesma pessoa pode revisar, pré-aprovar, aprovar e pôr em vigor (DV-DOC-N-011).</li>
-<li><strong>Não executado:</strong> data impossível na Solicitação de Mudanças (o navegador não deixa digitar). Código do front-end e da API nova segue sem revisão (Fase 2).</li>
-<li><strong>Manuais por tela:</strong> 19 manuais em rascunho (um por tela real); <strong>0 conferidos por robô</strong>. Candidatos a defeito ainda sem ficha em <code>versao-nova/CANDIDATOS-A-DEFEITO-E-PONTOS-A-VALIDAR-17-11.md</code>.</li>
-<li><strong>Fichas a retestar</strong> (a conferência de 17/11 levantou dúvidas; ficam como estão até o reteste pelos robôs): N-025, N-018 (os prints indicam que a justificativa não aparece em Motivo, Tipo de Qualificação, Processo Regulatório e Cadastro de Treinamento), N-016 e N-035.</li>
+<li><strong>Não executado:</strong> data impossível na Solicitação de Mudanças (o navegador não deixa digitar); duplicidade na Solicitação de Mudanças; alterar e excluir pela tela com perfil restrito e escolha de produto (Bloqueados no teste, acima).</li>
+<li><strong>Manuais por tela:</strong> 19 manuais em rascunho (um por tela real), <strong>todos conferidos por robô</strong> entre 17 e 19/11 (cada tela com suas limitações descritas no resultado da rodada); 697 imagens no manual e 75 ainda por fazer ou refazer. Fichas sem imagem de evidência: 9. Candidatos a defeito ainda sem ficha em <code>versao-nova/CANDIDATOS-A-DEFEITO-E-PONTOS-A-VALIDAR-17-11.md</code>.</li>
+<li><strong>Retestes feitos em 18 e 19/11:</strong> N-025, N-018, N-016 e N-035 <strong>repetem</strong>; N-014 <strong>repete e amplia</strong>; <strong>N-034 e N-036 não se repetem</strong> e <strong>N-003 não se repete</strong> na Avaliação, e a <strong>N-043 não se reproduziu</strong> nas combinações testadas (fica a dúvida). As fichas não reproduzidas continuam contadas como abertas até a Garantia da Qualidade decidir fechá-las como "não reproduzida".</li>
 <li><strong>Imagens:</strong> 302 conferidas na rodada 3 (revisão de segurança em <code>prints/</code>); nenhuma com senha, endereço de servidor ou caminho de pasta. Todas as informações do ambiente de teste são fictícias.</li>
 <li><strong>Responsável pela correção:</strong> não é indicado nas fichas: a Garantia da Qualidade avalia e simula primeiro, e só depois abre o reparo para os desenvolvedores.</li>
 </ul>
 <h2 id="parecer-da-homologacao">Parecer da homologação</h2>
 <div class="callout">
 <p class="callout-titulo">Sem veredito novo</p>
-<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O módulo está <strong>parcialmente construído</strong>: dos 40 itens do menu, <strong>19 são telas reais</strong> e <strong>21 são provisórias</strong> (as 14 de Controle de Desvio e 7 das 8 de Controle de Mudanças; as 4 telas de registro de produto também são provisórias). Sem as telas de desvio, a auditoria "Não conforme" não tem para onde mandar o tratamento. Por isso o veredito fica <strong>sem veredito</strong>, e não "apto". A rodada 3 (10/11/2026) está incorporada; os números deste dossiê são lidos das fichas.</p>
-<p>Fotografia do módulo na versão nova: 87 defeitos contados (86 abertos), 17 de prioridade Alta (17 abertos). Não há veredito de "apto".</p>
+<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O módulo está <strong>parcialmente construído</strong>: dos 40 itens do menu, <strong>19 são telas reais</strong> e <strong>21 são provisórias</strong> (as 14 de Controle de Desvio e 7 das 8 de Controle de Mudanças; as 4 telas de registro de produto também são provisórias). Sem as telas de desvio, a auditoria "Não conforme" não tem para onde mandar o tratamento. Por isso o veredito fica <strong>sem veredito</strong>, e não "apto". As rodadas 1 a 3 e os lotes de 18 e 19/11/2026 estão incorporados; os números deste dossiê são lidos das fichas. A foto do código de 18/11 mostra que o desenvolvimento já escreveu, por exemplo, o plano de ação do Controle de Mudanças; o ambiente de teste ainda não mostra essas telas, e elas só entram nos testes quando abrirem lá.</p>
+<p>Fotografia do módulo na versão nova: 95 defeitos contados (94 abertos), 18 de prioridade Alta (18 abertos). Não há veredito de "apto".</p>
 </div>
 <h2 id="fechamento-do-modulo">Fechamento do módulo</h2>
 <h3 id="o-que-foi-concluido">O que foi concluído</h3>
@@ -1289,7 +1392,7 @@
 <ol>
 <li>Corrigir os itens de prioridade Alta (acesso por perfil, histórico com justificativa, auditoria finalizada e sua conclusão, exclusão em uso, monitoramento, roteiro com seleção).</li>
 <li>Construir as telas provisórias de Controle de Desvio e de Mudanças e ligar a auditoria "Não conforme" ao tratamento de desvio.</li>
-<li>Resolver o acesso por perfil e repetir os casos de permissão com perfis diferentes do administrador.</li>
+<li>Resolver o acesso por perfil (inclusive a consulta, N-093, e a permissão que não é honrada, N-094) e repetir os casos de alterar e excluir pela tela com perfis diferentes do administrador, que ficaram Bloqueados no teste em 18/11.</li>
 <li>Definir com a Garantia da Qualidade o critério de "apto".</li>
 <li>Receber e revisar o código do front-end e da API nova (Fase 2).</li>
 </ol>
