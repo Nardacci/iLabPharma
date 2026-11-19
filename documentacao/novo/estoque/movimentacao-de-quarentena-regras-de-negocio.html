@@ -40,26 +40,47 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 312 de 756</span><div class="prog-doc"><i style="width:41%"></i></div></div>
   <header class="doc-cabecalho"><h1>Movimentação de Quarentena: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="movimentacao-de-quarentena-analise.html">Análise</a><a href="movimentacao-de-quarentena-manual-do-usuario.html">Manual do usuário</a><a href="movimentacao-de-quarentena-fluxos.html">Fluxos</a><a href="movimentacao-de-quarentena-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="movimentacao-de-quarentena-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="movimentacao-de-quarentena-erros.html">Erros (1)</a><a class="aba-extra" href="movimentacao-de-quarentena-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="movimentacao-de-quarentena-analise.html">Análise</a><a href="movimentacao-de-quarentena-manual-do-usuario.html">Manual do usuário</a><a href="movimentacao-de-quarentena-fluxos.html">Fluxos</a><a href="movimentacao-de-quarentena-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="movimentacao-de-quarentena-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="movimentacao-de-quarentena-erros.html">Erros (3)</a><a class="aba-extra" href="movimentacao-de-quarentena-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>FINALIZAR (código da tela e API nova):</strong> grava os endereçamentos (saída da quarentena e entrada no destino) e marca a análise como MOVIMENTADO, com log. A API tem as rotas de endereçamento, cancelamento e <strong>finalizar</strong>.</li>
-<li>O saldo sai de "Quarentena" e entra no endereço de destino; para lote aprovado vira <strong>Disponível</strong> (do legado; a confirmar).</li>
-<li>Lote <strong>reprovado</strong>: o destino deve ser de refugo (do legado; a confirmar na versão nova).</li>
+<li><strong>Nesta tela, como testada:</strong> nada é gravado. A lista só lê; PESQUISAR, LIMPAR e LOG não alteram dado.</li>
+<li><strong>FINALIZAR</strong> (pelo código da tela e API nova; <strong>não visto, Bloqueado no teste</strong>): grava os endereçamentos (saída da quarentena e entrada no destino) e marca a análise como MOVIMENTADO, com log. A API tem as rotas de endereçamento, cancelamento e finalizar.</li>
+<li>O saldo sai de "Quarentena" e entra no endereço de destino; para lote aprovado vira <strong>Disponível</strong> (do legado; a confirmar). Lote <strong>reprovado</strong>: o destino deve ser de refugo (do legado; a confirmar).</li>
 </ul>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
-<li><strong>CONFIRMAR ENDEREÇO:</strong> grava na hora uma linha origem, destino e quantidade, <strong>sem mexer no saldo</strong>; reabrindo a tela antes de finalizar, a linha continua lá (movimentacao_cq_ed2.aspx.cs:369-387; CT-EST-051).</li>
-<li><strong>FINALIZAR:</strong> confere que a soma endereçada fecha com o saldo a liberar, grava uma movimentação do tipo Movimentação de Quarentena (saída da origem e entrada no destino sob o mesmo código), marca a análise como movimentada e grava o log (movimentacao_cq_ed2.aspx.cs:205-297). O aprovado passa de Quarentena a Disponível; o reprovado, de Bloqueado a Reprovado (CT-EST-207 e 051).</li>
-<li>As quantidades de referência, retenção e estabilidade não saem com o lote: ficam reservadas (RN-EST-E06-004).</li>
-<li>A tela <strong>não pede justificativa</strong> (a versão antiga pedia).</li>
+<li><strong>CONFIRMAR ENDEREÇO:</strong> grava na hora uma linha origem, destino e quantidade, sem mexer no saldo; reabrindo a tela antes de finalizar, a linha continua lá (movimentacao_cq_ed2.aspx.cs:369-387; CT-EST-051).</li>
+<li><strong>FINALIZAR:</strong> confere que a soma endereçada fecha com o saldo a liberar e grava a movimentação (movimentacao_cq_ed2.aspx.cs:205-297). As quantidades de referência, retenção e estabilidade não saem com o lote: ficam reservadas (RN-EST-E06-004). A tela <strong>não pede justificativa</strong>.</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<p><strong>Visto na tela (19/11/2026):</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Situação</th>
-<th>Mensagem (código da tela)</th>
+<th>Mensagem</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa sem resultado (Item Entrada inexistente, N.do Laudo inexistente, Situação MOVIMENTADO)</td>
+<td>"A pesquisa não retornou nenhum resultado."</td>
+<td>Aparece dentro da lista</td>
+</tr>
+<tr>
+<td>Log de análise ainda não movimentada</td>
+<td>"Não existe log de alteração para este registro."</td>
+<td>Janela de log</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pelo código da tela, não vistas (Bloqueado no teste, o formulário não abre):</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Mensagem</th>
 <th>Observação</th>
 </tr>
 </thead>
@@ -97,7 +118,7 @@
 <tr>
 <td>Falhas técnicas</td>
 <td>"Não foi possível registrar o endereçamento.", "Não foi possível cancelar o endereçamento.", "Não foi possível finalizar a movimentação.", "Não foi possível carregar os endereços de origem." / "de destino."</td>
-<td>Servidor ou grupo do usuário (DV-EST-N-049)</td>
+<td>Servidor ou grupo do usuário (DV-EST-N-049; a lista não repete o defeito)</td>
 </tr>
 <tr>
 <td>Permissões</td>
@@ -108,12 +129,9 @@
 </table></div>
 <p><strong>Recusas do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
-<li>Quantidade vazia ou zero: "Quantidade não informada!" / "Quantidade não informada ou inválida!". Maior que o saldo do endereço: "Quantidade informada é superior a pendente!".</li>
 <li>Destino: "Endereço não pode receber o lote!", "Endereço de destino inválido!", "O Endereço {código} não pode ser utilizado!".</li>
-<li>Finalizar fora de ordem: "A Análise ainda não foi finalizada!", "O processo de liberação já foi executado!", "Existem solicitações de amostra pendentes!", "Nenhum endereço foi registrado!".</li>
-<li>Soma que não fecha: "Total endereçado é divergente do total do Lote!". Origem que mudou: "Algum endereço de Origem foi movimentado! Exclua os endereços atuais".</li>
-<li>Lote de produção ainda não liberado: avisos "LOTE DE PRODUÇÃO AGUARDANDO LIBERAÇÃO DA GARANTIA / RESPONSÁVEL TÉCNICO" ou "LOTE DE PRODUÇÃO REPROVADO" (a tela esconde origem, destino e Finalizar).</li>
-<li>Rua, coluna e andar em branco <strong>não são recusados</strong> ao confirmar o endereço (veja os cuidados).</li>
+<li>Finalizar fora de ordem: "A Análise ainda não foi finalizada!", "O processo de liberação já foi executado!", "Existem solicitações de amostra pendentes!", "Nenhum endereço foi registrado!". Soma que não fecha: "Total endereçado é divergente do total do Lote!". Origem que mudou: "Algum endereço de Origem foi movimentado! Exclua os endereços atuais".</li>
+<li>Lote de produção ainda não liberado: avisos "LOTE DE PRODUÇÃO AGUARDANDO LIBERAÇÃO DA GARANTIA / RESPONSÁVEL TÉCNICO" ou "LOTE DE PRODUÇÃO REPROVADO". Rua, coluna e andar em branco <strong>não são recusados</strong> ao confirmar o endereço.</li>
 </ul>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
@@ -131,29 +149,29 @@
 <td>Pesquisa: Item Entrada</td>
 <td>Texto</td>
 <td>Não</td>
-<td>Código do lote no estoque</td>
-<td>levantamento</td>
+<td>Número do sistema do lote (<code>0004/26</code>) ou código (<code>TA0043</code>); até 12 caracteres</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Pesquisa: N.do Laudo</td>
 <td>Texto</td>
 <td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td>Laudo inexistente: sem resultado</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Pesquisa: Situação</td>
 <td>Lista</td>
 <td>Não</td>
 <td>TODOS, PENDENTE, MOVIMENTADO</td>
-<td>levantamento</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Item, Item de Entrada, Lote, Data de Validade, Fornecedor, Fabricante, Nº do Laudo, Resultado, Unid. Medida</td>
 <td>Texto travado</td>
 <td>—</td>
 <td>Da análise</td>
-<td>código da tela</td>
+<td>código da tela (formulário não aberto)</td>
 </tr>
 <tr>
 <td>Lote, Referência, Retenção, Estabilidade, Endereçar, Endereçada</td>
@@ -315,25 +333,34 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros, que declaram). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> chamando a rota com um perfil sem a função.</li>
-<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador (perfil 1) usa o módulo; os demais recebem 403 (DV-EST-N-001, Alta), e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
-<li><strong>Grupo do usuário:</strong> as telas que dependem do almoxarifado do grupo recusaram tudo nos testes de 10 a 12/11/2026 porque o login não grava o grupo no token (DV-EST-N-049 e N-050). Um robô deve <strong>repetir esse reteste</strong> nesta tela antes de concluir qualquer falha de gravação.</li>
-<li><strong>O que a tela faz (código da tela):</strong> ela carrega as permissões ao abrir e mostra "Não foi possível carregar as permissões da tela. Atualize a página." se falhar; a conferir quais botões somem sem a função.
-| Perfil | Resultado esperado a confirmar |
-|---|---|
-| Administrador | Abre e opera |
-| Perfil T.BA20 e perfil restrito | Esperado 403 como nas outras telas (DV-EST-N-001); confirmar |
-| Sem login | Leva à tela de login |</li>
+<li><strong>Com o administrador (testado):</strong> a lista abre e pesquisa normalmente, sem erro de grupo (o DV-EST-N-049 e o N-050 <strong>não se repetem na leitura</strong>; o carregamento de endereços e a gravação não foram possíveis).</li>
+<li><strong>Perfil sem permissão (T.BA20 e conta restrita):</strong> <strong>Bloqueado no teste</strong>: a variável da senha da conta restrita estava sem valor na sessão do robô. Esperado 403 como nas outras telas (DV-EST-N-001, Alta); responsável: quem testa (criar o usuário restrito) e desenvolvimento (corrigir o 403).</li>
+<li><strong>Pelo código:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros); a API só confere "usuário logado" (a confirmar com um perfil sem a função). A tela lê as permissões ao abrir e mostra "Não foi possível carregar as permissões da tela. Atualize a página." se falhar.</li>
+<li><strong>IMPRIMIR e Excel:</strong> o código da tela os liga a uma permissão de impressão; é possível que o administrador do ambiente não a tenha (DV-EST-N-120).</li>
 </ul>
-<p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
-<ul>
-<li>A lista e o formulário usam a função de código <strong>320</strong>. O ícone de histórico depende da marca <strong>Consultar log</strong> (movimentacao_cq_lst.aspx.cs:185-186).</li>
-<li>O <strong>ícone de abrir ignora a marca Alterar</strong>: a linha 163 o liga a ela e a linha 170 o sobrescreve só pelo status da análise; quem não tem a marca vê o ícone se a análise estiver concluída.</li>
-<li><strong>Não há função própria para finalizar</strong> (nada equivalente ao "aprovar/reprovar" do Controle da Qualidade) nem segunda pessoa para a liberação (movimentacao_cq_ed2.aspx.cs:186-297). Ponto para validar com a área: exigir uma segunda pessoa (Pessoa Delegada, art. 8º, XV).</li>
-<li>O <strong>grupo de usuário</strong> limita lotes e almoxarifados. O formulário usa o número da análise do endereço e abre sem conferir grupo nem status (movimentacao_cq_ed2.aspx.cs:39-42 e 59-64).</li>
-<li>A tela <strong>não confere a permissão ao ser aberta</strong>: um usuário sem acesso ao Estoque abriu esta tela pelo endereço (DV-EST-008, Alta; CT-EST-065).</li>
-<li>A regra "aprovado só em local comum, reprovado só em refugo" é só da lista de seleção; o servidor não a repete ao finalizar.</li>
-</ul></article>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Abre e pesquisa; Movimentar não testado (sem análise com resultado)</td>
+</tr>
+<tr>
+<td>Perfil T.BA20 e perfil restrito</td>
+<td><strong>Bloqueado no teste</strong> (sem senha da conta restrita); esperado 403 (DV-EST-N-001)</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login (a confirmar)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>: a lista e o formulário usam a função de código <strong>320</strong>; o ícone de histórico depende da marca <strong>Consultar log</strong>; o <strong>ícone de abrir ignora a marca Alterar</strong> (movimentacao_cq_lst.aspx.cs:163-170); <strong>não há função própria para finalizar</strong> nem segunda pessoa para a liberação (ponto para validar com a área: Pessoa Delegada, art. 8º, XV); o <strong>grupo de usuário</strong> limita lotes e almoxarifados; a tela <strong>não conferia a permissão ao ser aberta</strong> (DV-EST-008, Alta); a regra "aprovado só em local comum, reprovado só em refugo" era só da lista de seleção.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="movimentacao-de-quarentena-fluxos.html"><small>← Anterior</small><strong>Fluxos · Movimentação de Quarentena</strong></a><a class="ap ap-prox" href="movimentacao-de-quarentena-anvisa.html"><small>Próximo →</small><strong>Anvisa · Movimentação de Quarentena</strong></a></nav>
 </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>

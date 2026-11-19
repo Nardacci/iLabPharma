@@ -40,49 +40,61 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 396 de 756</span><div class="prog-doc"><i style="width:52%"></i></div></div>
   <header class="doc-cabecalho"><h1>Histórico do Lote: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="historico-do-lote-analise.html">Análise</a><a href="historico-do-lote-manual-do-usuario.html">Manual do usuário</a><a href="historico-do-lote-fluxos.html">Fluxos</a><a href="historico-do-lote-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="historico-do-lote-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="historico-do-lote-erros.html">Erros (1)</a><a class="aba-extra" href="historico-do-lote-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="historico-do-lote-analise.html">Análise</a><a href="historico-do-lote-manual-do-usuario.html">Manual do usuário</a><a href="historico-do-lote-fluxos.html">Fluxos</a><a href="historico-do-lote-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="historico-do-lote-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="historico-do-lote-erros.html">Erros (2)</a><a class="aba-extra" href="historico-do-lote-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
-<p>Nada é gravado. PESQUISAR só lê (a API tem rotas só de leitura: busca por Item de Entrada, resumo, movimentações, endereços e solicitações). VOLTAR leva ao Histórico do Item.</p>
-<p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
-<p>Nada é gravado. PESQUISAR só lê e preenche a página; VOLTAR leva ao Histórico do Item, quando foi ele que abriu a tela (historico_lote_lst.aspx.cs:160-164).</p>
+<p>Nada é gravado. PESQUISAR só lê (a API tem rotas só de leitura: busca por Item de Entrada, resumo, movimentações, endereços e solicitações); a paginação só muda a página mostrada; VOLTAR leva ao Histórico do Item. Confirmado na tela: nenhum dado mudou depois das consultas.</p>
+<p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>: nada é gravado; PESQUISAR só lê; VOLTAR leva ao Histórico do Item quando foi ele que abriu a tela (historico_lote_lst.aspx.cs:160-164).</p>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<p><strong>Visto na tela (19/11/2026):</strong></p>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Situação</th>
-<th>Mensagem (código da tela)</th>
+<th>Mensagem</th>
 <th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Item de Entrada inexistente</td>
+<td>Item de Entrada inexistente (por exemplo <code>9999/99</code>), ou parte do código (<code>0002</code>, <code>0002/2</code>)</td>
 <td>"Nenhum lote foi encontrado!"</td>
-<td></td>
+<td>Faixa vermelha no pé da página, quadros vazios</td>
 </tr>
 <tr>
 <td>Campo em branco</td>
 <td>"Informe o item de entrada para pesquisar o lote."</td>
-<td></td>
+<td>Faixa vermelha</td>
 </tr>
 <tr>
-<td>Falha ao carregar</td>
-<td>"Não foi possível carregar o histórico do lote." / "Não foi possível carregar os dados."</td>
-<td></td>
-</tr>
-<tr>
-<td>Grade sem dados</td>
-<td>Texto da grade vazia (não está no código lido)</td>
-<td>O robô anota; no legado "Nenhuma movimentação encontrada", "Nenhum endereço encontrado" e "Nenhuma solicitação encontrada para o lote"</td>
+<td>Lote sem solicitação</td>
+<td>"Nenhuma solicitação encontrada para o lote"</td>
+<td>Texto dentro da grade de solicitações</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Recusas do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
-<ul>
-<li>Item de Entrada inexistente: "Nenhum lote foi encontrado!".</li>
-<li>Grades sem dados: "Nenhuma movimentação encontrada" (vista em teste, CT-EST-197), "Nenhum endereço encontrado" (vista na rodada 6) e "Nenhuma solicitação encontrada para o lote".</li>
-<li>Outras falhas aparecem em quadro vermelho com o link "Detalhe do erro (+)".</li>
-</ul>
+<p><strong>Pelo código da tela, não vistas:</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Mensagem</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Falha ao carregar</td>
+<td>"Não foi possível carregar o histórico do lote." / "Não foi possível carregar os dados."</td>
+<td>Não provocadas no teste</td>
+</tr>
+<tr>
+<td>Grade de movimentações ou de endereços sem dados</td>
+<td>Texto não visto: <strong>não foi possível</strong>, todo lote do ambiente tem ao menos uma movimentação e um endereço</td>
+<td>No legado: "Nenhuma movimentação encontrada" e "Nenhum endereço encontrado"</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Recusas do legado</strong> <em>(do legado; a confirmar na versão nova)</em>: "Nenhum lote foi encontrado!"; grades sem dados: "Nenhuma movimentação encontrada" (CT-EST-197), "Nenhum endereço encontrado" (rodada 6) e "Nenhuma solicitação encontrada para o lote"; outras falhas aparecem em quadro vermelho com o link "Detalhe do erro (+)".</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -99,50 +111,50 @@
 <td>Item de Entrada (pesquisa)</td>
 <td>Texto</td>
 <td><strong>Sim</strong></td>
-<td>Código completo do lote</td>
-<td>levantamento</td>
+<td>Código completo do lote; até 40 caracteres; espaços e minúsculas aceitos</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Item, Unid. Medida, Custo Médio, Lote, Validade, Fabricante, Fornecedor, Saldo Atual</td>
 <td>Texto travado</td>
 <td>—</td>
-<td>Dados do lote</td>
-<td>código da tela</td>
+<td>Dados do lote; Custo Médio apareceu 0,000</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Nº do Laudo, Data da Análise, Validade do Laudo, Tipo de Análise, Data da Reanálise, Grau de Pureza, Teor, Resultado, Responsável</td>
 <td>Texto travado</td>
 <td>—</td>
-<td>Última análise</td>
-<td>código da tela</td>
+<td>Última análise; vazios nos lotes sem análise (Grau de Pureza e Teor em 0,00)</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Disponível, Vencido/Reanálise, Reprovado, Bloq./Inventário, Solic./Separação, Quarentena, Total</td>
 <td>Número travado</td>
 <td>—</td>
-<td>Saldos</td>
-<td>código da tela</td>
+<td>Saldos, em três casas decimais</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Grade Histórico de Movimentações</td>
-<td>Tabela paginada</td>
+<td>Tabela paginada (5 por página)</td>
 <td>—</td>
-<td>Código, Data, Tipo de Movimentação, Endereço, Quantidade, Custo Unitário, Entrada/Saída</td>
-<td>código da tela</td>
+<td>Código, Data, Tipo de Movimentação, Endereço, Quantidade, Custo Unitário, Entrada/Saída; mais recente primeiro</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Grade Endereços do Lote</td>
-<td>Tabela paginada</td>
+<td>Tabela paginada (5 por página)</td>
 <td>—</td>
-<td>Almoxarifado, Local de Armazenagem, Endereço, Quantidade</td>
-<td>código da tela</td>
+<td>Almoxarifado, Local de Armazenagem, Endereço, Quantidade; só com saldo</td>
+<td>visto na tela</td>
 </tr>
 <tr>
 <td>Grade Solicitações</td>
 <td>Tabela paginada</td>
 <td>—</td>
-<td>Código, Data Solicitação, Data Atendimento, Data Separação, Almoxarifado, Centro de Custo, Tipo, Atendido</td>
-<td>código da tela</td>
+<td>Código, Data Solicitação, Data Atendimento, Data Separação, Almoxarifado, Centro de Custo, Tipo, Atendido; com solicitação, fica para a tela 33</td>
+<td>visto na tela (sem linhas)</td>
 </tr>
 </tbody>
 </table></div>
@@ -247,39 +259,34 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros, que declaram). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> chamando a rota com um perfil sem a função.</li>
-<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador (perfil 1) usa o módulo; os demais recebem 403 (DV-EST-N-001, Alta), e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
-<li><strong>Grupo do usuário:</strong> as telas que dependem do almoxarifado do grupo recusaram tudo nos testes de 10 a 12/11/2026 porque o login não grava o grupo no token (DV-EST-N-049 e N-050). Um robô deve <strong>repetir esse reteste</strong> nesta tela antes de concluir qualquer falha de gravação.</li>
+<li><strong>Com o administrador (testado):</strong> a consulta abre e carrega saldos, movimentações e endereços sem erro de grupo (o DV-EST-N-049 e o N-050 <strong>não se repetem na leitura</strong>).</li>
+<li><strong>Perfil sem permissão (T.BA20 e conta restrita):</strong> <strong>sem como testar</strong> nesta rodada: a variável da senha da conta restrita estava sem valor na sessão do robô. Esperado 403 como nas outras telas (DV-EST-N-001, Alta); responsável: quem testa (criar o usuário restrito).</li>
+<li><strong>Pelo código:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong>; a API só confere "usuário logado" (a confirmar com um perfil sem a função).</li>
+<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador usa o módulo; os demais recebem 403, e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
 </ul>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Perfil</th>
-<th>Resultado esperado a confirmar</th>
+<th>Resultado</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Administrador</td>
-<td>Abre e opera</td>
+<td>Abre e consulta</td>
 </tr>
 <tr>
 <td>Perfil T.BA20 e perfil restrito</td>
-<td>Esperado 403 como nas outras telas (DV-EST-N-001); confirmar</td>
+<td><strong>Sem como testar</strong> (sem senha da conta restrita); esperado 403 (DV-EST-N-001)</td>
 </tr>
 <tr>
 <td>Sem login</td>
-<td>Leva à tela de login</td>
+<td>Leva à tela de login (a confirmar)</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
-<ul>
-<li>A tela usa a função de código <strong>341</strong> e a base do <strong>formulário</strong>, que começa com todas as permissões ligadas e tem a conferência desligada (ClassePaiEd.cs:18, 49-61, 79-81 e 95-105). Não há botão de gravação.</li>
-<li><strong>Quem digita o endereço da página pesquisa qualquer lote</strong> (DV-EST-008, Alta, confirmado em outras telas; sem teste por endereço nesta).</li>
-<li>O <strong>grupo de usuário</strong> filtra os endereços e as solicitações, mas <strong>não filtra as movimentações nem os dados do lote</strong>: quem não tem acesso ao almoxarifado do lote vê as movimentações dele. Leitura do código, a confirmar (CT-EST-E11-06). O número do lote vem do endereço da página sem conferência de grupo.</li>
-<li>A ficha não registra quem a consultou.</li>
-</ul></article>
+<p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>: a tela usava a função de código <strong>341</strong> e a base do formulário, que começa com todas as permissões ligadas e tem a conferência desligada; quem digitava o endereço da página pesquisava qualquer lote (DV-EST-008, Alta); o <strong>grupo de usuário</strong> filtrava os endereços e as solicitações, mas não as movimentações nem os dados do lote (leitura do código, a confirmar); a ficha não registra quem a consultou.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="historico-do-lote-fluxos.html"><small>← Anterior</small><strong>Fluxos · Histórico do Lote</strong></a><a class="ap ap-prox" href="historico-do-lote-anvisa.html"><small>Próximo →</small><strong>Anvisa · Histórico do Lote</strong></a></nav>
 </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>

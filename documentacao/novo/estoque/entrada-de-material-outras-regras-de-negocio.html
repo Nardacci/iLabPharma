@@ -40,12 +40,14 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 291 de 756</span><div class="prog-doc"><i style="width:38%"></i></div></div>
   <header class="doc-cabecalho"><h1>Entrada de Material - Outras: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="entrada-de-material-outras-analise.html">Análise</a><a href="entrada-de-material-outras-manual-do-usuario.html">Manual do usuário</a><a href="entrada-de-material-outras-fluxos.html">Fluxos</a><a href="entrada-de-material-outras-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="entrada-de-material-outras-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="entrada-de-material-outras-erros.html">Erros (6)</a><a class="aba-extra" href="entrada-de-material-outras-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="entrada-de-material-outras-analise.html">Análise</a><a href="entrada-de-material-outras-manual-do-usuario.html">Manual do usuário</a><a href="entrada-de-material-outras-fluxos.html">Fluxos</a><a href="entrada-de-material-outras-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="entrada-de-material-outras-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="entrada-de-material-outras-erros.html">Erros (10)</a><a class="aba-extra" href="entrada-de-material-outras-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Finalizar (código da tela, API nova e legado; a confirmar):</strong> grava a movimentação, gera os volumes, abre a análise no CQ para item com controle de qualidade, coloca o saldo em quarentena (ou disponível, se o item não tem controle) e abre as etiquetas.</li>
-<li><strong>Erro depois de gravar:</strong> no legado, se a abertura da análise falhasse a entrada já estava gravada e um novo FINALIZAR gravava de novo; o robô confere (risco de duplicar).</li>
-<li><strong>Não há alteração nem exclusão</strong> da entrada pela tela (legado; a API só tem consulta e inclusão).</li>
+<li><strong>Finalizar (visto):</strong> pergunta "Confirma a inclusão do registro?", grava a movimentação (ex.: 00000137), põe o saldo no endereço escolhido e volta à lista com "Inclusão realizada com sucesso!". Item com controle de qualidade: <strong>quarentena</strong> (Disponível 0) com número de análise do CQ; item sem controle: <strong>disponível</strong>. <strong>Não abre nenhuma janela de etiqueta.</strong></li>
+<li><strong>Validade vencida:</strong> o lote entra mesmo assim; o saldo vencido não fica disponível (Disponível 0), mas <strong>sem aviso e sem análise diferenciada</strong> (DV-EST-N-037).</li>
+<li><strong>Mesmo lote em outra entrada:</strong> entra como outro lote interno, sem aviso (DV-EST-N-142).</li>
+<li><strong>Não há alteração nem exclusão</strong> da entrada pela tela (a lista só tem Visualizar e LOG; Editar e Excluir existem só nos itens do formulário).</li>
+<li><strong>Erro depois de gravar (legado):</strong> o robô não conseguiu repetir; conferir a lista antes de finalizar de novo.</li>
 </ul>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
@@ -58,25 +60,30 @@
 <thead>
 <tr>
 <th>Situação</th>
-<th>Mensagem (código da tela)</th>
+<th>Mensagem exata (vista na tela)</th>
 <th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Item em branco</td>
-<td>"O Item é obrigatório!"</td>
+<td>PESQUISAR sem escolher o tipo</td>
+<td>"Tipo de Movimentação não foi informado!"</td>
+<td>O legado pesquisava todos os tipos</td>
+</tr>
+<tr>
+<td>Código sem resultado</td>
+<td>"A pesquisa não retornou nenhum resultado."</td>
 <td></td>
 </tr>
 <tr>
-<td>Custo unitário em branco</td>
-<td>"O Custo Unitário é obrigatório!"</td>
-<td></td>
+<td>Data inicial inexistente</td>
+<td>"A data inicial do período é inválida!"</td>
+<td>Período invertido não tem aviso próprio</td>
 </tr>
 <tr>
-<td>Quantidade em branco</td>
-<td>"A Quantidade é obrigatória!"</td>
-<td></td>
+<td>SALVAR ITEM vazio</td>
+<td>"O Item é obrigatório!", "O Custo Unitário é obrigatório!", "A Quantidade é obrigatória!", "A Qtde. Volumes é obrigatória!", "O Lote é obrigatório!"</td>
+<td>Todas na mesma faixa</td>
 </tr>
 <tr>
 <td>Volumes em branco</td>
@@ -84,23 +91,28 @@
 <td></td>
 </tr>
 <tr>
-<td>Lote em branco</td>
-<td>"O Lote é obrigatório!"</td>
+<td>Validade em branco</td>
+<td>"A Validade é obrigatória!"</td>
+<td>Só aparece com o item escolhido</td>
+</tr>
+<tr>
+<td>Validade inexistente (31/02/2030)</td>
+<td>"A Validade é inválida!"</td>
 <td></td>
 </tr>
 <tr>
-<td>Validade em branco ou inválida</td>
-<td>"A Validade é obrigatória!" / "A Validade é inválida!"</td>
-<td>No legado a validade de ontem era aceita (DV-EST-025 do legado); conferir</td>
+<td><strong>Validade vencida (ontem, 01/01/2020)</strong></td>
+<td><strong>Aceita, sem aviso</strong></td>
+<td>DV-EST-N-037 (Alta); a norma pede validade em dia</td>
 </tr>
 <tr>
-<td>Mesmo item, lote e fabricante duas vezes</td>
+<td>Mesmo item, lote e fabricante na mesma entrada</td>
 <td>"Este item já foi incluído com o mesmo lote e fabricante!"</td>
-<td></td>
+<td>Em <strong>outra</strong> entrada o mesmo lote passa (DV-EST-N-142)</td>
 </tr>
 <tr>
-<td>Endereço sem item-lote</td>
-<td>"O Item-Lote-Validade é obrigatório!"</td>
+<td>INCLUIR ENDEREÇO vazio</td>
+<td>"O Item-Lote-Validade é obrigatório!", "Almoxarifado não informado!", "Local não informado!", "Rua não informada!", "Coluna não informada!", "Andar não informado!", "A Quantidade é obrigatória!"</td>
 <td></td>
 </tr>
 <tr>
@@ -109,29 +121,34 @@
 <td></td>
 </tr>
 <tr>
-<td>Endereço repetido por outro item</td>
+<td>Endereço já usado por outro item da mesma entrada</td>
 <td>"Este endereço já foi utilizado por outro item nesta entrada!"</td>
-<td></td>
+<td>Sem print</td>
 </tr>
 <tr>
-<td>Tipo em branco</td>
-<td>"O Tipo de Movimentação é obrigatório!"</td>
-<td></td>
-</tr>
-<tr>
-<td>Item sem endereçamento completo</td>
+<td>FINALIZAR com pendência de endereço</td>
 <td>"Todos os itens devem estar totalmente endereçados!"</td>
-<td></td>
+<td>Vem depois da pergunta (SIM)</td>
 </tr>
 <tr>
-<td>Sem justificativa</td>
+<td>FINALIZAR sem justificativa</td>
 <td>"A Justificativa é obrigatória!"</td>
 <td></td>
 </tr>
 <tr>
-<td>Falhas</td>
-<td>"Não foi possível salvar a entrada de material.", "Não foi possível carregar o endereçamento.", "Não foi possível gerar a etiqueta de volume."</td>
+<td>Endereço recusado ao finalizar</td>
+<td>"Endereço inválido."</td>
+<td>Uma vez, com L100-R801-C801-A804; o mesmo item gravou com outros endereços (DV-EST-N-014; sem print)</td>
+</tr>
+<tr>
+<td>Excluir item</td>
+<td>Pergunta "Confirma a exclusão do item?"</td>
 <td></td>
+</tr>
+<tr>
+<td>Não vistas</td>
+<td>"O Tipo de Movimentação é obrigatório!", finalizar sem itens, "Não foi possível salvar a entrada de material."</td>
+<td>Não testadas nesta rodada</td>
 </tr>
 </tbody>
 </table></div>
@@ -149,7 +166,7 @@
 <th>Campo</th>
 <th>Tipo</th>
 <th>Obrigatório</th>
-<th>Valores e regra</th>
+<th>Valores e regra (visto na tela)</th>
 <th>Fonte</th>
 </tr>
 </thead>
@@ -158,99 +175,127 @@
 <td>Pesquisa: Código</td>
 <td>Texto</td>
 <td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td>Código inexistente: "A pesquisa não retornou nenhum resultado."</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Pesquisa: Período</td>
-<td>Duas datas</td>
+<td>Duas datas com calendário</td>
 <td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td>Data inexistente recusada; período invertido sem aviso</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Pesquisa: Tipo de Movimentação</td>
 <td>Lista</td>
-<td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td><strong>Sim</strong> para pesquisar</td>
+<td>SELECIONE, DOAÇÃO, ENTRADA - OUTRAS e tipos de teste</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Código, Data</td>
 <td>Texto travado</td>
 <td>—</td>
-<td>Gerados ao salvar</td>
-<td>código da tela</td>
+<td>Gerados ao salvar; a data mostra data e hora</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Tipo de Movimentação</td>
 <td>Lista</td>
 <td><strong>Sim</strong></td>
-<td></td>
-<td>código da tela</td>
+<td>ENTRADA - OUTRAS e outros tipos de entrada</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Motivo da Movimentação</td>
 <td>Lista</td>
-<td>A confirmar</td>
-<td>Código e descrição</td>
-<td>código da tela</td>
+<td>Não</td>
+<td>Código e descrição (ex.: 00001 - DEVOLUÇÃO); <strong>não aparece ao Visualizar</strong> (N-140)</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
-<td>Referência, Nº OP</td>
+<td>Referência</td>
 <td>Texto</td>
 <td>Não</td>
-<td></td>
-<td>código da tela</td>
+<td>Até 60 caracteres</td>
+<td>teste 19/11/2026</td>
+</tr>
+<tr>
+<td>Nº OP</td>
+<td>Texto</td>
+<td>Não</td>
+<td>Até 20 caracteres; não conferido com a Produção</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Item, Unid. Med., Custo Médio</td>
-<td>Texto e lupa</td>
+<td>Texto, lupa e travados</td>
 <td><strong>Sim</strong> (item)</td>
-<td></td>
-<td>código da tela</td>
+<td>Descrição e unidade vêm do cadastro</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
-<td>Custo Unitário, Quantidade, Qtde. Volumes</td>
-<td>Números</td>
+<td>Custo Unitário</td>
+<td>Número</td>
 <td><strong>Sim</strong></td>
-<td></td>
-<td>código da tela</td>
+<td>"O Custo Unitário é obrigatório!"</td>
+<td>teste 19/11/2026</td>
+</tr>
+<tr>
+<td>Quantidade</td>
+<td>Número</td>
+<td><strong>Sim</strong></td>
+<td>Máscara de 3 casas (<code>100</code> vira 0,100)</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Fabricante</td>
 <td>Lista</td>
 <td>Quando o item exige</td>
-<td></td>
-<td>código da tela</td>
+<td><strong>Desabilitado</strong> nos seis itens testados</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
-<td>Lote, Validade</td>
-<td>Texto e data</td>
+<td>Lote</td>
+<td>Texto</td>
 <td><strong>Sim</strong></td>
-<td>Validade válida</td>
-<td>código da tela</td>
+<td>Até 40 caracteres; o mesmo lote em outra entrada é aceito (N-142)</td>
+<td>teste 19/11/2026</td>
+</tr>
+<tr>
+<td>Validade</td>
+<td>Data com máscara</td>
+<td><strong>Sim</strong></td>
+<td>Até 10; inexistente recusada; <strong>vencida aceita</strong> (N-037)</td>
+<td>teste 19/11/2026</td>
+</tr>
+<tr>
+<td>Qtde. Volumes</td>
+<td>Número</td>
+<td><strong>Sim</strong></td>
+<td>Inteiro, até 3 dígitos</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Item-Lote-Validade, Pendente</td>
 <td>Lista e número</td>
 <td><strong>Sim</strong></td>
-<td></td>
-<td>código da tela</td>
+<td>Itens já salvos; Pendente baixa com os endereços</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Almoxarifado, Local, Rua, Coluna, Andar, Endereço, Quantidade</td>
 <td>Listas em cascata, texto e número</td>
 <td><strong>Sim</strong></td>
-<td>Quantidade até o pendente</td>
-<td>código da tela</td>
+<td>Só endereços livres; item com CQ só vê quarentena; Quantidade até o pendente</td>
+<td>teste 19/11/2026</td>
 </tr>
 <tr>
 <td>Justificativa</td>
 <td>Texto</td>
 <td><strong>Sim</strong></td>
-<td>Ao finalizar</td>
-<td>código da tela</td>
+<td>Até 255; vai ao LOG</td>
+<td>teste 19/11/2026</td>
 </tr>
 </tbody>
 </table></div>
@@ -497,15 +542,15 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros, que declaram). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> chamando a rota com um perfil sem a função.</li>
-<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador (perfil 1) usa o módulo; os demais recebem 403 (DV-EST-N-001, Alta), e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
-<li><strong>Grupo do usuário:</strong> as telas que dependem do almoxarifado do grupo recusaram tudo nos testes de 10 a 12/11/2026 porque o login não grava o grupo no token (DV-EST-N-049 e N-050). Um robô deve <strong>repetir esse reteste</strong> nesta tela antes de concluir qualquer falha de gravação.</li>
-<li><strong>Sem permissão por endereço digitado:</strong> no legado quem abria o formulário pelo endereço conseguia lançar a entrada (DV-EST-008 do legado); aqui a confirmar com o perfil restrito.
-| Perfil | Resultado esperado a confirmar |
+<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> com um perfil sem a função.</li>
+<li><strong>Visto em 19/11/2026:</strong> a conta de administrador (login Admin) abre e opera tudo: pesquisa, inclui, finaliza, visualiza, vê o LOG, imprime e exporta.</li>
+<li><strong>Perfil sem permissão: Bloqueado no teste.</strong> Não havia senha local do perfil T.BA20 e a conta de consulta de teste (T. R4) não foi criada nesta sessão; responsável: o robô da próxima rodada (criar a conta, pela regra de autonomia nos cadastros). Nas outras telas do Estoque os demais perfis recebem 403 (DV-EST-N-001) e a recusa aparece como erro genérico (DV-EST-N-075) ou lista vazia (DV-EST-N-054).</li>
+<li><strong>Grupo do usuário (DV-EST-N-049 e N-050):</strong> <strong>não se repetiu</strong> nesta tela para o administrador; o almoxarifado de teste foi oferecido e as entradas gravaram.
+| Perfil | Resultado |
 |---|---|
-| Administrador | Abre e opera |
-| Perfil T.BA20 e perfil restrito | Esperado 403 como nas outras telas (DV-EST-N-001); confirmar |
-| Sem login | Leva à tela de login |</li>
+| Administrador (login Admin) | Abre e opera |
+| Perfil T.BA20 e perfil restrito | Bloqueado no teste (sem senha local / conta não criada) |
+| Sem login | Leva à tela de login (não testado aqui) |</li>
 </ul>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>

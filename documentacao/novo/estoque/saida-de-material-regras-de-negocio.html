@@ -40,12 +40,12 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 368 de 756</span><div class="prog-doc"><i style="width:49%"></i></div></div>
   <header class="doc-cabecalho"><h1>Saída de Material: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="saida-de-material-analise.html">Análise</a><a href="saida-de-material-manual-do-usuario.html">Manual do usuário</a><a href="saida-de-material-fluxos.html">Fluxos</a><a href="saida-de-material-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="saida-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="saida-de-material-erros.html">Erros (9)</a><a class="aba-extra" href="saida-de-material-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="saida-de-material-analise.html">Análise</a><a href="saida-de-material-manual-do-usuario.html">Manual do usuário</a><a href="saida-de-material-fluxos.html">Fluxos</a><a href="saida-de-material-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="saida-de-material-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="saida-de-material-erros.html">Erros (11)</a><a class="aba-extra" href="saida-de-material-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Confirmar (código da tela e API nova):</strong> baixa o saldo do lote e do endereço e grava a saída com tipo, motivo e observação.</li>
-<li><strong>Excluir:</strong> a API tem a rota de exclusão da saída e do log; no legado a exclusão nunca aparecia para saída confirmada.</li>
-<li><strong>Em 12/11/2026 nenhuma saída pôde ser gravada</strong> (DV-EST-N-043: "Almoxarifado de origem inválido para o lote."); o robô repete o caso agora, com a tela real.</li>
+<li><strong>Confirmar (visto na tela):</strong> a pergunta "Confirma a Movimentação do Lote?" aparece e, com SIM, o servidor recusa com "Almoxarifado de origem inválido para o lote."; <strong>nada é gravado</strong> e o saldo do lote e do endereço não muda (lote RB260104: 100 antes e depois). Nenhuma linha nova na lista.</li>
+<li><strong>Bloqueado no teste (responsável: desenvolvimento, DV-EST-N-130):</strong> a saída gravada, o efeito no saldo do lote e do endereço, a linha no Histórico do Lote, o LOG, o Excluir e o Visualizar. Os casos de lote vencido e de lote em quarentena (que o legado conferia) também não puderam ser alcançados, porque a recusa vem antes de qualquer outra regra.</li>
+<li><strong>Visto na lista:</strong> a saída 00001 de 16/11/2026 mostra que uma saída <strong>já gravou uma vez</strong> na versão nova; o que mudou desde então não se sabe (pergunta ao desenvolvimento).</li>
 </ul>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
@@ -56,11 +56,12 @@
 <li>Esta tela <strong>não lê nem grava em outros módulos</strong>: tudo fica no Estoque.</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<p>Mensagens vistas na tela, sempre em <strong>faixa vermelha dentro da tela</strong>, não em janela:</p>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Situação</th>
-<th>Mensagem (código da tela)</th>
+<th>Mensagem (vista na tela)</th>
 <th>Observação</th>
 </tr>
 </thead>
@@ -68,65 +69,46 @@
 <tr>
 <td>Campos obrigatórios em branco</td>
 <td>"Preencha todos os campos obrigatórios."</td>
-<td></td>
+<td>Igual ao esperado</td>
 </tr>
 <tr>
-<td>Data inválida ou posterior a hoje</td>
+<td>Data posterior a hoje (31/12/2027)</td>
 <td>"Data da saída inválida ou superior à data atual."</td>
-<td>N-047: a API devolvia texto técnico em inglês</td>
+<td>Em português (DV-EST-N-047 corrigido na tela)</td>
 </tr>
 <tr>
-<td>Item inválido</td>
-<td>"Informe um item válido."</td>
-<td></td>
-</tr>
-<tr>
-<td>Busca sem texto</td>
-<td>"Informe pelo menos um caracter para realizar a busca!"</td>
-<td></td>
-</tr>
-<tr>
-<td>Endereço incompleto</td>
-<td>"Selecione o endereço de origem completo."</td>
-<td></td>
-</tr>
-<tr>
-<td>Quantidade inválida</td>
+<td>Quantidade zero</td>
 <td>"Quantidade inválida!"</td>
 <td></td>
 </tr>
 <tr>
-<td>Quantidade maior que o saldo do lote</td>
+<td>Quantidade acima do saldo do lote (150 de 100)</td>
 <td>"Quantidade informada superior ao saldo do lote!"</td>
 <td></td>
 </tr>
 <tr>
-<td>Quantidade maior que o saldo do endereço</td>
-<td>"Quantidade informada superior ao saldo do endereço!"</td>
+<td>Período incompleto ou invertido (filtro)</td>
+<td>"O período informado é inválido."</td>
 <td></td>
 </tr>
 <tr>
-<td>Lote sem endereço com saldo</td>
-<td>"Não existem endereços com saldo disponíveis para o lote selecionado."</td>
-<td>DV-EST-N-017 (lista de origem vazia)</td>
-</tr>
-<tr>
-<td>Formulário incompleto</td>
-<td>"Os dados da saída estão incompletos. Revise o formulário."</td>
+<td>Pesquisa sem resultado</td>
+<td>"A pesquisa não retornou nenhum resultado."</td>
 <td></td>
 </tr>
 <tr>
-<td>Falha ao gravar</td>
-<td>"Não foi possível realizar a saída do material."</td>
-<td>DV-EST-N-043 e N-044: o servidor devolvia "Almoxarifado de origem inválido para o lote." para todos os motivos</td>
-</tr>
-<tr>
-<td>Falha ao excluir</td>
-<td>"Não foi possível excluir o registro."</td>
-<td></td>
+<td><strong>Qualquer saída válida</strong></td>
+<td><strong>"Almoxarifado de origem inválido para o lote."</strong></td>
+<td><strong>DV-EST-N-130 (Alta) e N-044: a mesma frase para todas as combinações</strong></td>
 </tr>
 </tbody>
 </table></div>
+<p>Mensagens que o código da tela prevê e que <strong>não foram alcançadas</strong> (o lote e o endereço do teste têm o mesmo saldo e a recusa do servidor vem antes): "Quantidade informada superior ao saldo do endereço!", "Informe um item válido.", "Selecione o endereço de origem completo.", "Não existem endereços com saldo disponíveis para o lote selecionado.".</p>
+<figure><a href="../../img/estoque/pnr3-saida-de-material-07-confirmar-vazio.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-saida-de-material-07-confirmar-vazio.png" alt="Faixa &quot;Preencha todos os campos obrigatórios.&quot;" loading="lazy"></a><figcaption>Faixa &quot;Preencha todos os campos obrigatórios.&quot; · clique para ampliar</figcaption></figure>
+<figure><a href="../../img/estoque/pnr3-saida-de-material-08-data-futura.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-saida-de-material-08-data-futura.png" alt="Data futura recusada" loading="lazy"></a><figcaption>Data futura recusada · clique para ampliar</figcaption></figure>
+<figure><a href="../../img/estoque/pnr3-saida-de-material-09-quantidade-zero.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-saida-de-material-09-quantidade-zero.png" alt="Quantidade zero recusada" loading="lazy"></a><figcaption>Quantidade zero recusada · clique para ampliar</figcaption></figure>
+<figure><a href="../../img/estoque/pnr3-saida-de-material-10-quantidade-acima-do-saldo.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-saida-de-material-10-quantidade-acima-do-saldo.png" alt="Quantidade acima do saldo do lote" loading="lazy"></a><figcaption>Quantidade acima do saldo do lote · clique para ampliar</figcaption></figure>
+
 <p><strong>Recusas do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
 <li>Campo obrigatório vazio (cada campo mostra a sua mensagem, por exemplo "Motivo da movimentação não informado.!").</li>
@@ -142,8 +124,7 @@
 <th>Campo</th>
 <th>Tipo</th>
 <th>Obrigatório</th>
-<th>Valores e regra</th>
-<th>Fonte</th>
+<th>Valores e regra (visto na tela)</th>
 </tr>
 </thead>
 <tbody>
@@ -151,92 +132,91 @@
 <td>Pesquisa: Código</td>
 <td>Texto</td>
 <td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td>Procura pelo código (00001 achou; 99999 não)</td>
 </tr>
 <tr>
 <td>Pesquisa: Período</td>
 <td>Duas datas</td>
 <td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td>Uma data só, ou final antes da inicial: "O período informado é inválido."</td>
 </tr>
 <tr>
 <td>Pesquisa: Almoxarifado</td>
 <td>Lista</td>
 <td>Não</td>
-<td>Almoxarifados do grupo</td>
-<td>levantamento</td>
+<td>PADRÃO e outros; o filtro funcionou com PADRÃO</td>
 </tr>
 <tr>
 <td>Código</td>
 <td>Texto travado</td>
 <td>—</td>
-<td>Gerado ao salvar</td>
-<td>código da tela</td>
+<td>Gerado ao salvar (nada grava hoje)</td>
 </tr>
 <tr>
 <td>Data</td>
 <td>Data dd/mm/aaaa</td>
 <td><strong>Sim</strong></td>
-<td>Não pode ser posterior a hoje</td>
-<td>código da tela</td>
+<td>Vem com hoje; futura é recusada</td>
 </tr>
 <tr>
 <td>Tipo de Movimentação, Motivo da Movimentação</td>
 <td>Listas</td>
 <td><strong>Sim</strong></td>
-<td></td>
-<td>código da tela</td>
+<td>O motivo acompanha o tipo</td>
 </tr>
 <tr>
 <td>Item, Descrição, Unid. Medida</td>
-<td>Texto e lupa</td>
+<td>Texto, lupa e texto travado</td>
 <td><strong>Sim</strong> (item)</td>
-<td>Localizar Item</td>
-<td>código da tela</td>
+<td>Localizar Item exige texto</td>
 </tr>
 <tr>
 <td>Item entrada</td>
 <td>Lista</td>
 <td><strong>Sim</strong></td>
-<td>Lotes do item; mostra Saldo</td>
-<td>código da tela</td>
+<td>Só o código interno; inclui lotes com saldo 0 (N-045)</td>
+</tr>
+<tr>
+<td>Saldo</td>
+<td>Texto travado</td>
+<td>—</td>
+<td>Saldo do lote</td>
 </tr>
 <tr>
 <td>Almoxarifado, Local, Rua, Coluna, Andar</td>
-<td>Cinco listas em cascata</td>
+<td>Cinco listas</td>
 <td><strong>Sim</strong></td>
-<td>Montam o Endereço</td>
-<td>código da tela</td>
+<td>Local não depende do almoxarifado (N-131)</td>
 </tr>
 <tr>
 <td>Endereço, Saldo Endereço</td>
 <td>Texto travado</td>
 <td>—</td>
-<td></td>
-<td>código da tela</td>
+<td>Montados ao escolher o Andar</td>
 </tr>
 <tr>
-<td>Valor Unitário, Valor Total</td>
+<td>Valor Unitário</td>
 <td>Número</td>
-<td>A confirmar</td>
-<td></td>
-<td>código da tela</td>
+<td><strong>Sim</strong></td>
+<td>Custo médio do item (4,20), editável</td>
 </tr>
 <tr>
 <td>Quantidade</td>
 <td>Número</td>
 <td><strong>Sim</strong></td>
-<td>Até o saldo do lote e do endereço</td>
-<td>código da tela</td>
+<td>Vem com todo o saldo do endereço; zero e acima do saldo são recusados</td>
+</tr>
+<tr>
+<td>Valor Total</td>
+<td>Número travado</td>
+<td>—</td>
+<td>Quantidade × valor unitário</td>
 </tr>
 <tr>
 <td>Observação</td>
-<td>Texto</td>
+<td>Texto de até 255</td>
 <td>Não</td>
 <td></td>
-<td>código da tela</td>
 </tr>
 </tbody>
 </table></div>
@@ -369,16 +349,46 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros, que declaram). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> chamando a rota com um perfil sem a função.</li>
-<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador (perfil 1) usa o módulo; os demais recebem 403 (DV-EST-N-001, Alta), e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
-<li><strong>Grupo do usuário:</strong> as telas que dependem do almoxarifado do grupo recusaram tudo nos testes de 10 a 12/11/2026 porque o login não grava o grupo no token (DV-EST-N-049 e N-050). Um robô deve <strong>repetir esse reteste</strong> nesta tela antes de concluir qualquer falha de gravação.</li>
-<li><strong>Saída:</strong> DV-EST-N-048 (perfil sem acesso recebia 403 sem mensagem, e a função "saída" não podia ser testada sozinha).
-| Perfil | Resultado esperado a confirmar |
-|---|---|
-| Administrador | Abre e opera |
-| Perfil T.BA20 e perfil restrito | Esperado 403 como nas outras telas (DV-EST-N-001); confirmar |
-| Sem login | Leva à tela de login |</li>
+<li><strong>Administrador (visto):</strong> abre a tela, pesquisa e abre o formulário; não consegue gravar por causa do DV-EST-N-130.</li>
+<li><strong>Conta de consulta (T.R2EST02, visto):</strong> a tela abre, mas "Não foi possível carregar os almoxarifados." aparece, a pesquisa responde "Não foi possível realizar a pesquisa." e o Incluir "Não foi possível carregar as opções da saída." É uma recusa genérica, que não diz que falta permissão (DV-EST-N-075).</li>
+<li><strong>Conta sem acesso (T.R2EST01, visto):</strong> o menu não mostra o Estoque; digitando o endereço da tela, ela abre e mostra "Acesso negado ao módulo." ao pesquisar e ao incluir (como em DV-EST-N-001 e N-054).</li>
+<li><strong>Perfil com permissão parcial (só Incluir, só Imprimir etc.):</strong> <strong>Bloqueado no teste</strong>, não havia perfil assim no ambiente; responsável: quem cria perfis de teste.</li>
+<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong>; a confirmar com um perfil parcial.</li>
+<li><strong>Grupo do usuário:</strong> com o administrador, a lista de origem passou a preencher; o efeito para quem não é administrador segue não testado.</li>
 </ul>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Abre e opera, mas a gravação é recusada (DV-EST-N-130)</td>
+</tr>
+<tr>
+<td>Consulta (T.R2EST02)</td>
+<td>Abre; erros genéricos nas listas e na pesquisa</td>
+</tr>
+<tr>
+<td>Sem acesso (T.R2EST01)</td>
+<td>Sem menu; pela rota digitada, "Acesso negado ao módulo."</td>
+</tr>
+<tr>
+<td>Perfil parcial</td>
+<td>Bloqueado no teste</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login (não testado aqui)</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../../img/estoque/pnr3-saida-de-material-22-perfil-consulta.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-saida-de-material-22-perfil-consulta.png" alt="Conta de consulta: almoxarifados não carregam e a pesquisa é recusada" loading="lazy"></a><figcaption>Conta de consulta: almoxarifados não carregam e a pesquisa é recusada · clique para ampliar</figcaption></figure>
+<figure><a href="../../img/estoque/pnr3-saida-de-material-23-perfil-sem-acesso.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-saida-de-material-23-perfil-sem-acesso.png" alt="Conta sem acesso: &quot;Acesso negado ao módulo.&quot;" loading="lazy"></a><figcaption>Conta sem acesso: &quot;Acesso negado ao módulo.&quot; · clique para ampliar</figcaption></figure>
+
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
 <li>A tela é a função <strong>340 (Saída de Material)</strong>. O cadastro do menu libera para o perfil só <strong>Incluir</strong> e <strong>Imprimir/Exportar</strong>. <strong>Visualizar</strong>, <strong>Excluir</strong> e <strong>Ver log</strong> dependem de funções que o menu não registra: por isso <strong>ficam escondidos para quem só tem o que o menu dá</strong>.</li>
