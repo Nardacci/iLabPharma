@@ -383,6 +383,7 @@ MODULOS = [
             ("versao-nova/3.estoque/entregaveis/cadastros/aderencia-anvisa-menu-cadastros.md", "Cadastros: aderência à ANVISA", "novo", None),
             ("versao-nova/3.estoque/entregaveis/cadastros/comparacao-com-o-legado-menu-cadastros.md", "Cadastros: comparação com o legado", "novo", None),
             ("versao-nova/3.estoque/entregaveis/cadastros/pendencias-menu-cadastros.md", "Cadastros: pendências", "novo", None),
+            ("versao-nova/3.estoque/telas-menu/levantamento-do-menu-19-11-2026.md", "Levantamento do menu do Estoque (19/11/2026)", "novo", None),
             ("versao-nova/3.estoque/manual/manual-estoque-versao-nova.md", "Manual da versão nova, por tela", "novo", "versao-nova/3.estoque/manual/LabMedSys - Modulo Estoque - Manual da Versao Nova por Tela.docx"),
             ("versao-nova/3.estoque/resumo-versao-nova.md", "Situação na versão nova", "novo", None),
             ("3.estoque/entregaveis/fonte/relatorio-de-testes.md", "Relatório de testes", "inicio", "3.estoque/entregaveis/LabMedSys - Modulo Estoque - Relatorio de Testes.docx"),
