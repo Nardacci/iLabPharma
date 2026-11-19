@@ -40,14 +40,242 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Cadastros</span><span>documento 25 de 756</span><div class="prog-doc"><i style="width:3%"></i></div></div>
   <header class="doc-cabecalho"><h1>Conversão de Unidade: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conversao-de-unidade-analise.html" class="aba-sem">Análise</a><a href="conversao-de-unidade-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="conversao-de-unidade-fluxos.html" class="aba-sem">Fluxos</a><a href="conversao-de-unidade-regras-de-negocio.html" aria-current=page class="aba-sem">Regras de negócio</a><a href="conversao-de-unidade-anvisa.html" class="aba-sem">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="conversao-de-unidade-erros.html">Erros</a><a class="aba-extra aba-sem" href="conversao-de-unidade-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1d5fd0;margin-right:6px"></span>Situação da tela na versão nova: <strong>Pronta na versão nova; falta testar</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Tela pronta na versão nova, ainda sem manual</p><p>Segundo o código da versão nova (de 17/11/2026), esta tela já existe, mas ainda não foi testada pelos robôs. O manual por tela sai depois do teste.</p><p>Para ver como a tela é no sistema entregue, <a href="../../estoque/conversao-de-unidade-regras-de-negocio.html">abra a página do Legado</a>.</p></div></article>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="conversao-de-unidade-analise.html">Análise</a><a href="conversao-de-unidade-manual-do-usuario.html">Manual do usuário</a><a href="conversao-de-unidade-fluxos.html">Fluxos</a><a href="conversao-de-unidade-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="conversao-de-unidade-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="conversao-de-unidade-erros.html">Erros (5)</a><a class="aba-extra" href="conversao-de-unidade-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>Incluir:</strong> grava a conversão (nome em maiúsculas, fator, unidade, tipo, unidade de produção, ativo, data e usuário) e a linha "INCLUSÃO DO REGISTRO" no histórico (visto na tela). A justificativa não é pedida na inclusão.</li>
+<li><strong>Alterar:</strong> o histórico recebe <strong>uma linha por campo mudado</strong> (visto: QUANTIDADE, NOME APRESENTAÇÃO, UNIDADE DE MEDIDA e ATIVO, cada uma com a justificativa). Mudar só o <strong>tipo</strong> ou a <strong>unidade de produção</strong> não entra no histórico pelo código (igual ao legado; <strong>não verificado na tela</strong>).</li>
+<li><strong>Excluir:</strong> <strong>na versão nova a exclusão de uma conversão sem uso deu erro interno e não excluiu, em dois registros diferentes</strong> (DV-EST-N-070). Pelo código, o servidor confere antes se a conversão aparece em item de nota fiscal, em lote de nota ou em apresentação de fornecedor e recusa; <strong>não foi possível testar</strong> (nenhuma tela disponível usa a conversão).</li>
+<li><strong>Inativar:</strong> aceito com justificativa; o registro inativo só deixa mudar Ativo e Justificativa. A conferência de uso ao inativar <strong>não foi possível testar</strong> (mesma família do DV-EST-N-026).</li>
+<li><strong>Texto:</strong> apresentação e justificativa vão em maiúsculas; pelo código o servidor corta a justificativa em 255 caracteres (não verificado na tela).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Mensagem exata</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Salvar sem apresentação (tipo ESTOQUE)</td>
+<td>"A Apresentação é obrigatória!"</td>
+<td>Depois do SIM; print 12</td>
+</tr>
+<tr>
+<td>Tipo PRODUÇÃO sem unidade de produção</td>
+<td>"Unidade de Produção é obrigatória!"</td>
+<td>Print 26</td>
+</tr>
+<tr>
+<td>Sem unidade do estoque</td>
+<td>"A Unidade é obrigatória!"</td>
+<td>No legado era "A Unidade obrigatória!"</td>
+</tr>
+<tr>
+<td>Sem fator ou fator zero</td>
+<td>"O Fator de Conversão é obrigatório!"</td>
+<td>O campo apaga o zero; prints 12 e 18</td>
+</tr>
+<tr>
+<td>Apresentação com 31 caracteres (limite removido no navegador)</td>
+<td>"Os dados informados são inválidos."</td>
+<td>Não diz o campo (família DV-EST-N-027); print 21</td>
+</tr>
+<tr>
+<td>Alterar sem justificativa</td>
+<td>"A Justificativa é obrigatória!"</td>
+<td>Depois do SIM; print 32</td>
+</tr>
+<tr>
+<td>Excluir sem justificativa</td>
+<td>"A Justificativa é obrigatória!"</td>
+<td>No quadro de exclusão; print 42</td>
+</tr>
+<tr>
+<td>Conversão de PRODUÇÃO repetida</td>
+<td>"Já existe uma conversão cadastrada com os parâmetros informados!"</td>
+<td>Print 29</td>
+</tr>
+<tr>
+<td>Excluir conversão sem uso</td>
+<td>"Ocorreu um erro interno no servidor."</td>
+<td><strong>Falha</strong> (DV-EST-N-070), em dois registros; prints 45 e 50</td>
+</tr>
+<tr>
+<td>Excluir conversão em uso</td>
+<td>"Exclusão inválida, existem referências com outras tabelas." (pelo código)</td>
+<td><strong>Não foi possível testar</strong></td>
+</tr>
+<tr>
+<td>Unidade inexistente ou inativa; apresentação sem texto; fator negativo</td>
+<td>Textos do servidor, só se alguém contornar a tela (API)</td>
+<td>Pelo código; não verificado</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Não é recusado:</strong> o nome repetido de conversão de ESTOQUE, <strong>mesmo com a mesma unidade</strong> (duas "T. R2 CAIXA 1000" com CP - COMPRIMIDO e uma terceira com KG; DV-EST-N-056), e os símbolos "@ # / %", que são descartados sem aviso (DV-EST-N-009).</p>
+<figure><a href="../../img/estoque/pnr2-conversao-unidade-19-simbolos-formulario.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conversao-unidade-19-simbolos-formulario.png" alt="Apresentação com símbolos, antes de salvar" loading="lazy"></a><figcaption>Apresentação com símbolos, antes de salvar · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conversao-unidade-20-simbolos-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conversao-unidade-20-simbolos-resultado.png" alt="Inclusão com símbolos aceita" loading="lazy"></a><figcaption>Inclusão com símbolos aceita · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conversao-unidade-21-31-caracteres.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conversao-unidade-21-31-caracteres.png" alt="Apresentação com 31 caracteres" loading="lazy"></a><figcaption>Apresentação com 31 caracteres · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conversao-unidade-22-repetida-mesmo-nome-mesma-unidade.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conversao-unidade-22-repetida-mesmo-nome-mesma-unidade.png" alt="Mesmo nome e mesma unidade aceitos" loading="lazy"></a><figcaption>Mesmo nome e mesma unidade aceitos · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conversao-unidade-23-repetida-mesmo-nome-outra-unidade.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conversao-unidade-23-repetida-mesmo-nome-outra-unidade.png" alt="Mesmo nome e outra unidade aceitos" loading="lazy"></a><figcaption>Mesmo nome e outra unidade aceitos · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conversao-unidade-51-filtro-com-parenteses-sem-resultado.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conversao-unidade-51-filtro-com-parenteses-sem-resultado.png" alt="Filtro &quot;R2 (A)+B-C.&quot; sem resultado embora o registro exista (dúvida: a lista mostra um espaço onde o servidor talvez grave dois)" loading="lazy"></a><figcaption>Filtro &quot;R2 (A)+B-C.&quot; sem resultado embora o registro exista (dúvida: a lista mostra um espaço onde o servidor talvez grave dois) · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-conversao-unidade-24-lista-conversoes-t-r2.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-conversao-unidade-24-lista-conversoes-t-r2.png" alt="Lista com as conversões repetidas" loading="lazy"></a><figcaption>Lista com as conversões repetidas · clique para ampliar</figcaption></figure>
+
+<h2 id="campos-da-tela">Campos da tela</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Tamanho</th>
+<th>Obrigatório</th>
+<th>Valores e regra</th>
+<th>Observação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pesquisa: Apresentação</td>
+<td>Texto</td>
+<td>30</td>
+<td>Não</td>
+<td>Procura o trecho dentro do nome; envia em maiúsculas</td>
+<td>Visto</td>
+</tr>
+<tr>
+<td>Pesquisa: Unidade</td>
+<td>Lista</td>
+<td>—</td>
+<td>Não</td>
+<td>TODOS e o <strong>código</strong> de cada unidade, sem descrição</td>
+<td>Visto</td>
+</tr>
+<tr>
+<td>Pesquisa: Ativo</td>
+<td>Lista</td>
+<td>—</td>
+<td>Não</td>
+<td>TODOS, SIM, NÃO</td>
+<td></td>
+</tr>
+<tr>
+<td>Data do Cadastro</td>
+<td>Texto travado</td>
+<td>—</td>
+<td>—</td>
+<td>Data e hora em que o formulário foi aberto</td>
+<td>Visto</td>
+</tr>
+<tr>
+<td>Tipo</td>
+<td>Lista</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td>ESTOQUE ou PRODUÇÃO (liberado, Produção ligada); trocar de tipo limpa apresentação e unidade de produção</td>
+<td>Pode ser trocado na edição (não gravado no teste)</td>
+</tr>
+<tr>
+<td>Apresentação</td>
+<td>Texto</td>
+<td>30</td>
+<td><strong>Sim</strong> no tipo ESTOQUE</td>
+<td>Letras, números, espaço e <code>( ) + - .</code>; "@ # / %" descartados; maiúsculas; no tipo PRODUÇÃO fica travada e recebe "abreviatura - nome" da unidade de produção</td>
+<td>Editável na alteração (tipo ESTOQUE)</td>
+</tr>
+<tr>
+<td>Unidade de Produção</td>
+<td>Lista</td>
+<td>—</td>
+<td><strong>Sim</strong> no tipo PRODUÇÃO</td>
+<td>"SELECIONE" mais "abreviatura - nome"; travada no tipo ESTOQUE</td>
+<td></td>
+</tr>
+<tr>
+<td>Unidade do Estoque</td>
+<td>Lista</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td>"SELECIONE" mais "código - descrição"</td>
+<td></td>
+</tr>
+<tr>
+<td>Fator de Conversão</td>
+<td>Texto numérico</td>
+<td>8 dígitos</td>
+<td><strong>Sim</strong></td>
+<td>Máscara de 3 casas, só dígitos; <strong>zero não grava</strong>; máximo <code>99999,999</code></td>
+<td>Ver passo 5</td>
+</tr>
+<tr>
+<td>Ativo</td>
+<td>Sim / Não</td>
+<td>—</td>
+<td><strong>Sim</strong></td>
+<td>Sim já marcado; registro inativo só deixa mudar Ativo e Justificativa</td>
+<td></td>
+</tr>
+<tr>
+<td>Justificativa (formulário)</td>
+<td>Texto de várias linhas</td>
+<td>1000 na tela; 255 gravados (pelo código)</td>
+<td><strong>Sim</strong> ao alterar</td>
+<td>Só ao alterar; maiúsculas</td>
+<td>Vai para o histórico</td>
+</tr>
+<tr>
+<td>Justificativa (exclusão)</td>
+<td>Texto de várias linhas</td>
+<td>255</td>
+<td><strong>Sim</strong></td>
+<td>Quadro de exclusão</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<ul>
+<li><strong>Pelo código (tela):</strong> lista e formulário pedem as funções da tela "CONVERSÃO DE UNIDADE" (consultar, incluir, alterar, excluir, imprimir ou exportar e consultar log); sem a função, os botões ficam desabilitados com a dica "Sem permissão para ..." (não verificado na tela, só com o administrador).</li>
+<li><strong>Pelo código (API):</strong> o controlador desta tela não declara a função nem a ação exigida; só conferiria "usuário logado". <strong>Não foi possível testar</strong> com um perfil sem a função (sem senha local do T.BA20 e sem perfil restrito); se for assim, a regra de "quem pode" existe só na tela (DV-EST-008 no legado).</li>
+<li><strong>O que foi visto em teste:</strong> só o administrador (perfil 1) abriu e fez todas as ações. Nas demais telas do Estoque os outros perfis levam 403 (DV-EST-N-001, Alta).</li>
+</ul>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Abre, pesquisa e grava (testado em 18/11/2026)</td>
+</tr>
+<tr>
+<td>Perfil T.BA20 e perfil restrito</td>
+<td><strong>Não foi possível testar</strong> (sem senha local); esperado 403 como nas outras telas (DV-EST-N-001)</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login (não testado nesta tela)</td>
+</tr>
+</tbody>
+</table></div></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="conversao-de-unidade-fluxos.html"><small>← Anterior</small><strong>Fluxos · Conversão de Unidade</strong></a><a class="ap ap-prox" href="conversao-de-unidade-anvisa.html"><small>Próximo →</small><strong>Anvisa · Conversão de Unidade</strong></a></nav>
 </main>
-  
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 18/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 19/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../../portal/portal.js"></script>
