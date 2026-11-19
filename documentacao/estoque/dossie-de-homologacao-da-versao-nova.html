@@ -71,7 +71,7 @@
 </tr>
 <tr>
 <td>Fichas de defeito DV-EST-N</td>
-<td>96 fichas, com passos, esperado, obtido, impacto e evidência</td>
+<td>113 fichas, com passos, esperado, obtido, impacto e evidência</td>
 </tr>
 <tr>
 <td>Documentos do Legado</td>
@@ -311,7 +311,7 @@
 <h3 id="avaliacao-das-funcoes">Avaliação das funções</h3>
 <p>Não verificado na versão nova: depende da análise do código novo.</p>
 <h3 id="resumo-dos-riscos">Resumo dos riscos</h3>
-<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 23 defeitos de prioridade Alta (21 abertos) (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
+<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 27 defeitos de prioridade Alta (25 abertos) (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
 <ul>
 <li><strong>Perfil com todas as funções do Estoque</strong> recebe 403 até para leitura (N-001, confirmado na Fase 2 B); sem token ou com token adulterado, 401; telas abertas sem login levam ao login; só o administrador de perfil 1 usa o módulo. A <strong>separação de funções</strong> (quem recebe não autoriza, quem conta não ajusta) <strong>continua sem teste</strong>: a autorização do recebimento segue bloqueada por configuração do ambiente (<code>Integracoes:Principal:BaseUrl</code>).</li>
@@ -352,23 +352,23 @@
 <tbody>
 <tr>
 <td>Fichas de defeito</td>
-<td>96</td>
+<td>113</td>
 </tr>
 <tr>
 <td>Defeitos contados</td>
-<td>96</td>
+<td>113</td>
 </tr>
 <tr>
 <td>Abertos / corrigidos ou fechados</td>
-<td>90 / 6</td>
+<td>107 / 6</td>
 </tr>
 <tr>
 <td>Gravidade Alta / Média / Baixa</td>
-<td>23 / 47 / 26 (Alta abertas: 21)</td>
+<td>27 / 54 / 32 (Alta abertas: 25)</td>
 </tr>
 <tr>
 <td>Classe na versão nova</td>
-<td>24 Igual ao legado, 15 Regressão, 41 Novo, 7 Bloqueado no teste, 9 A confirmar</td>
+<td>31 Igual ao legado, 19 Regressão, 47 Novo, 7 Bloqueado no teste, 9 A confirmar</td>
 </tr>
 </tbody>
 </table></div>
@@ -776,6 +776,30 @@
 <td>Remessa de Material: o formulário Incluir abre com as listas Origem, Local de Entrega, Almoxarifado, Transportadora e Evento só com "SELECIONE", e nenhuma remessa grava</td>
 <td>Remessa de Material &gt; Incluir</td>
 <td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-110</td>
+<td>Central de Pesagem: nenhuma balança pode ser cadastrada (a categoria de código 1 não existe e não pode ser criada), então nenhum volume é pesado nem etiquetado</td>
+<td>Central de Pesagem &gt; Editar volume; Principal &gt; Cadastro de Equipament</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-121</td>
+<td>Quarentena: o lote que entra pela Entrada de Material - Outras não gera solicitação de análise no CQ, e o item não é oferecido na Solicitação de Análise</td>
+<td>Entrada de Material - Outras (rota direta), Solicitação de Análise (CQ</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-130</td>
+<td>Saída de Material: nenhuma saída grava, mesmo com a lista de endereços de origem já preenchida ("Almoxarifado de origem inválido para o lote.")</td>
+<td>Saída de Material (Outras)</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-143</td>
+<td>Entrada de Material - Produção: lote e ordem de produção inexistentes e validade vencida são aceitos, e abrem análise do CQ</td>
+<td>Entrada de Material - Produção (rota direta)</td>
+<td>Igual ao legado</td>
 </tr>
 </tbody>
 </table></div>
@@ -1463,6 +1487,125 @@
 <td>Remessa de Material (lista)</td>
 <td>Novo</td>
 </tr>
+<tr>
+<td>DV-EST-N-110</td>
+<td>Central de Pesagem: nenhuma balança pode ser cadastrada (a categoria de código 1 não existe e não pode ser criada), então nenhum volume é pesado nem etiquetado</td>
+<td>Alta</td>
+<td>Central de Pesagem &gt; Editar volume; Principal &gt; Cadastro de Equipament</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-111</td>
+<td>Central de Pesagem: dividir um volume deixa os dois volumes com o mesmo código</td>
+<td>Média</td>
+<td>Central de Pesagem &gt; Dividir Volumes</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-112</td>
+<td>Central de Pesagem: dividir e agrupar volumes não deixam rastro no Log</td>
+<td>Média</td>
+<td>Central de Pesagem &gt; LOG</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-113</td>
+<td>Central de Pesagem: com o Período recusado ("Data final inválida!"), a lista continua mostrando a pesagem</td>
+<td>Baixa</td>
+<td>Central de Pesagem (lista)</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-114</td>
+<td>Separação de Material: a pergunta de cancelar vem antes da recusa por falta de justificativa</td>
+<td>Baixa</td>
+<td>Separação de Material &gt; Cancelar separação</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-120</td>
+<td>Movimentação de Quarentena: a lista não tem os botões IMPRIMIR e Exportar para Excel</td>
+<td>Média</td>
+<td>Movimentação de Quarentena (lista)</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-121</td>
+<td>Quarentena: o lote que entra pela Entrada de Material - Outras não gera solicitação de análise no CQ, e o item não é oferecido na Solicitação de Análise</td>
+<td>Alta</td>
+<td>Entrada de Material - Outras (rota direta), Solicitação de Análise (CQ</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-122</td>
+<td>Histórico do Lote: as movimentações não mostram usuário nem hora</td>
+<td>Média</td>
+<td>Histórico do Lote</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-130</td>
+<td>Saída de Material: nenhuma saída grava, mesmo com a lista de endereços de origem já preenchida ("Almoxarifado de origem inválido para o lote.")</td>
+<td>Alta</td>
+<td>Saída de Material (Outras)</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-131</td>
+<td>Saída de Material: o almoxarifado escolhido não filtra Local, Rua, Coluna e Andar (e um lote vem sem Local)</td>
+<td>Baixa</td>
+<td>Saída de Material (Outras) &gt; Informações do Item</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-132</td>
+<td>Aprovação de Solicitação: quem criou a solicitação pode aprová-la (repete o DV-EST-070 do legado)</td>
+<td>Média</td>
+<td>Aprovação de Solicitação</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-133</td>
+<td>Aprovação de Solicitação: o campo Solicitação aceita letras e a recusa só vem ao pesquisar</td>
+<td>Baixa</td>
+<td>Aprovação de Solicitação &gt; Pesquisa</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-140</td>
+<td>Entrada de Material - Outras: o Motivo da Movimentação escolhido não aparece ao Visualizar</td>
+<td>Média</td>
+<td>Entrada de Material - Outras (rota direta) &gt; Visualizar</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-EST-N-141</td>
+<td>Entrada de Material - Outras: a grade de endereços não tem Excluir</td>
+<td>Baixa</td>
+<td>Entrada de Material - Outras (rota direta) &gt; Endereços</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-EST-N-142</td>
+<td>Entrada de Material - Outras: o mesmo lote já existente entra de novo, sem aviso, como outro lote</td>
+<td>Média</td>
+<td>Entrada de Material - Outras (rota direta) &gt; FINALIZAR MOVIMENTAÇÃO</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-143</td>
+<td>Entrada de Material - Produção: lote e ordem de produção inexistentes e validade vencida são aceitos, e abrem análise do CQ</td>
+<td>Alta</td>
+<td>Entrada de Material - Produção (rota direta)</td>
+<td>Igual ao legado</td>
+</tr>
+<tr>
+<td>DV-EST-N-144</td>
+<td>Entrada de Material - Produção: validade em branco passa no INCLUIR ITEM e só é recusada ao salvar, com mensagem que não diz o motivo</td>
+<td>Baixa</td>
+<td>Entrada de Material - Produção (rota direta)</td>
+<td>Regressão</td>
+</tr>
 </tbody>
 </table></div>
 <p>Fichas completas, com passos, esperado, obtido e evidência, em <code>homologacao/versao-nova/3.estoque/defeitos/</code>.</p>
@@ -1525,8 +1668,8 @@
 <h2 id="parecer-da-homologacao">Parecer da homologação</h2>
 <div class="callout">
 <p class="callout-titulo">Sem veredito novo</p>
-<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo está <strong>muito incompleto</strong>: no levantamento de 19/11/2026 (sem Kits, que não existe no produto), das 81 telas do módulo, <strong>59 são reais e 22 são provisórias</strong>; 32 das reais já foram testadas. O caminho do lote <strong>ainda não pôde ser percorrido de ponta a ponta pelas telas</strong>: Recebimento, Conferência de Recebimento, Endereçamento, Agenda de Reanálise, Revalidação e Inventário seguem provisórios, e as telas de Movimentação de Material, Devolução da Produção e Remessa foram testadas em parte (transferência e remessa não gravam com sucesso: DV-EST-N-093 e N-100), e Quarentena, Separação, Atendimento, Pesagem, Saída e as Entradas ainda não foram testadas, e por isso o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
-<p>Fotografia do módulo na versão nova: 96 defeitos contados (90 abertos), 23 de prioridade Alta (21 abertos). Não há veredito de "apto".</p>
+<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo está <strong>muito incompleto</strong>: no levantamento de 19/11/2026 (sem Kits, que não existe no produto), das 81 telas do módulo, <strong>59 são reais e 22 são provisórias</strong>; 40 das reais já foram testadas. O caminho do lote <strong>ainda não pôde ser percorrido de ponta a ponta pelas telas</strong>: Recebimento, Conferência de Recebimento, Endereçamento, Agenda de Reanálise, Revalidação e Inventário seguem provisórios, e as telas de Movimentação de Material, Movimentação de Quarentena, Histórico do Lote, Separação, Central de Pesagem, Saída, Aprovação, Devolução da Produção, Remessa e as duas Entradas de Material (Outras e Produção) foram testadas em parte (a transferência dá erro mas grava, o lote em quarentena não chega ao CQ, nenhuma saída nem remessa grava, nenhuma balança pode ser cadastrada e a mesma conta cria e aprova a solicitação e a Entrada de Material - Produção aceita lote, ordem de produção e validade inexistentes: DV-EST-N-093, N-121, N-130, N-100, N-110, N-132 e N-143), e Atendimento de Solicitação e Entrada de Produção (tela 38) ainda não foram testados, e por isso o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
+<p>Fotografia do módulo na versão nova: 113 defeitos contados (107 abertos), 27 de prioridade Alta (25 abertos). Não há veredito de "apto".</p>
 </div>
 <h2 id="fechamento-do-modulo">Fechamento do módulo</h2>
 <h3 id="o-que-foi-concluido">O que foi concluído</h3>

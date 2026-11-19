@@ -40,12 +40,14 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 249 de 756</span><div class="prog-doc"><i style="width:33%"></i></div></div>
   <header class="doc-cabecalho"><h1>Central de Pesagem: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="central-de-pesagem-analise.html">Análise</a><a href="central-de-pesagem-manual-do-usuario.html">Manual do usuário</a><a href="central-de-pesagem-fluxos.html">Fluxos</a><a href="central-de-pesagem-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="central-de-pesagem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="central-de-pesagem-erros.html">Erros</a><a class="aba-extra" href="central-de-pesagem-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="central-de-pesagem-analise.html">Análise</a><a href="central-de-pesagem-manual-do-usuario.html">Manual do usuário</a><a href="central-de-pesagem-fluxos.html">Fluxos</a><a href="central-de-pesagem-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="central-de-pesagem-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="central-de-pesagem-erros.html">Erros (4)</a><a class="aba-extra" href="central-de-pesagem-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Salvar o volume (código da tela e API nova):</strong> grava peso bruto, tara, líquido, balança e responsável do volume, com log. A API tem a captura da balança, a divisão e o agrupamento de volumes.</li>
-<li><strong>Finalizar:</strong> marca a pesagem como concluída; com divergência de total pede confirmação (a regra do percentual vem do Subgrupo: DV-EST-N-061 nas telas de cadastro).</li>
-<li>A pesagem concluída libera a Separação de Material (a confirmar).</li>
+<li><strong>Salvar o volume:</strong> <strong>Bloqueado no teste.</strong> Hoje SALVAR responde "O Tag da balança é obrigatório." e nada grava (DV-EST-N-110). O que se sabe vem do código, <strong>não da tela</strong> (API nova): grava peso bruto, tara, líquido, balança e responsável, com log, e tem a captura da balança.</li>
+<li><strong>Dividir (visto):</strong> troca um volume por dois, cuja soma é o peso do original; os dois ficam com o <strong>mesmo código</strong> (DV-EST-N-111) e <strong>sem rastro no LOG</strong> (DV-EST-N-112).</li>
+<li><strong>Agrupar (visto):</strong> junta dois volumes em um, com a soma dos pesos; também sem rastro no LOG.</li>
+<li><strong>Finalizar (visto só sem peso):</strong> pergunta duas vezes e recusa com "Existem itens que não foram pesados!"; a pesagem continua aberta. A conclusão com peso e a liberação da Separação de Material <strong>não foram possíveis de testar</strong>.</li>
+<li><strong>Efeito na Separação de Material (visto na tela 34):</strong> enquanto a pesagem estiver aberta, a separação do item é recusada com "Existem pesagens pendentes para a Solicitação!".</li>
 </ul>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
@@ -58,60 +60,70 @@
 <thead>
 <tr>
 <th>Situação</th>
-<th>Mensagem (código da tela)</th>
+<th>Mensagem (vista na tela)</th>
 <th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Balança não escolhida</td>
-<td>"O Tag da balança é obrigatório."</td>
-<td></td>
+<td>Salvar o volume sem balança escolhida</td>
+<td>Faixa "O Tag da balança é obrigatório."</td>
+<td>Com ou sem lacre e pesos; sempre, enquanto não houver balança (DV-EST-N-110)</td>
 </tr>
 <tr>
-<td>Peso em branco ou inválido</td>
-<td>"O Peso é obrigatório!" / "O Peso está em uma quantidade inválida"</td>
-<td></td>
-</tr>
-<tr>
-<td>Tara em branco ou inválida</td>
-<td>"A Tara é obrigatória!" / "Tara informada inválida."</td>
-<td></td>
-</tr>
-<tr>
-<td>Peso líquido inválido</td>
-<td>"Peso Líquido inválido!"</td>
-<td>Bruto menor que a tara</td>
-</tr>
-<tr>
-<td>Sem leitura da balança</td>
-<td>"Capture o peso da balança."</td>
-<td></td>
-</tr>
-<tr>
-<td>Falha da balança</td>
-<td>"Erro de Comunicação com a Balança!"</td>
-<td></td>
-</tr>
-<tr>
-<td>Volumes iguais</td>
-<td>"Os volumes não podem ser iguais!"</td>
-<td></td>
-</tr>
-<tr>
-<td>Nenhum volume escolhido</td>
+<td>Dividir sem escolher o volume</td>
 <td>"Nenhum volume foi selecionado!"</td>
+<td>Faixa dentro da janela</td>
+</tr>
+<tr>
+<td>Dividir com soma diferente do total</td>
+<td>"A soma do peso nos volumes A e B não pode ser diferente do total do volume atual!"</td>
 <td></td>
 </tr>
 <tr>
-<td>Datas do filtro</td>
-<td>"Data inicial não informada", "Data final não informada", "Data final inválida!"</td>
+<td>Agrupar sem escolher</td>
+<td>"É necessário selecionar os dois volumes!"</td>
 <td></td>
+</tr>
+<tr>
+<td>Agrupar o mesmo volume nos dois</td>
+<td>"Os volumes não podem ser iguais!"</td>
+<td>A faixa continua mesmo depois de escolher dois volumes diferentes</td>
+</tr>
+<tr>
+<td>Finalizar sem nada pesado</td>
+<td>"Pesagem com divergências no total. Deseja continuar?" e, com SIM, a faixa "Existem itens que não foram pesados!"</td>
+<td>A pesagem continua aberta</td>
+</tr>
+<tr>
+<td>Período com só a data inicial</td>
+<td>Faixa "Data final não informada"</td>
+<td></td>
+</tr>
+<tr>
+<td>Período com a data final menor</td>
+<td>Faixa "Data final inválida!"</td>
+<td>A grade continua com a pesagem (DV-EST-N-113)</td>
+</tr>
+<tr>
+<td>Pesquisa sem resultado</td>
+<td>"A pesquisa não retornou nenhum resultado."</td>
+<td></td>
+</tr>
+<tr>
+<td>Peso líquido negativo (bruto 3, tara 5)</td>
+<td><strong>Nenhuma recusa</strong> na tela: o Peso Líquido mostra -2,000</td>
+<td>O legado recusava "Peso Líquido inválido!"; o salvar não pôde ser testado</td>
+</tr>
+<tr>
+<td>Volume sem Nº do Lacre</td>
+<td>A tela exige o lacre (campo com asterisco)</td>
+<td>Texto da recusa não visto, porque a recusa da balança vem antes</td>
 </tr>
 <tr>
 <td>Falhas</td>
 <td>"Erro na consulta do registro!", "Não foi possível registrar a pesagem.", "Não foi possível finalizar a pesagem.", "Não foi possível cancelar a pesagem.", "Não foi possível atualizar os volumes."</td>
-<td></td>
+<td>Textos do código; não vistos na tela</td>
 </tr>
 </tbody>
 </table></div>
@@ -135,81 +147,109 @@
 </thead>
 <tbody>
 <tr>
-<td>Pesquisa: Código, Item de entrada, Lote fornecedor, Cód. Solicitação</td>
+<td>Pesquisa: Código</td>
 <td>Texto</td>
 <td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td>Só acha o código inteiro (<code>0000001/26</code>)</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Pesquisa: Tipo</td>
 <td>Lista</td>
 <td>Não</td>
-<td>SELECIONE e os tipos de pesagem</td>
-<td>levantamento</td>
+<td>SELECIONE, RECEBIMENTO, SEPARAÇÃO, OUTROS, ANÁLISE QUALIDADE</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Pesquisa: Período</td>
 <td>Duas datas</td>
 <td>Não</td>
-<td></td>
-<td>levantamento</td>
+<td>Só vale com as duas; faixas "Data final não informada" e "Data final inválida!"</td>
+<td>tela</td>
+</tr>
+<tr>
+<td>Pesquisa: Item de entrada, Lote fornecedor, Cód. Solicitação</td>
+<td>Texto</td>
+<td>Não</td>
+<td>Aceitam parte do texto</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Pesquisa: Concluído</td>
 <td>Lista</td>
 <td>Não</td>
 <td>TODOS, SIM, NÃO</td>
-<td>levantamento</td>
+<td>tela</td>
 </tr>
 <tr>
-<td>Dados do Lote e da Solicitação</td>
+<td>Dados do Lote e Dados da Solicitação</td>
 <td>Texto travado</td>
 <td>—</td>
-<td></td>
-<td>código da tela</td>
+<td>Só leitura</td>
+<td>tela</td>
+</tr>
+<tr>
+<td>Volume: Cód. do Volume, Item, Lote Fabricante, Item Entrada, Validade, Qtde Requisitada</td>
+<td>Texto travado</td>
+<td>—</td>
+<td>Só leitura</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Tag Balança</td>
 <td>Lista</td>
 <td><strong>Sim</strong></td>
-<td>Balanças da API</td>
-<td>código da tela</td>
+<td>Hoje só "SELECIONE" (DV-EST-N-110)</td>
+<td>tela</td>
+</tr>
+<tr>
+<td>Nº do Lacre</td>
+<td>Texto</td>
+<td><strong>Sim</strong></td>
+<td>O legado só exigia conforme a configuração</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Data da Pesagem, Responsável</td>
 <td>Texto travado</td>
 <td>—</td>
-<td></td>
-<td>código da tela</td>
+<td>Data e hora atuais e o usuário logado</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Peso Bruto</td>
 <td>Número</td>
 <td><strong>Sim</strong></td>
-<td>Capturado ou digitado</td>
-<td>código da tela</td>
+<td>Registro e captura não puderam ser testados</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Tara</td>
 <td>Número</td>
 <td><strong>Sim</strong></td>
 <td></td>
-<td>código da tela</td>
+<td>tela</td>
 </tr>
 <tr>
 <td>Peso Líquido</td>
 <td>Número travado</td>
 <td>—</td>
-<td>Bruto menos tara</td>
-<td>código da tela</td>
+<td>Bruto menos tara; mostra negativo sem recusa</td>
+<td>tela</td>
 </tr>
 <tr>
-<td>Dividir/Agrupar: Volume (A), Volume (B), Peso atual, Pesos</td>
-<td>Listas e números</td>
+<td>Dividir: Volume, Peso Atual, Peso Volume (A) e (B)</td>
+<td>Lista e números</td>
 <td><strong>Sim</strong></td>
-<td></td>
-<td>código da tela</td>
+<td>A soma de A e B tem de ser igual ao peso atual</td>
+<td>tela</td>
+</tr>
+<tr>
+<td>Agrupar: Volume (A) e (B), pesos</td>
+<td>Listas</td>
+<td><strong>Sim</strong></td>
+<td>Os dois volumes têm de ser diferentes</td>
+<td>tela</td>
 </tr>
 </tbody>
 </table></div>
@@ -342,16 +382,33 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros, que declaram). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> chamando a rota com um perfil sem a função.</li>
-<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador (perfil 1) usa o módulo; os demais recebem 403 (DV-EST-N-001, Alta), e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
-<li><strong>Grupo do usuário:</strong> as telas que dependem do almoxarifado do grupo recusaram tudo nos testes de 10 a 12/11/2026 porque o login não grava o grupo no token (DV-EST-N-049 e N-050). Um robô deve <strong>repetir esse reteste</strong> nesta tela antes de concluir qualquer falha de gravação.</li>
-<li><strong>O que a tela faz (código da tela):</strong> carrega as permissões ao abrir ("Não foi possível carregar as permissões da tela.").
-| Perfil | Resultado esperado a confirmar |
-|---|---|
-| Administrador | Abre e opera |
-| Perfil T.BA20 e perfil restrito | Esperado 403 como nas outras telas (DV-EST-N-001); confirmar |
-| Sem login | Leva à tela de login |</li>
+<li><strong>O que foi visto na tela:</strong> com a conta de <strong>administrador</strong> a tela abre e opera nos passos acima (lista, filtros, dividir, agrupar, finalizar sem peso, LOG).</li>
+<li><strong>Perfil sem permissão:</strong> <strong>Bloqueado no teste.</strong> Não havia senha local do perfil restrito (T.BA20) e o usuário e o perfil restrito não foram criados nesta sessão; a próxima sessão deve criá-los (regra de autonomia de 13/11/2026). Responsável: quem guarda as senhas de teste. Pelo que as outras telas mostraram, só o administrador usa o módulo (DV-EST-N-001, Alta).</li>
+<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong>; pela leitura da foto de 17/11/2026, a API só confere "usuário logado" (a confirmar com um perfil sem a função).</li>
+<li><strong>Quem pesa:</strong> o campo <strong>Responsável</strong> do volume vem preenchido com o usuário logado; <strong>não há segunda pessoa</strong> que confira o peso (ponto para validar).</li>
 </ul>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Abre e opera (visto)</td>
+</tr>
+<tr>
+<td>Perfil T.BA20 e perfil restrito</td>
+<td><strong>Bloqueado no teste</strong> (sem usuário e senha); esperado 403 como nas outras telas (DV-EST-N-001)</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login (a confirmar)</td>
+</tr>
+</tbody>
+</table></div>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
 <li>A função da tela é a <strong>308</strong>; a carga do menu registra "alterar", "imprimir" e "ver log" (dml.sql:1889), sem excluir nem incluir. Editar/Visualizar depende de "alterar" e Ver log da função de histórico; Imprimir e Excluir da lista ficam escondidos para todos.</li>

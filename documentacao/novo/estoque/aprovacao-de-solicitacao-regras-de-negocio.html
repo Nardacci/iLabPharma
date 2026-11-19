@@ -40,12 +40,12 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 375 de 756</span><div class="prog-doc"><i style="width:50%"></i></div></div>
   <header class="doc-cabecalho"><h1>Aprovação de Solicitação: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="aprovacao-de-solicitacao-analise.html">Análise</a><a href="aprovacao-de-solicitacao-manual-do-usuario.html">Manual do usuário</a><a href="aprovacao-de-solicitacao-fluxos.html">Fluxos</a><a href="aprovacao-de-solicitacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="aprovacao-de-solicitacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="aprovacao-de-solicitacao-erros.html">Erros (2)</a><a class="aba-extra" href="aprovacao-de-solicitacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="aprovacao-de-solicitacao-analise.html">Análise</a><a href="aprovacao-de-solicitacao-manual-do-usuario.html">Manual do usuário</a><a href="aprovacao-de-solicitacao-fluxos.html">Fluxos</a><a href="aprovacao-de-solicitacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="aprovacao-de-solicitacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="aprovacao-de-solicitacao-erros.html">Erros (4)</a><a class="aba-extra" href="aprovacao-de-solicitacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Confirmar (código da tela e API nova):</strong> grava a data e o usuário da aprovação; a solicitação passa a ser vista pelo Atendimento. A API tem as rotas <strong>aprovação</strong> e <strong>reprovação</strong> (a tela mostra só Confirmar e Cancelar; a confirmar o que Cancelar chama).</li>
-<li><strong>Cancelar:</strong> apaga a data e o usuário da aprovação; a solicitação volta a esperar aprovação.</li>
-<li>A aprovação não muda a situação da solicitação (do legado; a confirmar).</li>
+<li><strong>Confirmar (visto na tela):</strong> grava a data e o usuário da aprovação na linha; a situação da solicitação <strong>continua CONCLUÍDA</strong>; ela passa a aparecer no Atendimento de Solicitação como PENDENTE.</li>
+<li><strong>Cancelar (visto na tela):</strong> apaga a data e o usuário da aprovação; a solicitação volta a esperar aprovação e <strong>deixa de aparecer</strong> no Atendimento. Cancelar funciona também na mesma conta que aprovou.</li>
+<li><strong>Não visto:</strong> a mensagem "A solicitação foi alterada por outro usuário. Pesquise novamente." (exige duas contas) e o rastro da aprovação no LOG da solicitação.</li>
 </ul>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
@@ -59,7 +59,7 @@
 <thead>
 <tr>
 <th>Situação</th>
-<th>Mensagem (código da tela)</th>
+<th>Mensagem (vista na tela)</th>
 <th>Observação</th>
 </tr>
 </thead>
@@ -67,35 +67,29 @@
 <tr>
 <td>Solicitação com letras ou mais de 10 dígitos</td>
 <td>"Informe somente números, com no máximo 10 dígitos, no campo Solicitação."</td>
+<td>Faixa no alto da tela e borda vermelha no campo; o campo <strong>aceita digitar letras</strong> e só recusa ao pesquisar (DV-EST-N-133)</td>
+</tr>
+<tr>
+<td>Pesquisa sem resultado</td>
+<td>"A pesquisa não retornou nenhum resultado."</td>
 <td></td>
 </tr>
 <tr>
-<td>Solicitação alterada por outro usuário</td>
-<td>"A solicitação foi alterada por outro usuário. Pesquise novamente."</td>
-<td></td>
-</tr>
-<tr>
-<td>Sem permissão</td>
+<td>Conta de consulta (T.R2EST02)</td>
 <td>"Você não possui permissão para realizar esta operação."</td>
-<td>A tela trata o 403 com texto próprio (a confirmar)</td>
+<td>Vista no print da conta de consulta, junto com a lista vazia; ver "Quem pode usar"</td>
 </tr>
 <tr>
-<td>Sessão vencida</td>
-<td>"Sua sessão expirou. Entre novamente no sistema."</td>
-<td></td>
-</tr>
-<tr>
-<td>Falhas</td>
-<td>"Não foi possível atualizar a aprovação.", "Não foi possível pesquisar as solicitações.", "Não foi possível carregar os itens da solicitação."</td>
-<td></td>
-</tr>
-<tr>
-<td>Sem itens</td>
-<td>"Nenhum item foi encontrado"</td>
-<td></td>
+<td><strong>Aprovar a própria solicitação</strong></td>
+<td><strong>Não é recusado</strong></td>
+<td>DV-EST-N-132 (Média), repete o DV-EST-070 do legado</td>
 </tr>
 </tbody>
 </table></div>
+<p><strong>Previstas pelo código da tela e não vistas:</strong> "A solicitação foi alterada por outro usuário. Pesquise novamente." · "Sua sessão expirou. Entre novamente no sistema." · "Nenhum item foi encontrado" (detalhe sem itens) · "Não foi possível atualizar a aprovação." · "Não foi possível pesquisar as solicitações." · "Não foi possível carregar os itens da solicitação."</p>
+<figure><a href="../../img/estoque/pnr3-aprovacao-de-solicitacao-14-codigo-so-numeros.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-aprovacao-de-solicitacao-14-codigo-so-numeros.png" alt="Campo Solicitação aceita letras digitadas" loading="lazy"></a><figcaption>Campo Solicitação aceita letras digitadas · clique para ampliar</figcaption></figure>
+<figure><a href="../../img/estoque/pnr3-aprovacao-de-solicitacao-17-codigo-com-letras.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-aprovacao-de-solicitacao-17-codigo-com-letras.png" alt="Recusa ao pesquisar com letras" loading="lazy"></a><figcaption>Recusa ao pesquisar com letras · clique para ampliar</figcaption></figure>
+
 <p><strong>Recusas do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
 <li>Quase nada: a tela só pergunta e grava. Mensagens: "A pesquisa não retornou nenhum resultado.", "Nenhum item foi encontrado" (detalhe sem itens), "Erro ao consultar registro!".</li>
@@ -109,38 +103,39 @@
 <th>Campo</th>
 <th>Tipo</th>
 <th>Obrigatório</th>
-<th>Valores e regra</th>
-<th>Fonte</th>
+<th>Valores e regra (visto na tela)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Pesquisa: Solicitação</td>
-<td>Texto numérico</td>
+<td>Texto</td>
 <td>Não</td>
-<td>Só números, até 10</td>
-<td>levantamento e código da tela</td>
+<td>Até 10 caracteres; aceita letras digitadas, recusa ao pesquisar (N-133)</td>
 </tr>
 <tr>
 <td>Pesquisa: Aprovado</td>
 <td>Lista</td>
 <td>Não</td>
-<td>Opções da API</td>
-<td>levantamento</td>
+<td>TODAS, NÃO, SIM</td>
 </tr>
 <tr>
 <td>Grade: Código, Data da Solicitação, Centro de Custo, Almoxarifado, Situação, Data da Aprovação, Aprovado Por</td>
 <td>Tabela</td>
 <td>—</td>
-<td></td>
-<td>código da tela</td>
+<td>Ordenável pelos títulos; concluídas sem aprovação em vermelho</td>
 </tr>
 <tr>
-<td>Itens da Solicitação: Código, Data, Centro de Custo, Almoxarifado, Solicitado Por, ITEM, UNID. MED., QTDE SOLIC., QTDE ATEND.</td>
+<td>Painel Itens da Solicitação: Código, Data, Centro de Custo, Almoxarifado, Solicitado Por</td>
+<td>Texto travado</td>
+<td>—</td>
+<td>Só leitura</td>
+</tr>
+<tr>
+<td>Painel: ITEM, UNID. MED., QTDE SOLIC., QTDE ATEND.</td>
 <td>Tabela</td>
 <td>—</td>
-<td></td>
-<td>código da tela</td>
+<td>Só leitura</td>
 </tr>
 </tbody>
 </table></div>
@@ -202,16 +197,44 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros, que declaram). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> chamando a rota com um perfil sem a função.</li>
-<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador (perfil 1) usa o módulo; os demais recebem 403 (DV-EST-N-001, Alta), e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
-<li><strong>Grupo do usuário:</strong> as telas que dependem do almoxarifado do grupo recusaram tudo nos testes de 10 a 12/11/2026 porque o login não grava o grupo no token (DV-EST-N-049 e N-050). Um robô deve <strong>repetir esse reteste</strong> nesta tela antes de concluir qualquer falha de gravação.</li>
-<li><strong>O que a tela faz (código da tela):</strong> carrega as permissões ao abrir e, ao aprovar sem permissão, mostra "Você não possui permissão para realizar esta operação."; é a primeira tela do Estoque com esse texto (a confirmar).
-| Perfil | Resultado esperado a confirmar |
-|---|---|
-| Administrador | Abre e opera |
-| Perfil T.BA20 e perfil restrito | Esperado 403 como nas outras telas (DV-EST-N-001); confirmar |
-| Sem login | Leva à tela de login |</li>
+<li><strong>Administrador (visto):</strong> abre, pesquisa, exibe itens, aprova e cancela a aprovação. <strong>Pode aprovar a solicitação que ele mesmo criou</strong> (DV-EST-N-132): o sistema não separa quem pede de quem aprova.</li>
+<li><strong>Conta de consulta (T.R2EST02, visto):</strong> a tela abre, <strong>não mostra nenhuma linha</strong> (então não há ícone Confirmar para clicar) e a pesquisa responde com lista vazia. No print aparece a faixa "Você não possui permissão para realizar esta operação."; o relato do robô descreve "Não foi possível carregar as opções. Tente pesquisar novamente." e diz que a mensagem de permissão não foi alcançada (<strong>ponto a confirmar:</strong> em que passo a faixa de permissão aparece; ver "Prints que faltam").</li>
+<li><strong>Conta sem acesso (T.R2EST01, visto):</strong> o menu não mostra o Estoque; digitando o endereço, a tela abre com a mesma faixa de erro; sem print próprio.</li>
+<li><strong>Perfil com permissão parcial e almoxarifado sem "Aprovar Solicitação":</strong> <strong>Bloqueado no teste</strong>, não havia perfil assim no ambiente; responsável: quem cria perfis de teste.</li>
+<li><strong>Grupo do usuário:</strong> para o administrador a lista com "Aprovar Solicitação" funcionou (aprovar e cancelar gravam), diferente da Saída de Material (DV-EST-N-049 e N-050); não foi possível dizer se é por ele ser administrador.</li>
 </ul>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Abre e opera; aprova a própria solicitação (DV-EST-N-132)</td>
+</tr>
+<tr>
+<td>Consulta (T.R2EST02)</td>
+<td>Abre; lista vazia; faixa de permissão no print</td>
+</tr>
+<tr>
+<td>Sem acesso (T.R2EST01)</td>
+<td>Sem menu; pela rota digitada abre com faixa de erro</td>
+</tr>
+<tr>
+<td>Perfil parcial</td>
+<td>Bloqueado no teste</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login (não testado aqui)</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a href="../../img/estoque/pnr3-aprovacao-de-solicitacao-18-perfil-consulta.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr3-aprovacao-de-solicitacao-18-perfil-consulta.png" alt="Conta de consulta: lista vazia e faixa de permissão" loading="lazy"></a><figcaption>Conta de consulta: lista vazia e faixa de permissão · clique para ampliar</figcaption></figure>
+
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
 <li>A função da tela é a <strong>324</strong>, registrada com o conjunto padrão de funções (dml.sql:1906).</li>
