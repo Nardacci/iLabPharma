@@ -40,13 +40,15 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Configuração</span><span>documento 312 de 483</span><div class="prog-doc"><i style="width:65%"></i></div></div>
   <header class="doc-cabecalho"><h1>Grupo Perfil: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="grupo-perfil-analise.html">Análise</a><a href="grupo-perfil-manual-do-usuario.html">Manual do usuário</a><a href="grupo-perfil-fluxos.html">Fluxos</a><a href="grupo-perfil-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="grupo-perfil-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="grupo-perfil-erros.html">Erros (2)</a><a class="aba-extra" href="grupo-perfil-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="grupo-perfil-analise.html">Análise</a><a href="grupo-perfil-manual-do-usuario.html">Manual do usuário</a><a href="grupo-perfil-fluxos.html">Fluxos</a><a href="grupo-perfil-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="grupo-perfil-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="grupo-perfil-erros.html">Erros (2)</a><a class="aba-extra" href="grupo-perfil-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../garantia-qualidade/a-garantia-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li>Grava o nome do grupo e a lista de usuários.</li>
+<li>Grava o nome do grupo e a lista de usuários, depois de perguntar "Confirma a alteração do item?" (a pergunta vem antes de a tela conferir o Nome).</li>
 <li>O histórico registra todas as alterações com o motivo fixo <strong>"Atualizar Grupo Perfil"</strong> e <strong>sem valor antigo e novo</strong>: não dá para saber quem entrou ou saiu de um nível (DV-GQ-N-011 e N-012).</li>
+<li>Salvar sem mudar nada também grava e confirma com sucesso.</li>
 <li>Não há assinatura nem justificativa digitada.</li>
 <li>A rodada 7 mostrou que colocar o usuário de consulta nos Níveis 01, 02 e 03 <strong>não liberou</strong> as leituras da GQ (continuaram negadas, 403): o nível do grupo, sozinho, não abre as telas (DV-GQ-N-008).</li>
+<li>No teste de 18/11/2026 o usuário de teste entrou e saiu do Nível 01, e o grupo <strong>voltou ao estado original</strong> (dois usuários).</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
@@ -59,23 +61,32 @@
 </thead>
 <tbody>
 <tr>
-<td>Salvar com perfil sem permissão</td>
-<td>"Usuário sem permissão para salvar este grupo perfil."</td>
-<td>A própria tela recusou, sem enviar o pedido (rodada 5, usuário de consulta); o servidor também respondeu 403 na chamada direta</td>
+<td>Nome vazio</td>
+<td>"Nome é obrigatório."</td>
+<td>Aparece depois da pergunta "Confirma a alteração do item?" e do SIM; imagem do passo 8</td>
 </tr>
 <tr>
-<td>Busca de usuário</td>
-<td>Pede pelo menos 3 letras ("digite 3 caracteres")</td>
-<td>Texto do rótulo do campo</td>
+<td>Adicionar o mesmo usuário de novo</td>
+<td>"Usuário já foi cadastrado."</td>
+<td>Faixa vermelha; imagem do passo 4</td>
+</tr>
+<tr>
+<td>Busca com menos de 3 letras</td>
+<td>"Nome Usuário: digite no mínimo 3 caracteres."</td>
+<td>Imagem do passo 3</td>
+</tr>
+<tr>
+<td>Salvar com perfil sem permissão</td>
+<td>"Usuário sem permissão para salvar este grupo perfil."</td>
+<td>A própria tela recusou, sem enviar o pedido (rodada 5, usuário de consulta); o servidor também respondeu 403 na chamada direta. Não refeito em 18/11/2026 (só havia a conta de administrador)</td>
 </tr>
 <tr>
 <td>Lista sem linhas</td>
 <td>"A pesquisa não retornou nenhum resultado."</td>
-<td>Print P02</td>
+<td>Filtro que não casa com nenhum grupo (por exemplo "T.")</td>
 </tr>
 </tbody>
 </table></div>
-<p>Outras mensagens do legado (por exemplo "Nome é obrigatório." e "Usuário já foi cadastrado.") <strong>não foram testadas na versão nova</strong>: (do legado; a confirmar na versão nova).</p>
 <h2 id="campos-da-tela">Campos da tela</h2>
 <div class="tabela"><table>
 <thead>
@@ -95,7 +106,7 @@
 <td>Não informado</td>
 <td>Não</td>
 <td>Procura no nome do grupo</td>
-<td>Print P01</td>
+<td></td>
 </tr>
 <tr>
 <td>Grade</td>
@@ -103,15 +114,15 @@
 <td></td>
 <td>Não se aplica</td>
 <td>NOME, NÍVEL (ordenáveis), Editar</td>
-<td>Print P02</td>
+<td>Três linhas fixas</td>
 </tr>
 <tr>
 <td>Nome</td>
 <td>Texto</td>
 <td>Não informado</td>
-<td>Sim (do legado; a confirmar)</td>
+<td>Sim</td>
 <td>Livre; não muda o nível</td>
-<td></td>
+<td>"Nome é obrigatório."</td>
 </tr>
 <tr>
 <td>Nível</td>
@@ -119,7 +130,7 @@
 <td></td>
 <td>Não se aplica</td>
 <td>1, 2 ou 3, vem do grupo</td>
-<td>Desabilitado (confidencial-grupo-perfil)</td>
+<td>Desabilitado</td>
 </tr>
 <tr>
 <td>Nome Usuário</td>
@@ -127,7 +138,7 @@
 <td>3 letras no mínimo</td>
 <td>Não</td>
 <td>Busca usuários pelo nome</td>
-<td>Rodada 5 e 7</td>
+<td></td>
 </tr>
 <tr>
 <td>Tabela de usuários</td>
@@ -135,7 +146,7 @@
 <td></td>
 <td>Não se aplica</td>
 <td>Código, Usuário, Remover</td>
-<td></td>
+<td>Sem pergunta ao remover</td>
 </tr>
 </tbody>
 </table></div>
@@ -167,7 +178,10 @@
 </tr>
 </tbody>
 </table></div>
-<p>Só o perfil de administrador usa a GQ na versão nova (DV-GQ-N-014). Em 17/10/2026 a conta de consulta (sem o módulo GQ) abriu a tela de edição do Nível 3, mas a gravação foi recusada pela tela e pelo servidor e o grupo não mudou. <strong>Limite da prova:</strong> esse teste não equivale ao cenário do legado, em que o perfil de consulta <strong>colocou a si mesmo no Nível 3</strong> (DV-GQ-009, Crítica); na versão nova os casos CT-GQ-111 e CT-GQ-112 ficaram <strong>inconclusivos/bloqueados</strong> (rodada 9).</p></article>
+<p>Só o perfil de administrador usa a GQ na versão nova (DV-GQ-N-014). Em 17/10/2026 a conta de consulta (sem o módulo GQ) abriu a tela de edição do Nível 3, mas a gravação foi recusada pela tela e pelo servidor e o grupo não mudou. <strong>Limite da prova:</strong> esse teste não equivale ao cenário do legado, em que o perfil de consulta <strong>colocou a si mesmo no Nível 3</strong> (DV-GQ-009, Crítica); na versão nova os casos CT-GQ-111 e CT-GQ-112 ficaram <strong>inconclusivos/bloqueados</strong> (rodada 9).</p>
+<ul>
+<li><strong>Perfil restrito (teste de 18/11/2026; contas T.R2GQ01 sem acesso, T.R2GQ02 só consulta, T.R2GQ03 só Incluir em Tipo de Treinamento):</strong> sem acesso: a tela abre pela rota, fora do menu, com PESQUISAR desabilitado; sem botão Incluir na tela. Só consulta: a tela está no menu, mas <strong>a lista não carrega</strong> (403): lista vazia; sem botão Incluir na tela (DV-GQ-N-093). Nenhuma gravação foi aceita em nenhuma conta (a API recusa com 403). Ver também DV-GQ-N-014.</li>
+</ul></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="grupo-perfil-fluxos.html"><small>← Anterior</small><strong>Fluxos · Grupo Perfil</strong></a><a class="ap ap-prox" href="grupo-perfil-anvisa.html"><small>Próximo →</small><strong>Anvisa · Grupo Perfil</strong></a></nav>
 </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>

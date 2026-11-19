@@ -40,13 +40,16 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 298 de 756</span><div class="prog-doc"><i style="width:39%"></i></div></div>
   <header class="doc-cabecalho"><h1>Solicitação de Material (Consumo): Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-material-consumo-analise.html">Análise</a><a href="solicitacao-de-material-consumo-manual-do-usuario.html">Manual do usuário</a><a href="solicitacao-de-material-consumo-fluxos.html">Fluxos</a><a href="solicitacao-de-material-consumo-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="solicitacao-de-material-consumo-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="solicitacao-de-material-consumo-erros.html">Erros (2)</a><a class="aba-extra" href="solicitacao-de-material-consumo-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="solicitacao-de-material-consumo-analise.html">Análise</a><a href="solicitacao-de-material-consumo-manual-do-usuario.html">Manual do usuário</a><a href="solicitacao-de-material-consumo-fluxos.html">Fluxos</a><a href="solicitacao-de-material-consumo-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="solicitacao-de-material-consumo-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="solicitacao-de-material-consumo-erros.html">Erros (8)</a><a class="aba-extra" href="solicitacao-de-material-consumo-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (completa)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>GRAVAR SOLICITAÇÃO:</strong> grava o cabeçalho com a situação PENDENTE. <strong>Grava mesmo sem nenhum item</strong> (a solicitação 00031 nasceu "sem itens", DV-EST-N-032).</li>
-<li><strong>SALVAR ITEM:</strong> coloca o item na grade (observado: item 5,000 un.).</li>
-<li><strong>SALVAR E CONCLUIR:</strong> muda a situação para CONCLUÍDA.</li>
-<li><strong>Aprovação:</strong> na Aprovação de Solicitação, a mesma conta que criou e concluiu a solicitação conseguiu aprovar (DV-EST-N-029).</li>
+<li><strong>GRAVAR SOLICITAÇÃO:</strong> grava o cabeçalho com a situação PENDENTE. <strong>Grava mesmo sem nenhum item</strong> (DV-EST-N-032).</li>
+<li><strong>SALVAR ITEM:</strong> coloca o item só na grade da tela; nada é gravado até o SALVAR ou o SALVAR E CONCLUIR.</li>
+<li><strong>SALVAR:</strong> grava os itens e a alteração do cabeçalho, com justificativa, e mantém a solicitação PENDENTE; <strong>não deixa linha de histórico para o item</strong> (DV-EST-N-083) e pode trocar a prioridade para NORMAL (DV-EST-N-082).</li>
+<li><strong>SALVAR E CONCLUIR:</strong> exige ao menos um item e a justificativa; muda a situação para CONCLUÍDA e grava essa troca no histórico. <strong>Não confere a quantidade contra o saldo.</strong></li>
+<li><strong>REABRIR SOLICITAÇÃO:</strong> volta a situação a PENDENTE, <strong>sem justificativa</strong> (DV-EST-N-084).</li>
+<li><strong>Excluir:</strong> exige justificativa; a solicitação e o histórico dela somem da lista.</li>
+<li><strong>Aprovação:</strong> na Aprovação de Solicitação, a mesma conta que criou e concluiu a solicitação conseguiu aprovar (DV-EST-N-029; testado em 10 e 11/11/2026, não repetido em 19/11/2026).</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
 <div class="tabela"><table>
@@ -61,22 +64,37 @@
 <tr>
 <td>Gravar vazio</td>
 <td>"Informe a data da solicitação. Selecione o centro de custo. Selecione o almoxarifado. Selecione a prioridade."</td>
-<td>Visto no print; a rodada de 09/11/2026 também registrou "Selecione a prioridade"</td>
+<td>O botão fica ativo; as mensagens vêm depois do clique</td>
 </tr>
 <tr>
-<td>Almoxarifado, centro de custo ou prioridade em "SELECIONE"</td>
-<td>As mensagens acima</td>
+<td>Data posterior a hoje</td>
+<td>"A data da solicitação não pode ser superior à data atual."</td>
 <td></td>
 </tr>
 <tr>
 <td>Concluir sem item</td>
-<td><strong>Não é recusado</strong>; a solicitação nasce "sem itens" ("A solicitação não possui itens.")</td>
-<td>DV-EST-N-032</td>
+<td>"Inclua pelo menos um item na solicitação."</td>
+<td>Sem item e sem justificativa: "Informe a justificativa. Inclua pelo menos um item na solicitação."</td>
+</tr>
+<tr>
+<td>Concluir ou salvar sem justificativa</td>
+<td>"Informe a justificativa."</td>
+<td></td>
+</tr>
+<tr>
+<td>Quantidade 0, letras ou negativa</td>
+<td>"Informe uma quantidade positiva, com até três casas decimais."</td>
+<td>O campo aceita digitar letras, mas não grava</td>
+</tr>
+<tr>
+<td>Excluir sem justificativa</td>
+<td>"A justificativa é obrigatória e deve ter no máximo 255 caracteres."</td>
+<td></td>
 </tr>
 <tr>
 <td>Quantidade maior que o saldo</td>
-<td><strong>Não foi testado</strong> nesta tela (no Atendimento, 400 "Saldo insuficiente para atender o item!")</td>
-<td>Ponto para validar</td>
+<td><strong>Não é recusada</strong>: 999.999 com saldo 476 foi aceita e a solicitação concluiu</td>
+<td><strong>Ponto para validar com a área:</strong> é regra de negócio (a conferência fica para o Atendimento, que responde 400 "Saldo insuficiente para atender o item!") ou falha?</td>
 </tr>
 </tbody>
 </table></div>
@@ -106,8 +124,8 @@
 <td>Duas datas</td>
 <td>—</td>
 <td>Não</td>
-<td>As duas precisam estar preenchidas (legado)</td>
-<td></td>
+<td>As duas precisam estar preenchidas</td>
+<td>Só a inicial devolve a lista inteira</td>
 </tr>
 <tr>
 <td>Centro de Custo</td>
@@ -122,7 +140,7 @@
 <td>Travado</td>
 <td>—</td>
 <td>—</td>
-<td>Gerado (ex.: 00031)</td>
+<td>Gerado (ex.: 00040)</td>
 <td></td>
 </tr>
 <tr>
@@ -130,7 +148,7 @@
 <td>Data</td>
 <td>—</td>
 <td><strong>Sim</strong></td>
-<td></td>
+<td>Não posterior a hoje</td>
 <td></td>
 </tr>
 <tr>
@@ -139,7 +157,7 @@
 <td>—</td>
 <td><strong>Sim</strong></td>
 <td>CONSUMO</td>
-<td></td>
+<td>A lista guarda também PRODUÇÃO, CLIENTE e ANÁLISE QUALIDADE</td>
 </tr>
 <tr>
 <td>Status</td>
@@ -147,7 +165,7 @@
 <td>—</td>
 <td>—</td>
 <td>PENDENTE</td>
-<td></td>
+<td>Nove situações na lista</td>
 </tr>
 <tr>
 <td>Almoxarifado</td>
@@ -162,15 +180,15 @@
 <td>Lista</td>
 <td>—</td>
 <td><strong>Sim</strong></td>
-<td>Por exemplo NORMAL</td>
-<td></td>
+<td>NORMAL, ALTA, EMERGÊNCIAL</td>
+<td>Não volta como gravada (N-082)</td>
 </tr>
 <tr>
 <td>Item</td>
 <td>Busca</td>
 <td>—</td>
 <td>Sim, no item</td>
-<td>Busca por Enter; sem ponto</td>
+<td>Busca por Enter; código com ponto é achado</td>
 <td></td>
 </tr>
 <tr>
@@ -186,7 +204,7 @@
 <td>Número</td>
 <td>—</td>
 <td>Sim, no item</td>
-<td></td>
+<td>Positiva, até 3 casas; não confere o saldo</td>
 <td></td>
 </tr>
 <tr>
@@ -194,8 +212,8 @@
 <td>Texto</td>
 <td>—</td>
 <td>Sim</td>
+<td>Ao salvar, concluir e excluir (até 255 caracteres na exclusão)</td>
 <td></td>
-<td>Ao concluir</td>
 </tr>
 <tr>
 <td>Grade de itens</td>
@@ -208,7 +226,7 @@
 </tbody>
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
-<p><strong>Teste com perfil restrito (18/11/2026, rodada <code>execucao/2026-11-18-perfil-restrito-estoque/</code>):</strong> com três contas de teste (sem acesso, só consulta e só Incluir em Unidade de Medida), <strong>nenhuma conta que não seja administradora usou esta tela</strong>: o menu obedece ao perfil (consulta mostra a tela; sem acesso e "uma tela" não), mas a API recusa leitura e gravação com 403 (DV-EST-N-001, reteste de 19/11/2026: repete). A tela abre pela rota com a lista vazia, sem aviso de falta de permissão (DV-EST-N-054); a tela é provisória (sem Incluir).</p>
+<p><strong>Teste com perfil restrito (18/11/2026, rodada <code>execucao/2026-11-18-perfil-restrito-estoque/</code>):</strong> com três contas de teste (sem acesso, só consulta e só Incluir em Unidade de Medida), <strong>nenhuma conta que não seja administradora usou esta tela</strong>: o menu obedece ao perfil (consulta mostra a tela; sem acesso e "uma tela" não), mas a API recusa leitura e gravação com 403 (DV-EST-N-001, reteste de 19/11/2026: repete). A tela abre pela rota com a lista vazia, sem aviso de falta de permissão (DV-EST-N-054).</p>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -219,11 +237,11 @@
 <tbody>
 <tr>
 <td>Administrador</td>
-<td>Abre, pesquisa e grava (testado)</td>
+<td>Abre, pesquisa, grava, conclui, reabre e exclui (testado em 19/11/2026, pela rota direta)</td>
 </tr>
 <tr>
 <td>Perfil T.BA20</td>
-<td><strong>Negado</strong>: "Não foi possível carregar as solicitações de material." (403)</td>
+<td><strong>Negado</strong>: "Não foi possível carregar as solicitações de material." (403). Em 19/11/2026 <strong>Bloqueado no teste</strong>: sem senha local desse login (responsável: quem guarda as senhas de teste)</td>
 </tr>
 </tbody>
 </table></div>

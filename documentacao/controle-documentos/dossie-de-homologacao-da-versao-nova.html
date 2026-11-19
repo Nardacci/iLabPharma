@@ -47,7 +47,7 @@
     <article class="texto">
 <h2 id="introducao">Introdução</h2>
 <h3 id="escopo">Escopo</h3>
-<p>Este dossiê registra os testes de homologação do <strong>módulo Controle de Documentos (DOC) na versão nova</strong> do LabMedSys (o mesmo sistema com um front-end novo sobre o mesmo back-end), entre <strong>04 e 10/11/2026</strong>: a rodada 1 (04/11), a investigação do defeito N-001 (05/11) e o ciclo do documento até a vigência com contas de papel (10/11, feito dentro da rodada 3 da Garantia da Qualidade). O objetivo é saber o que funciona, o que falha e o que ainda impede o uso em ambiente regulado (RDC 658/2022, Guia 33/2020). O foco é o comportamento das telas; a leitura do código novo é a Fase 2 do trabalho e ainda não foi feita.</p>
+<p>Este dossiê registra os testes de homologação do <strong>módulo Controle de Documentos (DOC) na versão nova</strong> do LabMedSys (o mesmo sistema com um front-end novo sobre o mesmo back-end), entre <strong>04 e 19/11/2026</strong>: a rodada 1 (04/11), a investigação do defeito N-001 (05/11), o ciclo do documento até a vigência com contas de papel (10/11, feito dentro da rodada 3 da Garantia da Qualidade) e a primeira passagem do robô do manual por tela na tela Documento (19/11, parcial). O objetivo é saber o que funciona, o que falha e o que ainda impede o uso em ambiente regulado (RDC 658/2022, Guia 33/2020). O foco é o comportamento das telas; o código novo (telas em Angular e API) já foi recebido e fotografado em 11 e 18/11/2026, mas a análise dele por tela é a Fase 2 do trabalho e ainda não foi feita.</p>
 <h3 id="documentos-deste-pacote">Documentos deste pacote</h3>
 <div class="tabela"><table>
 <thead>
@@ -71,7 +71,7 @@
 </tr>
 <tr>
 <td>Fichas de defeito DV-DOC-N</td>
-<td>11 fichas, com passos, esperado, obtido, impacto e evidência</td>
+<td>15 fichas, com passos, esperado, obtido, impacto e evidência</td>
 </tr>
 <tr>
 <td>Documentos do Legado</td>
@@ -154,7 +154,7 @@
 <td>Ciclo</td>
 <td>Documento</td>
 <td>Real (testada)</td>
-<td>N-001, N-002, N-003, N-005, N-006, N-007</td>
+<td>N-001, N-002, N-003, N-005, N-006, N-007, N-012, N-013, N-014, N-015</td>
 </tr>
 <tr>
 <td>Ciclo</td>
@@ -239,16 +239,16 @@
 <h3 id="avaliacao-das-funcoes">Avaliação das funções</h3>
 <p>Não verificado na versão nova: depende da análise do código novo.</p>
 <h3 id="resumo-dos-riscos">Resumo dos riscos</h3>
-<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 4 defeitos de prioridade Alta (4 abertos) (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
+<p>Riscos <strong>confirmados</strong> pelos testes da versão nova: 5 defeitos de prioridade Alta (5 abertos) (lista no capítulo Desvios), com destaque para acesso, trilha de auditoria e integridade dos dados.</p>
 <h2 id="achados-de-seguranca">Achados de segurança</h2>
 <ul>
 <li><strong>Servidor confere a função (Melhoria):</strong> usuário sem função e usuário de consulta recebem 403 em todas as gravações testadas; a mensagem para o usuário é genérica (N-003, N-006). Usuário sem nenhuma função do módulo é barrado já no login ("Usuário sem módulos de acesso.").</li>
 <li><strong>Contas de papel:</strong> a investigação de 05/11 comparou o administrador e o Elaborador uma diferença de cada vez (funções do módulo idênticas, 76 de 76 com escrita; perfil espelho do administrador com todas as funções; setor, grupo e dono do documento) e <strong>nada mudou o 403</strong>. O que sobra de diferença é o perfil 1 e o módulo "patrimônio" no token do administrador, que a tela de Perfil não mostra nem permite conceder. É <strong>inferência</strong>, não confirmada; vai ao desenvolvimento e ao DBA (consulta <code>consulta-perfis-403.sql</code>). O 403 vem sem corpo e sem dizer o que faltou.</li>
 <li><strong>Separação de funções:</strong> o autor não revisa o próprio documento (Melhoria); mas a mesma pessoa revisa todos os setores, pré-aprova, aprova e põe em vigor (N-011, DV-DOC-002); revisar e aprovar exigem também a função de elaboração (N-008). Os papéis Revisor, Pré-aprovador, Aprovador e Vigência <strong>não foram testados isoladamente de forma completa</strong>: o ciclo exigiu a função Documento ou o administrador em alguns passos.</li>
-<li>Não foi testado com conta de papel: adicionar setor revisor e aplicação (o 403 da rodada 1 era do <code>t.doc.elaborador</code>; os setores dos documentos 178 a 180 foram montados pelo administrador).</li>
+<li><strong>Contas de papel na passagem de 19/11:</strong> não houve; N-001, N-003 e N-006 ficaram Bloqueados no teste. Não foi testado com conta de papel: adicionar setor revisor e aplicação (o 403 da rodada 1 era do <code>t.doc.elaborador</code>; os setores dos documentos 178 a 180 foram montados pelo administrador).</li>
 </ul>
 <h3 id="trilha-de-auditoria">Trilha de auditoria</h3>
-<p>O histórico do documento grava <strong>REVISADO, PRÉ-APROVADO e APROVADO</strong> com setor, profissional, data e hora, assinante e justificativa. <strong>Não grava</strong> criação, envio, devolução, vigência, nova revisão, obsolescência nem exclusão (N-002, Regressão sobre o legado). Para a conta de papel, a leitura do histórico, dos setores e dos anexos devolve 403 e a tela mostra o histórico vazio (N-001). A assinatura aceita <strong>a credencial de outra pessoa</strong> e grava essa pessoa como assinante (DV-DOC-003 repete); senha errada é recusada ("Autenticação inválida!"). O <strong>Documento Legado</strong> vigente fica com histórico vazio (DV-DOC-011).</p>
+<p>O histórico do documento grava <strong>REVISADO, PRÉ-APROVADO e APROVADO</strong> com setor, profissional, data e hora, assinante e justificativa. <strong>Não grava</strong> criação, envio, devolução, vigência, nova revisão, obsolescência nem exclusão (N-002, Regressão sobre o legado), <strong>no quadro Histórico do documento</strong>; no reteste de 19/11 o ícone Log da lista registrou criação, anexo, envio e exclusão (com o nome técnico "IdAssinaturaInicio", N-013), de modo que a trilha existe em parte e o que falta é mostrá-la no quadro e conferir devolução e vigência. Para a conta de papel, a leitura do histórico, dos setores e dos anexos devolve 403 e a tela mostra o histórico vazio (N-001). A assinatura aceita <strong>a credencial de outra pessoa</strong> e grava essa pessoa como assinante (DV-DOC-003 repete); senha errada é recusada ("Autenticação inválida!"). O <strong>Documento Legado</strong> vigente fica com histórico vazio (DV-DOC-011).</p>
 <h2 id="plano-de-testes">Plano de testes</h2>
 <h3 id="objetivo">Objetivo</h3>
 <p>Saber o que funciona, o que falha e o que ainda impede o uso do Controle de Documentos da versão nova em ambiente regulado, em comparação com o sistema entregue.</p>
@@ -260,7 +260,7 @@
 <li><strong>Quem testou:</strong> robôs (Claude Code, no computador da pessoa, com scripts) pelas telas, no navegador, e a API do módulo para ler respostas (200, 403) e para ligar o treinamento ao documento, que a tela de Vigência não oferece. Contas: o administrador de teste (perfil 1) e contas de papel (<code>t.doc.elaborador</code>, <code>t.doc.aprovador</code>, <code>t.doc.consulta</code> e <code>t.doc.semfuncao</code> na rodada 1; T.BA41, T.BA42 e T.BA43 no ciclo de 10/11).</li>
 <li><strong>Registros:</strong> todo registro criado começa com "T." e permanece no ambiente. Massa da rodada 1: 89 documentos "T.", 6 documentos legados, 8 perfis, 16 usuários e 5 setores (<code>T. AREA A</code> a <code>E</code>). Em 05/11 os perfis do módulo foram renomeados de <code>0.T.DOC_...</code> para <code>Z.T.DOC_...</code> para saírem das 10 vagas da caixa de perfis (efeito sobre a Conta usuário do Principal, N-038 do Principal).</li>
 <li><strong>Classes de resultado:</strong> Igual ao legado (inclusive a falha), Regressão, Melhoria, Novo, Provisória (tela sem lógica, <strong>não é defeito</strong>, caso "não aplicável") e Bloqueado no teste. Base de comparação: o plano de regressão (45 casos do plano, 18 casos novos das telas e 12 de filtros e impressão) e os 40 defeitos do legado (DV-DOC-001 a 040).</li>
-<li><strong>Dados que não foram vistos:</strong> o banco, o código do front-end novo e o código da API nova.</li>
+<li><strong>Dados que não foram vistos:</strong> o banco; o código do front-end novo e o da API nova foram fotografados (18/11), mas não lidos tela a tela.</li>
 </ul>
 <h3 id="evidencias-e-registro">Evidências e registro</h3>
 <p>Capturas das telas (com manifesto), resultados por rodada em <code>execucao/</code> e uma ficha por defeito (<code>defeitos/</code>). Imagens revisadas antes da publicação; registros de teste com o prefixo "T.".</p>
@@ -280,23 +280,23 @@
 <tbody>
 <tr>
 <td>Fichas de defeito</td>
-<td>11</td>
+<td>15</td>
 </tr>
 <tr>
 <td>Defeitos contados</td>
-<td>11</td>
+<td>15</td>
 </tr>
 <tr>
 <td>Abertos / corrigidos ou fechados</td>
-<td>11 / 0</td>
+<td>15 / 0</td>
 </tr>
 <tr>
 <td>Gravidade Alta / Média / Baixa</td>
-<td>4 / 5 / 2 (Alta abertas: 4)</td>
+<td>5 / 5 / 5 (Alta abertas: 5)</td>
 </tr>
 <tr>
 <td>Classe na versão nova</td>
-<td>2 Regressão, 9 Novo</td>
+<td>3 Regressão, 12 Novo</td>
 </tr>
 </tbody>
 </table></div>
@@ -326,10 +326,15 @@
 <td>10/11/2026</td>
 <td>Contas de papel (T.BA41, T.BA42, T.BA43) pelo fluxo normal do Principal; documentos <strong>178 e 179</strong> (tipo que exige treinamento) e <strong>180</strong> (tipo que não exige) chegaram a <strong>VIGENTE</strong>; testes de separação de funções; <strong>4 defeitos novos</strong> (N-008 a N-011)</td>
 </tr>
+<tr>
+<td>Manual por tela, tela 01 Documento (robô 4)</td>
+<td>19/11/2026</td>
+<td><strong>Parcial:</strong> a tela foi percorrida só com a conta de administrador (40 imagens, 14 delas refazem imagens antigas); 8 pontos do manual conferidos, 2 diferentes, 3 não foi possível, 5 trechos do manual errados. <strong>4 defeitos novos (N-012 a N-015).</strong> Retestes: <strong>N-001, N-003 e N-006 ficaram Bloqueados no teste</strong> (não existem contas por papel; nenhum usuário, perfil ou função foi criado); <strong>N-002</strong> reteste parcial (o Log registra; só o quadro Histórico fica vazio); <strong>N-005 não se reproduz</strong> pelo servidor; <strong>N-007</strong> parcial (14 tipos de documento hoje, tela de Tipo ainda provisória)</td>
+</tr>
 </tbody>
 </table></div>
 <p><strong>Defeitos Alta do legado (20), segundo a rodada 1:</strong> 5 <strong>repetem</strong> (DV-DOC-002, 003, 007, 011 e 020), 4 <strong>corrigidos</strong> (015, 030, 033 e 039), 2 <strong>corrigidos em parte</strong> (001 e 037), 9 <strong>não aplicáveis</strong> por tela provisória (004, 009, 013, 016, 017, 018, 029, 035 e 040); <strong>nenhum piorou</strong>. Conferidos de passagem: 008 corrigido; 012, 021, 022, 023, 024 e 026 repetem; 025 repete em parte.</p>
-<p><strong>Resultado em números:</strong> <strong>11 fichas de defeito</strong> (DV-DOC-N-001 a N-011: 4 Alta, 5 Média, 2 Baixa), das quais <strong>uma é de ambiente/dados</strong> (N-007).</p>
+<p><strong>Resultado em números:</strong> <strong>15 fichas de defeito</strong> (DV-DOC-N-001 a N-015: 5 Alta, 5 Média, 5 Baixa), das quais <strong>uma é de ambiente/dados</strong> (N-007). As fichas N-012 a N-015 são de 19/11/2026.</p>
 <h3 id="resultado-em-uma-frase-por-tema">Resultado em uma frase por tema</h3>
 <p><strong>O que melhorou em relação ao legado</strong></p>
 <ul>
@@ -356,8 +361,13 @@
 </tr>
 <tr>
 <td>Alta</td>
-<td>O <strong>histórico não grava criação, envio, devolução e vigência</strong> (só revisar, pré-aprovar e aprovar); exclusão e devolução ficam sem rastro. Regressão: o legado gravava VIGENTE e DEVOLVIDO</td>
+<td>O <strong>histórico não grava criação, envio, devolução e vigência</strong> (só revisar, pré-aprovar e aprovar); exclusão e devolução ficam sem rastro. Regressão: o legado gravava VIGENTE e DEVOLVIDO. <strong>Reteste de 19/11 (parcial):</strong> o ícone <strong>Log</strong> da lista registra a criação, o anexo, o envio e a exclusão; o que fica vazio é o quadro <strong>Histórico</strong> dentro do documento. Devolução e vigência não foram retestadas; o alcance e a gravidade da ficha estão em decisão</td>
 <td>N-002</td>
+</tr>
+<tr>
+<td>Alta</td>
+<td><strong>O envio (ASSINAR E SUBMETER) termina sem mensagem</strong>: a tela fica em "PRÉ INCLUSÃO" com o botão ainda ativo, embora o dado seja gravado (a lista mostra PENDENTE ANÁLISE CRÍTICA; repetiu em 4 documentos). Regressão da própria versão nova: em 04 e 10/11 o envio terminava com "Inclusão efetuada com sucesso.". Quem assina não recebe confirmação do ato</td>
+<td>N-012</td>
 </tr>
 <tr>
 <td>Alta</td>
@@ -396,7 +406,7 @@
 </tr>
 <tr>
 <td>Baixa</td>
-<td>O anexo baixado sai com <strong>nome aleatório</strong></td>
+<td>O anexo baixado sai com <strong>nome aleatório</strong>. <strong>Reteste de 19/11:</strong> o servidor envia o nome original; o nome em código apareceu no navegador do robô, então a ficha fica a confirmar num navegador comum</td>
 <td>N-005</td>
 </tr>
 <tr>
@@ -404,8 +414,14 @@
 <td>Usuário sem função: "Não foi possível carregar os filtros do documento." no lugar de "Permissão Negada" (Regressão de mensagem)</td>
 <td>N-006</td>
 </tr>
+<tr>
+<td>Baixa</td>
+<td><strong>Tela Documento (19/11):</strong> o Log mostra o nome técnico "IdAssinaturaInicio" e um nome de situação diferente do da tela; o PDF da lista sai com "SUA LOGO AQUI" e a coluna Setor Revisor em branco; a faixa de erro do anexo não some depois de outras ações</td>
+<td>N-013, N-014, N-015</td>
+</tr>
 </tbody>
 </table></div>
+<p><strong>Retestes de 19/11 que não se concluíram (Bloqueado no teste, ambiente/dados):</strong> N-001, N-003 e N-006 dependem de contas por papel (elaborador com a função Documento, revisor, sem função e só consulta), que ainda não foram criadas pelas telas do Principal; <strong>responsável: robô, na próxima passagem da tela 01</strong>, sem pedir nada ao DBA. A N-007 também depende de tela de Tipo de Documento que ainda é provisória.</p>
 <p><strong>Repetem o legado (sem ficha nova):</strong> o mesmo usuário revisa, pré-aprova e aprova (DV-DOC-002); a credencial de <strong>outra pessoa</strong> é aceita na assinatura e gravada como assinante (DV-DOC-003); emissão retroativa aceita (DV-DOC-007); Documento Legado tornado vigente sem senha e com histórico vazio (DV-DOC-011); nova revisão de documento de código digitado não é aprovada, "Já existe um outro documento com o código informado!" (DV-DOC-020); nova revisão e obsolescência sem motivo ou justificativa (DV-DOC-021 e 022); exclusão sem histórico (DV-DOC-024); a ordenação por Código não ordena (DV-DOC-026).</p>
 <p><strong>Provisória (não é defeito).</strong> Documento externo, Controle de cópias, Tipo de documento, GED modelos e GED arquivos: cartão "API conectada" com o caminho do legado e a rota da API. Os <strong>26 casos "não aplicáveis"</strong> serão repetidos quando a equipe desenvolver as telas; a massa que faltou (12 tipos, 8 externos, 8 vigentes com cópia, 5 modelos e 10 arquivos) também.</p>
 <h4 id="o-ciclo-do-documento-passo-a-passo-rodada-1-e-ciclo-de-10-11">O ciclo do documento, passo a passo (rodada 1 e ciclo de 10/11)</h4>
@@ -470,6 +486,7 @@
 </tr>
 </tbody>
 </table></div>
+<p><em>Reteste de 19/11 (administrador, tela Documento):</em> o ícone <strong>Log</strong> da lista registra a criação ("INCLUSÃO DO REGISTRO"), o anexo, o envio ("Pré Inclusão para Pendente Revisão", com justificativa, data, hora e usuário) e a exclusão; o quadro <strong>Histórico</strong> dentro do documento continua vazio nesses atos. A coluna "Histórico gravado" acima descreve o quadro Histórico (N-002); o Log tem mais do que o quadro mostra.</p>
 <p><strong>Quem fez o quê no ciclo de 10/11:</strong> T.BA41 (só Revisão e Visualizar) recebeu 403 ao revisar o documento 178; T.BA43 (todas as funções do módulo) revisou o 178, e no documento 180 <strong>revisou, pré-aprovou, aprovou e pôs em vigor sozinha</strong>; T.BA42 pré-aprovou e aprovou os documentos 178 e 179 depois de receber também a função Documento; a vigência de 178 e 179 só foi possível depois de <strong>refazer o treinamento na Garantia da Qualidade e ligá-lo ao documento por API</strong>.</p>
 <h2 id="desvios">Desvios</h2>
 <h3 id="defeitos-de-gravidade-alta">Defeitos de gravidade Alta</h3>
@@ -506,6 +523,12 @@
 <td>Documento de tipo que exige treinamento não tem como ser posto em vigor pela tela: o vínculo com o treinamento só existe pela API</td>
 <td>Vigência Documento</td>
 <td>Novo</td>
+</tr>
+<tr>
+<td>DV-DOC-N-012</td>
+<td>O envio do documento (ASSINAR E SUBMETER) termina sem mensagem e a tela fica em "PRÉ INCLUSÃO"</td>
+<td>Documento (edição), botão ASSINAR E SUBMETER</td>
+<td>Regressão</td>
 </tr>
 </tbody>
 </table></div>
@@ -598,6 +621,34 @@
 <td>Revisão Documento</td>
 <td>Novo</td>
 </tr>
+<tr>
+<td>DV-DOC-N-012</td>
+<td>O envio do documento (ASSINAR E SUBMETER) termina sem mensagem e a tela fica em "PRÉ INCLUSÃO"</td>
+<td>Alta</td>
+<td>Documento (edição), botão ASSINAR E SUBMETER</td>
+<td>Regressão</td>
+</tr>
+<tr>
+<td>DV-DOC-N-013</td>
+<td>O Log do documento mostra o nome técnico "IdAssinaturaInicio" e um nome de situação diferente do da tela</td>
+<td>Baixa</td>
+<td>Documento, ícone LOG</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-DOC-N-014</td>
+<td>O PDF da lista de documentos sai com "SUA LOGO AQUI" e com a coluna Setor Revisor em branco</td>
+<td>Baixa</td>
+<td>Documento (IMPRIMIR)</td>
+<td>Novo</td>
+</tr>
+<tr>
+<td>DV-DOC-N-015</td>
+<td>A faixa de erro do anexo não some depois de outras ações na edição do documento</td>
+<td>Baixa</td>
+<td>Documento (edição), quadro Documento Anexo</td>
+<td>Novo</td>
+</tr>
 </tbody>
 </table></div>
 <p>Fichas completas, com passos, esperado, obtido e evidência, em <code>homologacao/versao-nova/6.controle_documento/defeitos/</code>.</p>
@@ -617,12 +668,12 @@
 <tr>
 <td>Rastreabilidade e trilha de auditoria</td>
 <td>Não atende</td>
-<td>Histórico não grava criação, envio, devolução e vigência (N-002); conta de papel não lê o histórico (N-001); obsolescência e nova revisão sem justificativa</td>
+<td>Quadro Histórico não mostra criação, envio, devolução e vigência (N-002; o Log da lista registra parte, reteste de 19/11); conta de papel não lê o histórico (N-001); obsolescência e nova revisão sem justificativa; Log com nome técnico (N-013)</td>
 </tr>
 <tr>
 <td>Autorização e assinatura eletrônica</td>
 <td>Atende em parte</td>
-<td>Assinatura com usuário e senha nas etapas; mas aceita a credencial de outra pessoa (DV-DOC-003)</td>
+<td>Assinatura com usuário e senha nas etapas; mas aceita a credencial de outra pessoa (DV-DOC-003) e o envio assinado termina sem mensagem de confirmação (N-012)</td>
 </tr>
 <tr>
 <td>Controle de acesso e separação de funções</td>
@@ -652,8 +703,9 @@
 <li><strong>Não executados na rodada 1 (falta de crédito, não de bloqueio):</strong> CT-DOC-037 (conteúdo da lista de Visualizar por usuário), CT-DOC-F-04 (acento, &amp; e aspas), F-06 e F-07 (filtros da Obsolescência e do Documento Legado), filtros de validade, emissão e setor, e a leitura dos nomes dos itens de menu por papel (só a contagem).</li>
 <li><strong>Bloqueado no teste:</strong> documento SUBSTITUÍDO e revisões encadeadas (N-007: nenhum tipo existente serve); documento CANCELADO (nenhuma tela testada cancela; o filtro de Situação tem "CANCELADO").</li>
 <li><strong>Pontos para validar (não são defeitos):</strong> quem criou o documento não aparece como possível revisor dele (se for a regra de separação, está melhor que o legado e precisa constar nos requisitos); a validade além do prazo do tipo passa na vigência e só é recusada na gravação final do legado; o botão Imprimir só entrega o arquivo depois de alguns segundos, sem indicador de espera; a nova revisão já nasce com o número 1.</li>
-<li><strong>Fichas sem imagem de evidência:</strong> 5 das 11. <strong>Manual por tela:</strong> escrito em 6 das 8 telas reais, com 83 imagens e 32 capturas ainda por fazer ou refazer; conferência por robô: 0 de 6.</li>
+<li><strong>Fichas sem imagem de evidência:</strong> 5 das 15. <strong>Manual por tela:</strong> escrito em 6 das 8 telas reais, com 109 imagens e 31 capturas ainda por fazer ou refazer; conferência por robô: a tela 01 Documento foi percorrida em 19/11 só como administrador (parcial) e nenhuma tela está conferida por completo (0 de 6).</li>
 <li><strong>Correção de 17/11/2026 (nas fichas):</strong> a N-001 deixou de dizer "só o administrador grava as etapas"; as fichas N-008 a N-011 apontavam para a pasta de evidência da Garantia da Qualidade e passaram a citar a pasta de Documentos (o arquivo é o mesmo).</li>
+<li><strong>Código novo:</strong> a foto de 18/11 mostra, no Front, telas novas de Controle de cópias e GED e as listas de aprovação e vigência sem o filtro "setor responsável" (inferência do relatório de mudanças: pode reduzir a visibilidade por setor; a conferir com a regra de acesso por área). Nenhuma mudança na API do módulo entre as fotos de 11 e 18/11. A análise por tela do código ainda não foi feita.</li>
 <li><strong>Perguntas ao desenvolvimento e ao DBA:</strong> o que a política de autorização dos subrecursos de <code>documentos/{id}</code> exige (perfil 1, módulo patrimônio ou função fora da árvore); se o módulo "patrimônio" faz parte do produto e, sendo, por que a tela de Perfil não o mostra; se há funções do Controle de Documentos registradas em outro módulo.</li>
 <li><strong>Responsável pela correção:</strong> não é indicado nas fichas: a Garantia da Qualidade avalia e simula primeiro, e só depois abre o reparo para os desenvolvedores.</li>
 <li><strong>Imagens:</strong> conferidas; a senha provisória que aparecia na caixa de sucesso da criação de conta foi apagada e passou a ser mascarada antes da captura; a captura <code>PDC-R1-doc179-vigencia-apos-treinamento-proprio-formulario-preenchido-2.png</code> é a tela de login e as listas do documento 179 na pré-aprovação e na aprovação estão vazias (a refazer).</li>
@@ -661,8 +713,8 @@
 <h2 id="parecer-da-homologacao">Parecer da homologação</h2>
 <div class="callout">
 <p class="callout-titulo">Sem veredito novo</p>
-<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo tem <strong>8 telas reais e 5 provisórias</strong> (Documento externo, Controle de cópias, Tipo de documento, GED modelos e GED arquivos). O ciclo do documento (elaborar, revisar, pré-aprovar, aprovar e pôr em vigor) <strong>foi percorrido até VIGENTE</strong>, mas com falhas de acesso, de trilha e de separação de funções; o veredito fica <strong>sem veredito</strong>, e não "apto".</p>
-<p>Fotografia do módulo na versão nova: 11 defeitos contados (11 abertos), 4 de prioridade Alta (4 abertos). Não há veredito de "apto".</p>
+<p>O critério de "apto para uso em ambiente regulado" ainda não foi escrito com a Garantia da Qualidade. O parecer do legado concluiu <strong>não apto</strong>. Nesta versão o módulo tem <strong>8 telas reais e 5 provisórias</strong> (Documento externo, Controle de cópias, Tipo de documento, GED modelos e GED arquivos). O ciclo do documento (elaborar, revisar, pré-aprovar, aprovar e pôr em vigor) <strong>foi percorrido até VIGENTE</strong>, mas com falhas de acesso, de trilha e de separação de funções; o veredito fica <strong>sem veredito</strong>, e não "apto". A foto do código de 18/11 mostra que o desenvolvimento já escreveu as telas de Controle de cópias e do GED (arquivos e modelos); o ambiente de teste ainda as mostra como provisórias, e elas só entram nos testes quando abrirem lá.</p>
+<p>Fotografia do módulo na versão nova: 15 defeitos contados (15 abertos), 5 de prioridade Alta (5 abertos). Não há veredito de "apto".</p>
 </div>
 <h2 id="fechamento-do-modulo">Fechamento do módulo</h2>
 <h3 id="o-que-foi-concluido">O que foi concluído</h3>
@@ -671,11 +723,11 @@
 <p>Telas provisórias; código da API nova; perfis diferentes do administrador, quando o acesso é negado; o que está dito em Pendências.</p>
 <h3 id="o-que-muda-na-reabertura">O que muda na reabertura</h3>
 <ol>
-<li>Corrigir os itens de prioridade Alta: a leitura do histórico, dos setores e dos anexos e o Anexo Final para contas de papel (N-001); a gravação do histórico de criação, envio, devolução e vigência (N-002); a exigência da função Documento nas etapas (N-008); o vínculo do treinamento pela tela de Vigência (N-009).</li>
-<li>Responder as perguntas de acesso (política de autorização e módulo "patrimônio") e refazer, <strong>com contas de papel isoladas</strong>, os casos de Revisor, Pré-aprovador, Aprovador e Vigência, inclusive adicionar setor revisor e aplicação.</li>
+<li>Corrigir os itens de prioridade Alta: a leitura do histórico, dos setores e dos anexos e o Anexo Final para contas de papel (N-001); a gravação do histórico de criação, envio, devolução e vigência (N-002); a exigência da função Documento nas etapas (N-008); o vínculo do treinamento pela tela de Vigência (N-009). Também: devolver a mensagem de confirmação do envio (N-012) e decidir o alcance da N-002 (Log da lista × quadro Histórico).</li>
+<li>Responder as perguntas de acesso (política de autorização e módulo "patrimônio") e refazer, <strong>com contas de papel isoladas</strong>, os casos de Revisor, Pré-aprovador, Aprovador e Vigência, inclusive adicionar setor revisor e aplicação e os retestes N-001, N-003 e N-006 (Bloqueados no teste em 19/11).</li>
 <li>Fechar a separação de funções com a Garantia da Qualidade (mesma pessoa em todas as etapas; revisor do setor) e a assinatura com a credencial de outra pessoa.</li>
 <li>Construir as telas provisórias (Tipo de documento, Documento externo, Controle de cópias, GED) e repetir os 26 casos, o documento SUBSTITUÍDO e as revisões encadeadas.</li>
-<li>Definir com a Garantia da Qualidade o critério de "apto"; receber e revisar o código do front-end e da API nova (Fase 2).</li>
+<li>Definir com a Garantia da Qualidade o critério de "apto"; analisar por tela o código do front-end e da API nova, já recebido (Fase 2).</li>
 </ol>
 <h3 id="decisoes-e-pontos-para-validar">Decisões e pontos para validar</h3>
 <ul>
