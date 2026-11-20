@@ -100,9 +100,21 @@
 <td>N-010, N-018, N-052, N-053</td>
 <td></td>
 </tr>
+<tr>
+<td>8</td>
+<td>Natureza da Operação: gravar o Incide IPI como escolhido e o histórico só com o que mudou; limite da Observação com aviso claro (hoje erro interno acima de 300); apóstrofo como digitado; relatório com o mesmo filtro de Código da grade</td>
+<td>N-088, N-089, N-090, N-091</td>
+<td>N-088 Alta (repete o DV-EST-097 do legado); dado fiscal</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Item e Substância Controlada: gravar a marca CONTROLE PORTARIA 344 e o tipo de substância controlada; avisar ao inativar tipo em uso por Item</td>
+<td>N-092, N-026</td>
+<td>N-092 Alta (repete o DV-EST-094 do legado): sem isso o cadastro de Substância Controlada não tem efeito</td>
+</tr>
 </tbody>
 </table></div>
-<p><strong>Telas provisórias, a construir</strong> (decisão de prioridade, não defeito): Natureza da Operação, Substância Controlada, Conversão Fornecedor e Parâmetros do Estoque. <strong>Telas 22 a 25</strong> (Endereço do Estoque, Disponibilidade de Estoque, Solicitação de Material - Consumo e - Produção): são do menu Estoque, ficam fora das 28, mas destravam casos do Cadastros (cadastro em uso por movimentação, tipo e motivo nas movimentações, centro de custo nas solicitações); seus manuais estão "Em ajuste" e a fila de prints tem 16 linhas delas.</p>
+<p><strong>Telas provisórias, a construir</strong> (decisão de prioridade, não defeito): Conversão Fornecedor e Parâmetros do Estoque. <strong>Recebimento de Material</strong> (provisório): destrava os casos Bloqueados no teste do CFOP da Natureza da Operação (recusa de excluir CFOP usado por item de nota, uso do CFOP no item da nota e importação do XML). <strong>Telas 22 a 25</strong> (Endereço do Estoque, Disponibilidade de Estoque, Solicitação de Material - Consumo e - Produção): são do menu Estoque, ficam fora das 28, mas destravam casos do Cadastros (cadastro em uso por movimentação, tipo e motivo nas movimentações, centro de custo nas solicitações); seus manuais estão "Em ajuste" e a fila de prints tem 16 linhas delas.</p>
 <h3 id="2-ti-e-dba">2. TI e DBA</h3>
 <div class="tabela"><table>
 <thead>
@@ -120,12 +132,12 @@
 </tr>
 <tr>
 <td>2</td>
-<td><strong>Senha do perfil T.BA20</strong> (perfil restrito "T. BA PERFIL ESTOQUE") sem senha local nas máquinas dos robôs: faltam os prints das telas com esse perfil. Pedir a redefinição (a tela Conta usuário exige justificativa) e guardar só em variável de ambiente.</td>
+<td><strong>Senha do perfil T.BA20</strong> (perfil restrito "T. BA PERFIL ESTOQUE") sem senha local nas máquinas dos robôs: faltam os prints das telas com esse perfil (inclusive o perfil sem permissão na Natureza da Operação e na Substância Controlada, Bloqueado no teste). Pedir a redefinição (a tela Conta usuário exige justificativa) e guardar só em variável de ambiente.</td>
 <td>paginas/prints-que-faltam.csv</td>
 </tr>
 <tr>
 <td>3</td>
-<td><strong>Massa de teste:</strong> um grupo de itens com mais de 100 itens (corte do atalho por grupo do Centro de Custo), um centro de custo "do sistema" e mais de 100 conversões de unidade, para os casos hoje Bloqueados.</td>
+<td><strong>Massa de teste:</strong> um grupo de itens com mais de 100 itens (corte do atalho por grupo do Centro de Custo), um centro de custo "do sistema" e mais de 100 conversões de unidade, para os casos hoje Bloqueados. Em Substância Controlada, mais de 15 tipos (paginação) e uma segunda empresa (lista do Item sem filtro de empresa). <strong>Tipos de teste que ficam no ambiente</strong> (regra dos dados de teste): T-01 (inativo, usado pelo Item T.R2SC01), T-02 (inativo), ABCD, AB-CD e ABCDEFGH na Substância Controlada, e os CFOP 9901 a 9918 e 1245 na Natureza da Operação; os tipos 001, 002 e 003 e os CFOP 1100 e 2100 já existiam.</td>
 <td>paginas/prints-que-faltam.csv</td>
 </tr>
 <tr>
@@ -172,20 +184,30 @@
 </tr>
 <tr>
 <td>5</td>
-<td><strong>Telas provisórias:</strong> ordem de construção de Natureza da Operação (fiscal), Substância Controlada (Portaria 344), Conversão Fornecedor e Parâmetros do Estoque.</td>
-<td>Diretoria e área</td>
+<td><strong>Portaria 344 controlada fora do sistema?</strong> Hoje o cadastro de Substância Controlada só guarda código e descrição (sem lista da Portaria, limite, assinatura nem escrituração) e o Item novo não grava a marca nem o tipo (N-092). Dizer se o controle é feito fora do sistema ou se a versão nova deve controlar. Confirmar também se os tipos 001 D2, 002 B1 e 003 C1 do ambiente são os que a empresa usa, se tipo em uso por Item pode ser inativado e se o código zero deve ser recusado.</td>
+<td>Qualidade e responsável técnico</td>
 </tr>
 <tr>
 <td>6</td>
+<td><strong>Natureza da Operação (CFOP):</strong> os quatro parâmetros (Venda, DIPJ, PIS/COFINS, IPI) alimentam alguma regra? O código deve ser conferido contra a tabela oficial? Quem revisa o CFOP criado pela importação do XML ("ALTERAR - IMPORTAÇÃO XML")? O CFOP inativo fica no relatório? Quem cuida do cadastro (área fiscal ou administrador do Estoque)?</td>
+<td>Área fiscal</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Telas provisórias:</strong> ordem de construção de Conversão Fornecedor e Parâmetros do Estoque.</td>
+<td>Diretoria e área</td>
+</tr>
+<tr>
+<td>8</td>
 <td><strong>Perfil restrito do Estoque e GQ:</strong> definir quem tem acesso a cada cadastro do Estoque e à Garantia da Qualidade (consulta, uma tela, sem acesso) para repetir o teste de perfil depois da correção do 403.</td>
 <td>GQ e Almoxarifado</td>
 </tr>
 </tbody>
 </table></div>
 <h4 id="pontos-para-validar-que-vem-dos-manuais-por-tela">Pontos para validar que vêm dos manuais por tela</h4>
-<p>Os manuais das 23 telas testadas somam <strong>86 pontos para validar com a área</strong> (lista completa na seção "Pontos para validar com a área" de cada manual). Os mais repetidos:</p>
+<p>Os manuais das 25 telas testadas somam <strong>103 pontos para validar com a área</strong> (lista completa na seção "Pontos para validar com a área" de cada manual). Os mais repetidos:</p>
 <ul>
-<li>Se o EXCEL deve entregar planilha em vez de CSV ou HTML (10 manuais)</li>
+<li>Se o EXCEL deve entregar planilha em vez de CSV ou HTML (11 manuais)</li>
 <li>Se a descrição repetida deve ser recusada (N-056) (8 manuais)</li>
 <li>Se os símbolos devem ser recusados e não descartados em silêncio (N-009) (5 manuais)</li>
 <li>Se a faixa vermelha deve sumir quando o campo é corrigido (4 manuais)</li>
@@ -263,10 +285,22 @@
 <td>6</td>
 </tr>
 <tr>
+<td>Natureza da Operação</td>
+<td>parcial</td>
+<td>4</td>
+<td>3</td>
+</tr>
+<tr>
 <td>Item</td>
 <td>completa</td>
 <td>4</td>
 <td>3</td>
+</tr>
+<tr>
+<td>Substância Controlada</td>
+<td>completa</td>
+<td>5</td>
+<td>1</td>
 </tr>
 <tr>
 <td>Conta Financeira</td>
@@ -342,7 +376,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>Total: <strong>97 linhas</strong> na fila das 23 telas, <strong>10</strong> delas "Bloqueado no teste" com motivo e responsável. Casos de cobertura: 15 telas completas e 8 parciais (as parciais dependem de telas provisórias, de Item, de movimentação ou do perfil).</p>
+<p>Total: <strong>106 linhas</strong> na fila das 25 telas, <strong>14</strong> delas "Bloqueado no teste" com motivo e responsável. Casos de cobertura: 16 telas completas e 9 parciais (as parciais dependem de telas provisórias, de Item, de movimentação, do Recebimento ou do perfil).</p>
 <p><strong>Prints a refazer:</strong> na Conta Corrente, os prints <strong>12 e 32</strong> (histórico da inclusão e da alteração) saíram com o recorte cortado (faltam as primeiras letras da esquerda e parte da coluna Usuário); a biblioteca dos robôs foi corrigida em 18/11/2026. Refazer as duas capturas e substituir no manual (<code>paginas/cadastros/18-conta-corrente/manual.md</code>). Também falta o print do perfil T.BA20 onde houver senha e o histórico de registro excluído (a tela não abre).</p>
 <p><strong>Telas 22 a 25</strong> ficam com os manuais "Em ajuste" e com 16 linhas na fila; não fazem parte do menu Cadastros, mas dependem do mesmo robô.</p>
     </article>
