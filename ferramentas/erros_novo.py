@@ -181,14 +181,75 @@ def pagina(hom, destino, erros, novo, cabecalho, rodape):
                   f'<p class="en-meta">Versão nova · {E(nome)}</p>{corpo_ficha(x, lig)}</main>')
             (pasta / f'{x["id"].lower()}.html').write_text(
                 cabecalho(f'{x["id"]}: {x["titulo"]}', "../").replace("</head>", f"<style>{CSS}</style></head>") + c2 + rodape("../"), encoding="utf-8")
-    corpo = (f'<main class="conteudo" id="conteudo"><h1>Erros encontrados na versão nova</h1>'
-             f'<p>Todos os erros encontrados nos testes de tela da versão nova (de 17/10 a 11/11/2026), módulo a módulo. O ambiente de teste só tem informação fictícia. Clique no defeito para ver o que fazer para reproduzir, o que era esperado, o que aconteceu e o impacto, e o botão para a tela do erro, com as evidências. Tela provisória (ainda por construir) não é erro.</p>'
+    corpo = (f'<main class="conteudo" id="conteudo">{TRILHA_N}<p><a href="erros-legado.html">Ver os erros do legado</a></p><h1>Erros encontrados na versão nova</h1>'
+             f'<p>Todos os erros encontrados nos testes de tela da versão nova (de 17/10 a 20/11/2026), módulo a módulo. O ambiente de teste só tem informação fictícia. Clique no defeito para ver o que fazer para reproduzir, o que era esperado, o que aconteceu e o impacto, e o botão para a tela do erro, com as evidências. Tela provisória (ainda por construir) não é erro.</p>'
              f'<p><b>{total} erros:</b> ' + ", ".join(f"{n} {k}" for k, n in tg.items() if n) + '.</p>'
              f'<div class="en-topo"><button class="botao" type="button" data-abrir="1">Abrir tudo</button><button class="botao" type="button" data-abrir="0">Fechar tudo</button>{word}</div>{"".join(secs)}</main>')
     (Path(destino) / "erros-novo.html").write_text(
         cabecalho("Erros encontrados na versão nova", "").replace("</head>", f"<style>{CSS}</style></head>") + corpo + rodape("").replace("</body>", f"<script>{JS}</script></body>"), encoding="utf-8")
-    # a página de entrada antiga (com cartões) só leva à lista, para o endereço publicado continuar funcionando
-    (Path(destino) / "erros.html").write_text(
-        '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0; url=erros-novo.html"><title>Erros</title>'
-        '<link rel="canonical" href="erros-novo.html"></head><body><p><a href="erros-novo.html">Erros encontrados na versão nova</a></p></body></html>', encoding="utf-8")
+    _paginas_legado_e_entrada(hom, destino, cabecalho, rodape, dados)
     return total
+
+
+TRILHA_L = '<nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <a href="erros.html">Erros</a> › <span>Legado</span></nav>'
+TRILHA_E = '<nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <span>Erros</span></nav>'
+TRILHA_N = '<nav class="trilha" aria-label="Você está em"><a href="index.html">Início</a> › <a href="erros.html">Erros</a> › <span>Versão nova</span></nav>'
+
+
+def _paginas_legado_e_entrada(hom, destino, cabecalho, rodape, dados_novo):
+    """erros-legado.html: os erros do sistema entregue pelo fornecedor, por módulo, com os números DO LEGADO.
+    erros.html: a entrada, que mostra Legado e Novo lado a lado (cada um com os seus números) e leva a cada lista.
+    Antes, erros.html levava só à lista da versão nova e quem entrava pelo lado Legado via os números do Novo."""
+    import erros_tela
+    leg = []
+    for mid, nome, pasta, sig in MODS:
+        itens = [d for d in erros_tela.carregar_legado(hom, mid) if (d.get("situacao") or "Aberto") != "Descartado"]
+        leg.append((mid, nome, itens))
+    novo = {mid: itens for mid, _n, itens in dados_novo}
+    tl = {k: sum(1 for _m, _n, i in leg for x in i if x["gravidade"] == k) for k in ORDEM}
+    total_l = sum(len(i) for _m, _n, i in leg)
+    total_n = sum(len(i) for i in novo.values())
+    linhas = []
+    for mid, nome, itens in leg:
+        c = {k: sum(1 for x in itens if x["gravidade"] == k) for k in ORDEM}
+        resumo = ", ".join(f"{n} {k}" for k, n in c.items() if n)
+        pagina_mod = f"documentacao/{mid}/defeitos-para-correcao.html"
+        existe = (Path(destino) / pagina_mod).exists()
+        link = f'<a href="{pagina_mod}">Ver os defeitos do módulo</a>' if existe else "—"
+        linhas.append(f"<tr><td>{E(nome)}</td><td>{len(itens)}</td><td>{E(resumo)}</td><td>{link}</td></tr>")
+    css = f"<style>{CSS}</style>"
+    secs_l = []
+    for mid, nome, itens in leg:
+        c = {k: sum(1 for x in itens if x["gravidade"] == k) for k in ORDEM}
+        resumo = ", ".join(f"{n} {k}" for k, n in c.items() if n)
+        pagina_mod = f"documentacao/{mid}/defeitos-para-correcao.html"
+        existe = (Path(destino) / pagina_mod).exists()
+        ordenados = sorted(itens, key=lambda x: (ORDEM.get(x["gravidade"], 9), x["id"]))
+        linhas_m = "".join(
+            f'<tr><td>' + (f'<a href="{pagina_mod}#{x["id"].lower()}">{E(x["id"])}</a>' if existe else E(x["id"])) +
+            f'</td><td>{E(x["gravidade"])}</td><td>{E(x.get("tela_txt") or "—")}</td><td>{E(x["titulo"])}</td><td>{E(x.get("tipo") or "—")}</td></tr>' for x in ordenados)
+        if not itens:
+            continue
+        secs_l.append(f'<details class="en-mod" id="{mid}" open><summary>{E(nome)}<small>{len(itens)} erros · {E(resumo)}</small></summary><div class="en-corpo">'
+                      '<table class="en-tab"><thead><tr><th>Defeito</th><th>Gravidade</th><th>Tela</th><th>Título</th><th>Tipo</th></tr></thead><tbody>' + linhas_m + '</tbody></table></div></details>')
+    corpo_l = ('<main class="conteudo" id="conteudo">' + TRILHA_L + '<h1>Erros encontrados no legado</h1>'
+               '<p>O legado é o sistema entregue pelo fornecedor. Estes são os erros encontrados nos testes de tela e na leitura do código dele, módulo a módulo, '
+               'inclusive os de acesso e segurança. O ambiente de teste só tem informação fictícia. Cada módulo tem a sua página de defeitos, com o passo a passo e as evidências. '
+               '<b>Os números da versão nova são outros</b>: ela é testada à parte e muitas telas dela ainda não foram testadas ou ainda não existem.</p>'
+               f'<p><b>{total_l} erros no legado:</b> ' + ", ".join(f"{n} {k}" for k, n in tl.items() if n) + '.</p>'
+               '<div class="en-topo"><button class="botao" type="button" data-abrir="1">Abrir tudo</button><button class="botao" type="button" data-abrir="0">Fechar tudo</button>'
+               '<a class="botao" href="erros-novo.html">Ver os erros da versão nova →</a></div>' + "".join(secs_l) + '</main>')
+    (Path(destino) / "erros-legado.html").write_text(
+        cabecalho("Erros encontrados no legado", "").replace("</head>", css + "</head>") + corpo_l + rodape("").replace("</body>", f"<script>{JS}</script></body>"), encoding="utf-8")
+    comp = []
+    for mid, nome, itens in leg:
+        n_novo = len(novo.get(mid, []))
+        comp.append(f"<tr><td>{E(nome)}</td><td>{len(itens)}</td><td>{n_novo}</td></tr>")
+    corpo_e = ('<main class="conteudo" id="conteudo">' + TRILHA_E + '<h1>Erros</h1>'
+               '<p>Os erros estão em duas listas separadas, porque são dois sistemas: o <b>legado</b> (entregue pelo fornecedor) e a <b>versão nova</b> (a que o desenvolvimento está fazendo). '
+               'Os números não são comparáveis um a um: a versão nova tem telas ainda não testadas e telas ainda provisórias.</p>'
+               '<div class="en-topo"><a class="botao" href="erros-legado.html">Erros do legado (' + str(total_l) + ')</a> <a class="botao" href="erros-novo.html">Erros da versão nova (' + str(total_n) + ')</a></div>'
+               '<table class="en-tab"><thead><tr><th>Módulo</th><th>Legado</th><th>Versão nova</th></tr></thead><tbody>' + "".join(comp) + f'<tr><td><b>Total</b></td><td><b>{total_l}</b></td><td><b>{total_n}</b></td></tr></tbody></table></main>')
+    (Path(destino) / "erros.html").write_text(
+        cabecalho("Erros", "").replace("</head>", css + "</head>") + corpo_e + rodape(""), encoding="utf-8")
+    return total_l
