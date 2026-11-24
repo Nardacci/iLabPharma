@@ -40,14 +40,137 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Amostragem</span><span>documento 46 de 203</span><div class="prog-doc"><i style="width:23%"></i></div></div>
   <header class="doc-cabecalho"><h1>Amostragens Pendentes: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="amostragens-pendentes-analise.html" class="aba-sem">Análise</a><a href="amostragens-pendentes-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="amostragens-pendentes-fluxos.html" class="aba-sem">Fluxos</a><a href="amostragens-pendentes-regras-de-negocio.html" aria-current=page class="aba-sem">Regras de negócio</a><a href="amostragens-pendentes-anvisa.html" class="aba-sem">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="amostragens-pendentes-erros.html">Erros</a><a class="aba-extra aba-sem" href="amostragens-pendentes-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1d5fd0;margin-right:6px"></span>Situação da tela na versão nova: <strong>Pronta na versão nova; falta testar</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Tela pronta na versão nova, ainda sem manual</p><p>Segundo o código da versão nova (de 17/11/2026), esta tela já existe, mas ainda não foi testada pelos robôs. O manual por tela sai depois do teste.</p><p>Para ver como a tela é no sistema entregue, <a href="../../controle-qualidade/amostragens-pendentes-regras-de-negocio.html">abra a página do Legado</a>.</p></div></article>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="amostragens-pendentes-analise.html">Análise</a><a href="amostragens-pendentes-manual-do-usuario.html">Manual do usuário</a><a href="amostragens-pendentes-fluxos.html">Fluxos</a><a href="amostragens-pendentes-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="amostragens-pendentes-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="amostragens-pendentes-erros.html">Erros (1)</a><a class="aba-extra" href="amostragens-pendentes-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<ul>
+<li><strong>A lista só consulta.</strong> O que grava é o <strong>Registro de Amostragem</strong> (pop-up desta tela), que, ao salvar, deveria passar a amostragem a "Executada" e a solicitação para a análise.</li>
+<li><strong>Na versão nova a gravação não se completou</strong> (DV-CQ-N-043): o servidor recusa com "Uma verificação não pertence às regras aplicáveis à amostragem.". Por isso <strong>não foi possível</strong> confirmar "Alteração efetuada com sucesso.", a mudança para Executada nem o histórico gravado.</li>
+<li>Antes de gravar, a tela pergunta <strong>"Confirma a operação?"</strong> (e só depois mostra as conferências).</li>
+<li>O botão Cancelar (que gravaria o cancelamento) <strong>não existe</strong> na linha Pendente (DV-CQ-040 repete).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<p>Confirmado na tela em 20/11/2026.</p>
+<p><strong>Na lista:</strong> "A pesquisa não retornou nenhum resultado." e "Não existem Coletas indicadas como Urgente.".</p>
+<p><strong>No Registro de Amostragem (textos exatos):</strong></p>
+<ul>
+<li><strong>"Informe o ponto de amostragem."</strong> (INCLUIR com o ponto vazio).</li>
+<li><strong>"Quantidade amostrada inválida em um ou mais itens de regra."</strong> (quantidade negativa; o zero é aceito).</li>
+<li><strong>"A justificativa deve ser preenchida, pois existe(m) resultado(s) negativo(s) na regra amostragem e/ou verificação amostragem ."</strong> (resultado NÃO sem justificativa; o espaço antes do ponto é do sistema).</li>
+<li><strong>"Usuário Verificador e Usuário Amostrador não podem ser iguais."</strong> (segregação de funções imposta pela tela).</li>
+<li><strong>"Não existe nenhuma regra preenchida."</strong></li>
+<li>Mensagens <strong>novas, que o manual do legado não trazia:</strong> "Quantidade da Solicitação deve ser preenchida!", "Data verificado deve ser preenchida.", "Hora verificado deve ser preenchida.", "Data amostrado deve ser preenchida.", "Hora amostrado deve ser preenchida.", "Usuário verificador deve ser preenchido.", "Usuário amostrador deve ser preenchido.", "Preencha o resultado da regra <nome>.", "Quantidade da regra <nome> inválida.", "Responda à verificação <nome>.", "Existem alterações não salvas. Ao voltar, elas serão descartadas.", "Verificação de Amostragem inativa!" e "Confirma a operação?" (SIM e NÃO).</li>
+<li><strong>Da gravação:</strong> "Uma verificação não pertence às regras aplicáveis à amostragem." (DV-CQ-N-043).</li>
+</ul>
+<p><strong>Diferenças em relação ao previsto pelo código da tela:</strong> "Nenhum Ponto de Amostragem foi informado." <strong>não apareceu</strong> (SALVAR sem nenhum ponto não pede o ponto); "Hora amostrado inválida." e "Hora verificado inválida." <strong>não aparecem</strong> (o campo de hora do navegador não aceita hora inválida; vazio gera "Hora ... deve ser preenchida."); "Não existe nenhum item de verificação marcado." virou <strong>"Responda à verificação <nome>."</strong> para cada pergunta. "Não foi possível identificar os responsáveis existentes." <strong>não foi vista.</strong></p>
+<p><strong>Passa no CONFERIR CAMPOS e não se sabe se o servidor recusa</strong> (a gravação foi recusada antes): data de amostragem no futuro, verificação anterior à amostragem e quantidade muito maior que a da solicitação (99999 contra 500).</p>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><em>(Campos, botões e colunas conferidos na tela em 20/11/2026; as regras de cada campo e a fonte são do código do legado.)</em> Os campos e botões da abertura estão confirmados pelo levantamento (passo 1); o restante é do legado.</p>
+<p>Fontes: Views/Pendentes/Index.cshtml e _GridConsultaColetasPendentes.cshtml (caminhos em UI/Areas/Coleta/).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo na tela</th>
+<th>Tipo</th>
+<th>Obrigatório</th>
+<th>Regra, limite ou valores possíveis</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selecione</td>
+<td>Duas opções</td>
+<td>—</td>
+<td>PRODUTO / MATERIAL ou ÁGUA / AMBIENTE; troca o bloco de filtros</td>
+<td>Index.cshtml:33-36; Script/ColetaPendente.js:105-123</td>
+</tr>
+<tr>
+<td>Tipo de Item</td>
+<td>Lista</td>
+<td>Não</td>
+<td>Tipos de item de material (matéria-prima, embalagem, produto acabado, granel, semielaborado, padrão)</td>
+<td>Index.cshtml:56-61; Controllers/PendentesController.cs:117-120</td>
+</tr>
+<tr>
+<td>Item Análise</td>
+<td>Texto com busca</td>
+<td>Não</td>
+<td>Busca no Estoque ou na Produção; preenche o Código</td>
+<td>Index.cshtml:62-69; Script/ColetaPendente.js:98-103</td>
+</tr>
+<tr>
+<td>Código</td>
+<td>Texto, desabilitado</td>
+<td>—</td>
+<td>Código do item escolhido</td>
+<td>Index.cshtml:70-75</td>
+</tr>
+<tr>
+<td>Tipo Análise</td>
+<td>Duas caixas</td>
+<td>Não</td>
+<td>Só uma marcada filtra; duas ou nenhuma = todos</td>
+<td>Index.cshtml:78-86; Controllers/PendentesController.cs:43-50</td>
+</tr>
+<tr>
+<td>Solicitação</td>
+<td>Texto</td>
+<td>Não</td>
+<td>Parte do número da solicitação</td>
+<td>Index.cshtml:87-92; Infra/Coleta/AmostragemRepository.cs:191</td>
+</tr>
+<tr>
+<td>Item Entrada</td>
+<td>Texto</td>
+<td>Não</td>
+<td>Parte do item de entrada (produto/material)</td>
+<td>Index.cshtml:93-98</td>
+</tr>
+<tr>
+<td>Situação</td>
+<td>Lista</td>
+<td>Não</td>
+<td>SELECIONE, PENDENTE, PROGRAMADA, EXECUTADA, CANCELADA (nomes em maiúsculas, vindos do código)</td>
+<td>Index.cshtml:108-114; PendentesController.cs:252-266</td>
+</tr>
+<tr>
+<td>Filtros de água e ambiente</td>
+<td>Lista, texto, caixas</td>
+<td>Não</td>
+<td>Tipo (ambiente, potável, purificada, injetáveis), item, tipo de análise, solicitação, situação</td>
+<td>Index.cshtml:120-180</td>
+</tr>
+<tr>
+<td>Datas de início</td>
+<td>—</td>
+<td>—</td>
+<td>O modelo tem data inicial e final, mas os campos estão comentados</td>
+<td>Index.cshtml:99-105 e 169-175; Models/ColetaPendenteModel.cs:17-18</td>
+</tr>
+<tr>
+<td>Grade: Solicitação, Situação, Responsável, Tipo Análise, Tipo Item Análise, Item Análise, Item Entrada</td>
+<td>Texto</td>
+<td>—</td>
+<td>Item Entrada só na consulta de produto/material; a data de início da coleta é lida e não é mostrada</td>
+<td>Views/Pendentes/_GridConsultaColetasPendentes.cshtml:16-37 e 56-79; Infra/Coleta/AmostragemRepository.cs:135-150</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p><em>(do legado; a confirmar na versão nova)</em></p>
+<ul>
+<li>A tela é a função <code>coleta/pendentes</code>; para abrir, o perfil precisa da permissão de <strong>consultar</strong>. A <strong>Visão Administrador</strong> é outra função (<code>coleta/pendentes/visaoadmin</code>).</li>
+<li><strong>Pesquisar, pesquisar urgentes e cancelar não têm conferência de permissão</strong> nem da função profissional. A regra "cada pessoa vê as suas coletas" <strong>não é conferida no servidor</strong> (RN-CQ-A03-006).</li>
+<li>No teste, o perfil só de consulta abriu a página pelo endereço e a lista veio vazia (não era responsável por nada).</li>
+<li>Chefe de subdivisão: o código desta tela não exige.</li>
+</ul>
+<p><strong>Na versão nova:</strong> esta tela <strong>não foi testada com perfil restrito</strong> nesta rodada (pista CQ-C); a <strong>visão comum com a conta de um amostrador também não foi conferida</strong> (não existe amostrador e a Programação não deixa escolher o responsável, DV-CQ-N-042). Com a conta de administrador a visão comum veio vazia e a visão do administrador listou as coletas. Nas telas que já foram testadas (rodadas de 17 e 18/11/2026), o servidor recusa a gravação sem a função (403, melhoria sobre o legado), mas a interface continua mostrando os botões (DV-CQ-N-031, N-032). A pista <strong>CQ-C</strong> inclui um percurso de perfil restrito nestas telas novas.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="amostragens-pendentes-fluxos.html"><small>← Anterior</small><strong>Fluxos · Amostragens Pendentes</strong></a><a class="ap ap-prox" href="amostragens-pendentes-anvisa.html"><small>Próximo →</small><strong>Anvisa · Amostragens Pendentes</strong></a></nav>
 </main>
-  
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../../portal/portal.js"></script>

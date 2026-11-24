@@ -40,14 +40,177 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Análise e Laudo</span><span>documento 95 de 203</span><div class="prog-doc"><i style="width:47%"></i></div></div>
   <header class="doc-cabecalho"><h1>Emissão Laudo Final: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="emissao-laudo-final-analise.html" class="aba-sem">Análise</a><a href="emissao-laudo-final-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="emissao-laudo-final-fluxos.html" class="aba-sem">Fluxos</a><a href="emissao-laudo-final-regras-de-negocio.html" aria-current=page class="aba-sem">Regras de negócio</a><a href="emissao-laudo-final-anvisa.html" class="aba-sem">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="emissao-laudo-final-erros.html">Erros</a><a class="aba-extra aba-sem" href="emissao-laudo-final-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1d5fd0;margin-right:6px"></span>Situação da tela na versão nova: <strong>Pronta na versão nova; falta testar</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Tela pronta na versão nova, ainda sem manual</p><p>Segundo o código da versão nova (de 17/11/2026), esta tela já existe, mas ainda não foi testada pelos robôs. O manual por tela sai depois do teste.</p><p>Para ver como a tela é no sistema entregue, <a href="../../controle-qualidade/emissao-laudo-final-regras-de-negocio.html">abra a página do Legado</a>.</p></div></article>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="emissao-laudo-final-analise.html">Análise</a><a href="emissao-laudo-final-manual-do-usuario.html">Manual do usuário</a><a href="emissao-laudo-final-fluxos.html">Fluxos</a><a href="emissao-laudo-final-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="emissao-laudo-final-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="emissao-laudo-final-erros.html">Erros (1)</a><a class="aba-extra" href="emissao-laudo-final-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<p><em>(do legado; a confirmar na versão nova)</em></p>
+<ul>
+<li><strong>Salvar Registro (correção):</strong> grava os resultados corrigidos, com justificativa; quem corrige vira analista da análise. Não deixa histórico (DV-CQ-006).</li>
+<li><strong>Aprovar ou Reprovar:</strong> grava a decisão (aprovado = sim ou não), a validade do laudo, a observação e o teor. Não grava <strong>quem decidiu</strong>; o campo "Responsável" do laudo mostra quem está olhando a tela (DV-CQ-005, DV-EST-030). Quem decide pode <strong>trocar a decisão</strong> enquanto o laudo não for emitido (leitura do código; não testado).</li>
+<li><strong>Emitir Laudo:</strong> leva a análise e a solicitação a <strong>"Laudo liberado"</strong>; depois disso não se altera o resultado.</li>
+<li><strong>Estoque:</strong> o resultado só chega ao lote quando alguém clica em "Atualizar resultado" no Estoque. A reprovação já vale no Estoque <strong>antes de o laudo ser emitido</strong> (DV-CQ-004), e a decisão de reanálise e a data do laudo <strong>não chegam</strong> ao lote (DV-EST-171).</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<p><em>(do legado; a confirmar na versão nova)</em></p>
+<ul>
+<li>"O Responsável pela aprovação precisa ser diferente dos analistas das análises." (aprovar quem digitou ou corrigiu ensaio) e "O Responsável pela emissão precisa ser diferente dos analistas das análises." (reprovar ou emitir).</li>
+<li>"A análise deve estar na situação de Liberar laudo." (aprovar ou reprovar análise que não está nessa situação, por exemplo já emitida).</li>
+<li>"Teor obrigatório." e "Teor Obrigatório." (aprovar sem teor, quando exigido).</li>
+<li>"Data de Validade inválida.", "A Data de Validade tem que ser maior ou igual a atual." e "Data de Validade do Laudo é obrigatório.".</li>
+<li>Correção: "Padrão não foi informado.", "A Data do Teste é inválida para: <nome>.", "Valor do Resultado inválido para o tipo INTERVALO.", "O resultado das análises relacionadas não foram informados.".</li>
+<li>Relacionar: "A análise para associação deve estar com a situação de laudo liberado", "Associação já existe para análise informada.", "A análise já foi associada por outra análise.".</li>
+<li>Falha: "Ocorreu um erro inesperado.".</li>
+<li><strong>Não recusa:</strong> reprovar sem motivo; aprovar lote já vencido com uma data futura de laudo (DV-CQ-043).</li>
+</ul>
+<p><strong>Pelo código da tela da versão nova (foto de 17/11/2026), ainda não vistas na tela</strong> (código da tela):</p>
+<ul>
+<li>"Informe o padrão utilizado nos ensaios."</li>
+<li>"O resultado das análises relacionadas não foi informado."</li>
+<li>"Operação realizada com sucesso."</li>
+<li>Confirmar operação (janela que pede a justificativa nas ações de decisão e correção)</li>
+</ul>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><em>(do legado; a confirmar na versão nova)</em> Os campos e botões da abertura estão confirmados pelo levantamento (passo 1); o restante é do legado.</p>
+<p>Fontes: Index.cshtml, _GridConsultaAnalisesLaudo.cshtml, Edit.cshtml e Visualizar.cshtml (pasta Areas/Analise/Views/EmissaoLaudoFinal/), EmissaoLaudoFinalEdit.js e EmissaoLaudoFinalVisualizar.js (pasta Areas/Analise/Script/).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo na tela</th>
+<th>Tipo</th>
+<th>Obrigatório</th>
+<th>Regra, limite ou valores possíveis</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selecione (Produto / Material ou Água / Ambiente)</td>
+<td>Opção</td>
+<td>Sim (um deles)</td>
+<td>Produto / Material vem marcado</td>
+<td>Index.cshtml:32-37</td>
+</tr>
+<tr>
+<td>Tipo Item Análise, Item Análise, Tipo Análise, Nº Solicitação, Item Entrada</td>
+<td>Lista, texto com busca, caixas e textos</td>
+<td>Não</td>
+<td>Mesmos filtros da Consultar Análise Programada, sem data</td>
+<td>Index.cshtml:52-135</td>
+</tr>
+<tr>
+<td>Situação</td>
+<td>Lista</td>
+<td>Não</td>
+<td>TODOS, Liberar laudo, Laudo liberado, Cancelado; <strong>sem</strong> "Pendente de digitação"</td>
+<td>Index.cshtml:155-156; ObterSituacoesParaAnaliseService.cs:36-43</td>
+</tr>
+<tr>
+<td>Grade: Nº solicitação, Item análise, Item entrada, Situação</td>
+<td>Texto</td>
+<td>—</td>
+<td>Uma linha por análise</td>
+<td>_GridConsultaAnalisesLaudo.cshtml:17-52</td>
+</tr>
+<tr>
+<td>Dados da solicitação (tela de correção)</td>
+<td>Texto só leitura</td>
+<td>—</td>
+<td>Código, item, tipo de item, situação, data de criação, criado por, nº, item de entrada, lote, validade, quantidade, fabricante, fornecedor, tipo de análise, coletado por; em ambiente, graus; em produção, etapa e subetapa</td>
+<td>Edit.cshtml:58-269</td>
+</tr>
+<tr>
+<td>Ensaios (referência, data do teste, resultado)</td>
+<td>Texto, data, número ou CONFORME / NÃO CONFORME</td>
+<td>Ao corrigir</td>
+<td>Abrem só pelo lápis do ensaio; o resultado de conformidade vem como CONFORME</td>
+<td>EmissaoLaudoFinal/_GridAnaliseItemResultado.cshtml; AnaliseItemMaterial.js:121-138</td>
+</tr>
+<tr>
+<td>Relacionar Solicitações</td>
+<td>Texto com busca</td>
+<td>Não</td>
+<td>Só análises já com laudo liberado, e cada uma só pode ser relacionada por uma análise</td>
+<td>Edit.cshtml:304-307; EmissaoLaudoFinalController.cs:559-611</td>
+</tr>
+<tr>
+<td>Observações (correção)</td>
+<td>Texto, até 500</td>
+<td>Não</td>
+<td>Grava na observação da análise</td>
+<td>Edit.cshtml:323; EmissaoLaudoFinalController.cs:257-259</td>
+</tr>
+<tr>
+<td>Reanálise Prevista?</td>
+<td>Opção Sim / Não</td>
+<td>Só em produto e material</td>
+<td>Padrão Sim; com Sim a data de validade do laudo é digitada; com Não vale a validade do lote</td>
+<td>Visualizar.cshtml:160-172; EmissaoLaudoFinalVisualizar.js:17-26; EmissaoLaudoFinalController.cs:759-761</td>
+</tr>
+<tr>
+<td>Data/Hora</td>
+<td>Texto só leitura</td>
+<td>—</td>
+<td>Data da última atualização da análise ou o momento atual</td>
+<td>Visualizar.cshtml:174-178; EmissaoLaudoFinalController.cs:783</td>
+</tr>
+<tr>
+<td>APROVADO / REPROVADO</td>
+<td>Texto</td>
+<td>—</td>
+<td>Mostra a decisão gravada</td>
+<td>Visualizar.cshtml:180-188</td>
+</tr>
+<tr>
+<td>Data de Validade do Laudo</td>
+<td>Data com máscara</td>
+<td>Sim</td>
+<td>Não pode ser anterior a hoje: "A Data de Validade tem que ser maior ou igual a atual." Abre com a validade do lote (vista em teste: 16/10/2026 no lote vencido 012/26); com Reanálise = Não o campo fica bloqueado com essa data (CT-CQ-R2-01 e R2-03). Não é comparada com a validade do lote (DV-CQ-043)</td>
+<td>Visualizar.cshtml:191-197; EmissaoLaudoFinalController.cs:447-459</td>
+</tr>
+<tr>
+<td>Responsável</td>
+<td>Texto só leitura</td>
+<td>—</td>
+<td>Quem emitiu o laudo; antes de emitir, mostra quem está vendo a tela</td>
+<td>Visualizar.cshtml:199-205; EmissaoLaudoFinalController.cs:784</td>
+</tr>
+<tr>
+<td>Observação (decisão)</td>
+<td>Texto, até 500</td>
+<td>Não (nem para reprovar)</td>
+<td>Gravada como observação do laudo</td>
+<td>Visualizar.cshtml:207-213; EmissaoLaudoFinalController.cs:497-504</td>
+</tr>
+<tr>
+<td>Teor</td>
+<td>Número</td>
+<td>Só se a solicitação exigir</td>
+<td>"Teor obrigatório." se zero; mascarado com 3 casas</td>
+<td>Visualizar.cshtml:215-226; EmissaoLaudoFinalVisualizar.js:31-42; EmissaoLaudoFinalController.cs:441-445</td>
+</tr>
+<tr>
+<td>Anexos</td>
+<td>Arquivos</td>
+<td>Não</td>
+<td>Enviar, abrir e excluir anexos</td>
+<td>Visualizar.cshtml:130-146</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p><em>(do legado; a confirmar na versão nova)</em></p>
+<ul>
+<li>A tela é a função <code>analise/EmissaoLaudoFinal</code> (DB/dml.sql:184). O controlador inteiro exige só a permissão de <strong>consultar</strong>; <strong>aprovar, reprovar, emitir, corrigir e imprimir não pedem outra permissão do perfil</strong>.</li>
+<li>A <strong>função de chefe (48, procurada por número fixo)</strong> só muda o que a página mostra: o lápis da lista, o Salvar Registro da correção e a leitura da tela de decisão. <strong>Nenhuma ação que grava confere essa função</strong> (AprovarLaudo, ReprovarLaudo, EmitirLaudo e Salvar). A tela esconde Aprovar, Reprovar e Emitir de quem não tem a função, mas depois mostra Aprovar e Reprovar de novo conforme os resultados; só o <strong>Emitir Laudo</strong> continua escondido (a única barreira é visual).</li>
+<li><strong>Cuidado:</strong> o usuário <strong>sem a função de chefe aprovou</strong> a 017/26 (CT-CQ-011); o <strong>perfil só de consulta aprovou</strong> o laudo da 015/26 (CT-CQ-071) e <strong>reprovou</strong> o da 019/26 (CT-CQ-R2-AC-14) (DV-CQ-003, Alta; DV-EST-028).</li>
+<li><strong>A barreira que funciona:</strong> quem digitou ou corrigiu um ensaio não aprova nem emite o laudo daquela análise. <strong>Nenhuma decisão pede senha nem assinatura eletrônica</strong> (RN-CQ-005; SEG-CQ-05).</li>
+</ul>
+<p><strong>Na versão nova:</strong> esta tela <strong>ainda não foi testada com perfil restrito</strong>. Nas telas que já foram testadas (rodadas de 17 e 18/11/2026), o servidor recusa a gravação sem a função (403, melhoria sobre o legado), mas a interface continua mostrando os botões (DV-CQ-N-031, N-032). A pista <strong>CQ-C</strong> inclui um percurso de perfil restrito nestas telas novas.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="emissao-laudo-final-fluxos.html"><small>← Anterior</small><strong>Fluxos · Emissão Laudo Final</strong></a><a class="ap ap-prox" href="emissao-laudo-final-anvisa.html"><small>Próximo →</small><strong>Anvisa · Emissão Laudo Final</strong></a></nav>
 </main>
-  
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../../portal/portal.js"></script>
