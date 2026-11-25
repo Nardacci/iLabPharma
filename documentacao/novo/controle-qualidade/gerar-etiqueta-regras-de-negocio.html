@@ -40,14 +40,114 @@
   <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Análise e Laudo</span><span>documento 102 de 203</span><div class="prog-doc"><i style="width:50%"></i></div></div>
   <header class="doc-cabecalho"><h1>Gerar Etiqueta: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="gerar-etiqueta-analise.html" class="aba-sem">Análise</a><a href="gerar-etiqueta-manual-do-usuario.html" class="aba-sem">Manual do usuário</a><a href="gerar-etiqueta-fluxos.html" class="aba-sem">Fluxos</a><a href="gerar-etiqueta-regras-de-negocio.html" aria-current=page class="aba-sem">Regras de negócio</a><a href="gerar-etiqueta-anvisa.html" class="aba-sem">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="gerar-etiqueta-erros.html">Erros</a><a class="aba-extra aba-sem" href="gerar-etiqueta-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1d5fd0;margin-right:6px"></span>Situação da tela na versão nova: <strong>Pronta na versão nova; falta testar</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
-  <article class="texto texto-largo"><div class="callout nv-aviso"><p class="callout-titulo">Tela pronta na versão nova, ainda sem manual</p><p>Segundo o código da versão nova (de 17/11/2026), esta tela já existe, mas ainda não foi testada pelos robôs. O manual por tela sai depois do teste.</p><p>Para ver como a tela é no sistema entregue, <a href="../../controle-qualidade/gerar-etiqueta-regras-de-negocio.html">abra a página do Legado</a>.</p></div></article>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="gerar-etiqueta-analise.html">Análise</a><a href="gerar-etiqueta-manual-do-usuario.html">Manual do usuário</a><a href="gerar-etiqueta-fluxos.html">Fluxos</a><a href="gerar-etiqueta-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="gerar-etiqueta-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo aba-erros-zero" href="gerar-etiqueta-erros.html">Erros</a><a class="aba-extra" href="gerar-etiqueta-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../controle-qualidade/o-controle-da-qualidade-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
+<p><em>(do legado; a confirmar na versão nova)</em></p>
+<ul>
+<li>Gera o <strong>PDF das etiquetas</strong>; <strong>não grava nada</strong>: o sistema não registra quem imprimiu, quantas etiquetas nem quantas vezes.</li>
+<li>Não muda a situação da análise nem do lote e não grava em outros módulos.</li>
+<li>A etiqueta de análise <strong>reprovada</strong> também pode ser impressa; confira o texto REPROVADO.</li>
+</ul>
+<h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<p><em>(do legado; a confirmar na versão nova)</em></p>
+<ul>
+<li>"Preencha a quantidade." (vazia).</li>
+<li>"Somente números." (não é número).</li>
+<li>"Somente números pares. As etiquetas são impressas em pares." (ímpar).</li>
+<li>"A pesquisa não retornou nenhum resultado." (lista vazia).</li>
+<li>"Não foi possível obter laudos" e "Não foi possível obter laudos urgentes" (falha na pesquisa).</li>
+</ul>
+<p><strong>Pelo código da tela da versão nova (foto de 17/11/2026), ainda não vistas na tela</strong> (código da tela):</p>
+<ul>
+<li>"Informe uma quantidade numérica, positiva e par."</li>
+</ul>
+<h2 id="campos-da-tela">Campos da tela</h2>
+<p><em>(do legado; a confirmar na versão nova)</em> Os campos e botões da abertura estão confirmados pelo levantamento (passo 1); o restante é do legado.</p>
+<p>Fontes: Index.cshtml, _GridConsultaAnalisesLaudoParaEtiquetas.cshtml e Imprimir.cshtml (pasta Areas/Analise/Views/GerarEtiquetas/), GerarEtiquetasIndex.js e GerarEtiquetasImprimir.js (pasta Areas/Analise/Script/).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Campo na tela</th>
+<th>Tipo</th>
+<th>Obrigatório</th>
+<th>Regra, limite ou valores possíveis</th>
+<th>Fonte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selecione (Produto / Material ou Água / Ambiente)</td>
+<td>Opção</td>
+<td>Sim (um deles)</td>
+<td>Produto / Material vem marcado</td>
+<td>Index.cshtml:32-37</td>
+</tr>
+<tr>
+<td>Tipo de Item (produto e material) / Tipo Item Análise (água e ambiente)</td>
+<td>Lista</td>
+<td>Não</td>
+<td>SELECIONE e os tipos de cada grupo</td>
+<td>Index.cshtml:56 e 107; GerarEtiquetasController.cs:23-33</td>
+</tr>
+<tr>
+<td>Item Análise</td>
+<td>Texto com busca</td>
+<td>Não</td>
+<td>Escolher na lista</td>
+<td>Index.cshtml:63 e 114</td>
+</tr>
+<tr>
+<td>Tipo Análise</td>
+<td>Caixas</td>
+<td>Não</td>
+<td>Físico-Químico e Microbiológica</td>
+<td>Index.cshtml:72-74 e 123-124; GerarEtiquetasController.cs:159-169</td>
+</tr>
+<tr>
+<td>Nº Solicitação, Item Entrada</td>
+<td>Texto</td>
+<td>Não</td>
+<td>Valor exato</td>
+<td>Index.cshtml:81-87 e 130-136</td>
+</tr>
+<tr>
+<td>Situação</td>
+<td>Lista</td>
+<td>Não</td>
+<td>Todas as situações de análise, mas a lista só traz Laudo liberado</td>
+<td>Index.cshtml:156-157; ObterSituacoesParaAnaliseService.cs:45-51; AnaliseLaudoRepository.cs:498-509</td>
+</tr>
+<tr>
+<td>Grade: Nº solicitação, Responsável, Tipo análise, Item entrada, Situação, Gerar etiquetas</td>
+<td>Texto e ícone</td>
+<td>—</td>
+<td>A coluna Responsável traz um ícone de alerta em todas as linhas</td>
+<td>_GridConsultaAnalisesLaudoParaEtiquetas.cshtml:17-70</td>
+</tr>
+<tr>
+<td>Quantidade</td>
+<td>Texto, até o que couber</td>
+<td>Sim</td>
+<td>Número par; vazio, texto e ímpar são recusados pela tela; zero e negativos não são conferidos</td>
+<td>Imprimir.cshtml:26-28; GerarEtiquetasImprimir.js:7-26</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
+<p><em>(do legado; a confirmar na versão nova)</em></p>
+<ul>
+<li>A tela é a função <code>analise/GerarEtiquetas</code> (DB/dml.sql:185). O controlador exige só a permissão de <strong>consultar</strong>; <strong>imprimir não pede a permissão de imprimir do perfil</strong> nem função profissional.</li>
+<li>O script que esconderia os botões por permissão é carregado e não é usado (SEG-CQ-02).</li>
+<li><strong>Cuidado:</strong> o perfil só de consulta (sem imprimir) abriu a tela, escolheu a 017/26 e gerou o PDF com duas etiquetas (DV-CQ-037, Alta; CT-CQ-R2-AC-15). Pelo código, a ação de imprimir pode ser chamada com qualquer número de análise, sem conferir se há laudo liberado (não testado; CT-CQ-L06-10 proposto).</li>
+<li>Chefe de subdivisão: não é exigido nesta tela.</li>
+</ul>
+<p><strong>Na versão nova:</strong> esta tela <strong>ainda não foi testada com perfil restrito</strong>. Nas telas que já foram testadas (rodadas de 17 e 18/11/2026), o servidor recusa a gravação sem a função (403, melhoria sobre o legado), mas a interface continua mostrando os botões (DV-CQ-N-031, N-032). A pista <strong>CQ-C</strong> inclui um percurso de perfil restrito nestas telas novas.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="gerar-etiqueta-fluxos.html"><small>← Anterior</small><strong>Fluxos · Gerar Etiqueta</strong></a><a class="ap ap-prox" href="gerar-etiqueta-anvisa.html"><small>Próximo →</small><strong>Anvisa · Gerar Etiqueta</strong></a></nav>
 </main>
-  
+  <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../../portal/portal.js"></script>

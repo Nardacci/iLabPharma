@@ -37,15 +37,16 @@
   </aside>
   <main class="doc" id="conteudo">
   <nav class="trilha" aria-label="Você está em"><a href="../../../index.html">Início</a> › <a href="../../../documentacao/estoque/index.html">Estoque</a> › <a class="sit-trilha" href="../../../documentacao/estoque/novo.html" style="--cor:#1f6feb">Novo</a> › <span>Atendimento de Solicitação</span></nav>
-  <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 235 de 756</span><div class="prog-doc"><i style="width:31%"></i></div></div>
+  <div class="onde-estou" aria-label="Onde você está no roteiro"><span>Novo · menu Estoque</span><span>documento 235 de 763</span><div class="prog-doc"><i style="width:31%"></i></div></div>
   <header class="doc-cabecalho"><h1>Atendimento de Solicitação: Regras de negócio</h1>
   <div class="doc-acoes"><button class="botao botao-secundario" type="button" onclick="window.print()">⎙ Imprimir</button></div></header>
-  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="atendimento-de-solicitacao-analise.html">Análise</a><a href="atendimento-de-solicitacao-manual-do-usuario.html">Manual do usuário</a><a href="atendimento-de-solicitacao-fluxos.html">Fluxos</a><a href="atendimento-de-solicitacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="atendimento-de-solicitacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="atendimento-de-solicitacao-erros.html">Erros (2)</a><a class="aba-extra" href="atendimento-de-solicitacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Manual escrito; ainda não conferido por robô</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
+  <nav class="abas-tela" aria-label="Páginas desta tela"><a href="atendimento-de-solicitacao-analise.html">Análise</a><a href="atendimento-de-solicitacao-manual-do-usuario.html">Manual do usuário</a><a href="atendimento-de-solicitacao-fluxos.html">Fluxos</a><a href="atendimento-de-solicitacao-regras-de-negocio.html" aria-current=page>Regras de negócio</a><a href="atendimento-de-solicitacao-anvisa.html">Anvisa</a><span class="aba-sep" aria-hidden="true"></span><a class="aba-extra aba-erros aba-erros-novo" href="atendimento-de-solicitacao-erros.html">Erros (5)</a><a class="aba-extra" href="atendimento-de-solicitacao-passo-a-passo.html">Passo a passo</a><a class="aba-extra" href="../../estoque/o-estoque-ideal.html" title="O ideal é um só, comum às duas versões">Ideal</a></nav><p class="sit-tela" style="margin:10px 0 0;font-size:.92rem"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7785;margin-right:6px"></span>Situação da tela na versão nova: <strong>Conferida por robô na versão nova (parcial)</strong> <span style="opacity:.75">(a partir dos testes da versão nova)</span></p>
   <article class="texto texto-largo"><h2 id="o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</h2>
 <ul>
-<li><strong>Atender item / Finalizar (código da tela e API nova):</strong> o material do lote escolhido sai do endereço de estoque para o endereço de separação e a solicitação passa a ATENDIDA; o sistema gera as pesagens de separação dos itens que exigem pesagem (do legado; a confirmar na versão nova).</li>
-<li><strong>Cancelar atendimento:</strong> devolve o material (do legado; a confirmar), com rastro no histórico (no legado o cancelamento ficava sem rastro: DV-EST-061).</li>
-<li>O próximo passo é a <strong>Separação de Material</strong>.</li>
+<li><strong>Atender item (visto na tela):</strong> grava o lote e a quantidade para o item; a grade mostra Atendido e Pendente. O <strong>Saldo Atual não baixa</strong>; o Disponível cai e a coluna <strong>Solic./Separação</strong> sobe.</li>
+<li><strong>Finalizar (visto na tela):</strong> a solicitação passa a ATENDIDO e a movimentação "ATENDIMENTO DE SOLICITAÇÃO" é gravada <strong>só com saídas dos endereços</strong> (sem entrada em endereço de separação); Solic./Separação volta a zero e o Saldo Atual e o Total <strong>não baixam</strong> (DV-EST-N-152). Não foi possível conferir a lista de separação nem as pesagens (<strong>Bloqueado no teste</strong>: janela em branco; o item T.R2RA01 não exige pesagem e nenhuma foi gerada).</li>
+<li><strong>Cancelar o atendimento (visto na tela):</strong> devolve o saldo e os endereços e volta a solicitação a PENDENTE, mas <strong>sem justificativa e sem rastro</strong>: a movimentação desaparece do Histórico do Lote (DV-EST-N-151).</li>
+<li>O próximo passo é a <strong>Separação de Material</strong> (tela 34), que deve dizer onde o material realmente está.</li>
 </ul>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
@@ -54,24 +55,25 @@
 <li><strong>Cancelar o item:</strong> apaga os lotes atendidos do item (atendimento_op.aspx.cs:696-721). <strong>CANCELAR ATENDIMENTO:</strong> apaga movimentações e pesagens e volta a solicitação a Concluída (dalSolicitacao.cs:1629-1710).</li>
 </ul>
 <h2 id="o-que-o-sistema-recusa">O que o sistema recusa</h2>
+<p>Todas as recusas aparecem como <strong>faixa vermelha no alto da tela</strong>, nunca como janela, e ficam até a próxima ação. Mensagens vistas na tela:</p>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>Situação</th>
-<th>Mensagem (código da tela)</th>
+<th>Mensagem (vista na tela)</th>
 <th>Observação</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Solicitação com letras ou mais de 10 dígitos</td>
+<td>Solicitação com letras ou mais de 10 caracteres</td>
 <td>"Informe somente números, com no máximo 10 dígitos, no campo Solicitação."</td>
-<td></td>
+<td>A faixa aparece ao pesquisar; o campo aceita letras e corta em 10 caracteres</td>
 </tr>
 <tr>
-<td>Item já atendido</td>
-<td>"Item já foi totalmente atendido!"</td>
-<td></td>
+<td>Pesquisa sem resultado</td>
+<td>"Nenhum registro foi encontrado!"</td>
+<td>Também para o Tipo CLIENTE</td>
 </tr>
 <tr>
 <td>Item não escolhido</td>
@@ -81,37 +83,47 @@
 <tr>
 <td>Lote não escolhido</td>
 <td>"Selecione o lote."</td>
-<td></td>
+<td>Vem <strong>junta</strong> com a de quantidade quando a quantidade também falta; faltando item, lote e quantidade saem as três juntas</td>
 </tr>
 <tr>
-<td>Quantidade inválida</td>
+<td>Quantidade vazia, 0, 0,0001, letras ou -1</td>
 <td>"Informe uma quantidade maior que zero, com até três casas decimais."</td>
-<td></td>
+<td>A mesma mensagem para todos esses casos</td>
 </tr>
 <tr>
-<td>Saldo do lote menor que o pedido</td>
-<td>"Saldo insuficiente para atender o item!"</td>
-<td></td>
+<td>Quantidade acima do saldo e do pedido (5000)</td>
+<td>"Saldo insuficiente para atender o item! Quantidade atendida não pode ser superior à solicitada."</td>
+<td>Duas mensagens somadas; nenhuma pergunta abre e nada grava (a anotação anterior de que "não abria mensagem" estava incompleta)</td>
 </tr>
 <tr>
-<td>Quantidade acima da solicitada</td>
+<td>Quantidade acima do solicitado (11)</td>
 <td>"Quantidade atendida não pode ser superior à solicitada."</td>
 <td></td>
 </tr>
 <tr>
-<td>Solicitação sem itens</td>
-<td>"A solicitação não possui itens."</td>
-<td></td>
+<td>Item já atendido por inteiro</td>
+<td><strong>Nenhuma mensagem</strong>: o item some da lista Item</td>
+<td>O texto "Item já foi totalmente atendido!" existe no código mas não aparece</td>
 </tr>
 <tr>
-<td>Alterada por outro usuário</td>
-<td>"A solicitação foi alterada ou não está mais disponível para esta operação. Atualize a pesquisa."</td>
-<td></td>
+<td>Lote em quarentena ou vencido</td>
+<td>"Nenhum registro foi encontrado!" na janela Lotes (quarentena); o vencido simplesmente não é listado</td>
+<td>Igual ao esperado</td>
+</tr>
+<tr>
+<td>Lote que vence depois</td>
+<td><strong>Não recusa</strong></td>
+<td>DV-EST-N-150</td>
+</tr>
+<tr>
+<td>Cancelar sem justificativa</td>
+<td><strong>Não pede justificativa</strong></td>
+<td>DV-EST-N-151</td>
 </tr>
 <tr>
 <td>Falhas técnicas</td>
 <td>"Não foi possível concluir o atendimento.", "Não foi possível carregar os lotes disponíveis.", "Não foi possível carregar a solicitação."</td>
-<td>Servidor ou grupo (DV-EST-N-049)</td>
+<td>Textos do código; não vistos na tela</td>
 </tr>
 </tbody>
 </table></div>
@@ -140,7 +152,7 @@
 <td>Texto numérico</td>
 <td>Não</td>
 <td>Só números, até 10</td>
-<td>levantamento e código da tela</td>
+<td>conferido na tela</td>
 </tr>
 <tr>
 <td>Pesquisa: Centro de Custo</td>
@@ -168,42 +180,42 @@
 <td>Texto travado</td>
 <td>—</td>
 <td>Da solicitação</td>
-<td>código da tela</td>
+<td>conferido na tela</td>
 </tr>
 <tr>
 <td>Item</td>
 <td>Lista</td>
 <td><strong>Sim</strong></td>
 <td>Itens da solicitação</td>
-<td>código da tela</td>
+<td>conferido na tela</td>
 </tr>
 <tr>
 <td>Unid. Medida, Solicitado, Atendido (Real), Atendido (Corrigido)</td>
 <td>Texto travado</td>
 <td>—</td>
 <td></td>
-<td>código da tela</td>
+<td>conferido na tela</td>
 </tr>
 <tr>
 <td>Lote, Item de Entrada, Validade, Saldo, Teor (%), Pureza (%)</td>
 <td>Texto travado</td>
 <td>—</td>
 <td>Do lote escolhido</td>
-<td>código da tela</td>
+<td>conferido na tela</td>
 </tr>
 <tr>
 <td>Quantidade a atender</td>
 <td>Número</td>
 <td><strong>Sim</strong></td>
 <td>Maior que zero, até 3 casas</td>
-<td>código da tela</td>
+<td>conferido na tela</td>
 </tr>
 <tr>
 <td>Grade de itens</td>
 <td>Tabela</td>
 <td>—</td>
 <td>Item, Unid. Med., Solicitado, Atendido, Pendente, Pendente (Teor)</td>
-<td>código da tela</td>
+<td>conferido na tela</td>
 </tr>
 </tbody>
 </table></div>
@@ -315,16 +327,33 @@
 </table></div>
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
-<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros, que declaram). Pela leitura da foto de 17/11/2026, a API só confere "usuário logado". <strong>A confirmar</strong> chamando a rota com um perfil sem a função.</li>
-<li><strong>O que foi visto em teste nas outras telas do Estoque:</strong> só o administrador (perfil 1) usa o módulo; os demais recebem 403 (DV-EST-N-001, Alta), e a recusa aparece como erro genérico (DV-EST-N-075) ou como lista vazia sem aviso (DV-EST-N-054).</li>
-<li><strong>Grupo do usuário:</strong> as telas que dependem do almoxarifado do grupo recusaram tudo nos testes de 10 a 12/11/2026 porque o login não grava o grupo no token (DV-EST-N-049 e N-050). Um robô deve <strong>repetir esse reteste</strong> nesta tela antes de concluir qualquer falha de gravação.</li>
-<li><strong>O que a tela faz (código da tela):</strong> carrega as permissões ao abrir ("Não foi possível carregar as permissões.").
-| Perfil | Resultado esperado a confirmar |
-|---|---|
-| Administrador | Abre e opera |
-| Perfil T.BA20 e perfil restrito | Esperado 403 como nas outras telas (DV-EST-N-001); confirmar |
-| Sem login | Leva à tela de login |</li>
+<li><strong>O que foi visto na tela:</strong> com a conta de <strong>administrador</strong> a tela abre e opera em todos os passos acima.</li>
+<li><strong>Perfil sem permissão:</strong> <strong>Bloqueado no teste.</strong> A variável de ambiente <code>LABMEDSYS_SENHA_EST_ALMOX</code> existe, mas nenhum documento diz qual é o login dela e o robô não o adivinhou; o perfil T.BA20 não tem senha local. Responsável: quem guarda as senhas de teste. A próxima sessão deve criar a conta restrita pela tela de Conta usuário e Perfil do Principal (regra de autonomia de 13/11/2026). Pelo que as outras telas mostraram, só o administrador usa o módulo (DV-EST-N-001, Alta).</li>
+<li><strong>O que o código novo mostra na API:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong>; a API só confere "usuário logado" (a confirmar com um perfil sem a função).</li>
+<li><strong>Grupo do usuário:</strong> com o administrador, carregar lotes, atender, finalizar e cancelar gravaram (reteste: DV-EST-N-049 e N-050 <strong>não se repetem</strong> nesta tela). O efeito para quem não é administrador segue não testado.</li>
 </ul>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrador</td>
+<td>Abre e opera (visto)</td>
+</tr>
+<tr>
+<td>Perfil T.BA20 e perfil restrito</td>
+<td><strong>Bloqueado no teste</strong> (sem login e senha); esperado 403 como nas outras telas (DV-EST-N-001)</td>
+</tr>
+<tr>
+<td>Sem login</td>
+<td>Leva à tela de login (a confirmar)</td>
+</tr>
+</tbody>
+</table></div>
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>:</p>
 <ul>
 <li>A função da tela é a <strong>306</strong>. A carga do menu registra só "alterar" e "imprimir" (dml.sql:1887), <strong>não "ver log"</strong>: por isso não há botão de Log (inferência a confirmar no banco). Atender/Visualizar depende de "alterar"; Imprimir, de "imprimir".</li>
@@ -337,7 +366,7 @@
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 20/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../../portal/portal.js"></script>
