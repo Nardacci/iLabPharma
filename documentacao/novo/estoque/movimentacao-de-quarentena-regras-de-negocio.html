@@ -334,7 +334,7 @@
 <h2 id="quem-pode-usar-permissoes">Quem pode usar (permissões)</h2>
 <ul>
 <li><strong>Com o administrador (testado):</strong> a lista abre e pesquisa normalmente, sem erro de grupo (o DV-EST-N-049 e o N-050 <strong>não se repetem na leitura</strong>; o carregamento de endereços e a gravação não foram possíveis).</li>
-<li><strong>Perfil sem permissão (T.BA20 e conta restrita):</strong> <strong>Bloqueado no teste</strong>: a variável da senha da conta restrita estava sem valor na sessão do robô. Esperado 403 como nas outras telas (DV-EST-N-001, Alta); responsável: quem testa (criar o usuário restrito) e desenvolvimento (corrigir o 403).</li>
+<li><strong>Perfil sem permissão (visto na tela em 25/11/2026, contas T.R2EST01 sem função do Estoque e T.R2EST02 só consulta):</strong> sem acesso: abre sem aviso, com PESQUISAR desabilitado; só consulta: PESQUISAR recusa (403) com "Não foi possível pesquisar as movimentações.". A conta com a consulta marcada no perfil <strong>não consegue consultar</strong> (DV-EST-N-001, N-054 e N-075 <strong>repetem</strong>; N-074 não ocorre nesta tela); nada foi gravado. Não testado: gravação direta pela API com essas contas.</li>
 <li><strong>Pelo código:</strong> o controlador desta tela <strong>não declara a função nem a ação exigida</strong> (diferente de Item, NCM e outros cadastros); a API só confere "usuário logado" (a confirmar com um perfil sem a função). A tela lê as permissões ao abrir e mostra "Não foi possível carregar as permissões da tela. Atualize a página." se falhar.</li>
 <li><strong>IMPRIMIR e Excel:</strong> o código da tela os liga a uma permissão de impressão; é possível que o administrador do ambiente não a tenha (DV-EST-N-120).</li>
 </ul>
@@ -351,8 +351,12 @@
 <td>Abre e pesquisa; Movimentar não testado (sem análise com resultado)</td>
 </tr>
 <tr>
-<td>Perfil T.BA20 e perfil restrito</td>
-<td><strong>Bloqueado no teste</strong> (sem senha da conta restrita); esperado 403 (DV-EST-N-001)</td>
+<td>Perfil sem acesso ao Estoque (T.R2EST01)</td>
+<td>Abre sem aviso; PESQUISAR desabilitado (DV-EST-N-054)</td>
+</tr>
+<tr>
+<td>Perfil só de consulta (T.R2EST02)</td>
+<td>Pesquisa recusada (403): "Não foi possível pesquisar as movimentações." (DV-EST-N-001 e N-075)</td>
 </tr>
 <tr>
 <td>Sem login</td>
@@ -360,13 +364,19 @@
 </tr>
 </tbody>
 </table></div>
+<figure><a href="../../img/estoque/pnr2-movimentacao-de-quarentena-90-perfil-sem-acesso-tela.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-movimentacao-de-quarentena-90-perfil-sem-acesso-tela.png" alt="Perfil sem acesso: tela aberta pelo endereço" loading="lazy"></a><figcaption>Perfil sem acesso: tela aberta pelo endereço · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-movimentacao-de-quarentena-90-perfil-consulta-tela.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-movimentacao-de-quarentena-90-perfil-consulta-tela.png" alt="Perfil só de consulta: tela aberta" loading="lazy"></a><figcaption>Perfil só de consulta: tela aberta · clique para ampliar</figcaption></figure>
+
+<figure><a href="../../img/estoque/pnr2-movimentacao-de-quarentena-91-perfil-consulta-pesquisa.png" target="_blank" rel="noopener"><img src="../../img/estoque/pnr2-movimentacao-de-quarentena-91-perfil-consulta-pesquisa.png" alt="Perfil só de consulta: resultado de PESQUISAR" loading="lazy"></a><figcaption>Perfil só de consulta: resultado de PESQUISAR · clique para ampliar</figcaption></figure>
+
 <p><strong>Segundo o manual do legado</strong> <em>(do legado; a confirmar na versão nova)</em>: a lista e o formulário usam a função de código <strong>320</strong>; o ícone de histórico depende da marca <strong>Consultar log</strong>; o <strong>ícone de abrir ignora a marca Alterar</strong> (movimentacao_cq_lst.aspx.cs:163-170); <strong>não há função própria para finalizar</strong> nem segunda pessoa para a liberação (ponto para validar com a área: Pessoa Delegada, art. 8º, XV); o <strong>grupo de usuário</strong> limita lotes e almoxarifados; a tela <strong>não conferia a permissão ao ser aberta</strong> (DV-EST-008, Alta); a regra "aprovado só em local comum, reprovado só em refugo" era só da lista de seleção.</p></article>
   <nav class="anterior-proximo" aria-label="Anterior e próximo"><a class="ap ap-ant" href="movimentacao-de-quarentena-fluxos.html"><small>← Anterior</small><strong>Fluxos · Movimentação de Quarentena</strong></a><a class="ap ap-prox" href="movimentacao-de-quarentena-anvisa.html"><small>Próximo →</small><strong>Anvisa · Movimentação de Quarentena</strong></a></nav>
 </main>
   <nav class="toc" aria-label="Nesta página"><div class="toc-titulo">Nesta página</div><ul><li><a href="#o-que-acontece-ao-confirmar-ou-salvar">O que acontece ao confirmar ou salvar</a></li><li><a href="#o-que-o-sistema-recusa">O que o sistema recusa</a></li><li><a href="#campos-da-tela">Campos da tela</a></li><li><a href="#quem-pode-usar-permissoes">Quem pode usar (permissões)</a></li></ul></nav>
 </div>
 <footer class="rodape">
-  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 24/11/2026</div>
+  <div><strong>iLabMedSys</strong> · documentação da homologação do LabMedSys · atualizado em 25/11/2026</div>
   <div>Os documentos descrevem o sistema legado entregue pelo fornecedor, com todos os defeitos encontrados, inclusive os de acesso e segurança. Senhas, logins e endereços de servidor não são publicados.</div>
 </footer>
 <script src="../../../portal/portal.js"></script>
